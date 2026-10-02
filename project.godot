@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Visible Fleet Battle POC"
+config/name="SpaceBattleOfThreeKingdoms"
 run/main_scene="res://scenes/FleetBattle3D.tscn"
 config/features=PackedStringArray("4.7")
 
