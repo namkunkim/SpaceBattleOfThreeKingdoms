@@ -5,16 +5,33 @@ func _initialize() -> void:
 
 func _capture() -> void:
 	var scene := load("res://scenes/FleetBattle3D.tscn") as PackedScene
-	assert(scene != null)
 	var battle := scene.instantiate()
 	root.add_child(battle)
-	for frame in 100:
+	await process_frame
+	battle._start()
+	assert(battle.fleets[0].nodes.size() == 28)
+	var forms := {}
+	for f in battle.fleets:
+		forms[f.form_id] = true
+	assert(forms.size() == battle.fleets.size())
+	# 전 함대 선택 후 일괄 이동 검증
+	battle.do_cmd("all")
+	assert(battle.selected.size() == 6)
+	var before: Array = []
+	for f in battle.selected:
+		before.append(f.pos)
+	battle.order_move(Vector2(1300.0, 1150.0))
+	for i in 240:
+		battle.update_sim(0.05)
+	for i in 60:
 		await process_frame
-	assert(battle.model_scenes.size() == 7)
-	assert(battle.fleets.size() == 6)
+	var moved := 0
+	for i in battle.selected.size():
+		if battle.selected[i].pos.distance_to(before[i]) > 50.0:
+			moved += 1
+	assert(moved == 6, "moved %d" % moved)
 	var image := root.get_viewport().get_texture().get_image()
-	var output_path := ProjectSettings.globalize_path("res://out/fleet-battle-3d-poc.png")
-	var result := image.save_png(output_path)
-	assert(result == OK, "Screenshot save failed: %s" % result)
-	print("FLEET_3D_CAPTURE_PASS " + output_path)
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://out"))
+	image.save_png(ProjectSettings.globalize_path("res://out/fleet-battle.png"))
+	print("FLEET_3D_CAPTURE_PASS")
 	quit(0)
