@@ -538,13 +538,6 @@ func _separate() -> void:
 		f.pos.x = clampf(f.pos.x, e, W.x - e)
 		f.pos.y = clampf(f.pos.y, e, W.y - e)
 
-static func _seg_dist(p: Vector2, a: Vector2, b: Vector2) -> float:
-	var ab := b - a
-	var l2 := ab.length_squared()
-	if l2 <= 0.0:
-		return p.distance_to(a)
-	return p.distance_to(a + ab * clampf((p - a).dot(ab) / l2, 0.0, 1.0))
-
 func _move_missiles() -> void:
 	for m in st.missiles:
 		m.age += sub_ms
@@ -554,11 +547,12 @@ func _move_missiles() -> void:
 			continue
 		var age_s := m.age / 1000.0
 		var a := atan2(t.pos.y - m.pos.y, t.pos.x - m.pos.x) + m.wob * maxf(0.0, 0.6 - age_s)
-		var from := m.pos
 		m.pos = BattleRules.quant_v(m.pos + Vector2(cos(a), sin(a)) * m.v * dt)
 		m.v += 120.0 * dt
-		# 빠른 물체: 한 틱 동안 지나간 선분과 표적 사이의 최근접 거리로 판정한다(§3.3)
-		if _seg_dist(t.pos, from, m.pos) < BattleRules.MISSILE_HIT_R:
+		# 명중 판정은 기준 POC와 같은 점 판정이다(이동 뒤 위치가 표적에서 22px 안). 하위 걸음이 0.05초 이하라
+		# 한 걸음 이동(≤20px)이 판정 지름(44px)보다 작아 놓치지 않는다. 선분 판정(§3.3)은 걸음이 더 커질 때 쓴다.
+		var hit := m.pos.distance_to(t.pos) < BattleRules.MISSILE_HIT_R
+		if hit:
 			m.dead = true
 			apply_dmg(st.by_id(m.src_id), t, m.dmg)
 			emit("missile_hit", t.id, m.src_id, m.pos)

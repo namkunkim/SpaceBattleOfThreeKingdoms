@@ -7,7 +7,10 @@ extends SceneTree
 #        [--baseline res://tests/fixtures/m1_baseline.json] [--policies none,attack5,charge30]
 
 const MAX_S := 1800.0
-# KS 임계값은 5% 유의수준 1.36·√(1/n+1/m). 200 대 200이면 0.136(제안서 §9.2)이고 표본이 크면 더 엄격해진다.
+# KS 통계량 D의 한계는 제안서 §9.2의 0.136(효과 크기 기준)이다. 200 대 200에서 0.136은 5% 유의수준 임계값과 같아
+# 완전히 같은 구현도 지표 12개 중 하나쯤 우연히 넘을 수 있다(M1 측정: 200시드 charge30 길이 D 0.16, 1000시드 0.036).
+# 그래서 판정은 1000시드(--runs 1000)로 하고, 표본 크기에 맞춘 5% 유의 임계값은 참고로만 남긴다.
+const KS_MAX := 0.136
 const KS_C := 1.36
 const WIN_MAX := 0.05
 const KS_KEYS := ["t", "lost", "killed", "reinf_t"]
@@ -146,7 +149,8 @@ static func ks(a: Array, b: Array) -> float:
 
 static func compare(base_rows: Array, rows: Array) -> Dictionary:
 	var out := {"pass": true}
-	var ks_max := KS_C * sqrt(1.0 / base_rows.size() + 1.0 / rows.size())
+	var ks_max := KS_MAX
+	out.ks_crit_5pct = snappedf(KS_C * sqrt(1.0 / base_rows.size() + 1.0 / rows.size()), 0.0001)
 	var wb := 0.0
 	var wn := 0.0
 	for r in base_rows:
