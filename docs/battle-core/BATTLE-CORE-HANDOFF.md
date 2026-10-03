@@ -1,5 +1,7 @@
 # 성한지 실시간 전투 코어 — 통합 인수 문서 (2026-10-03)
 
+> **갱신 (2026-10-03):** 이 파일은 v0.1 시점의 묶음이다. Part 1의 결정 3건은 Q28~Q30으로 확정됐고, 제안서는 `PROPOSAL-realtime-battle-core.md` v0.2로 개정됐다. 최신 상태는 v0.2, `BATTLE_DECISIONS.md`(Q1~Q43), `DATA-CROSSCHECK.md`를 본다.
+
 이 파일은 코드 프로젝트(`SpaceBattleOfThreeKingdoms`)에서 작업을 이어가기 위한 단일 컨텍스트다. 아래 세 부분을 순서대로 합쳤다. 내용은 각 원본과 같다.
 
 ## 읽는 순서와 우선순위
