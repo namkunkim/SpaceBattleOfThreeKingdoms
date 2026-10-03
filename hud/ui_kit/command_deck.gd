@@ -6,6 +6,8 @@ extends Control
 
 const W := preload("res://hud/ui_kit/deck_widgets.gd")
 const Screens := preload("res://hud/ui_kit/deck_screens.gd")
+const Pacing := preload("res://hud/ui_kit/battle_pacing.gd")
+const Guard := preload("res://hud/ui_kit/session_guard.gd")
 
 const CMD_INFO := {
 	"stop": {"label": "정지", "icon": "stop", "desc": "이동과 공격 명령을 멈추고 그 자리에서 대기합니다. 사거리 안의 적은 계속 사격합니다."},
@@ -33,6 +35,9 @@ var cp_bar: Control
 var sys_bar: HBoxContainer
 var speed_btns: Array = []
 var pause_btn: Control
+var skip_btn: Control
+var pacing: Node
+var guard: Node
 var objectives: Control
 var log_box: VBoxContainer
 var cut: Control
@@ -58,6 +63,14 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 	src = s
 	renderer = r
 	theme = UiTheme.build()
+	pacing = Pacing.new()
+	pacing.name = "BattlePacing"
+	add_child(pacing)
+	pacing.setup(self, src)
+	guard = Guard.new()
+	guard.name = "SessionGuard"
+	add_child(guard)
+	guard.setup(self)
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	overlay = TacticalOverlay.new()
@@ -119,6 +132,7 @@ func to_title() -> void:
 func resume() -> void:
 	if battle.G.state == "pause":
 		battle._close_menu()
+	guard.clear()
 	show_screen("")
 
 func open_pause() -> void:
@@ -132,6 +146,7 @@ func _process(delta: float) -> void:
 	if st == "pause" and screen == "":
 		show_screen("pause")
 	elif st == "play" and (screen == "pause" or screen == "settings_pause"):
+		guard.clear()
 		show_screen("")
 	elif st == "end" and screen != "result":
 		show_screen("result")
@@ -147,8 +162,11 @@ func _process(delta: float) -> void:
 			for g in groups_row.get_children():
 				g.queue_redraw()
 			for i in speed_btns.size():
-				speed_btns[i].active = battle.G.speed == i + 1
+				speed_btns[i].active = pacing.user_speed == i + 1 and pacing.mode == pacing.Mode.USER
 				speed_btns[i].queue_redraw()
+			skip_btn.disabled = not pacing.can_skip()
+			skip_btn.active = pacing.mode == pacing.Mode.SKIP
+			skip_btn.queue_redraw()
 
 func _anchor(c: Control, preset: int, sz: Vector2, off := Vector2.ZERO) -> void:
 	c.set_anchors_preset(preset)
@@ -206,13 +224,11 @@ func _draw_top(c: Control) -> void:
 	c.draw_line(Vector2(mx - 112, 14), Vector2(mx - 112, 64), Color(UiTheme.GOLD, 0.18))
 	c.draw_line(Vector2(mx + 112, 14), Vector2(mx + 112, 64), Color(UiTheme.GOLD, 0.18))
 	var st: String = battle.G.state
-	var tag := "교 전 중"
-	var tc := UiTheme.WARN
+	var tag: String = pacing.status_tag()
+	var tc := UiTheme.WARN if not pacing.quiet else UiTheme.ALLY_HI
 	if st == "pause":
 		tag = "일 시 정 지"
 		tc = UiTheme.INK_2
-	elif battle.G.speed == 2:
-		tag = "교 전 중 · ×2"
 	UiDraw.text(c, Vector2(mx, 30), tag, "semibold", 11, tc, HORIZONTAL_ALIGNMENT_CENTER, 0.0)
 	var tt := int(battle.G.t)
 	UiDraw.text(c, Vector2(mx, 62), "%02d:%02d" % [tt / 60, tt % 60], "serif", 28, UiTheme.INK, HORIZONTAL_ALIGNMENT_CENTER, 0.0)
@@ -243,18 +259,21 @@ func _build_sys() -> void:
 	st.set_content_margin_all(6)
 	holder.add_theme_stylebox_override("panel", st)
 	hud.add_child(holder)
-	_anchor(holder, Control.PRESET_TOP_RIGHT, Vector2(186, 46), Vector2(-16, 16))
+	_anchor(holder, Control.PRESET_TOP_RIGHT, Vector2(230, 46), Vector2(-16, 16))
 	sys_bar = HBoxContainer.new()
 	sys_bar.add_theme_constant_override("separation", 4)
 	holder.add_child(sys_bar)
 	for i in 2:
 		var b := W.IconButton.new("", "×%d" % (i + 1))
 		b.tooltip_text = "배속 ×%d" % (i + 1)
-		b.pressed.connect(func():
-			if battle.G.speed != i + 1:
-				battle._toggle_speed())
+		b.pressed.connect(func(): pacing.set_user_speed(i + 1))
 		sys_bar.add_child(b)
 		speed_btns.append(b)
+	# Q52: 조용한 구간에서만 누를 수 있다. 교전·경보가 생기거나 전장을 만지면 멈춘다.
+	skip_btn = W.IconButton.new("skip")
+	skip_btn.tooltip_text = "다음 교전·경보까지 건너뛰기 (조용한 구간에서만)"
+	skip_btn.pressed.connect(func(): pacing.skip())
+	sys_bar.add_child(skip_btn)
 	var pb := W.IconButton.new("pause")
 	pb.tooltip_text = "일시정지 (Space)"
 	pb.pressed.connect(open_pause)

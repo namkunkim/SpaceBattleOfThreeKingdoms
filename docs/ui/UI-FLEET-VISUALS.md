@@ -28,6 +28,8 @@ hud/ui_kit/
   deck_screens.gd        타이틀, 브리핑, 일시정지, 설정, 결과
   tactical_overlay.gd    명패, 선택 괄호, 사거리 부채꼴, 명령선·도착 예상, 터치 끌기 미리보기
   radar_scope.gd         전술도
+  battle_pacing.gd       시간 진행(Q52): 조용한 구간 자동 ×4, 다음 교전·경보까지 건너뛰기(×8)
+  session_guard.gd       중단 처리(Q53): 백그라운드·포커스 상실 시 즉시 일시정지
   ui_theme.gd, ornate_style.gd, ui_draw.gd, deck_widgets.gd, screen_kit.gd, commanders.gd, game_settings.gd
 input/touch/
   touch_controller.gd    터치 제스처
@@ -60,10 +62,20 @@ M1이 만들 `view/battle_view_3d.gd`, `view/camera_rig.gd`, `view/fx_layer.gd`,
 godot --headless --path . --script tests/smoke.gd        # 기존 규칙 스모크
 godot --headless --path . --script tests/touch_input.gd  # 터치 8항목 + 마우스 클릭
 godot --headless --path . --script tests/ui_flow.gd      # 타이틀→브리핑→전투→일시정지→결과→타이틀
-godot --path . --script tests/capture_ui.gd -- battle res://out/ui-battle.png   # title|brief|battle|pause|result
+godot --headless --path . --script tests/pacing.gd       # Q52 자동 ×4·건너뛰기, Q53 포커스 상실 일시정지
+godot --path . --script tests/capture_ui.gd -- battle res://out/ui-battle.png   # title|brief|quiet|battle|pause|suspend|result
 ```
 
 측정(Intel Arc 130V 내장 GPU, Compatibility, 1600×900): 표시 함선 약 760척, 60fps.
+
+## 시간 진행과 중단 처리(Q52·Q53)
+
+- **조용한 구간:** `BattleSource.quiet()`가 판정한다. 아군·적 전대가 모두 교전 거리대(미사일·함재기·주포 사거리 중 가장 긴 값 ×1.15) 밖이고 날아가는 미사일·함재기가 없으면 조용하다. 코어의 "알림 분기"가 생기면 이 함수만 바꾼다.
+- **자동 ×4:** 조용한 상태가 1초 이어지면 ×4로 바꾸고, 교전이 시작되면 플레이어가 고른 배속(×1·×2)으로 돌아온다. 조용한 구간에서 배속 버튼을 누르면 그 구간 동안은 자동 ×4를 쓰지 않는다. 설정에서 끈다(`user://settings.cfg`의 `play/auto_fast`).
+- **건너뛰기:** 우측 상단 ⏭ 버튼. 조용한 구간에서만 누를 수 있고 ×8로 진행한다. 교전이 시작되거나, 경보·적 사건(`sys`, `foe` 교신)이 오거나, 전장·키를 누르면 멈춘다. "다음 분기"는 코어에 아직 없어 교전·경보로 대신한다.
+- **상단 상태 문구:** 교전 중 / 정찰 / 정찰 · 자동 ×4 / 건너뛰는 중 · ×8.
+- **중단:** `NOTIFICATION_APPLICATION_PAUSED`(모바일 백그라운드)와 `NOTIFICATION_APPLICATION_FOCUS_OUT`(창 포커스 상실)에서 전투 중이면 즉시 일시정지하고, 일시정지 화면에 "자리를 비워 자동으로 멈췄습니다" 안내를 띄운다. 저장(초기 상태 + 명령 기록 + 틱)과 국면별 체크포인트는 코어가 생긴 뒤 `SessionGuard.suspend_requested`에 붙인다.
+- 배속은 `BattleSource.set_speed()`로만 바꾼다(POC는 프레임당 시뮬레이션 횟수).
 
 ## 남은 일
 

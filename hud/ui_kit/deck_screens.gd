@@ -218,6 +218,10 @@ class PauseScreen extends Control:
 			c.draw_rect(Rect2(cx, cy - 17, kw, 24), Color(0.25, 0.32, 0.43), false, 1.0)
 			UiDraw.text(c, Vector2(cx, cy), keys[i][0], "semibold", 12, UiTheme.INK, HORIZONTAL_ALIGNMENT_CENTER, kw)
 			UiDraw.text(c, Vector2(cx + kw + 10, cy), keys[i][1], "regular", 13, UiTheme.INK_2)
+		# Q53: 창을 벗어나 자동으로 멈췄을 때 안내
+		if deck.guard.auto_paused:
+			UiDraw.diamond(c, Vector2(x + 5, c.size.y - 49), 4.0, UiTheme.GOLD)
+			UiDraw.text(c, Vector2(x + 18, c.size.y - 44), "자리를 비워 자동으로 멈췄습니다. 전황은 그대로입니다.", "regular", 13, UiTheme.INK_2)
 	func on_show() -> void:
 		queue_redraw()
 
@@ -228,16 +232,17 @@ class SettingsScreen extends Control:
 	var scale_btns: Array = []
 	var full_chk: CheckButton
 	var glow_chk: CheckButton
+	var fast_chk: CheckButton
 	var pending_scale := 1.0
 	func _init(d: Control, back: String) -> void:
 		deck = d
 		back_to = back
 		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		mouse_filter = Control.MOUSE_FILTER_STOP
-		var p := ScreenKit.centered(self, Vector2(600, 430), UiTheme.ornate())
+		var p := ScreenKit.centered(self, Vector2(600, 480), UiTheme.ornate())
 		p.painter = func(c: Control):
 			UiDraw.text(c, Vector2(36, 50), "설 정", "eyebrow", 11, UiTheme.GOLD)
-			UiDraw.text(c, Vector2(36, 94), "화면과 표시", "serif_bold", 28, UiTheme.INK)
+			UiDraw.text(c, Vector2(36, 94), "화면과 진행", "serif_bold", 28, UiTheme.INK)
 			c.draw_line(Vector2(36, 118), Vector2(c.size.x - 36, 118), Color(UiTheme.GOLD, 0.22))
 		var vb := VBoxContainer.new()
 		vb.position = Vector2(36, 142)
@@ -268,12 +273,16 @@ class SettingsScreen extends Control:
 		glow_chk.text = "빛 번짐 효과 (광선·폭발 발광)"
 		glow_chk.focus_mode = Control.FOCUS_NONE
 		vb.add_child(glow_chk)
+		fast_chk = CheckButton.new()
+		fast_chk.text = "조용한 구간 자동 ×4 (교전이 시작되면 원래 배속)"
+		fast_chk.focus_mode = Control.FOCUS_NONE
+		vb.add_child(fast_chk)
 		var hint := UiTheme.label("설정은 이 컴퓨터에 저장되어 다음 실행에도 유지됩니다.", "Muted")
 		vb.add_child(hint)
 		var hb := HBoxContainer.new()
 		hb.add_theme_constant_override("separation", 12)
 		hb.alignment = BoxContainer.ALIGNMENT_END
-		hb.position = Vector2(600 - 36 - 380, 430 - 30 - 52)
+		hb.position = Vector2(600 - 36 - 380, 480 - 30 - 52)
 		hb.size = Vector2(380, 52)
 		p.add_child(hb)
 		var cancel := Button.new()
@@ -296,11 +305,13 @@ class SettingsScreen extends Control:
 		pending_scale = GameSettings.ui_scale
 		full_chk.button_pressed = GameSettings.fullscreen
 		glow_chk.button_pressed = GameSettings.glow
+		fast_chk.button_pressed = GameSettings.auto_fast
 		_sync()
 	func _save() -> void:
 		GameSettings.ui_scale = pending_scale
 		GameSettings.fullscreen = full_chk.button_pressed
 		GameSettings.glow = glow_chk.button_pressed
+		GameSettings.auto_fast = fast_chk.button_pressed
 		GameSettings.save_cfg()
 		GameSettings.apply(get_window())
 		deck.apply_glow()

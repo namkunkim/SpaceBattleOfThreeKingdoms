@@ -2,7 +2,7 @@ extends SceneTree
 
 # 상품화 표현 계층 캡처. 화면이 있는 실행에서만 의미가 있다.
 # godot --path . --script tests/capture_ui.gd -- <장면> <출력 png>
-# 장면: title | brief | battle | select | pause | result
+# 장면: title | brief | quiet | battle | select | pause | suspend | result
 const SEED := 20261003
 
 func _initialize() -> void:
@@ -19,6 +19,12 @@ func _run() -> void:
 	var deck = battle.presentation.hud if battle.presentation else null
 	if mode == "title":
 		for i in 90:
+			await process_frame
+	elif mode == "quiet":
+		# 접근 구간: 조용한 구간 자동 ×4 표시(Q52)
+		if deck:
+			deck.begin_battle()
+		for i in 120:
 			await process_frame
 	elif mode == "brief":
 		if deck:
@@ -42,6 +48,11 @@ func _run() -> void:
 			await process_frame
 		if mode == "pause":
 			battle._toggle_menu()
+			for i in 30:
+				await process_frame
+		elif mode == "suspend":
+			# 포커스를 잃어 자동으로 멈춘 일시정지(Q53)
+			deck.guard.suspend("focus")
 			for i in 30:
 				await process_frame
 		elif mode == "result":

@@ -74,3 +74,27 @@ func world_size() -> Vector2:
 
 func unit_scale() -> float:
 	return battle.S
+
+# ------------------------------------------------------------ 시간 진행(Q52)
+# 교전 거리대: 주포·미사일·함재기 중 가장 긴 사거리에 여유를 더한 거리.
+const ENGAGE_MARGIN := 1.15
+
+# 조용한 구간인가: 어느 아군·적 전대도 교전 거리대에 없고, 날아가는 미사일·함재기도 없다.
+# 임시 판정이다. 코어의 "알림 분기"가 생기면 이 함수만 코어 판정으로 바꾼다.
+func quiet() -> bool:
+	if not battle.missiles.is_empty() or not battle.swarms.is_empty():
+		return false
+	var reach := maxf(battle.MISSILE_R, battle.FIGHTER_R) * ENGAGE_MARGIN
+	for a in battle.fleets:
+		if a.dead or a.side != 0:
+			continue
+		for b in battle.fleets:
+			if b.dead or b.side == 0:
+				continue
+			if a.pos.distance_to(b.pos) <= maxf(reach, maxf(a.range_r, b.range_r) * ENGAGE_MARGIN):
+				return false
+	return true
+
+# 배속 설정. 표현 계층이 전투 시계를 바꾸는 유일한 통로다(POC는 프레임당 시뮬레이션 횟수).
+func set_speed(n: int) -> void:
+	battle.G.speed = n

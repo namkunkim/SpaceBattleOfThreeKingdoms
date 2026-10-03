@@ -39,9 +39,7 @@
 ## 다음 할 일(우선순위)
 
 1. **사용자 플레이 피드백 반영:** 원래 폴더의 `플레이하기.cmd`로 실행해 받은 의견을 먼저 처리한다.
-2. **모바일 결정 반영(Q51~Q54, `BATTLE_DECISIONS.md`)**
-   - Q53: 앱이 백그라운드로 가거나 포커스를 잃으면 즉시 일시정지한다. 저장은 코어가 생긴 뒤에 한다.
-   - Q52: 조용한 구간의 자동 ×4와 "다음 분기까지 건너뛰기" 버튼. 자리와 표시를 만들고, 판정은 코어를 기다린다.
+2. ~~**모바일 결정 반영(Q52·Q53)**~~ 완료(브랜치 `feature/ui-polish-2`). 조용함 판정은 `BattleSource.quiet()`의 거리 기반 임시 판정이고, 저장은 `SessionGuard.suspend_requested`에 코어가 붙인다. 자세한 내용은 `UI-FLEET-VISUALS.md`의 "시간 진행과 중단 처리".
 3. **터치 보완:** 명령 버튼을 길게 누르면 툴팁이 뜨게 한다. 손가락 크기 기준 터치 영역을 점검한다(제안서 §7.2, 약 9mm 또는 48dp).
 4. **소리:** UI 효과음 훅(버튼, 명령 확정, 경보, 격침)과 음량 설정. 자산은 라이선스를 확인하고 사용자 승인 뒤에 들인다.
 5. **정본 편성 연결:** `data/scenarios/red_cliffs_208_realtime.json`의 전대·지휘관·함종 구성을 브리핑과 정보 패널에 보여 준다. 함종 구성은 지금 표현용 배치다.
@@ -53,6 +51,7 @@
 godot --headless --path . --script tests/smoke.gd
 godot --headless --path . --script tests/touch_input.gd
 godot --headless --path . --script tests/ui_flow.gd
+godot --headless --path . --script tests/pacing.gd
 godot --path . --script tests/capture_3d_poc.gd
 godot --path . --script tests/capture_ui.gd -- battle res://out/ui-battle.png
 ```

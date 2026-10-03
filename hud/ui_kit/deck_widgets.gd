@@ -17,7 +17,7 @@ class DrawPanel extends Control:
 		if painter.is_valid():
 			painter.call(self)
 
-# 아이콘 버튼(배속·일시정지·설정)
+# 아이콘 버튼(배속·건너뛰기·일시정지·설정)
 class IconButton extends Button:
 	var icon_name := ""
 	var caption := ""
@@ -33,6 +33,8 @@ class IconButton extends Button:
 			draw_rect(Rect2(0, size.y - 2, size.x, 2), UiTheme.GOLD)
 			draw_rect(r, UiTheme.GOLD, false, 1.0)
 		var col := UiTheme.GOLD_HI if active else (UiTheme.INK if is_hovered() else UiTheme.INK_2)
+		if disabled:
+			col = UiTheme.INK_4
 		if icon_name != "":
 			UiDraw.icon(self, icon_name, Rect2(size * 0.5 - Vector2(9, 9), Vector2(18, 18)), col, 1.7)
 		if caption != "":
