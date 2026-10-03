@@ -46,6 +46,9 @@ func _run() -> void:
 			TestCheck.ok(self, false, "scaled %s = %d" % [c.ship_type_id, c.count])
 			return
 	if not TestCheck.ok(self, ScenarioRoster.deployed(d, "liu_bei", "입문").size() == 4, "alliance same in all difficulties"): return
+	# X-1: 기록상 종군 장수(지휘관·부지휘관·참모, 중복 없이)
+	var off := ", ".join(ScenarioRoster.officers(d, "cao_cao"))
+	if not TestCheck.ok(self, off == "조조, 허저, 정욱, 가후, 조인, 서황, 만총, 문빙, 채모, 장윤, 조순, 조홍", "officers %s" % off): return
 	var battle := (load("res://scenes/FleetBattle3D.tscn") as PackedScene).instantiate()
 	root.add_child(battle)
 	await _frames()
