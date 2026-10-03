@@ -116,7 +116,8 @@ func _faction(c: Control, o: Vector2, fac: Dictionary) -> void:
 		y += 4.0
 	_not_deployed(c, Vector2(o.x, y), fac)
 
-# 조조군(전투 전): 기록상 규모, 총사령, 지휘관 명단, 불참 인물만
+# 조조군(전투 전): 기록상 규모, 총사령, 기록상 종군 장수, 불참 인물만
+# 장수 명단은 지휘관·부지휘관·참모를 합쳐 중복 없이 보인다. 전대 지휘관만 모으면 이름 수가 곧 전대 수가 된다(리뷰 X-1).
 func _hidden_enemy(c: Control, o: Vector2, fac: Dictionary) -> void:
 	_head(c, o, fac, "적 · 정찰 전에는 전대 수·구성·척 수를 알 수 없음")
 	var hs: Dictionary = data.get("historical_scale", {}).get("cao_cao", {})
@@ -135,12 +136,8 @@ func _hidden_enemy(c: Control, o: Vector2, fac: Dictionary) -> void:
 	y += 24.0
 	UiDraw.text(c, Vector2(o.x, y), str(fac.get("supreme_commander", "")), "serif_bold", 15, UiTheme.INK)
 	y += 36.0
-	UiDraw.text(c, Vector2(o.x, y), "지 휘 관 명 단", "eyebrow", 11, UiTheme.GOLD)
-	var names := PackedStringArray()
-	for s in ScenarioRoster.squadrons_of(data, fac.id):
-		var n := str(s.get("commander", {}).get("name", ""))
-		if n != "" and not names.has(n):
-			names.append(n)
+	UiDraw.text(c, Vector2(o.x, y), "기 록 상 종 군 장 수", "eyebrow", 11, UiTheme.GOLD)
+	var names := ScenarioRoster.officers(data, fac.id)
 	y += 24.0
 	for part in _wrap(", ".join(names), COL_W):
 		UiDraw.text(c, Vector2(o.x, y), part, "regular", 13, UiTheme.INK_2)

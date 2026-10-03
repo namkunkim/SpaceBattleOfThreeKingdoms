@@ -60,6 +60,17 @@ static func person(d: Dictionary, id: String) -> Dictionary:
 				return {"id": id, "name": p.name, "faction": FACTION_KEY.get(f.id, "shu")}
 	return {}
 
+# 세력의 종군 장수 이름(지휘관 → 부지휘관 → 참모, 전대 순, 중복 없이). 난이도와 무관한 기록상 명단(리뷰 X-1).
+static func officers(d: Dictionary, faction_id: String) -> PackedStringArray:
+	var names := PackedStringArray()
+	for s in squadrons_of(d, faction_id):
+		var ppl: Array = [s.get("commander", {}), s.get("vice_commander", {})]
+		ppl.append_array(s.get("staff", []))
+		for p in ppl:
+			if p is Dictionary and p.get("name", "") != "" and not names.has(p.name):
+				names.append(p.name)
+	return names
+
 # ---------------------------------------------------------------- 난이도(리뷰 W-2)
 # cao_scale_rule: 조조군 전대마다 함종별 척 수 × count_factor를 half-up 반올림, 원래 1척 이상이면 최소 1척.
 # 난이도가 deploy_min_difficulty보다 낮으면 그 전대는 배치하지 않는다. 연합 편성은 모든 난이도에서 같다.

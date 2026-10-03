@@ -148,6 +148,7 @@ godot --path . --script tests/capture_ui.gd -- battle res://out/ui-battle.png   
 | W-5 | 빠른 선택 알림이 떠 있는 동안 ×0.2 감속, 열 때 `warn_branch` 소리. 입문 정지는 코어 난이도가 생기면 |
 | W-6 | 결정 카드에 추천 선택지가 없으면 위임하지 않고 경고(`delegated(-1)`, 교신 "위임 처리 불가") |
 | W-7 | 설정 진행 탭: 선택 감속 3택(선택하면 / 조작 중에만 / 끔, Q36), 진동 켜고 끄기. 진동은 모두 `UiSound.vibrate`를 거친다 |
+| X-1 | 조조군 명단 제목을 "기록상 종군 장수"로, 지휘관·부지휘관·참모를 합쳐 중복 없이(`ScenarioRoster.officers`). 이름 수가 전대 수를 드러내지 않는다 |
 
 ## 정본 편성
 
