@@ -1,6 +1,6 @@
 # UI·함대 표현 세션 인수 메모
 
-새 세션이 "게임 UI 상품화" 작업을 이어받을 때 먼저 읽는 문서다. 갱신: 2026-10-04(UI-2 세션 종료).
+새 세션이 "게임 UI 상품화" 작업을 이어받을 때 먼저 읽는 문서다. 갱신: 2026-10-04(UI-3 세션).
 맨 아래 "새 세션 첫 프롬프트"를 그대로 붙여 넣으면 된다.
 
 ## 현재 상태
@@ -19,7 +19,8 @@
 
 - **안드로이드 태블릿 + 윈도우 PC**. 폰은 1차 목표가 아니다.
 - 터치 목표 48dp: 모든 화면의 누를 수 있는 컨트롤을 52단위 이상으로 맞췄다(16:10 태블릿 UI 100%에서 약 48~49dp). `tests/touch_targets.gd`가 태블릿 3종 기준으로 전 화면을 검사한다.
-- 실기기(안드로이드) 확인, 안전 영역(노치·내비게이션 바), 텍스처 압축(ETC2/ASTC)은 아직 하지 않았다.
+- UI-3에서 안전 영역(`input/touch/safe_area.gd`), 가로 고정, ETC2/ASTC 압축 설정, Android 내보내기 프리셋, 모바일 첫 실행 표시 밀도(낮음, 임시), 밀도 측정 도구(`tests/bench_density.gd`)를 넣었다. 자세한 것은 `docs/ui/ANDROID-EXPORT.md`.
+- **아직 못 한 것: 실제 내보내기와 실기기 확인.** 이 PC에는 내보내기 템플릿·JDK·Android SDK가 없어 APK를 한 번도 만들지 못했다. 사용자가 설치한 뒤 ANDROID-EXPORT.md의 "사용자가 해야 할 것"을 따른다.
 
 ## 사용자 작업 방식
 
@@ -66,7 +67,7 @@
 ## 다음 할 일(우선순위)
 
 1. **사용자 플레이 피드백:** 원래 폴더의 `플레이하기.cmd`로 실행해 받은 의견을 먼저 처리한다(아직 받은 적 없음).
-2. **태블릿 마무리:** 안드로이드 내보내기 설정·실기기 확인, 안전 영역, 텍스처 압축, 태블릿 성능 측정(표시 밀도 기본값 결정).
+2. **태블릿 마무리(남은 것):** 템플릿·SDK 설치 뒤 실제 내보내기와 실기기 확인, 태블릿 성능 측정으로 표시 밀도 기본값 확정(PC 측정에서는 밀도가 프레임에 영향이 없었다. 병목은 고정 비용), 화면(타이틀 등)에도 안전 영역이 필요한지 확인.
 3. **실제 효과음·음악:** 출처와 라이선스를 사용자에게 승인받은 뒤 `assets/audio/ui|battle/<사건>.ogg`로 넣는다(사건 15종, `UI-FLEET-VISUALS.md` "소리").
 4. **조조군 전부 공개 화면 연결:** `roster_screen.open_roster(true, 난이도)`는 있다. 적벽 시나리오 전투의 결산이 생기면 거기서 연다(지금 결산은 시험 전투라 붙이지 않았다).
 5. **코어 값이 생기면:** 사기(bp + ● ◐ ▽ ×), 5국면, 탄약·에너지·열, 진형 탭, 지휘 상태 ●/○, 결정 분기, 강조 포화, 리뷰 §11의 소리 자리(국면 전환, 사기 구간, 붕괴 위기, 화공 단계, 결집, 기함 위기).
@@ -86,6 +87,8 @@ godot --headless --path . --script tests/squadron_strip.gd
 godot --headless --path . --script tests/ui_sound.gd
 godot --headless --path . --script tests/decision_flow.gd
 godot --headless --path . --script tests/roster.gd
+godot --headless --path . --script tests/safe_area.gd
+godot --path . --resolution 1920x1200 --script tests/bench_density.gd
 godot --path . --script tests/capture_3d_poc.gd
 godot --path . --script tests/capture_ui.gd -- battle res://out/ui-battle.png
 godot --path . --resolution 1600x1000 --script tests/capture_ui.gd -- battle res://out/ui-tablet.png
@@ -104,5 +107,5 @@ docs/battle-core/SESSION-HANDOFF.md를 읽고, BATTLE_DECISIONS.md의 Q51 이후
 같은 폴더를 다른 세션도 쓰므로 구현은 git worktree와 새 브랜치에서 하고,
 FleetBattle3D.gd의 HUD·3D 생성 함수는 고치지 말고 hud/ui_kit/, view/fleet_render/, input/touch/에 새 파일로 작업해라.
 "커밋 푸시"는 작업 브랜치를 main에 병합해 main을 푸시하라는 뜻이다.
-시작 전에 테스트 12종을 돌려 통과하는지 확인하고, 인수 메모의 "다음 할 일" 1번부터 진행해라.
+시작 전에 테스트 13종을 돌려 통과하는지 확인하고, 인수 메모의 "다음 할 일" 1번부터 진행해라.
 ```

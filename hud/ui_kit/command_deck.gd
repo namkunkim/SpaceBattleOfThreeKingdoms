@@ -100,6 +100,10 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 	hud.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	hud.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(hud)
+	var safe := SafeArea.new()
+	safe.name = "SafeArea"
+	add_child(safe)
+	safe.setup(hud)
 	_build_top()
 	_build_sys()
 	_build_log()
