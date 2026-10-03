@@ -41,7 +41,7 @@
 1. **사용자 플레이 피드백 반영:** 원래 폴더의 `플레이하기.cmd`로 실행해 받은 의견을 먼저 처리한다.
 2. ~~**모바일 결정 반영(Q52·Q53)**~~ 완료(브랜치 `feature/ui-polish-2`). 조용함 판정은 `BattleSource.quiet()`의 거리 기반 임시 판정이고, 저장은 `SessionGuard.suspend_requested`에 코어가 붙인다. 자세한 내용은 `UI-FLEET-VISUALS.md`의 "시간 진행과 중단 처리".
 3. ~~**터치 보완**~~ 완료(`feature/ui-polish-2`): 길게 누르기 툴팁, 터치 목표 크기 점검(`tests/touch_targets.gd`), 모바일 첫 실행 UI 크기 자동 선택. 남은 것: 폰 전용 HUD 배치(시스템 아이콘·탭·그룹 탭이 폰에서 25~27dp).
-3-1. ~~**컨셉 세션 UI 리뷰 반영**~~ 완료(`feature/ui-polish-2`, `UI-FLEET-VISUALS.md`의 "컨셉 세션 UI 리뷰 반영"). 남은 것: 전대 띠(U4), 강조 포화(C-2), 사기 bp 표시(U-2, 코어 M4).
+3-1. ~~**컨셉 세션 UI 리뷰 반영**~~ 완료(`feature/ui-polish-2`, `UI-FLEET-VISUALS.md`의 "컨셉 세션 UI 리뷰 반영"). 전대 띠(U4)도 완료. 남은 것: 강조 포화(C-2), 사기 bp 표시(U-2, 코어 M4).
 4. **소리:** UI 효과음 훅(버튼, 명령 확정, 경보, 격침)과 음량 설정. 자산은 라이선스를 확인하고 사용자 승인 뒤에 들인다.
 5. **정본 편성 연결:** `data/scenarios/red_cliffs_208_realtime.json`의 전대·지휘관·함종 구성을 브리핑과 정보 패널에 보여 준다. 함종 구성은 지금 표현용 배치다.
 6. **코어 값이 생기면:** 사기 막대, 5국면 표시, 탄약·에너지·열 게이지, 진형 탭을 목업 v2의 자리대로 붙인다.
@@ -57,6 +57,7 @@ godot --headless --path . --script tests/touch_hold.gd
 godot --headless --path . --script tests/touch_targets.gd
 godot --headless --path . --script tests/rule_text.gd
 godot --headless --path . --script tests/order_undo.gd
+godot --headless --path . --script tests/squadron_strip.gd
 godot --path . --script tests/capture_3d_poc.gd
 godot --path . --script tests/capture_ui.gd -- battle res://out/ui-battle.png
 ```

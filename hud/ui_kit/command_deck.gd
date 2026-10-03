@@ -10,6 +10,7 @@ const Pacing := preload("res://hud/ui_kit/battle_pacing.gd")
 const Guard := preload("res://hud/ui_kit/session_guard.gd")
 const Undo := preload("res://hud/ui_kit/order_undo.gd")
 const Card := preload("res://hud/ui_kit/decision_card.gd")
+const Strip := preload("res://hud/ui_kit/squadron_strip.gd")
 
 # 이름·아이콘만 여기 둔다. 효과 문구와 수치는 규칙 값(BattleSource.rules → RuleText.cmd)에서 만든다.
 # confirm: 되돌릴 수 없거나 비용이 큰 명령은 길게 눌러 확정한다(EXPERIENCE-DESIGN §6 U3). 단축키는 바로 실행.
@@ -44,6 +45,7 @@ var pacing: Node
 var hold_tip: HoldTip
 var undo_bar: Control
 var decision_card: Control
+var strip: Control
 const CONFIRM_HOLD := 0.6   # 길게 눌러 확정(리뷰 U3)
 var _confirm_btn: Control = null
 var _confirm_t := 0.0
@@ -689,6 +691,11 @@ func _build_commands() -> void:
 	groups_row.add_theme_constant_override("separation", 6)
 	hud.add_child(groups_row)
 	_anchor(groups_row, Control.PRESET_BOTTOM_RIGHT, Vector2(346, 44), Vector2(-16, -262))
+	# 전대 띠(U4): 그룹 탭 바로 위. 탭 선택, 길게 눌러 추가, 끌어서 명령
+	strip = Strip.new()
+	hud.add_child(strip)
+	_anchor(strip, Control.PRESET_BOTTOM_RIGHT, Vector2(346, 60), Vector2(-16, -312))
+	strip.setup(self)
 	for i in 4:
 		var g := W.GroupButton.new(i + 1, self)
 		g.button_down.connect(battle._group_down.bind(i + 1))
