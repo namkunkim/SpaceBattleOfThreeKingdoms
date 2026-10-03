@@ -171,10 +171,11 @@ func faction(id: int) -> String:
 	var f = battle.by_id(id)
 	return "wei" if f and f.side == 1 else "shu"
 
-# 플레이어가 직접 지휘하는 전대인가(소유 표시 ● / ○)
-func is_own(id: int) -> bool:
-	var f = battle.by_id(id)
-	return f != null and f.side == 0 and faction(id) == "shu"
+# 지휘 상태(Q20, 리뷰 V-1): "direct"(직접 지휘 ●) | "delegated"(위임 ○) | ""(모름).
+# 세력과 무관하다(유비 전대도 위임할 수 있고 손권 전대에도 직접 명령할 수 있다). 세력은 글리프가 맡는다.
+# POC에는 위임 개념이 없어 ""를 돌려준다(표시하지 않는다). 코어의 지휘 상태가 생기면 이 함수만 고친다.
+func command_mode(_id: int) -> String:
+	return ""
 
 # ------------------------------------------------------------ 결정 분기(EXPERIENCE-DESIGN §5)
 # 코어에 결정 분기가 생기면 {"done": 2, "total": 5}를 돌려준다. POC에는 없으므로 비운다(화면에서 숨긴다).

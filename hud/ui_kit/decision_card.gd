@@ -4,7 +4,7 @@ extends Control
 # 지금 POC에는 분기가 없어 게임에서는 뜨지 않는다. 자리와 모양만 준비해 둔다(가짜 분기를 만들지 않는다).
 #
 # open_card(data):
-#   {speaker: "제갈량", portrait: 3, line: "참모 대사 한 줄",
+#   {speaker_id: "zhuge_liang"(Commanders.PEOPLE의 인물 ID), line: "참모 대사 한 줄",
 #    options: [{label, effects: [[이름, 값]], risk: {level: "low|mid|high", why: "근거 한 줄"}, rec: "추천 참모 이름" 또는 ""}],
 #    time: 30.0, queue: 0}
 # 예상 결과는 세 층만: 규칙상 확정 효과(숫자) / 관측 위험(낮음·보통·높음 + 근거) / 승률·결말은 보이지 않는다.
@@ -47,8 +47,8 @@ func open_card(d: Dictionary) -> void:
 	var pk := Button.new()
 	pk.text = "전장 보기"
 	pk.focus_mode = Control.FOCUS_NONE
-	pk.position = Vector2(size.x - 128, 14)
-	pk.size = Vector2(112, 40)
+	pk.position = Vector2(size.x - 136, 10)
+	pk.size = Vector2(120, 52)
 	pk.pressed.connect(func(): peek.emit())
 	add_child(pk)
 	_opts.append(pk)
@@ -65,10 +65,16 @@ func _draw() -> void:
 	var r := Rect2(Vector2.ZERO, size)
 	draw_style_box(UiTheme.ornate(), r)
 	# 참모 초상과 대사
+	# 화자는 인물 ID로 받는다(리뷰 V-6). 초상이 없는 인물은 세력 색 머리글자 패.
 	var pr := Rect2(16, 12, 46, 46)
-	draw_texture_rect(deck.battle._portrait_tex(int(data.get("portrait", 0))), pr, false)
+	var who := Commanders.person(str(data.get("speaker_id", "")))
+	var name: String = who.get("name", str(data.get("speaker", "")))
+	if int(who.get("portrait", -1)) >= 0:
+		draw_texture_rect(deck.battle._portrait_tex(int(who.portrait)), pr, false)
+	else:
+		UiDraw.faction_seal(self, pr, who.get("faction", "shu"), name.left(1))
 	draw_rect(pr, UiTheme.GOLD, false, 1.0)
-	UiDraw.text(self, Vector2(74, 30), str(data.get("speaker", "")), "serif_bold", 14, UiTheme.GOLD_HI)
+	UiDraw.text(self, Vector2(74, 30), name, "serif_bold", 14, UiTheme.GOLD_HI)
 	UiDraw.text(self, Vector2(74, 52), "“%s”" % data.get("line", ""), "medium", 14, UiTheme.INK)
 	if int(data.get("queue", 0)) > 0:
 		UiDraw.text(self, Vector2(size.x - 140, 34), "+%d" % int(data.queue), "bold", 13, UiTheme.WARN, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
