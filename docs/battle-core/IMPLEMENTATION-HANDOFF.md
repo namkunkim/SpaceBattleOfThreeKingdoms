@@ -7,8 +7,8 @@ M1 구조 분리부터 코어 구현을 맡을 세션이 처음 읽는 문서다
 | 순서 | 문서 | 왜 |
 |---|---|---|
 | 1 | `BATTLE_DECISIONS.md` | 사용자 결정 Q1~Q55. 구현이 결정과 어긋나면 결정이 이긴다 |
-| 2 | `PROPOSAL-realtime-battle-core.md` v0.2 | 규칙 전체, §9 단계(M0~M12), §9.1 M1 이전 단계, §9.2 M1 완료 기준 |
-| 3 | `EXPERIENCE-DESIGN.md` | v0.2 이후 채택된 규칙: 화공 재설계, 연환·역병, 사건 기반 회복, 결정 카드, 조작, 재플레이. §8은 밸런스 값 |
+| 2 | `PROPOSAL-realtime-battle-core.md` v0.3 | 규칙 전체, §9 단계(M0~M12), §9.1 M1 이전 단계, §9.2 M1 완료 기준 |
+| 3 | `EXPERIENCE-DESIGN.md` | 제안서 v0.3에 녹인 경험 설계의 근거와 세부. §8은 밸런스 값(세트 RX) |
 | 4 | `SCENARIO-RED-CLIFFS-208.md`와 `data/scenarios/red_cliffs_208_realtime.json` | 첫 시나리오의 편성, 지휘관, 난이도 |
 | 5 | `DATA-CROSSCHECK.md` §6 | 본편 데모 코드가 실제로 어떻게 계산하는지. 수치의 정본은 본편 `data/`다 |
 | 6 | `docs/ui/UI-FLEET-VISUALS.md` | 이미 `main`에 병합된 표현 계층의 구조와 연결 지점 |

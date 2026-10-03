@@ -22,8 +22,8 @@
 ## 문서 지도 (읽는 순서)
 
 1. `BATTLE_DECISIONS.md`: 사용자 결정 Q1~Q55. 세션 결정은 본편 정본보다 우선한다.
-2. `PROPOSAL-realtime-battle-core.md` v0.2: 규칙, M0~M12 단계. §11.1의 K1~K6은 Q45~Q50으로 확정됐다.
-3. `EXPERIENCE-DESIGN.md`: v0.2 이후 채택된 경험 설계와 밸런스(세트 RX). 제안서 v0.2와 함께 읽는다.
+2. `PROPOSAL-realtime-battle-core.md` v0.3: 규칙, M0~M12 단계. 경험 설계와 Q45~Q55가 본문에 녹아 있다.
+3. `EXPERIENCE-DESIGN.md`: 경험 설계의 근거, 판정 기록, 밸런스(세트 RX) 수치.
 4. `SCENARIO-RED-CLIFFS-208.md`와 `data/scenarios/red_cliffs_208_realtime.json`: 정사 기반 편성, 지휘관, 난이도 4단계.
 5. `DATA-CROSSCHECK.md`: 본편 `C:\WorkSpace\Seonghanji`의 data와 데모 코드를 대조한 기록. §6이 코드 검증 정정이다.
 6. `IMPLEMENTATION-HANDOFF.md`, `UPSTREAM-ISSUES.md`, `REVIEW-UI-v2.md`: 구현 세션, 본편, UI 세션에 넘기는 문서.
@@ -43,7 +43,7 @@
 
 ## 남은 일
 
-1. **제안서 v0.3:** `EXPERIENCE-DESIGN.md`와 Q45~Q55를 제안서 본문에 녹인다. 지금은 v0.2 + 경험 설계 두 문서를 같이 읽어야 한다.
+1. ~~제안서 v0.3~~ **완료** (2026-10-03).
 2. **탐지 재조정 설계(M6 선행):** 진영 공유 탐지를 켜면 승률이 뒤집힌다. 1안은 추정 명중 ×0.75, 2안은 정찰 센서를 척 수와 분리. 시뮬레이션으로 고른다.
 3. **화공 남은 규칙의 수치:** 차단 3종, 의심 가감 요인, 주유 결집. 조조 밀집 전대끼리 대형 유지 규칙.
 4. **시나리오 이야기 다듬기:** 결정 카드 문구(참모 대사), 사관 서술 템플릿 30~40종 초안, what-if 카드 3장의 세부 규칙.
