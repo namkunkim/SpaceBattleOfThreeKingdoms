@@ -40,8 +40,9 @@
    - `IMPLEMENTATION-HANDOFF.md`: 구현 세션용
    - `UPSTREAM-ISSUES.md`: 본편용(불일치 8건, 의도적 차이 17건, 되돌려 줄 것 4건)
    - `REVIEW-UI-v2.md`: UI 세션용
-8. `CHECKLIST-OPEN.md`: 더 파악해야 할 것. 지금 확인할 것, UI-2 다음 병합, 구현, 본편, 열린 설계 문제로 나눴다. 세션을 시작하면 여기서 할 일을 고른다.
-9. 오래된 기록: `REVIEW-realtime-battle-core.md`, `BATTLE-CORE-HANDOFF.md`(v0.1 시점).
+8. `BALANCE-PLAN-M4.md`: M4 이후 밸런스 재조정 기준(목표 지표, 측정값, 레버 순서, 사람 플레이 테스트)
+9. `CHECKLIST-OPEN.md`: 더 파악해야 할 것. 지금 확인할 것, UI-2 다음 병합, 구현, 본편, 열린 설계 문제로 나눴다. 세션을 시작하면 여기서 할 일을 고른다.
+10. 오래된 기록: `REVIEW-realtime-battle-core.md`, `BATTLE-CORE-HANDOFF.md`(v0.1 시점).
 
 **시뮬레이션 도구**
 - `tools/scenario/sim_red_cliffs_208.py`: 초기 간이 모델
