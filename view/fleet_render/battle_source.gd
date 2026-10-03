@@ -63,6 +63,9 @@ func clock_s() -> float:
 func speed() -> int:
 	return int(battle.G.get("speed", 1))
 
+func camera() -> Camera3D:
+	return battle.camera
+
 func zoom() -> float:
 	return battle.cam_z
 
@@ -81,6 +84,8 @@ const ENGAGE_MARGIN := 1.15
 
 # 조용한 구간인가: 어느 아군·적 전대도 교전 거리대에 없고, 날아가는 미사일·함재기도 없다.
 # 임시 판정이다. 코어의 "알림 분기"가 생기면 이 함수만 코어 판정으로 바꾼다.
+# 안개가 생기면(M6, 리뷰 V-2) 적 전체가 아니라 **공개 투영의 접촉**(확인·추정)만 본다. 미탐지 적의 위치로
+# 자동 ×4가 풀리면 안개가 샌다. 미탐지 적이 쏘면 그 사격 사건으로 조용한 구간이 끝난다.
 func quiet() -> bool:
 	if not battle.missiles.is_empty() or not battle.swarms.is_empty():
 		return false
@@ -171,12 +176,26 @@ func faction(id: int) -> String:
 	var f = battle.by_id(id)
 	return "wei" if f and f.side == 1 else "shu"
 
-# 플레이어가 직접 지휘하는 전대인가(소유 표시 ● / ○)
-func is_own(id: int) -> bool:
-	var f = battle.by_id(id)
-	return f != null and f.side == 0 and faction(id) == "shu"
+# 지휘 상태(Q20, 리뷰 V-1): "direct"(직접 지휘 ●) | "delegated"(위임 ○) | ""(모름).
+# 세력과 무관하다(유비 전대도 위임할 수 있고 손권 전대에도 직접 명령할 수 있다). 세력은 글리프가 맡는다.
+# POC에는 위임 개념이 없어 ""를 돌려준다(표시하지 않는다). 코어의 지휘 상태가 생기면 이 함수만 고친다.
+func command_mode(_id: int) -> String:
+	return ""
+
+# ------------------------------------------------------------ 함종 카운터(리뷰 C-1)
+# 전대의 함종별 실제 척 수 [[함종 이름, 수], ...]. 코어가 시나리오 편성(ScenarioRoster)을 읽게 되면 그 카운터를 준다.
+# POC에는 함종 카운터가 없다(함선 수 하나뿐). 화면 숫자는 코어 카운터만 쓰므로 빈 배열을 돌려준다.
+func composition(_id: int) -> Array:
+	return []
 
 # ------------------------------------------------------------ 결정 분기(EXPERIENCE-DESIGN §5)
+# 곧 분기(리뷰 V-4): 약 3초 전 예고. {"secs": 남은 게임 초, "pos": 관련 위치(전장 px)}. 없으면 {}.
+# POC에는 분기가 없다. incoming_override는 미리보기·테스트용이다.
+var incoming_override := {}
+
+func decision_incoming() -> Dictionary:
+	return incoming_override
+
 # 코어에 결정 분기가 생기면 {"done": 2, "total": 5}를 돌려준다. POC에는 없으므로 비운다(화면에서 숨긴다).
 func decision_progress() -> Dictionary:
 	return {}

@@ -156,6 +156,16 @@ func _draw() -> void:
 			UiDraw.icon(self, "charge", Rect2(r.position + Vector2(40, 3), Vector2(11, 11)), UiTheme.GOLD_HI, 1.2)
 		if f.is_flag:
 			UiDraw.text(self, r.position + Vector2(5, 14), "旗", "serif_bold", 11, UiTheme.GOLD_HI, HORIZONTAL_ALIGNMENT_LEFT, -1, 3)
+		# 세력 글리프와 지휘 상태(리뷰 V-8): 촉·오가 같은 모양으로 보이지 않게
+		UiDraw.faction_seal(self, Rect2(r.position + Vector2(37, 28), Vector2(14, 14)), src.faction(f.id))
+		var cm := src.command_mode(f.id)
+		if cm != "":
+			var dp := r.position + Vector2(9, 35)
+			draw_circle(dp, 4.0, Color(0.02, 0.03, 0.05, 0.9))
+			if cm == "direct":
+				draw_circle(dp, 2.8, UiTheme.ALLY)
+			else:
+				draw_arc(dp, 2.8, 0.0, TAU, 12, UiTheme.ALLY, 1.2, true)
 		draw_rect(r.grow(-0.5), UiTheme.ALLY_HI if sel else UiTheme.LINE, false, 1.5 if sel else 1.0)
 		if sel:
 			draw_rect(Rect2(r.position.x, r.end.y - 2, r.size.x, 2), UiTheme.ALLY)

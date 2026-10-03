@@ -164,9 +164,10 @@ func _plate(f) -> void:
 	var pr := Rect2(r.position + Vector2(3, 3), Vector2(32, 32))
 	draw_texture_rect(battle._portrait_tex(f.portrait), pr, false)
 	UiDraw.faction_seal(self, Rect2(pr.position + Vector2(20, 20), Vector2(15, 15)), fk)
-	# 소유 표시: ● 직접 지휘 / ○ 동맹 세력
-	if not foe:
-		var own := src.is_own(f.id)
+	# 지휘 상태: ● 직접 지휘 / ○ 위임(Q20). 코어가 값을 주기 전에는 그리지 않는다.
+	var cm := src.command_mode(f.id) if not foe else ""
+	if cm != "":
+		var own := cm == "direct"
 		var dp := pr.position + Vector2(5.5, 26.5)
 		draw_circle(dp, 3.6, Color(0.02, 0.03, 0.05, 0.9))
 		if own:

@@ -13,6 +13,7 @@ static func build_all(deck: Control) -> Dictionary:
 		"settings": SettingsScreen.new(deck, "title"),
 		"settings_pause": SettingsScreen.new(deck, "pause"),
 		"result": ResultScreen.new(deck),
+		"roster": preload("res://hud/ui_kit/roster_screen.gd").new(deck),
 	}
 	for k in out:
 		deck.add_child(out[k])
@@ -97,9 +98,15 @@ class BriefScreen extends Control:
 		var hb := HBoxContainer.new()
 		hb.add_theme_constant_override("separation", 12)
 		panel.add_child(hb)
-		hb.position = Vector2(1180 - 24 - 400, 680 - 24 - 54)
-		hb.size = Vector2(400, 54)
+		hb.position = Vector2(1180 - 24 - 580, 680 - 24 - 54)
+		hb.size = Vector2(580, 54)
 		hb.alignment = BoxContainer.ALIGNMENT_END
+		var roster := Button.new()
+		roster.text = "정본 편성"
+		roster.custom_minimum_size = Vector2(160, 54)
+		roster.focus_mode = Control.FOCUS_NONE
+		roster.pressed.connect(func(): deck.show_screen("roster"))
+		hb.add_child(roster)
 		var back := Button.new()
 		back.text = "뒤로"
 		back.custom_minimum_size = Vector2(120, 54)

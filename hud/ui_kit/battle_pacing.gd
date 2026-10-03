@@ -10,6 +10,7 @@ extends Node
 # 모든 시간 판정은 실제 시간(UiDraw.real_dt)으로 한다. 감속 중에도 5초는 5초다.
 
 signal changed   # 상단 상태 문구가 바뀔 때(반짝임, 리뷰 U8)
+signal incoming  # 곧 분기(리뷰 V-4): 예고가 처음 들어올 때 한 번
 
 const AUTO_SPEED := 4
 const SKIP_SPEED := 8
@@ -34,6 +35,7 @@ var _idle := 0.0
 var _order_done := false
 var _sig := ""
 var _tag := ""
+var _incoming := false
 
 func setup(d: Control, s: BattleSource) -> void:
 	deck = d
@@ -51,7 +53,7 @@ func set_user_speed(n: int) -> void:
 	mode = Mode.USER
 
 func can_skip() -> bool:
-	return src.state() == "play" and quiet and mode != Mode.SKIP
+	return src.state() == "play" and quiet and mode != Mode.SKIP and not _incoming
 
 func skip() -> void:
 	if can_skip():
@@ -78,6 +80,14 @@ func _process(delta: float) -> void:
 		src.set_time_scale(1.0)
 		_emit_if_changed()
 		return
+	# 곧 분기(V-4): 자동 ×4와 건너뛰기를 멈추고, 이번 조용한 구간에서는 다시 켜지 않는다
+	var inc := not src.decision_incoming().is_empty()
+	if inc and not _incoming:
+		incoming.emit()
+	_incoming = inc
+	if inc:
+		_suppressed = true
+		mode = Mode.USER
 	# 조용한 구간
 	quiet = src.quiet()
 	if not quiet:
@@ -142,6 +152,8 @@ func _input(event: InputEvent) -> void:
 func status_tag() -> String:
 	if src and src.state() == "pause":
 		return "일 시 정 지"
+	if _incoming:
+		return "결 정 임 박"
 	if slow:
 		return "선 택 · 감 속 ×0.2"
 	match mode:

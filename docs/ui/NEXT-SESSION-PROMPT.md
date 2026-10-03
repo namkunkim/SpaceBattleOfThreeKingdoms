@@ -16,6 +16,12 @@
   - 입력은 터치와 마우스를 모두 지원한다.
 - 측정값: Intel Arc 130V 내장 GPU, Compatibility, 1600×900에서 표시 함선 약 760척, 60fps.
 
+## 1차 목표 플랫폼
+
+- **안드로이드 태블릿 + 윈도우 PC**(사용자 지시 2026-10-03). 폰은 1차 목표가 아니다.
+- 태블릿 터치 목표(48dp) 작업은 사용자 지시로 **보류**했다. `feature/tablet-touch` 브랜치(main에 병합 안 함)에 기준 기기 변경과 52단위 크기 조정이 있다. 다른 남은 일을 마친 뒤 이어서 한다.
+- "커밋 푸시" 요청은 작업 브랜치를 main에 병합해 main을 푸시한다는 뜻이다.
+
 ## 다른 세션과의 규칙
 
 - "컨셉·시나리오" 세션은 `docs/`, `data/scenarios/`, `tools/scenario/`만 수정한다. 인수 메모는 `docs/battle-core/SESSION-HANDOFF.md`.
@@ -43,7 +49,7 @@
 3. ~~**터치 보완**~~ 완료(`feature/ui-polish-2`): 길게 누르기 툴팁, 터치 목표 크기 점검(`tests/touch_targets.gd`), 모바일 첫 실행 UI 크기 자동 선택. 남은 것: 폰 전용 HUD 배치(시스템 아이콘·탭·그룹 탭이 폰에서 25~27dp).
 3-1. ~~**컨셉 세션 UI 리뷰 반영**~~ 완료(`feature/ui-polish-2`, `UI-FLEET-VISUALS.md`의 "컨셉 세션 UI 리뷰 반영"). 전대 띠(U4)도 완료. 남은 것: 강조 포화(C-2), 사기 bp 표시(U-2, 코어 M4).
 4. ~~**소리(훅·음량)**~~ 완료: `hud/ui_kit/ui_sound.gd`, 합성 임시음. 남은 것: 실제 자산·음악(라이선스 확인·승인). 원래 항목: UI 효과음 훅(버튼, 명령 확정, 경보, 격침)과 음량 설정. 자산은 라이선스를 확인하고 사용자 승인 뒤에 들인다.
-5. **정본 편성 연결:** `data/scenarios/red_cliffs_208_realtime.json`의 전대·지휘관·함종 구성을 브리핑과 정보 패널에 보여 준다. 함종 구성은 지금 표현용 배치다.
+5. ~~**정본 편성 연결**~~ 완료: 브리핑 → "정본 편성" 화면, `ScenarioRoster`. 정보 패널 함종 숫자는 코어 카운터만(POC는 숨김). 원래 항목: `data/scenarios/red_cliffs_208_realtime.json`의 전대·지휘관·함종 구성을 브리핑과 정보 패널에 보여 준다. 함종 구성은 지금 표현용 배치다.
 6. **코어 값이 생기면:** 사기 막대, 5국면 표시, 탄약·에너지·열 게이지, 진형 탭을 목업 v2의 자리대로 붙인다.
 
 ## 테스트
@@ -59,6 +65,8 @@ godot --headless --path . --script tests/rule_text.gd
 godot --headless --path . --script tests/order_undo.gd
 godot --headless --path . --script tests/squadron_strip.gd
 godot --headless --path . --script tests/ui_sound.gd
+godot --headless --path . --script tests/decision_flow.gd
+godot --headless --path . --script tests/roster.gd
 godot --path . --script tests/capture_3d_poc.gd
 godot --path . --script tests/capture_ui.gd -- battle res://out/ui-battle.png
 ```
