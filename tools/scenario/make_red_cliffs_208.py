@@ -191,6 +191,7 @@ if __name__ == "__main__":
             "wind_window": {"start_after_first_hit_s": [540, 600], "duration_s": 180, "note": "시드로 시작 시각을 정하고 1막에 예보한다"},
             "chain_host_ai": "황개 화공대는 기류 창 전에는 모든 적에게서 280 밖에 대기하고, 창이 열리면 투항 상태로 가장 가까운 밀집 전대에 120까지 접근해 발동한다",
             "chain_morale_shock_scale": {"target_squadron": 0.5, "army": 0.25, "note": "화공 사기 충격(전대 3500, 군 2500)에 위력/0.4를 곱한 뒤 이 배율을 곱한다"},
+            "fog_override": {"estimated_confidence_basis_points": 7500, "note": "본편 데이터 5000. 진영 공유 탐지(Q46)에서 규모가 작은 전대도 싸울 수 있게 올렸다(EXPERIENCE-DESIGN.md §8 탐지 재조정)"},
             "formation_classes": {"dense": ["FRM-02", "FRM-03", "FRM-04"], "dispersed": ["FRM-05", "FRM-06", "FRM-07"], "neutral": ["FRM-01"], "note": "본편 red-cliffs-chain-explosion-rules.json의 분류. 밀집은 연환 보너스(사기 감소 ×0.8), 분산 북방군은 역병(10초마다 −40bp), 중립(어린진)은 둘 다 없음"}
         },
         "chain_explosion_override": {"host_squadron_id": "RC-SUN-SQ-03", "operator_faction_id": "liu_bei",

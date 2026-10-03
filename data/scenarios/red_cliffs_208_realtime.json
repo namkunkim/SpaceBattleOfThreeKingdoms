@@ -883,6 +883,10 @@
    "army": 0.25,
    "note": "화공 사기 충격(전대 3500, 군 2500)에 위력/0.4를 곱한 뒤 이 배율을 곱한다"
   },
+  "fog_override": {
+   "estimated_confidence_basis_points": 7500,
+   "note": "본편 데이터 5000. 진영 공유 탐지(Q46)에서 규모가 작은 전대도 싸울 수 있게 올렸다(EXPERIENCE-DESIGN.md §8 탐지 재조정)"
+  },
   "formation_classes": {
    "dense": [
     "FRM-02",
