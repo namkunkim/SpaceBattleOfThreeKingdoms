@@ -233,6 +233,7 @@ class PauseScreen extends Control:
 
 # ------------------------------------------------------------ 설정
 class SettingsScreen extends Control:
+	const PAGES := ["화면", "진행", "소리"]
 	var deck: Control
 	var back_to := "title"
 	var scale_btns: Array = []
@@ -241,90 +242,137 @@ class SettingsScreen extends Control:
 	var fast_chk: CheckButton
 	var slow_chk: CheckButton
 	var density_btns: Array = []
+	var vol_sliders := {}
 	var pending_density := 1
 	var pending_scale := 1.0
+	var tabs: Array = []
+	var pages: Array = []
 	func _init(d: Control, back: String) -> void:
 		deck = d
 		back_to = back
 		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		mouse_filter = Control.MOUSE_FILTER_STOP
-		var p := ScreenKit.centered(self, Vector2(600, 580), UiTheme.ornate())
+		var p := ScreenKit.centered(self, Vector2(600, 500), UiTheme.ornate())
 		p.painter = func(c: Control):
 			UiDraw.text(c, Vector2(36, 50), "설 정", "eyebrow", 11, UiTheme.GOLD)
-			UiDraw.text(c, Vector2(36, 94), "화면과 진행", "serif_bold", 28, UiTheme.INK)
-			c.draw_line(Vector2(36, 118), Vector2(c.size.x - 36, 118), Color(UiTheme.GOLD, 0.22))
-		var vb := VBoxContainer.new()
-		vb.position = Vector2(36, 142)
-		vb.size = Vector2(528, 200)
-		vb.add_theme_constant_override("separation", 18)
-		p.add_child(vb)
-		var row := HBoxContainer.new()
-		var lbl := UiTheme.label("UI 크기", "Strong")
-		lbl.custom_minimum_size = Vector2(160, 0)
-		row.add_child(lbl)
+			UiDraw.text(c, Vector2(36, 94), "설정", "serif_bold", 28, UiTheme.INK)
+			c.draw_line(Vector2(36, 166), Vector2(c.size.x - 36, 166), Color(UiTheme.GOLD, 0.22))
+		var tb := HBoxContainer.new()
+		tb.position = Vector2(36, 120)
+		tb.size = Vector2(528, 44)
+		p.add_child(tb)
+		for i in PAGES.size():
+			var t := DeckWidgets.TabButton.new(PAGES[i])
+			t.custom_minimum_size = Vector2(0, 44)
+			t.pressed.connect(_show_page.bind(i))
+			tb.add_child(t)
+			tabs.append(t)
+		for i in PAGES.size():
+			var vb := VBoxContainer.new()
+			vb.position = Vector2(36, 186)
+			vb.size = Vector2(528, 220)
+			vb.add_theme_constant_override("separation", 18)
+			p.add_child(vb)
+			pages.append(vb)
+		# 화면
+		var row := _row(pages[0], "UI 크기")
 		for sc in GameSettings.UI_SCALES:
-			var b := Button.new()
-			b.text = "%d%%" % roundi(sc * 100.0)
-			b.toggle_mode = true
-			b.focus_mode = Control.FOCUS_NONE
-			b.custom_minimum_size = Vector2(80, 36)
+			var b := _choice("%d%%" % roundi(sc * 100.0), row)
 			b.pressed.connect(func():
 				pending_scale = sc
 				_sync())
-			row.add_child(b)
 			scale_btns.append([b, sc])
-		vb.add_child(row)
 		# 표시 함선 밀도(리뷰 C-1·C-4): 화면 숫자는 언제나 실제 척 수, 보이는 배는 고정 배율
-		var drow := HBoxContainer.new()
-		var dl := UiTheme.label("함선 표시", "Strong")
-		dl.custom_minimum_size = Vector2(160, 0)
-		drow.add_child(dl)
+		var drow := _row(pages[0], "함선 표시")
 		for i in 3:
-			var b := Button.new()
-			b.text = ["낮음", "보통", "높음"][i]
-			b.toggle_mode = true
-			b.focus_mode = Control.FOCUS_NONE
-			b.custom_minimum_size = Vector2(80, 36)
+			var b := _choice(["낮음", "보통", "높음"][i], drow)
 			b.pressed.connect(func():
 				pending_density = i
 				_sync())
-			drow.add_child(b)
 			density_btns.append(b)
-		vb.add_child(drow)
-		full_chk = CheckButton.new()
-		full_chk.text = "전체 화면"
-		full_chk.focus_mode = Control.FOCUS_NONE
-		vb.add_child(full_chk)
-		glow_chk = CheckButton.new()
-		glow_chk.text = "빛 번짐 효과 (광선·폭발 발광)"
-		glow_chk.focus_mode = Control.FOCUS_NONE
-		vb.add_child(glow_chk)
-		fast_chk = CheckButton.new()
-		fast_chk.text = "조용한 구간 자동 ×4 (교전이 시작되면 원래 배속)"
-		fast_chk.focus_mode = Control.FOCUS_NONE
-		vb.add_child(fast_chk)
-		slow_chk = CheckButton.new()
-		slow_chk.text = "선택하면 ×0.2 감속 (5초 동안 입력이 없으면 해제)"
-		slow_chk.focus_mode = Control.FOCUS_NONE
-		vb.add_child(slow_chk)
-		var hint := UiTheme.label("설정은 이 컴퓨터에 저장되어 다음 실행에도 유지됩니다.", "Muted")
-		vb.add_child(hint)
+		full_chk = _check(pages[0], "전체 화면")
+		glow_chk = _check(pages[0], "빛 번짐 효과 (광선·폭발 발광)")
+		# 진행
+		fast_chk = _check(pages[1], "조용한 구간 자동 ×4 (교전이 시작되면 원래 배속)")
+		slow_chk = _check(pages[1], "선택하면 ×0.2 감속 (5초 동안 입력이 없으면 해제)")
+		pages[1].add_child(UiTheme.label("백그라운드로 가거나 창을 벗어나면 전투는 바로 멈춥니다.", "Muted"))
+		# 소리
+		for it in [["master", "전체 음량"], ["sfx", "전투 효과음"], ["ui", "UI·알림음"]]:
+			var r := _row(pages[2], it[1])
+			var sl := HSlider.new()
+			sl.min_value = 0.0
+			sl.max_value = 1.0
+			sl.step = 0.05
+			sl.custom_minimum_size = Vector2(300, 36)
+			sl.focus_mode = Control.FOCUS_NONE
+			sl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			sl.value_changed.connect(func(v: float): _preview_volume(it[0], v))
+			r.add_child(sl)
+			vol_sliders[it[0]] = sl
+		pages[2].add_child(UiTheme.label("지금은 임시 합성음입니다. 경보·결정·아군 손실은 화면 표시와 진동을 함께 냅니다.", "Muted"))
+		var hint := UiTheme.label("설정은 이 기기에 저장됩니다.", "Muted")
+		hint.position = Vector2(36, 500 - 30 - 36)
+		p.add_child(hint)
 		var hb := HBoxContainer.new()
 		hb.add_theme_constant_override("separation", 12)
 		hb.alignment = BoxContainer.ALIGNMENT_END
-		hb.position = Vector2(600 - 36 - 380, 580 - 30 - 52)
-		hb.size = Vector2(380, 52)
+		hb.position = Vector2(600 - 36 - 300, 500 - 30 - 52)
+		hb.size = Vector2(300, 52)
 		p.add_child(hb)
 		var cancel := Button.new()
 		cancel.text = "취소"
 		cancel.custom_minimum_size = Vector2(110, 50)
 		cancel.focus_mode = Control.FOCUS_NONE
-		cancel.pressed.connect(func(): deck.show_screen(back_to))
+		cancel.pressed.connect(_cancel)
 		hb.add_child(cancel)
 		var ok := ScreenKit.menu_button("저장", true)
 		ok.custom_minimum_size = Vector2(170, 50)
 		ok.pressed.connect(_save)
 		hb.add_child(ok)
+		_show_page(0)
+	func _row(parent: Control, title: String) -> HBoxContainer:
+		var row := HBoxContainer.new()
+		var lbl := UiTheme.label(title, "Strong")
+		lbl.custom_minimum_size = Vector2(160, 0)
+		row.add_child(lbl)
+		parent.add_child(row)
+		return row
+	func _choice(text: String, row: Control) -> Button:
+		var b := Button.new()
+		b.text = text
+		b.toggle_mode = true
+		b.focus_mode = Control.FOCUS_NONE
+		b.custom_minimum_size = Vector2(80, 44)
+		row.add_child(b)
+		return b
+	func _check(parent: Control, text: String) -> CheckButton:
+		var c := CheckButton.new()
+		c.text = text
+		c.focus_mode = Control.FOCUS_NONE
+		c.custom_minimum_size = Vector2(0, 44)
+		parent.add_child(c)
+		return c
+	func _show_page(i: int) -> void:
+		for k in pages.size():
+			pages[k].visible = k == i
+			tabs[k].on = k == i
+			tabs[k].queue_redraw()
+	# 음량은 움직이는 대로 들려 주고, 취소하면 저장값으로 되돌린다.
+	func _preview_volume(key: String, v: float) -> void:
+		_set_vol(key, v)
+		UiSound.apply_volume()
+		if deck.sound and visible:
+			deck.sound.play("volley" if key == "sfx" else "button")
+	static func _get_vol(key: String) -> float:
+		match key:
+			"master": return GameSettings.vol_master
+			"sfx": return GameSettings.vol_sfx
+		return GameSettings.vol_ui
+	static func _set_vol(key: String, v: float) -> void:
+		match key:
+			"master": GameSettings.vol_master = v
+			"sfx": GameSettings.vol_sfx = v
+			_: GameSettings.vol_ui = v
 	func _sync() -> void:
 		for it in scale_btns:
 			it[0].button_pressed = is_equal_approx(it[1], pending_scale)
@@ -332,6 +380,7 @@ class SettingsScreen extends Control:
 			density_btns[i].button_pressed = i == pending_density
 	func _draw() -> void:
 		draw_rect(Rect2(Vector2.ZERO, size), Color(0.01, 0.015, 0.03, 0.78))
+	var _orig_vol := {}
 	func on_show() -> void:
 		GameSettings.load_cfg()
 		pending_scale = GameSettings.ui_scale
@@ -340,18 +389,30 @@ class SettingsScreen extends Control:
 		fast_chk.button_pressed = GameSettings.auto_fast
 		slow_chk.button_pressed = GameSettings.slow_select
 		pending_density = GameSettings.ship_density
+		for k in vol_sliders:
+			_orig_vol[k] = _get_vol(k)
+			vol_sliders[k].set_value_no_signal(_orig_vol[k])
+		_show_page(0)
 		_sync()
+	func _cancel() -> void:
+		for k in _orig_vol:
+			_set_vol(k, _orig_vol[k])
+		UiSound.apply_volume()
+		deck.show_screen(back_to)
 	func _save() -> void:
 		GameSettings.ui_scale = pending_scale
 		GameSettings.fullscreen = full_chk.button_pressed
 		GameSettings.glow = glow_chk.button_pressed
 		GameSettings.auto_fast = fast_chk.button_pressed
 		GameSettings.slow_select = slow_chk.button_pressed
+		for k in vol_sliders:
+			_set_vol(k, vol_sliders[k].value)
 		if GameSettings.ship_density != pending_density:
 			GameSettings.ship_density = pending_density
 			deck.renderer.reset()
 		GameSettings.save_cfg()
 		GameSettings.apply(get_window())
+		UiSound.apply_volume()
 		deck.apply_glow()
 		deck.show_screen(back_to)
 

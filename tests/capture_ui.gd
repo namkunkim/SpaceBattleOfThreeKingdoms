@@ -3,7 +3,7 @@ extends SceneTree
 # 상품화 표현 계층 캡처. 화면이 있는 실행에서만 의미가 있다.
 # godot --path . --script tests/capture_ui.gd -- <장면> <출력 png> [UI 크기]
 # 폰 130% 배치 확인: --resolution 1600x720 ... -- battle res://out/ui-phone.png 1.3
-# 장면: title | brief | quiet | battle | select | hold | undo | decision | wu | pause | suspend | result
+# 장면: title | brief | quiet | battle | select | hold | undo | decision | wu | pause | suspend | result | settings
 const SEED := 20261003
 
 func _initialize() -> void:
@@ -31,6 +31,11 @@ func _run() -> void:
 		if deck:
 			deck.begin_battle()
 		for i in 120:
+			await process_frame
+	elif mode == "settings":
+		deck.show_screen("settings")
+		deck.screens["settings"]._show_page(2)
+		for i in 30:
 			await process_frame
 	elif mode == "brief":
 		if deck:

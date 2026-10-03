@@ -6,6 +6,9 @@ extends Node3D
 # - 전투 상태는 BattleSource로만 읽고 바꾸지 않는다. 연출용 난수는 전투 난수와 분리한다.
 # - 사격은 2초 안팎 주기의 일제 포화로 재생한다. 앞줄부터 물결처럼 쏘고 방어막 섬광·피격·격침을 그린다.
 
+# 소리 훅: "volley"(일제 포화), "ship_kill"(함선 격침). 표현 계층이 효과음으로 잇는다.
+signal fx_event(kind: String)
+
 const LOD_DIR := "res://assets/models/fleet_lod/"
 const SRC_DIR := "res://assets/models/user_ver3_runtime/"
 const CLASS_NAMES := ["전열함", "화력함", "공성함", "보급_수리함", "전자전함", "호위함", "항모"]
@@ -498,6 +501,7 @@ func _pick_victim(v: FleetVis) -> Slot:
 	return alive[rng.randi() % alive.size()]
 
 func _kill_one(v: FleetVis) -> void:
+	fx_event.emit("ship_kill")
 	var s := _pick_victim(v)
 	if s == null:
 		return
@@ -571,6 +575,7 @@ func _update_wrecks(dt: float) -> void:
 
 # ------------------------------------------------------------ volleys
 func _volley(a: FleetVis, b: FleetVis) -> void:
+	fx_event.emit("volley")
 	var front := a.slots.filter(func(s): return s.alive and s.rank < 0.4 and s.cls != CARRIER)
 	if front.size() < 6:
 		front = a.slots.filter(func(s): return s.alive)
