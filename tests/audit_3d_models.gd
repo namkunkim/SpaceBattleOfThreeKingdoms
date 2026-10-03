@@ -6,7 +6,7 @@ const ROOT := "res://assets/models/quaternius_ultimate_spaceships/"
 func _initialize() -> void:
 	for model_name in MODELS:
 		var packed := load(ROOT + model_name + "/" + model_name + ".fbx") as PackedScene
-		assert(packed != null, "Could not load %s" % model_name)
+		if not TestCheck.ok(self, packed != null, "Could not load %s" % model_name): return
 		var instance := packed.instantiate()
 		var bounds := _bounds_for(instance)
 		print("MODEL_AUDIT %s position=%s size=%s" % [model_name, bounds.position, bounds.size])
@@ -19,7 +19,7 @@ func _initialize() -> void:
 				break
 		instance.free()
 	print("FLEET_3D_MODEL_AUDIT_PASS")
-	quit()
+	quit(0)
 
 func _bounds_for(root: Node) -> AABB:
 	var bounds := AABB()

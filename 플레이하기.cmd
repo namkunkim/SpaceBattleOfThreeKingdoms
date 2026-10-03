@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 >nul
 setlocal
 rem Godot 경로: 환경변수 GODOT_EXE > PATH의 godot > 기본 설치 경로 순으로 찾는다.
 if not defined GODOT_EXE (
@@ -16,5 +17,5 @@ if not exist "%GODOT_EXE%" (
   exit /b 1
 )
 
-start "성한지 우주함대 3D 전투 POC" "%GODOT_EXE%" --path "%~dp0"
+start "성한지 우주함대 3D 전투 POC" "%GODOT_EXE%" --path "%~dp0."
 endlocal

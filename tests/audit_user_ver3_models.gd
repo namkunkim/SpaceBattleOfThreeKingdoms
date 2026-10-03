@@ -2,7 +2,6 @@ extends SceneTree
 
 const MODEL_NAMES: Array[String] = [
 	"전열함",
-	"전열함_기함급",
 	"화력함",
 	"항모",
 	"공성함",
@@ -10,12 +9,12 @@ const MODEL_NAMES: Array[String] = [
 	"보급_수리함",
 	"호위함",
 ]
-const MODEL_ROOT := "res://assets/models/user_ver3/"
+const MODEL_ROOT := "res://assets/models/user_ver3_runtime/"
 
 func _initialize() -> void:
 	for model_name in MODEL_NAMES:
 		var packed := load(MODEL_ROOT + model_name + ".glb") as PackedScene
-		assert(packed != null, "Could not load %s" % model_name)
+		if not TestCheck.ok(self, packed != null, "Could not load %s" % model_name): return
 		var instance := packed.instantiate()
 		var row := {
 			"bounds": AABB(),
