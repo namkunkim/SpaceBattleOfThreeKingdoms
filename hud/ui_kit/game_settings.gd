@@ -30,6 +30,7 @@ static func load_cfg() -> void:
 	if cf.load(PATH) != OK:
 		# 처음 실행: 모바일은 터치 목표 크기에 맞춰 UI 크기를 고른다(§7.2).
 		ui_scale = TouchMetrics.default_ui_scale(UI_SCALES)
+		ship_density = default_density()
 		return
 	ui_scale = float(cf.get_value("display", "ui_scale", 1.0))
 	fullscreen = bool(cf.get_value("display", "fullscreen", false))
@@ -41,6 +42,11 @@ static func load_cfg() -> void:
 	vol_master = float(cf.get_value("audio", "master", 0.8))
 	vol_sfx = float(cf.get_value("audio", "sfx", 0.8))
 	vol_ui = float(cf.get_value("audio", "ui", 0.7))
+
+# 첫 실행 표시 밀도. 모바일(안드로이드 태블릿)은 실기기 측정 전이라 보수적으로 낮음(35%)에서 시작한다.
+# 측정(tests/bench_density.gd)으로 값이 정해지면 여기만 바꾼다.
+static func default_density() -> int:
+	return 0 if OS.has_feature("mobile") else 1
 
 static func save_cfg() -> void:
 	var cf := ConfigFile.new()
