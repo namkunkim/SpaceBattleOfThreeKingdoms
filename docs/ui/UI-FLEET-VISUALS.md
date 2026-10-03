@@ -33,6 +33,7 @@ hud/ui_kit/
   factions.gd            세력 글리프(촉 蜀·사각, 위 魏·마름모, 오 吳·원)와 색
   order_undo.gd          명령 되돌리기 알림(4초, U2)
   decision_card.gd       결정 카드(§5). 코어 분기가 오면 뜬다. 지금은 자리만
+  squadron_strip.gd      전대 띠(U4): 아군 초상 띠. 탭 선택·다시 탭 화면 이동·길게 눌러 추가·끌어서 명령
   session_guard.gd       중단 처리(Q53): 백그라운드·포커스 상실 시 즉시 일시정지
   ui_theme.gd, ornate_style.gd, ui_draw.gd, deck_widgets.gd, screen_kit.gd, commanders.gd, game_settings.gd
 input/touch/
@@ -59,6 +60,7 @@ M1이 만들 `view/battle_view_3d.gd`, `view/camera_rig.gd`, `view/fx_layer.gd`,
 | 끌기 취소 | Esc | 출발 함대 위로 되돌려 놓기 |
 | 화면 이동 | 우클릭 드래그, 방향키 | 빈 곳에서 끌기 |
 | 확대 | 휠 | 두 손가락 |
+| 전대 띠 | 클릭 선택, 다시 클릭 화면 이동, 끌어서 명령 | 탭 선택, 다시 탭 화면 이동, 길게 눌러 추가, 끌어서 이동·공격(띠로 되돌리면 취소) |
 | 버튼 설명 | 올려 두기 | 길게 누르기(0.45초). 툴팁이 뜬 뒤 떼면 버튼은 눌리지 않는다 |
 
 ### 터치 목표 크기(§7.2, 48dp)
@@ -80,6 +82,7 @@ godot --headless --path . --script tests/touch_hold.gd   # 길게 누르기 툴�
 godot --headless --path . --script tests/touch_targets.gd  # 터치 목표 크기 표(out/touch-targets.md)
 godot --headless --path . --script tests/rule_text.gd    # 화면 문구 규칙 값 = POC 동작, v02 틀
 godot --headless --path . --script tests/order_undo.gd   # 명령 되돌리기
+godot --headless --path . --script tests/squadron_strip.gd  # 전대 띠
 godot --path . --script tests/capture_ui.gd -- battle res://out/ui-battle.png   # title|brief|quiet|battle|pause|suspend|result
 ```
 
@@ -116,7 +119,6 @@ godot --path . --script tests/capture_ui.gd -- battle res://out/ui-battle.png   
 - 사기, 국면, 탄약·에너지·열, 진형 탭: 코어에 값이 생기면 붙인다(목업 v2에 자리 설계가 있다). 지금은 표시하지 않는다.
 - 표시 함선 수는 남은 전력 비율을 따른다. 함종 구성은 표현용 배치이고 규칙 값이 아니다. 정본 편성(`data/scenarios/`)과 연결되면 함종 카운터를 읽는다.
 - 효과음·음악 없음(훅 없음).
-- 전대 띠(U4): 그룹 탭 자리를 넓혀 아군 초상 띠로. 아직 없다.
 - 강조 포화(C-2): 코어 일제사격 사건이 오면.
 - 폰 전용 HUD 배치: 시스템 아이콘·탭·그룹 탭이 48dp에 못 미친다(위 "터치 목표 크기").
 - 끌기 중 시간 감속(§7.3), 도착 방향 고리, 경유점: POC 규칙에 없어 넣지 않았다.
