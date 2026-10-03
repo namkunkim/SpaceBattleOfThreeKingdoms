@@ -37,6 +37,7 @@ var speed_btns: Array = []
 var pause_btn: Control
 var skip_btn: Control
 var pacing: Node
+var hold_tip: HoldTip
 var guard: Node
 var objectives: Control
 var log_box: VBoxContainer
@@ -88,6 +89,13 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 	_build_info()
 	_build_commands()
 	_build_toast()
+	# 터치 길게 누르기 툴팁: HUD 위, 전환 화면 아래
+	hold_tip = HoldTip.new()
+	add_child(hold_tip)
+	for c in sys_bar.get_children():
+		hold_tip.register(c)
+	for c in cmd_buttons:
+		hold_tip.register(c)
 	screens = Screens.build_all(self)
 	battle.battle_event.connect(_on_event)
 	GameSettings.apply(get_window())
@@ -259,7 +267,7 @@ func _build_sys() -> void:
 	st.set_content_margin_all(6)
 	holder.add_theme_stylebox_override("panel", st)
 	hud.add_child(holder)
-	_anchor(holder, Control.PRESET_TOP_RIGHT, Vector2(230, 46), Vector2(-16, 16))
+	_anchor(holder, Control.PRESET_TOP_RIGHT, Vector2(248, 52), Vector2(-16, 16))
 	sys_bar = HBoxContainer.new()
 	sys_bar.add_theme_constant_override("separation", 4)
 	holder.add_child(sys_bar)
@@ -286,7 +294,7 @@ func _build_sys() -> void:
 	sys_bar.add_child(gb)
 	objectives = W.DrawPanel.new(_draw_objectives, UiTheme.ornate())
 	hud.add_child(objectives)
-	_anchor(objectives, Control.PRESET_TOP_RIGHT, Vector2(272, 112), Vector2(-16, 70))
+	_anchor(objectives, Control.PRESET_TOP_RIGHT, Vector2(272, 112), Vector2(-16, 76))
 
 func _draw_objectives(c: Control) -> void:
 	UiDraw.text(c, Vector2(18, 26), "작 전 목 표", "eyebrow", 11, UiTheme.GOLD)
@@ -638,7 +646,7 @@ func _build_commands() -> void:
 	groups_row = HBoxContainer.new()
 	groups_row.add_theme_constant_override("separation", 6)
 	hud.add_child(groups_row)
-	_anchor(groups_row, Control.PRESET_BOTTOM_RIGHT, Vector2(346, 38), Vector2(-16, -262))
+	_anchor(groups_row, Control.PRESET_BOTTOM_RIGHT, Vector2(346, 44), Vector2(-16, -262))
 	for i in 4:
 		var g := W.GroupButton.new(i + 1, self)
 		g.button_down.connect(battle._group_down.bind(i + 1))
@@ -665,6 +673,8 @@ func _set_tab(i: int) -> void:
 		b.pressed.connect(func(): battle.do_cmd(id))
 		cmd_grid.add_child(b)
 		cmd_buttons.append(b)
+		if hold_tip:
+			hold_tip.register(b)
 
 func _refresh_cmds() -> void:
 	var s: Array = battle.my_sel()

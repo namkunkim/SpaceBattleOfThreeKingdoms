@@ -18,6 +18,8 @@ static func load_cfg() -> void:
 	_loaded = true
 	var cf := ConfigFile.new()
 	if cf.load(PATH) != OK:
+		# 처음 실행: 모바일은 터치 목표 크기에 맞춰 UI 크기를 고른다(§7.2).
+		ui_scale = TouchMetrics.default_ui_scale(UI_SCALES)
 		return
 	ui_scale = float(cf.get_value("display", "ui_scale", 1.0))
 	fullscreen = bool(cf.get_value("display", "fullscreen", false))

@@ -33,6 +33,8 @@ hud/ui_kit/
   ui_theme.gd, ornate_style.gd, ui_draw.gd, deck_widgets.gd, screen_kit.gd, commanders.gd, game_settings.gd
 input/touch/
   touch_controller.gd    터치 제스처
+  hold_tip.gd            길게 누르기 툴팁(명령·시스템 버튼)
+  touch_metrics.gd       터치 목표 크기 계산(dp), 모바일 첫 실행 UI 크기
 assets/models/fleet_lod/ 저폴리 LOD(재생성: tools/blender/build_fleet_lods.py)
 ```
 
@@ -53,6 +55,13 @@ M1이 만들 `view/battle_view_3d.gd`, `view/camera_rig.gd`, `view/fx_layer.gd`,
 | 끌기 취소 | Esc | 출발 함대 위로 되돌려 놓기 |
 | 화면 이동 | 우클릭 드래그, 방향키 | 빈 곳에서 끌기 |
 | 확대 | 휠 | 두 손가락 |
+| 버튼 설명 | 올려 두기 | 길게 누르기(0.45초). 툴팁이 뜬 뒤 떼면 버튼은 눌리지 않는다 |
+
+### 터치 목표 크기(§7.2, 48dp)
+
+- `tests/touch_targets.gd`가 HUD 버튼 크기를 기준 기기(폰 6.1", 태블릿 11", PC)의 dp로 바꿔 `out/touch-targets.md`에 표로 남긴다.
+- 모바일 첫 실행 UI 크기는 `TouchMetrics.pick_ui_scale`이 고른다. 명령 버튼이 48dp에 닿는 가장 작은 배율이되 HUD가 화면에 다 들어가는 배율(화면 1500×680 단위 이상)까지만 키운다. 폰(20:9)은 130%, 4:3 태블릿은 100%.
+- 지금 결과: 명령 버튼은 폰 130%에서 49dp, 태블릿 100%에서 71dp로 통과. 시스템 아이콘(44×40)·명령 탭·그룹 탭은 폰에서 25~27dp, 태블릿에서 36~40dp로 모자란다. 데스크톱 배치를 유지한 채로는 더 키울 자리가 없어, 폰 전용 배치(시스템 버튼 접기, 그룹 탭 세로 배치 등)가 필요하다.
 
 터치는 Godot의 마우스 흉내(`DEVICE_ID_EMULATION`)로 HUD 버튼을 누른다. 전장으로 내려온 흉내 이벤트는 `TouchController`가 막아 POC 상자 선택과 겹치지 않는다.
 
@@ -63,6 +72,8 @@ godot --headless --path . --script tests/smoke.gd        # 기존 규칙 스모�
 godot --headless --path . --script tests/touch_input.gd  # 터치 8항목 + 마우스 클릭
 godot --headless --path . --script tests/ui_flow.gd      # 타이틀→브리핑→전투→일시정지→결과→타이틀
 godot --headless --path . --script tests/pacing.gd       # Q52 자동 ×4·건너뛰기, Q53 포커스 상실 일시정지
+godot --headless --path . --script tests/touch_hold.gd   # 길게 누르기 툴팁, 툴팁 뒤 떼면 명령 취소
+godot --headless --path . --script tests/touch_targets.gd  # 터치 목표 크기 표(out/touch-targets.md)
 godot --path . --script tests/capture_ui.gd -- battle res://out/ui-battle.png   # title|brief|quiet|battle|pause|suspend|result
 ```
 
@@ -82,6 +93,6 @@ godot --path . --script tests/capture_ui.gd -- battle res://out/ui-battle.png   
 - 사기, 국면, 탄약·에너지·열, 진형 탭: 코어에 값이 생기면 붙인다(목업 v2에 자리 설계가 있다). 지금은 표시하지 않는다.
 - 표시 함선 수는 남은 전력 비율을 따른다. 함종 구성은 표현용 배치이고 규칙 값이 아니다. 정본 편성(`data/scenarios/`)과 연결되면 함종 카운터를 읽는다.
 - 효과음·음악 없음(훅 없음).
-- 터치에서 명령 버튼 툴팁(마우스 올림)이 뜨지 않는다. 길게 누르기 툴팁이 필요하다.
+- 폰 전용 HUD 배치: 시스템 아이콘·탭·그룹 탭이 48dp에 못 미친다(위 "터치 목표 크기").
 - 끌기 중 시간 감속(§7.3), 도착 방향 고리, 경유점: POC 규칙에 없어 넣지 않았다.
 - 모바일 실기기, 텍스처 압축(ETC2/ASTC)은 아직 검증하지 않았다.

@@ -1,8 +1,9 @@
 extends SceneTree
 
 # 상품화 표현 계층 캡처. 화면이 있는 실행에서만 의미가 있다.
-# godot --path . --script tests/capture_ui.gd -- <장면> <출력 png>
-# 장면: title | brief | quiet | battle | select | pause | suspend | result
+# godot --path . --script tests/capture_ui.gd -- <장면> <출력 png> [UI 크기]
+# 폰 130% 배치 확인: --resolution 1600x720 ... -- battle res://out/ui-phone.png 1.3
+# 장면: title | brief | quiet | battle | select | hold | pause | suspend | result
 const SEED := 20261003
 
 func _initialize() -> void:
@@ -17,6 +18,9 @@ func _run() -> void:
 	await process_frame
 	seed(SEED)
 	var deck = battle.presentation.hud if battle.presentation else null
+	if args.size() > 2:
+		GameSettings.ui_scale = float(args[2])
+		GameSettings.apply(root.get_window())
 	if mode == "title":
 		for i in 90:
 			await process_frame
@@ -49,6 +53,18 @@ func _run() -> void:
 		if mode == "pause":
 			battle._toggle_menu()
 			for i in 30:
+				await process_frame
+		elif mode == "hold":
+			# 터치로 돌격 버튼을 길게 누른 상태
+			for b in deck.cmd_buttons:
+				if b.cmd.id == "charge":
+					var m := InputEventMouseButton.new()
+					m.device = InputEvent.DEVICE_ID_EMULATION
+					m.button_index = MOUSE_BUTTON_LEFT
+					m.position = b.get_global_rect().get_center()
+					m.pressed = true
+					root.push_input(m, true)
+			for i in 50:
 				await process_frame
 		elif mode == "suspend":
 			# 포커스를 잃어 자동으로 멈춘 일시정지(Q53)

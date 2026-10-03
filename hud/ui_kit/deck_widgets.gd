@@ -26,7 +26,7 @@ class IconButton extends Button:
 		icon_name = icon_n
 		caption = cap
 		focus_mode = Control.FOCUS_NONE
-		custom_minimum_size = Vector2(40, 34)
+		custom_minimum_size = Vector2(44, 40)
 	func _draw() -> void:
 		var r := Rect2(Vector2.ZERO, size)
 		if active:
@@ -88,7 +88,7 @@ class TabButton extends Button:
 		text = ""
 		set_meta("label", t)
 		focus_mode = Control.FOCUS_NONE
-		custom_minimum_size = Vector2(0, 36)
+		custom_minimum_size = Vector2(0, 40)
 		size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		add_theme_stylebox_override("normal", StyleBoxEmpty.new())
 		add_theme_stylebox_override("hover", StyleBoxEmpty.new())
@@ -108,7 +108,7 @@ class GroupButton extends Button:
 		n = i
 		deck = d
 		focus_mode = Control.FOCUS_NONE
-		custom_minimum_size = Vector2(82, 38)
+		custom_minimum_size = Vector2(82, 44)
 		tooltip_text = "그룹 %s 선택 (%d) · 길게 누르거나 Ctrl+%d로 저장" % [["I", "II", "III", "IV"][i - 1], i, i]
 	func _draw() -> void:
 		var b: Node = deck.battle
