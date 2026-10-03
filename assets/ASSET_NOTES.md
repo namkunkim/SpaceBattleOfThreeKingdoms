@@ -1,8 +1,10 @@
 # POC 생성 자산 기록
 
+> **저장소 현황 (2026-10-03):** `ships/` 폴더와 `models/user_ver3/` 원본 15종은 이 저장소에 없다. 아래의 해당 항목은 반입 당시 기록으로 남긴다. 현재 3D 전투(`FleetBattle3D`)가 쓰는 함선 모델은 `models/user_ver3_runtime/` 7종뿐이고, Quaternius 모델은 `tests/audit_3d_models.gd`만 참조한다.
+
 두 자산은 OpenAI 내장 ImageGen으로 2026-09-12 생성한 독자 POC 자산이다. 원작 게임의 함선, 인물 초상, UI 자산을 입력 이미지로 사용하거나 복제하지 않았다.
 
-## `ships/fleet_ship_sheet_v1.png`
+## `ships/fleet_ship_sheet_v1.png` (저장소에 없음)
 
 - 용도: 탑다운 함대전용 함선 스프라이트 시트
 - 프롬프트: 투명 배경의 2행 3열 구성으로 아군 청색과 적군 적색의 전열함·순양함·구축함을 각각 한 척씩 배치한다. 모든 함선은 오른쪽을 향한 정투영 탑다운 시점이며, 장갑판·함교·포탑·엔진 발광이 48~96픽셀에서도 읽히는 독자적인 레트로 미래 우주 오페라 디자인으로 만든다. 문자·로고·워터마크·기존 저작물의 식별 가능한 함선은 배제한다.
@@ -39,7 +41,7 @@
 
 ## 사용자 제공 ver3 GLB
 
-- 원본 보존: `models/user_ver3/` (15종)
+- 원본 보존: `models/user_ver3/` (15종, 이 저장소에는 없음)
 - 전투 런타임: `models/user_ver3_runtime/` (7종)
 - 사용자 확인 라이선스: 사용 가능, 별도 제한 없음
 - 적용 함급: 전열함, 화력함, 항모, 공성함, 전자전함, 보급/수리함, 호위함
@@ -47,9 +49,11 @@
 - 재질 정책: GLB 내장 PBR 재질 보존, 기존 Quaternius 런타임 재질 오버라이드 제거
 - 축 정책: 원본 선수 `+X`를 게임 전방 `-Z`로 Y축 90도 보정
 
-`전열함_기함급`은 과도한 기함 강조를 피하기 위해 현재 204척 편제에는 사용하지 않는다. 원본 15종은 수정하지 않았으며 Blender 최적화 스크립트는 `tools/blender/optimize_user_ver3_models.py`에 보존한다.
+`전열함_기함급`은 과도한 기함 강조를 피하기 위해 현재 편제(전대당 28척 표시)에는 사용하지 않는다. 원본 15종은 수정하지 않았으며 Blender 최적화 스크립트는 `tools/blender/optimize_user_ver3_models.py`에 보존한다.
 
 ## 사용자 제공 함선 컨셉과 v0.9 런타임 자산
+
+> `concepts/user-provided/` 원본만 저장소에 있다. `ships/concept_runtime/`과 `ships/concept_atlases/`는 없으며, 이를 쓰던 레거시 2D POC(`Main.gd`)는 2026-10-03에 삭제했다.
 
 - 원본 보존 위치: `concepts/user-provided/`
 - 통일 시점: 정투영 상면도
