@@ -7,7 +7,8 @@ extends SceneTree
 #        [--baseline res://tests/fixtures/m1_baseline.json] [--policies none,attack5,charge30]
 
 const MAX_S := 1800.0
-const KS_MAX := 0.136
+# KS 임계값은 5% 유의수준 1.36·√(1/n+1/m). 200 대 200이면 0.136(제안서 §9.2)이고 표본이 크면 더 엄격해진다.
+const KS_C := 1.36
 const WIN_MAX := 0.05
 const KS_KEYS := ["t", "lost", "killed", "reinf_t"]
 # 기준선의 변동계수가 이보다 작은(거의 상수인) 변수는 KS 대신 평균의 상대 차이로 본다(컨셉 세션 조정, §9.2).
@@ -145,6 +146,7 @@ static func ks(a: Array, b: Array) -> float:
 
 static func compare(base_rows: Array, rows: Array) -> Dictionary:
 	var out := {"pass": true}
+	var ks_max := KS_C * sqrt(1.0 / base_rows.size() + 1.0 / rows.size())
 	var wb := 0.0
 	var wn := 0.0
 	for r in base_rows:
@@ -198,7 +200,7 @@ static func compare(base_rows: Array, rows: Array) -> Dictionary:
 				out.pass = false
 		else:
 			var d := ks(xa, xb)
-			out[k] = {"test": "ks", "value": snappedf(d, 0.0001), "max": KS_MAX}
-			if d >= KS_MAX:
+			out[k] = {"test": "ks", "value": snappedf(d, 0.0001), "max": snappedf(ks_max, 0.0001)}
+			if d >= ks_max:
 				out.pass = false
 	return out
