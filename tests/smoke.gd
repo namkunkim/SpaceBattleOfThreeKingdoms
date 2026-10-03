@@ -1,34 +1,51 @@
 extends SceneTree
 
+# 메인 씬(FleetBattle3D) 스모크: 씬 로드, 전투 시작, 방향 보정, 증원, 시뮬레이션 상태의 유효성.
+# 현행 POC는 _ready()에서 randomize()를 부르므로 인스턴스 뒤에 seed()로 다시 고정한다.
+const SEED := 20261003
+
 func _initialize() -> void:
-	var scene := load("res://scenes/Main.tscn")
-	assert(scene != null)
-	var root: Node = scene.instantiate()
-	assert(root != null)
-	assert(root.fleets.is_empty())
-	root._seed_stars()
-	root._fleets_setup()
-	assert(root.fleets.size() == 5)
-	assert(root._formation_offsets("횡진", 28).size() == 28)
-	assert(root._formation_offsets("쐐기진", 24).size() == 24)
-	assert(root._formation_offsets("방진", 26).size() == 26)
-	assert(root.fleets[0].ships == 28)
-	root._set_formation(root.fleets[0], "방진")
-	assert(root.fleets[0].formation == "방진")
-	assert(root.fleets[0].formation_from == "횡진")
-	assert(root._visual_formation_offsets(root.fleets[0]).size() == 28)
-	root._issue_salvo(0, 3)
-	assert(root.salvo_source == 0)
-	assert(root.salvo_target == 3)
-	assert(is_equal_approx(root.fleets[3].shield, 0.48))
-	assert(root._ship_class_index("F01", 0) == 0)
-	assert(root._ship_class_index("A01", 0) == 3)
-	assert(root._ship_class_index("E01", 0) == 2)
-	assert(root._ship_class_index("F01", 3) == 8)
-	assert(root._ship_class_index("F01", 13) == 4)
-	assert(root._ship_class_source_rect(0).size.x > 1000.0)
-	assert(root._ship_class_source_rect(9) == Rect2(1448, 0, 724, 724))
-	assert(root._vfx_source_rect(0) == Rect2(0, 0, 440, 440))
-	assert(root._vfx_source_rect(7) == Rect2(1320, 440, 440, 440))
-	print("VISIBLE_FLEET_POC_SMOKE_PASS")
+	call_deferred("_run")
+
+func _run() -> void:
+	var scene := load("res://scenes/FleetBattle3D.tscn") as PackedScene
+	if not TestCheck.ok(self, scene != null, "scene load"): return
+	var battle := scene.instantiate()
+	root.add_child(battle)
+	await process_frame
+	seed(SEED)
+	if not TestCheck.ok(self, battle.fleets.size() == 13, "fleets %d" % battle.fleets.size()): return
+	if not TestCheck.ok(self, battle.alive(0).size() == 6, "ally fleets"): return
+	if not TestCheck.ok(self, battle.alive(1).size() == 7, "foe fleets"): return
+	if not TestCheck.ok(self, battle.flag(0) != null and battle.flag(1) != null, "flagships"): return
+	for f in battle.fleets:
+		if not TestCheck.ok(self, f.nodes.size() == battle.MAX_VISIBLE, "nodes %s" % f.fname): return
+	battle._start()
+	if not TestCheck.ok(self, battle.G.state == "play", "state"): return
+	# 방향 보정: 정면 <60°, 측면 60~120°, 후면 >120° (경계값 처리는 M3에서 Q33 기준으로 맞춘다)
+	var tgt = battle.fleets[6]
+	var att = battle.fleets[0]
+	tgt.heading = 0.0
+	att.pos = tgt.pos + Vector2(100.0, 0.0)
+	if not TestCheck.ok(self, is_equal_approx(battle.flank_mul(att, tgt), 1.0), "front"): return
+	att.pos = tgt.pos + Vector2(0.0, 100.0)
+	if not TestCheck.ok(self, is_equal_approx(battle.flank_mul(att, tgt), 1.3), "flank"): return
+	att.pos = tgt.pos + Vector2(-100.0, 0.0)
+	if not TestCheck.ok(self, is_equal_approx(battle.flank_mul(att, tgt), 1.6), "rear"): return
+	battle._restart()
+	seed(SEED)
+	# 120초 진행: 95초 증원과 상태 값의 유효성
+	for i in 2400:
+		battle.update_sim(0.05)
+		if battle.G.over:
+			break
+	if not battle.G.over:
+		if not TestCheck.ok(self, battle.G.reinf, "reinforcements not spawned"): return
+		if not TestCheck.ok(self, battle.fleets.size() == 15, "fleets after reinf %d" % battle.fleets.size()): return
+	for f in battle.fleets:
+		if not TestCheck.ok(self, is_finite(f.pos.x) and is_finite(f.pos.y) and is_finite(f.heading), "non-finite %s" % f.fname): return
+		if not TestCheck.ok(self, f.ships >= 0.0 and f.ships <= f.max_ships, "ships out of range %s %f" % [f.fname, f.ships]): return
+	battle.queue_free()
+	await process_frame
+	print("FLEET_3D_SMOKE_PASS")
 	quit(0)
