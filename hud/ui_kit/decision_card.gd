@@ -4,7 +4,7 @@ extends Control
 # 지금 POC에는 분기가 없어 게임에서는 뜨지 않는다. 자리와 모양만 준비해 둔다(가짜 분기를 만들지 않는다).
 #
 # open_card(data):
-#   {speaker_id: "zhuge_liang"(Commanders.PEOPLE의 인물 ID), line: "참모 대사 한 줄",
+#   {speaker_id: "CHR-0134"(시나리오·본편 인물 ID), line: "참모 대사 한 줄",
 #    options: [{label, effects: [[이름, 값]], risk: {level: "low|mid|high", why: "근거 한 줄"}, rec: "추천 참모 이름" 또는 ""}],
 #    time: 30.0, queue: 0}
 # 예상 결과는 세 층만: 규칙상 확정 효과(숫자) / 관측 위험(낮음·보통·높음 + 근거) / 승률·결말은 보이지 않는다.
@@ -36,13 +36,18 @@ func _process(_delta: float) -> void:
 	queue_redraw()
 	if time_left <= 0.0:
 		var opts: Array = data.get("options", [])
-		var rec := 0
+		var rec := -1
 		for i in opts.size():
 			if str(opts[i].get("rec", "")) != "":
 				rec = i
-		var label := str(opts[rec].get("label", "")) if not opts.is_empty() else ""
 		close_card()
-		deck.battle.battle_event.emit("sys", "위임 처리 · %s" % label, -1)
+		if rec < 0:
+			# 내러티브의 모든 카드에는 추천이 있다. 없으면 자료 오류다(리뷰 W-6)
+			push_warning("결정 카드: 추천 선택지가 없어 위임 처리를 못 했습니다")
+			deck.battle.battle_event.emit("sys", "위임 처리 불가 · 추천 없음", -1)
+			delegated.emit(-1)
+			return
+		deck.battle.battle_event.emit("sys", "위임 처리 · %s" % opts[rec].get("label", ""), -1)
 		delegated.emit(rec)
 
 func setup(d: Control) -> void:
@@ -95,7 +100,7 @@ func _draw() -> void:
 	# 화자는 인물 ID로 받는다(리뷰 V-6). 초상이 없는 인물은 세력 색 머리글자 패.
 	var pr := Rect2(16, 12, 46, 46)
 	var who := Commanders.person(str(data.get("speaker_id", "")))
-	var name: String = who.get("name", str(data.get("speaker", "")))
+	var name: String = who.get("name", str(data.get("speaker", "?")))
 	if int(who.get("portrait", -1)) >= 0:
 		draw_texture_rect(deck.battle._portrait_tex(int(who.portrait)), pr, false)
 	else:

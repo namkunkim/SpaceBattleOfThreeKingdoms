@@ -21,7 +21,7 @@ func _run() -> void:
 	var src: BattleSource = battle.presentation.src
 	var pacing = deck.pacing
 	GameSettings.auto_fast = true
-	GameSettings.slow_select = false
+	GameSettings.slow_mode = GameSettings.SLOW_OFF
 	deck.begin_battle()
 	await create_timer(1.3).timeout
 	await _frames()
@@ -36,7 +36,7 @@ func _run() -> void:
 	# V-3
 	var got := [-1]
 	deck.decision_card.delegated.connect(func(i): got[0] = i)
-	deck.decision_card.open_card({"speaker_id": "lu_su", "line": "견본", "time": 3.0,
+	deck.decision_card.open_card({"speaker_id": "CHR-0186", "line": "견본", "time": 3.0,
 		"options": [{"label": "가", "rec": ""}, {"label": "나", "rec": "노숙"}]})
 	await _frames()
 	if not TestCheck.ok(self, not deck.info.visible, "card replaces info panel"): return
@@ -59,6 +59,22 @@ func _run() -> void:
 	await create_timer(0.9).timeout
 	await _frames()
 	if not TestCheck.ok(self, exp[0] and picked[0] == -1 and not deck.quick_alert.visible, "quick alert expires without auto-apply"): return
+	# W-5: 알림이 떠 있는 동안 ×0.2, 열 때 소리
+	UiSound.history.clear()
+	deck.quick_alert.open_alert({"text": "견본", "options": [{"label": "가", "rec": true}, {"label": "나"}], "time": 5.0})
+	await _frames()
+	if not TestCheck.ok(self, pacing.slow and is_equal_approx(Engine.time_scale, 0.2) and UiSound.history.has("warn_branch"), "quick alert slows to x0.2 + sound"): return
+	deck.quick_alert.close_alert()
+	await _frames()
+	if not TestCheck.ok(self, not pacing.slow and is_equal_approx(Engine.time_scale, 1.0), "closing alert restores speed"): return
+	# W-6: 추천 없는 카드는 위임하지 않고 경고
+	got[0] = 99
+	deck.decision_card.open_card({"speaker_id": "CHR-0207", "line": "견본", "time": 0.5, "options": [{"label": "가"}, {"label": "나"}]})
+	waited = 0.0
+	while deck.decision_card.visible and waited < 3.0:
+		await create_timer(0.1).timeout
+		waited += 0.1
+	if not TestCheck.ok(self, got[0] == -1, "no recommendation -> no delegation (%d)" % got[0]): return
 	deck.quick_alert.open_alert({"text": "견본", "options": [{"label": "가", "rec": true}, {"label": "나"}], "time": 2.0})
 	await _frames()
 	deck.quick_alert._btns[0].pressed.emit()   # _btns는 뒤에서부터 만든다: [0] = 마지막 선택지

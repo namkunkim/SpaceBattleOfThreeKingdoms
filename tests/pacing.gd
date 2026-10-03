@@ -18,7 +18,7 @@ func _run() -> void:
 	var pacing = deck.pacing
 	var src: BattleSource = battle.presentation.src
 	GameSettings.auto_fast = true
-	GameSettings.slow_select = false
+	GameSettings.slow_mode = GameSettings.SLOW_OFF
 	deck.begin_battle()
 	await _frames(2)
 	if not TestCheck.ok(self, battle.G.state == "play" and battle.G.speed == 1, "battle starts at x1"): return
@@ -58,7 +58,7 @@ func _run() -> void:
 	if not TestCheck.ok(self, pacing.mode == pacing.Mode.USER and battle.G.speed == 1, "engagement returns to x1"): return
 	if not TestCheck.ok(self, not pacing.can_skip(), "skip unavailable during engagement"): return
 	# Q31·Q55: 선택하면 ×0.2, 5초(실제 시간) 입력이 없으면 해제, 다시 만지면 감속
-	GameSettings.slow_select = true
+	GameSettings.slow_mode = GameSettings.SLOW_ON_SELECT
 	battle.selected.clear()
 	battle.selected.append(battle.fleets[1])
 	var k := InputEventKey.new()
@@ -78,6 +78,25 @@ func _run() -> void:
 	battle.fleets[1].move_to = battle.fleets[1].pos + Vector2(200, 0)
 	await _frames(3)
 	if not TestCheck.ok(self, not pacing.slow and is_equal_approx(Engine.time_scale, 1.0), "order confirmed -> x1"): return
+	# W-7: 조작 중에만 감속 / 끔
+	GameSettings.slow_mode = GameSettings.SLOW_WHILE_HANDLING
+	battle.selected.clear()
+	battle.selected.append(battle.fleets[1])
+	await _frames(3)
+	if not TestCheck.ok(self, not pacing.slow, "while-handling: no slow when idle"): return
+	var hm := InputEventMouseButton.new()
+	hm.button_index = MOUSE_BUTTON_LEFT
+	hm.pressed = true
+	hm.position = Vector2(5, 5)
+	root.push_input(hm, true)
+	await _frames(3)
+	if not TestCheck.ok(self, pacing.slow, "while-handling: slow while pressed"): return
+	hm = hm.duplicate()
+	hm.pressed = false
+	root.push_input(hm, true)
+	await _frames(3)
+	if not TestCheck.ok(self, not pacing.slow, "while-handling: release -> x1"): return
+	GameSettings.slow_mode = GameSettings.SLOW_OFF
 	battle.selected.clear()
 	await _frames(2)
 	# Q53: 포커스를 잃으면 즉시 일시정지

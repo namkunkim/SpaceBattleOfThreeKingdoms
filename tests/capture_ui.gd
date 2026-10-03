@@ -3,7 +3,7 @@ extends SceneTree
 # 상품화 표현 계층 캡처. 화면이 있는 실행에서만 의미가 있다.
 # godot --path . --script tests/capture_ui.gd -- <장면> <출력 png> [UI 크기]
 # 폰 130% 배치 확인: --resolution 1600x720 ... -- battle res://out/ui-phone.png 1.3
-# 장면: title | brief | quiet | battle | select | hold | undo | decision | wu | pause | suspend | result | settings | incoming | salvo | roster
+# 장면: title | brief | quiet | battle | select | hold | undo | decision | wu | pause | suspend | result | settings | incoming | salvo | roster | roster_full
 const SEED := 20261003
 
 func _initialize() -> void:
@@ -20,7 +20,7 @@ func _run() -> void:
 	var deck = battle.presentation.hud if battle.presentation else null
 	if deck and mode != "suspend":
 		deck.guard.enabled = false   # 캡처 창이 포커스를 잃어도 일시정지하지 않는다
-	if args.size() > 2:
+	if args.size() > 2 and mode != "settings":
 		GameSettings.ui_scale = float(args[2])
 		GameSettings.apply(root.get_window())
 	if mode == "title":
@@ -34,11 +34,11 @@ func _run() -> void:
 			await process_frame
 	elif mode == "settings":
 		deck.show_screen("settings")
-		deck.screens["settings"]._show_page(2)
+		deck.screens["settings"]._show_page(int(args[2]) if args.size() > 2 else 2)
 		for i in 30:
 			await process_frame
-	elif mode == "roster":
-		deck.show_screen("roster")
+	elif mode == "roster" or mode == "roster_full":
+		deck.screens["roster"].open_roster(mode == "roster_full", "표준")
 		for i in 30:
 			await process_frame
 	elif mode == "brief":
@@ -83,7 +83,7 @@ func _run() -> void:
 				await process_frame
 		elif mode == "decision":
 			# 자리 확인용 견본(캡처 전용). 게임에는 코어의 분기만 뜬다.
-			deck.decision_card.open_card({"speaker_id": "huang_gai", "line": "바람 창이 열렸습니다. 지금 배에 불을 붙이겠습니까?", "queue": 1, "time": 30.0,
+			deck.decision_card.open_card({"speaker_id": "CHR-0217", "line": "바람 창이 열렸습니다. 지금 배에 불을 붙이겠습니까?", "queue": 1, "time": 30.0,
 				"options": [{"label": "화공 발동", "effects": [["표적 사기", "−3500"], ["적 군 사기", "−2500"]], "risk": {"level": "high", "why": "간파 위험: 의심 82"}, "rec": "제갈량"},
 					{"label": "한 번 더 기다린다", "effects": [["기류 창 남은 시간", "약 40초"]], "risk": {"level": "mid", "why": "기류가 바뀔 수 있음"}, "rec": ""},
 					{"label": "황개를 물린다", "effects": [["황개 전대", "후퇴"]], "risk": {"level": "low", "why": "기회 상실"}, "rec": ""}]})

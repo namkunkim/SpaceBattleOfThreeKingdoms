@@ -137,9 +137,21 @@ godot --path . --script tests/capture_ui.gd -- battle res://out/ui-battle.png   
 | C-1 | 정보 패널 함종 숫자는 `BattleSource.composition(id)`(코어 카운터)만 쓴다. POC는 비어 있어 "표시 편성" 이름만 숫자 없이 |
 | C-2 | `FleetRenderer.emphasis_volley(id)`: 두 배 굵고 밝은 포화, 화면 흔들림, "salvo" 소리. 코어 일제사격 사건이 오면 부른다 |
 
+## 3차 리뷰 반영(`REVIEW-UI-v2.md` §10)
+
+| # | 처리 |
+|---|---|
+| W-1 | 인물 ID는 본편·시나리오와 같은 `CHR-xxxx`. 이름·세력은 시나리오 JSON에서 읽고(`ScenarioRoster.person`), `Commanders.PORTRAIT`에는 초상 번호만 둔다. 정보(`CHR-0207`) 등 시나리오의 모든 인물을 찾는다 |
+| W-2 | `ScenarioRoster.deployed(d, faction, 난이도)`: 조조군은 `deploy_min_difficulty`로 거르고 함종별 × `count_factor`를 half-up(정수 계산), 원래 1척 이상이면 최소 1척. 입문 4·표준 5·상급 7개 전대 |
+| W-3 | 정본 편성 화면은 기본(브리핑)에서 조조군의 기록상 규모·총사령·지휘관 명단·불참 인물만 보인다. 전대 수·구성·척 수·투입 시각은 숨긴다. `open_roster(true, 난이도)`(결산·재생용)일 때만 난이도별 실제 배치를 보인다 |
+| W-4 | 효과음 음높이는 전용 `RandomNumberGenerator`. 전역 난수(POC 규칙 난수열)를 건드리지 않는다 |
+| W-5 | 빠른 선택 알림이 떠 있는 동안 ×0.2 감속, 열 때 `warn_branch` 소리. 입문 정지는 코어 난이도가 생기면 |
+| W-6 | 결정 카드에 추천 선택지가 없으면 위임하지 않고 경고(`delegated(-1)`, 교신 "위임 처리 불가") |
+| W-7 | 설정 진행 탭: 선택 감속 3택(선택하면 / 조작 중에만 / 끔, Q36), 진동 켜고 끄기. 진동은 모두 `UiSound.vibrate`를 거친다 |
+
 ## 정본 편성
 
-- 브리핑의 "정본 편성" 버튼 → 시나리오 JSON(`data/scenarios/red_cliffs_208_realtime.json`) 그대로: 세력(지휘 구분) → 전단 → 전대(지휘관·참모·기함·함종 카운터·척 수), 불참 인물.
+- 브리핑의 "정본 편성" 버튼 → 시나리오 JSON(`data/scenarios/red_cliffs_208_realtime.json`): 연합은 세력 → 전단 → 전대(지휘관·참모·기함·함종 카운터·척 수), 조조군은 전투 전 공개 범위만(W-3).
 - 지금 시험 전투(적벽 회랑)는 이 편성이 아니라고 화면에 밝힌다. 코어가 시나리오를 읽게 되면 같은 자료로 `composition()`을 채운다.
 
 ## 소리
