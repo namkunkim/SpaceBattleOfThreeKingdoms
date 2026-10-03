@@ -1,0 +1,59 @@
+extends SceneTree
+
+# 상품화 표현 계층 캡처. 화면이 있는 실행에서만 의미가 있다.
+# godot --path . --script tests/capture_ui.gd -- <장면> <출력 png>
+# 장면: title | brief | battle | select | pause | result
+const SEED := 20261003
+
+func _initialize() -> void:
+	call_deferred("_run")
+
+func _run() -> void:
+	var args := OS.get_cmdline_user_args()
+	var mode := args[0] if args.size() > 0 else "battle"
+	var outp := args[1] if args.size() > 1 else "res://out/ui-%s.png" % mode
+	var battle := (load("res://scenes/FleetBattle3D.tscn") as PackedScene).instantiate()
+	root.add_child(battle)
+	await process_frame
+	seed(SEED)
+	var deck = battle.presentation.hud if battle.presentation else null
+	if mode == "title":
+		for i in 90:
+			await process_frame
+	elif mode == "brief":
+		if deck:
+			deck.show_screen("brief")
+		for i in 60:
+			await process_frame
+	else:
+		if deck:
+			deck.begin_battle()
+		else:
+			battle._start()
+		# 접근 구간을 건너뛰고 교전 직전까지 진행한다.
+		for i in 520:
+			battle.update_sim(0.05)
+		battle.selected.clear()
+		battle.selected.append(battle.fleets[1])
+		battle.refresh_panel()
+		battle.cam_pos = battle.fleets[1].pos + Vector2(260.0, 40.0)
+		battle.cam_z = 1.0
+		for i in 150:
+			await process_frame
+		if mode == "pause":
+			battle._toggle_menu()
+			for i in 30:
+				await process_frame
+		elif mode == "result":
+			battle.G.killed = 412.0
+			battle.G.lost = 168.0
+			battle.end_game(true, "위 원정군이 회랑에서 모두 사라졌습니다. 회랑은 연합의 손에 남습니다.")
+			for i in 160:
+				await process_frame
+	print("UI_FPS ", Engine.get_frames_per_second(), " ships ", battle.presentation.renderer.vis.values().reduce(func(a, v): return a + v.alive_n, 0) if battle.presentation else 0)
+	var image := root.get_viewport().get_texture().get_image()
+	var path := ProjectSettings.globalize_path(outp) if outp.begins_with("res://") else outp
+	DirAccess.make_dir_recursive_absolute(path.get_base_dir())
+	image.save_png(path)
+	print("UI_CAPTURE_PASS ", path)
+	quit(0)

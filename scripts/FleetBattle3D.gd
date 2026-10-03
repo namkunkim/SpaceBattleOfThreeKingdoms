@@ -31,6 +31,11 @@ const C_INK := Color("dbe7e1")
 const C_MUTE := Color("8ea29a")
 const C_RIVET := Color("3d4f47")
 
+# 표현 계층(view/fleet_render, hud/ui_kit)이 교신·알림을 받는 통로. kind: "", "foe", "sys", "toast"
+signal battle_event(kind: String, text: String, fleet_id: int)
+const PRESENTATION := "res://hud/ui_kit/presentation.gd"
+var presentation: Node = null
+
 class Fleet:
 	var id := 0
 	var form_id := 0
@@ -194,6 +199,11 @@ func _ready() -> void:
 	_build_backdrop()
 	_build_hud()
 	init_game()
+	# 상품화 표현 계층이 있으면 POC 3D 함대와 HUD를 대신한다.
+	if ResourceLoader.exists(PRESENTATION):
+		presentation = load(PRESENTATION).new()
+		add_child(presentation)
+		presentation.setup(self)
 
 # ============================================================ setup
 func _load_models() -> void:
@@ -773,6 +783,7 @@ func float_text(p: Vector2, text: String, color: Color) -> void:
 	floats.append(t)
 
 func toast(text: String) -> void:
+	battle_event.emit("toast", text, -1)
 	toast_label.text = text
 	if toast_tween:
 		toast_tween.kill()
@@ -782,6 +793,7 @@ func toast(text: String) -> void:
 	toast_tween.tween_property(toast_label, "modulate:a", 0.0, 0.3)
 
 func add_log(text: String, kind: String, f: Fleet) -> void:
+	battle_event.emit(kind, text, f.id if f else -1)
 	var row := PanelContainer.new()
 	var border := C_ALLY
 	if kind == "foe":
