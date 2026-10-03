@@ -21,11 +21,13 @@
 
 ## 문서 지도 (읽는 순서)
 
-1. `BATTLE_DECISIONS.md`: 사용자 결정 Q1~Q54. 세션 결정은 본편 정본보다 우선한다.
+1. `BATTLE_DECISIONS.md`: 사용자 결정 Q1~Q55. 세션 결정은 본편 정본보다 우선한다.
 2. `PROPOSAL-realtime-battle-core.md` v0.2: 규칙, M0~M12 단계. §11.1의 K1~K6은 Q45~Q50으로 확정됐다.
-3. `SCENARIO-RED-CLIFFS-208.md`와 `data/scenarios/red_cliffs_208_realtime.json`: 정사 기반 편성, 지휘관, 난이도 4단계.
-4. `DATA-CROSSCHECK.md`: 본편 `C:\WorkSpace\Seonghanji`의 data와 데모 코드를 대조한 기록. §6이 코드 검증 정정이다.
-5. `REVIEW-realtime-battle-core.md`, `BATTLE-CORE-HANDOFF.md`: v0.1 시점 기록이라 오래됐다.
+3. `EXPERIENCE-DESIGN.md`: v0.2 이후 채택된 경험 설계와 밸런스(세트 RX). 제안서 v0.2와 함께 읽는다.
+4. `SCENARIO-RED-CLIFFS-208.md`와 `data/scenarios/red_cliffs_208_realtime.json`: 정사 기반 편성, 지휘관, 난이도 4단계.
+5. `DATA-CROSSCHECK.md`: 본편 `C:\WorkSpace\Seonghanji`의 data와 데모 코드를 대조한 기록. §6이 코드 검증 정정이다.
+6. `IMPLEMENTATION-HANDOFF.md`, `UPSTREAM-ISSUES.md`, `REVIEW-UI-v2.md`: 구현 세션, 본편, UI 세션에 넘기는 문서.
+7. `REVIEW-realtime-battle-core.md`, `BATTLE-CORE-HANDOFF.md`: v0.1 시점 기록이라 오래됐다.
 
 ## 완료한 일 (2026-10-03 오후)
 
