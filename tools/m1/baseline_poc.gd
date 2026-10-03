@@ -35,10 +35,10 @@ func _run() -> void:
 			"charge30": "30초에 전 함대 선택 후 돌격 1회",
 		},
 	}, "policies": {}}
-	for pol in POLICIES:
+	for pol in _arg("--policies", ",".join(POLICIES)).split(","):
 		var rows := []
 		var t0 := Time.get_ticks_msec()
-		for i in runs:
+		for i in range(int(_arg("--from", "0")), int(_arg("--from", "0")) + runs):
 			battle.G.state = "end"
 			await process_frame
 			battle._restart()

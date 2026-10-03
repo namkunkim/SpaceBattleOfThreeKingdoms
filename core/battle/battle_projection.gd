@@ -1,0 +1,57 @@
+class_name BattleProjection
+extends RefCounted
+
+# 공개 투영 v0(IMPLEMENTATION-HANDOFF §4). 화면(view/·hud/)과 입력은 이 사전만 읽는다.
+# 단위: 척 수 1/1000척 정수(ships_milli), 시간은 틱과 초를 같이 준다. 위치는 전장 px.
+# M1은 안개가 없다(POC 규칙). 보는 진영(side)은 자원(CP)과 앞으로의 안개(M6)를 가르는 데 쓴다.
+# 사건은 투영에 넣지 않고 BattleSim.drain_events()로 따로 받는다(한 프레임에 여러 틱이 돌 수 있어서).
+
+static func build(sim: BattleSim, side: int) -> Dictionary:
+	var st := sim.st
+	var sqs: Array[Dictionary] = []
+	for f in st.fleets:
+		sqs.append(squadron(st, f))
+	var ms := []
+	for m in st.missiles:
+		ms.append({"id": m.id, "pos": m.pos, "side": m.side, "target_id": m.target_id})
+	var sw := []
+	for s in st.swarms:
+		var pts := []
+		for p in s.pts:
+			pts.append(p.pos)
+		sw.append({"id": s.id, "side": s.side, "src_id": s.src_id, "target_id": s.target_id, "pts": pts,
+			"life_s": float(s.life) / st.hz, "striking": s.striking})
+	return {
+		"side": side,
+		"tick": st.tick,
+		"hz": st.hz,
+		"clock_s": st.clock_s(),
+		"cp_bp": st.cp if side == 0 else st.ecp,
+		"reinf": st.reinf,
+		"killed_milli": st.killed if side == 0 else st.lost,
+		"lost_milli": st.lost if side == 0 else st.killed,
+		"outcome": {"over": st.over, "win": st.win if side == 0 else (st.over and not st.win), "reason": st.end_reason, "end_tick": st.end_tick},
+		"squadrons": sqs,
+		"missiles": ms,
+		"swarms": sw,
+	}
+
+static func squadron(st: BattleState, f: FleetState) -> Dictionary:
+	var hz := float(st.hz)
+	return {
+		"id": f.id, "side": f.side, "faction": "wei" if f.side == 1 else "shu", "name": f.name, "role": f.role,
+		"portrait": f.portrait, "commander_id": f.name,
+		"pos": f.pos, "heading": f.heading,
+		"ships_milli": f.ships, "max_ships_milli": f.max_ships, "shown_milli": f.shown,
+		"lv": f.lv, "flagship": f.is_flag, "dead": f.dead,
+		"target_id": f.target_id if not f.dead else -1,
+		"firing_at": f.fire_id if not f.dead else -1,
+		"formation": f.form_id % BattleRules.FORM_COUNT,
+		"has_move": f.has_move, "move_to": f.move_to,
+		"defense": f.defense, "charge_s": f.charge / hz, "in_cmd": f.in_cmd,
+		"missile_cd_s": f.missile_cd / hz, "fighter_cd_s": f.fighter_cd / hz,
+		"range": f.range_r,
+		"form": f.form,
+		"control": "",   # 직접·위임(Q20). M7에서 채운다
+		"counts": {},    # 함종 × 손상 단계. M2·M3에서 채운다
+	}
