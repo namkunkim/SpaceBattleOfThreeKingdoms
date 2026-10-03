@@ -46,6 +46,44 @@ static func squadron(d: Dictionary, id: String) -> Dictionary:
 			return s
 	return {}
 
+# 인물 ID(CHR-xxxx) → {id, name, faction(세력 키)}. 전대의 지휘관·부지휘관·참모와 불참 인물에서 찾는다.
+static func person(d: Dictionary, id: String) -> Dictionary:
+	for s in d.get("squadrons", []):
+		var ppl: Array = [s.get("commander", {}), s.get("vice_commander", {})]
+		ppl.append_array(s.get("staff", []))
+		for p in ppl:
+			if p is Dictionary and p.get("id", "") == id:
+				return {"id": id, "name": p.name, "faction": FACTION_KEY.get(s.faction_id, "shu")}
+	for f in d.get("factions", []):
+		for p in f.get("not_deployed", []):
+			if p.get("id", "") == id:
+				return {"id": id, "name": p.name, "faction": FACTION_KEY.get(f.id, "shu")}
+	return {}
+
+# ---------------------------------------------------------------- 난이도(리뷰 W-2)
+# cao_scale_rule: 조조군 전대마다 함종별 척 수 × count_factor를 half-up 반올림, 원래 1척 이상이면 최소 1척.
+# 난이도가 deploy_min_difficulty보다 낮으면 그 전대는 배치하지 않는다. 연합 편성은 모든 난이도에서 같다.
+static func deployed(d: Dictionary, faction_id: String, difficulty: String) -> Array:
+	var order: Array = d.get("difficulty_order", [])
+	var lv := order.find(difficulty)
+	var factor: float = float(d.get("difficulty_profiles", {}).get(difficulty, {}).get("count_factor", 1.0))
+	var out := []
+	for s in squadrons_of(d, faction_id):
+		var need := order.find(s.get("deploy_min_difficulty", order[0] if not order.is_empty() else ""))
+		if faction_id == "cao_cao" and need > lv:
+			continue
+		if faction_id != "cao_cao":
+			out.append(s)
+			continue
+		var t: Dictionary = s.duplicate(true)
+		for c in t.composition:
+			var n := int(c.count)
+			# half-up을 정수로 센다(부동소수 오차로 3.5가 3.4999…가 되지 않게)
+			var milli := roundi(factor * 1000.0)
+			c.count = maxi(1 if n >= 1 else 0, (n * milli + 500) / 1000)
+		out.append(t)
+	return out
+
 static func ship_count(s: Dictionary) -> int:
 	var n := 0
 	for c in s.get("composition", []):

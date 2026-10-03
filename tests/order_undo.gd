@@ -16,7 +16,7 @@ func _run() -> void:
 	await _frames()
 	var deck = battle.presentation.hud
 	GameSettings.auto_fast = false
-	GameSettings.slow_select = false
+	GameSettings.slow_mode = GameSettings.SLOW_OFF
 	deck.begin_battle()
 	await _frames()
 	var bar = deck.undo_bar

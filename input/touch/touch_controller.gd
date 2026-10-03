@@ -43,7 +43,7 @@ func _process(delta: float) -> void:
 				battle.selected.append(origin_fleet)
 			battle.inspect = null
 			battle.refresh_panel()
-			Input.vibrate_handheld(30)
+			UiSound.vibrate(30)
 
 func _unhandled_input(e: InputEvent) -> void:
 	# 전장에 내려온 터치 흉내 마우스는 POC로 보내지 않는다.

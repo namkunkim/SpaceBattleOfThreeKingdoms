@@ -30,6 +30,13 @@ const EVENTS := {
 }
 
 static var history: Array = []   # 최근 사건(테스트·디버그용)
+# 음높이 흔들기 전용 난수(리뷰 W-4). 전역 난수를 쓰면 POC 규칙 난수열이 밀려 결정론이 깨진다.
+var _rng := RandomNumberGenerator.new()
+
+# 진동은 모두 여기로(설정 "진동"으로 끈다, 리뷰 W-7)
+static func vibrate(ms: int) -> void:
+	if GameSettings.vibrate:
+		Input.vibrate_handheld(ms)
 
 var _streams := {}
 var _last := {}
@@ -70,13 +77,13 @@ func play(ev: String) -> void:
 	if history.size() > 64:
 		history.pop_front()
 	if spec.has("vibrate"):
-		Input.vibrate_handheld(int(spec.vibrate))
+		vibrate(int(spec.vibrate))
 	var p := _free_player()
 	if p == null:
 		return
 	p.stream = _stream(ev, spec)
 	p.bus = spec.bus
-	p.pitch_scale = randf_range(0.96, 1.04) if spec.bus == "Sfx" else 1.0
+	p.pitch_scale = _rng.randf_range(0.96, 1.04) if spec.bus == "Sfx" else 1.0
 	p.play()
 
 func _free_player() -> AudioStreamPlayer:

@@ -82,7 +82,7 @@ func _open(b: Control) -> void:
 		_fade.kill()
 	_fade = create_tween().set_ignore_time_scale()
 	_fade.tween_property(tip, "modulate:a", 1.0, 0.12)
-	Input.vibrate_handheld(20)
+	UiSound.vibrate(20)
 
 # 버튼 위(손가락에 가리지 않는 쪽)에 띄우고 화면 안으로 맞춘다. 위가 모자라면 아래로.
 func _place(tip: Control, r: Rect2) -> void:

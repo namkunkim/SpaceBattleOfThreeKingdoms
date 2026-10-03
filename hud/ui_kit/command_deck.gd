@@ -124,8 +124,10 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 	_anchor(quick_alert, Control.PRESET_CENTER_BOTTOM, Vector2(560, 64), Vector2(0, -176))
 	quick_alert.setup()
 	quick_alert.visibility_changed.connect(func():
+		pacing.forced_slow = quick_alert.visible
 		if quick_alert.visible:
-			undo_bar.visible = false)
+			undo_bar.visible = false
+			sound.play("warn_branch"))
 	# 분기 예고 펄스(V-4)
 	edge_pulse = Pulse.new()
 	hud.add_child(edge_pulse)

@@ -36,6 +36,8 @@ var _order_done := false
 var _sig := ""
 var _tag := ""
 var _incoming := false
+var _held := false          # 포인터를 누르고 있다(조작 중에만 감속)
+var forced_slow := false    # 빠른 선택 알림이 떠 있는 동안 감속(리뷰 W-5)
 
 func setup(d: Control, s: BattleSource) -> void:
 	deck = d
@@ -108,7 +110,14 @@ func _process(delta: float) -> void:
 		if _sig != "" and sig != "" and _ids(sig) == _ids(_sig):
 			_order_done = true
 		_sig = sig
-	slow = GameSettings.slow_select and src.has_selection() and _idle < IDLE and not _order_done
+	match GameSettings.slow_mode:
+		GameSettings.SLOW_ON_SELECT:
+			slow = src.has_selection() and _idle < IDLE and not _order_done
+		GameSettings.SLOW_WHILE_HANDLING:
+			slow = src.has_selection() and (_held or deck.overlay.touch.mode == "order")
+		_:
+			slow = false
+	slow = slow or forced_slow
 	_apply()
 
 func _apply() -> void:
@@ -142,6 +151,8 @@ func _on_event(kind: String, _text: String, _fleet_id: int) -> void:
 # 누르기·끌기·키·휠은 입력으로 친다: 선택 감속을 다시 켜고, 건너뛰기는 멈춘다(이벤트는 소비하지 않는다).
 func _input(event: InputEvent) -> void:
 	var pressed := (event is InputEventMouseButton or event is InputEventScreenTouch or event is InputEventKey) and event.is_pressed()
+	if event is InputEventMouseButton or event is InputEventScreenTouch:
+		_held = event.is_pressed()
 	if pressed or event is InputEventScreenDrag or (event is InputEventMouseMotion and event.button_mask != 0):
 		_idle = 0.0
 		_order_done = false

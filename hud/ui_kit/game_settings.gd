@@ -10,7 +10,12 @@ static var ui_scale := 1.0
 static var fullscreen := false
 static var glow := true
 static var auto_fast := true
-static var slow_select := true
+# 선택 감속(Q36, 리뷰 W-7): 0 선택하면 / 1 조작 중에만(누르고 있거나 끄는 동안) / 2 끔
+const SLOW_ON_SELECT := 0
+const SLOW_WHILE_HANDLING := 1
+const SLOW_OFF := 2
+static var slow_mode := SLOW_ON_SELECT
+static var vibrate := true
 static var vol_master := 0.8
 static var vol_sfx := 0.8
 static var vol_ui := 0.7
@@ -30,7 +35,8 @@ static func load_cfg() -> void:
 	fullscreen = bool(cf.get_value("display", "fullscreen", false))
 	glow = bool(cf.get_value("display", "glow", true))
 	auto_fast = bool(cf.get_value("play", "auto_fast", true))
-	slow_select = bool(cf.get_value("play", "slow_select", true))
+	slow_mode = int(cf.get_value("play", "slow_mode", SLOW_ON_SELECT))
+	vibrate = bool(cf.get_value("play", "vibrate", true))
 	ship_density = int(cf.get_value("display", "ship_density", 1))
 	vol_master = float(cf.get_value("audio", "master", 0.8))
 	vol_sfx = float(cf.get_value("audio", "sfx", 0.8))
@@ -42,7 +48,8 @@ static func save_cfg() -> void:
 	cf.set_value("display", "fullscreen", fullscreen)
 	cf.set_value("display", "glow", glow)
 	cf.set_value("play", "auto_fast", auto_fast)
-	cf.set_value("play", "slow_select", slow_select)
+	cf.set_value("play", "slow_mode", slow_mode)
+	cf.set_value("play", "vibrate", vibrate)
 	cf.set_value("display", "ship_density", ship_density)
 	cf.set_value("audio", "master", vol_master)
 	cf.set_value("audio", "sfx", vol_sfx)

@@ -105,7 +105,7 @@ class BriefScreen extends Control:
 		roster.text = "정본 편성"
 		roster.custom_minimum_size = Vector2(160, 54)
 		roster.focus_mode = Control.FOCUS_NONE
-		roster.pressed.connect(func(): deck.show_screen("roster"))
+		roster.pressed.connect(func(): deck.screens["roster"].open_roster(false))
 		hb.add_child(roster)
 		var back := Button.new()
 		back.text = "뒤로"
@@ -247,7 +247,9 @@ class SettingsScreen extends Control:
 	var full_chk: CheckButton
 	var glow_chk: CheckButton
 	var fast_chk: CheckButton
-	var slow_chk: CheckButton
+	var slow_btns: Array = []
+	var vib_chk: CheckButton
+	var pending_slow := 0
 	var density_btns: Array = []
 	var vol_sliders := {}
 	var pending_density := 1
@@ -301,8 +303,16 @@ class SettingsScreen extends Control:
 		glow_chk = _check(pages[0], "빛 번짐 효과 (광선·폭발 발광)")
 		# 진행
 		fast_chk = _check(pages[1], "조용한 구간 자동 ×4 (교전이 시작되면 원래 배속)")
-		slow_chk = _check(pages[1], "선택하면 ×0.2 감속 (5초 동안 입력이 없으면 해제)")
-		pages[1].add_child(UiTheme.label("백그라운드로 가거나 창을 벗어나면 전투는 바로 멈춥니다.", "Muted"))
+		var srow := _row(pages[1], "선택 감속 ×0.2")
+		for i in 3:
+			var b := _choice(["선택하면", "조작 중에만", "끔"][i], srow)
+			b.custom_minimum_size.x = 110
+			b.pressed.connect(func():
+				pending_slow = i
+				_sync())
+			slow_btns.append(b)
+		pages[1].add_child(UiTheme.label("선택하면: 명령하거나 5초 동안 입력이 없으면 풀림 · 조작 중에만: 누르고 있거나 끄는 동안", "Muted"))
+		vib_chk = _check(pages[1], "진동 (경보·결정·아군 손실·길게 누르기)")
 		# 소리
 		for it in [["master", "전체 음량"], ["sfx", "전투 효과음"], ["ui", "UI·알림음"]]:
 			var r := _row(pages[2], it[1])
@@ -385,6 +395,8 @@ class SettingsScreen extends Control:
 			it[0].button_pressed = is_equal_approx(it[1], pending_scale)
 		for i in density_btns.size():
 			density_btns[i].button_pressed = i == pending_density
+		for i in slow_btns.size():
+			slow_btns[i].button_pressed = i == pending_slow
 	func _draw() -> void:
 		draw_rect(Rect2(Vector2.ZERO, size), Color(0.01, 0.015, 0.03, 0.78))
 	var _orig_vol := {}
@@ -394,7 +406,8 @@ class SettingsScreen extends Control:
 		full_chk.button_pressed = GameSettings.fullscreen
 		glow_chk.button_pressed = GameSettings.glow
 		fast_chk.button_pressed = GameSettings.auto_fast
-		slow_chk.button_pressed = GameSettings.slow_select
+		pending_slow = GameSettings.slow_mode
+		vib_chk.button_pressed = GameSettings.vibrate
 		pending_density = GameSettings.ship_density
 		for k in vol_sliders:
 			_orig_vol[k] = _get_vol(k)
@@ -411,7 +424,8 @@ class SettingsScreen extends Control:
 		GameSettings.fullscreen = full_chk.button_pressed
 		GameSettings.glow = glow_chk.button_pressed
 		GameSettings.auto_fast = fast_chk.button_pressed
-		GameSettings.slow_select = slow_chk.button_pressed
+		GameSettings.slow_mode = pending_slow
+		GameSettings.vibrate = vib_chk.button_pressed
 		for k in vol_sliders:
 			_set_vol(k, vol_sliders[k].value)
 		if GameSettings.ship_density != pending_density:
