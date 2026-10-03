@@ -45,6 +45,7 @@ input/touch/
   touch_controller.gd    터치 제스처
   hold_tip.gd            길게 누르기 툴팁(명령·시스템 버튼)
   touch_metrics.gd       터치 목표 크기 계산(dp), 모바일 첫 실행 UI 크기
+  safe_area.gd           안전 영역(노치·내비게이션 바)만큼 전투 HUD를 안쪽으로 민다
 assets/models/fleet_lod/ 저폴리 LOD(재생성: tools/blender/build_fleet_lods.py)
 ```
 
@@ -91,6 +92,7 @@ godot --headless --path . --script tests/squadron_strip.gd  # 전대 띠
 godot --headless --path . --script tests/ui_sound.gd     # 효과음 훅·음량
 godot --headless --path . --script tests/decision_flow.gd  # 분기 예고·결정 카드 시간·빠른 선택·강조 포화
 godot --headless --path . --script tests/roster.gd       # 정본 편성
+godot --headless --path . --script tests/safe_area.gd    # 안전 영역 보정
 godot --path . --script tests/capture_ui.gd -- battle res://out/ui-battle.png   # title|brief|quiet|battle|pause|suspend|result
 ```
 
@@ -167,8 +169,7 @@ godot --path . --script tests/capture_ui.gd -- battle res://out/ui-battle.png   
 
 - 사기, 국면, 탄약·에너지·열, 진형 탭: 코어에 값이 생기면 붙인다(목업 v2에 자리 설계가 있다). 지금은 표시하지 않는다.
 - 표시 함선 수는 남은 전력 비율을 따른다. 함종 구성은 표현용 배치이고 규칙 값이 아니다. 코어가 함종 카운터를 주면 `composition()`으로 표시 배치도 맞춘다.
-- 태블릿 터치 목표(48dp): 보류. `feature/tablet-touch` 브랜치에 작업이 있다(기준 기기를 안드로이드 태블릿·PC로, 모든 화면 컨트롤 52단위).
+- 태블릿 터치 목표(48dp): 모든 화면 컨트롤 52단위 이상(16:10 태블릿 UI 100%에서 약 48~49dp), `tests/touch_targets.gd`가 태블릿 3종으로 검사. 실기기·안전 영역·텍스처 압축은 남았다.
 - 실제 효과음 자산과 음악(라이선스 확인·승인 필요).
-- 폰 전용 HUD 배치: 시스템 아이콘·탭·그룹 탭이 48dp에 못 미친다(위 "터치 목표 크기").
 - 끌기 중 시간 감속(§7.3), 도착 방향 고리, 경유점: POC 규칙에 없어 넣지 않았다.
-- 모바일 실기기, 텍스처 압축(ETC2/ASTC)은 아직 검증하지 않았다.
+- 안드로이드 내보내기 프리셋·안전 영역·ETC2/ASTC 설정은 들어갔지만 실제 내보내기와 실기기 검증은 못 했다(`docs/ui/ANDROID-EXPORT.md`).

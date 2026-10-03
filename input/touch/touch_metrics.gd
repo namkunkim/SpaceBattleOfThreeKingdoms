@@ -7,12 +7,15 @@ extends RefCounted
 const BASE := Vector2(1600, 900)
 const MIN_DP := 48.0
 
-# 기준 기기: [이름, 화면 픽셀(가로), dpi]
+# 기준 기기: [이름, 화면 픽셀(가로), dpi]. 1차 목표는 안드로이드 태블릿 + 윈도우 PC(폰은 1차 아님).
 const DEVICES := [
-	["폰 6.1\" (2400×1080, 400dpi)", Vector2(2400, 1080), 400.0],
-	["태블릿 11\" (2388×1668, 264dpi)", Vector2(2388, 1668), 264.0],
+	["태블릿 11\" (2560×1600, 274dpi)", Vector2(2560, 1600), 274.0],
+	["태블릿 11\" (1920×1200, 206dpi)", Vector2(1920, 1200), 206.0],
+	["태블릿 14.6\" (2960×1848, 240dpi)", Vector2(2960, 1848), 240.0],
 	["PC 24\" (1920×1080, 92dpi)", Vector2(1920, 1080), 92.0],
 ]
+# 터치 검사 대상(태블릿) 수
+const TOUCH_DEVICES := 3
 
 # 화면 단위 1이 몇 dp인가
 static func dp_per_unit(screen_px: Vector2, dpi: float, ui_scale := 1.0) -> float:

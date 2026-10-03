@@ -100,6 +100,10 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 	hud.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	hud.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(hud)
+	var safe := SafeArea.new()
+	safe.name = "SafeArea"
+	add_child(safe)
+	safe.setup(hud)
 	_build_top()
 	_build_sys()
 	_build_log()
@@ -111,7 +115,7 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 	# 명령 되돌리기 알림: 정보 패널 바로 위(결정 카드가 오면 그 위로 올린다)
 	undo_bar = Undo.new()
 	hud.add_child(undo_bar)
-	_anchor(undo_bar, Control.PRESET_CENTER_BOTTOM, Vector2(420, 52), Vector2(0, -180))
+	_anchor(undo_bar, Control.PRESET_CENTER_BOTTOM, Vector2(420, 60), Vector2(0, -180))
 	undo_bar.setup(self, src)
 	# 결정 카드: 정보 패널 자리(화면 아래 가운데, 엄지 영역). 뜨면 정보 패널을 가리고 되돌리기 알림을 그 위로 올린다.
 	decision_card = Card.new()
@@ -134,9 +138,9 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 	edge_pulse.setup(self)
 	decision_card.visibility_changed.connect(func():
 		info.visible = not decision_card.visible
-		undo_bar.offset_top = -(decision_card.size.y + 14 + 10 + 52) if decision_card.visible else -(158 + 14 + 10 + 52)
-		undo_bar.offset_bottom = undo_bar.offset_top + 52
-		quick_alert.offset_top = undo_bar.offset_top - 6
+		undo_bar.offset_top = -(decision_card.size.y + 14 + 10 + 60) if decision_card.visible else -(158 + 14 + 8 + 60)
+		undo_bar.offset_bottom = undo_bar.offset_top + 60
+		quick_alert.offset_top = undo_bar.offset_top - 2
 		quick_alert.offset_bottom = quick_alert.offset_top + 64)
 	# 터치 길게 누르기 툴팁: HUD 위, 전환 화면 아래
 	hold_tip = HoldTip.new()
@@ -333,7 +337,7 @@ func _build_sys() -> void:
 	st.set_content_margin_all(6)
 	holder.add_theme_stylebox_override("panel", st)
 	hud.add_child(holder)
-	_anchor(holder, Control.PRESET_TOP_RIGHT, Vector2(248, 52), Vector2(-16, 16))
+	_anchor(holder, Control.PRESET_TOP_RIGHT, Vector2(288, 64), Vector2(-16, 16))
 	sys_bar = HBoxContainer.new()
 	sys_bar.add_theme_constant_override("separation", 4)
 	holder.add_child(sys_bar)
@@ -360,7 +364,7 @@ func _build_sys() -> void:
 	sys_bar.add_child(gb)
 	objectives = W.DrawPanel.new(_draw_objectives, UiTheme.ornate())
 	hud.add_child(objectives)
-	_anchor(objectives, Control.PRESET_TOP_RIGHT, Vector2(272, 112), Vector2(-16, 76))
+	_anchor(objectives, Control.PRESET_TOP_RIGHT, Vector2(272, 112), Vector2(-16, 88))
 
 func _draw_objectives(c: Control) -> void:
 	UiDraw.text(c, Vector2(18, 26), "작 전 목 표", "eyebrow", 11, UiTheme.GOLD)
@@ -694,10 +698,10 @@ func _info_none(c: Control) -> void:
 func _build_commands() -> void:
 	cmd_panel = W.DrawPanel.new(Callable(), UiTheme.ornate())
 	hud.add_child(cmd_panel)
-	_anchor(cmd_panel, Control.PRESET_BOTTOM_RIGHT, Vector2(364, 238), Vector2(-16, -14))
+	_anchor(cmd_panel, Control.PRESET_BOTTOM_RIGHT, Vector2(364, 250), Vector2(-16, -14))
 	var vb := VBoxContainer.new()
 	vb.position = Vector2(8, 6)
-	vb.size = Vector2(348, 226)
+	vb.size = Vector2(348, 238)
 	vb.add_theme_constant_override("separation", 8)
 	cmd_panel.add_child(vb)
 	var tabs := HBoxContainer.new()
@@ -724,11 +728,11 @@ func _build_commands() -> void:
 	groups_row = HBoxContainer.new()
 	groups_row.add_theme_constant_override("separation", 6)
 	hud.add_child(groups_row)
-	_anchor(groups_row, Control.PRESET_BOTTOM_RIGHT, Vector2(346, 44), Vector2(-16, -262))
+	_anchor(groups_row, Control.PRESET_BOTTOM_RIGHT, Vector2(346, 52), Vector2(-16, -274))
 	# 전대 띠(U4): 그룹 탭 바로 위. 탭 선택, 길게 눌러 추가, 끌어서 명령
 	strip = Strip.new()
 	hud.add_child(strip)
-	_anchor(strip, Control.PRESET_BOTTOM_RIGHT, Vector2(346, 60), Vector2(-16, -312))
+	_anchor(strip, Control.PRESET_BOTTOM_RIGHT, Vector2(346, 60), Vector2(-16, -332))
 	strip.setup(self)
 	for i in 4:
 		var g := W.GroupButton.new(i + 1, self)

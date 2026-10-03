@@ -386,6 +386,13 @@ func slot_world(v: FleetVis, s: Slot) -> Vector3:
 func bow_world(v: FleetVis, s: Slot) -> Vector3:
 	return v.node.to_global(s.pos + Vector3(0.0, 0.0, -s.half_len))
 
+# 지금 화면에 살아 있는 표시 함선 수(성능 측정용, 규칙 값 아님)
+func visible_ship_count() -> int:
+	var n := 0
+	for k in vis:
+		n += (vis[k] as FleetVis).alive_n
+	return n
+
 func composition(id: int) -> Array:
 	# 함종별 남은 표시 척수 [[라벨, 수], ...]
 	var v: FleetVis = vis.get(id)
