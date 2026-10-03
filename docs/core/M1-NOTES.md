@@ -60,7 +60,7 @@ scripts/FleetBattle3D.gd  전투 노드(호스트): BattleSim·TickClock 소유,
 
 ## 4. 시험과 실행기
 
-헤드리스(`godot --headless --path . -s <파일>`), 실패하면 종료 코드 1이다.
+헤드리스(`godot --headless --path . -s <파일>`), 실패하면 종료 코드 1이다. **새 worktree에서는 먼저 `godot --headless --path . --import`를 한 번 돌려야 한다**(전역 클래스 캐시가 없으면 `BattleSim` 같은 이름을 못 찾는다. 새 `class_name` 파일을 추가한 뒤에도 같다).
 
 | 파일 | 내용 |
 |---|---|
@@ -101,3 +101,10 @@ godot --headless --path . -s tests/autoresolve.gd -- --runs 200 --hz 10 --baseli
 - 승률은 정책마다 0% 또는 100%로 포화돼 판별력이 없다. 종료 경로 분포가 바뀌지 않았고(무명령·돌격은 전부 기함 격침, 공격은 전부 전멸) 시간 초과도 없다.
 - **5초 공격 정책에서 길이가 평균 1.4% 짧고(104.6초 대 106.0초) 아군 손실이 1.8% 적다.** 20Hz로 돌려도 같다(D 0.113). 그래서 틱 폭 때문이 아니라 아군 미사일·함재기 쪽의 미세한 구조 차이다. 미사일 판정(점 대 선분), 틱 폭, AI 주기·함재기 수명, 분리·순서 항목은 원인이 아님을 확인했다. 아직 찾지 못했다. 효과가 작고(§9.2 효과 크기 기준 안) 승패에 영향이 없어 M1에서는 목록으로 남긴다.
 - 200 대 200 KS는 D < 0.136이 5% 유의수준 임계값과 같아서 완전히 같은 구현도 지표 12개 중 하나를 우연히 넘길 수 있다. 판정은 1000시드로 하는 것을 권한다(`--runs 1000`, 한 정책 4~6분).
+
+## 8. 후속 (컨셉 세션 리뷰 REVIEW-M1 반영)
+
+- 5초 공격 정책의 길이 −1.4%는 보류. M3 시작 때 같은 증상이 남아 있으면 이분 탐색을 한 번 한다. 0.55초·9.05초는 POC 전용이라 기준선을 다시 잡지 않고 M3 새 규칙으로 대체될 때 사라진다.
+- 선택 감속을 `Engine.time_scale`에서 `TickClock.set_speed`로 옮길 때, Q55의 유휴 5초 해제 타이머가 감속의 영향을 받지 않는 **실시간 기준**인지 확인한다(UI 세션 `battle_pacing.gd`는 지금 `UiDraw.real_dt`로 `Engine.time_scale`을 나눠 실시간을 얻는다. 코어 시계 속도로 옮기면 `Engine.time_scale`이 1이 되므로 이 보정이 그대로 맞는지 같이 본다).
+- 정보 경계와 투영의 빈 자리(`counts`, `control`, `chain_op`, `pending_decisions`)는 M6·M7. POC HUD 이중 구조는 M10.
+- 다음 M2: 시나리오 JSON의 `difficulty_policy`, `deploy_delay_s`, `realtime_rules`(status "proposed" 포함)를 데이터로 읽게 한다. `core/battle/poc_setup.gd`와 `BattleRules`의 상수가 대상이다.
