@@ -40,7 +40,7 @@ func _run() -> void:
 	a.defense = true
 	if not TestCheck.ok(self, is_equal_approx(battle.power(a) / base, r.defense.fire), "defense fire"): return
 	# 받는 피해
-	t.defense = true
+	TestPoke.fleet(battle, t, {"defense": true})
 	var s0: float = t.ships
 	battle.apply_dmg(null, t, 10.0)
 	if not TestCheck.ok(self, is_equal_approx(s0 - t.ships, 10.0 * r.defense.taken), "defense taken"): return

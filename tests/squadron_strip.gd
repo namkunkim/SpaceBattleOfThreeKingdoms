@@ -67,7 +67,7 @@ func _run() -> void:
 	if not TestCheck.ok(self, battle.selected.size() == 2 and battle.selected.has(f2), "long press adds"): return
 	# 끌어서 이동(빈 곳)
 	battle.selected.clear()
-	f1.has_move = false
+	TestPoke.fleet(battle, f1, {"has_move": false})
 	var dst := Vector2(700, 300)
 	_mouse(c1, true)
 	_move(c1, dst)
@@ -85,8 +85,7 @@ func _run() -> void:
 	await _frames()
 	if not TestCheck.ok(self, f1.target == foe, "drag to enemy = attack"): return
 	# 띠로 되돌리면 취소
-	f1.has_move = false
-	f1.target = null
+	TestPoke.fleet(battle, f1, {"has_move": false, "target_id": -1})
 	_mouse(c1, true)
 	_move(c1, dst)
 	_move(dst, c1 + Vector2(0, -2))

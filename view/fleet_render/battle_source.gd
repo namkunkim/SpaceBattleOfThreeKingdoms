@@ -209,16 +209,6 @@ func order_snapshot() -> Dictionary:
 			out[f.id] = [f.has_move, f.move_to, f.target.id if f.target else -1, f.defense]
 	return out
 
-# 스냅숏의 명령 상태로 되돌린다. POC 전용 쓰기 통로다.
-# 코어에서는 "직전 상태로 돌아가는 새 명령"으로 기록해 결정론을 지킨다(U2). 그때 이 함수만 명령 발행으로 바꾼다.
+# 스냅숏의 명령 상태로 되돌린다. 코어에서는 "직전 상태로 돌아가는 새 명령"(restore)으로 발행되고 명령 기록에 남는다(U2).
 func restore_orders(snap: Dictionary) -> void:
-	for id in snap:
-		var f = battle.by_id(id)
-		if f == null or f.dead:
-			continue
-		var o: Array = snap[id]
-		f.has_move = o[0]
-		f.move_to = o[1]
-		var t = battle.by_id(o[2]) if o[2] >= 0 else null
-		f.target = t if (t and not t.dead) else null
-		f.defense = o[3]
+	battle.restore_orders(snap)

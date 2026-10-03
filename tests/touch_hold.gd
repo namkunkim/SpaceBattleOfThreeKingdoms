@@ -42,7 +42,7 @@ func _run() -> void:
 		elif b.cmd.id == "charge":
 			charge = b
 	var f = battle.fleets[1]
-	f.has_move = false
+	TestPoke.fleet(battle, f, {"has_move": false})
 	# 1. 길게 누르기: 툴팁이 뜨고, 떼도 명령이 실행되지 않는다(기함 집결 = 이동 명령)
 	_press(btn, true)
 	await create_timer(0.7).timeout

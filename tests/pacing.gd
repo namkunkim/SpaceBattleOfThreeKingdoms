@@ -74,8 +74,7 @@ func _run() -> void:
 	await _frames(3)
 	if not TestCheck.ok(self, pacing.slow, "touch again -> slow again"): return
 	# 명령 확정(정지 명령)이면 해제
-	battle.fleets[1].has_move = true
-	battle.fleets[1].move_to = battle.fleets[1].pos + Vector2(200, 0)
+	TestPoke.fleet(battle, battle.fleets[1], {"has_move": true, "move_to": battle.fleets[1].pos + Vector2(200, 0)})
 	await _frames(3)
 	if not TestCheck.ok(self, not pacing.slow and is_equal_approx(Engine.time_scale, 1.0), "order confirmed -> x1"): return
 	# W-7: 조작 중에만 감속 / 끔

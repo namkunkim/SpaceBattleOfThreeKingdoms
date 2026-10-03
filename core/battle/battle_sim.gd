@@ -57,6 +57,14 @@ func projection(side: int) -> Dictionary:
 func fingerprint() -> String:
 	return BattleFingerprint.of(st)
 
+# 즉시 적용 명령. 틱 사이에 상태는 변하지 않으므로 "다음 step() 첫머리에 적용"과 결과가 같고,
+# 재생(replay)도 같은 틱 번호로 같은 결과를 낸다. 화면이 명령 직후 상태를 바로 읽을 수 있다.
+func issue(cmd: Dictionary) -> void:
+	var c := cmd.duplicate(true)
+	c.tick = st.tick
+	command_log.append(c)
+	apply(c)
+
 # 한 틱 진행. 대기 중인 명령을 먼저 적용한다.
 func step() -> void:
 	var cmds := _queue
@@ -82,6 +90,22 @@ static func replay(seed_id: int, hz: int, log: Array, until_tick: int) -> Battle
 
 static func command(side: int, ids: Array, kind: String, target_id := -1, point := Vector2.ZERO, args := {}) -> Dictionary:
 	return {"tick": -1, "side": side, "ids": ids.duplicate(), "kind": kind, "target_id": target_id, "point": point, "args": args}
+
+# 테스트·도구용 훅(규칙 단위 테스트가 상태를 직접 만든다). 게임 흐름에서는 쓰지 않는다.
+func debug_damage(src_id: int, tgt_id: int, amt: float) -> void:
+	apply_dmg(st.by_id(src_id), st.by_id(tgt_id), amt)
+
+func debug_fire_missiles(src_id: int, tgt_id: int) -> void:
+	_fire_missiles(st.by_id(src_id), st.by_id(tgt_id))
+
+func debug_launch_fighters(src_id: int, tgt_id: int) -> void:
+	_launch_fighters(st.by_id(src_id), st.by_id(tgt_id))
+
+func debug_spawn_reinf() -> void:
+	_spawn_reinf()
+
+func debug_end(win: bool, reason: String) -> void:
+	_end(win, reason)
 
 # ============================================================ 사건
 func emit(kind: String, sq := -1, other := -1, pos := Vector2.ZERO, value: Variant = null) -> void:

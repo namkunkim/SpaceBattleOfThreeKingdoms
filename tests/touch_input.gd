@@ -50,7 +50,7 @@ func _run() -> void:
 	if not TestCheck.ok(self, battle.selected.size() == 1 and battle.selected[0] == f, "tap select"): return
 	if not TestCheck.ok(self, battle.drag.is_empty(), "no mouse box drag from touch"): return
 	# 2. 끌어서 이동
-	f.has_move = false
+	TestPoke.fleet(battle, f, {"has_move": false})
 	var dst := Vector2(800.0, 330.0)
 	_touch(0, sp, true)
 	_move(0, sp, dst)
@@ -60,7 +60,7 @@ func _run() -> void:
 	await _settle()
 	if not TestCheck.ok(self, f.has_move and f.move_to.distance_to(battle.s2w(dst)) < 60.0, "drag move %s" % f.move_to): return
 	# 3. 되돌려 취소
-	f.has_move = false
+	TestPoke.fleet(battle, f, {"has_move": false})
 	sp = battle.w2s(f.pos)
 	_touch(0, sp, true)
 	_move(0, sp, sp + Vector2(160, 0))
@@ -70,7 +70,7 @@ func _run() -> void:
 	if not TestCheck.ok(self, not f.has_move, "drag cancel"): return
 	# 4. 적 위에 놓아 공격
 	var foe = battle.fleets[6]
-	foe.pos = f.pos + Vector2(380.0, -40.0)
+	TestPoke.fleet(battle, foe, {"pos": f.pos + Vector2(380.0, -40.0)})
 	await _settle()
 	sp = battle.w2s(f.pos)
 	var fp: Vector2 = battle.w2s(foe.pos)

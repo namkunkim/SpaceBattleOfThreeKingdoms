@@ -32,11 +32,11 @@ func _run() -> void:
 	await _frames()
 	if not TestCheck.ok(self, f.has_move == had and f.move_to == before and not bar.visible, "undo restores previous order"): return
 	# 저절로 풀린 것(도착)은 명령이 아니다
-	f.has_move = true
+	TestPoke.fleet(battle, f, {"has_move": true})
 	f.move_to = f.pos + Vector2(400, 0)
 	await _frames()
 	bar._close()
-	f.has_move = false
+	TestPoke.fleet(battle, f, {"has_move": false})
 	await _frames()
 	if not TestCheck.ok(self, not bar.visible, "arrival is not an order"): return
 	# 4초 뒤 닫힘
