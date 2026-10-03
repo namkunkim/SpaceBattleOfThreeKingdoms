@@ -21,6 +21,8 @@ const EVENTS := {
 	"pause": {"bus": "Ui", "file": "ui/pause", "synth": ["tone", 520.0, 390.0, 0.12, 0.4], "gap": 0.1},
 	"alert": {"bus": "Ui", "file": "ui/alert", "synth": ["alarm", 880.0, 660.0, 0.5, 0.5], "gap": 1.0, "vibrate": 60},
 	"decision": {"bus": "Ui", "file": "ui/decision", "synth": ["tone", 523.0, 784.0, 0.35, 0.5], "gap": 0.5, "vibrate": 40},
+	"salvo": {"bus": "Sfx", "file": "battle/salvo", "synth": ["boom", 260.0, 70.0, 0.7, 0.6], "gap": 0.3},
+	"warn_branch": {"bus": "Ui", "file": "ui/warn_branch", "synth": ["tone", 740.0, 880.0, 0.18, 0.45], "gap": 1.0, "vibrate": 30},
 	"volley": {"bus": "Sfx", "file": "battle/volley", "synth": ["noise", 2400.0, 600.0, 0.16, 0.22], "gap": 0.09},
 	"ship_kill": {"bus": "Sfx", "file": "battle/ship_kill", "synth": ["boom", 180.0, 50.0, 0.45, 0.45], "gap": 0.07},
 	"fleet_destroyed": {"bus": "Sfx", "file": "battle/fleet_destroyed", "synth": ["boom", 120.0, 30.0, 1.3, 0.8], "gap": 0.5},

@@ -3,7 +3,7 @@ extends SceneTree
 # 상품화 표현 계층 캡처. 화면이 있는 실행에서만 의미가 있다.
 # godot --path . --script tests/capture_ui.gd -- <장면> <출력 png> [UI 크기]
 # 폰 130% 배치 확인: --resolution 1600x720 ... -- battle res://out/ui-phone.png 1.3
-# 장면: title | brief | quiet | battle | select | hold | undo | decision | wu | pause | suspend | result | settings
+# 장면: title | brief | quiet | battle | select | hold | undo | decision | wu | pause | suspend | result | settings | incoming | salvo | roster
 const SEED := 20261003
 
 func _initialize() -> void:
@@ -35,6 +35,10 @@ func _run() -> void:
 	elif mode == "settings":
 		deck.show_screen("settings")
 		deck.screens["settings"]._show_page(2)
+		for i in 30:
+			await process_frame
+	elif mode == "roster":
+		deck.show_screen("roster")
 		for i in 30:
 			await process_frame
 	elif mode == "brief":
@@ -92,6 +96,19 @@ func _run() -> void:
 			battle.selected.clear()
 			battle.selected.append(battle.fleets[2])
 			for i in 20:
+				await process_frame
+		elif mode == "incoming":
+			# 분기 예고(화면 밖 오른쪽 아래) + 빠른 선택 알림 견본(캡처 전용)
+			battle.presentation.src.incoming_override = {"secs": 3.0, "pos": battle.s2w(Vector2(2400, 1200))}
+			deck.quick_alert.open_alert({"text": "정욱의 의심이 커지고 있습니다", "options": [{"label": "황개를 늦춘다", "rec": true}, {"label": "그대로 간다"}], "time": 60.0})
+			for i in 20:
+				await process_frame
+		elif mode == "salvo":
+			for f in battle.alive(0):
+				if f.fire_t and not f.fire_t.dead:
+					deck.renderer.emphasis_volley(f.id)
+					break
+			for i in 14:
 				await process_frame
 		elif mode == "suspend":
 			# 포커스를 잃어 자동으로 멈춘 일시정지(Q53)

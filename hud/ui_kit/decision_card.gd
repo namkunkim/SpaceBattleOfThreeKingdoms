@@ -11,6 +11,7 @@ extends Control
 
 signal chosen(index: int)
 signal peek   # "전장 보기": 카드를 잠시 내려 전장을 본다
+signal delegated(index: int)   # 시간이 다 돼 추천안으로 위임 처리(리뷰 V-3)
 
 const RISK := {"low": ["낮음", Color("86e39a")], "mid": ["보통", Color("f2b84b")], "high": ["높음", Color("ff7550")]}
 
@@ -18,6 +19,31 @@ var deck: Control
 var data := {}
 var time_left := 0.0
 var _opts: Array = []
+var _clock := 0.0
+
+# 남은 시간은 게임 시계로 준다(리뷰 V-3): 입문(정지)에서는 멈추고, 표준(×0.2)에서는 실제로 길어진다.
+# 코어가 생기면 투영의 pending_decisions[].time_left를 그대로 그리고(time_left_src), 위임 판정은 코어가 한다.
+# 지금은 카드가 직접 세고, 다 되면 rec 선택지로 delegated를 낸다(자리만).
+func _process(_delta: float) -> void:
+	if not visible or data.is_empty():
+		return
+	var c: float = deck.src.clock_s()
+	if data.has("time_left_src"):
+		time_left = float(data.time_left_src.call())
+	else:
+		time_left -= maxf(0.0, c - _clock)
+	_clock = c
+	queue_redraw()
+	if time_left <= 0.0:
+		var opts: Array = data.get("options", [])
+		var rec := 0
+		for i in opts.size():
+			if str(opts[i].get("rec", "")) != "":
+				rec = i
+		var label := str(opts[rec].get("label", "")) if not opts.is_empty() else ""
+		close_card()
+		deck.battle.battle_event.emit("sys", "위임 처리 · %s" % label, -1)
+		delegated.emit(rec)
 
 func setup(d: Control) -> void:
 	deck = d
@@ -27,6 +53,7 @@ func setup(d: Control) -> void:
 func open_card(d: Dictionary) -> void:
 	data = d
 	time_left = float(d.get("time", 30.0))
+	_clock = deck.src.clock_s()
 	for b in _opts:
 		b.queue_free()
 	_opts.clear()
