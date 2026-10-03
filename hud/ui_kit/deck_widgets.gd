@@ -48,6 +48,7 @@ class CmdButton extends Button:
 	var cool_text := ""
 	var blocked := false
 	var pinned := false
+	var hold_k := 0.0   # 길게 눌러 확정 진행(0~1)
 	func _init(c: Dictionary, d: Node) -> void:
 		cmd = c
 		deck = d
@@ -74,6 +75,14 @@ class CmdButton extends Button:
 		var cost: int = cmd.get("cost", 0)
 		for i in cost:
 			UiDraw.diamond(self, Vector2(9 + i * 8, 9), 3.0, UiTheme.CP if not blocked else Color(UiTheme.CP, 0.35))
+		if hold_k > 0.0:
+			var cc := ir.get_center()
+			draw_arc(cc, 21.0, 0.0, TAU, 32, Color(UiTheme.GOLD, 0.25), 2.0, true)
+			draw_arc(cc, 21.0, -PI * 0.5, -PI * 0.5 + TAU * hold_k, 32, UiTheme.GOLD_HI, 2.6, true)
+		elif cmd.get("confirm", false):
+			# 길게 눌러 확정하는 명령 표시: 아이콘 아래 작은 점 세 개
+			for i in 3:
+				draw_circle(Vector2(size.x * 0.5 - 6 + i * 6, 47), 1.2, Color(tint, 0.55))
 		if cool > 0.0:
 			draw_rect(Rect2(0, size.y - 3, size.x, 3), Color(0.1, 0.14, 0.21))
 			draw_rect(Rect2(0, size.y - 3, size.x * (1.0 - cool), 3), UiTheme.CP)

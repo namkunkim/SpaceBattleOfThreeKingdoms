@@ -32,6 +32,7 @@ func setup(b: Node) -> void:
 	Input.emulate_mouse_from_touch = true
 
 func _process(delta: float) -> void:
+	delta = UiDraw.real_dt(delta)
 	if mode == "pending" and touches.size() == 1:
 		press_t += delta
 		if press_t >= LONG_PRESS and origin_fleet and origin_fleet.side == 0:

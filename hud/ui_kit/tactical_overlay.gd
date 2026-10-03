@@ -14,6 +14,7 @@ func setup(b: Node) -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 func _process(delta: float) -> void:
+	delta = UiDraw.real_dt(delta)
 	t += delta
 	queue_redraw()
 
@@ -150,7 +151,9 @@ func _plate(f) -> void:
 	var pw := 146.0
 	var ph := 38.0
 	var r := Rect2(s.x - 22.0, s.y - 64.0, pw, ph)
-	var sc := UiTheme.side_color(f.side)
+	var src: BattleSource = battle.presentation.src
+	var fk := src.faction(f.id)
+	var sc: Color = Factions.of(fk).color
 	draw_line(Vector2(s.x, r.end.y), Vector2(s.x, s.y - 8.0), Color(sc, 0.45), 1.0)
 	draw_circle(Vector2(s.x, s.y - 8.0), 2.0, Color(sc, 0.8))
 	var top := Color(0.16, 0.055, 0.04, 0.9) if foe else Color(0.04, 0.1, 0.12, 0.9)
@@ -160,7 +163,16 @@ func _plate(f) -> void:
 		draw_rect(r.grow(2.5), Color(UiTheme.GOLD_HI, 0.3), false, 1.0)
 	var pr := Rect2(r.position + Vector2(3, 3), Vector2(32, 32))
 	draw_texture_rect(battle._portrait_tex(f.portrait), pr, false)
-	UiDraw.seal(self, Rect2(pr.position + Vector2(20, 20), Vector2(15, 15)), f.side)
+	UiDraw.faction_seal(self, Rect2(pr.position + Vector2(20, 20), Vector2(15, 15)), fk)
+	# 소유 표시: ● 직접 지휘 / ○ 동맹 세력
+	if not foe:
+		var own := src.is_own(f.id)
+		var dp := pr.position + Vector2(5.5, 26.5)
+		draw_circle(dp, 3.6, Color(0.02, 0.03, 0.05, 0.9))
+		if own:
+			draw_circle(dp, 2.6, sc)
+		else:
+			draw_arc(dp, 2.6, 0.0, TAU, 12, sc, 1.2, true)
 	if f.is_flag:
 		UiDraw.text(self, pr.position + Vector2(2, 11), "旗", "serif_bold", 11, UiTheme.GOLD_HI, HORIZONTAL_ALIGNMENT_LEFT, -1, 3)
 	UiDraw.text(self, r.position + Vector2(42, 17), f.fname, "serif_bold", 14, UiTheme.INK)
@@ -192,9 +204,10 @@ func _plate(f) -> void:
 func _symbol(f) -> void:
 	# 원거리: 진영 기호 + 방향 + 이름
 	var s: Vector2 = battle.w2s(f.pos)
-	var sc := UiTheme.side_color(f.side)
+	var fk: String = battle.presentation.src.faction(f.id)
+	var sc: Color = Factions.of(fk).color
 	var sel: bool = battle.selected.has(f)
-	UiDraw.side_glyph(self, s + Vector2(0, -28), 6.0, f.side, sc)
+	UiDraw.faction_glyph(self, s + Vector2(0, -28), 6.0, fk, sc)
 	if f.is_flag:
 		draw_rect(Rect2(s + Vector2(-10, -38), Vector2(20, 20)), UiTheme.GOLD_HI, false, 1.2)
 	var hd := Vector2(cos(f.heading), sin(f.heading))

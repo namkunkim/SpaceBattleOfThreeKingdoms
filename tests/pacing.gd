@@ -1,6 +1,7 @@
 extends SceneTree
 
-# 전투 시간 진행 검증(헤드리스): Q52 조용한 구간 자동 ×4·건너뛰기, Q53 포커스를 잃으면 즉시 일시정지.
+# 전투 시간 진행 검증(헤드리스): Q52 조용한 구간 자동 ×4·건너뛰기, Q53 포커스를 잃으면 즉시 일시정지,
+# Q31·Q55 선택 감속(×0.2)과 5초 유휴 해제, 명령 확정 시 해제.
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -17,6 +18,7 @@ func _run() -> void:
 	var pacing = deck.pacing
 	var src: BattleSource = battle.presentation.src
 	GameSettings.auto_fast = true
+	GameSettings.slow_select = false
 	deck.begin_battle()
 	await _frames(2)
 	if not TestCheck.ok(self, battle.G.state == "play" and battle.G.speed == 1, "battle starts at x1"): return
@@ -55,6 +57,29 @@ func _run() -> void:
 	if not TestCheck.ok(self, not src.quiet(), "skip reaches engagement (game clock %.0fs)" % battle.G.t): return
 	if not TestCheck.ok(self, pacing.mode == pacing.Mode.USER and battle.G.speed == 1, "engagement returns to x1"): return
 	if not TestCheck.ok(self, not pacing.can_skip(), "skip unavailable during engagement"): return
+	# Q31·Q55: 선택하면 ×0.2, 5초(실제 시간) 입력이 없으면 해제, 다시 만지면 감속
+	GameSettings.slow_select = true
+	battle.selected.clear()
+	battle.selected.append(battle.fleets[1])
+	var k := InputEventKey.new()
+	k.keycode = KEY_SHIFT
+	k.pressed = true
+	root.push_input(k, true)
+	await _frames(3)
+	if not TestCheck.ok(self, pacing.slow and is_equal_approx(Engine.time_scale, 0.2), "select -> x0.2"): return
+	await create_timer(5.4, true, false, true).timeout
+	await _frames(2)
+	if not TestCheck.ok(self, not pacing.slow and is_equal_approx(Engine.time_scale, 1.0) and battle.selected.size() == 1, "idle 5s -> x1, selection kept"): return
+	root.push_input(k, true)
+	await _frames(3)
+	if not TestCheck.ok(self, pacing.slow, "touch again -> slow again"): return
+	# 명령 확정(정지 명령)이면 해제
+	battle.fleets[1].has_move = true
+	battle.fleets[1].move_to = battle.fleets[1].pos + Vector2(200, 0)
+	await _frames(3)
+	if not TestCheck.ok(self, not pacing.slow and is_equal_approx(Engine.time_scale, 1.0), "order confirmed -> x1"): return
+	battle.selected.clear()
+	await _frames(2)
 	# Q53: 포커스를 잃으면 즉시 일시정지
 	deck.guard.notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
 	await _frames(2)

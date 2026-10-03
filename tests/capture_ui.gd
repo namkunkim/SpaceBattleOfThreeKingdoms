@@ -3,7 +3,7 @@ extends SceneTree
 # 상품화 표현 계층 캡처. 화면이 있는 실행에서만 의미가 있다.
 # godot --path . --script tests/capture_ui.gd -- <장면> <출력 png> [UI 크기]
 # 폰 130% 배치 확인: --resolution 1600x720 ... -- battle res://out/ui-phone.png 1.3
-# 장면: title | brief | quiet | battle | select | hold | pause | suspend | result
+# 장면: title | brief | quiet | battle | select | hold | undo | decision | wu | pause | suspend | result
 const SEED := 20261003
 
 func _initialize() -> void:
@@ -18,6 +18,8 @@ func _run() -> void:
 	await process_frame
 	seed(SEED)
 	var deck = battle.presentation.hud if battle.presentation else null
+	if deck and mode != "suspend":
+		deck.guard.enabled = false   # 캡처 창이 포커스를 잃어도 일시정지하지 않는다
 	if args.size() > 2:
 		GameSettings.ui_scale = float(args[2])
 		GameSettings.apply(root.get_window())
@@ -65,6 +67,26 @@ func _run() -> void:
 					m.pressed = true
 					root.push_input(m, true)
 			for i in 50:
+				await process_frame
+		elif mode == "undo":
+			battle.order_move(battle.fleets[1].pos + Vector2(260, -120))
+			for i in 20:
+				await process_frame
+		elif mode == "decision":
+			# 자리 확인용 견본(캡처 전용). 게임에는 코어의 분기만 뜬다.
+			deck.decision_card.open_card({"speaker": "제갈량", "portrait": 3, "line": "황개 전대가 바람 창에 닿았습니다. 지금 불을 놓으시겠습니까?", "queue": 1, "time": 30.0,
+				"options": [{"label": "화공 발동", "effects": [["표적 사기", "−3500"], ["적 군 사기", "−2500"]], "risk": {"level": "high", "why": "간파 위험: 의심 82"}, "rec": "제갈량"},
+					{"label": "한 번 더 기다린다", "effects": [["기류 창 남은 시간", "약 40초"]], "risk": {"level": "mid", "why": "기류가 바뀔 수 있음"}, "rec": ""},
+					{"label": "황개를 물린다", "effects": [["황개 전대", "후퇴"]], "risk": {"level": "low", "why": "기회 상실"}, "rec": ""}]})
+			deck.decision_card.time_left = 21.0
+			for i in 20:
+				await process_frame
+		elif mode == "wu":
+			# 오(吳) 세력 표시 확인용: 아군 전대 둘을 동맹 세력으로 바꿔 그린다(캡처 전용)
+			battle.presentation.src.faction_override = {battle.fleets[2].id: "wu", battle.fleets[3].id: "wu"}
+			battle.selected.clear()
+			battle.selected.append(battle.fleets[2])
+			for i in 20:
 				await process_frame
 		elif mode == "suspend":
 			# 포커스를 잃어 자동으로 멈춘 일시정지(Q53)

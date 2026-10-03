@@ -46,6 +46,7 @@ func _input(e: InputEvent) -> void:
 			_hide()
 
 func _process(delta: float) -> void:
+	delta = UiDraw.real_dt(delta)
 	if _btn == null or _tip != null:
 		return
 	if not is_instance_valid(_btn) or not _btn.is_visible_in_tree():
@@ -68,7 +69,8 @@ func _open(b: Control) -> void:
 			return
 		tip = _plain(b.tooltip_text)
 	# 손을 떼도 버튼이 눌리지 않게 누름 상태를 지운다(disabled를 껐다 켜면 BaseButton이 누름을 잊는다).
-	if b is BaseButton and not (b as BaseButton).disabled:
+	# 길게 눌러 확정하는 버튼은 누름을 그대로 둔다(확정 판정은 명령 데크가 한다).
+	if b is BaseButton and not (b as BaseButton).disabled and not b.has_meta("hold_confirm"):
 		(b as BaseButton).disabled = true
 		(b as BaseButton).disabled = false
 	_tip = tip
@@ -78,7 +80,7 @@ func _open(b: Control) -> void:
 	tip.modulate.a = 0.0
 	if _fade:
 		_fade.kill()
-	_fade = create_tween()
+	_fade = create_tween().set_ignore_time_scale()
 	_fade.tween_property(tip, "modulate:a", 1.0, 0.12)
 	Input.vibrate_handheld(20)
 
@@ -100,6 +102,10 @@ func _plain(text: String) -> Control:
 	var l := UiTheme.label(text, "Body", 13)
 	p.add_child(l)
 	return p
+
+func hide_tip() -> void:
+	_btn = null
+	_hide()
 
 func _hide() -> void:
 	if _tip:

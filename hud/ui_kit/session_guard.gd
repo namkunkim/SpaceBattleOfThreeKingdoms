@@ -7,11 +7,14 @@ signal suspend_requested(reason: String)
 
 var deck: Control
 var auto_paused := false   # 마지막 일시정지가 자동이었는가(일시정지 화면 안내 문구)
+var enabled := true        # 캡처처럼 창 포커스와 무관하게 돌려야 할 때 끈다
 
 func setup(d: Control) -> void:
 	deck = d
 
 func _notification(what: int) -> void:
+	if not enabled:
+		return
 	match what:
 		NOTIFICATION_APPLICATION_PAUSED:
 			suspend("background")
