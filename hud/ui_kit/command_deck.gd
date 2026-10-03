@@ -46,6 +46,7 @@ var hold_tip: HoldTip
 var undo_bar: Control
 var decision_card: Control
 var strip: Control
+var sound: UiSound
 const CONFIRM_HOLD := 0.6   # 길게 눌러 확정(리뷰 U3)
 var _confirm_btn: Control = null
 var _confirm_t := 0.0
@@ -125,6 +126,7 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 	for c in cmd_buttons:
 		hold_tip.register(c)
 	screens = Screens.build_all(self)
+	_build_sound()
 	battle.battle_event.connect(_on_event)
 	GameSettings.apply(get_window())
 	get_window().title = "성한지 — 적벽 회랑"
@@ -505,9 +507,16 @@ func _cutin(name: String, sub: String, portrait: int, side: int, line: String) -
 func _on_event(kind: String, text: String, fleet_id: int) -> void:
 	if kind == "toast":
 		show_toast(text)
+		sound.play("denied")   # POC 알림 띠는 거의 다 "할 수 없음" 안내다
 		return
 	add_log_entry(kind, text, fleet_id)
 	var f = battle.by_id(fleet_id) if fleet_id >= 0 else null
+	if kind == "sys":
+		sound.play("alert")
+	elif kind == "foe" and f and f.side == 0:
+		sound.play("fleet_lost")
+	elif text.contains("격파") or text.contains("궤멸"):
+		sound.play("fleet_destroyed")
 	if kind == "sys":
 		_cutin("제갈량", "군사 · 孔明", 2, 0, Commanders.REINF_LINE)
 	elif kind == "foe" and f:
@@ -731,10 +740,35 @@ func _set_tab(i: int) -> void:
 			b.pressed.connect(func(): battle.do_cmd(id))
 		cmd_grid.add_child(b)
 		cmd_buttons.append(b)
+		if sound:
+			_hook_buttons(b)
 		if hold_tip:
 			hold_tip.register(b)
 
 # 길게 눌러 확정: 누르는 동안 버튼에 고리가 차고, 다 차면 명령을 실행한다. 일찍 떼면 취소.
+# ------------------------------------------------------------ 효과음 훅
+func _build_sound() -> void:
+	sound = UiSound.new()
+	sound.name = "UiSound"
+	add_child(sound)
+	_hook_buttons(self)
+	renderer.fx_event.connect(func(k: String): sound.play(k))
+	pacing.changed.connect(func():
+		if src.state() == "pause":
+			sound.play("pause"))
+	decision_card.visibility_changed.connect(func():
+		if decision_card.visible:
+			sound.play("decision"))
+
+# 모든 버튼: 누르면 "button"(탭은 "tab"). 명령 버튼은 길게 눌러 확정할 때 "confirm_heavy"를 따로 낸다.
+func _hook_buttons(n: Node) -> void:
+	if n is BaseButton and not n.has_meta("sound_hooked"):
+		n.set_meta("sound_hooked", true)
+		var ev := "tab" if n is W.TabButton else "button"
+		(n as BaseButton).button_down.connect(func(): sound.play(ev))
+	for c in n.get_children():
+		_hook_buttons(c)
+
 func _confirm_start(b: Control) -> void:
 	_confirm_btn = b
 	_confirm_t = 0.0
@@ -762,7 +796,7 @@ func _confirm_tick(delta: float) -> void:
 		_confirm_fired = true
 		_confirm_btn.hold_k = 0.0
 		hold_tip.hide_tip()
-		Input.vibrate_handheld(40)
+		sound.play("confirm_heavy")
 		battle.do_cmd(_confirm_btn.cmd.id)
 
 func _refresh_cmds() -> void:

@@ -45,6 +45,7 @@ func _process(delta: float) -> void:
 				prev[id] = _last[id]
 		if not prev.is_empty():
 			_undo = prev
+			deck.sound.play("confirm")
 			_what = _describe(prev, now)
 			_left = SHOW
 			visible = true
@@ -78,6 +79,7 @@ func undo() -> void:
 	if _undo.is_empty():
 		return
 	src.restore_orders(_undo)
+	deck.sound.play("undo")
 	_last = src.order_snapshot()   # 되돌린 것을 새 명령으로 알아채지 않게
 	deck.show_toast("명령을 되돌렸습니다")
 	_close()
