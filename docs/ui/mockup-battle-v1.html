@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>성한지 전투 화면 초안</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+<style>
+:root{
+  --lacquer:#0b1018; --lacquer-2:#121a26; --lacquer-3:#1a2433;
+  --gold:#c9a45c; --gold-hi:#f0d79a; --gold-lo:#6d5631; --bronze:#8a6a3a;
+  --ink:#e9eef2; --ink-2:#b7c2cc; --ink-3:#7d8a96;
+  --ally:#5fe0cf; --ally-hi:#bff7ef; --foe:#ff7a52; --foe-hi:#ffd0b8;
+  --life:#7fe08f; --warn:#f2b84b; --cp:#7ea8ff;
+  --serif:'Noto Serif KR',serif; --sans:'Pretendard',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#000;overflow:hidden;font-family:var(--sans);color:var(--ink)}
+#stage{position:absolute;left:0;top:0;width:1600px;height:900px;transform-origin:0 0;overflow:hidden;background:#02050b}
+canvas{position:absolute;inset:0}
+.hud{position:absolute;inset:0;pointer-events:none}
+.hud *{pointer-events:auto}
+.plate{position:absolute;background:linear-gradient(180deg,rgba(22,30,44,.92),rgba(9,13,20,.94));border:1px solid var(--gold-lo);box-shadow:inset 0 0 0 1px rgba(240,215,154,.06),0 8px 24px rgba(0,0,0,.45)}
+.plate::before,.plate::after{content:"";position:absolute;width:14px;height:14px;border-color:var(--gold);border-style:solid;pointer-events:none}
+.plate::before{left:-1px;top:-1px;border-width:2px 0 0 2px}
+.plate::after{right:-1px;bottom:-1px;border-width:0 2px 2px 0}
+.eyebrow{font-size:11px;letter-spacing:.18em;color:var(--gold);font-weight:600}
+.serif{font-family:var(--serif)}
+.pt{background-image:url(../../assets/portraits/commanders_sheet_v1.png);background-size:300% 200%}
+.p0{background-position:0 0}.p1{background-position:50% 0}.p2{background-position:100% 0}
+.p3{background-position:0 100%}.p4{background-position:50% 100%}.p5{background-position:100% 100%}
+
+#top{left:50%;top:10px;transform:translateX(-50%);width:640px;height:64px;display:grid;grid-template-columns:1fr 132px 1fr;align-items:center;padding:0 16px;gap:12px}
+.side{display:flex;flex-direction:column;gap:5px}
+.side .nm{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-2)}
+.side .nm b{font-family:var(--serif);font-size:14px;color:var(--ink);font-weight:700}
+.bar{height:7px;background:#060a10;border:1px solid #2a3443;position:relative;overflow:hidden}
+.bar i{position:absolute;inset:0 auto 0 0;display:block}
+.foeside .bar i{left:auto;right:0}
+#clock{text-align:center;border-left:1px solid #2c3646;border-right:1px solid #2c3646;height:44px;display:flex;flex-direction:column;justify-content:center}
+#clock .ph{font-size:11px;letter-spacing:.3em;color:var(--warn);font-weight:700}
+#clock .t{font-family:var(--serif);font-size:22px;line-height:1.1;color:var(--ink)}
+#cp{position:absolute;left:50%;top:80px;transform:translateX(-50%);display:flex;align-items:center;gap:8px;font-size:11px;color:var(--ink-3)}
+#cp .pip{width:16px;height:6px;background:#141d2b;border:1px solid #2a3750;transform:skewX(-20deg)}
+#cp .pip.on{background:var(--cp);border-color:#a9c4ff;box-shadow:0 0 6px rgba(126,168,255,.6)}
+
+#sys{right:14px;top:14px;display:flex;gap:6px;padding:6px}
+.ib{width:38px;height:34px;display:grid;place-items:center;background:#0e1520;border:1px solid #2b3647;color:var(--ink-2);font-size:13px;font-weight:600;cursor:pointer}
+.ib.on{border-color:var(--gold);color:var(--gold-hi)}
+
+#log{position:absolute;left:14px;top:14px;width:340px;display:flex;flex-direction:column;gap:6px;pointer-events:none}
+.msg{display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:center;padding:5px 10px 5px 5px;background:linear-gradient(90deg,rgba(10,18,24,.92),rgba(10,18,24,.55));border-left:2px solid var(--ally);font-size:12.5px;line-height:1.35}
+.msg .pt{width:34px;height:34px;border:1px solid #2c3a44}
+.msg small{display:block;color:var(--ink-3);font-size:11px}
+.msg.foe{border-left-color:var(--foe);background:linear-gradient(90deg,rgba(30,10,8,.92),rgba(30,10,8,.5))}
+.msg.sys{border-left-color:var(--warn)}
+
+#radar{position:absolute;left:14px;bottom:14px;width:172px;height:172px;border-radius:50%;padding:8px;background:radial-gradient(circle,#0c1a2b 0,#060c15 70%);border:1px solid var(--gold-lo);box-shadow:0 0 0 4px rgba(9,13,20,.9),0 0 0 5px var(--gold-lo)}
+#radar canvas{position:absolute;inset:8px;width:154px;height:154px;border-radius:50%}
+#radar .lbl{position:absolute;left:50%;bottom:-6px;transform:translate(-50%,100%);font-size:10px;letter-spacing:.25em;color:var(--gold)}
+
+#info{left:50%;bottom:14px;transform:translateX(-50%);width:600px;height:142px;display:grid;grid-template-columns:116px 1fr;gap:14px;padding:12px 16px 12px 12px}
+.frame{position:relative;width:116px;height:116px;padding:3px;background:linear-gradient(135deg,var(--gold-hi),var(--bronze) 45%,var(--gold-lo));clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px)}
+.frame .pt{width:100%;height:100%;clip-path:inherit}
+.frame .star{position:absolute;left:6px;bottom:6px;font-size:10px;padding:2px 6px;background:#0b1018;color:var(--gold-hi);border:1px solid var(--gold);letter-spacing:.1em}
+.hd{display:flex;align-items:baseline;gap:10px}
+.hd h2{font-family:var(--serif);font-size:24px;font-weight:700;letter-spacing:.02em}
+.hd span{font-size:12px;color:var(--ink-3)}
+.row{display:flex;justify-content:space-between;align-items:baseline;margin-top:6px;font-size:12px;color:var(--ink-2)}
+.row b{font-size:15px;color:var(--ink);font-weight:600}
+.hp{height:8px;margin-top:4px;background:#060a10;border:1px solid #2a3443;position:relative}
+.hp i{position:absolute;inset:0 auto 0 0;width:89%;background:linear-gradient(90deg,#3fae63,var(--life))}
+.hp em{position:absolute;inset:0 auto 0 89%;width:4%;background:rgba(255,120,80,.55)}
+.comp{display:flex;gap:10px;margin-top:9px;font-size:11px;color:var(--ink-3)}
+.comp b{color:var(--ink-2);font-weight:600;margin-left:3px}
+.chips{display:flex;gap:6px;margin-top:8px}
+.chip{font-size:11px;padding:3px 8px;border:1px solid #2f3b4c;background:#0d141e;color:var(--ink-2);display:flex;gap:5px;align-items:center}
+.chip.g{border-color:var(--gold-lo);color:var(--gold-hi)}
+.chip.c{border-color:#2d5a55;color:var(--ally-hi)}
+.ring{width:12px;height:12px;border-radius:50%;background:conic-gradient(var(--cp) 0 62%,#1d2636 62%)}
+
+#cmd{right:14px;bottom:14px;width:316px;height:198px;padding:0}
+.tabs{display:flex;border-bottom:1px solid #2a3443}
+.tab{flex:1;height:34px;display:grid;place-items:center;font-family:var(--serif);font-size:14px;color:var(--ink-3);cursor:pointer;position:relative}
+.tab.on{color:var(--gold-hi)}
+.tab.on::after{content:"";position:absolute;left:20%;right:20%;bottom:-1px;height:2px;background:var(--gold)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:10px}
+.cb{height:68px;background:linear-gradient(180deg,#152031,#0c121c);border:1px solid #2b3749;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;position:relative;color:var(--ink)}
+.cb:hover{border-color:var(--gold);background:linear-gradient(180deg,#1c2a40,#101826)}
+.cb svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.6}
+.cb span{font-size:12px}
+.cb kbd{position:absolute;right:4px;top:3px;font-size:9.5px;color:var(--ink-3);font-family:var(--sans)}
+.cb .cost{position:absolute;left:4px;top:3px;font-size:9.5px;color:var(--cp)}
+.cb.warm{color:var(--gold-hi)}
+.cb.hot{color:var(--foe-hi)}
+.cb.cool{opacity:.55}
+.cb .cd{position:absolute;inset:auto 0 0 0;height:3px;background:var(--cp)}
+
+#groups{position:absolute;right:14px;bottom:222px;display:flex;gap:6px}
+.gb{width:48px;height:30px;display:grid;place-items:center;font-family:var(--serif);font-size:13px;background:#0e1520;border:1px solid #2b3647;color:var(--ink-2)}
+.gb.on{border-color:var(--ally);color:var(--ally-hi);box-shadow:inset 0 -2px 0 var(--ally)}
+.gb small{font-size:9px;color:var(--ink-3);margin-left:2px}
+
+#toast{left:50%;top:116px;transform:translateX(-50%);padding:8px 22px;font-size:14px;color:var(--warn);background:linear-gradient(90deg,transparent,rgba(40,26,6,.9) 20%,rgba(40,26,6,.9) 80%,transparent);border-top:1px solid rgba(242,184,75,.4);border-bottom:1px solid rgba(242,184,75,.4);letter-spacing:.06em;position:absolute;white-space:nowrap}
+#note{position:absolute;left:50%;bottom:-40px}
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="cv" width="1600" height="900"></canvas>
+  <div class="hud">
+    <div id="log">
+      <div class="msg"><div class="pt p1"></div><div>관우 함대, 위 선봉 측면 돌입<small>07:38 · 측면 공격 +30%</small></div></div>
+      <div class="msg foe"><div class="pt p5"></div><div>장료 함대 전열 붕괴 조짐<small>07:31</small></div></div>
+      <div class="msg sys"><div class="pt p0"></div><div>경고 · 별동대 접근 예상 구역 확인<small>07:12</small></div></div>
+    </div>
+
+    <div id="top" class="plate">
+      <div class="side">
+        <div class="nm"><b>촉한 연합</b><span>전력 82%</span></div>
+        <div class="bar"><i style="width:82%;background:linear-gradient(90deg,#2a9c90,var(--ally))"></i></div>
+      </div>
+      <div id="clock"><div class="ph">교 전</div><div class="t">07:42</div></div>
+      <div class="side foeside">
+        <div class="nm"><span>전력 64%</span><b>위 원정군</b></div>
+        <div class="bar"><i style="width:64%;background:linear-gradient(270deg,#b8452a,var(--foe))"></i></div>
+      </div>
+    </div>
+    <div id="cp">커맨드 <span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span> 6</div>
+    <div id="toast">적 별동대 2개 함대 출현 · 북측 측면 주의</div>
+
+    <div id="sys" class="plate">
+      <div class="ib on">×1</div><div class="ib">×2</div>
+      <div class="ib"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="3" y="2" width="3.5" height="12"/><rect x="9.5" y="2" width="3.5" height="12"/></svg></div>
+      <div class="ib"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.5 1.5M11.5 11.5L13 13M13 3l-1.5 1.5M4.5 11.5L3 13"/></svg></div>
+    </div>
+
+    <div id="radar"><canvas id="rd" width="154" height="154"></canvas><div class="lbl">전술 레이더</div></div>
+
+    <div id="info" class="plate">
+      <div class="frame"><div class="pt p1"></div><div class="star">제1분함대</div></div>
+      <div>
+        <div class="hd"><h2>관우 함대</h2><span>쐐기진 · 돌격 태세</span></div>
+        <div class="row"><span>함선</span><b>96 <span style="color:var(--ink-3);font-size:12px;font-weight:400">/ 108척</span></b></div>
+        <div class="hp"><i></i><em></em></div>
+        <div class="comp"><span>전열<b>38</b></span><span>화력<b>21</b></span><span>항모<b>10</b></span><span>전자전<b>7</b></span><span>호위<b>14</b></span><span>보급<b>6</b></span></div>
+        <div class="chips">
+          <div class="chip c">지휘 범위 안</div>
+          <div class="chip g">측면 공격 중</div>
+          <div class="chip"><span class="ring"></span>미사일 7초</div>
+          <div class="chip">함재기 준비</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="groups">
+      <div class="gb">I</div><div class="gb on">II<small>2</small></div><div class="gb">III</div><div class="gb">IV</div>
+    </div>
+    <div id="cmd" class="plate">
+      <div class="tabs"><div class="tab on">태세</div><div class="tab">무장</div><div class="tab" style="opacity:.35">진형</div></div>
+      <div class="grid">
+        <div class="cb"><kbd>S</kbd><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12"/></svg><span>정지</span></div>
+        <div class="cb"><kbd>D</kbd><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/></svg><span>방어</span></div>
+        <div class="cb warm"><kbd>C</kbd><div class="cost">CP 3</div><svg viewBox="0 0 24 24"><path d="M4 7l6 5-6 5M12 7l6 5-6 5"/></svg><span>돌격</span></div>
+        <div class="cb"><kbd>R</kbd><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/><path d="M12 3v5M12 16v5M3 12h5M16 12h5"/></svg><span>집결</span></div>
+        <div class="cb"><kbd>G</kbd><svg viewBox="0 0 24 24"><path d="M10 6l-6 6 6 6M4 12h16"/></svg><span>후퇴</span></div>
+        <div class="cb hot"><kbd>M</kbd><div class="cost">CP 2</div><svg viewBox="0 0 24 24"><path d="M5 19l9-9M14 10l2-5 3 3-5 2M7 13l-2 2M11 17l-2 2"/></svg><span>미사일</span><div class="cd" style="width:62%"></div></div>
+        <div class="cb hot"><kbd>F</kbd><div class="cost">CP 3</div><svg viewBox="0 0 24 24"><path d="M12 4l3 8-3 2-3-2zM5 14l7-2 7 2M9 19l3-5 3 5"/></svg><span>함재기</span></div>
+        <div class="cb"><kbd>A</kbd><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/></svg><span>전체</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const stage=document.getElementById('stage');
+function fit(){const s=Math.min(innerWidth/1600,innerHeight/900);stage.style.transform=`translate(${(innerWidth-1600*s)/2}px,${(innerHeight-900*s)/2}px) scale(${s})`}
+addEventListener('resize',fit);fit();
+
+const cv=document.getElementById('cv'),g=cv.getContext('2d');
+const rd=document.getElementById('rd'),rg=rd.getContext('2d');
+let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};
+
+const stars=[];for(let i=0;i<900;i++)stars.push({x:rnd()*1800-100,y:rnd()*1000-50,z:rnd(),b:rnd()});
+const neb=[];for(let i=0;i<14;i++)neb.push({x:rnd()*1600,y:rnd()*900,r:180+rnd()*320,c:rnd()<.5?'40,110,140':(rnd()<.6?'120,90,40':'110,40,40'),a:.05+rnd()*.07});
+
+function mkFleet(name,side,x,y,head,cols,rows,sel,form){
+  const ships=[];
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
+    let fx=-r*15,fy=(c-(cols-1)/2)*9.5;
+    if(form==='wedge'){fx-=Math.abs(c-(cols-1)/2)*7}
+    if(form==='crane'){fx+=Math.abs(c-(cols-1)/2)*5.5}
+    const big=r<2?1:(r>rows-2?0.75:0.9);
+    ships.push({fx:fx+(rnd()-.5)*3,fy:fy+(rnd()-.5)*2.4,ph:rnd()*6.28,s:big*(0.85+rnd()*.3),alive:true,kind:c%7===3?1:0});
+  }
+  return {name,side,x,y,head,ships,sel,vol:rnd()*2.4,hit:0};
+}
+const fleets=[
+  mkFleet('유비',0,380,470,0.06,14,6,false,'square'),
+  mkFleet('관우',0,690,300,0.22,16,6,true,'wedge'),
+  mkFleet('장비',0,720,560,0.02,15,6,false,'line'),
+  mkFleet('조운',0,560,760,-0.25,12,5,false,'line'),
+  mkFleet('장료',1,1010,380,Math.PI+0.18,16,6,false,'line'),
+  mkFleet('하후돈',1,1080,600,Math.PI-0.05,15,6,false,'crane'),
+  mkFleet('조조',1,1330,470,Math.PI,15,7,false,'square'),
+];
+const pairs=[[1,4],[2,5],[4,1],[5,2],[0,4],[6,2]];
+const beams=[],fx=[];
+
+function shipXY(f,s,t){const bob=Math.sin(t*0.9+s.ph)*1.2;const c=Math.cos(f.head),n=Math.sin(f.head);return[f.x+s.fx*c-(s.fy+bob*.4)*n,f.y+s.fx*n+(s.fy+bob*.4)*c]}
+function front(f){return f.ships.filter(s=>s.alive&&s.fx>-32)}
+
+function volley(a,b,t){
+  const fr=front(a);const tg=b.ships.filter(s=>s.alive);if(!tg.length)return;
+  const n=Math.min(fr.length,22);
+  for(let i=0;i<n;i++){
+    const s=fr[Math.floor(rnd()*fr.length)],d=tg[Math.floor(rnd()*tg.length)];
+    beams.push({a,s,b,d,t0:t+rnd()*.18,dur:.32+rnd()*.12,side:a.side});
+  }
+}
+function impact(x,y,side,kill){
+  if(kill){fx.push({x,y,t:0,life:.9,k:'boom',side});fx.push({x,y,t:0,life:.5,k:'ring'});for(let i=0;i<8;i++){const a=rnd()*6.28,v=20+rnd()*60;fx.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,t:0,life:.6+rnd()*.6,k:'spark',side})}}
+  else fx.push({x,y,t:0,life:.28,k:'shield',side});
+}
+
+function drawShip(x,y,h,s,side,sel,hl){
+  g.save();g.translate(x,y);g.rotate(h);g.scale(s,s);
+  g.globalCompositeOperation='lighter';
+  const eg=g.createRadialGradient(-8,0,0,-8,0,7);
+  eg.addColorStop(0,side?'rgba(255,200,150,.95)':'rgba(190,250,255,.95)');eg.addColorStop(.4,side?'rgba(255,110,60,.5)':'rgba(70,200,255,.45)');eg.addColorStop(1,'rgba(0,0,0,0)');
+  g.fillStyle=eg;g.fillRect(-15,-7,14,14);
+  g.globalCompositeOperation='source-over';
+  g.fillStyle=hl?'#ffffff':(side?'#9c8478':'#8fa3ad');
+  g.beginPath();g.moveTo(8,0);g.lineTo(2,-2.2);g.lineTo(-7,-2.6);g.lineTo(-8,-1.2);g.lineTo(-8,1.2);g.lineTo(-7,2.6);g.lineTo(2,2.2);g.closePath();g.fill();
+  g.fillStyle=side?'#e8cdbf':'#d6eef3';g.fillRect(-4,-0.7,8,1.4);
+  g.fillStyle=side?'rgba(255,140,90,.9)':'rgba(120,240,255,.9)';g.fillRect(-1.5,-.5,2,1);
+  g.restore();
+}
+
+function drawPlate(f,t){
+  const al=f.ships.filter(s=>s.alive).length,tot=f.ships.length;
+  const x=f.x-40,y=f.y-(f.side?78:84);
+  g.save();
+  g.fillStyle=f.side?'rgba(28,10,8,.82)':'rgba(6,18,22,.82)';
+  g.fillRect(x,y,112,30);
+  g.strokeStyle=f.sel?'#f0d79a':(f.side?'rgba(255,122,82,.6)':'rgba(95,224,207,.55)');g.lineWidth=f.sel?1.5:1;g.strokeRect(x+.5,y+.5,111,29);
+  g.fillStyle=f.side?'#ff7a52':'#5fe0cf';
+  if(f.side){g.beginPath();g.moveTo(x+8,y+9);g.lineTo(x+13,y+15);g.lineTo(x+8,y+21);g.lineTo(x+3,y+15);g.fill()}else g.fillRect(x+4,y+10,8,10);
+  g.font='600 13px "Noto Serif KR"';g.fillStyle='#eef3f5';g.fillText(f.name,x+18,y+15);
+  g.font='500 10.5px Pretendard';g.fillStyle='#9fb0bb';g.fillText(Math.round(al*1.25)+'척',x+76,y+14);
+  g.fillStyle='#060a10';g.fillRect(x+18,y+20,88,4);
+  g.fillStyle=f.side?'#ff7a52':'#7fe08f';g.fillRect(x+18,y+20,88*al/tot,4);
+  g.restore();
+}
+
+function frame(ms){
+  const t=ms/1000;
+  g.fillStyle='#02050b';g.fillRect(0,0,1600,900);
+  for(const n of neb){const gr=g.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r);gr.addColorStop(0,`rgba(${n.c},${n.a})`);gr.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gr;g.fillRect(n.x-n.r,n.y-n.r,n.r*2,n.r*2)}
+  const px=Math.sin(t*.05)*30;
+  for(const s of stars){const x=s.x+px*s.z,y=s.y;g.fillStyle=`rgba(210,225,255,${.25+s.b*.6*s.z})`;g.fillRect(x,y,s.z>.85?1.6:1,s.z>.85?1.6:1)}
+  g.strokeStyle='rgba(120,160,220,.06)';g.lineWidth=1;
+  for(let x=0;x<=1600;x+=100){g.beginPath();g.moveTo(x,0);g.lineTo(x,900);g.stroke()}
+  for(let y=0;y<=900;y+=100){g.beginPath();g.moveTo(0,y);g.lineTo(1600,y);g.stroke()}
+
+  const fl=fleets[0];g.save();g.strokeStyle='rgba(95,224,207,.25)';g.setLineDash([2,6]);g.beginPath();g.arc(fl.x,fl.y,420,0,6.28);g.stroke();g.restore();
+
+  for(const f of fleets){f.x+=Math.cos(f.head)*.04;f.y+=Math.sin(f.head)*.04}
+  for(const[a,b]of pairs){const A=fleets[a],B=fleets[b];if(t>A.vol){A.vol=t+2.2+rnd()*.8;volley(A,B,t)}}
+
+  const sf=fleets.find(f=>f.sel);
+  if(sf){g.save();g.strokeStyle='rgba(240,215,154,.5)';g.setLineDash([8,6]);g.lineWidth=1.5;g.beginPath();g.moveTo(sf.x,sf.y);g.lineTo(fleets[4].x,fleets[4].y);g.stroke();g.restore();
+    g.save();g.translate(sf.x,sf.y);g.rotate(sf.head);g.strokeStyle='rgba(240,215,154,.8)';g.lineWidth=1.5;
+    const w=100,h=78;for(const[sx,sy]of[[-1,-1],[1,-1],[1,1],[-1,1]]){g.beginPath();g.moveTo(sx*w/1.3-sx*-0,sy*h/2-sy*0);g.moveTo(sx*w*.62,sy*h/2);g.lineTo(sx*w*.62,sy*h/2-sy*12);g.moveTo(sx*w*.62,sy*h/2);g.lineTo(sx*w*.62-sx*14,sy*h/2);g.stroke()}
+    g.fillStyle='rgba(240,215,154,.85)';g.beginPath();g.moveTo(80,0);g.lineTo(68,-7);g.lineTo(68,7);g.fill();g.restore()}
+
+  for(const f of fleets){
+    for(const s of f.ships){if(!s.alive)continue;const[x,y]=shipXY(f,s,t);drawShip(x,y,f.head,s.s,f.side,false,s.flash>t)}
+  }
+
+  g.globalCompositeOperation='lighter';
+  for(let i=beams.length-1;i>=0;i--){
+    const b=beams[i],k=(t-b.t0)/b.dur;if(k<0)continue;
+    if(!b.s.alive||!b.d.alive){if(k>1)beams.splice(i,1);continue}
+    const[ax,ay]=shipXY(b.a,b.s,t),[bx,by]=shipXY(b.b,b.d,t);
+    if(k>1){const kill=rnd()<.07;if(kill){b.d.alive=false}else b.d.flash=t+.08;impact(bx,by,b.b.side,kill);beams.splice(i,1);continue}
+    const h=Math.min(1,k*1.15),tl=Math.max(0,k*1.15-.45);
+    const x1=ax+(bx-ax)*tl,y1=ay+(by-ay)*tl,x2=ax+(bx-ax)*h,y2=ay+(by-ay)*h;
+    const col=b.side?'255,140,80':'110,235,255';
+    g.strokeStyle=`rgba(${col},.22)`;g.lineWidth=4;g.beginPath();g.moveTo(x1,y1);g.lineTo(x2,y2);g.stroke();
+    g.strokeStyle=`rgba(${col},.9)`;g.lineWidth=1.3;g.beginPath();g.moveTo(x1,y1);g.lineTo(x2,y2);g.stroke();
+    g.strokeStyle='rgba(255,255,255,.9)';g.lineWidth=.6;g.beginPath();g.moveTo(x1,y1);g.lineTo(x2,y2);g.stroke();
+    if(k<.12){g.fillStyle=`rgba(${col},.8)`;g.beginPath();g.arc(ax,ay,3,0,6.28);g.fill()}
+  }
+  for(let i=fx.length-1;i>=0;i--){
+    const e=fx[i];e.t+=1/60;const k=e.t/e.life;if(k>=1){fx.splice(i,1);continue}
+    if(e.k==='shield'){const r=4+k*7;const gr=g.createRadialGradient(e.x,e.y,0,e.x,e.y,r);gr.addColorStop(0,`rgba(220,245,255,${.9*(1-k)})`);gr.addColorStop(.6,`rgba(90,170,255,${.35*(1-k)})`);gr.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gr;g.beginPath();g.arc(e.x,e.y,r,0,6.28);g.fill()}
+    if(e.k==='boom'){const r=6+k*22;const gr=g.createRadialGradient(e.x,e.y,0,e.x,e.y,r);gr.addColorStop(0,`rgba(255,255,240,${1-k})`);gr.addColorStop(.35,`rgba(255,190,90,${.8*(1-k)})`);gr.addColorStop(1,'rgba(120,30,10,0)');g.fillStyle=gr;g.beginPath();g.arc(e.x,e.y,r,0,6.28);g.fill()}
+    if(e.k==='ring'){g.strokeStyle=`rgba(255,240,210,${.7*(1-k)})`;g.lineWidth=1.5;g.beginPath();g.arc(e.x,e.y,4+k*34,0,6.28);g.stroke()}
+    if(e.k==='spark'){e.x+=e.vx/60;e.y+=e.vy/60;g.fillStyle=`rgba(255,210,150,${1-k})`;g.fillRect(e.x,e.y,1.6,1.6)}
+  }
+  g.globalCompositeOperation='source-over';
+  for(const f of fleets)drawPlate(f,t);
+
+  rg.clearRect(0,0,154,154);
+  rg.save();rg.beginPath();rg.arc(77,77,77,0,6.28);rg.clip();
+  rg.fillStyle='#071322';rg.fillRect(0,0,154,154);
+  rg.strokeStyle='rgba(120,180,255,.16)';for(let i=1;i<4;i++){rg.beginPath();rg.arc(77,77,i*22,0,6.28);rg.stroke()}
+  rg.beginPath();rg.moveTo(0,77);rg.lineTo(154,77);rg.moveTo(77,0);rg.lineTo(77,154);rg.stroke();
+  const sw=t*1.2;const sg=rg.createConicGradient?rg.createConicGradient(sw,77,77):null;
+  if(sg){sg.addColorStop(0,'rgba(120,200,255,.25)');sg.addColorStop(.08,'rgba(120,200,255,0)');sg.addColorStop(1,'rgba(120,200,255,0)');rg.fillStyle=sg;rg.fillRect(0,0,154,154)}
+  for(const f of fleets){const x=20+f.x/1600*114,y=30+f.y/900*94;rg.fillStyle=f.side?'#ff7a52':(f.sel?'#fff':'#5fe0cf');
+    if(f.side){rg.beginPath();rg.moveTo(x,y-3.5);rg.lineTo(x+3.5,y);rg.lineTo(x,y+3.5);rg.lineTo(x-3.5,y);rg.fill()}else rg.fillRect(x-3,y-3,6,6)}
+  rg.strokeStyle='rgba(130,255,160,.8)';rg.strokeRect(36,40,82,52);
+  rg.restore();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
