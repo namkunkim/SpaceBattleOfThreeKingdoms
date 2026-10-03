@@ -57,7 +57,7 @@ func _process(delta: float) -> void:
 					battle.selected.append(f)
 				battle.inspect = null
 				battle.refresh_panel()
-				Input.vibrate_handheld(30)
+				UiSound.vibrate(30)
 	queue_redraw()
 
 func _gui_input(e: InputEvent) -> void:

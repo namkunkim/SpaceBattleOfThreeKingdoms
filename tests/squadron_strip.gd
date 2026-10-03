@@ -37,7 +37,7 @@ func _run() -> void:
 	await _frames()
 	var deck = battle.presentation.hud
 	GameSettings.auto_fast = false
-	GameSettings.slow_select = false
+	GameSettings.slow_mode = GameSettings.SLOW_OFF
 	deck.begin_battle()
 	battle.cam_z = 1.0
 	battle.cam_pos = Vector2(900.0, 1150.0)

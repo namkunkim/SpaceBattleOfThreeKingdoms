@@ -404,6 +404,12 @@ func composition(id: int) -> Array:
 
 # ------------------------------------------------------------ frame
 func update(dt: float) -> void:
+	# 강조 포화의 화면 흔들림(카메라 오프셋만 건드린다. 실제 시간으로 줄인다)
+	var cam := src.camera()
+	if cam:
+		shake = maxf(0.0, shake - get_process_delta_time() / maxf(0.001, Engine.time_scale) * 0.9)
+		cam.h_offset = rng.randf_range(-1.0, 1.0) * shake
+		cam.v_offset = rng.randf_range(-1.0, 1.0) * shake
 	clock += dt
 	var sqs := src.squadrons()
 	var seen := {}
@@ -574,20 +580,41 @@ func _update_wrecks(dt: float) -> void:
 	wrecks = keep
 
 # ------------------------------------------------------------ volleys
-func _volley(a: FleetVis, b: FleetVis) -> void:
-	fx_event.emit("volley")
+# 강조 포화(리뷰 C-2): 코어의 일제사격 사건(Q46, 무기 범주마다 60초에 한 번)이 오면 부른다.
+# 상시 포화(분위기 연출)보다 굵고 밝은 광선을 두 배로 쏘고, 화면을 짧게 흔들고, "salvo" 소리 훅을 낸다.
+# 지금 POC에는 이 사건이 없어 게임에서는 부르지 않는다(캡처·테스트만).
+var shake := 0.0
+
+func emphasis_volley(squadron_id: int) -> bool:
+	if not vis.has(squadron_id):
+		return false
+	var a: FleetVis = vis[squadron_id]
+	var sq := src.squadron(squadron_id)
+	var tid: int = sq.get("firing_at", -1)
+	if tid < 0:
+		tid = sq.get("target_id", -1)
+	if tid < 0 or not vis.has(tid):
+		return false
+	fx_event.emit("salvo")
+	_volley(a, vis[tid], 2.2)
+	shake = maxf(shake, 0.35)
+	return true
+
+func _volley(a: FleetVis, b: FleetVis, boost := 1.0) -> void:
+	if boost <= 1.0:
+		fx_event.emit("volley")
 	var front := a.slots.filter(func(s): return s.alive and s.rank < 0.4 and s.cls != CARRIER)
 	if front.size() < 6:
 		front = a.slots.filter(func(s): return s.alive)
 	var tgt := b.slots.filter(func(s): return s.alive)
 	if front.is_empty() or tgt.is_empty():
 		return
-	var n := clampi(a.alive_n / 4, 6, 26)
-	var col := C_ALLY_BEAM if a.side == 0 else C_FOE_BEAM
+	var n := roundi(clampi(a.alive_n / 4, 6, 26) * boost)
+	var col := (C_ALLY_BEAM if a.side == 0 else C_FOE_BEAM) * (1.0 + (boost - 1.0) * 0.8)
 	for i in n:
 		var s: Slot = front[rng.randi() % front.size()]
 		shots.append({"av": a, "slot": s, "bv": b, "tslot": tgt[rng.randi() % tgt.size()],
-			"t": -(s.rank * 0.5 + rng.randf() * 0.14), "speed": 75.0, "len": 9.0, "hit": false, "muzzle": false,
+			"t": -(s.rank * 0.5 + rng.randf() * 0.14), "speed": 75.0, "len": 9.0 * boost, "hit": false, "muzzle": false,
 			"jit": Vector3(rng.randf_range(-0.15, 0.15), rng.randf_range(-0.1, 0.1), rng.randf_range(-0.15, 0.15)), "col": col})
 
 func _update_shots(dt: float) -> void:

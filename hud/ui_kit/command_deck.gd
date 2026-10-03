@@ -11,6 +11,8 @@ const Guard := preload("res://hud/ui_kit/session_guard.gd")
 const Undo := preload("res://hud/ui_kit/order_undo.gd")
 const Card := preload("res://hud/ui_kit/decision_card.gd")
 const Strip := preload("res://hud/ui_kit/squadron_strip.gd")
+const Pulse := preload("res://hud/ui_kit/edge_pulse.gd")
+const Quick := preload("res://hud/ui_kit/quick_alert.gd")
 
 # 이름·아이콘만 여기 둔다. 효과 문구와 수치는 규칙 값(BattleSource.rules → RuleText.cmd)에서 만든다.
 # confirm: 되돌릴 수 없거나 비용이 큰 명령은 길게 눌러 확정한다(EXPERIENCE-DESIGN §6 U3). 단축키는 바로 실행.
@@ -46,6 +48,8 @@ var hold_tip: HoldTip
 var undo_bar: Control
 var decision_card: Control
 var strip: Control
+var edge_pulse: Control
+var quick_alert: Control
 var sound: UiSound
 const CONFIRM_HOLD := 0.6   # 길게 눌러 확정(리뷰 U3)
 var _confirm_btn: Control = null
@@ -114,10 +118,26 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 	hud.add_child(decision_card)
 	_anchor(decision_card, Control.PRESET_CENTER_BOTTOM, Vector2(720, 210), Vector2(0, -14))
 	decision_card.setup(self)
+	# 빠른 선택 알림(V-7): 되돌리기 알림 자리를 같이 쓴다
+	quick_alert = Quick.new()
+	hud.add_child(quick_alert)
+	_anchor(quick_alert, Control.PRESET_CENTER_BOTTOM, Vector2(560, 64), Vector2(0, -176))
+	quick_alert.setup()
+	quick_alert.visibility_changed.connect(func():
+		pacing.forced_slow = quick_alert.visible
+		if quick_alert.visible:
+			undo_bar.visible = false
+			sound.play("warn_branch"))
+	# 분기 예고 펄스(V-4)
+	edge_pulse = Pulse.new()
+	hud.add_child(edge_pulse)
+	edge_pulse.setup(self)
 	decision_card.visibility_changed.connect(func():
 		info.visible = not decision_card.visible
 		undo_bar.offset_top = -(decision_card.size.y + 14 + 10 + 60) if decision_card.visible else -(158 + 14 + 8 + 60)
-		undo_bar.offset_bottom = undo_bar.offset_top + 60)
+		undo_bar.offset_bottom = undo_bar.offset_top + 60
+		quick_alert.offset_top = undo_bar.offset_top - 2
+		quick_alert.offset_bottom = quick_alert.offset_top + 64)
 	# 터치 길게 누르기 툴팁: HUD 위, 전환 화면 아래
 	hold_tip = HoldTip.new()
 	add_child(hold_tip)
@@ -602,9 +622,14 @@ func _info_single(c: Control, f) -> void:
 		c.draw_line(Vector2(xx, bar.position.y + 1), Vector2(xx, bar.end.y - 1), Color(0, 0, 0, 0.55))
 	UiDraw.text(c, Vector2(c.size.x - 18, 70), "%d" % ceili(f.ships), "bold", 15, UiTheme.INK, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
 	UiDraw.text(c, Vector2(c.size.x - 52, 70), "/ %d척" % int(f.max_ships), "regular", 11, UiTheme.INK_3, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
-	# 함종 구성(표시 함선 기준)
-	var comp: Array = renderer.composition(f.id)
+	# 함종 구성: 화면 숫자는 코어 카운터만(리뷰 C-1). 카운터가 없으면(POC) 보이는 함종 이름만 숫자 없이 쓴다.
+	var comp: Array = src.composition(f.id)
 	var cx := x
+	if comp.is_empty():
+		var names := PackedStringArray()
+		for it in renderer.composition(f.id):
+			names.append(str(it[0]))
+		UiDraw.text(c, Vector2(cx, 96), "표시 편성  " + " · ".join(names), "regular", 11, UiTheme.INK_4)
 	for it in comp:
 		var label: String = it[0]
 		UiDraw.text(c, Vector2(cx, 96), label, "regular", 11, UiTheme.INK_3)
@@ -753,6 +778,7 @@ func _build_sound() -> void:
 	add_child(sound)
 	_hook_buttons(self)
 	renderer.fx_event.connect(func(k: String): sound.play(k))
+	pacing.incoming.connect(func(): sound.play("warn_branch"))
 	pacing.changed.connect(func():
 		if src.state() == "pause":
 			sound.play("pause"))

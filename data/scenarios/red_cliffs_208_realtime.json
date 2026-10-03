@@ -902,7 +902,231 @@
     "FRM-01"
    ],
    "note": "본편 red-cliffs-chain-explosion-rules.json의 분류. 밀집은 연환 보너스(사기 감소 ×0.8), 분산 북방군은 역병(10초마다 −40bp), 중립(어린진)은 둘 다 없음"
-  }
+  },
+  "linked_ships_and_plague": {
+   "dense_cao_morale_loss_mul": 0.8,
+   "plague_group": "northern",
+   "plague_interval_s": 10,
+   "plague_loss_bp": 40,
+   "status": "proposed",
+   "basis": "무제기의 대역(大疫). 묶어야 버티고 묶으면 탄다"
+  },
+  "morale_events": {
+   "army_recovery_bp": {
+    "enemy_squadron_retreat_or_surrender": 300,
+    "flagship_boarding_success": 1000
+   },
+   "army_loss_bp": {
+    "own_squadron_retreat_or_surrender": 500,
+    "chain_fire_hit": 2500,
+    "feigned_surrender_hit": 4000,
+    "flagship_boarding_allowed": 4000,
+    "duel_loss": 4000,
+    "ambush_hit": 1500
+   },
+   "rally": [
+    {
+     "id": "liu_bei_rally",
+     "squadron_id": "RC-LIU-SQ-01",
+     "uses": 1
+    },
+    {
+     "id": "zhou_yu_rally",
+     "squadron_id": "RC-SUN-SQ-01",
+     "uses": 1,
+     "status": "proposed"
+    }
+   ],
+   "rally_effect": {
+    "radius": 200,
+    "morale_bp_at_charm_99": 1200,
+    "scale": "charm / 99",
+    "loss_mul": 0.5,
+    "loss_mul_s": 30
+   },
+   "crisis_threshold_bp": 4500,
+   "collapse_threshold_bp": 3000,
+   "status": "proposed"
+  },
+  "chain_operation": {
+   "charges": 2,
+   "consume_per_use": true,
+   "trigger_range": 240,
+   "target_must_be": [
+    "dense",
+    "confirmed_contact"
+   ],
+   "wind_cone_deg": 60,
+   "power_by_range": [
+    [
+     240,
+     0.25
+    ],
+    [
+     120,
+     0.4
+    ],
+    [
+     60,
+     0.5
+    ]
+   ],
+   "power_interp": "linear",
+   "breakaway_heavy_damage_share": 0.25,
+   "spread": {
+    "radius": 150,
+    "interval_s": 20,
+    "max": 2,
+    "power_mul_each": 0.5
+   },
+   "result_grades": [
+    "흔들림",
+    "큰 타격",
+    "연환 대화재"
+   ],
+   "feigned_surrender": {
+    "letter_uses": 1,
+    "ceasefire_while_suspicion_below": 100,
+    "suspicion_per_s": "difficulty_profiles.*.ai.suspicion_per_s",
+    "modifiers": {
+     "fast_approach_rate_mul": 1.5,
+     "escort_per_squadron_per_s": 0.3,
+     "escort_radius": 100,
+     "alliance_hit_near_host": 10,
+     "alliance_hit_radius": 300,
+     "in_nebula_rate_mul": 0.5,
+     "self_inflicted_hull_damage_min": 0.1,
+     "self_inflicted_start_suspicion": -30,
+     "cheng_yu_absent_rate_mul": 0.5
+    },
+    "on_detected": {
+     "target_to_dispersed": true,
+     "focus_fire_on_host": true,
+     "alliance_army_loss_bp": 1500
+    },
+    "warnings": [
+     50,
+     80
+    ]
+   },
+   "cao_counters": [
+    {
+     "id": "emergency_disperse",
+     "radius": 150,
+     "duration_s": 30,
+     "min_difficulty": "상급"
+    },
+    {
+     "id": "interception_net",
+     "radius": 200,
+     "min_interceptor_platforms": 8,
+     "second_run_power_mul": 0.5,
+     "min_difficulty": "표준"
+    },
+    {
+     "id": "cut_off",
+     "cao_army_loss_bp": 1000,
+     "min_difficulty": "표준"
+    }
+   ],
+   "counter_uses_per_fire": 1,
+   "linked_formation_ai": {
+    "spacing": [
+     120,
+     180
+    ]
+   },
+   "target_success_ai_vs_ai": {
+    "상급": 0.274
+   },
+   "status": "proposed"
+  },
+  "decision_cards": {
+   "time_game_s": 30,
+   "speed_by_difficulty": {
+    "입문": 0.0,
+    "표준": 0.2,
+    "상급": 1.0,
+    "극한": 1.0
+   },
+   "precursor_s": 3,
+   "on_timeout": "recommended_option",
+   "target_count": [
+    4,
+    6
+   ],
+   "suspicion_80": {
+    "form": "card",
+    "time_game_s": "min(30, 간파까지 남은 게임 초 - 2)",
+    "on_timeout": "recommended_option"
+   },
+   "quick_alert": {
+    "used_for": "suspicion_50",
+    "time_real_s": 2,
+    "speed": 0.2,
+    "on_timeout": "continue"
+   },
+   "source": "EXPERIENCE-DESIGN.md §5, NARRATIVE-RED-CLIFFS.md §1"
+  },
+  "seed_variation": {
+   "wind_window_start": "wind_window.start_after_first_hit_s",
+   "jing_navy_start_morale_bp_delta": [
+    -500,
+    500
+   ],
+   "cao_wave_order": "주력·후군 안의 전대 순서",
+   "public_seed": true,
+   "status": "proposed",
+   "source": "EXPERIENCE-DESIGN.md §9 R1"
+  },
+  "cao_dispositions": {
+   "pick": "seed",
+   "reveal": "결산",
+   "options": [
+    {
+     "id": "cautious",
+     "name": "신중",
+     "behavior": "밀집을 빨리 푼다"
+    },
+    {
+     "id": "aggressive",
+     "name": "공세",
+     "behavior": "조기 강습"
+    },
+    {
+     "id": "deceptive",
+     "name": "기만",
+     "behavior": "형주 수군을 미끼로 쓴다"
+    }
+   ],
+   "status": "proposed",
+   "source": "EXPERIENCE-DESIGN.md §9 R2"
+  },
+  "what_if_cards": [
+   {
+    "id": "southeast_wind",
+    "name": "동남풍 「단 위의 사흘 밤」",
+    "effect": "기류 창 시작을 배치 단계에서 한 번 고른다",
+    "pick_range_after_first_hit_s": [
+     360,
+     720
+    ],
+    "duration_s": 180
+   },
+   {
+    "id": "double_agent",
+    "name": "반간계 「장간의 서신」",
+    "effect": "형주 수군 을의 사기 −1000, 지휘관을 모개로 교체",
+    "target_squadron_id": "RC-CAO-SQ-05",
+    "morale_bp": -1000,
+    "replacement_commander": "CHR-0058"
+   },
+   {
+    "id": "cheng_yu_insight",
+    "name": "정욱 간파 「가볍게 뜬 배」",
+    "effect": "화공 표적 하나가 처음부터 분산 진형"
+   }
+  ]
  },
  "chain_explosion_override": {
   "host_squadron_id": "RC-SUN-SQ-03",

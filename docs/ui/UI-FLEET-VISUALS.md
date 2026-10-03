@@ -19,6 +19,7 @@
 ```
 view/fleet_render/
   battle_source.gd       전투 상태를 읽는 유일한 통로(어댑터). M1 BattleProjection이 정해지면 이 파일만 고친다
+  scenario_roster.gd     시나리오 JSON 정본 편성 읽기(표시 전용), 함종 ID → 이름
   fleet_renderer.gd      함대 대량 표시, 진형 슬롯, 일제 포화, 격침·잔해, 미사일·함재기 연출
   fx_pool.gd, beam_pool.gd                     연출 스프라이트·광선 MultiMesh 풀
   fx_sprite.gdshaderinc, fx_sprite_add/mix.gdshader, beam.gdshader
@@ -32,7 +33,10 @@ hud/ui_kit/
   rule_text.gd           규칙 값(BattleSource.rules) → 화면 문구. POC 틀과 확정 규칙(v02) 틀
   factions.gd            세력 글리프(촉 蜀·사각, 위 魏·마름모, 오 吳·원)와 색
   order_undo.gd          명령 되돌리기 알림(4초, U2)
-  decision_card.gd       결정 카드(§5). 코어 분기가 오면 뜬다. 지금은 자리만
+  decision_card.gd       결정 카드(§5). 게임 시계로 시간이 줄고, 다 되면 추천안 위임(V-3). 코어 분기가 오면 뜬다
+  edge_pulse.gd          분기 예고(V-4) 가장자리 방향 펄스
+  quick_alert.gd         빠른 선택 알림(V-7): 버튼 2개, 2초, 자동 적용 없음
+  roster_screen.gd       정본 편성 화면(브리핑 → "정본 편성")
   ui_sound.gd            효과음 훅(사건 이름으로 재생), 음량 버스(Sfx·Ui), 자산이 없으면 합성 임시음
   squadron_strip.gd      전대 띠(U4): 아군 초상 띠. 탭 선택·다시 탭 화면 이동·길게 눌러 추가·끌어서 명령
   session_guard.gd       중단 처리(Q53): 백그라운드·포커스 상실 시 즉시 일시정지
@@ -85,6 +89,8 @@ godot --headless --path . --script tests/rule_text.gd    # 화면 문구 규칙 
 godot --headless --path . --script tests/order_undo.gd   # 명령 되돌리기
 godot --headless --path . --script tests/squadron_strip.gd  # 전대 띠
 godot --headless --path . --script tests/ui_sound.gd     # 효과음 훅·음량
+godot --headless --path . --script tests/decision_flow.gd  # 분기 예고·결정 카드 시간·빠른 선택·강조 포화
+godot --headless --path . --script tests/roster.gd       # 정본 편성
 godot --path . --script tests/capture_ui.gd -- battle res://out/ui-battle.png   # title|brief|quiet|battle|pause|suspend|result
 ```
 
@@ -116,6 +122,39 @@ godot --path . --script tests/capture_ui.gd -- battle res://out/ui-battle.png   
 | U8 | 상단 상태 문구에 "접적까지 약 N초", 배속이 바뀌면 반짝임 |
 | 결정 카드·"결정 n/m" | 자리와 모양(`decision_card.gd`, 상단 시계 옆). 분기가 없으면 숨긴다. 캡처 `decision`은 견본 데이터 |
 
+## 2차 리뷰 반영(`REVIEW-UI-v2.md` §6)
+
+| # | 처리 |
+|---|---|
+| V-1 | ●/○는 지휘 상태(직접·위임, Q20)다. `BattleSource.command_mode(id)`가 POC에서는 ""라 그리지 않는다. 세력은 글리프가 맡는다 |
+| V-2 | `quiet()` 주석에 안개 조건(공개 투영 접촉만) 기록. 코어 M6 |
+| V-3 | 결정 카드 남은 시간 = 게임 시계(일시정지면 멈춤). 다 되면 rec 선택지로 `delegated`, 교신에 "위임 처리". 코어가 생기면 `time_left_src`로 투영 값을 그린다 |
+| V-4 | `BattleSource.decision_incoming()`(곧 분기). 오면 자동 ×4·건너뛰기 정지, 상단 "결정 임박", 가장자리 펄스, 예고음·진동 |
+| V-5 | "전장 보기" 120×52 |
+| V-6 | 화자를 인물 ID(`Commanders.PEOPLE`)로 받는다. 초상이 없으면 세력 색 머리글자 패 |
+| V-7 | 빠른 선택 알림(되돌리기 자리 공유) |
+| V-8 | 전대 띠 칸에 세력 글리프, 지휘 상태(값이 생기면) |
+| C-1 | 정보 패널 함종 숫자는 `BattleSource.composition(id)`(코어 카운터)만 쓴다. POC는 비어 있어 "표시 편성" 이름만 숫자 없이 |
+| C-2 | `FleetRenderer.emphasis_volley(id)`: 두 배 굵고 밝은 포화, 화면 흔들림, "salvo" 소리. 코어 일제사격 사건이 오면 부른다 |
+
+## 3차 리뷰 반영(`REVIEW-UI-v2.md` §10)
+
+| # | 처리 |
+|---|---|
+| W-1 | 인물 ID는 본편·시나리오와 같은 `CHR-xxxx`. 이름·세력은 시나리오 JSON에서 읽고(`ScenarioRoster.person`), `Commanders.PORTRAIT`에는 초상 번호만 둔다. 정보(`CHR-0207`) 등 시나리오의 모든 인물을 찾는다 |
+| W-2 | `ScenarioRoster.deployed(d, faction, 난이도)`: 조조군은 `deploy_min_difficulty`로 거르고 함종별 × `count_factor`를 half-up(정수 계산), 원래 1척 이상이면 최소 1척. 입문 4·표준 5·상급 7개 전대 |
+| W-3 | 정본 편성 화면은 기본(브리핑)에서 조조군의 기록상 규모·총사령·지휘관 명단·불참 인물만 보인다. 전대 수·구성·척 수·투입 시각은 숨긴다. `open_roster(true, 난이도)`(결산·재생용)일 때만 난이도별 실제 배치를 보인다 |
+| W-4 | 효과음 음높이는 전용 `RandomNumberGenerator`. 전역 난수(POC 규칙 난수열)를 건드리지 않는다 |
+| W-5 | 빠른 선택 알림이 떠 있는 동안 ×0.2 감속, 열 때 `warn_branch` 소리. 입문 정지는 코어 난이도가 생기면 |
+| W-6 | 결정 카드에 추천 선택지가 없으면 위임하지 않고 경고(`delegated(-1)`, 교신 "위임 처리 불가") |
+| W-7 | 설정 진행 탭: 선택 감속 3택(선택하면 / 조작 중에만 / 끔, Q36), 진동 켜고 끄기. 진동은 모두 `UiSound.vibrate`를 거친다 |
+| X-1 | 조조군 명단 제목을 "기록상 종군 장수"로, 지휘관·부지휘관·참모를 합쳐 중복 없이(`ScenarioRoster.officers`). 이름 수가 전대 수를 드러내지 않는다 |
+
+## 정본 편성
+
+- 브리핑의 "정본 편성" 버튼 → 시나리오 JSON(`data/scenarios/red_cliffs_208_realtime.json`): 연합은 세력 → 전단 → 전대(지휘관·참모·기함·함종 카운터·척 수), 조조군은 전투 전 공개 범위만(W-3).
+- 지금 시험 전투(적벽 회랑)는 이 편성이 아니라고 화면에 밝힌다. 코어가 시나리오를 읽게 되면 같은 자료로 `composition()`을 채운다.
+
 ## 소리
 
 - 사건: button, tab, confirm(명령), confirm_heavy(길게 눌러 확정), denied(할 수 없음 알림), undo, pause, alert(증원 경보), decision(결정 카드), volley(일제 포화), ship_kill(함선 격침), fleet_destroyed(적 함대 격파), fleet_lost(아군 함대 궤멸).
@@ -127,9 +166,8 @@ godot --path . --script tests/capture_ui.gd -- battle res://out/ui-battle.png   
 ## 남은 일
 
 - 사기, 국면, 탄약·에너지·열, 진형 탭: 코어에 값이 생기면 붙인다(목업 v2에 자리 설계가 있다). 지금은 표시하지 않는다.
-- 표시 함선 수는 남은 전력 비율을 따른다. 함종 구성은 표현용 배치이고 규칙 값이 아니다. 정본 편성(`data/scenarios/`)과 연결되면 함종 카운터를 읽는다.
+- 표시 함선 수는 남은 전력 비율을 따른다. 함종 구성은 표현용 배치이고 규칙 값이 아니다. 코어가 함종 카운터를 주면 `composition()`으로 표시 배치도 맞춘다.
+- 태블릿 터치 목표(48dp): 모든 화면 컨트롤 52단위 이상(16:10 태블릿 UI 100%에서 약 48~49dp), `tests/touch_targets.gd`가 태블릿 3종으로 검사. 실기기·안전 영역·텍스처 압축은 남았다.
 - 실제 효과음 자산과 음악(라이선스 확인·승인 필요).
-- 강조 포화(C-2): 코어 일제사격 사건이 오면.
-- 폰 전용 HUD 배치: 시스템 아이콘·탭·그룹 탭이 48dp에 못 미친다(위 "터치 목표 크기").
 - 끌기 중 시간 감속(§7.3), 도착 방향 고리, 경유점: POC 규칙에 없어 넣지 않았다.
 - 모바일 실기기, 텍스처 압축(ETC2/ASTC)은 아직 검증하지 않았다.
