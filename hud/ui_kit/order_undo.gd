@@ -22,8 +22,8 @@ func setup(d: Control, s: BattleSource) -> void:
 	_btn = Button.new()
 	_btn.text = "되돌리기"
 	_btn.focus_mode = Control.FOCUS_NONE
-	_btn.custom_minimum_size = Vector2(120, 40)
-	_btn.position = Vector2(size.x - 128, 6)
+	_btn.custom_minimum_size = Vector2(120, 52)
+	_btn.position = Vector2(size.x - 124, 4)
 	_btn.pressed.connect(undo)
 	add_child(_btn)
 
