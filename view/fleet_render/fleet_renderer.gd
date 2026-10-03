@@ -15,7 +15,12 @@ const CLASS_LABEL := ["전열", "화력", "공성", "보급", "전자전", "호�
 const CLASS_LEN := [1.15, 1.0, 1.2, 0.9, 0.88, 0.6, 1.25]
 const MODEL_LEN := 1.9
 const HULL_STRETCH := Vector3(1.0, 1.5, 1.9)
-const VIS_RATIO := 0.6
+# 표시 함선 = 정원 × 고정 배율(리뷰 C-1). 손실은 같은 배율로 줄어든다. 화면 숫자는 언제나 실제 척 수다.
+# 배율은 설정의 "함선 표시"(낮음·보통·높음)로 고른다(리뷰 C-4, 모바일 성능).
+const VIS_RATIOS := [0.35, 0.6, 0.85]
+
+static func vis_ratio() -> float:
+	return VIS_RATIOS[clampi(GameSettings.ship_density, 0, VIS_RATIOS.size() - 1)]
 const GAP_LAT := 13.0
 const GAP_FWD := 25.0
 const LAYER_H := 0.34
@@ -288,7 +293,7 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 	v.mmis = []
 	v.slots = []
 	v.formation = sq.formation
-	var n := maxi(12, roundi(sq.max_ships * VIS_RATIO))
+	var n := maxi(12, roundi(sq.max_ships * vis_ratio()))
 	var pts := formation_points(sq.formation, n)
 	var cls := _assign_class(pts, sq.flagship, sq.id * 7919)
 	var S := src.unit_scale()

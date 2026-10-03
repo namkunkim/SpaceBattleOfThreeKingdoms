@@ -6,16 +6,22 @@ extends Control
 
 const W := preload("res://hud/ui_kit/deck_widgets.gd")
 const Screens := preload("res://hud/ui_kit/deck_screens.gd")
+const Pacing := preload("res://hud/ui_kit/battle_pacing.gd")
+const Guard := preload("res://hud/ui_kit/session_guard.gd")
+const Undo := preload("res://hud/ui_kit/order_undo.gd")
+const Card := preload("res://hud/ui_kit/decision_card.gd")
 
+# 이름·아이콘만 여기 둔다. 효과 문구와 수치는 규칙 값(BattleSource.rules → RuleText.cmd)에서 만든다.
+# confirm: 되돌릴 수 없거나 비용이 큰 명령은 길게 눌러 확정한다(EXPERIENCE-DESIGN §6 U3). 단축키는 바로 실행.
 const CMD_INFO := {
 	"stop": {"label": "정지", "icon": "stop", "desc": "이동과 공격 명령을 멈추고 그 자리에서 대기합니다. 사거리 안의 적은 계속 사격합니다."},
-	"def": {"label": "방어진형", "icon": "def", "desc": "진형을 좁혀 피해를 줄입니다. 다시 누르면 풉니다.", "fx": [["받는 피해", "×0.6", true], ["화력", "×0.7", false], ["속도", "×0.5", false]]},
-	"charge": {"label": "돌격", "icon": "charge", "tone": "warm", "desc": "가장 가까운 적에게 돌입합니다. 방어진형은 풀립니다.", "fx": [["화력", "×1.35", true], ["속도", "×1.4", true], ["방어진형", "해제", false]], "foot": "지속 10초"},
-	"rally": {"label": "기함 집결", "icon": "rally", "desc": "선택한 함대가 기함 주위로 모여 지휘 범위 안으로 들어옵니다. 범위 밖 함대는 화력 −25%입니다."},
-	"retreat": {"label": "후퇴", "icon": "retreat", "desc": "가장 가까운 적의 반대쪽으로 전선을 물립니다."},
+	"def": {"label": "방어진형", "icon": "def"},
+	"charge": {"label": "돌격", "icon": "charge", "tone": "warm", "confirm": true},
+	"rally": {"label": "기함 집결", "icon": "rally"},
+	"retreat": {"label": "후퇴", "icon": "retreat", "confirm": true},
 	"all": {"label": "전체 선택", "icon": "all", "desc": "살아 있는 아군 함대를 모두 선택합니다."},
-	"missile": {"label": "미사일", "icon": "missile", "tone": "hot", "desc": "사거리 안의 적에게 유도 미사일 6발을 일제 발사합니다.", "fx": [["사거리", "480", true]], "foot": "재장전 18초"},
-	"fighter": {"label": "함재기", "icon": "fighter", "tone": "hot", "desc": "함재기 편대를 발진시켜 9초 동안 적을 근접 공격합니다.", "fx": [["작전 반경", "380", true]], "foot": "정비 26초"},
+	"missile": {"label": "미사일", "icon": "missile", "tone": "hot"},
+	"fighter": {"label": "함재기", "icon": "fighter", "tone": "hot"},
 }
 const TABS := [["태세", ["stop", "def", "charge", "rally", "retreat", "all"]], ["무장", ["missile", "fighter"]]]
 
@@ -33,6 +39,17 @@ var cp_bar: Control
 var sys_bar: HBoxContainer
 var speed_btns: Array = []
 var pause_btn: Control
+var skip_btn: Control
+var pacing: Node
+var hold_tip: HoldTip
+var undo_bar: Control
+var decision_card: Control
+const CONFIRM_HOLD := 0.6   # 길게 눌러 확정(리뷰 U3)
+var _confirm_btn: Control = null
+var _confirm_t := 0.0
+var _confirm_fired := false
+var _tag_flash := 0.0   # 배속이 바뀌면 상단 상태 문구가 반짝인다(리뷰 U8)
+var guard: Node
 var objectives: Control
 var log_box: VBoxContainer
 var cut: Control
@@ -58,6 +75,15 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 	src = s
 	renderer = r
 	theme = UiTheme.build()
+	pacing = Pacing.new()
+	pacing.name = "BattlePacing"
+	add_child(pacing)
+	pacing.setup(self, src)
+	pacing.changed.connect(func(): _tag_flash = 0.8)
+	guard = Guard.new()
+	guard.name = "SessionGuard"
+	add_child(guard)
+	guard.setup(self)
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	overlay = TacticalOverlay.new()
@@ -75,6 +101,27 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 	_build_info()
 	_build_commands()
 	_build_toast()
+	# 명령 되돌리기 알림: 정보 패널 바로 위(결정 카드가 오면 그 위로 올린다)
+	undo_bar = Undo.new()
+	hud.add_child(undo_bar)
+	_anchor(undo_bar, Control.PRESET_CENTER_BOTTOM, Vector2(420, 52), Vector2(0, -180))
+	undo_bar.setup(self, src)
+	# 결정 카드: 정보 패널 자리(화면 아래 가운데, 엄지 영역). 뜨면 정보 패널을 가리고 되돌리기 알림을 그 위로 올린다.
+	decision_card = Card.new()
+	hud.add_child(decision_card)
+	_anchor(decision_card, Control.PRESET_CENTER_BOTTOM, Vector2(720, 210), Vector2(0, -14))
+	decision_card.setup(self)
+	decision_card.visibility_changed.connect(func():
+		info.visible = not decision_card.visible
+		undo_bar.offset_top = -(decision_card.size.y + 14 + 10 + 52) if decision_card.visible else -(158 + 14 + 10 + 52)
+		undo_bar.offset_bottom = undo_bar.offset_top + 52)
+	# 터치 길게 누르기 툴팁: HUD 위, 전환 화면 아래
+	hold_tip = HoldTip.new()
+	add_child(hold_tip)
+	for c in sys_bar.get_children():
+		hold_tip.register(c)
+	for c in cmd_buttons:
+		hold_tip.register(c)
 	screens = Screens.build_all(self)
 	battle.battle_event.connect(_on_event)
 	GameSettings.apply(get_window())
@@ -89,7 +136,7 @@ func show_screen(name: String) -> void:
 		if k == name:
 			sc.visible = true
 			sc.modulate.a = 0.0
-			create_tween().tween_property(sc, "modulate:a", 1.0, 0.25)
+			create_tween().set_ignore_time_scale().tween_property(sc, "modulate:a", 1.0, 0.25)
 			if sc.has_method("on_show"):
 				sc.on_show()
 		else:
@@ -119,6 +166,7 @@ func to_title() -> void:
 func resume() -> void:
 	if battle.G.state == "pause":
 		battle._close_menu()
+	guard.clear()
 	show_screen("")
 
 func open_pause() -> void:
@@ -126,12 +174,16 @@ func open_pause() -> void:
 		battle._toggle_menu()
 
 func _process(delta: float) -> void:
+	delta = UiDraw.real_dt(delta)
 	t += delta
+	_tag_flash = maxf(0.0, _tag_flash - delta)
+	_confirm_tick(delta)
 	cut_cool = maxf(0.0, cut_cool - delta)
 	var st: String = battle.G.get("state", "")
 	if st == "pause" and screen == "":
 		show_screen("pause")
 	elif st == "play" and (screen == "pause" or screen == "settings_pause"):
+		guard.clear()
 		show_screen("")
 	elif st == "end" and screen != "result":
 		show_screen("result")
@@ -147,8 +199,12 @@ func _process(delta: float) -> void:
 			for g in groups_row.get_children():
 				g.queue_redraw()
 			for i in speed_btns.size():
-				speed_btns[i].active = battle.G.speed == i + 1
+				speed_btns[i].active = pacing.user_speed == i + 1 and pacing.mode == pacing.Mode.USER
 				speed_btns[i].queue_redraw()
+			skip_btn.disabled = not pacing.can_skip()
+			skip_btn.tooltip_text = "다음 교전·경보까지 건너뛰기" + (" · " + pacing.next_stop_hint() if pacing.quiet else " (조용한 구간에서만)")
+			skip_btn.active = pacing.mode == pacing.Mode.SKIP
+			skip_btn.queue_redraw()
 
 func _anchor(c: Control, preset: int, sz: Vector2, off := Vector2.ZERO) -> void:
 	c.set_anchors_preset(preset)
@@ -206,16 +262,26 @@ func _draw_top(c: Control) -> void:
 	c.draw_line(Vector2(mx - 112, 14), Vector2(mx - 112, 64), Color(UiTheme.GOLD, 0.18))
 	c.draw_line(Vector2(mx + 112, 14), Vector2(mx + 112, 64), Color(UiTheme.GOLD, 0.18))
 	var st: String = battle.G.state
-	var tag := "교 전 중"
-	var tc := UiTheme.WARN
+	var tag: String = pacing.status_tag()
+	var tc := UiTheme.WARN if not pacing.quiet else UiTheme.ALLY_HI
+	if pacing.slow:
+		tc = UiTheme.CP
 	if st == "pause":
-		tag = "일 시 정 지"
 		tc = UiTheme.INK_2
-	elif battle.G.speed == 2:
-		tag = "교 전 중 · ×2"
+	elif pacing.next_stop_hint() != "":
+		tag += "  ·  " + pacing.next_stop_hint()
+	if _tag_flash > 0.0:
+		var k := _tag_flash / 0.8
+		var tw := UiDraw.text_w(tag, "semibold", 11) + 20.0
+		c.draw_rect(Rect2(mx - tw * 0.5, 18, tw, 17), Color(UiTheme.GOLD, 0.22 * k))
+		tc = tc.lerp(UiTheme.GOLD_HI, k)
 	UiDraw.text(c, Vector2(mx, 30), tag, "semibold", 11, tc, HORIZONTAL_ALIGNMENT_CENTER, 0.0)
 	var tt := int(battle.G.t)
 	UiDraw.text(c, Vector2(mx, 62), "%02d:%02d" % [tt / 60, tt % 60], "serif", 28, UiTheme.INK, HORIZONTAL_ALIGNMENT_CENTER, 0.0)
+	# 결정 분기 진행(EXPERIENCE-DESIGN §5). 코어에 분기가 없으면 그리지 않는다.
+	var dp := src.decision_progress()
+	if not dp.is_empty():
+		UiDraw.text(c, Vector2(mx + 56, 61), "결정 %d/%d" % [dp.done, dp.total], "semibold", 11, UiTheme.GOLD_HI)
 
 func _draw_cp(c: Control) -> void:
 	var w := c.size.x
@@ -243,18 +309,21 @@ func _build_sys() -> void:
 	st.set_content_margin_all(6)
 	holder.add_theme_stylebox_override("panel", st)
 	hud.add_child(holder)
-	_anchor(holder, Control.PRESET_TOP_RIGHT, Vector2(186, 46), Vector2(-16, 16))
+	_anchor(holder, Control.PRESET_TOP_RIGHT, Vector2(248, 52), Vector2(-16, 16))
 	sys_bar = HBoxContainer.new()
 	sys_bar.add_theme_constant_override("separation", 4)
 	holder.add_child(sys_bar)
 	for i in 2:
 		var b := W.IconButton.new("", "×%d" % (i + 1))
 		b.tooltip_text = "배속 ×%d" % (i + 1)
-		b.pressed.connect(func():
-			if battle.G.speed != i + 1:
-				battle._toggle_speed())
+		b.pressed.connect(func(): pacing.set_user_speed(i + 1))
 		sys_bar.add_child(b)
 		speed_btns.append(b)
+	# Q52: 조용한 구간에서만 누를 수 있다. 교전·경보가 생기거나 전장을 만지면 멈춘다.
+	skip_btn = W.IconButton.new("skip")
+	skip_btn.tooltip_text = "다음 교전·경보까지 건너뛰기 (조용한 구간에서만)"
+	skip_btn.pressed.connect(func(): pacing.skip())
+	sys_bar.add_child(skip_btn)
 	var pb := W.IconButton.new("pause")
 	pb.tooltip_text = "일시정지 (Space)"
 	pb.pressed.connect(open_pause)
@@ -267,7 +336,7 @@ func _build_sys() -> void:
 	sys_bar.add_child(gb)
 	objectives = W.DrawPanel.new(_draw_objectives, UiTheme.ornate())
 	hud.add_child(objectives)
-	_anchor(objectives, Control.PRESET_TOP_RIGHT, Vector2(272, 112), Vector2(-16, 70))
+	_anchor(objectives, Control.PRESET_TOP_RIGHT, Vector2(272, 112), Vector2(-16, 76))
 
 func _draw_objectives(c: Control) -> void:
 	UiDraw.text(c, Vector2(18, 26), "작 전 목 표", "eyebrow", 11, UiTheme.GOLD)
@@ -342,7 +411,7 @@ func add_log_entry(kind: String, text: String, fleet_id: int) -> void:
 	log_box.move_child(item, 0)
 	item.modulate.a = 0.0
 	item.position.x = -20
-	var tw := item.create_tween()
+	var tw := item.create_tween().set_ignore_time_scale()
 	tw.tween_property(item, "modulate:a", 1.0, 0.3)
 	log_items.append({"node": item, "age": 0.0})
 	while log_items.size() > 4:
@@ -424,7 +493,7 @@ func _cutin(name: String, sub: String, portrait: int, side: int, line: String) -
 	var base_x := cut.offset_left
 	cut.position.x = base_x - 60.0
 	cut.modulate.a = 0.0
-	cut_tween = create_tween()
+	cut_tween = create_tween().set_ignore_time_scale()
 	cut_tween.set_parallel(true)
 	cut_tween.tween_property(cut, "modulate:a", 1.0, 0.35)
 	cut_tween.tween_property(cut, "position:x", base_x, 0.45).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
@@ -475,7 +544,7 @@ func _draw_info(c: Control) -> void:
 	else:
 		_info_none(c)
 
-func _frame(c: Control, r: Rect2, tex: Texture2D, side: int) -> void:
+func _frame(c: Control, r: Rect2, tex: Texture2D, faction: String) -> void:
 	var cut_k := 14.0
 	var outer := PackedVector2Array([r.position + Vector2(cut_k, 0), Vector2(r.end.x, r.position.y), r.end - Vector2(0, cut_k), r.end - Vector2(cut_k, 0), Vector2(r.position.x, r.end.y), r.position + Vector2(0, cut_k)])
 	c.draw_colored_polygon(outer, UiTheme.GOLD_LO)
@@ -490,12 +559,12 @@ func _frame(c: Control, r: Rect2, tex: Texture2D, side: int) -> void:
 		inner.append(r.get_center() + (p - r.get_center()) * 0.96)
 	c.draw_polyline(inner, Color(UiTheme.GOLD_HI, 0.35), 1.0, true)
 	c.draw_polygon(PackedVector2Array([Vector2(r.position.x + 3, r.end.y - 34), Vector2(r.end.x - 3, r.end.y - 34), Vector2(r.end.x - 3 - cut_k * 0.8, r.end.y - 3), Vector2(r.position.x + 3, r.end.y - 3)]), PackedColorArray([Color(0, 0, 0, 0), Color(0, 0, 0, 0), Color(0.02, 0.03, 0.05, 0.92), Color(0.02, 0.03, 0.05, 0.92)]))
-	UiDraw.seal(c, Rect2(r.end.x - 31, r.position.y + 8, 22, 22), side)
+	UiDraw.faction_seal(c, Rect2(r.end.x - 31, r.position.y + 8, 22, 22), faction)
 
 func _info_single(c: Control, f) -> void:
 	var foe: bool = f.side == 1
 	var pr := Rect2(13, 13, 132, 132)
-	_frame(c, pr, battle._portrait_tex(f.portrait), f.side)
+	_frame(c, pr, battle._portrait_tex(f.portrait), src.faction(f.id))
 	UiDraw.text(c, pr.position + Vector2(10, pr.size.y - 12), f.role.get_slice(" · ", 0), "medium", 11, UiTheme.GOLD_HI)
 	var x := 162.0
 	UiDraw.text(c, Vector2(x, 42), f.fname, "serif_bold", 26, UiTheme.INK)
@@ -536,14 +605,14 @@ func _info_single(c: Control, f) -> void:
 	if f.is_flag:
 		chips.append(["기함", UiTheme.GOLD_HI])
 	if not foe:
-		chips.append(["지휘 범위 안" if f.in_cmd else "지휘 범위 밖 · 화력 −25%", UiTheme.ALLY_HI if f.in_cmd else UiTheme.WARN])
+		chips.append(["지휘 범위 안" if f.in_cmd else "지휘 범위 밖 · 화력 %s" % RuleText._pct(src.rules().out_of_cmd_fire).replace("-", "−"), UiTheme.ALLY_HI if f.in_cmd else UiTheme.WARN])
 		chips.append(["미사일 준비" if f.missile_cd <= 0.0 else "미사일 %d초" % ceili(f.missile_cd), UiTheme.CP if f.missile_cd <= 0.0 else UiTheme.INK_2])
 		chips.append(["함재기 준비" if f.fighter_cd <= 0.0 else "함재기 %d초" % ceili(f.fighter_cd), UiTheme.CP if f.fighter_cd <= 0.0 else UiTheme.INK_2])
 	if f.charge_t > 0.0:
 		chips.append(["돌격 %d초" % ceili(f.charge_t), UiTheme.GOLD_HI])
 	if f.fire_t and not f.fire_t.dead:
-		var fm: float = battle.flank_mul(f, f.fire_t)
-		chips.append(["%s 교전 중%s" % [f.fire_t.fname, " · 배후 +60%" if fm > 1.4 else (" · 측면 +30%" if fm > 1.0 else "")], UiTheme.GOLD_HI if fm > 1.0 else UiTheme.INK_2])
+		var dir := src.attack_dir(f.id, f.fire_t.id)
+		chips.append(["%s 교전 중%s" % [f.fire_t.fname, RuleText.flank_chip(src.rules(), dir)], UiTheme.GOLD_HI if dir != "front" else UiTheme.INK_2])
 	var chx := x
 	var chy := 112.0
 	for ch in chips:
@@ -619,7 +688,7 @@ func _build_commands() -> void:
 	groups_row = HBoxContainer.new()
 	groups_row.add_theme_constant_override("separation", 6)
 	hud.add_child(groups_row)
-	_anchor(groups_row, Control.PRESET_BOTTOM_RIGHT, Vector2(346, 38), Vector2(-16, -262))
+	_anchor(groups_row, Control.PRESET_BOTTOM_RIGHT, Vector2(346, 44), Vector2(-16, -262))
 	for i in 4:
 		var g := W.GroupButton.new(i + 1, self)
 		g.button_down.connect(battle._group_down.bind(i + 1))
@@ -635,17 +704,59 @@ func _set_tab(i: int) -> void:
 	for b in cmd_buttons:
 		b.queue_free()
 	cmd_buttons.clear()
+	var rules := src.rules()
 	for id in TABS[i][1]:
+		if not src.has_command(id):
+			continue
 		var spec: Dictionary = CMD_INFO[id].duplicate()
+		spec.merge(RuleText.cmd(rules, id), true)
 		spec["id"] = id
 		for c in battle.CMDS:
 			if c.id == id:
 				spec["key"] = c.key
 				spec["cost"] = c.cost
 		var b := W.CmdButton.new(spec, self)
-		b.pressed.connect(func(): battle.do_cmd(id))
+		if spec.get("confirm", false):
+			b.set_meta("hold_confirm", true)
+			b.button_down.connect(_confirm_start.bind(b))
+			b.button_up.connect(_confirm_end.bind(b))
+		else:
+			b.pressed.connect(func(): battle.do_cmd(id))
 		cmd_grid.add_child(b)
 		cmd_buttons.append(b)
+		if hold_tip:
+			hold_tip.register(b)
+
+# 길게 눌러 확정: 누르는 동안 버튼에 고리가 차고, 다 차면 명령을 실행한다. 일찍 떼면 취소.
+func _confirm_start(b: Control) -> void:
+	_confirm_btn = b
+	_confirm_t = 0.0
+	_confirm_fired = false
+
+func _confirm_end(b: Control) -> void:
+	if _confirm_btn != b:
+		return
+	if not _confirm_fired:
+		show_toast("%s: 길게 눌러 확정합니다" % b.cmd.label)
+	b.hold_k = 0.0
+	b.queue_redraw()
+	_confirm_btn = null
+
+func _confirm_tick(delta: float) -> void:
+	if _confirm_btn == null or _confirm_fired:
+		return
+	if not is_instance_valid(_confirm_btn) or not _confirm_btn.is_visible_in_tree():
+		_confirm_btn = null
+		return
+	_confirm_t += delta
+	_confirm_btn.hold_k = clampf(_confirm_t / CONFIRM_HOLD, 0.0, 1.0)
+	_confirm_btn.queue_redraw()
+	if _confirm_t >= CONFIRM_HOLD:
+		_confirm_fired = true
+		_confirm_btn.hold_k = 0.0
+		hold_tip.hide_tip()
+		Input.vibrate_handheld(40)
+		battle.do_cmd(_confirm_btn.cmd.id)
 
 func _refresh_cmds() -> void:
 	var s: Array = battle.my_sel()
@@ -734,6 +845,6 @@ func show_toast(text: String) -> void:
 	if toast_tween:
 		toast_tween.kill()
 	toast.modulate.a = 1.0
-	toast_tween = create_tween()
+	toast_tween = create_tween().set_ignore_time_scale()
 	toast_tween.tween_interval(2.0)
 	toast_tween.tween_property(toast, "modulate:a", 0.0, 0.4)

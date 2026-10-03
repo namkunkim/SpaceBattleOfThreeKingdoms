@@ -13,11 +13,16 @@ const ICONS := {
 	"missile": [[[6, 22], [16, 12]], [[16, 12], [18.5, 5.5], [22, 9], [16, 12]], [[8, 16], [5, 17], [6, 14]], [[12, 20], [11, 23], [14, 22]]],
 	"fighter": [[[14, 4], [16.5, 13], [14, 15], [11.5, 13], [14, 4]], [[5, 15], [14, 13], [23, 15]], [[10, 22], [14, 15], [18, 22]]],
 	"pause": [[[10, 7], [10, 21]], [[18, 7], [18, 21]]],
+	"skip": [[[5, 7], [12, 14], [5, 21]], [[13, 7], [20, 14], [13, 21]], [[23, 7], [23, 21]]],
 	"gear": [[[14, 3], [14, 7]], [[14, 21], [14, 25]], [[3, 14], [7, 14]], [[21, 14], [25, 14]], [[6.2, 6.2], [9, 9]], [[19, 19], [21.8, 21.8]], [[21.8, 6.2], [19, 9]], [[9, 19], [6.2, 21.8]]],
 	"warn": [[[14, 4], [25, 23], [3, 23], [14, 4]], [[14, 11], [14, 17]], [[14, 19.5], [14, 20.5]]],
 	"flag": [[[7, 24], [7, 4]], [[7, 5], [21, 5], [17, 10], [21, 15], [7, 15]]],
 	"target": [[[14, 3], [14, 9]], [[14, 19], [14, 25]], [[3, 14], [9, 14]], [[19, 14], [25, 14]]],
 }
+
+# 실제 경과 시간. 선택 감속(Engine.time_scale)과 무관하게 UI 연출·입력 판정이 같은 속도로 돈다.
+static func real_dt(delta: float) -> float:
+	return delta / maxf(0.001, Engine.time_scale)
 
 static func icon(ci: CanvasItem, name: String, rect: Rect2, color: Color, width := 1.6) -> void:
 	var paths: Array = ICONS.get(name, [])
@@ -31,30 +36,41 @@ static func icon(ci: CanvasItem, name: String, rect: Rect2, color: Color, width 
 	if name == "rally" or name == "gear" or name == "target":
 		ci.draw_arc(o + Vector2(14, 14) * k, (3.0 if name != "gear" else 5.0) * k, 0.0, TAU, 20, color, width, true)
 
-# 진영 인장: 사각 바탕에 한자 한 글자.
+# 진영 인장: 사각 바탕에 한자 한 글자. side(0/1)는 촉·위, 세력 키는 faction_seal.
 static func seal(ci: CanvasItem, rect: Rect2, side: int, glyph := "") -> void:
-	var deep := UiTheme.ALLY_DEEP if side == 0 else UiTheme.FOE_DEEP
-	var mid := Color("2b8f84") if side == 0 else Color("b8442a")
-	var rim := Color("7fe9dc") if side == 0 else Color("ff9f80")
+	faction_seal(ci, rect, Factions.of_side(side), glyph)
+
+static func faction_seal(ci: CanvasItem, rect: Rect2, key: String, glyph := "") -> void:
+	var fi := Factions.of(key)
+	var deep: Color = fi.deep
+	var mid: Color = fi.mid
+	var rim: Color = fi.rim
 	ci.draw_rect(rect, deep)
 	ci.draw_rect(rect.grow(-2.0), mid.lerp(deep, 0.35))
 	ci.draw_rect(rect.grow(-0.5), rim, false, 1.0)
 	ci.draw_rect(rect.grow(-3.5), Color(rim, 0.45), false, 1.0)
-	var g := glyph if glyph != "" else ("蜀" if side == 0 else "魏")
+	var g: String = glyph if glyph != "" else fi.glyph
 	var f := UiTheme.font("serif_bold")
 	var fs := int(rect.size.y * 0.56)
 	var w := f.get_string_size(g, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 	var asc := f.get_ascent(fs)
 	var dsc := f.get_descent(fs)
-	ci.draw_string(f, Vector2(rect.position.x + (rect.size.x - w) * 0.5, rect.position.y + (rect.size.y + asc - dsc) * 0.5), g, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color("f4fffd") if side == 0 else Color("fff0e8"))
+	ci.draw_string(f, Vector2(rect.position.x + (rect.size.x - w) * 0.5, rect.position.y + (rect.size.y + asc - dsc) * 0.5), g, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, fi.ink)
 
-# 진영 기호: 촉 = 사각, 위 = 마름모. 레이더·명패에서 색 외의 구분.
+# 진영 기호: 촉 = 사각, 위 = 마름모, 오 = 원. 레이더·명패에서 색 외의 구분.
 static func side_glyph(ci: CanvasItem, c: Vector2, r: float, side: int, color: Color, filled := true) -> void:
+	faction_glyph(ci, c, r, Factions.of_side(side), color, filled)
+
+static func faction_glyph(ci: CanvasItem, c: Vector2, r: float, key: String, color: Color, filled := true) -> void:
 	var pts: PackedVector2Array
-	if side == 0:
-		pts = PackedVector2Array([c + Vector2(-r, -r), c + Vector2(r, -r), c + Vector2(r, r), c + Vector2(-r, r)])
-	else:
-		pts = PackedVector2Array([c + Vector2(0, -r * 1.25), c + Vector2(r * 1.25, 0), c + Vector2(0, r * 1.25), c + Vector2(-r * 1.25, 0)])
+	match Factions.of(key).shape:
+		"square":
+			pts = PackedVector2Array([c + Vector2(-r, -r), c + Vector2(r, -r), c + Vector2(r, r), c + Vector2(-r, r)])
+		"circle":
+			for i in 16:
+				pts.append(c + Vector2.from_angle(TAU * i / 16.0) * r * 1.12)
+		_:
+			pts = PackedVector2Array([c + Vector2(0, -r * 1.25), c + Vector2(r * 1.25, 0), c + Vector2(0, r * 1.25), c + Vector2(-r * 1.25, 0)])
 	if filled:
 		ci.draw_colored_polygon(pts, color)
 	else:

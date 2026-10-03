@@ -51,6 +51,7 @@ class TitleScreen extends Control:
 		card.offset_right = -56
 		card.offset_bottom = -56
 	func _process(delta: float) -> void:
+		delta = UiDraw.real_dt(delta)
 		t += delta
 		queue_redraw()
 	func _draw() -> void:
@@ -131,7 +132,10 @@ class BriefScreen extends Control:
 		y += 18.0
 		UiDraw.text(c, Vector2(x, y), "교 전 규 칙", "eyebrow", 11, UiTheme.GOLD)
 		y += 14.0
-		var rules := [["target", "측면 공격 화력 +30%, 배후 공격 +60%"], ["flag", "기함 지휘 범위 밖의 함대는 화력 −25%"], ["charge", "지휘력으로 미사일(2)·함재기(3)·돌격(3) 사용"], ["def", "방어진형: 받는 피해 −40%, 화력·속도 감소"]]
+		var rv: Dictionary = deck.src.rules()
+		var rules := [["target", RuleText.flank_rule(rv)], ["flag", RuleText.cmd_range_rule(rv)], ["charge", RuleText.cost_rule(rv)]]
+		if RuleText.defense_rule(rv) != "":
+			rules.append(["def", RuleText.defense_rule(rv)])
 		for r in rules:
 			y += 34.0
 			c.draw_rect(Rect2(x, y - 21, 28, 28), Color(0.05, 0.08, 0.12))
@@ -209,6 +213,8 @@ class PauseScreen extends Control:
 		c.draw_line(Vector2(x - 30, 146), Vector2(x - 30, c.size.y - 36), Color(UiTheme.GOLD, 0.15))
 		UiDraw.text(c, Vector2(x, 160), "단 축 키", "eyebrow", 11, UiTheme.GOLD)
 		var keys := [["S", "정지"], ["D", "방어진형"], ["C", "돌격"], ["R", "기함 집결"], ["G", "후퇴"], ["M", "미사일"], ["F", "함재기"], ["A", "전 함대 선택"], ["1–4", "그룹 선택 · Ctrl+숫자 저장"], ["Space", "일시정지"]]
+		if not deck.src.has_command("def"):
+			keys = keys.filter(func(k): return k[0] != "D")
 		var y := 192.0
 		for i in keys.size():
 			var cx := x + (i % 2) * 210.0
@@ -218,6 +224,10 @@ class PauseScreen extends Control:
 			c.draw_rect(Rect2(cx, cy - 17, kw, 24), Color(0.25, 0.32, 0.43), false, 1.0)
 			UiDraw.text(c, Vector2(cx, cy), keys[i][0], "semibold", 12, UiTheme.INK, HORIZONTAL_ALIGNMENT_CENTER, kw)
 			UiDraw.text(c, Vector2(cx + kw + 10, cy), keys[i][1], "regular", 13, UiTheme.INK_2)
+		# Q53: 창을 벗어나 자동으로 멈췄을 때 안내
+		if deck.guard.auto_paused:
+			UiDraw.diamond(c, Vector2(x + 5, c.size.y - 49), 4.0, UiTheme.GOLD)
+			UiDraw.text(c, Vector2(x + 18, c.size.y - 44), "자리를 비워 자동으로 멈췄습니다. 전황은 그대로입니다.", "regular", 13, UiTheme.INK_2)
 	func on_show() -> void:
 		queue_redraw()
 
@@ -228,16 +238,20 @@ class SettingsScreen extends Control:
 	var scale_btns: Array = []
 	var full_chk: CheckButton
 	var glow_chk: CheckButton
+	var fast_chk: CheckButton
+	var slow_chk: CheckButton
+	var density_btns: Array = []
+	var pending_density := 1
 	var pending_scale := 1.0
 	func _init(d: Control, back: String) -> void:
 		deck = d
 		back_to = back
 		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		mouse_filter = Control.MOUSE_FILTER_STOP
-		var p := ScreenKit.centered(self, Vector2(600, 430), UiTheme.ornate())
+		var p := ScreenKit.centered(self, Vector2(600, 580), UiTheme.ornate())
 		p.painter = func(c: Control):
 			UiDraw.text(c, Vector2(36, 50), "설 정", "eyebrow", 11, UiTheme.GOLD)
-			UiDraw.text(c, Vector2(36, 94), "화면과 표시", "serif_bold", 28, UiTheme.INK)
+			UiDraw.text(c, Vector2(36, 94), "화면과 진행", "serif_bold", 28, UiTheme.INK)
 			c.draw_line(Vector2(36, 118), Vector2(c.size.x - 36, 118), Color(UiTheme.GOLD, 0.22))
 		var vb := VBoxContainer.new()
 		vb.position = Vector2(36, 142)
@@ -260,6 +274,23 @@ class SettingsScreen extends Control:
 			row.add_child(b)
 			scale_btns.append([b, sc])
 		vb.add_child(row)
+		# 표시 함선 밀도(리뷰 C-1·C-4): 화면 숫자는 언제나 실제 척 수, 보이는 배는 고정 배율
+		var drow := HBoxContainer.new()
+		var dl := UiTheme.label("함선 표시", "Strong")
+		dl.custom_minimum_size = Vector2(160, 0)
+		drow.add_child(dl)
+		for i in 3:
+			var b := Button.new()
+			b.text = ["낮음", "보통", "높음"][i]
+			b.toggle_mode = true
+			b.focus_mode = Control.FOCUS_NONE
+			b.custom_minimum_size = Vector2(80, 36)
+			b.pressed.connect(func():
+				pending_density = i
+				_sync())
+			drow.add_child(b)
+			density_btns.append(b)
+		vb.add_child(drow)
 		full_chk = CheckButton.new()
 		full_chk.text = "전체 화면"
 		full_chk.focus_mode = Control.FOCUS_NONE
@@ -268,12 +299,20 @@ class SettingsScreen extends Control:
 		glow_chk.text = "빛 번짐 효과 (광선·폭발 발광)"
 		glow_chk.focus_mode = Control.FOCUS_NONE
 		vb.add_child(glow_chk)
+		fast_chk = CheckButton.new()
+		fast_chk.text = "조용한 구간 자동 ×4 (교전이 시작되면 원래 배속)"
+		fast_chk.focus_mode = Control.FOCUS_NONE
+		vb.add_child(fast_chk)
+		slow_chk = CheckButton.new()
+		slow_chk.text = "선택하면 ×0.2 감속 (5초 동안 입력이 없으면 해제)"
+		slow_chk.focus_mode = Control.FOCUS_NONE
+		vb.add_child(slow_chk)
 		var hint := UiTheme.label("설정은 이 컴퓨터에 저장되어 다음 실행에도 유지됩니다.", "Muted")
 		vb.add_child(hint)
 		var hb := HBoxContainer.new()
 		hb.add_theme_constant_override("separation", 12)
 		hb.alignment = BoxContainer.ALIGNMENT_END
-		hb.position = Vector2(600 - 36 - 380, 430 - 30 - 52)
+		hb.position = Vector2(600 - 36 - 380, 580 - 30 - 52)
 		hb.size = Vector2(380, 52)
 		p.add_child(hb)
 		var cancel := Button.new()
@@ -289,6 +328,8 @@ class SettingsScreen extends Control:
 	func _sync() -> void:
 		for it in scale_btns:
 			it[0].button_pressed = is_equal_approx(it[1], pending_scale)
+		for i in density_btns.size():
+			density_btns[i].button_pressed = i == pending_density
 	func _draw() -> void:
 		draw_rect(Rect2(Vector2.ZERO, size), Color(0.01, 0.015, 0.03, 0.78))
 	func on_show() -> void:
@@ -296,11 +337,19 @@ class SettingsScreen extends Control:
 		pending_scale = GameSettings.ui_scale
 		full_chk.button_pressed = GameSettings.fullscreen
 		glow_chk.button_pressed = GameSettings.glow
+		fast_chk.button_pressed = GameSettings.auto_fast
+		slow_chk.button_pressed = GameSettings.slow_select
+		pending_density = GameSettings.ship_density
 		_sync()
 	func _save() -> void:
 		GameSettings.ui_scale = pending_scale
 		GameSettings.fullscreen = full_chk.button_pressed
 		GameSettings.glow = glow_chk.button_pressed
+		GameSettings.auto_fast = fast_chk.button_pressed
+		GameSettings.slow_select = slow_chk.button_pressed
+		if GameSettings.ship_density != pending_density:
+			GameSettings.ship_density = pending_density
+			deck.renderer.reset()
 		GameSettings.save_cfg()
 		GameSettings.apply(get_window())
 		deck.apply_glow()
@@ -334,6 +383,7 @@ class ResultScreen extends Control:
 		again.pressed.connect(func(): deck.restart())
 		hb.add_child(again)
 	func _process(delta: float) -> void:
+		delta = UiDraw.real_dt(delta)
 		t += delta
 		queue_redraw()
 	func on_show() -> void:

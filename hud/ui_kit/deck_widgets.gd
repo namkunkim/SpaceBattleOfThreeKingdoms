@@ -17,7 +17,7 @@ class DrawPanel extends Control:
 		if painter.is_valid():
 			painter.call(self)
 
-# 아이콘 버튼(배속·일시정지·설정)
+# 아이콘 버튼(배속·건너뛰기·일시정지·설정)
 class IconButton extends Button:
 	var icon_name := ""
 	var caption := ""
@@ -26,13 +26,15 @@ class IconButton extends Button:
 		icon_name = icon_n
 		caption = cap
 		focus_mode = Control.FOCUS_NONE
-		custom_minimum_size = Vector2(40, 34)
+		custom_minimum_size = Vector2(44, 40)
 	func _draw() -> void:
 		var r := Rect2(Vector2.ZERO, size)
 		if active:
 			draw_rect(Rect2(0, size.y - 2, size.x, 2), UiTheme.GOLD)
 			draw_rect(r, UiTheme.GOLD, false, 1.0)
 		var col := UiTheme.GOLD_HI if active else (UiTheme.INK if is_hovered() else UiTheme.INK_2)
+		if disabled:
+			col = UiTheme.INK_4
 		if icon_name != "":
 			UiDraw.icon(self, icon_name, Rect2(size * 0.5 - Vector2(9, 9), Vector2(18, 18)), col, 1.7)
 		if caption != "":
@@ -46,6 +48,7 @@ class CmdButton extends Button:
 	var cool_text := ""
 	var blocked := false
 	var pinned := false
+	var hold_k := 0.0   # 길게 눌러 확정 진행(0~1)
 	func _init(c: Dictionary, d: Node) -> void:
 		cmd = c
 		deck = d
@@ -72,6 +75,14 @@ class CmdButton extends Button:
 		var cost: int = cmd.get("cost", 0)
 		for i in cost:
 			UiDraw.diamond(self, Vector2(9 + i * 8, 9), 3.0, UiTheme.CP if not blocked else Color(UiTheme.CP, 0.35))
+		if hold_k > 0.0:
+			var cc := ir.get_center()
+			draw_arc(cc, 21.0, 0.0, TAU, 32, Color(UiTheme.GOLD, 0.25), 2.0, true)
+			draw_arc(cc, 21.0, -PI * 0.5, -PI * 0.5 + TAU * hold_k, 32, UiTheme.GOLD_HI, 2.6, true)
+		elif cmd.get("confirm", false):
+			# 길게 눌러 확정하는 명령 표시: 아이콘 아래 작은 점 세 개
+			for i in 3:
+				draw_circle(Vector2(size.x * 0.5 - 6 + i * 6, 47), 1.2, Color(tint, 0.55))
 		if cool > 0.0:
 			draw_rect(Rect2(0, size.y - 3, size.x, 3), Color(0.1, 0.14, 0.21))
 			draw_rect(Rect2(0, size.y - 3, size.x * (1.0 - cool), 3), UiTheme.CP)
@@ -86,7 +97,7 @@ class TabButton extends Button:
 		text = ""
 		set_meta("label", t)
 		focus_mode = Control.FOCUS_NONE
-		custom_minimum_size = Vector2(0, 36)
+		custom_minimum_size = Vector2(0, 40)
 		size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		add_theme_stylebox_override("normal", StyleBoxEmpty.new())
 		add_theme_stylebox_override("hover", StyleBoxEmpty.new())
@@ -106,7 +117,7 @@ class GroupButton extends Button:
 		n = i
 		deck = d
 		focus_mode = Control.FOCUS_NONE
-		custom_minimum_size = Vector2(82, 38)
+		custom_minimum_size = Vector2(82, 44)
 		tooltip_text = "그룹 %s 선택 (%d) · 길게 누르거나 Ctrl+%d로 저장" % [["I", "II", "III", "IV"][i - 1], i, i]
 	func _draw() -> void:
 		var b: Node = deck.battle

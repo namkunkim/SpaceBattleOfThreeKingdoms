@@ -18,6 +18,7 @@ func setup(b: Node) -> void:
 var _acc := 0.0
 
 func _process(delta: float) -> void:
+	delta = UiDraw.real_dt(delta)
 	t += delta
 	_acc += delta
 	if _acc >= 1.0 / 30.0:
@@ -87,8 +88,9 @@ func _draw() -> void:
 			continue
 		var p := _w2r(f.pos)
 		var sel: bool = battle.selected.has(f)
-		var col := Color.WHITE if sel else UiTheme.side_color(f.side)
-		UiDraw.side_glyph(self, p, 3.6 if not f.is_flag else 4.4, f.side, col)
+		var fk: String = battle.presentation.src.faction(f.id)
+		var col: Color = Color.WHITE if sel else Factions.of(fk).color
+		UiDraw.faction_glyph(self, p, 3.6 if not f.is_flag else 4.4, fk, col)
 		var hd := Vector2(cos(f.heading), sin(f.heading))
 		draw_line(p, p + hd * 8.0, col, 1.2, true)
 		if f.is_flag:
