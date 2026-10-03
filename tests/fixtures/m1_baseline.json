@@ -1,0 +1,6061 @@
+{
+	"meta": {
+		"dt": 0.05,
+		"max_t": 1800.0,
+		"policies": {
+			"attack5": "5초마다(0,5,10..) 아군 전대마다 최근접 적 공격 명령, 이어서 전 함대 선택 후 미사일·함재기 명령",
+			"charge30": "30초에 전 함대 선택 후 돌격 1회",
+			"none": "명령 없음"
+		},
+		"runs": 200,
+		"seeding": "seed(i) after _restart(), i = 0..runs-1",
+		"source": "scripts/FleetBattle3D.gd (M1 이전 POC)"
+	},
+	"policies": {
+		"attack5": {
+			"runs": [
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.128,
+					"lost": 284.442,
+					"reason": "annihilation",
+					"reinf_t": 71.15,
+					"t": 103.9,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 893.58,
+					"lost": 256.605,
+					"reason": "annihilation",
+					"reinf_t": 80.65,
+					"t": 110.7,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.46,
+					"lost": 213.197,
+					"reason": "annihilation",
+					"reinf_t": 70.85,
+					"t": 92.3,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.014,
+					"lost": 267.889,
+					"reason": "annihilation",
+					"reinf_t": 71.25,
+					"t": 104.75,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 893.077,
+					"lost": 287.8,
+					"reason": "annihilation",
+					"reinf_t": 72.25,
+					"t": 108.55,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.208,
+					"lost": 278.477,
+					"reason": "annihilation",
+					"reinf_t": 71.2,
+					"t": 97.55,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.738,
+					"lost": 248.578,
+					"reason": "annihilation",
+					"reinf_t": 80.7,
+					"t": 102.85,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.201,
+					"lost": 270.028,
+					"reason": "annihilation",
+					"reinf_t": 71.15,
+					"t": 106.2,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.65,
+					"lost": 205.407,
+					"reason": "annihilation",
+					"reinf_t": 71.0,
+					"t": 91.5,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.162,
+					"lost": 218.899,
+					"reason": "annihilation",
+					"reinf_t": 71.3,
+					"t": 95.7,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.695,
+					"lost": 220.051,
+					"reason": "annihilation",
+					"reinf_t": 70.85,
+					"t": 93.95,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.208,
+					"lost": 234.325,
+					"reason": "annihilation",
+					"reinf_t": 80.7,
+					"t": 104.3,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.319,
+					"lost": 257.813,
+					"reason": "annihilation",
+					"reinf_t": 71.1,
+					"t": 95.8,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.147,
+					"lost": 279.03,
+					"reason": "annihilation",
+					"reinf_t": 80.7,
+					"t": 111.3,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 891.39,
+					"lost": 316.739,
+					"reason": "annihilation",
+					"reinf_t": 70.9,
+					"t": 105.85,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.451,
+					"lost": 282.791,
+					"reason": "annihilation",
+					"reinf_t": 71.1,
+					"t": 106.3,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.142,
+					"lost": 309.25,
+					"reason": "annihilation",
+					"reinf_t": 72.55,
+					"t": 108.45,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.639,
+					"lost": 274.004,
+					"reason": "annihilation",
+					"reinf_t": 71.15,
+					"t": 108.05,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 891.414,
+					"lost": 284.885,
+					"reason": "annihilation",
+					"reinf_t": 71.8,
+					"t": 108.5,
+					"win": true
+				},
+				{
+					"ally_alive": 3,
+					"foe_alive": 0,
+					"killed": 892.172,
+					"lost": 302.38,
+					"reason": "annihilation",
+					"reinf_t": 71.2,
+					"t": 107.55,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 891.951,
+					"lost": 283.325,
+					"reason": "annihilation",
+					"reinf_t": 80.8,
+					"t": 111.15,
+					"win": true
+				},
+				{
+					"ally_alive": 3,
+					"foe_alive": 0,
+					"killed": 891.732,
+					"lost": 312.747,
+					"reason": "annihilation",
+					"reinf_t": 72.95,
+					"t": 112.5,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.333,
+					"lost": 274.445,
+					"reason": "annihilation",
+					"reinf_t": 71.35,
+					"t": 105.2,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.175,
+					"lost": 283.771,
+					"reason": "annihilation",
+					"reinf_t": 71.4,
+					"t": 115.35,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 891.677,
+					"lost": 245.542,
+					"reason": "annihilation",
+					"reinf_t": 70.7,
+					"t": 109.7,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.702,
+					"lost": 228.309,
+					"reason": "annihilation",
+					"reinf_t": 70.65,
+					"t": 90.85,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.564,
+					"lost": 274.246,
+					"reason": "annihilation",
+					"reinf_t": 71.15,
+					"t": 109.05,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.663,
+					"lost": 218.158,
+					"reason": "annihilation",
+					"reinf_t": 71.2,
+					"t": 107.35,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.148,
+					"lost": 280.117,
+					"reason": "annihilation",
+					"reinf_t": 72.4,
+					"t": 110.0,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 891.842,
+					"lost": 293.513,
+					"reason": "annihilation",
+					"reinf_t": 80.7,
+					"t": 109.45,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.026,
+					"lost": 272.742,
+					"reason": "annihilation",
+					"reinf_t": 70.95,
+					"t": 108.1,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 891.77,
+					"lost": 294.646,
+					"reason": "annihilation",
+					"reinf_t": 71.45,
+					"t": 108.25,
+					"win": true
+				},
+				{
+					"ally_alive": 3,
+					"foe_alive": 0,
+					"killed": 893.116,
+					"lost": 307.558,
+					"reason": "annihilation",
+					"reinf_t": 80.7,
+					"t": 115.65,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.708,
+					"lost": 270.646,
+					"reason": "annihilation",
+					"reinf_t": 80.75,
+					"t": 109.55,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.895,
+					"lost": 260.216,
+					"reason": "annihilation",
+					"reinf_t": 80.7,
+					"t": 110.75,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.678,
+					"lost": 301.18,
+					"reason": "annihilation",
+					"reinf_t": 71.25,
+					"t": 111.3,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.65,
+					"lost": 261.597,
+					"reason": "annihilation",
+					"reinf_t": 80.7,
+					"t": 110.75,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.085,
+					"lost": 299.879,
+					"reason": "annihilation",
+					"reinf_t": 71.0,
+					"t": 106.35,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.334,
+					"lost": 246.507,
+					"reason": "annihilation",
+					"reinf_t": 71.05,
+					"t": 112.25,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.451,
+					"lost": 246.867,
+					"reason": "annihilation",
+					"reinf_t": 71.1,
+					"t": 105.05,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 891.785,
+					"lost": 318.488,
+					"reason": "annihilation",
+					"reinf_t": 71.2,
+					"t": 106.2,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.634,
+					"lost": 236.403,
+					"reason": "annihilation",
+					"reinf_t": 80.75,
+					"t": 98.85,
+					"win": true
+				},
+				{
+					"ally_alive": 3,
+					"foe_alive": 0,
+					"killed": 892.634,
+					"lost": 303.626,
+					"reason": "annihilation",
+					"reinf_t": 71.35,
+					"t": 106.1,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 893.003,
+					"lost": 255.153,
+					"reason": "annihilation",
+					"reinf_t": 70.7,
+					"t": 105.2,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 891.844,
+					"lost": 255.821,
+					"reason": "annihilation",
+					"reinf_t": 72.0,
+					"t": 106.05,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.144,
+					"lost": 268.129,
+					"reason": "annihilation",
+					"reinf_t": 80.75,
+					"t": 105.9,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 893.092,
+					"lost": 250.268,
+					"reason": "annihilation",
+					"reinf_t": 80.75,
+					"t": 106.2,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.633,
+					"lost": 252.058,
+					"reason": "annihilation",
+					"reinf_t": 80.4,
+					"t": 106.1,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.797,
+					"lost": 291.508,
+					"reason": "annihilation",
+					"reinf_t": 80.7,
+					"t": 106.3,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.17,
+					"lost": 263.538,
+					"reason": "annihilation",
+					"reinf_t": 71.15,
+					"t": 107.35,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.528,
+					"lost": 216.613,
+					"reason": "annihilation",
+					"reinf_t": 71.15,
+					"t": 91.1,
+					"win": true
+				},
+				{
+					"ally_alive": 3,
+					"foe_alive": 0,
+					"killed": 892.564,
+					"lost": 300.927,
+					"reason": "annihilation",
+					"reinf_t": 80.7,
+					"t": 110.75,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.672,
+					"lost": 251.982,
+					"reason": "annihilation",
+					"reinf_t": 80.75,
+					"t": 105.65,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.167,
+					"lost": 278.335,
+					"reason": "annihilation",
+					"reinf_t": 70.75,
+					"t": 106.8,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.614,
+					"lost": 265.475,
+					"reason": "annihilation",
+					"reinf_t": 70.75,
+					"t": 97.2,
+					"win": true
+				},
+				{
+					"ally_alive": 3,
+					"foe_alive": 0,
+					"killed": 892.16,
+					"lost": 310.495,
+					"reason": "annihilation",
+					"reinf_t": 72.85,
+					"t": 108.3,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.223,
+					"lost": 295.919,
+					"reason": "annihilation",
+					"reinf_t": 80.75,
+					"t": 106.35,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.617,
+					"lost": 294.908,
+					"reason": "annihilation",
+					"reinf_t": 71.1,
+					"t": 106.9,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.268,
+					"lost": 263.208,
+					"reason": "annihilation",
+					"reinf_t": 71.1,
+					"t": 105.8,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.261,
+					"lost": 298.714,
+					"reason": "annihilation",
+					"reinf_t": 71.25,
+					"t": 108.6,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 893.133,
+					"lost": 209.707,
+					"reason": "annihilation",
+					"reinf_t": 70.9,
+					"t": 91.25,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.726,
+					"lost": 202.405,
+					"reason": "annihilation",
+					"reinf_t": 70.7,
+					"t": 90.85,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.187,
+					"lost": 262.02,
+					"reason": "annihilation",
+					"reinf_t": 80.8,
+					"t": 101.3,
+					"win": true
+				},
+				{
+					"ally_alive": 3,
+					"foe_alive": 0,
+					"killed": 892.462,
+					"lost": 301.082,
+					"reason": "annihilation",
+					"reinf_t": 80.75,
+					"t": 110.7,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.208,
+					"lost": 273.83,
+					"reason": "annihilation",
+					"reinf_t": 80.75,
+					"t": 114.05,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.307,
+					"lost": 247.355,
+					"reason": "annihilation",
+					"reinf_t": 70.8,
+					"t": 90.85,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.112,
+					"lost": 274.056,
+					"reason": "annihilation",
+					"reinf_t": 71.25,
+					"t": 105.35,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.627,
+					"lost": 237.913,
+					"reason": "annihilation",
+					"reinf_t": 70.7,
+					"t": 107.3,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.59,
+					"lost": 225.535,
+					"reason": "annihilation",
+					"reinf_t": 70.9,
+					"t": 104.25,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.107,
+					"lost": 277.148,
+					"reason": "annihilation",
+					"reinf_t": 80.8,
+					"t": 107.1,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.687,
+					"lost": 273.887,
+					"reason": "annihilation",
+					"reinf_t": 71.45,
+					"t": 111.0,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.283,
+					"lost": 291.991,
+					"reason": "annihilation",
+					"reinf_t": 71.35,
+					"t": 106.5,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.049,
+					"lost": 281.946,
+					"reason": "annihilation",
+					"reinf_t": 71.15,
+					"t": 112.75,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.631,
+					"lost": 252.447,
+					"reason": "annihilation",
+					"reinf_t": 80.7,
+					"t": 110.55,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.17,
+					"lost": 255.377,
+					"reason": "annihilation",
+					"reinf_t": 70.95,
+					"t": 105.65,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 894.068,
+					"lost": 268.755,
+					"reason": "annihilation",
+					"reinf_t": 80.7,
+					"t": 110.7,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.645,
+					"lost": 299.826,
+					"reason": "annihilation",
+					"reinf_t": 71.3,
+					"t": 107.15,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.178,
+					"lost": 293.781,
+					"reason": "annihilation",
+					"reinf_t": 71.35,
+					"t": 112.2,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.582,
+					"lost": 249.378,
+					"reason": "annihilation",
+					"reinf_t": 80.75,
+					"t": 106.25,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.861,
+					"lost": 268.635,
+					"reason": "annihilation",
+					"reinf_t": 70.75,
+					"t": 95.25,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.606,
+					"lost": 276.103,
+					"reason": "annihilation",
+					"reinf_t": 80.7,
+					"t": 106.15,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.103,
+					"lost": 237.259,
+					"reason": "annihilation",
+					"reinf_t": 80.7,
+					"t": 107.8,
+					"win": true
+				},
+				{
+					"ally_alive": 3,
+					"foe_alive": 0,
+					"killed": 893.162,
+					"lost": 308.536,
+					"reason": "annihilation",
+					"reinf_t": 71.4,
+					"t": 107.8,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.055,
+					"lost": 285.653,
+					"reason": "annihilation",
+					"reinf_t": 80.75,
+					"t": 106.3,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.57,
+					"lost": 292.224,
+					"reason": "annihilation",
+					"reinf_t": 71.2,
+					"t": 107.45,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.635,
+					"lost": 273.966,
+					"reason": "annihilation",
+					"reinf_t": 71.1,
+					"t": 106.3,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.471,
+					"lost": 223.947,
+					"reason": "annihilation",
+					"reinf_t": 71.15,
+					"t": 91.15,
+					"win": true
+				},
+				{
+					"ally_alive": 3,
+					"foe_alive": 0,
+					"killed": 893.12,
+					"lost": 307.314,
+					"reason": "annihilation",
+					"reinf_t": 71.2,
+					"t": 108.4,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.234,
+					"lost": 258.447,
+					"reason": "annihilation",
+					"reinf_t": 71.1,
+					"t": 104.05,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 891.798,
+					"lost": 296.05,
+					"reason": "annihilation",
+					"reinf_t": 72.65,
+					"t": 111.55,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 891.44,
+					"lost": 287.4,
+					"reason": "annihilation",
+					"reinf_t": 70.95,
+					"t": 100.5,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.17,
+					"lost": 260.931,
+					"reason": "annihilation",
+					"reinf_t": 71.05,
+					"t": 106.85,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.584,
+					"lost": 292.2,
+					"reason": "annihilation",
+					"reinf_t": 80.5,
+					"t": 110.7,
+					"win": true
+				},
+				{
+					"ally_alive": 3,
+					"foe_alive": 0,
+					"killed": 891.992,
+					"lost": 308.942,
+					"reason": "annihilation",
+					"reinf_t": 71.1,
+					"t": 107.85,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.502,
+					"lost": 224.423,
+					"reason": "annihilation",
+					"reinf_t": 71.05,
+					"t": 90.8,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.117,
+					"lost": 318.064,
+					"reason": "annihilation",
+					"reinf_t": 72.0,
+					"t": 108.9,
+					"win": true
+				},
+				{
+					"ally_alive": 3,
+					"foe_alive": 0,
+					"killed": 892.141,
+					"lost": 313.593,
+					"reason": "annihilation",
+					"reinf_t": 72.6,
+					"t": 112.7,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.148,
+					"lost": 301.617,
+					"reason": "annihilation",
+					"reinf_t": 71.25,
+					"t": 106.75,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.156,
+					"lost": 308.713,
+					"reason": "annihilation",
+					"reinf_t": 71.9,
+					"t": 108.35,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.43,
+					"lost": 243.359,
+					"reason": "annihilation",
+					"reinf_t": 80.65,
+					"t": 106.2,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 891.23,
+					"lost": 288.25,
+					"reason": "annihilation",
+					"reinf_t": 72.0,
+					"t": 108.25,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.663,
+					"lost": 273.328,
+					"reason": "annihilation",
+					"reinf_t": 80.75,
+					"t": 104.55,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.247,
+					"lost": 276.893,
+					"reason": "annihilation",
+					"reinf_t": 71.3,
+					"t": 107.65,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.518,
+					"lost": 228.74,
+					"reason": "annihilation",
+					"reinf_t": 70.7,
+					"t": 109.1,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 891.89,
+					"lost": 305.33,
+					"reason": "annihilation",
+					"reinf_t": 71.4,
+					"t": 104.95,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.4,
+					"lost": 277.378,
+					"reason": "annihilation",
+					"reinf_t": 80.75,
+					"t": 106.1,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.063,
+					"lost": 261.323,
+					"reason": "annihilation",
+					"reinf_t": 80.7,
+					"t": 108.65,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.143,
+					"lost": 285.832,
+					"reason": "annihilation",
+					"reinf_t": 71.3,
+					"t": 112.45,
+					"win": true
+				},
+				{
+					"ally_alive": 3,
+					"foe_alive": 0,
+					"killed": 892.712,
+					"lost": 312.713,
+					"reason": "annihilation",
+					"reinf_t": 71.2,
+					"t": 108.4,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.642,
+					"lost": 285.43,
+					"reason": "annihilation",
+					"reinf_t": 71.2,
+					"t": 108.6,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.138,
+					"lost": 272.344,
+					"reason": "annihilation",
+					"reinf_t": 80.8,
+					"t": 111.15,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 891.905,
+					"lost": 244.846,
+					"reason": "annihilation",
+					"reinf_t": 71.45,
+					"t": 105.05,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.215,
+					"lost": 258.782,
+					"reason": "annihilation",
+					"reinf_t": 80.7,
+					"t": 110.65,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.595,
+					"lost": 290.362,
+					"reason": "annihilation",
+					"reinf_t": 80.75,
+					"t": 106.3,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.219,
+					"lost": 263.342,
+					"reason": "annihilation",
+					"reinf_t": 80.7,
+					"t": 104.8,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.097,
+					"lost": 288.59,
+					"reason": "annihilation",
+					"reinf_t": 71.25,
+					"t": 106.75,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 891.519,
+					"lost": 292.408,
+					"reason": "annihilation",
+					"reinf_t": 71.25,
+					"t": 107.75,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.255,
+					"lost": 303.628,
+					"reason": "annihilation",
+					"reinf_t": 72.3,
+					"t": 108.2,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.275,
+					"lost": 253.432,
+					"reason": "annihilation",
+					"reinf_t": 71.35,
+					"t": 108.5,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.929,
+					"lost": 280.984,
+					"reason": "annihilation",
+					"reinf_t": 71.15,
+					"t": 107.3,
+					"win": true
+				},
+				{
+					"ally_alive": 3,
+					"foe_alive": 0,
+					"killed": 893.397,
+					"lost": 303.111,
+					"reason": "annihilation",
+					"reinf_t": 80.6,
+					"t": 110.65,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.623,
+					"lost": 294.247,
+					"reason": "annihilation",
+					"reinf_t": 80.5,
+					"t": 106.35,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.919,
+					"lost": 208.796,
+					"reason": "annihilation",
+					"reinf_t": 70.7,
+					"t": 90.75,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.617,
+					"lost": 258.592,
+					"reason": "annihilation",
+					"reinf_t": 80.75,
+					"t": 103.75,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.447,
+					"lost": 283.168,
+					"reason": "annihilation",
+					"reinf_t": 80.75,
+					"t": 104.3,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.154,
+					"lost": 281.701,
+					"reason": "annihilation",
+					"reinf_t": 80.8,
+					"t": 110.95,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 893.44,
+					"lost": 233.463,
+					"reason": "annihilation",
+					"reinf_t": 71.0,
+					"t": 105.85,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.586,
+					"lost": 276.075,
+					"reason": "annihilation",
+					"reinf_t": 80.75,
+					"t": 106.3,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.399,
+					"lost": 258.058,
+					"reason": "annihilation",
+					"reinf_t": 80.7,
+					"t": 103.8,
+					"win": true
+				},
+				{
+					"ally_alive": 3,
+					"foe_alive": 0,
+					"killed": 892.286,
+					"lost": 314.657,
+					"reason": "annihilation",
+					"reinf_t": 71.25,
+					"t": 111.7,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.484,
+					"lost": 265.512,
+					"reason": "annihilation",
+					"reinf_t": 70.95,
+					"t": 101.35,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.581,
+					"lost": 284.653,
+					"reason": "annihilation",
+					"reinf_t": 70.9,
+					"t": 108.1,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.153,
+					"lost": 275.011,
+					"reason": "annihilation",
+					"reinf_t": 71.15,
+					"t": 107.1,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 891.832,
+					"lost": 283.71,
+					"reason": "annihilation",
+					"reinf_t": 71.25,
+					"t": 110.4,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.636,
+					"lost": 266.592,
+					"reason": "annihilation",
+					"reinf_t": 71.1,
+					"t": 105.2,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.152,
+					"lost": 255.266,
+					"reason": "annihilation",
+					"reinf_t": 80.5,
+					"t": 106.15,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 891.83,
+					"lost": 289.651,
+					"reason": "annihilation",
+					"reinf_t": 72.0,
+					"t": 107.15,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 891.689,
+					"lost": 298.71,
+					"reason": "annihilation",
+					"reinf_t": 71.5,
+					"t": 106.7,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.644,
+					"lost": 296.352,
+					"reason": "annihilation",
+					"reinf_t": 71.35,
+					"t": 106.9,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 891.627,
+					"lost": 259.461,
+					"reason": "annihilation",
+					"reinf_t": 71.2,
+					"t": 98.45,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.655,
+					"lost": 269.361,
+					"reason": "annihilation",
+					"reinf_t": 80.7,
+					"t": 105.95,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 891.794,
+					"lost": 282.476,
+					"reason": "annihilation",
+					"reinf_t": 72.1,
+					"t": 113.25,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.64,
+					"lost": 248.684,
+					"reason": "annihilation",
+					"reinf_t": 80.6,
+					"t": 101.7,
+					"win": true
+				},
+				{
+					"ally_alive": 3,
+					"foe_alive": 0,
+					"killed": 892.11,
+					"lost": 309.594,
+					"reason": "annihilation",
+					"reinf_t": 73.2,
+					"t": 114.1,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.264,
+					"lost": 285.005,
+					"reason": "annihilation",
+					"reinf_t": 71.0,
+					"t": 109.1,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.655,
+					"lost": 260.508,
+					"reason": "annihilation",
+					"reinf_t": 71.3,
+					"t": 105.35,
+					"win": true
+				},
+				{
+					"ally_alive": 3,
+					"foe_alive": 0,
+					"killed": 891.197,
+					"lost": 297.816,
+					"reason": "annihilation",
+					"reinf_t": 71.45,
+					"t": 107.95,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.071,
+					"lost": 258.415,
+					"reason": "annihilation",
+					"reinf_t": 70.65,
+					"t": 90.95,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.137,
+					"lost": 306.629,
+					"reason": "annihilation",
+					"reinf_t": 71.55,
+					"t": 108.3,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.642,
+					"lost": 258.688,
+					"reason": "annihilation",
+					"reinf_t": 80.7,
+					"t": 107.45,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.566,
+					"lost": 278.613,
+					"reason": "annihilation",
+					"reinf_t": 70.85,
+					"t": 109.8,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.854,
+					"lost": 274.112,
+					"reason": "annihilation",
+					"reinf_t": 80.75,
+					"t": 106.4,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.071,
+					"lost": 290.438,
+					"reason": "annihilation",
+					"reinf_t": 71.3,
+					"t": 108.4,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.622,
+					"lost": 239.966,
+					"reason": "annihilation",
+					"reinf_t": 71.0,
+					"t": 94.35,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.425,
+					"lost": 283.595,
+					"reason": "annihilation",
+					"reinf_t": 80.6,
+					"t": 106.3,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.175,
+					"lost": 268.189,
+					"reason": "annihilation",
+					"reinf_t": 80.55,
+					"t": 106.15,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.342,
+					"lost": 224.247,
+					"reason": "annihilation",
+					"reinf_t": 70.8,
+					"t": 95.05,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.278,
+					"lost": 271.903,
+					"reason": "annihilation",
+					"reinf_t": 80.75,
+					"t": 109.35,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.6,
+					"lost": 275.383,
+					"reason": "annihilation",
+					"reinf_t": 80.75,
+					"t": 106.15,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.913,
+					"lost": 219.924,
+					"reason": "annihilation",
+					"reinf_t": 70.8,
+					"t": 91.15,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.144,
+					"lost": 307.513,
+					"reason": "annihilation",
+					"reinf_t": 72.65,
+					"t": 108.75,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.21,
+					"lost": 237.788,
+					"reason": "annihilation",
+					"reinf_t": 80.7,
+					"t": 106.3,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 891.269,
+					"lost": 310.012,
+					"reason": "annihilation",
+					"reinf_t": 72.45,
+					"t": 108.7,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.055,
+					"lost": 253.986,
+					"reason": "annihilation",
+					"reinf_t": 70.85,
+					"t": 103.0,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.286,
+					"lost": 298.075,
+					"reason": "annihilation",
+					"reinf_t": 71.15,
+					"t": 107.45,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.601,
+					"lost": 286.484,
+					"reason": "annihilation",
+					"reinf_t": 71.1,
+					"t": 106.5,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.57,
+					"lost": 263.067,
+					"reason": "annihilation",
+					"reinf_t": 80.65,
+					"t": 100.4,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.433,
+					"lost": 271.685,
+					"reason": "annihilation",
+					"reinf_t": 80.8,
+					"t": 105.95,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.77,
+					"lost": 234.932,
+					"reason": "annihilation",
+					"reinf_t": 71.0,
+					"t": 95.85,
+					"win": true
+				},
+				{
+					"ally_alive": 3,
+					"foe_alive": 0,
+					"killed": 892.648,
+					"lost": 315.241,
+					"reason": "annihilation",
+					"reinf_t": 71.3,
+					"t": 111.85,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.015,
+					"lost": 270.778,
+					"reason": "annihilation",
+					"reinf_t": 71.2,
+					"t": 102.25,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.703,
+					"lost": 275.196,
+					"reason": "annihilation",
+					"reinf_t": 70.95,
+					"t": 108.0,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 891.824,
+					"lost": 276.15,
+					"reason": "annihilation",
+					"reinf_t": 80.55,
+					"t": 111.05,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.419,
+					"lost": 268.731,
+					"reason": "annihilation",
+					"reinf_t": 80.75,
+					"t": 100.4,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.642,
+					"lost": 268.835,
+					"reason": "annihilation",
+					"reinf_t": 80.45,
+					"t": 106.1,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.427,
+					"lost": 223.808,
+					"reason": "annihilation",
+					"reinf_t": 70.8,
+					"t": 91.15,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.174,
+					"lost": 260.988,
+					"reason": "annihilation",
+					"reinf_t": 80.45,
+					"t": 106.25,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.831,
+					"lost": 299.859,
+					"reason": "annihilation",
+					"reinf_t": 71.0,
+					"t": 106.8,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.375,
+					"lost": 289.632,
+					"reason": "annihilation",
+					"reinf_t": 80.55,
+					"t": 106.35,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 893.439,
+					"lost": 281.321,
+					"reason": "annihilation",
+					"reinf_t": 80.65,
+					"t": 105.8,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.66,
+					"lost": 248.574,
+					"reason": "annihilation",
+					"reinf_t": 80.75,
+					"t": 100.25,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 891.986,
+					"lost": 241.202,
+					"reason": "annihilation",
+					"reinf_t": 71.2,
+					"t": 99.2,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.976,
+					"lost": 221.904,
+					"reason": "annihilation",
+					"reinf_t": 71.3,
+					"t": 90.9,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.129,
+					"lost": 294.775,
+					"reason": "annihilation",
+					"reinf_t": 71.95,
+					"t": 106.0,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.722,
+					"lost": 286.424,
+					"reason": "annihilation",
+					"reinf_t": 71.3,
+					"t": 106.4,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.617,
+					"lost": 284.231,
+					"reason": "annihilation",
+					"reinf_t": 71.55,
+					"t": 102.7,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.7,
+					"lost": 236.306,
+					"reason": "annihilation",
+					"reinf_t": 71.1,
+					"t": 95.85,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.574,
+					"lost": 283.251,
+					"reason": "annihilation",
+					"reinf_t": 80.8,
+					"t": 106.35,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.293,
+					"lost": 294.213,
+					"reason": "annihilation",
+					"reinf_t": 80.7,
+					"t": 110.7,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.896,
+					"lost": 260.075,
+					"reason": "annihilation",
+					"reinf_t": 80.75,
+					"t": 110.7,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 892.642,
+					"lost": 241.189,
+					"reason": "annihilation",
+					"reinf_t": 70.9,
+					"t": 91.05,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.204,
+					"lost": 322.242,
+					"reason": "annihilation",
+					"reinf_t": 72.9,
+					"t": 115.5,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 893.182,
+					"lost": 268.407,
+					"reason": "annihilation",
+					"reinf_t": 70.8,
+					"t": 91.8,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.217,
+					"lost": 272.112,
+					"reason": "annihilation",
+					"reinf_t": 80.8,
+					"t": 106.0,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.238,
+					"lost": 267.478,
+					"reason": "annihilation",
+					"reinf_t": 80.8,
+					"t": 104.9,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 893.135,
+					"lost": 204.974,
+					"reason": "annihilation",
+					"reinf_t": 70.9,
+					"t": 91.1,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.983,
+					"lost": 270.454,
+					"reason": "annihilation",
+					"reinf_t": 71.15,
+					"t": 105.4,
+					"win": true
+				},
+				{
+					"ally_alive": 5,
+					"foe_alive": 0,
+					"killed": 893.126,
+					"lost": 214.126,
+					"reason": "annihilation",
+					"reinf_t": 70.65,
+					"t": 90.8,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.235,
+					"lost": 290.865,
+					"reason": "annihilation",
+					"reinf_t": 71.15,
+					"t": 106.7,
+					"win": true
+				},
+				{
+					"ally_alive": 4,
+					"foe_alive": 0,
+					"killed": 892.647,
+					"lost": 297.252,
+					"reason": "annihilation",
+					"reinf_t": 71.1,
+					"t": 112.05,
+					"win": true
+				}
+			],
+			"summary": {
+				"mean_killed": 892.56,
+				"mean_lost": 271.57,
+				"mean_reinf_t": 74.49,
+				"mean_t": 105.35,
+				"n": 200,
+				"reasons": {
+					"annihilation": 200
+				},
+				"win_rate": 1.0
+			}
+		},
+		"charge30": {
+			"runs": [
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 438.893,
+					"lost": 626.097,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.75,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 421.957,
+					"lost": 626.136,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.65,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 397.356,
+					"lost": 626.037,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 141.95,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 391.291,
+					"lost": 626.171,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 137.95,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 375.459,
+					"lost": 625.907,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 135.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 401.636,
+					"lost": 626.455,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 140.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 400.605,
+					"lost": 626.138,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 141.95,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 420.592,
+					"lost": 625.581,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 141.65,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 384.016,
+					"lost": 626.128,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 134.9,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 426.705,
+					"lost": 625.611,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.35,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 374.658,
+					"lost": 626.197,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 134.05,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 409.815,
+					"lost": 626.474,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 145.1,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 427.597,
+					"lost": 626.136,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 141.2,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 410.36,
+					"lost": 626.316,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 140.65,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 401.59,
+					"lost": 626.008,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 141.8,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 399.188,
+					"lost": 626.626,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 141.7,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 420.946,
+					"lost": 626.584,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 147.1,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 416.809,
+					"lost": 626.137,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 144.25,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 439.164,
+					"lost": 626.057,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 404.32,
+					"lost": 626.652,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 144.75,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 434.168,
+					"lost": 626.549,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.55,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 415.974,
+					"lost": 625.643,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 144.25,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 429.719,
+					"lost": 625.577,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 140.65,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 413.448,
+					"lost": 625.318,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.6,
+					"win": false
+				},
+				{
+					"ally_alive": 1,
+					"foe_alive": 7,
+					"killed": 364.196,
+					"lost": 584.205,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 128.7,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 437.854,
+					"lost": 626.081,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 385.544,
+					"lost": 625.62,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 134.85,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 383.303,
+					"lost": 626.053,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 139.85,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 387.515,
+					"lost": 626.144,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 135.65,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 383.43,
+					"lost": 626.084,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 137.3,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 431.474,
+					"lost": 625.87,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 145.8,
+					"win": false
+				},
+				{
+					"ally_alive": 1,
+					"foe_alive": 6,
+					"killed": 369.789,
+					"lost": 535.74,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 116.25,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 437.417,
+					"lost": 625.66,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 144.95,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 385.101,
+					"lost": 625.193,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 140.7,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 400.318,
+					"lost": 626.108,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 141.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 425.279,
+					"lost": 626.157,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 139.85,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 389.191,
+					"lost": 626.145,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.15,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 419.881,
+					"lost": 625.591,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 142.5,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 427.106,
+					"lost": 625.554,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 146.65,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 414.571,
+					"lost": 626.112,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 141.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 404.499,
+					"lost": 626.596,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 137.2,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 390.434,
+					"lost": 626.141,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 134.55,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 424.959,
+					"lost": 625.716,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 147.15,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 444.219,
+					"lost": 626.074,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 144.3,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 404.524,
+					"lost": 626.621,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.95,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 423.859,
+					"lost": 625.642,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 142.35,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 414.371,
+					"lost": 627.075,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 387.047,
+					"lost": 626.606,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 137.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 397.238,
+					"lost": 626.144,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 137.95,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 411.241,
+					"lost": 625.614,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 140.2,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 437.483,
+					"lost": 625.596,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.85,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 386.649,
+					"lost": 626.601,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 139.4,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 413.512,
+					"lost": 626.046,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.3,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 397.774,
+					"lost": 625.453,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 139.95,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 413.374,
+					"lost": 626.213,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 142.5,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 414.303,
+					"lost": 627.541,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 399.428,
+					"lost": 625.2,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 138.8,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 394.914,
+					"lost": 626.585,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 138.8,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 417.096,
+					"lost": 625.594,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 140.75,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 392.481,
+					"lost": 626.127,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 139.95,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 418.828,
+					"lost": 626.118,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.5,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 426.759,
+					"lost": 625.617,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 142.3,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 449.865,
+					"lost": 626.129,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 144.5,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 401.3,
+					"lost": 626.083,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 140.95,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 395.157,
+					"lost": 625.829,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 135.15,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 386.091,
+					"lost": 626.179,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 136.1,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 415.142,
+					"lost": 626.344,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 144.25,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 404.607,
+					"lost": 626.15,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 141.35,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 384.23,
+					"lost": 626.073,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 136.65,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 415.131,
+					"lost": 626.559,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 410.439,
+					"lost": 626.511,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.75,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 433.819,
+					"lost": 625.56,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 146.75,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 436.78,
+					"lost": 625.622,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 141.9,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 394.147,
+					"lost": 626.103,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 139.3,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 385.786,
+					"lost": 626.122,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 136.85,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 429.538,
+					"lost": 625.655,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 144.2,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 386.005,
+					"lost": 626.369,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 136.15,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 416.561,
+					"lost": 625.968,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.2,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 386.042,
+					"lost": 626.101,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 137.9,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 422.058,
+					"lost": 626.092,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 142.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 453.469,
+					"lost": 626.552,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 148.8,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 413.633,
+					"lost": 625.579,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 142.4,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 413.861,
+					"lost": 625.796,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.5,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 397.895,
+					"lost": 626.532,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 140.7,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 425.307,
+					"lost": 625.64,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 142.9,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 423.71,
+					"lost": 625.625,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.75,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 390.094,
+					"lost": 626.09,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 135.0,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 395.595,
+					"lost": 626.076,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 137.5,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 422.372,
+					"lost": 626.095,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 145.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 383.918,
+					"lost": 626.598,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 136.25,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 393.864,
+					"lost": 626.173,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 138.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 378.072,
+					"lost": 625.478,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 135.2,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 415.55,
+					"lost": 625.601,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 140.1,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 394.959,
+					"lost": 626.057,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 142.15,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 423.204,
+					"lost": 626.578,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 389.066,
+					"lost": 626.082,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 138.4,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 427.855,
+					"lost": 626.092,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 146.0,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 391.773,
+					"lost": 626.624,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 141.05,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 422.1,
+					"lost": 625.549,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 142.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 397.138,
+					"lost": 626.131,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 139.2,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 369.283,
+					"lost": 626.724,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 132.65,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 425.829,
+					"lost": 625.648,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.0,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 423.182,
+					"lost": 626.115,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 139.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 441.274,
+					"lost": 626.08,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 144.75,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 387.468,
+					"lost": 626.576,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 135.0,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 394.266,
+					"lost": 626.533,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 139.0,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 412.668,
+					"lost": 626.432,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.8,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 400.501,
+					"lost": 626.128,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 141.3,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 431.33,
+					"lost": 626.053,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.35,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 425.491,
+					"lost": 626.136,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 146.2,
+					"win": false
+				},
+				{
+					"ally_alive": 1,
+					"foe_alive": 6,
+					"killed": 377.928,
+					"lost": 544.156,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 122.25,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 450.48,
+					"lost": 626.576,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 145.55,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 411.473,
+					"lost": 625.382,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 138.8,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 389.814,
+					"lost": 626.155,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 141.1,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 443.077,
+					"lost": 626.568,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 145.35,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 444.539,
+					"lost": 625.964,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 144.75,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 429.27,
+					"lost": 626.042,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 146.85,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 398.707,
+					"lost": 626.599,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 141.2,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 408.725,
+					"lost": 626.593,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.75,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 386.915,
+					"lost": 626.116,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 137.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 435.55,
+					"lost": 626.091,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 144.0,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 425.48,
+					"lost": 626.185,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 144.35,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 392.102,
+					"lost": 626.273,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 141.0,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 436.354,
+					"lost": 626.56,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 148.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 448.672,
+					"lost": 625.788,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 145.55,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 418.019,
+					"lost": 627.028,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 144.2,
+					"win": false
+				},
+				{
+					"ally_alive": 1,
+					"foe_alive": 6,
+					"killed": 379.86,
+					"lost": 540.323,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 122.65,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 414.769,
+					"lost": 625.583,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 141.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 401.231,
+					"lost": 625.636,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 140.35,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 385.297,
+					"lost": 626.119,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 137.95,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 416.016,
+					"lost": 625.583,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 142.05,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 380.752,
+					"lost": 625.598,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 139.15,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 432.222,
+					"lost": 625.589,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.05,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 420.154,
+					"lost": 625.607,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 142.6,
+					"win": false
+				},
+				{
+					"ally_alive": 1,
+					"foe_alive": 6,
+					"killed": 391.508,
+					"lost": 534.926,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.75,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 372.416,
+					"lost": 625.595,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 134.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 416.326,
+					"lost": 626.022,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 145.3,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 405.295,
+					"lost": 626.083,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.85,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 373.668,
+					"lost": 626.576,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 133.9,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 443.639,
+					"lost": 625.15,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 147.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 387.652,
+					"lost": 626.144,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 134.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 391.084,
+					"lost": 626.666,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 137.95,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 387.302,
+					"lost": 626.331,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 135.1,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 423.785,
+					"lost": 625.976,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 140.05,
+					"win": false
+				},
+				{
+					"ally_alive": 1,
+					"foe_alive": 7,
+					"killed": 351.944,
+					"lost": 610.469,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 128.95,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 427.674,
+					"lost": 625.67,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 142.35,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 391.284,
+					"lost": 626.588,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 135.15,
+					"win": false
+				},
+				{
+					"ally_alive": 1,
+					"foe_alive": 6,
+					"killed": 366.092,
+					"lost": 534.776,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 115.4,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 420.009,
+					"lost": 625.553,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 142.55,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 385.334,
+					"lost": 626.114,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 139.25,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 413.676,
+					"lost": 625.302,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 144.1,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 388.145,
+					"lost": 626.571,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 134.15,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 402.108,
+					"lost": 627.064,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 144.1,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 446.617,
+					"lost": 626.583,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 144.4,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 443.469,
+					"lost": 626.201,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 145.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 449.169,
+					"lost": 625.628,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 145.95,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 420.942,
+					"lost": 626.462,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 144.4,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 390.92,
+					"lost": 626.183,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 138.35,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 401.94,
+					"lost": 626.082,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 140.3,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 382.693,
+					"lost": 625.92,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 134.25,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 413.359,
+					"lost": 625.645,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 140.75,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 399.169,
+					"lost": 626.123,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 138.85,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 393.861,
+					"lost": 626.556,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 138.05,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 402.048,
+					"lost": 625.57,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 142.55,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 383.693,
+					"lost": 626.134,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 137.65,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 415.897,
+					"lost": 625.63,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 138.9,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 429.536,
+					"lost": 626.553,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.4,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 435.716,
+					"lost": 626.048,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 144.65,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 394.499,
+					"lost": 625.632,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 137.35,
+					"win": false
+				},
+				{
+					"ally_alive": 1,
+					"foe_alive": 6,
+					"killed": 398.197,
+					"lost": 560.067,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 127.1,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 408.482,
+					"lost": 626.577,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.25,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 392.135,
+					"lost": 625.588,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 140.45,
+					"win": false
+				},
+				{
+					"ally_alive": 1,
+					"foe_alive": 7,
+					"killed": 376.061,
+					"lost": 551.473,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.85,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 415.098,
+					"lost": 626.571,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 141.7,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 426.595,
+					"lost": 626.58,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.4,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 374.175,
+					"lost": 626.553,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 133.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 421.451,
+					"lost": 625.645,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 139.65,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 406.119,
+					"lost": 626.049,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 139.15,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 421.505,
+					"lost": 625.822,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 141.95,
+					"win": false
+				},
+				{
+					"ally_alive": 1,
+					"foe_alive": 7,
+					"killed": 402.461,
+					"lost": 554.491,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.75,
+					"win": false
+				},
+				{
+					"ally_alive": 1,
+					"foe_alive": 6,
+					"killed": 411.192,
+					"lost": 579.516,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 132.15,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 463.425,
+					"lost": 626.112,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 150.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 406.737,
+					"lost": 626.101,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.05,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 421.154,
+					"lost": 626.086,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 142.25,
+					"win": false
+				},
+				{
+					"ally_alive": 1,
+					"foe_alive": 6,
+					"killed": 419.715,
+					"lost": 614.806,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 143.7,
+					"win": false
+				},
+				{
+					"ally_alive": 1,
+					"foe_alive": 6,
+					"killed": 394.755,
+					"lost": 555.731,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.75,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 433.916,
+					"lost": 625.624,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 145.2,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 381.329,
+					"lost": 626.136,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 139.35,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 384.55,
+					"lost": 626.552,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 133.25,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 387.628,
+					"lost": 625.771,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 137.5,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 417.78,
+					"lost": 625.654,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 142.4,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 399.822,
+					"lost": 625.229,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 142.25,
+					"win": false
+				},
+				{
+					"ally_alive": 1,
+					"foe_alive": 6,
+					"killed": 400.75,
+					"lost": 548.748,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 130.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 387.269,
+					"lost": 626.072,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 136.4,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 433.568,
+					"lost": 625.996,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 142.7,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 396.107,
+					"lost": 625.697,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 140.3,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 382.359,
+					"lost": 626.208,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 137.9,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 393.913,
+					"lost": 626.145,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 139.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 6,
+					"killed": 384.053,
+					"lost": 626.073,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 133.9,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 7,
+					"killed": 382.451,
+					"lost": 626.103,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 138.4,
+					"win": false
+				}
+			],
+			"summary": {
+				"mean_killed": 407.63,
+				"mean_lost": 621.5,
+				"mean_reinf_t": 95.05,
+				"mean_t": 140.01,
+				"n": 200,
+				"reasons": {
+					"flagship_lost": 200
+				},
+				"win_rate": 0.0
+			}
+		},
+		"none": {
+			"runs": [
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 168.488,
+					"lost": 625.681,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 114.15,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 186.152,
+					"lost": 625.629,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.0,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 207.4,
+					"lost": 625.619,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 123.35,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 212.671,
+					"lost": 626.082,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 122.35,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 178.822,
+					"lost": 625.658,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 111.5,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 177.875,
+					"lost": 625.638,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 116.3,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 197.417,
+					"lost": 626.129,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 119.15,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 209.706,
+					"lost": 625.654,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 115.05,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 226.204,
+					"lost": 625.6,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 122.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 172.995,
+					"lost": 625.585,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 115.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 203.594,
+					"lost": 626.62,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 120.25,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 209.512,
+					"lost": 626.117,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 122.1,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 185.716,
+					"lost": 625.652,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 113.5,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 237.287,
+					"lost": 626.086,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 125.55,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 239.776,
+					"lost": 625.266,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 201.605,
+					"lost": 626.059,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 177.211,
+					"lost": 625.822,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 115.65,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 221.151,
+					"lost": 625.574,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 117.25,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 243.411,
+					"lost": 626.572,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 123.95,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 196.363,
+					"lost": 625.633,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 116.5,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 189.266,
+					"lost": 627.069,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.8,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 185.031,
+					"lost": 626.136,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 117.2,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 180.1,
+					"lost": 626.415,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.85,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 182.758,
+					"lost": 625.686,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 119.9,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 182.085,
+					"lost": 625.94,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 119.85,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 192.796,
+					"lost": 626.578,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.65,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 199.492,
+					"lost": 625.595,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 112.9,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 174.073,
+					"lost": 626.077,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 120.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 218.166,
+					"lost": 625.61,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 118.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 178.905,
+					"lost": 625.674,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 117.15,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 230.006,
+					"lost": 625.137,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 122.25,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 203.444,
+					"lost": 626.182,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 176.952,
+					"lost": 626.559,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 119.8,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 212.076,
+					"lost": 626.072,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.8,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 183.496,
+					"lost": 626.676,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.3,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 243.335,
+					"lost": 626.462,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 193.098,
+					"lost": 625.953,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 117.3,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 195.017,
+					"lost": 625.711,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 122.1,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 181.141,
+					"lost": 625.672,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 117.35,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 190.786,
+					"lost": 626.179,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.3,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 246.012,
+					"lost": 626.082,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 123.65,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 197.453,
+					"lost": 625.249,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 118.5,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 243.463,
+					"lost": 625.894,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 124.7,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 181.362,
+					"lost": 625.338,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 116.25,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 204.149,
+					"lost": 626.443,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.55,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 172.535,
+					"lost": 625.639,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 115.85,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 177.358,
+					"lost": 625.636,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 115.85,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 164.676,
+					"lost": 625.722,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 119.55,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 196.774,
+					"lost": 625.774,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 117.95,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 174.25,
+					"lost": 625.706,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 112.5,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 247.328,
+					"lost": 626.084,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 126.2,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 191.849,
+					"lost": 626.058,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 180.696,
+					"lost": 625.216,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.1,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 224.433,
+					"lost": 626.046,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 122.2,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 197.154,
+					"lost": 626.031,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.65,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 177.368,
+					"lost": 625.621,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 119.3,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 238.32,
+					"lost": 625.639,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 122.95,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 242.791,
+					"lost": 626.077,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 123.2,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 196.804,
+					"lost": 625.624,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 120.0,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 199.813,
+					"lost": 626.623,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.9,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 216.17,
+					"lost": 625.718,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 123.35,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 190.524,
+					"lost": 626.149,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 118.1,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 191.121,
+					"lost": 626.087,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 199.961,
+					"lost": 626.115,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.55,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 218.985,
+					"lost": 626.571,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.55,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 191.682,
+					"lost": 625.643,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.9,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 184.98,
+					"lost": 625.609,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 117.35,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 183.931,
+					"lost": 626.049,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.75,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 239.029,
+					"lost": 626.431,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.7,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 193.677,
+					"lost": 626.093,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 123.5,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 184.77,
+					"lost": 625.543,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 116.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 231.061,
+					"lost": 625.594,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 123.3,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 205.381,
+					"lost": 626.573,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.85,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 191.283,
+					"lost": 625.638,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 119.3,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 181.145,
+					"lost": 625.603,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 114.65,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 190.859,
+					"lost": 625.782,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 117.35,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 213.981,
+					"lost": 625.155,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 125.8,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 174.265,
+					"lost": 625.86,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 116.35,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 189.132,
+					"lost": 625.648,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 118.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 183.97,
+					"lost": 625.564,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 117.7,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 242.801,
+					"lost": 626.028,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 126.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 205.743,
+					"lost": 625.629,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 124.05,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 190.217,
+					"lost": 626.577,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.3,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 187.34,
+					"lost": 626.463,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.75,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 190.621,
+					"lost": 626.497,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.8,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 190.508,
+					"lost": 625.942,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 123.15,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 237.738,
+					"lost": 626.125,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 124.3,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 199.081,
+					"lost": 626.063,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 120.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 243.455,
+					"lost": 626.107,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 122.95,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 229.566,
+					"lost": 626.582,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.35,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 256.467,
+					"lost": 625.642,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 131.15,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 210.107,
+					"lost": 626.097,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 183.647,
+					"lost": 625.629,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 119.15,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 237.611,
+					"lost": 627.075,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 122.25,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 199.943,
+					"lost": 626.1,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 124.3,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 199.661,
+					"lost": 625.668,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 117.65,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 237.537,
+					"lost": 626.537,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 123.65,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 197.125,
+					"lost": 626.622,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 199.295,
+					"lost": 626.102,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 118.3,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 200.789,
+					"lost": 625.399,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 183.242,
+					"lost": 626.086,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 119.8,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 169.54,
+					"lost": 626.002,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 118.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 189.338,
+					"lost": 626.574,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.7,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 191.118,
+					"lost": 626.302,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.75,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 165.707,
+					"lost": 626.117,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 115.95,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 250.228,
+					"lost": 625.631,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 125.85,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 182.167,
+					"lost": 626.074,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.8,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 239.165,
+					"lost": 626.562,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 124.3,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 203.137,
+					"lost": 626.099,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.0,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 214.748,
+					"lost": 626.109,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 122.15,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 171.632,
+					"lost": 626.065,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 116.5,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 168.149,
+					"lost": 626.081,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 115.4,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 195.225,
+					"lost": 625.974,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 117.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 184.107,
+					"lost": 625.643,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 116.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 189.9,
+					"lost": 626.131,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 122.8,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 240.305,
+					"lost": 626.245,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 123.1,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 213.961,
+					"lost": 626.125,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 126.35,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 196.967,
+					"lost": 626.345,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.85,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 236.507,
+					"lost": 626.109,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 123.8,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 163.787,
+					"lost": 625.241,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 112.0,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 208.523,
+					"lost": 626.532,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.25,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 244.67,
+					"lost": 626.059,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 125.7,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 182.616,
+					"lost": 625.612,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.75,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 250.545,
+					"lost": 626.103,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 122.75,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 201.286,
+					"lost": 625.611,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 123.7,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 171.701,
+					"lost": 625.223,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 119.9,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 189.666,
+					"lost": 625.696,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 122.35,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 200.982,
+					"lost": 627.025,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.5,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 175.242,
+					"lost": 625.702,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 120.7,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 183.243,
+					"lost": 626.632,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.75,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 180.618,
+					"lost": 626.038,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 117.15,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 251.754,
+					"lost": 626.106,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 130.15,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 220.445,
+					"lost": 626.045,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 122.9,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 172.561,
+					"lost": 625.619,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 118.95,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 179.96,
+					"lost": 625.801,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 119.2,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 234.922,
+					"lost": 626.053,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 125.65,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 208.385,
+					"lost": 626.138,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 124.85,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 214.696,
+					"lost": 625.93,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 122.9,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 184.173,
+					"lost": 625.657,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 119.4,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 208.475,
+					"lost": 625.627,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 118.8,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 208.685,
+					"lost": 626.407,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.8,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 188.939,
+					"lost": 625.691,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 116.85,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 239.91,
+					"lost": 626.57,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.8,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 193.636,
+					"lost": 625.668,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 118.7,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 172.371,
+					"lost": 625.148,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 118.25,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 197.898,
+					"lost": 625.627,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 120.8,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 185.989,
+					"lost": 626.102,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.5,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 198.793,
+					"lost": 625.14,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 115.85,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 206.267,
+					"lost": 626.123,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 122.5,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 208.353,
+					"lost": 626.093,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 122.4,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 182.397,
+					"lost": 625.561,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 120.2,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 252.562,
+					"lost": 625.643,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 125.9,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 180.79,
+					"lost": 625.336,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 120.75,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 246.288,
+					"lost": 626.571,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 125.35,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 173.948,
+					"lost": 625.649,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 117.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 183.167,
+					"lost": 625.955,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.8,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 195.442,
+					"lost": 625.655,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 115.9,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 182.122,
+					"lost": 625.729,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 117.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 200.134,
+					"lost": 625.654,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 114.7,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 191.328,
+					"lost": 625.718,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 119.2,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 172.309,
+					"lost": 625.155,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 115.05,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 180.23,
+					"lost": 626.144,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 119.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 188.434,
+					"lost": 626.465,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.4,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 241.369,
+					"lost": 625.611,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 122.4,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 173.927,
+					"lost": 625.599,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 119.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 245.4,
+					"lost": 626.094,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 129.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 174.528,
+					"lost": 626.094,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 116.55,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 224.25,
+					"lost": 626.079,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 119.85,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 184.536,
+					"lost": 625.957,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 203.538,
+					"lost": 626.154,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 116.1,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 228.43,
+					"lost": 625.692,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 118.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 179.046,
+					"lost": 626.085,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.3,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 255.092,
+					"lost": 626.3,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 129.7,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 214.203,
+					"lost": 625.598,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 117.05,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 186.388,
+					"lost": 626.32,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.45,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 226.853,
+					"lost": 625.381,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 120.95,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 183.92,
+					"lost": 625.774,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 118.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 192.213,
+					"lost": 626.075,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 116.1,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 169.975,
+					"lost": 625.683,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 119.65,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 192.45,
+					"lost": 626.62,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.85,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 186.349,
+					"lost": 626.163,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 117.7,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 234.633,
+					"lost": 626.093,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 127.2,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 212.169,
+					"lost": 625.659,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 116.25,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 197.489,
+					"lost": 625.636,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 113.9,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 205.056,
+					"lost": 625.607,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 123.0,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 182.955,
+					"lost": 625.585,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 118.15,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 170.489,
+					"lost": 626.438,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.6,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 193.976,
+					"lost": 626.146,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.75,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 239.275,
+					"lost": 626.111,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 124.1,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 209.099,
+					"lost": 625.614,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 117.2,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 179.784,
+					"lost": 625.638,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 113.25,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 170.199,
+					"lost": 625.695,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 115.95,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 195.89,
+					"lost": 625.642,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 114.95,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 184.65,
+					"lost": 625.651,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 116.05,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 250.719,
+					"lost": 625.96,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 125.0,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 222.076,
+					"lost": 626.05,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 122.85,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 8,
+					"killed": 167.591,
+					"lost": 625.605,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 116.1,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 209.97,
+					"lost": 626.485,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 122.4,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 184.571,
+					"lost": 626.129,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 121.4,
+					"win": false
+				},
+				{
+					"ally_alive": 0,
+					"foe_alive": 9,
+					"killed": 202.429,
+					"lost": 625.601,
+					"reason": "flagship_lost",
+					"reinf_t": 95.05,
+					"t": 120.95,
+					"win": false
+				}
+			],
+			"summary": {
+				"mean_killed": 201.07,
+				"mean_lost": 625.94,
+				"mean_reinf_t": 95.05,
+				"mean_t": 120.4,
+				"n": 200,
+				"reasons": {
+					"flagship_lost": 200
+				},
+				"win_rate": 0.0
+			}
+		}
+	}
+}
