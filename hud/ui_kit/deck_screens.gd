@@ -40,7 +40,7 @@ class TitleScreen extends Control:
 		col.add_child(spacer)
 		for spec in [["설정", func(): deck.show_screen("settings")], ["종료", func(): deck.get_tree().quit()]]:
 			var b := ScreenKit.menu_button(spec[0])
-			b.custom_minimum_size = Vector2(280, 44)
+			b.custom_minimum_size = Vector2(280, 52)
 			b.pressed.connect(spec[1])
 			col.add_child(b)
 		var card := W.DrawPanel.new(_draw_card, UiTheme.ornate())
@@ -193,7 +193,7 @@ class PauseScreen extends Control:
 		var specs := [["계속", func(): deck.resume()], ["설정", func(): deck.show_screen("settings_pause")], ["처음부터", func(): deck.restart()], ["타이틀로", func(): deck.to_title()], ["종료", func(): deck.get_tree().quit()]]
 		for i in specs.size():
 			var b := ScreenKit.menu_button(specs[i][0], i == 0)
-			b.custom_minimum_size = Vector2(300, 52 if i == 0 else 46)
+			b.custom_minimum_size = Vector2(300, 56 if i == 0 else 52)
 			b.pressed.connect(specs[i][1])
 			col.add_child(b)
 			if i == 0:
@@ -252,18 +252,18 @@ class SettingsScreen extends Control:
 		back_to = back
 		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		mouse_filter = Control.MOUSE_FILTER_STOP
-		var p := ScreenKit.centered(self, Vector2(600, 500), UiTheme.ornate())
+		var p := ScreenKit.centered(self, Vector2(600, 580), UiTheme.ornate())
 		p.painter = func(c: Control):
 			UiDraw.text(c, Vector2(36, 50), "설 정", "eyebrow", 11, UiTheme.GOLD)
 			UiDraw.text(c, Vector2(36, 94), "설정", "serif_bold", 28, UiTheme.INK)
 			c.draw_line(Vector2(36, 166), Vector2(c.size.x - 36, 166), Color(UiTheme.GOLD, 0.22))
 		var tb := HBoxContainer.new()
-		tb.position = Vector2(36, 120)
-		tb.size = Vector2(528, 44)
+		tb.position = Vector2(36, 112)
+		tb.size = Vector2(528, 52)
 		p.add_child(tb)
 		for i in PAGES.size():
 			var t := DeckWidgets.TabButton.new(PAGES[i])
-			t.custom_minimum_size = Vector2(0, 44)
+			t.custom_minimum_size = Vector2(0, 52)
 			t.pressed.connect(_show_page.bind(i))
 			tb.add_child(t)
 			tabs.append(t)
@@ -271,7 +271,7 @@ class SettingsScreen extends Control:
 			var vb := VBoxContainer.new()
 			vb.position = Vector2(36, 186)
 			vb.size = Vector2(528, 220)
-			vb.add_theme_constant_override("separation", 18)
+			vb.add_theme_constant_override("separation", 14)
 			p.add_child(vb)
 			pages.append(vb)
 		# 화면
@@ -303,7 +303,7 @@ class SettingsScreen extends Control:
 			sl.min_value = 0.0
 			sl.max_value = 1.0
 			sl.step = 0.05
-			sl.custom_minimum_size = Vector2(300, 36)
+			sl.custom_minimum_size = Vector2(300, 52)
 			sl.focus_mode = Control.FOCUS_NONE
 			sl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 			sl.value_changed.connect(func(v: float): _preview_volume(it[0], v))
@@ -311,22 +311,22 @@ class SettingsScreen extends Control:
 			vol_sliders[it[0]] = sl
 		pages[2].add_child(UiTheme.label("지금은 임시 합성음입니다. 경보·결정·아군 손실은 화면 표시와 진동을 함께 냅니다.", "Muted"))
 		var hint := UiTheme.label("설정은 이 기기에 저장됩니다.", "Muted")
-		hint.position = Vector2(36, 500 - 30 - 36)
+		hint.position = Vector2(36, 580 - 30 - 36)
 		p.add_child(hint)
 		var hb := HBoxContainer.new()
 		hb.add_theme_constant_override("separation", 12)
 		hb.alignment = BoxContainer.ALIGNMENT_END
-		hb.position = Vector2(600 - 36 - 300, 500 - 30 - 52)
+		hb.position = Vector2(600 - 36 - 300, 580 - 30 - 52)
 		hb.size = Vector2(300, 52)
 		p.add_child(hb)
 		var cancel := Button.new()
 		cancel.text = "취소"
-		cancel.custom_minimum_size = Vector2(110, 50)
+		cancel.custom_minimum_size = Vector2(110, 52)
 		cancel.focus_mode = Control.FOCUS_NONE
 		cancel.pressed.connect(_cancel)
 		hb.add_child(cancel)
 		var ok := ScreenKit.menu_button("저장", true)
-		ok.custom_minimum_size = Vector2(170, 50)
+		ok.custom_minimum_size = Vector2(170, 52)
 		ok.pressed.connect(_save)
 		hb.add_child(ok)
 		_show_page(0)
@@ -342,14 +342,14 @@ class SettingsScreen extends Control:
 		b.text = text
 		b.toggle_mode = true
 		b.focus_mode = Control.FOCUS_NONE
-		b.custom_minimum_size = Vector2(80, 44)
+		b.custom_minimum_size = Vector2(80, 52)
 		row.add_child(b)
 		return b
 	func _check(parent: Control, text: String) -> CheckButton:
 		var c := CheckButton.new()
 		c.text = text
 		c.focus_mode = Control.FOCUS_NONE
-		c.custom_minimum_size = Vector2(0, 44)
+		c.custom_minimum_size = Vector2(0, 52)
 		parent.add_child(c)
 		return c
 	func _show_page(i: int) -> void:
