@@ -37,3 +37,26 @@ var range_r := 0.0
 var sq_id := ""           # 시나리오 전대 ID (POC 프로필은 빈 문자열)
 var morale_group := ""
 var start_morale_bp := 0  # 시작 사기(M4에서 쓴다)
+
+# --- M3 사격·피해 상태(전투 규칙이 salvo일 때만 쓴다. max_hull == 0이면 POC 규칙이다) ---
+var cmd_stat := 0         # 지휘관 통솔
+var morale_bp := 10000    # M4에서 변한다. M3는 시작값
+var formation_id := ""
+var equip := ""           # 고속정 임무장비
+var comp0: Dictionary = {}    # 함종 → 처음 척 수(상수)
+var stages: Dictionary = {}   # 함종 → [무손상, 경파, 중파, 대파, 격침] 척 수
+var hull := 0                 # 선체 점수
+var max_hull := 0
+var lost_ships := 0           # 이탈(대파·격침)한 척 수의 누계
+var loss_total := 0           # 이탈 배분에 쓴 척 수(60/40 배분 카운터)
+var loss_exposed := 0
+var ammo: Dictionary = {}     # 범주 → 남은 탄약(뇌격은 특수 충전)
+var energy_m := 0             # 1/1000
+var energy_rem := 0
+var heat_m := 0
+var heat_rem := 0
+var sorties_m := 0
+var sorties_rem := 0
+var next_fire: Dictionary = {}   # 범주 → 다음 일제사격 틱
+var supp: Dictionary = {}        # 범주 → 보류 사유(없으면 "")
+var speed := 0.0              # px/초
