@@ -30,6 +30,7 @@ var cai: CommanderAi = null     # M7 지휘관 AI. 프로필에 ai 수치가 있
 var decisions: DecisionBoard = null   # M7 결정 카드(시나리오 realtime_rules.decision_cards가 있을 때)
 var first_hit_tick := -1        # 첫 명중 틱(양측이 아는 공개 사실). AI의 거리대 일정이 이 시각에서 센다
 var detect: Detection = null    # M6 탐지·전쟁 안개. combat.detection이 있을 때만 켜진다(없으면 완전 정보)
+var supply: SupplyCore = null   # M8 보급과 수리. combat.supply가 있을 때만 켜진다
 
 # profile: 프로필 사전({profile_id, rules, ally, foe, reinf}). 비우면 POC 프로필(기준선 동등).
 func _init(seed_id: int = 0, hz: int = BattleRules.TICK_HZ, profile: Dictionary = {}) -> void:
@@ -69,6 +70,8 @@ func _init(seed_id: int = 0, hz: int = BattleRules.TICK_HZ, profile: Dictionary 
 			salvo.terr = terrain
 		if cb.has("detection"):
 			detect = Detection.new(self, cb.detection, terrain if terrain else BattleTerrain.new({}))
+		if cb.has("supply"):
+			supply = SupplyCore.new(self, cb.supply)
 		if cb.has("morale") and not rs.scenario.is_empty():
 			morale = MoraleCore.new(self, cb.morale)
 			if cb.has("victory"):
@@ -108,6 +111,8 @@ func fingerprint() -> String:
 		for f in st.fleets:
 			parts.append("%d.%s.%s.%d.%d.%d.%d" % [f.id, f.control, f.posture, f.bias_until, roundi(f.bias_mod * 1000.0), f.pursue_id, f.ai_seen])
 		extra = "ai%d|%s|%s" % [first_hit_tick, ",".join(parts), decisions.fingerprint() if decisions else ""]
+	if supply:
+		extra += supply.fingerprint()   # M8. 보급이 없으면 M7 지문과 같다
 	return BattleFingerprint.of(st, detect, extra)
 
 # 즉시 적용 명령. 틱 사이에 상태는 변하지 않으므로 "다음 step() 첫머리에 적용"과 결과가 같고,
@@ -743,6 +748,8 @@ func _substep(first: bool) -> void:
 		salvo.step()
 		if morale:
 			morale.step()
+		if supply:
+			supply.step()
 		if decisions:
 			decisions.step()
 	_separate()

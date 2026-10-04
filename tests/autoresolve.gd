@@ -274,6 +274,7 @@ func play_rc(seed_id: int, pol: String, diff: String) -> Dictionary:
 	var conf_t := [-1, -1]       # 진영별 첫 확인 접촉 틱(M6)
 	var conf_n := [0, 0]         # 진영별 확인 접촉이 하나라도 있던 표본 수
 	var samples := 0
+	var sup := [[0, 0, 0, 0], [0, 0, 0, 0]]   # M8 진영별 [보급 주기, 탄약 보충, 수리, 경파 회복 척 수]
 	while not sim.st.over and sim.st.tick < max_tick:
 		if pol == "attack" and sim.st.tick % (5 * hz) == 0:
 			for a in sim.st.alive(0):
@@ -303,6 +304,13 @@ func play_rc(seed_id: int, pol: String, diff: String) -> Dictionary:
 					first_fire[e.sq] = e.tick
 				if first_hit < 0 and e.value.hit:
 					first_hit = e.tick
+			elif e.kind == "supply":
+				var sd: int = sim.st.by_id(e.sq).side
+				sup[sd][0] += 1
+				sup[sd][1] += int(e.value.ammo > 0)
+				sup[sd][2] += int(e.value.repair)
+			elif e.kind == "light_recovered":
+				sup[sim.st.by_id(e.sq).side][3] += int(e.value)
 			elif e.kind == "morale_state" and e.value.to == "retreat":
 				retreats.append([snappedf(e.tick / float(hz), 0.1), sim.st.by_id(e.sq).sq_id])
 		if sim.st.tick % (30 * hz) == 0:
@@ -338,6 +346,7 @@ func play_rc(seed_id: int, pol: String, diff: String) -> Dictionary:
 		"army_end": [sim.morale.army_bp(0), sim.morale.army_bp(1)], "plague_bp": sim.morale.plague_bp_total,
 		"conf_t": [snappedf(conf_t[0] / float(hz), 0.1) if conf_t[0] >= 0 else -1.0, snappedf(conf_t[1] / float(hz), 0.1) if conf_t[1] >= 0 else -1.0],
 		"conf_share": [float(conf_n[0]) / maxf(1.0, samples), float(conf_n[1]) / maxf(1.0, samples)],
+		"supply": sup,
 		"fp": sim.fingerprint()}
 
 static func summarize_rc(rows: Array) -> Dictionary:

@@ -96,3 +96,15 @@ var bias_until := -1
 var pursue_id := -1           # 결정 카드로 정한 추격 표적. pursue_until 틱까지
 var pursue_until := -1
 var ai_seen := -1             # 처음 접촉을 안 틱(난이도 반응 지연의 기준). 접촉이 없어지면 -1
+
+# --- M8 보급과 수리 ---
+var hit_tick := -1            # 마지막으로 명중을 받은 틱(경파 자연 회복의 기준)
+var sup_src := ""             # 배정된 공급원 키(기지 ID 또는 "f<전대 ID>"). ""이면 배정 없음
+var sup_prog := 0             # 이번 주기 진행(bp·틱). 처리량만큼 쌓인다
+var sup_since := -1           # 정지를 시작한 틱(처리 순서). 움직이면 -1
+var sup_still := false        # 이번 틱에 정지해 있었다
+var sup_pos := Vector2.ZERO   # 지난 보급 판정 때 위치
+var sup_n := 0                # 보급함 전대: 지난번 보급함 수(재고 손실 계산)
+var sup_ammo := 0             # 보급함 전대 재고: 탄약 단위
+var sup_mat := 0              # 보급함 전대 재고: 물자
+var supplied := 0             # 끝낸 보급 주기 수(통계)

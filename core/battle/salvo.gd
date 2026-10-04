@@ -520,6 +520,7 @@ func _resolve(s: Dictionary) -> void:
 		sim.first_hit_tick = sim.st.tick
 	sim.emit("salvo", f.id, tgt.id, tgt.pos, {"cat": s.cat, "hit": s.hit, "dmg": roundi(s.dmg), "acc": s.acc, "band": s.band, "sector": s.sector, "n": s.n})
 	if s.hit and not tgt.dead:
+		tgt.hit_tick = sim.st.tick   # 경파 자연 회복의 기준(M8)
 		var loss := apply_hull(f, tgt, s.dmg, s.band, s.sector, s.eid)
 		if sim.morale:
 			sim.morale.hit(tgt, loss, s.wband, s.sector)

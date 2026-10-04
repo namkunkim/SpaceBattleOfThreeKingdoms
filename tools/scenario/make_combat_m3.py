@@ -34,6 +34,9 @@ def main():
     fog = load("red-cliffs-fog-of-war-rules.json")
     terr = load("red-cliffs-terrain-rules.json")
     ai = load("red-cliffs-ai-rules.json")
+    fc = load("red-cliffs-fast-craft-rules.json")
+    sc = fc["supply_contract"]
+    inv = fc["supply_inventory_contract"]
 
     cost = {s["id"]: s["unit_cost"] for s in setup["ship_types"]}
     types = {}
@@ -276,6 +279,26 @@ def main():
                     for z in terr["zones"]
                 ],
                 "source": "본편 red-cliffs-terrain-rules.json. 겹침: 이동 비용 최댓값, 센서 합(−60~+30), 은폐 합, 사거리는 구역 ID 순 곱, 사격각 합",
+            },
+            # M8 보급과 수리(§4.13, 세션 Q25·Q48). 반경·처리량·재고·기지·연합·순서는 본편 고속정 보급 계약, 턴 → 초 환산과 수리는 제안값
+            "supply": {
+                "ship_type_id": sc["source_types"]["supply_ship"]["ship_type_id"],
+                "ship_radius": sc["source_types"]["supply_ship"]["radius"],
+                "capacity_per_ship": sc["source_types"]["supply_ship"]["capacity_per_ship"],
+                "base_radius": sc["source_types"]["friendly_base"]["radius"],
+                "base_capacity": sc["source_types"]["friendly_base"]["capacity_squadrons_per_turn"],
+                "bases": [{"id": b["source_id"], "faction_id": b["faction_id"], "position": b["position"]} for b in sc["friendly_bases"]],
+                "mutual": sc["mutual_supply_alliances"],
+                "per_ship": {"ammo": inv["per_supply_ship_maximum"]["ammo_units"], "materials": inv["per_supply_ship_maximum"]["supply_material_units"]},
+                "throughput_bp": inv["throughput_basis_points"],
+                "materials_per_refill": 1,
+                "priority": ["ammo_ratio_asc", "still_since_asc", "squadron_id_asc"],
+                "priority_note": "본편은 남은 연료 비율 → 들어온 턴 → 전대 ID. 연료가 없어 탄약 비율로 옮겼다(§4.13)",
+                "stationary_s": sc["required_stationary_turns"] * 60,
+                "still_eps": 0.05,
+                "repair": {"materials": 1, "light_recover_s": 120},
+                "status": "proposed (Q48: 본편 1턴 정지 → 60초. 손상된 보급함 전대의 처리량 50%·25%는 본편의 턴당 슬롯 크레딧 대신 진행 속도로 옮겼다(60초 → 120초·240초). 정지는 틱당 이동 still_eps px 이하. 기지는 재고 무한·수리 물자 없음. 수리: 주기마다 물자 1로 중파 1척 → 경파, 경파는 마지막 피격 뒤 120초면 무손상(P16))",
+                "source": "본편 red-cliffs-fast-craft-rules.json supply_contract·supply_inventory_contract(재고 손실 floor(재고 × (N − d) / N), 전량 보충만, 같은 세력 기지에서 재적재)",
             },
         },
     }

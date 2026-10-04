@@ -12,7 +12,10 @@ static func build(sim: BattleSim, side: int) -> Dictionary:
 	var fog := sim.detect != null
 	for f in st.fleets:
 		if not fog or f.side == side:
-			sqs.append(squadron(st, f))
+			var q := squadron(st, f)
+			if sim.supply and f.side == side:
+				q.supply = sim.supply.squadron_state(f)   # M8: 배정 공급원·진행·재고. 적 항목에는 넣지 않는다
+			sqs.append(q)
 	if fog:
 		# 안개(M6): 적은 진영 접촉표의 확인·추정·상실 접촉만, 줄인 형태로 준다. 미탐지 적은 어디에도 없다.
 		for c in sim.detect.foes(side):
@@ -51,6 +54,7 @@ static func build(sim: BattleSim, side: int) -> Dictionary:
 	else:
 		d.pending_decisions = []
 		d.upcoming_decisions = []
+	d.supply_sources = sim.supply.public_sources(side) if sim.supply else []   # M8: 자기 진영 보급 영역(기지·보급함 전대)만
 	if sim.salvo == null:
 		d.cp_bp = st.cp if side == 0 else st.ecp   # CP는 POC 규칙에만 있다(M4: salvo 규칙은 CP를 쓰지 않는다)
 	if sim.morale:

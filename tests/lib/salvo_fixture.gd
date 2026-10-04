@@ -27,6 +27,7 @@ static func sim(ally: Array, foe: Array, seed_id := 1, mode := "", tune := Calla
 	# 규칙 단위 테스트는 완전 정보·개활에서 한다. 안개와 지형은 tests/detection_rules.gd가 tune으로 켠다(M6)
 	cb.erase("detection")
 	cb.erase("terrain")
+	cb.erase("supply")   # 보급(M8)은 tests/supply_rules.gd가 tune으로 켠다
 	if mode != "":
 		cb.damage_mode = mode
 	if tune.is_valid():

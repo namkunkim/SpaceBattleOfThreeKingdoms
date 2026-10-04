@@ -805,6 +805,69 @@
     }
    ],
    "source": "본편 red-cliffs-terrain-rules.json. 겹침: 이동 비용 최댓값, 센서 합(−60~+30), 은폐 합, 사거리는 구역 ID 순 곱, 사격각 합"
+  },
+  "supply": {
+   "ship_type_id": "SHP-05",
+   "ship_radius": 140,
+   "capacity_per_ship": 1,
+   "base_radius": 180,
+   "base_capacity": 4,
+   "bases": [
+    {
+     "id": "RC-BASE-LIU-01",
+     "faction_id": "liu_bei",
+     "position": [
+      120,
+      780
+     ]
+    },
+    {
+     "id": "RC-BASE-SUN-01",
+     "faction_id": "sun_quan",
+     "position": [
+      300,
+      440
+     ]
+    },
+    {
+     "id": "RC-BASE-CAO-01",
+     "faction_id": "cao_cao",
+     "position": [
+      1460,
+      180
+     ]
+    }
+   ],
+   "mutual": [
+    [
+     "liu_bei",
+     "sun_quan"
+    ]
+   ],
+   "per_ship": {
+    "ammo": 12,
+    "materials": 4
+   },
+   "throughput_bp": {
+    "operational": 10000,
+    "moderate_damage": 5000,
+    "heavy_damage": 2500
+   },
+   "materials_per_refill": 1,
+   "priority": [
+    "ammo_ratio_asc",
+    "still_since_asc",
+    "squadron_id_asc"
+   ],
+   "priority_note": "본편은 남은 연료 비율 → 들어온 턴 → 전대 ID. 연료가 없어 탄약 비율로 옮겼다(§4.13)",
+   "stationary_s": 60,
+   "still_eps": 0.05,
+   "repair": {
+    "materials": 1,
+    "light_recover_s": 120
+   },
+   "status": "proposed (Q48: 본편 1턴 정지 → 60초. 손상된 보급함 전대의 처리량 50%·25%는 본편의 턴당 슬롯 크레딧 대신 진행 속도로 옮겼다(60초 → 120초·240초). 정지는 틱당 이동 still_eps px 이하. 기지는 재고 무한·수리 물자 없음. 수리: 주기마다 물자 1로 중파 1척 → 경파, 경파는 마지막 피격 뒤 120초면 무손상(P16))",
+   "source": "본편 red-cliffs-fast-craft-rules.json supply_contract·supply_inventory_contract(재고 손실 floor(재고 × (N − d) / N), 전량 보충만, 같은 세력 기지에서 재적재)"
   }
  }
 }
