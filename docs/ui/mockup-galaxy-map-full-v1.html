@@ -70,6 +70,14 @@ button{font-family:inherit;color:inherit}
 .sqd.sel .plate{border-color:var(--gold);box-shadow:0 0 12px rgba(201,164,92,.35)}
 .sqd .hit{width:120px;height:56px;left:-60px;top:-62px}
 .sqd .plate .mini{display:none}
+/* 교전 연출 조작(전장 단계에서만) */
+.cbt{position:fixed;left:50%;top:66px;transform:translateX(-50%);z-index:5;display:none;align-items:center;gap:10px;height:48px;padding:0 6px 0 14px;
+  border:1px solid var(--gold-line);background:rgba(8,12,18,.86);backdrop-filter:blur(8px);font-size:12px;color:var(--ink-2);white-space:nowrap}
+body[data-mode=f] .cbt,body[data-mode=o] .cbt{display:flex}
+.cbt b{font-family:var(--serif);color:var(--gold-hi);letter-spacing:2px;font-weight:600}
+.cbt .sd{display:flex;align-items:center;gap:4px}.cbt .sd i{font-style:normal;font-variant-numeric:tabular-nums}
+.cbt button{width:44px;height:38px;border:1px solid var(--line);background:rgba(20,28,39,.8);cursor:pointer;font-size:15px;color:var(--ink)}
+.cbt button.on{border-color:var(--gold);color:var(--gold-hi)}
 /* 전장 전체가 보이는 축척에서는 명패를 지휘관·함선 수만 남긴다(겹침 방지). 더 확대하면 전체 명패 */
 body[data-plate=mini] .sqd .plate{min-width:0;padding:2px 6px;margin-top:-10px}
 body[data-plate=mini] .sqd .plate b,body[data-plate=mini] .sqd .plate small,body[data-plate=mini] .sqd .bar,body[data-plate=mini] .sqd .plate em{display:none}
@@ -208,6 +216,9 @@ body[data-mode=g] .sys .meta svg{width:13px;height:13px}
   <button class="pm" data-z="1" aria-label="확대">+</button>
 </div>
 
+<div class="cbt" id="cbt"><b>교전</b><span id="cbtT">00:00</span>
+  <span class="sd" style="color:var(--ally)">연합 <i id="cbtA">0</i></span><span class="sd" style="color:var(--foe)">조조 <i id="cbtW">0</i></span>
+  <button id="cbtPlay" class="on" aria-label="일시정지">❚❚</button><button id="cbtSpd" aria-label="배속">×1</button><button id="cbtReset" aria-label="처음부터">↺</button></div>
 <div class="ticker" id="ticker"><span class="pulse"></span><b>적벽</b><span>교전 임박 · 구지 궤도</span></div>
 
 <aside class="panel" id="panel">
@@ -540,7 +551,7 @@ function drawBattleFleets(){
   const k=1-fleetDetail();if(k<=0)return;
   cx.save();cx.globalAlpha*=k;
   for(const q of SQ){
-    const [x,y]=bf2s(...q.pos),o=F[q.f];
+    if(q.alive===0)continue;const [x,y]=bf2s(...q.cur),o=F[q.f];
     cx.strokeStyle=hexA(o.col,.5);cx.lineWidth=1;cx.beginPath();cx.moveTo(x,y);cx.lineTo(x+Math.cos(q.head)*22,y+Math.sin(q.head)*22);cx.stroke();
     cx.fillStyle=o.deep;cx.strokeStyle=q.flag?'#f3dda4':o.col;cx.lineWidth=1.4;shapePath(cx,o.shape,x,y,q.flag?8:6.5);cx.fill();cx.stroke();
     if(cam.s>lvScale('o')*1.25){cx.font='10px sans-serif';cx.textAlign='center';cx.fillStyle='rgba(238,242,244,.85)';cx.fillText(q.cmd,x,y-11)}
@@ -620,30 +631,146 @@ const SQ=DATA.squadrons.map(q=>{
   if(q.flag){const i=ships.findIndex(c=>c==='cv'||c==='bb');if(i>=0)ships[i]='fl'}
   ships.sort((a,b)=>ORDER[a]-ORDER[b]);
   const slots=formationSlots(q.frm,ships.length),head=q.f==='wei'?Math.PI:0;
-  return {...q,head,total:ships.length,ships:ships.map((cls,i)=>({cls,fx:slots[i][0],fy:slots[i][1],ph:i*1.37+q.pos[0]*.01}))};
+  return {...q,head,head0:head,cur:[...q.pos],total:ships.length,alive:ships.length,period:1.6+((q.pos[0]*7+q.pos[1]*3)%80)/100,next:1+(q.pos[1]%30)/10,
+    ships:ships.map((cls,i)=>({cls,fx:slots[i][0],fy:slots[i][1],ph:i*1.37+q.pos[0]*.01,alive:true}))};
 });
+// 교전 연출: 화면용 근사다. 승패·피해 수치는 전투 코어(M4~)가 정하고, 이 시안은 그 모습만 보인다.
+const RANGE={fl:260,bb:250,cv:300,cr:220,es:150,fc:110,sup:0};
+const SPEED={fc:34,es:22};
+const BEAM_COL={shu:'120,240,230',wu:'205,185,255',wei:'255,140,90'};
+const SHIELD_COL={shu:'140,240,255',wu:'215,195,255',wei:'255,185,125'};
+const CBT={on:true,t:0,spd:1,fx:[],debris:[],shots:[],end:0};
+const ALLY=f=>f==='wei'?1:0;
+function shipBF(q,s,t){
+  const ch=Math.cos(q.head),sh=Math.sin(q.head);
+  const lx=s.fx+Math.sin(t*.0011+s.ph)*.5,ly=s.fy+Math.cos(t*.0009+s.ph)*.8;
+  return [q.cur[0]+lx*ch-ly*sh,q.cur[1]+lx*sh+ly*ch];
+}
+function cbtReset(){
+  for(const q of SQ){q.cur=[...q.pos];q.head=q.head0;q.alive=q.total;q.target=null;q.next=1+(q.pos[1]%30)/10;for(const s of q.ships)s.alive=true}
+  CBT.t=0;CBT.fx.length=0;CBT.debris.length=0;CBT.shots.length=0;CBT.end=0;
+}
+function nearestFoe(q){let b=null,bd=1e9;for(const o of SQ){if(ALLY(o.f)===ALLY(q.f)||o.alive===0)continue;const d=Math.hypot(o.cur[0]-q.cur[0],o.cur[1]-q.cur[1]);if(d<bd){bd=d;b=o}}return [b,bd]}
+function aliveIn(q){return q.ships.filter(s=>s.alive)}
+function cbtStep(dt,tm){
+  CBT.t+=dt;
+  for(const q of SQ){
+    if(q.alive===0)continue;
+    const [foe,d]=nearestFoe(q);q.target=foe;if(!foe)continue;
+    // 사거리(전대 주력 기준)까지 접근, 들어오면 정지
+    const lead=aliveIn(q).reduce((m,s)=>Math.max(m,RANGE[s.cls]||0),0)||200;
+    const want=Math.atan2(foe.cur[1]-q.cur[1],foe.cur[0]-q.cur[0]);
+    let da=((want-q.head+Math.PI*3)%(Math.PI*2))-Math.PI;q.head+=da*Math.min(1,dt*1.2);
+    if(d>lead*.85){const v=(SPEED[q.ships[0].cls]||14)*dt;q.cur[0]+=Math.cos(q.head)*v;q.cur[1]+=Math.sin(q.head)*v*.9;
+      q.cur[0]=Math.max(20,Math.min(BF.w-20,q.cur[0]));q.cur[1]=Math.max(20,Math.min(BF.h-20,q.cur[1]))}
+    // 일제 사격: 앞줄부터 물결처럼(전투 화면과 같은 1.6~2.4초 주기)
+    q.next-=dt;
+    if(q.next<=0&&d<lead*1.15){
+      q.next=q.period;
+      const own=aliveIn(q).filter(s=>RANGE[s.cls]>0&&RANGE[s.cls]>=d*.8);const tg=aliveIn(foe);if(!own.length||!tg.length)continue;
+      const fmax=Math.max(...own.map(s=>s.fx));
+      for(const s of own){if(Math.random()<.35)continue;
+        const ts=tg[Math.floor(Math.random()*tg.length)];
+        CBT.shots.push({at:CBT.t+(fmax-s.fx)*.012+Math.random()*.15,q,s,foe,ts,kind:s.cls==='cv'?'msl':s.cls==='fc'?'bolt':'beam'})}
+    }
+  }
+  // 발사 예약 → 연출
+  for(let i=CBT.shots.length-1;i>=0;i--){const sh=CBT.shots[i];if(sh.at>CBT.t)continue;CBT.shots.splice(i,1);
+    if(!sh.s.alive||!sh.ts.alive)continue;
+    const life=sh.kind==='msl'?1.3:sh.kind==='bolt'?.45:.32;
+    CBT.fx.push({k:sh.kind,t0:CBT.t,life,q:sh.q,s:sh.s,foe:sh.foe,ts:sh.ts,from:shipBF(sh.q,sh.s,tm),bend:(Math.random()-.5)*120,hit:false})}
+  // 명중 처리
+  for(const f of CBT.fx){
+    if(f.hit||!(f.k==='beam'||f.k==='msl'||f.k==='bolt'))continue;
+    const u=(CBT.t-f.t0)/f.life;if(u<(f.k==='beam'?.25:1))continue;f.hit=true;
+    if(!f.ts.alive)continue;const p=shipBF(f.foe,f.ts,tm);
+    const ratio=f.foe.alive/f.foe.total;
+    if(Math.random()<(f.k==='msl'?.08:.035)&&ratio>.42){ // 격침
+      f.ts.alive=false;f.foe.alive--;
+      CBT.fx.push({k:'boom',t0:CBT.t,life:1.1,x:p[0],y:p[1],sz:CLS[f.ts.cls].L});
+      CBT.fx.push({k:'wave',t0:CBT.t,life:.8,x:p[0],y:p[1],sz:CLS[f.ts.cls].L*2.2});
+      for(let i=0;i<9;i++){const a=Math.random()*6.28,v=8+Math.random()*26;CBT.fx.push({k:'ember',t0:CBT.t,life:.9+Math.random()*.8,x:p[0],y:p[1],vx:Math.cos(a)*v,vy:Math.sin(a)*v})}
+      CBT.debris.push({x:p[0],y:p[1],vx:(Math.random()-.5)*4,vy:(Math.random()-.5)*4,rot:Math.random()*6,vr:(Math.random()-.5)*.6,cls:f.ts.cls,f:f.foe.f,t0:CBT.t});
+    }else if(Math.random()<.68)CBT.fx.push({k:'shield',t0:CBT.t,life:.38,x:p[0],y:p[1],f:f.foe.f,sz:CLS[f.ts.cls].L*.8,a:Math.atan2(f.from[1]-p[1],f.from[0]-p[0])});
+    else CBT.fx.push({k:'spark',t0:CBT.t,life:.3,x:p[0],y:p[1],sz:CLS[f.ts.cls].L*.4});
+  }
+  for(let i=CBT.fx.length-1;i>=0;i--)if(CBT.t-CBT.fx[i].t0>CBT.fx[i].life)CBT.fx.splice(i,1);
+  for(const d of CBT.debris){d.x+=d.vx*dt;d.y+=d.vy*dt;d.rot+=d.vr*dt}
+  if(CBT.debris.length>80)CBT.debris.splice(0,CBT.debris.length-80);
+  // 한쪽 전력이 크게 줄면 잠시 뒤 처음부터(시안 반복 재생)
+  const side=[0,1].map(sd=>SQ.filter(q=>ALLY(q.f)===sd).reduce((a,q)=>a+q.alive,0)/SQ.filter(q=>ALLY(q.f)===sd).reduce((a,q)=>a+q.total,0));
+  if(!CBT.end&&(Math.min(...side)<.5||CBT.t>240))CBT.end=CBT.t;
+  if(CBT.end&&CBT.t-CBT.end>6)cbtReset();
+}
+function drawCombat(unit,tm){
+  cx.save();cx.globalCompositeOperation='lighter';
+  for(const f of CBT.fx){
+    const u=(CBT.t-f.t0)/f.life;
+    if(f.k==='beam'||f.k==='bolt'){
+      if(!f.ts.alive&&u>.3)continue;
+      const a=f.s.alive?shipBF(f.q,f.s,tm):f.from,b=shipBF(f.foe,f.ts,tm);
+      const [ax,ay]=bf2s(...a),[bx,by]=bf2s(...b),col=BEAM_COL[f.q.f];
+      if(f.k==='bolt'){const p=Math.min(1,u*1.4),x=ax+(bx-ax)*p,y=ay+(by-ay)*p,x0=ax+(bx-ax)*Math.max(0,p-.18),y0=ay+(by-ay)*Math.max(0,p-.18);
+        cx.strokeStyle=`rgba(${col},.9)`;cx.lineWidth=Math.max(1,unit*1.2);cx.beginPath();cx.moveTo(x0,y0);cx.lineTo(x,y);cx.stroke();continue}
+      const al=u<.15?u/.15:1-(u-.15)/.85;
+      cx.strokeStyle=`rgba(${col},${.25*al})`;cx.lineWidth=Math.max(3,unit*4);cx.beginPath();cx.moveTo(ax,ay);cx.lineTo(bx,by);cx.stroke();
+      cx.strokeStyle=`rgba(255,255,255,${.85*al})`;cx.lineWidth=Math.max(.8,unit*.9);cx.stroke();
+      const mg=Math.max(3,unit*5)*al;const g=cx.createRadialGradient(ax,ay,0,ax,ay,mg);g.addColorStop(0,`rgba(${col},.9)`);g.addColorStop(1,`rgba(${col},0)`);cx.fillStyle=g;cx.fillRect(ax-mg,ay-mg,mg*2,mg*2);
+    }else if(f.k==='msl'){
+      const b=shipBF(f.foe,f.ts,tm),a=f.from,p=Math.min(1,u);
+      const mx=(a[0]+b[0])/2-(b[1]-a[1])*f.bend/600,my=(a[1]+b[1])/2+(b[0]-a[0])*f.bend/600;
+      const pt=q=>[(1-q)*(1-q)*a[0]+2*(1-q)*q*mx+q*q*b[0],(1-q)*(1-q)*a[1]+2*(1-q)*q*my+q*q*b[1]];
+      cx.strokeStyle='rgba(255,210,150,.55)';cx.lineWidth=Math.max(.8,unit*.7);cx.beginPath();
+      for(let i=0;i<=8;i++){const q=Math.max(0,p-.25)+(p-Math.max(0,p-.25))*i/8;const [x,y]=bf2s(...pt(q));i?cx.lineTo(x,y):cx.moveTo(x,y)}cx.stroke();
+      const [hx,hy]=bf2s(...pt(p));cx.fillStyle='rgba(255,240,200,.95)';cx.beginPath();cx.arc(hx,hy,Math.max(1.4,unit*1.2),0,7);cx.fill();
+    }else if(f.k==='shield'){ // 육각 무늬 방어막 섬광
+      const [x,y]=bf2s(f.x,f.y),r=f.sz*unit*(1+u*.3),col=SHIELD_COL[f.f],al=(1-u)*.8;
+      cx.strokeStyle=`rgba(${col},${al})`;cx.lineWidth=Math.max(1,unit*.8);
+      cx.beginPath();cx.arc(x,y,r,f.a-1.1,f.a+1.1);cx.stroke();
+      cx.lineWidth=Math.max(.6,unit*.35);for(let i=-2;i<=2;i++){const a=f.a+i*.38,hx=x+Math.cos(a)*r*.86,hy=y+Math.sin(a)*r*.86;cx.beginPath();for(let k=0;k<6;k++){const b=k*Math.PI/3;cx.lineTo(hx+Math.cos(b)*r*.14,hy+Math.sin(b)*r*.14)}cx.closePath();cx.stroke()}
+    }else if(f.k==='spark'){
+      const [x,y]=bf2s(f.x,f.y),r=Math.max(2,f.sz*unit)*(1-u*.5);const g=cx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(255,240,200,${1-u})`);g.addColorStop(1,'rgba(255,120,40,0)');cx.fillStyle=g;cx.fillRect(x-r,y-r,r*2,r*2);
+    }else if(f.k==='boom'){
+      const [x,y]=bf2s(f.x,f.y),r=Math.max(4,f.sz*unit)*(.4+u*1.1);const g=cx.createRadialGradient(x,y,0,x,y,r);
+      g.addColorStop(0,`rgba(255,250,220,${1-u})`);g.addColorStop(.35,`rgba(255,170,60,${(1-u)*.9})`);g.addColorStop(1,'rgba(160,40,10,0)');cx.fillStyle=g;cx.fillRect(x-r,y-r,r*2,r*2);
+    }else if(f.k==='wave'){
+      const [x,y]=bf2s(f.x,f.y);cx.strokeStyle=`rgba(255,200,140,${(1-u)*.6})`;cx.lineWidth=Math.max(1,unit*1.2*(1-u));cx.beginPath();cx.arc(x,y,Math.max(3,f.sz*unit*u),0,7);cx.stroke();
+    }else if(f.k==='ember'){
+      const dt=CBT.t-f.t0,[x,y]=bf2s(f.x+f.vx*dt,f.y+f.vy*dt);cx.fillStyle=`rgba(255,${150+Math.floor(80*(1-u))},80,${1-u})`;cx.fillRect(x,y,Math.max(1,unit*.6),Math.max(1,unit*.6));
+    }
+  }
+  cx.restore();
+}
+function drawDebris(unit){
+  for(const d of CBT.debris){
+    const [x,y]=bf2s(d.x,d.y),sp=SPR[d.f][d.cls],age=CBT.t-d.t0;
+    cx.save();cx.globalAlpha*=.55;cx.translate(x,y);cx.rotate(d.rot);const sc=unit/SC;cx.filter='grayscale(.7) brightness(.45)';
+    cx.drawImage(sp.cv,-sp.cw/2*sc,-sp.ch/2*sc,sp.cw*sc*.55,sp.ch*sc);cx.drawImage(sp.cv,sp.cw*.1*sc,-sp.ch/2*sc,sp.cw*sc*.4,sp.ch*sc);cx.filter='none';cx.restore();
+    if(age<14){const r=Math.max(2,CLS[d.cls].L*unit*.3)*(1+.25*Math.sin(age*9+d.rot));const g=cx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(255,140,50,${.5*(1-age/14)})`);g.addColorStop(1,'rgba(255,80,20,0)');cx.fillStyle=g;cx.fillRect(x-r,y-r,r*2,r*2)}
+  }
+}
 function fleetDetail(){const o=lvScale('o'),f=lvScale('f');return Math.min(1,Math.max(0,(Math.log(cam.s)-Math.log(Math.sqrt(o*f)*.8))/(Math.log(f)-Math.log(Math.sqrt(o*f)*.8))))}
 function drawShips(t){
   const k=fleetDetail();if(k<=0||!layers.battle)return;
   const unit=BF.k*cam.s; // 전장 1단위의 화면 픽셀
   cx.save();cx.globalAlpha=k;
+  drawDebris(unit);
   for(const q of SQ){
-    const [qx,qy]=bf2s(...q.pos);if(!onScreen(qx,qy,160*unit))continue;
-    const ch=Math.cos(q.head),sh=Math.sin(q.head);
-    // 전대 영역 표시(전투 화면의 진형 외곽선)
+    const [qx,qy]=bf2s(...q.cur);if(!onScreen(qx,qy,180*unit)||q.alive===0)continue;
     cx.strokeStyle=hexA(F[q.f].col,.18);cx.setLineDash([3,5]);cx.beginPath();cx.arc(qx,qy,(Math.max(...q.ships.map(s=>Math.hypot(s.fx,s.fy)))+20)*unit,0,7);cx.stroke();cx.setLineDash([]);
+    const ch=Math.cos(q.head),sh=Math.sin(q.head);
     for(const s of q.ships){
-      const bob=Math.sin(t*.0011+s.ph)*1.2;
-      const lx=s.fx+bob*.4,ly=s.fy+Math.cos(t*.0009+s.ph)*.8;
-      const x=qx+(lx*ch-ly*sh)*unit,y=qy+(lx*sh+ly*ch)*unit;
+      if(!s.alive)continue;
+      const [x,y]=bf2s(...shipBF(q,s,t));
       const sp=SPR[q.f][s.cls],len=sp.L*unit;
-      // 엔진 불꽃
-      const ex=x-ch*len*.55,ey=y-sh*len*.55,gl=Math.max(2,len*.35)*(1+.15*Math.sin(t*.02+s.ph));
+      const moving=q.target&&Math.hypot(q.target.cur[0]-q.cur[0],q.target.cur[1]-q.cur[1])>(RANGE.cr*.9);
+      const ex=x-ch*len*.55,ey=y-sh*len*.55,gl=Math.max(2,len*(moving?.55:.32))*(1+.15*Math.sin(t*.02+s.ph));
       const g=cx.createRadialGradient(ex,ey,0,ex,ey,gl);g.addColorStop(0,`rgba(${SHIP_PAL[q.f].eng},.7)`);g.addColorStop(1,`rgba(${SHIP_PAL[q.f].eng},0)`);cx.fillStyle=g;cx.fillRect(ex-gl,ey-gl,gl*2,gl*2);
       cx.save();cx.translate(x,y);cx.rotate(q.head);const sc=unit/SC;cx.drawImage(sp.cv,-sp.cw/2*sc,-sp.ch/2*sc,sp.cw*sc,sp.ch*sc);cx.restore();
       if(s.cls==='fl'){cx.strokeStyle='rgba(243,221,164,.8)';cx.lineWidth=1;cx.beginPath();cx.arc(x,y,len*.7,0,7);cx.stroke()}
     }
   }
+  drawCombat(unit,t);
   cx.restore();
 }
 // ===================================================================== 노드(HTML)
@@ -698,7 +825,7 @@ for(const b of DATA.bodies){
 }
 for(const q of SQ){
   const o=F[q.f];
-  addNode({id:q.id,cls:'sqd',modes:['f'],at:[BF.cx+(q.pos[0]-BF.w/2)*BF.k,BF.cy+(q.pos[1]-BF.h/2)*BF.k],aria:q.name,layer:'battle',
+  addNode({id:q.id,cls:'sqd',modes:['f'],at:[0,0],atFn:()=>[BF.cx+(q.cur[0]-BF.w/2)*BF.k,BF.cy+(q.cur[1]-BF.h/2)*BF.k],sq:q,aria:q.name,layer:'battle',
     html:`<div class="plate" style="--c:${o.col}"><b>${glyphSVG(q.f,14)}${q.name}</b><small>${q.cmd}${q.vice?' · '+q.vice:''} · ${q.frm_name}</small><div class="bar"><i style="width:100%"></i></div><em>${q.total}</em><span class="mini">${glyphSVG(q.f,12)}${q.cmd}<i>${q.total}</i></span></div><span class="hit"></span>`,
     tap:()=>select({type:'sqd',id:q.id})});
 }
@@ -706,7 +833,9 @@ function placeNodes(){
   document.body.dataset.mode=mode;
   document.body.dataset.plate=cam.s<lvScale('f')*1.6?'mini':'full';
   for(const n of NODES){
+    if(n.atFn)n.at=n.atFn();
     const [x,y]=w2s(...n.at);
+    if(n.sq&&n.shown!==n.sq.alive){n.shown=n.sq.alive;n.el.querySelector('em').textContent=n.sq.alive;n.el.querySelector('.mini i').textContent=n.sq.alive;n.el.querySelector('.bar i').style.width=(n.sq.alive/n.sq.total*100)+'%';n.el.style.opacity=n.sq.alive?'':'0.35'}
     const vis=n.modes.includes(mode)&&(!n.layer||layers[n.layer])&&x>-120&&x<W+120&&y>-80&&y<H+80;
     n.el.classList.toggle('hide',!vis);
     n.el.style.transform=`translate(${x}px,${y}px)`;
@@ -753,7 +882,7 @@ function select(s){
     foot=(f?`<button class="btn" data-act="fam" data-fam="${f.id}">행성계 보기</button>`:'')+(r.id==='RGN-04'?battleBtn:`<button class="btn" data-act="sysup2" data-sys="${r.sys}">성역 정보</button>`);
   }else if(s.type==='sqd'){
     const q=SQ.find(q=>q.id===s.id),o=F[q.f];
-    eye=`전대 · ${{shu:'유비군',wu:'손권군',wei:'조조군'}[q.f]}`;title=q.name;sub=`${q.frm_name} · ${q.total}척${q.flag?' · 기함 전대':''}${q.delay?` · 출발 대기 ${q.delay}초`:''}`;
+    eye=`전대 · ${{shu:'유비군',wu:'손권군',wei:'조조군'}[q.f]}`;title=q.name;sub=`${q.frm_name} · ${q.alive}/${q.total}척${q.flag?' · 기함 전대':''}${q.delay?` · 출발 대기 ${q.delay}초`:''}`;
     body=`<div class="sec">지휘</div><div class="row">${glyphSVG(q.f,22)}<div class="t">${q.cmd}<small>${[q.vice&&('부장 '+q.vice),q.staff.length&&('참모 '+q.staff.join('·'))].filter(Boolean).join(' · ')||'단독 지휘'}</small></div></div>
       <div class="sec">편성</div>`+q.comp.map(([t,c])=>`<div class="row"><div class="t">${SHIP_NAME[t]}<small>${t}</small></div><div class="v" style="color:${o.col}">${c}척</div></div>`).join('')+
       `<p class="note">배치 좌표·진형·편성은 시나리오 정본(data/scenarios/red_cliffs_208_realtime.json)이다. 난이도 규모 계수는 반영하지 않았다.</p>`;
@@ -849,18 +978,27 @@ function updateCrumb(){
 }
 // ===================================================================== 루프
 function ease(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
+let lastT=0,hudT=0;
 function frame(t){
+  const dt=Math.min(.05,(t-lastT)/1000||0);lastT=t;
   if(anim){const k=Math.min(1,(t-anim.t0)/anim.ms),e=ease(k);
     cam.s=Math.exp(Math.log(anim.from.s)+(Math.log(anim.to.s)-Math.log(anim.from.s))*e);
     cam.x=anim.from.x+(anim.to.x-anim.from.x)*e;cam.y=anim.from.y+(anim.to.y-anim.from.y)*e;if(k>=1)anim=null}
   mode=computeMode();
   document.querySelectorAll('[data-lv]').forEach(b=>b.classList.toggle('on',b.dataset.lv===mode));
   updateCrumb();
+  if(CBT.on&&layers.battle&&(mode==='o'||mode==='f'))cbtStep(dt*CBT.spd,t);
+  if(t-hudT>250){hudT=t;const tt=Math.floor(CBT.t);$('cbtT').textContent=String(Math.floor(tt/60)).padStart(2,'0')+':'+String(tt%60).padStart(2,'0');
+    $('cbtA').textContent=SQ.filter(q=>q.f!=='wei').reduce((a,q)=>a+q.alive,0)+'/'+SQ.filter(q=>q.f!=='wei').reduce((a,q)=>a+q.total,0);
+    $('cbtW').textContent=SQ.filter(q=>q.f==='wei').reduce((a,q)=>a+q.alive,0)+'/'+SQ.filter(q=>q.f==='wei').reduce((a,q)=>a+q.total,0)}
   drawBackground(t);drawTerritory();drawTerrain();drawRoutes(t);drawCityDots();drawBeacon(t);drawSystems(t);drawShips(t);drawVignette();
   placeNodes();
   requestAnimationFrame(frame);
 }
 addEventListener('resize',resize);
+$('cbtPlay').onclick=()=>{CBT.on=!CBT.on;$('cbtPlay').textContent=CBT.on?'❚❚':'▶';$('cbtPlay').classList.toggle('on',CBT.on)};
+$('cbtSpd').onclick=()=>{CBT.spd=CBT.spd===1?2:CBT.spd===2?4:1;$('cbtSpd').textContent='×'+CBT.spd};
+$('cbtReset').onclick=()=>cbtReset();
 resize();Object.assign(cam,fit(WORLD_B));
 requestAnimationFrame(frame);
 </script>
