@@ -54,6 +54,7 @@ func _init(seed_id: int = 0, hz: int = BattleRules.TICK_HZ, profile: Dictionary 
 	for d in profile.foe:
 		_spawn(d, 1)
 	if salvo:
+		salvo.terrain_class = str(rs.scenario.get("battlefield_class", ""))
 		salvo.finish_setup()
 		st.cp = 0   # CP는 salvo 규칙에서 쓰지 않는다(M4). 자원은 탄약·에너지·열·함재기다
 		st.ecp = 0
@@ -287,6 +288,12 @@ func _lead(s: Array[FleetState]) -> FleetState:
 			return f
 	return s[0] if s.size() > 0 else null
 
+# 이동 명령의 부속 상태(경유점, 평행 이동, 도착 방향)를 지운다
+func _clear_path(f: FleetState) -> void:
+	f.route.clear()
+	f.strafe = false
+	f.face_set = false
+
 func _reject(lead: FleetState, reason: String, side: int) -> void:
 	emit("rejected", lead.id if lead else -1, side, Vector2.ZERO, reason)
 
@@ -318,13 +325,36 @@ func apply(c: Dictionary) -> void:
 	if morale and kind in ["stop", "move", "attack", "charge"]:
 		for f in s:
 			f.retreat_order = false
+	if kind in ["stop", "attack", "charge", "retreat", "rally", "ai_move", "restore"]:
+		for f in s:
+			_clear_path(f)
 	match kind:
 		"stop":
 			for f in s:
 				f.target_id = -1
 				f.has_move = false
 			emit("say", L.id, -1, L.pos, "stop")
+		"formation":
+			# 진형 전환(§4.7). args.id = 진형 ID. 전환 시간 동안 피해 ×0.8, 방어%·노출 배치는 이전 진형
+			if salvo == null:
+				_reject(L, "unknown_command", side)
+				return
+			var ok := 0
+			var why := ""
+			for f in s:
+				var w := salvo.start_transition(f, str(c.get("args", {}).get("id", "")))
+				if w == "":
+					ok += 1
+				else:
+					why = w
+			if ok == 0:
+				_reject(L, why, side)
+				return
+			emit("say", L.id, -1, L.pos, "formation")
 		"def":
+			if salvo:
+				_reject(L, "unknown_command", side)   # 방어진형은 삭제됐다. 방원진이 대신한다(§9)
+				return
 			var on := false
 			for f in s:
 				if not f.defense:
@@ -333,6 +363,8 @@ func apply(c: Dictionary) -> void:
 				f.defense = on
 			emit("say", L.id, -1, L.pos, "def_on" if on else "def_off")
 		"def_on":
+			if salvo:
+				return
 			for f in s:
 				f.defense = true
 			emit("say", L.id, -1, L.pos, "ai_def")
@@ -402,10 +434,16 @@ func apply(c: Dictionary) -> void:
 				f.move_to = Vector2(clampf(f.pos.x + cos(a) * R.retreat_dist, R.retreat_margin, W.x - R.retreat_margin), clampf(f.pos.y + sin(a) * R.retreat_dist, R.retreat_margin, W.y - R.retreat_margin))
 			emit("say", L.id, -1, L.pos, "retreat")
 		"move":
-			# 선택 전체가 현재 배치를 유지한 채 목표 지점으로 이동
+			# 선택 전체가 현재 배치를 유지한 채 목표 지점으로 이동. salvo 규칙에서는 args로
+			# via(경유점 목록, 경유 + 목적지가 max_waypoints 이하), strafe(평행 이동), facing_deg(도착 방향)를 받는다(§4.2)
 			var W := rs.world
 			var e: float = R.edge
-			var w: Vector2 = c.point
+			var args: Dictionary = c.get("args", {}) if salvo else {}
+			var pts: Array = (args.get("via", []) as Array).duplicate()
+			pts.append(c.point)
+			if salvo and pts.size() > int(salvo.C.movement.max_waypoints):
+				_reject(L, "too_many_waypoints", side)
+				return
 			var cen := Vector2.ZERO
 			for f in s:
 				cen += f.pos
@@ -414,7 +452,18 @@ func apply(c: Dictionary) -> void:
 				var o := f.pos - cen
 				f.target_id = -1
 				f.has_move = true
-				f.move_to = BattleRules.quant_v(Vector2(clampf(w.x + o.x, e, W.x - e), clampf(w.y + o.y, e, W.y - e)))
+				_clear_path(f)
+				for i in pts.size():
+					var w: Vector2 = pts[i]
+					var p := BattleRules.quant_v(Vector2(clampf(w.x + o.x, e, W.x - e), clampf(w.y + o.y, e, W.y - e)))
+					if i == 0:
+						f.move_to = p
+					else:
+						f.route.append(p)
+				f.strafe = bool(args.get("strafe", false))
+				if args.has("facing_deg"):
+					f.face_set = true
+					f.face_to = BattleRules.quant(deg_to_rad(float(args.facing_deg)))
 			emit("say", L.id, -1, L.pos, "move_all" if s.size() > 1 else "move")
 		"attack":
 			var t := st.by_id(int(c.target_id))
@@ -522,7 +571,8 @@ static func _regen(cur: int, rem: int, period: int, cap: int) -> Array:
 	return [cur, rem]
 
 func _turn(f: FleetState, a: float) -> void:
-	var m: float = R.turn_rate * dt
+	# salvo 규칙의 선회는 데이터(제자리 180°에 20초, §4.2). POC 규칙은 turn_rate
+	var m: float = (deg_to_rad(float(salvo.C.movement.turn_deg_per_s)) if salvo else float(R.turn_rate)) * dt
 	var dh := BattleRules.ang_diff(f.heading, a)
 	f.heading += dh if absf(dh) < m else signf(dh) * m
 
@@ -597,6 +647,7 @@ func _fleet_phase(timers: bool) -> void:
 			f.target_id = -1
 			f.has_move = true
 			f.move_to = morale.exit_point(f.side)
+			_clear_path(f)
 		var tgt := st.live_target(f)
 		if tgt == null:
 			f.target_id = -1
@@ -611,14 +662,22 @@ func _fleet_phase(timers: bool) -> void:
 				dest = tgt.pos
 		elif f.has_move:
 			if f.pos.distance_to(f.move_to) < R.arrive_r:
-				f.has_move = false
-			else:
+				if f.route.is_empty():
+					f.has_move = false
+					f.strafe = false
+				else:
+					f.move_to = f.route.pop_front()   # 다음 경유점
+			if f.has_move:
 				has_dest = true
 				dest = f.move_to
 		var spd := rs.move_speed(f.spd, f.defense, f.charge > 0)
 		if salvo:
-			spd = f.speed * (R.defense_speed_mul if f.defense else 1.0) * (R.charge_speed_mul if f.charge > 0 else 1.0)
-		if has_dest:
+			spd = f.speed * (R.charge_speed_mul if f.charge > 0 else 1.0)
+		if has_dest and f.strafe and tgt == null:
+			# 평행 이동: 방향을 유지한 채 전진 속도의 일부로 목적지를 향해 옆으로 간다(§4.2)
+			var dd := f.pos.distance_to(dest)
+			f.pos += (dest - f.pos) / maxf(dd, 0.001) * minf(spd * float(salvo.C.movement.strafe_speed_bp) / float(BattleRules.BP) * dt, dd)
+		elif has_dest:
 			var a := atan2(dest.y - f.pos.y, dest.x - f.pos.x)
 			_turn(f, a)
 			var dd := f.pos.distance_to(dest)
@@ -628,10 +687,15 @@ func _fleet_phase(timers: bool) -> void:
 				var k: float = maxf(R.min_turn_cos, cos(BattleRules.ang_diff(f.heading, a)))
 				var stp := minf(spd * dt * k, dd)
 				f.pos += Vector2(cos(f.heading), sin(f.heading)) * stp
+		if not has_dest and f.face_set:
+			# 도착 방향: 도착한 뒤 지정한 방향으로 돌아선다(§4.2). 맞출 때까지는 자동 조준보다 우선한다
+			_turn(f, f.face_to)
+			if absf(BattleRules.ang_diff(f.heading, f.face_to)) < deg_to_rad(float(salvo.C.movement.face_tolerance_deg)):
+				f.face_set = false
 		var ft: FleetState = tgt if (tgt and f.pos.distance_to(tgt.pos) <= f.range_r) else st.nearest_foe(f, f.range_r)
 		f.fire_id = ft.id if ft else -1
 		if ft:
-			if not has_dest:
+			if not has_dest and not f.face_set:
 				_turn(f, atan2(ft.pos.y - f.pos.y, ft.pos.x - f.pos.x))
 			if salvo:
 				continue   # 사격은 salvo.step()이 범주별 주기로 한다

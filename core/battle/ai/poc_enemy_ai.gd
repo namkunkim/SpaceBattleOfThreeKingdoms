@@ -43,8 +43,12 @@ func think(sim: BattleSim) -> void:
 		else:
 			_do(sim, f, "ai_target", -1)
 			_do(sim, f, "ai_move", -1, Vector2(f.home.x - t_s * sim.R.ai_advance_speed, f.home.y))
-		if f.ships < f.max_ships * sim.R.ai_defend_share and not f.defense:
-			_do(sim, f, "def_on")
+		if f.ships < f.max_ships * sim.R.ai_defend_share:
+			if sim.salvo == null:
+				if not f.defense:
+					_do(sim, f, "def_on")
+			elif f.formation_id != sim.salvo.C.formation_rules.defense_id and f.form_to != sim.salvo.C.formation_rules.defense_id:
+				sim.apply(BattleSim.command(f.side, [f.id], "formation", -1, Vector2.ZERO, {"id": sim.salvo.C.formation_rules.defense_id}))   # 방어진형 대신 방원진(§9)
 		var t := st.live_target(f)
 		if t and sim.salvo == null:   # 미사일·함재기는 POC 규칙. salvo 규칙은 범주별 주기로 스스로 쏜다
 			var d := f.pos.distance_to(t.pos)

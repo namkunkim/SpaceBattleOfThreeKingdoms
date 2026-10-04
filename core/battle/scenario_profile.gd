@@ -82,6 +82,7 @@ static func build(def: Dictionary, scn: Dictionary, base: Dictionary, difficulty
 			"wait": sq.get("deploy_delay_s", 0), "p": 0,
 			"squadron_id": sq.id, "faction_id": sq.faction_id, "commander_id": sq.commander.id,
 			"formation_id": sq.formation_id, "composition": comp, "command": int(sq.commander.get("command", 0)),
+			"traits": sq.commander.get("traits", []),
 			"might": int(sq.commander.get("might", 0)), "intellect": int(sq.commander.get("intellect", 0)),
 			"group_id": group_of.get(sq.id, ""),
 		}
@@ -105,6 +106,7 @@ static func build(def: Dictionary, scn: Dictionary, base: Dictionary, difficulty
 			"difficulty_order": order,
 			"difficulty_profile": dprof,
 			"escape_points": scn.get("escape_points", {}),
+			"battlefield_class": scn.get("battlefield_class", ""),
 			"factions": scn.factions.map(func(f): return {"id": f.id, "control": f.control}),
 			"fleet_groups": scn.get("fleet_groups", []),
 			"realtime_rules": scn.realtime_rules,

@@ -256,7 +256,10 @@
     "command": 82,
     "might": 73,
     "intellect": 76,
-    "charm": 99
+    "charm": 99,
+    "traits": [
+     "인덕"
+    ]
    },
    "vice_commander": {
     "id": "CHR-0130",
@@ -264,7 +267,10 @@
     "command": 88,
     "might": 98,
     "intellect": 45,
-    "charm": 45
+    "charm": 45,
+    "traits": [
+     "연인"
+    ]
    },
    "staff": [
     {
@@ -273,7 +279,10 @@
      "command": 92,
      "might": 38,
      "intellect": 100,
-     "charm": 92
+     "charm": 92,
+     "traits": [
+      "신기묘산"
+     ]
     }
    ],
    "flagship": true,
@@ -310,7 +319,10 @@
     "command": 95,
     "might": 97,
     "intellect": 75,
-    "charm": 93
+    "charm": 93,
+    "traits": [
+     "만인지적"
+    ]
    },
    "vice_commander": null,
    "staff": [],
@@ -348,7 +360,10 @@
     "command": 48,
     "might": 38,
     "intellect": 30,
-    "charm": 38
+    "charm": 38,
+    "traits": [
+     "장자"
+    ]
    },
    "vice_commander": null,
    "staff": [],
@@ -386,7 +401,10 @@
     "command": 91,
     "might": 96,
     "intellect": 76,
-    "charm": 88
+    "charm": 88,
+    "traits": [
+     "일신시담"
+    ]
    },
    "vice_commander": null,
    "staff": [],
@@ -421,7 +439,10 @@
     "command": 96,
     "might": 72,
     "intellect": 95,
-    "charm": 94
+    "charm": 94,
+    "traits": [
+     "미주랑"
+    ]
    },
    "vice_commander": {
     "id": "CHR-0185",
@@ -429,7 +450,10 @@
     "command": 82,
     "might": 96,
     "intellect": 70,
-    "charm": 62
+    "charm": 62,
+    "traits": [
+     "금범적"
+    ]
    },
    "staff": [
     {
@@ -438,7 +462,10 @@
      "command": 82,
      "might": 40,
      "intellect": 92,
-     "charm": 86
+     "charm": 86,
+     "traits": [
+      "천하이분"
+     ]
     }
    ],
    "flagship": true,
@@ -483,7 +510,10 @@
     "command": 84,
     "might": 82,
     "intellect": 70,
-    "charm": 76
+    "charm": 76,
+    "traits": [
+     "노장"
+    ]
    },
    "vice_commander": {
     "id": "CHR-0212",
@@ -491,7 +521,10 @@
     "command": 78,
     "might": 90,
     "intellect": 56,
-    "charm": 66
+    "charm": 66,
+    "traits": [
+     "만신창이"
+    ]
    },
    "staff": [
     {
@@ -500,7 +533,10 @@
      "command": 92,
      "might": 80,
      "intellect": 94,
-     "charm": 72
+     "charm": 72,
+     "traits": [
+      "백의도강"
+     ]
     }
    ],
    "flagship": false,
@@ -541,7 +577,10 @@
     "command": 82,
     "might": 85,
     "intellect": 68,
-    "charm": 72
+    "charm": 72,
+    "traits": [
+     "고육계"
+    ]
    },
    "vice_commander": {
     "id": "CHR-0216",
@@ -549,7 +588,10 @@
     "command": 80,
     "might": 80,
     "intellect": 62,
-    "charm": 66
+    "charm": 66,
+    "traits": [
+     "역전"
+    ]
    },
    "staff": [
     {
@@ -558,7 +600,10 @@
      "command": 84,
      "might": 88,
      "intellect": 64,
-     "charm": 72
+     "charm": 72,
+     "traits": [
+      "원한"
+     ]
     }
    ],
    "flagship": false,
@@ -596,7 +641,10 @@
     "command": 96,
     "might": 72,
     "intellect": 91,
-    "charm": 96
+    "charm": 96,
+    "traits": [
+     "유재시거"
+    ]
    },
    "vice_commander": {
     "id": "CHR-0047",
@@ -604,7 +652,10 @@
     "command": 70,
     "might": 96,
     "intellect": 32,
-    "charm": 50
+    "charm": 50,
+    "traits": [
+     "호치"
+    ]
    },
    "staff": [
     {
@@ -613,7 +664,10 @@
      "command": 78,
      "might": 45,
      "intellect": 89,
-     "charm": 70
+     "charm": 70,
+     "traits": [
+      "강직"
+     ]
     },
     {
      "id": "CHR-0001",
@@ -621,7 +675,10 @@
      "command": 70,
      "might": 32,
      "intellect": 97,
-     "charm": 50
+     "charm": 50,
+     "traits": [
+      "독사"
+     ]
     }
    ],
    "flagship": true,
@@ -678,7 +735,10 @@
     "command": 89,
     "might": 80,
     "intellect": 70,
-    "charm": 68
+    "charm": 68,
+    "traits": [
+     "철벽"
+    ]
    },
    "vice_commander": null,
    "staff": [],
@@ -723,7 +783,10 @@
     "command": 90,
     "might": 89,
     "intellect": 72,
-    "charm": 68
+    "charm": 68,
+    "traits": [
+     "주아부의 풍"
+    ]
    },
    "vice_commander": {
     "id": "CHR-0009",
@@ -731,7 +794,10 @@
     "command": 78,
     "might": 60,
     "intellect": 85,
-    "charm": 50
+    "charm": 50,
+    "traits": [
+     "혹리"
+    ]
    },
    "staff": [],
    "flagship": false,
@@ -775,7 +841,10 @@
     "command": 82,
     "might": 70,
     "intellect": 68,
-    "charm": 65
+    "charm": 65,
+    "traits": [
+     "수비"
+    ]
    },
    "vice_commander": null,
    "staff": [],
@@ -820,7 +889,10 @@
     "command": 53,
     "might": 28,
     "intellect": 25,
-    "charm": 26
+    "charm": 26,
+    "traits": [
+     "수군"
+    ]
    },
    "vice_commander": {
     "id": "CHR-0329",
@@ -828,7 +900,8 @@
     "command": 77,
     "might": 39,
     "intellect": 17,
-    "charm": 16
+    "charm": 16,
+    "traits": []
    },
    "staff": [],
    "flagship": false,
@@ -868,7 +941,10 @@
     "command": 72,
     "might": 56,
     "intellect": 16,
-    "charm": 30
+    "charm": 30,
+    "traits": [
+     "호표기"
+    ]
    },
    "vice_commander": null,
    "staff": [],
@@ -906,7 +982,10 @@
     "command": 76,
     "might": 79,
     "intellect": 45,
-    "charm": 55
+    "charm": 55,
+    "traits": [
+     "가재"
+    ]
    },
    "vice_commander": null,
    "staff": [],

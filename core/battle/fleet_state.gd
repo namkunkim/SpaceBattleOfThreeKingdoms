@@ -77,3 +77,13 @@ var chain_sunk := false      # 연쇄 폭발로 격침됐다(M9)
 var died_pos := Vector2.ZERO
 var arrived := false         # 자기 탈출 지점 반경에 한 번 닿았다(전대 간격 때문에 한 점에 모두 서 있을 수 없어 래치한다)
 var fired: Dictionary = {}   # 범주 → 첫 일제를 쐈다(첫 일제 엇갈림용)
+
+# --- M5 진형과 기동 ---
+var form_to := ""             # 전환 중인 목표 진형. ""이면 전환 없음. formation_id는 전환이 끝날 때까지 이전 진형이다(§4.7)
+var form_left := 0            # 전환 남은 틱
+var route: Array[Vector2] = []   # move_to 다음에 지날 경유점·목적지(§4.2)
+var strafe := false           # 평행 이동: 선회 없이 방향을 유지한 채 옆으로 이동
+var face_set := false         # 도착 방향 지정
+var face_to := 0.0
+var traits: Array = []        # 지휘관 특성(팔진 조건)
+var shape := -1               # 배치도 번호(BattleRules.formation_offsets의 kind). -1이면 POC(form_id)

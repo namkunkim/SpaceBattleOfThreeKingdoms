@@ -106,7 +106,8 @@ func conditions() -> Dictionary:
 		c.append("cao_morale_collapse")
 	return {"alliance": a, "foe": c, "limited": _alliance_escaped()}
 
-# 유비 기함이 탈출 지점에 닿았고, 같은 함대의 남은 전대가 모두 그 지점에 닿았거나(arrived) 이미 탈출했다
+# 유비 기함이 탈출 지점에 닿았고, 같은 함대의 전대가 모두 그 지점에 닿았거나(arrived) 이미 탈출했다.
+# 격침·항복한 전대가 있으면 "함대 전체 도달"이 아니라서 제한적 승리가 안 된다(REVIEW-M4 후속 1).
 func _alliance_escaped() -> bool:
 	var lf := flag_fleet(0)
 	if lf == null or lf.out != "" or not lf.arrived:
@@ -114,7 +115,7 @@ func _alliance_escaped() -> bool:
 	for f in sim.st.fleets:
 		if f.side != 0 or f.group_id != anchor_group or f == lf:
 			continue
-		if f.out == "" and not f.arrived:
+		if f.out == "sunk" or f.out == "surrender" or (f.out == "" and not f.arrived):
 			return false
 	return true
 

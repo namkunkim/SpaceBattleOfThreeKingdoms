@@ -381,7 +381,7 @@
    "formation_damage_mul": {
     "FRM-06": 0.9,
     "status": "proposed",
-    "note": "§4.3 장사진 ×0.9. 상성 ×1.2, 전환 ×0.8은 M5"
+    "note": "§4.3 장사진 ×0.9. 상성 ×1.2와 전환 중 ×0.8은 combat.formation_rules"
    },
    "terrain_mul": 1.0
   },
@@ -402,9 +402,88 @@
       "SHP-05",
       "SHP-01"
      ]
+    },
+    "FRM-02": {
+     "front": [
+      "SHP-04",
+      "SHP-07"
+     ],
+     "flank": [
+      "SHP-04",
+      "SHP-08"
+     ],
+     "rear": [
+      "SHP-03",
+      "SHP-05"
+     ]
+    },
+    "FRM-03": {
+     "front": [
+      "SHP-04"
+     ],
+     "flank": [
+      "SHP-04"
+     ],
+     "rear": [
+      "SHP-04",
+      "SHP-07"
+     ]
+    },
+    "FRM-04": {
+     "front": [
+      "SHP-03",
+      "SHP-04"
+     ],
+     "flank": [
+      "SHP-03",
+      "SHP-08"
+     ],
+     "rear": [
+      "SHP-05",
+      "SHP-02"
+     ]
+    },
+    "FRM-05": {
+     "front": [
+      "SHP-01",
+      "SHP-04"
+     ],
+     "flank": [
+      "SHP-07",
+      "SHP-08"
+     ],
+     "rear": [
+      "SHP-05",
+      "SHP-03"
+     ]
+    },
+    "FRM-06": {
+     "front": [
+      "SHP-04"
+     ],
+     "flank": [
+      "SHP-03",
+      "SHP-05",
+      "SHP-01"
+     ],
+     "rear": [
+      "SHP-05"
+     ]
+    },
+    "FRM-07": {
+     "front": [
+      "SHP-04"
+     ],
+     "flank": [
+      "SHP-04",
+      "SHP-07"
+     ],
+     "rear": [
+      "SHP-04"
+     ]
     }
    },
-   "exposure_note": "M3는 어린진 표 하나로 모든 진형을 처리한다. 진형별 표 전체는 M5(§4.4)"
+   "exposure_note": "§4.4 진형별 노출 함종 표 전체(제안값, M5). 전환 중에는 이전 진형의 표를 쓴다"
   },
   "stage": {
    "names": [
@@ -468,7 +547,55 @@
   },
   "movement": {
    "turn_div": 60,
-   "note": "전대 속도 = 편성에서 가장 느린 함종의 턴당 속도 / 60 (px/초) × (100 + 진형 기동%) / 100 (§4.2)"
+   "turn_deg_per_s": 9,
+   "strafe_speed_bp": 6000,
+   "face_tolerance_deg": 1,
+   "max_waypoints": 5,
+   "status": "proposed (turn_deg_per_s·strafe_speed_bp: §4.2 제자리 선회 180°에 20초, 평행 이동은 전진 속도의 60%. 정본에 수치 없음)",
+   "note": "전대 속도 = 편성에서 가장 느린 함종의 턴당 속도 / 60 (px/초) × (100 + 진형 기동%) / 100 (§4.2). 경유점은 최대 max_waypoints(경유 + 목적지)"
+  },
+  "formation_rules": {
+   "transition_s": 30,
+   "untrained_transition_s": 60,
+   "transition_damage_mul": 0.8,
+   "defense_id": "FRM-03",
+   "defense_note": "POC 방어진형 버튼은 삭제했다(§9 POC 처분). 같은 역할은 방원진이 맡고, 적 AI가 선체가 줄면 이 진형으로 바꾼다",
+   "master_id": "FRM-07",
+   "master_min_command": 90,
+   "master_trait": "신기묘산",
+   "master_transition_div": 2,
+   "status": "Q24 전환 30초·통솔 미달 60초·전환 중 ×0.8. 팔진 전환 절반은 proposed(§4.7)",
+   "affinity": {
+    "FRM-02": "FRM-01",
+    "FRM-01": "FRM-03",
+    "FRM-03": "FRM-05",
+    "FRM-05": "FRM-04",
+    "FRM-04": "FRM-02"
+   },
+   "affinity_mul": 1.2,
+   "affinity_band": "engagement",
+   "terrain": {
+    "base_route": {
+     "name": "기저 항로",
+     "banned": [
+      "FRM-02",
+      "FRM-04"
+     ]
+    },
+    "mid_corridor": {
+     "name": "중회랑",
+     "only": [
+      "FRM-03",
+      "FRM-05",
+      "FRM-06"
+     ]
+    },
+    "great_corridor": {
+     "name": "대회랑",
+     "forced": "FRM-06"
+    },
+    "source": "정본 ship-specs §5.3. 적벽 전장은 개활이라 시나리오 battlefield_class가 없으면 제한 없음"
+   }
   },
   "charge": {
    "heat_share_bp": 4000,

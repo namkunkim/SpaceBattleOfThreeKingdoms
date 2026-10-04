@@ -113,7 +113,7 @@ func _run() -> void:
 		if e.kind == "rejected" and e.value == "retreating":
 			rej = true
 	if not TestCheck.ok(self, rej and z.target_id == -1, "퇴각 중 명령 거부"): return
-	_sec(s, 20)
+	_sec(s, 60)   # 선회 9°/초라 먼저 돌아서는 데 20초가 든다(M5)
 	if not TestCheck.ok(self, z.pos.distance_to(s.morale.exit_point(0)) < d0 - 20.0, "탈출 지점으로 이동"): return
 	z.pos = s.morale.exit_point(0) + Vector2(30, 0)
 	_sec(s, 1)
@@ -226,6 +226,14 @@ func _run() -> void:
 	_f(s, "fc").pos = ex + Vector2(30, -30)
 	_sec(s, 1)
 	if not _ended(s, true, "alliance_escaped", "제한적 승리") or not TestCheck.ok(self, s.st.result.limited, "limited 표시"): return
+	# 4a. 같은 함대의 격침·항복 전대가 있으면 나머지가 모두 도달해도 제한적 승리가 아니다
+	print("sec 4a")
+	s = _sim()
+	_f(s, "liu").pos = ex + Vector2(40, 0)
+	_f(s, "fc").pos = ex + Vector2(30, -30)
+	_wreck(s, _f(s, "zhuge"), 10000)
+	_sec(s, 1)
+	if not TestCheck.ok(self, not (s.st.over and s.st.end_reason == "alliance_escaped"), "격침 전대가 있으면 제한적 승리 아님"): return
 	# 4b. 강하군(다른 함대)은 조건이 아니다
 	print("sec 4b")
 	# 5. 유비군 코스트 70% 손실 → 연합 패배

@@ -28,6 +28,12 @@ static func of(st: BattleState) -> String:
 	for f in st.fleets:
 		if f.max_hull > 0:
 			parts.append("m%d:%d,%s,%s,%d,%d,%d,%d,%d,%d" % [f.id, f.morale_bp, f.mstate, f.out, int(f.retreat_order), int(f.retreat_counted), f.loss_mul_until, f.loss_mul_bp, f.cost0, int(f.fired.size()) + (int(f.arrived) << 8)])
+	for f in st.fleets:
+		if f.max_hull > 0:
+			var rt := PackedStringArray()
+			for w in f.route:
+				rt.append("%d.%d" % [q.call(w.x), q.call(w.y)])
+			parts.append("v%d:%s,%d,%d,%d,%d|%s" % [f.id, f.form_to, f.form_left, int(f.strafe), int(f.face_set), q.call(f.face_to), ",".join(rt)])
 	for m in st.missiles:
 		parts.append("m%d:%d,%d,%d,%d,%d,%d" % [m.id, q.call(m.pos.x), q.call(m.pos.y), m.target_id, m.dmg, q.call(m.v), m.age])
 	for s in st.swarms:
