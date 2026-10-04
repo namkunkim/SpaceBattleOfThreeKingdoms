@@ -141,8 +141,8 @@ func step() -> void:
 	_tick()
 
 # 명령 기록으로 다시 돌린다(재생). until_tick까지.
-static func replay(seed_id: int, hz: int, log: Array, until_tick: int) -> BattleSim:
-	var sim := BattleSim.new(seed_id, hz)
+static func replay(seed_id: int, hz: int, log: Array, until_tick: int, profile := {}) -> BattleSim:
+	var sim := BattleSim.new(seed_id, hz, profile)   # 시나리오 판(안개·AI)은 같은 프로필로 다시 만든다(M6 리뷰 F-2)
 	var i := 0
 	while sim.st.tick < until_tick:
 		while i < log.size() and int(log[i].tick) == sim.st.tick:

@@ -33,6 +33,10 @@ AI는 적에 대해 `BattleProjection.build(sim, side)`가 주는 접촉 항목�
 - 지금 추정 접촉의 대부분은 점수가 아직 추정 등급이라 위치가 1초 안쪽(`eval_period_s`)이고 오차 30 안이다. 영향은 놓친 접촉(기억 180초)에 집중된다. `tests/commander_ai.gd` §7이 조준점 사거리·오차 반경·확인 접촉의 실제 위치를 검사한다.
 - 확인(`confirmed`) 접촉은 실제 위치다.
 
+## 2b. M6 리뷰 후속
+
+- F-1 추정 사격 조준: §2로 처리. F-6 AI 입력을 투영으로: 처리(정보 경계). **F-2** `BattleSim.replay`가 프로필을 받는다(`profile` 인자). 명령(이동·위임·방침)이 섞인 안개 판의 재생 지문 일치를 `tests/commander_ai.gd` §8이 검사한다.
+
 ## 3. 측정 (AI 대 AI, 안개 켬, 플레이어 명령 0건)
 
 도구: `tools/m7/baseline.sh <난이도> <시드 수> <병렬 수>`(환경변수 `EXTRA="--count-factor 0.9"`, `TAG`)와 `python tools/m7/summarize.py <난이도> [태그]`. 40시드가 8병렬로 약 2.5분(표준). 상급·극한은 판당 훨씬 오래 걸린다(40시드 3병렬에 약 40분).

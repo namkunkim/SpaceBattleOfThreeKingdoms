@@ -244,5 +244,23 @@ func _run() -> void:
 	rec.state = "confirmed"
 	if not TestCheck.ok(self, g.salvo.aim_ok(ga, gb) and g.detect.aim_pos(0, gb) == gb.pos, "확인 접촉은 실제 위치"): return
 
+	# --- 8. 명령이 섞인 안개 판의 재생 지문 일치(M6 리뷰 F-2) ---
+	var live := _rc(7, true, "표준", true)
+	var ids := []
+	for f in live.st.alive(0):
+		ids.append(f.id)
+	var until := 150 * live.st.hz
+	while live.st.tick < until:
+		if live.st.tick == 20 * live.st.hz:
+			live.queue(BattleSim.command(0, [ids[1]], "move", -1, Vector2(500, 300)))
+		if live.st.tick == 60 * live.st.hz:
+			live.queue(BattleSim.command(0, [ids[1]], "delegate"))
+			live.queue(BattleSim.command(0, [ids[0]], "posture", -1, Vector2.ZERO, {"id": "aggressive"}))
+		live.step()
+		live.drain_events()
+	var rp := ScenarioProfile.load_profile(RC, "표준")
+	var again := BattleSim.replay(7, live.st.hz, live.command_log, until, rp)
+	if not TestCheck.ok(self, live.command_log.size() == 3 and again.fingerprint() == live.fingerprint(), "명령이 섞인 안개 판 재생 지문 일치(명령 %d건)" % live.command_log.size()): return
+
 	print("COMMANDER_AI_PASS")
 	quit(0)
