@@ -139,9 +139,23 @@ func _run() -> void:
 	if not TestCheck.ok(self, out.aggressive.charge and not out.balanced.charge and not out.cautious.charge and not out.scheming.charge, "돌격은 적극만: %s" % str(out)): return
 	if not TestCheck.ok(self, out.cautious.kite >= 239.0 and out.scheming.kite >= 239.0 and out.balanced.kite < 131.0, "거리 130에서 신중·계략은 240까지 물러나고 균형·적극은 유지: %s" % str(out)): return
 	if not TestCheck.ok(self, out.cautious.retreat and out.scheming.retreat and not out.aggressive.retreat and not out.balanced.retreat, "사기 3500: 신중·계략만 질서 퇴각: %s" % str(out)): return
-	# 4e. 인물 위임(기본값): 지휘관 성향으로 방침이 정해진다. 장비(무뢰)는 적극, 관우(절의)는 신중, 황개는 계략 중시
+	# 4e. 인물 위임(기본값): 지휘관 성향(정본 §4)으로 방침이 정해진다. 관우·조인(절의)은 신중, 조조(야심)는 적극, 황개는 계략 중시
 	var cai: CommanderAi = base_s.cai
-	if not TestCheck.ok(self, cai.posture_of(_f(base_s, "RC-LIU-SQ-02")) == "cautious" and cai.posture_of(_f(base_s, "RC-CAO-SQ-02")) == "aggressive" and cai.posture_of(_f(base_s, "RC-SUN-SQ-03")) == "scheming" and cai.posture_of(_f(base_s, "RC-LIU-SQ-01")) == "balanced", "성향 → 방침"): return
+	if not TestCheck.ok(self, cai.posture_of(_f(base_s, "RC-LIU-SQ-02")) == "cautious" and cai.posture_of(_f(base_s, "RC-CAO-SQ-02")) == "cautious" and cai.posture_of(_f(base_s, "RC-CAO-SQ-01")) == "aggressive" and cai.posture_of(_f(base_s, "RC-SUN-SQ-03")) == "scheming" and cai.posture_of(_f(base_s, "RC-LIU-SQ-01")) == "balanced", "성향 → 방침"): return
+	# 4e'. 실무 손실 임계 퇴각: 정보(실무)·주유(명사)는 같은 균형 방침. 남은 선체 0.4에서 정보만 퇴각, 0.5에서는 둘 다 유지
+	var share: float = float(A.disposition_retreat_ship_share["실무"])
+	var rr := {}
+	for sid in ["RC-SUN-SQ-02", "RC-SUN-SQ-01"]:
+		for left in [share - 0.05, share + 0.05]:
+			var v := _rc(1, false)
+			_park(v, [sid, "RC-CAO-SQ-02"])
+			var m := _f(v, sid)
+			m.pos = Vector2(800, 450)
+			_f(v, "RC-CAO-SQ-02").pos = Vector2(1000, 450)
+			m.ships = int(m.max_ships * left)
+			v.cai.think(v)
+			rr["%s@%.2f" % [sid, left]] = m.retreat_order
+	if not TestCheck.ok(self, cai.posture_of(_f(base_s, "RC-SUN-SQ-02")) == "balanced" and rr["RC-SUN-SQ-02@%.2f" % (share - 0.05)] and not rr["RC-SUN-SQ-02@%.2f" % (share + 0.05)] and not rr["RC-SUN-SQ-01@%.2f" % (share - 0.05)], "실무만 손실 임계 퇴각: %s" % str(rr)): return
 	# 4f. 손권군은 아군 300 안에 적이 없으면 접근하지 않는다
 	var h := _rc(1, false)
 	_park(h, ["RC-SUN-SQ-02", "RC-CAO-SQ-02"])
