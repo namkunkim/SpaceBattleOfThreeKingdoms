@@ -87,3 +87,12 @@ var face_set := false         # 도착 방향 지정
 var face_to := 0.0
 var traits: Array = []        # 지휘관 특성(팔진 조건)
 var shape := -1               # 배치도 번호(BattleRules.formation_offsets의 kind). -1이면 POC(form_id)
+
+# --- M7 지휘관 AI ---
+var control := "delegate"     # "delegate"(기본, 지휘관 AI가 이동·표적을 정한다) | "direct"(플레이어가 명령해 AI가 손대지 않는다, §5.4). 적 진영은 항상 AI
+var posture := "delegated"    # 전투 방침: aggressive | balanced | cautious | scheming | delegated(지휘관 성향에서 고른다)
+var bias_mod := 0.0           # 결정 카드가 건 일시 가중(전황 반응과 같은 축). bias_until 틱까지
+var bias_until := -1
+var pursue_id := -1           # 결정 카드로 정한 추격 표적. pursue_until 틱까지
+var pursue_until := -1
+var ai_seen := -1             # 처음 접촉을 안 틱(난이도 반응 지연의 기준). 접촉이 없어지면 -1

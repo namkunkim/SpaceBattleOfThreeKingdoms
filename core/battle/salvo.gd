@@ -320,18 +320,27 @@ func damage_of(f: FleetState, tgt: FleetState, cat: String, n_total: float, coef
 # 표적이 사거리와 사격각 안에 드는 플랫폼만 모은다. [{type, n, range, arc}]
 func qualifying(f: FleetState, cat: String, tgt: FleetState) -> Array:
 	var out: Array = []
-	var dist := f.pos.distance_to(tgt.pos)
-	var bearing := atan2(tgt.pos.y - f.pos.y, tgt.pos.x - f.pos.x)
+	var aim := _aim(f, tgt)
+	var dist := f.pos.distance_to(aim)
+	var bearing := atan2(aim.y - f.pos.y, aim.x - f.pos.x)
 	var off := rad_to_deg(absf(BattleRules.ang_diff(f.heading, bearing)))
 	var rmul := 1.0
 	var adelta := 0.0
 	if terr:
-		rmul = terr.range_mul(f.pos, tgt.pos)   # 사격선이 성운·잔해·그림자를 지나면 사거리와 사격각이 줄어든다(§4.10)
-		adelta = terr.arc_delta(f.pos, tgt.pos)
+		rmul = terr.range_mul(f.pos, aim)   # 사격선이 성운·잔해·그림자를 지나면 사거리와 사격각이 줄어든다(§4.10)
+		adelta = terr.arc_delta(f.pos, aim)
 	for p in platforms(f, cat):
 		if dist <= p.range * rmul and off <= maxf(0.0, p.arc + adelta) * 0.5 + 0.001:
 			out.append(p)
 	return out
+
+# 조준점(M7). 확인 접촉은 실제 위치, 추정 접촉은 마지막으로 안 위치다. 사거리·사격각은 조준점으로 판정한다.
+func _aim(f: FleetState, tgt: FleetState) -> Vector2:
+	return tgt.pos if sim.detect == null else sim.detect.aim_pos(f.side, tgt)
+
+# 조준점이 실제 위치에서 접촉 오차 반경 안이어야 맞는다(추정 사격 한정). 놓친 접촉이 이미 움직였으면 빗나간다.
+func aim_ok(f: FleetState, tgt: FleetState) -> bool:
+	return sim.detect == null or sim.detect.aim_pos(f.side, tgt).distance_to(tgt.pos) <= sim.detect.aim_tol(f.side, tgt.id)
 
 func _pick_target(f: FleetState, cat: String) -> Dictionary:
 	var best: FleetState = null
@@ -345,7 +354,7 @@ func _pick_target(f: FleetState, cat: String) -> Dictionary:
 	for o in sim.st.fleets:
 		if o.dead or o.side == f.side or not sim.sees(f, o):
 			continue
-		var d := f.pos.distance_to(o.pos)
+		var d := f.pos.distance_to(_aim(f, o))
 		if d >= bd:
 			continue
 		var q := qualifying(f, cat, o)
@@ -502,11 +511,13 @@ func _plan_shot(f: FleetState, cat: String, tgt: FleetState, q: Array) -> Dictio
 	var acc := hit_bp(f, tgt, cat)
 	return {"src": f, "tgt": tgt, "cat": cat, "band": bd, "wband": wband, "sector": sector(f.pos, tgt), "acc": acc,
 		"dmg": damage_of(f, tgt, cat, n_total, coef, wband), "n": n_total, "eid": eid,
-		"hit": sim.rng.bp(sim.st.tick, eid, 1) < acc}
+		"hit": sim.rng.bp(sim.st.tick, eid, 1) < acc and aim_ok(f, tgt)}
 
 func _resolve(s: Dictionary) -> void:
 	var f: FleetState = s.src
 	var tgt: FleetState = s.tgt
+	if s.hit and sim.first_hit_tick < 0:
+		sim.first_hit_tick = sim.st.tick
 	sim.emit("salvo", f.id, tgt.id, tgt.pos, {"cat": s.cat, "hit": s.hit, "dmg": roundi(s.dmg), "acc": s.acc, "band": s.band, "sector": s.sector, "n": s.n})
 	if s.hit and not tgt.dead:
 		var loss := apply_hull(f, tgt, s.dmg, s.band, s.sector, s.eid)

@@ -45,6 +45,12 @@ static func build(sim: BattleSim, side: int) -> Dictionary:
 		"missiles": ms,
 		"swarms": sw,
 	}
+	if sim.decisions and side == 0:
+		d.pending_decisions = sim.decisions.pending()    # 열린 결정 카드. time_left는 게임 초(V-3)
+		d.upcoming_decisions = sim.decisions.upcoming()  # 예고 중인 카드(약 3초 전, V-4)
+	else:
+		d.pending_decisions = []
+		d.upcoming_decisions = []
 	if sim.salvo == null:
 		d.cp_bp = st.cp if side == 0 else st.ecp   # CP는 POC 규칙에만 있다(M4: salvo 규칙은 CP를 쓰지 않는다)
 	if sim.morale:
@@ -88,7 +94,7 @@ static func squadron(st: BattleState, f: FleetState) -> Dictionary:
 		"missile_cd_s": f.missile_cd / hz, "fighter_cd_s": f.fighter_cd / hz,
 		"range": f.range_r,
 		"form": f.form,
-		"control": "",   # 직접·위임(Q20). M7에서 채운다
+		"control": f.control, "posture": f.posture,   # 직접·위임(Q20), 전투 방침(§5.2). posture "delegated"는 인물 위임
 		"morale_bp": f.morale_bp, "mstate": f.mstate, "out": f.out, "retreat_order": f.retreat_order,
 		"faction_id": f.faction, "group_id": f.group_id,
 		"counts": f.stages.duplicate(true),   # 함종 × 손상 단계 [무손상, 경파, 중파, 대파, 격침]. POC 규칙이면 빈 사전

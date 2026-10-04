@@ -35,6 +35,16 @@ func can_target(side: int, id: int) -> bool:
 	var s := state(side, id)
 	return s == "confirmed" or s == "estimated"
 
+# 사격 조준점(M7). 확인 접촉은 실제 위치, 추정 접촉은 마지막으로 안 위치. 접촉이 없으면 실제 위치(호출 쪽이 막는다)
+func aim_pos(side: int, t: FleetState) -> Vector2:
+	var r := rec(side, t.id)
+	return t.pos if r.is_empty() or r.state == "confirmed" else r.pos
+
+# 조준점이 실제 위치와 이만큼 어긋나도 맞는다(접촉 오차 반경). 확인 접촉은 오차가 0이라 제한이 없다
+func aim_tol(side: int, id: int) -> float:
+	var r := rec(side, id)
+	return 1e9 if r.is_empty() or r.state == "confirmed" else float(r.err_r)
+
 # 추정 사격의 명중 배율(bp). 확인은 1.0
 func hit_mul_bp(side: int, id: int) -> int:
 	var r := rec(side, id)

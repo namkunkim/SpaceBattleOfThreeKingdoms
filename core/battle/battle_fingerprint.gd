@@ -3,7 +3,7 @@ extends RefCounted
 
 # 상태 지문(Q40): 정수와 0.001 격자로 양자화한 값만 넣어 sha256을 낸다.
 
-static func of(st: BattleState, detect: Detection = null) -> String:
+static func of(st: BattleState, detect: Detection = null, extra := "") -> String:
 	var q := BattleRules.q_int
 	var parts := PackedStringArray()
 	parts.append("t%d,%d|cp%d,%d,%d,%d|k%d,%d|r%d,%d|ai%d|id%d,%d,%d|o%d,%d,%s" % [
@@ -46,4 +46,6 @@ static func of(st: BattleState, detect: Detection = null) -> String:
 			for id in ids:
 				var r: Dictionary = detect.contacts[side][id]
 				parts.append("c%d:%d,%s,%d,%d,%d,%d" % [side, id, r.state, r.seen, q.call(r.pos.x), q.call(r.pos.y), r.conf_bp])
+	if extra != "":
+		parts.append(extra)   # M7: 지휘 상태(직접/위임·방침·결정 카드). 없으면 M6 지문과 같다
 	return "|".join(parts).sha256_text()

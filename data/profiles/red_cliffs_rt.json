@@ -5,6 +5,7 @@
  "scenario_path": "res://data/scenarios/red_cliffs_208_realtime.json",
  "base_profile": "res://data/profiles/poc_corridor.json",
  "combat_rules_path": "res://data/profiles/combat_m3.json",
+ "ai_rules_path": "res://data/profiles/ai_m7.json",
  "default_difficulty": "표준",
  "rule_overrides": {
   "ai_advance_speed": 0.0
