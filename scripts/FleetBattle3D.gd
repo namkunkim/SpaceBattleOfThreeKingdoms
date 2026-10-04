@@ -19,9 +19,9 @@ const CMD_R := 560.0
 const MISSILE_R := 480.0
 const FIGHTER_R := 380.0
 const PORTRAIT_SHEET := "res://assets/portraits/commanders_sheet_v1.png"
-const ALLY_DEF := PocSetup.ALLY_DEF
-const FOE_DEF := PocSetup.FOE_DEF
-const REINF_DEF := PocSetup.REINF_DEF
+var ALLY_DEF: Array = PocSetup.profile().ally
+var FOE_DEF: Array = PocSetup.profile().foe
+var REINF_DEF: Array = PocSetup.profile().reinf
 const CMDS := [
 	{"id": "stop", "key": "S", "name": "정지", "cost": 0},
 	{"id": "def", "key": "D", "name": "방어진형", "cost": 0},
@@ -398,10 +398,10 @@ func my_sel() -> Array:
 	return out
 
 func flank_mul(att, tgt) -> float:
-	return BattleRules.flank_mul(att.pos, tgt.pos, tgt.heading)
+	return sim.rs.flank_mul(att.pos, tgt.pos, tgt.heading)
 
 func power(f) -> float:
-	return BattleRules.power(f.lv, f.charge_t > 0.0, f.in_cmd, f.defense)
+	return sim.rs.power(f.lv, f.charge_t > 0.0, f.in_cmd, f.defense)
 
 # ============================================================ 입력(호환: input/ 으로 넘긴다)
 func do_cmd(id: String) -> void:

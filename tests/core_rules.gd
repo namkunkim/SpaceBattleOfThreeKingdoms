@@ -12,14 +12,15 @@ func _fp_at(sim: BattleSim, tick: int) -> String:
 	return sim.fingerprint()
 
 func _run() -> void:
+	var rs := RuleSet.from_dict(PocSetup.profile().rules)
 	# --- 방향(정면 <60°, 측면 <120°, 후면) ---
 	var tp := Vector2(1000, 1000)
-	if not TestCheck.ok(self, is_equal_approx(BattleRules.flank_mul(tp + Vector2(100, 0), tp, 0.0), 1.0), "front"): return
-	if not TestCheck.ok(self, is_equal_approx(BattleRules.flank_mul(tp + Vector2(0, 100), tp, 0.0), 1.3), "flank"): return
-	if not TestCheck.ok(self, is_equal_approx(BattleRules.flank_mul(tp + Vector2(-100, 0), tp, 0.0), 1.6), "rear"): return
+	if not TestCheck.ok(self, is_equal_approx(rs.flank_mul(tp + Vector2(100, 0), tp, 0.0), 1.0), "front"): return
+	if not TestCheck.ok(self, is_equal_approx(rs.flank_mul(tp + Vector2(0, 100), tp, 0.0), 1.3), "flank"): return
+	if not TestCheck.ok(self, is_equal_approx(rs.flank_mul(tp + Vector2(-100, 0), tp, 0.0), 1.6), "rear"): return
 	# --- 화력식 ---
-	if not TestCheck.ok(self, is_equal_approx(BattleRules.power(1, false, true, false), 1.0), "power base"): return
-	if not TestCheck.ok(self, is_equal_approx(BattleRules.power(12, true, false, true), (1.0 + 0.07 * 11) * 1.35 * 0.75 * 0.7), "power all"): return
+	if not TestCheck.ok(self, is_equal_approx(rs.power(1, false, true, false), 1.0), "power base"): return
+	if not TestCheck.ok(self, is_equal_approx(rs.power(12, true, false, true), (1.0 + 0.07 * 11) * 1.35 * 0.75 * 0.7), "power all"): return
 	# --- 틱 수 변환 ---
 	if not TestCheck.ok(self, BattleRules.ticks(18.0, 10) == 180 and BattleRules.ticks(18.0, 20) == 360, "ticks"): return
 	# --- 난수: 같은 키는 같은 값, 다른 키는 다름, 범위 ---

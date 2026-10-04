@@ -8,8 +8,9 @@ extends RefCounted
 #   플레이어 명령은 queue()로 넣고 다음 step()의 첫머리에 적용·기록한다. AI 명령은 기록하지 않는다(상태에서 다시 나온다).
 # 사건: {tick, kind, sq, other, pos, value} — drain_events()로 가져간다. 표현과 로그는 사건만 보고 그린다.
 
-const PROFILE := "poc-red-cliffs-corridor"
-
+var profile_id := ""
+var rs: RuleSet
+var R: Dictionary          # rs.v (규칙 수치, 프로필 JSON)
 var st: BattleState
 var rng: BattleRng
 var dt := BattleRules.TICK_S
@@ -20,26 +21,32 @@ var _ai := PocEnemyAi.new()
 # 초 단위 규칙값의 틱 수(틱 폭에 따라)
 var T := {}
 var sub_ms := 50
+var _reinf_def: Array = []
 
-func _init(seed_id: int = 0, hz: int = BattleRules.TICK_HZ) -> void:
+# profile: 프로필 사전({profile_id, rules, ally, foe, reinf}). 비우면 POC 프로필(기준선 동등).
+func _init(seed_id: int = 0, hz: int = BattleRules.TICK_HZ, profile: Dictionary = {}) -> void:
+	if profile.is_empty():
+		profile = PocSetup.profile()
+	profile_id = profile.profile_id
+	rs = RuleSet.from_dict(profile.rules)
+	R = rs.v
 	st = BattleState.new()
 	st.hz = hz
 	st.seed_id = seed_id
+	st.cp = R.cp_start_bp
+	st.ecp = R.cp_start_bp
 	dt = 1.0 / hz
-	rng = BattleRng.new("%s|%d" % [PROFILE, seed_id])
-	var secs := {
-		"MISSILE_CD_S": BattleRules.MISSILE_CD_S, "FIGHTER_CD_S": BattleRules.FIGHTER_CD_S,
-		"CHARGE_S": BattleRules.CHARGE_S, "FLANK_MSG_S": BattleRules.FLANK_MSG_S,
-		
-		
-	}
-	for k in secs:
-		T[k] = BattleRules.ticks(secs[k], hz)
-	T.CP_REGEN = BattleRules.ticks(BattleRules.CP_REGEN_S, hz)
-	T.ECP_REGEN = BattleRules.ticks(BattleRules.ECP_REGEN_S, hz)
-	for d in PocSetup.ALLY_DEF:
+	rng = BattleRng.new("%s|%d" % [profile_id, seed_id])
+	T.MISSILE_CD_S = BattleRules.ticks(R.missile_cd_s, hz)
+	T.FIGHTER_CD_S = BattleRules.ticks(R.fighter_cd_s, hz)
+	T.CHARGE_S = BattleRules.ticks(R.charge_s, hz)
+	T.FLANK_MSG_S = BattleRules.ticks(R.flank_msg_s, hz)
+	T.CP_REGEN = BattleRules.ticks(R.cp_regen_s, hz)
+	T.ECP_REGEN = BattleRules.ticks(R.ecp_regen_s, hz)
+	_reinf_def = profile.get("reinf", [])
+	for d in profile.ally:
 		_spawn(d, 0)
-	for d in PocSetup.FOE_DEF:
+	for d in profile.foe:
 		_spawn(d, 1)
 
 # ============================================================ 공개 API
@@ -130,9 +137,10 @@ func _spawn(d: Dictionary, side: int) -> FleetState:
 	f.wait = BattleRules.ticks(float(d.get("wait", 0)), st.hz)
 	f.portrait = d.p
 	f.home = f.pos
+	f.range_r = R.range_r
 	f.form_id = st.form_counter
 	st.form_counter += 1
-	f.form = BattleRules.formation_offsets(f.form_id % BattleRules.FORM_COUNT, 1.0 if f.form_id < BattleRules.FORM_COUNT else 1.35)
+	f.form = BattleRules.formation_offsets(f.form_id % BattleRules.FORM_COUNT, R.ship_gap * (1.0 if f.form_id < BattleRules.FORM_COUNT else R.formation_loose_mul))
 	st.fleets.append(f)
 	emit("spawn", f.id)
 	return f
@@ -140,26 +148,26 @@ func _spawn(d: Dictionary, side: int) -> FleetState:
 func _spawn_reinf() -> void:
 	st.reinf = true
 	st.reinf_ms = st.clock_ms
-	for d in PocSetup.REINF_DEF:
+	for d in _reinf_def:
 		_spawn(d, 1)
 	emit("reinforcements")
 
 # ============================================================ 피해
 func _rand_ship(f: FleetState, eid: int, sub: int) -> Vector2:
-	var i := rng.index(BattleRules.n_ships(f.ships, f.max_ships), st.tick, eid, sub)
+	var i := rng.index(rs.n_ships(f.ships, f.max_ships), st.tick, eid, sub)
 	return BattleRules.ship_pos(f.pos, f.heading, f.form, i)
 
 func apply_dmg(src: FleetState, tgt: FleetState, amt: float) -> void:
 	if tgt.dead:
 		return
 	if tgt.defense:
-		amt *= 0.6
+		amt *= R.defense_damage_taken_mul
 	var a := mini(roundi(amt), tgt.ships)
 	tgt.ships -= a
 	if src and not src.dead:
 		src.xp += a
-		var need := BattleRules.xp_need_milli(src.lv)
-		if src.xp >= need and src.lv < 20:
+		var need := rs.xp_need_milli(src.lv)
+		if src.xp >= need and src.lv < R.level_max_n:
 			src.xp -= need
 			src.lv += 1
 			emit("level_up", src.id, -1, src.pos)
@@ -173,7 +181,7 @@ func apply_dmg(src: FleetState, tgt: FleetState, amt: float) -> void:
 		n += 1
 	if n > 0:
 		emit("ship_lost", tgt.id, src.id if src else -1, tgt.pos, n)
-	if tgt.ships <= BattleRules.MILLI / 2:
+	if tgt.ships <= R.kill_below_milli_n:
 		_kill(tgt, src)
 
 func _kill(f: FleetState, src: FleetState) -> void:
@@ -188,15 +196,15 @@ func _kill(f: FleetState, src: FleetState) -> void:
 
 func _fire_missiles(f: FleetState, tgt: FleetState) -> void:
 	var eid := st.new_event_id()
-	for i in BattleRules.MISSILE_COUNT:
+	for i: int in R.missile_count_n:
 		var m := BattleState.Missile.new()
 		m.id = st.new_event_id()
 		m.pos = _rand_ship(f, eid, i * 3 + 1)
 		m.target_id = tgt.id
 		m.src_id = f.id
-		m.dmg = roundi(f.ships * 0.03 * BattleRules.power(f.lv, f.charge > 0, f.in_cmd, f.defense) / (0.7 if f.defense else 1.0))
-		m.v = 260.0 + rng.unit(st.tick, eid, i * 3 + 2) * 60.0
-		m.wob = (rng.unit(st.tick, eid, i * 3 + 3) - 0.5) * 2.4
+		m.dmg = roundi(f.ships * R.missile_dmg_share * rs.power(f.lv, f.charge > 0, f.in_cmd, f.defense) / (R.defense_power_mul if f.defense else 1.0))
+		m.v = R.missile_v0 + rng.unit(st.tick, eid, i * 3 + 2) * R.missile_v_rand
+		m.wob = (rng.unit(st.tick, eid, i * 3 + 3) - 0.5) * R.missile_wob
 		m.side = f.side
 		st.missiles.append(m)
 	f.missile_cd = T.MISSILE_CD_S
@@ -209,15 +217,15 @@ func _launch_fighters(f: FleetState, tgt: FleetState) -> void:
 	s.src_id = f.id
 	s.target_id = tgt.id
 	s.side = f.side
-	s.life = BattleRules.SWARM_LIFE_MS
-	s.dps = roundi(f.ships * 0.009 * BattleRules.level_mul(f.lv))
-	for i in BattleRules.SWARM_POINTS:
+	s.life = R.swarm_life_ms
+	s.dps = roundi(f.ships * R.fighter_dps_share * rs.level_mul(f.lv))
+	for i: int in R.swarm_points_n:
 		var k := i * 5
 		s.pts.append({
 			"pos": _rand_ship(f, eid, k + 1),
 			"a": rng.unit(st.tick, eid, k + 2) * TAU,
-			"r": 20.0 + rng.unit(st.tick, eid, k + 3) * 50.0,
-			"w": (-1.0 if rng.bp(st.tick, eid, k + 4) < 5000 else 1.0) * (1.5 + rng.unit(st.tick, eid, k + 5) * 2.0),
+			"r": R.swarm_r0 + rng.unit(st.tick, eid, k + 3) * R.swarm_r_rand,
+			"w": (-1.0 if rng.bp(st.tick, eid, k + 4) < 5000 else 1.0) * (R.swarm_w0 + rng.unit(st.tick, eid, k + 5) * R.swarm_w_rand),
 		})
 	st.swarms.append(s)
 	f.fighter_cd = T.FIGHTER_CD_S
@@ -280,15 +288,15 @@ func apply(c: Dictionary) -> void:
 		"missile", "fighter":
 			_cmd_weapon(c, s, L, kind == "missile")
 		"charge":
-			if _cp(side) < BattleRules.CHARGE_COST_BP:
+			if _cp(side) < R.charge_cost_bp:
 				_reject(L, "cp_charge", side)
 				return
-			_spend(side, BattleRules.CHARGE_COST_BP)
+			_spend(side, R.charge_cost_bp)
 			for f in s:
 				f.charge = T.CHARGE_S
 				f.defense = false
 				if st.live_target(f) == null:
-					var t := st.nearest_foe(f, 900.0)
+					var t := st.nearest_foe(f, R.charge_seek_r)
 					if t:
 						f.target_id = t.id
 			emit("say", L.id, -1, L.pos, "charge")
@@ -306,21 +314,21 @@ func apply(c: Dictionary) -> void:
 				i += 1
 				f.target_id = -1
 				f.has_move = true
-				f.move_to = pf.pos + Vector2(cos(a), sin(a)) * 120.0
+				f.move_to = pf.pos + Vector2(cos(a), sin(a)) * R.rally_radius
 			emit("say", L.id, -1, L.pos, "rally")
 		"retreat":
-			var W := BattleRules.WORLD
+			var W := rs.world
 			for f in s:
-				var t := st.nearest_foe(f, 2000.0)
+				var t := st.nearest_foe(f, R.retreat_seek_r)
 				f.target_id = -1
 				var a := atan2(f.pos.y - t.pos.y, f.pos.x - t.pos.x) if t else PI
 				f.has_move = true
-				f.move_to = Vector2(clampf(f.pos.x + cos(a) * 420.0, 60.0, W.x - 60.0), clampf(f.pos.y + sin(a) * 420.0, 60.0, W.y - 60.0))
+				f.move_to = Vector2(clampf(f.pos.x + cos(a) * R.retreat_dist, R.retreat_margin, W.x - R.retreat_margin), clampf(f.pos.y + sin(a) * R.retreat_dist, R.retreat_margin, W.y - R.retreat_margin))
 			emit("say", L.id, -1, L.pos, "retreat")
 		"move":
 			# 선택 전체가 현재 배치를 유지한 채 목표 지점으로 이동
-			var W := BattleRules.WORLD
-			var e := BattleRules.EDGE
+			var W := rs.world
+			var e: float = R.edge
 			var w: Vector2 = c.point
 			var cen := Vector2.ZERO
 			for f in s:
@@ -365,8 +373,8 @@ func apply(c: Dictionary) -> void:
 
 func _cmd_weapon(c: Dictionary, s: Array[FleetState], L: FleetState, missile: bool) -> void:
 	var side := int(c.side)
-	var cost := BattleRules.MISSILE_COST_BP if missile else BattleRules.FIGHTER_COST_BP
-	var reach := BattleRules.MISSILE_R if missile else BattleRules.FIGHTER_R
+	var cost: int = R.missile_cost_bp if missile else R.fighter_cost_bp
+	var reach: float = R.missile_r if missile else R.fighter_r
 	if _cp(side) < cost:
 		_reject(L, "cp_missile" if missile else "cp_fighter", side)
 		return
@@ -406,24 +414,24 @@ func _cmd_weapon(c: Dictionary, s: Array[FleetState], L: FleetState, missile: bo
 			emit("volley", L.id, -1, L.pos, n)
 
 # ============================================================ 틱
-static func _regen(cur: int, rem: int, period: int) -> Array:
+static func _regen(cur: int, rem: int, period: int, cap: int) -> Array:
 	# 1점(10000bp)을 period 틱에 나눠 채운다. 나머지를 넘겨 누적 오차가 없다.
 	rem += BattleRules.BP
-	cur = mini(BattleRules.CP_MAX_BP, cur + rem / period)
+	cur = mini(cap, cur + rem / period)
 	rem %= period
 	return [cur, rem]
 
 func _turn(f: FleetState, a: float) -> void:
-	var m := BattleRules.TURN_RATE * dt
+	var m: float = R.turn_rate * dt
 	var dh := BattleRules.ang_diff(f.heading, a)
 	f.heading += dh if absf(dh) < m else signf(dh) * m
 
 func _tick() -> void:
 	st.tick += 1
-	var r := _regen(st.cp, st.cp_rem, T.CP_REGEN)
+	var r := _regen(st.cp, st.cp_rem, T.CP_REGEN, R.cp_max_bp)
 	st.cp = r[0]
 	st.cp_rem = r[1]
-	r = _regen(st.ecp, st.ecp_rem, T.ECP_REGEN)
+	r = _regen(st.ecp, st.ecp_rem, T.ECP_REGEN, R.cp_max_bp)
 	st.ecp = r[0]
 	st.ecp_rem = r[1]
 	# 틱 안의 하위 걸음: 한 걸음이 0.05초(기준 POC의 프레임 폭)를 넘지 않게 나눈다. 한 걸음의 순서는 기준과 같다
@@ -445,11 +453,11 @@ func _tick() -> void:
 
 func _substep(first: bool) -> void:
 	st.clock_ms += sub_ms
-	if not st.reinf and st.clock_ms > BattleRules.REINF_MS:
+	if not st.reinf and st.clock_ms > R.reinf_ms:
 		_spawn_reinf()
 	st.ai_timer -= sub_ms
 	if st.ai_timer <= 0:
-		st.ai_timer += BattleRules.AI_PERIOD_MS
+		st.ai_timer += R.ai_period_ms
 		_ai.think(self)
 	_fleet_phase(first)
 	_separate()
@@ -476,31 +484,31 @@ func _fleet_phase(timers: bool) -> void:
 			if f.flank_msg > 0:
 				f.flank_msg -= 1
 		var fl: FleetState = flags[f.side]
-		f.in_cmd = fl == null or fl == f or f.pos.distance_to(fl.pos) < BattleRules.CMD_R
+		f.in_cmd = fl == null or fl == f or f.pos.distance_to(fl.pos) < R.cmd_r
 		var tgt := st.live_target(f)
 		if tgt == null:
 			f.target_id = -1
 		var has_dest := false
 		var dest := Vector2.ZERO
 		if tgt:
-			if f.pos.distance_to(tgt.pos) > f.range_r * 0.8:
+			if f.pos.distance_to(tgt.pos) > f.range_r * R.chase_range_share:
 				has_dest = true
 				dest = tgt.pos
 		elif f.has_move:
-			if f.pos.distance_to(f.move_to) < 10.0:
+			if f.pos.distance_to(f.move_to) < R.arrive_r:
 				f.has_move = false
 			else:
 				has_dest = true
 				dest = f.move_to
-		var spd := BattleRules.move_speed(f.spd, f.defense, f.charge > 0)
+		var spd := rs.move_speed(f.spd, f.defense, f.charge > 0)
 		if has_dest:
 			var a := atan2(dest.y - f.pos.y, dest.x - f.pos.x)
 			_turn(f, a)
 			var dd := f.pos.distance_to(dest)
-			if dd < spd * 0.7:
-				f.pos += (dest - f.pos) * BattleRules.lerp_k(2.0 * BattleRules.REF_DT, dt)
+			if dd < spd * R.settle_speed_share:
+				f.pos += (dest - f.pos) * BattleRules.lerp_k(R.arrive_k_ref * BattleRules.REF_DT, dt)
 			else:
-				var k := maxf(0.3, cos(BattleRules.ang_diff(f.heading, a)))
+				var k: float = maxf(R.min_turn_cos, cos(BattleRules.ang_diff(f.heading, a)))
 				var stp := minf(spd * dt * k, dd)
 				f.pos += Vector2(cos(f.heading), sin(f.heading)) * stp
 		var ft: FleetState = tgt if (tgt and f.pos.distance_to(tgt.pos) <= f.range_r) else st.nearest_foe(f, f.range_r)
@@ -508,14 +516,14 @@ func _fleet_phase(timers: bool) -> void:
 		if ft:
 			if not has_dest:
 				_turn(f, atan2(ft.pos.y - f.pos.y, ft.pos.x - f.pos.x))
-			var fm := BattleRules.flank_mul(f.pos, ft.pos, ft.heading)
-			apply_dmg(f, ft, f.ships * 0.011 * BattleRules.power(f.lv, f.charge > 0, f.in_cmd, f.defense) * fm * dt)
+			var fm := rs.flank_mul(f.pos, ft.pos, ft.heading)
+			apply_dmg(f, ft, f.ships * R.fire_share * rs.power(f.lv, f.charge > 0, f.in_cmd, f.defense) * fm * dt)
 			if fm > 1.0 and f.flank_msg <= 0:
 				f.flank_msg = T.FLANK_MSG_S
 				emit("flank", f.id, ft.id, ft.pos, fm)
 
 func _separate() -> void:
-	var k := BattleRules.lerp_k(4.0 * BattleRules.REF_DT, dt)
+	var k := BattleRules.lerp_k(R.separate_k_ref * BattleRules.REF_DT, dt)
 	var fl := st.fleets
 	for i in fl.size():
 		var a: FleetState = fl[i]
@@ -527,13 +535,13 @@ func _separate() -> void:
 				continue
 			var dv := b.pos - a.pos
 			var d := maxf(dv.length(), 0.001)
-			var mn := BattleRules.ALLY_GAP if a.side == b.side else BattleRules.FOE_GAP
+			var mn: float = R.ally_gap if a.side == b.side else R.foe_gap
 			if d < mn:
 				var p := (mn - d) * 0.5 * k
 				a.pos -= dv / d * p
 				b.pos += dv / d * p
-	var W := BattleRules.WORLD
-	var e := BattleRules.EDGE
+	var W := rs.world
+	var e: float = R.edge
 	for f in fl:
 		f.pos.x = clampf(f.pos.x, e, W.x - e)
 		f.pos.y = clampf(f.pos.y, e, W.y - e)
@@ -546,12 +554,12 @@ func _move_missiles() -> void:
 			m.dead = true
 			continue
 		var age_s := m.age / 1000.0
-		var a := atan2(t.pos.y - m.pos.y, t.pos.x - m.pos.x) + m.wob * maxf(0.0, 0.6 - age_s)
+		var a: float = atan2(t.pos.y - m.pos.y, t.pos.x - m.pos.x) + m.wob * maxf(0.0, R.missile_wob_decay_s - age_s)
 		m.pos = BattleRules.quant_v(m.pos + Vector2(cos(a), sin(a)) * m.v * dt)
-		m.v += 120.0 * dt
+		m.v += R.missile_accel * dt
 		# 명중 판정은 기준 POC와 같은 점 판정이다(이동 뒤 위치가 표적에서 22px 안). 하위 걸음이 0.05초 이하라
 		# 한 걸음 이동(≤20px)이 판정 지름(44px)보다 작아 놓치지 않는다. 선분 판정(§3.3)은 걸음이 더 커질 때 쓴다.
-		var hit := m.pos.distance_to(t.pos) < BattleRules.MISSILE_HIT_R
+		var hit: bool = m.pos.distance_to(t.pos) < R.missile_hit_r
 		if hit:
 			m.dead = true
 			apply_dmg(st.by_id(m.src_id), t, m.dmg)
@@ -559,22 +567,22 @@ func _move_missiles() -> void:
 	st.missiles = st.missiles.filter(func(m): return not m.dead)
 
 func _move_swarms() -> void:
-	var k_goal := BattleRules.lerp_k(2.2 * BattleRules.REF_DT, dt)
-	var k_back := BattleRules.lerp_k(2.0 * BattleRules.REF_DT, dt)
+	var k_goal := BattleRules.lerp_k(R.swarm_goal_k_ref * BattleRules.REF_DT, dt)
+	var k_back := BattleRules.lerp_k(R.swarm_back_k_ref * BattleRules.REF_DT, dt)
 	for s in st.swarms:
 		s.life -= sub_ms
 		var t := st.by_id(s.target_id)
 		var src := st.by_id(s.src_id)
 		if t.dead or src.dead:
-			s.life = mini(s.life, BattleRules.SWARM_RETURN_MS)
+			s.life = mini(s.life, R.swarm_return_ms)
 		for p in s.pts:
 			p.a += p.w * dt
 			var goal: Vector2 = t.pos + Vector2(cos(p.a), sin(p.a)) * p.r
-			if s.life < BattleRules.SWARM_RETURN_MS:
+			if s.life < R.swarm_return_ms:
 				p.pos = BattleRules.quant_v(p.pos + (src.pos - p.pos) * k_back)
 			else:
 				p.pos = BattleRules.quant_v(p.pos + (goal - p.pos) * k_goal)
-		s.striking = not t.dead and s.life > BattleRules.SWARM_RETURN_MS and s.pts.size() > 0 and (s.pts[0].pos as Vector2).distance_to(t.pos) < BattleRules.SWARM_HIT_R
+		s.striking = not t.dead and s.life > R.swarm_return_ms and s.pts.size() > 0 and (s.pts[0].pos as Vector2).distance_to(t.pos) < R.swarm_hit_r
 		if s.striking:
 			apply_dmg(src, t, s.dps * dt)
 	st.swarms = st.swarms.filter(func(s): return s.life > 0)

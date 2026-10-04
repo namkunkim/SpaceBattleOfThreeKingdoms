@@ -33,4 +33,4 @@ var spd := 1.0
 var wait := 0             # 적 AI 대기 틱
 var is_flag := false
 var home := Vector2.ZERO
-var range_r := BattleRules.RANGE_R
+var range_r := 0.0
