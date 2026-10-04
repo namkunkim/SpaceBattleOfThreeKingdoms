@@ -24,6 +24,6 @@
 
 ## 후속
 
-- A. `make_red_cliffs_208.py`에 G8-04 잠정값 키(포획 반경 120, 혼선 단계 등)를 `realtime_rules`에 `status: "proposed"`로 추가한다(M9 전, 컨셉 세션).
+- A. (완료 2026-10-04) `make_red_cliffs_208.py`에 G8-04 잠정값 키(포획 반경 120, 혼선 단계 등)를 `realtime_rules`에 `status: "proposed"`로 추가한다(M9 전, 컨셉 세션).
 - B. M3 시작 때 REVIEW-M1 #4(5초 공격 길이 −1.4%)를 이분 탐색한다(구현 세션).
 - C. 진형 슬롯 기하 교체(M3)와 `rule_overrides.ai_advance_speed` 같은 임시 덮어쓰기는 M3·M6에서 지운다. 지울 때 `rule_overrides_note`도 같이 정리한다.

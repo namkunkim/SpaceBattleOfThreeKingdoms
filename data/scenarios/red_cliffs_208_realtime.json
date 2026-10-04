@@ -1041,6 +1041,124 @@
    },
    "status": "proposed"
   },
+  "commander_succession": {
+   "order": [
+    "vice_admiral",
+    "fleet_squadron_commander_by_level_then_command_then_id"
+   ],
+   "confusion": {
+    "duration_s": 60,
+    "penalty_stage_equivalent": 2,
+    "max_stage": 4,
+    "effect_per_stage": {
+     "move_pct": -5,
+     "hit_pct": -4,
+     "formation_change_pct": -8
+    },
+    "no_candidate": "until_battle_end",
+    "random_order_failure": false
+   },
+   "recompute_command_limit": true,
+   "vice_admiral_shares_flagship_fate": true,
+   "vice_admiral_hull_injury": false,
+   "status": "proposed",
+   "source": "제안서 §4.14, UPSTREAM-ISSUES §E (본편 V-74)"
+  },
+  "commander_casualties": {
+   "capture_radius": 120,
+   "rescue_radius": 120,
+   "evaluated_at": "event_tick",
+   "hull_ratio_basis": "surviving_ship_count_ratio",
+   "table": [
+    {
+     "order": 1,
+     "when": "squadron_surrender_by_zero_morale",
+     "result": "captured_all_aboard"
+    },
+    {
+     "order": 2,
+     "when": "drifting_fast_craft_captured",
+     "result": "captured"
+    },
+    {
+     "order": 3,
+     "when": "hull_zero_sunk",
+     "branches": [
+      {
+       "order": 1,
+       "when": "same_tick_chain_explosion_sinking",
+       "result": "killed"
+      },
+      {
+       "order": 2,
+       "when": "friendly_rescue_equipped_squadron_within_radius",
+       "result": "severe_survive"
+      },
+      {
+       "order": 3,
+       "when": "no_enemy_operational_squadron_within_radius",
+       "result": "severe_survive"
+      },
+      {
+       "order": 4,
+       "when": "nearest_friend_distance_le_nearest_enemy_distance",
+       "result": "severe_survive",
+       "tie": "friend"
+      },
+      {
+       "order": 5,
+       "when": "otherwise",
+       "result": "captured"
+      }
+     ]
+    },
+    {
+     "order": 4,
+     "when": "hull_ratio_below_0.4_above_0",
+     "result": "severe",
+     "scope": "squadron_commander_only",
+     "effect": "command_incapacitated"
+    },
+    {
+     "order": 5,
+     "when": "hull_ratio_0.4_to_0.75",
+     "result": "light",
+     "scope": "squadron_commander_only",
+     "effect": "command_kept"
+    },
+    {
+     "order": 6,
+     "when": "forced_retreat_outside_own_exit_at_battle_end_enemy_wins",
+     "result": "captured"
+    }
+   ],
+   "operational_means": "not_retreating_surrendered_or_drifting",
+   "states": [
+    "unhurt",
+    "light",
+    "severe",
+    "killed",
+    "captured"
+   ],
+   "terminal": [
+    "killed",
+    "captured"
+   ],
+   "cao_cao": {
+    "flagship_sunk_by_chain_fire": "killed",
+    "flagship_sunk_enemy_close_only": "captured",
+    "flagship_sunk_otherwise": "severe_escape_huarong",
+    "flagship_surrender": "captured"
+   },
+   "instant_result": {
+    "liu_bei_killed_or_captured": "alliance_defeat",
+    "cao_cao_killed_or_captured": "alliance_victory",
+    "simultaneous": "cao_first",
+    "severe": "succession_only"
+   },
+   "status": "proposed",
+   "source": "제안서 §4.14, UPSTREAM-ISSUES §E (본편 V-74)"
+  },
   "decision_cards": {
    "time_game_s": 30,
    "speed_by_difficulty": {
