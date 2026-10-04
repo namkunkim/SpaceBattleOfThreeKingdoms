@@ -59,6 +59,20 @@ for b in m["bodies"]:
     own = CITY_OWNER.get(b["name"], "wei" if reg["owner"] == "split" else reg["owner"])
     data["cities"].append({"name": b["name"], "at": [r1(v) for v in b["position"]], "kind": b["kind"],
                            "rgn": b["region"], "owner": own})
+# 행성계: 거주 주행성마다 항성·내행성·금성형·위성·외행성이 붙는다(본편 planetary_families 22개).
+by_id = {b["id"]: b for b in m["bodies"]}
+data["bodies"] = []
+for b in m["bodies"]:
+    reg = next(r for r in data["regions"] if r["id"] == b["region"])
+    own = CITY_OWNER.get(b["name"], "wei" if reg["owner"] == "split" else reg["owner"])
+    parent = b.get("parent_body") or b.get("parent_star")
+    data["bodies"].append({"id": b["id"], "name": b["name"], "kind": b["kind"], "role": b.get("role"),
+                           "at": [round(v, 1) for v in b["position"]], "r": b["visual_radius"], "rgn": b["region"],
+                           "eco": b.get("economic_entity", True) is not False, "seed": b.get("shape_seed", 0) % 997,
+                           "parent": parent, "owner": own})
+data["families"] = [{"id": f["id"], "host": f["host"], "star": f["star"], "at": [r1(v) for v in by_id[f["star"]]["position"]],
+                     "center": [r1(v) for v in f["position"]], "radius": f["radius"],
+                     "name": by_id[f["host"]]["name"]} for f in m["planetary_families"]]
 for rt in m["routes"]:
     data["routes"].append({"id": rt["id"], "kind": rt["kind"], "connects": rt["connects"], "corridor": rt["corridor"],
                            "line": thin(rt["line"], 3)})
@@ -71,9 +85,23 @@ for t in m["terrain"]:
     data["terrain"].append({"name": t["name"], "kind": t["kind"], "density": t["density_peak"], "gas": t.get("gas_peak") or 0,
                             "polys": polys})
 
+# 적벽 전대: 이 저장소의 시나리오 정본(배치 좌표·진형·함종 편성). 전장 좌표 0..1600×0..900.
+ROOT = Path(__file__).resolve().parents[2]
+sc = json.loads((ROOT / "data/scenarios/red_cliffs_208_realtime.json").read_text(encoding="utf-8"))
+frm = json.loads((ROOT / "data/scenarios/base/formations.json").read_text(encoding="utf-8"))
+frm = {f["id"]: f["name"] for f in (frm if isinstance(frm, list) else frm.get("formations", []))}
+SIDE = {"liu_bei": "shu", "sun_quan": "wu", "cao_cao": "wei"}
+data["squadrons"] = [{
+    "id": q["id"], "f": SIDE[q["faction_id"]], "name": q["name"], "cmd": q["commander"]["name"],
+    "vice": (q.get("vice_commander") or {}).get("name"), "staff": [x["name"] for x in q.get("staff", [])],
+    "pos": q["initial_position"], "flag": bool(q.get("flagship")), "frm": q.get("formation_id"),
+    "frm_name": frm.get(q.get("formation_id"), ""), "delay": q.get("deploy_delay_s", 0),
+    "comp": [[c["ship_type_id"], c["count"]] for c in q["composition"]],
+} for q in sc["squadrons"]]
+
 blob = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
 html = HTML.read_text(encoding="utf-8")
 html = re.sub(r"/\*DATA\*/.*?/\*END\*/", lambda _: "/*DATA*/" + blob + "/*END*/", html, flags=re.S)
 HTML.write_text(html, encoding="utf-8")
 print(f"{HTML.name}: data {len(blob)//1024} KB, systems {len(data['systems'])}, regions {len(data['regions'])}, "
-      f"cities {len(data['cities'])}, routes {len(data['routes'])}, terrain {len(data['terrain'])}")
+      f"cities {len(data['cities'])}, bodies {len(data['bodies'])}, families {len(data['families'])}, routes {len(data['routes'])}, terrain {len(data['terrain'])}")
