@@ -170,7 +170,7 @@ if __name__ == "__main__":
             {"id": "cao_cao", "name": "조조군", "control": "ai", "supreme_commander": "조조",
              "not_deployed": [{"id": "CHR-0021", "name": "악진", "reason": "양양에 주둔"},
                               {"id": "CHR-0026", "name": "장료", "reason": "장사(長社)에 주둔"},
-                              {"id": "CHR-0023", "name": "우금", "reason": "장사(長社)에 주둔"}]}],
+                              {"id": "CHR-0023", "name": "우금", "reason": "208년 적벽 종군 기록이 없다"}]}],
         "fleet_groups": [
             {"id": "RC-LIU-FLT-01", "faction_id": "liu_bei", "name": "유비 연합 전단", "admiral": "CHR-0128", "vice_admiral": "CHR-0134",
              "squadron_ids": ["RC-LIU-SQ-01", "RC-LIU-SQ-02", "RC-LIU-FC-01"], "flagship_squadron_id": "RC-LIU-SQ-01"},
