@@ -14,6 +14,7 @@ const STAGE_SUNK := 4
 
 var sim: BattleSim
 var C: Dictionary
+var terrain_class := ""   # 전장 지형 등급(C.formation_rules.terrain의 키). ""이면 개활이라 진형 제한 없음(§4.7)
 
 func _init(s: BattleSim, combat: Dictionary) -> void:
 	sim = s
@@ -24,6 +25,7 @@ func _init(s: BattleSim, combat: Dictionary) -> void:
 func init_fleet(f: FleetState, d: Dictionary) -> void:
 	f.formation_id = d.get("formation_id", C.default_formation)
 	f.cmd_stat = int(d.get("command", 0))
+	f.traits = d.get("traits", [])
 	# 지휘관 능력치(거리대별 보정, §4.3). 데이터에 없는 능력치는 통솔로 대신한다
 	f.stats = {"command": f.cmd_stat, "might": int(d.get("might", f.cmd_stat)), "intellect": int(d.get("intellect", f.cmd_stat))}
 	f.morale_bp = int(d.get("start_morale_bp", 0))
@@ -64,9 +66,12 @@ func init_fleet(f: FleetState, d: Dictionary) -> void:
 		f.supp[cat] = ""
 		i += 1
 	f.speed = _speed(f)
+	_apply_shape(f)
 	refresh_range(f)
 
 func finish_setup() -> void:
+	for f in sim.st.fleets:
+		_enforce_terrain(f)
 	# 초기 방향: 가장 가까운 적 전대를 향한다(§4.2)
 	for f in sim.st.fleets:
 		var n := sim.st.nearest_foe(f, 1e9)
@@ -83,6 +88,99 @@ func _speed(f: FleetState) -> float:
 
 func _form_id(f: FleetState) -> String:
 	return f.formation_id if C.formations.has(f.formation_id) else C.default_formation
+
+# ============================================================ 진형(§4.7)
+func formation_ids() -> Array:
+	var ids: Array = C.formations.keys()
+	ids.sort()
+	return ids
+
+# 지형이 이 진형을 허용하는가: 기저 항로는 금지 목록, 중회랑은 허용 목록, 대회랑은 강제 진형 하나(§4.7)
+func terrain_allowed(fid: String) -> bool:
+	if terrain_class == "":
+		return true
+	var z: Dictionary = C.formation_rules.terrain[terrain_class]
+	if z.has("forced"):
+		return z.forced == fid
+	if z.has("banned"):
+		return not z.banned.has(fid)
+	return z.only.has(fid)
+
+# 팔진 조건: 통솔과 특성(정본 §5.6)
+func master_ok(f: FleetState) -> bool:
+	var fr: Dictionary = C.formation_rules
+	return f.cmd_stat >= int(fr.master_min_command) and f.traits.has(fr.master_trait)
+
+# 이 전대가 fid로 바꿀 수 없는 사유 코드. 가능하면 "".
+func form_block(f: FleetState, fid: String) -> String:
+	if not C.formations.has(fid):
+		return "unknown_formation"
+	if not terrain_allowed(fid):
+		return "formation_terrain"
+	if fid == C.formation_rules.master_id and not master_ok(f):
+		return "formation_master"
+	return ""
+
+# 전환 시간(틱): 기본 30초, 통솔이 요구치에 못 미치면 60초, 팔진 조건 충족자는 절반
+func transition_ticks(f: FleetState, fid: String) -> int:
+	var fr: Dictionary = C.formation_rules
+	var s := float(fr.untrained_transition_s) if f.cmd_stat < int(C.formations[fid].required_command) else float(fr.transition_s)
+	if master_ok(f):
+		s /= float(fr.master_transition_div)
+	return BattleRules.ticks(s, sim.st.hz)
+
+# 진형 전환 시작. 현재 진형으로 되돌리면 전환을 취소한다. 사유 코드 또는 "".
+func start_transition(f: FleetState, fid: String) -> String:
+	var why := form_block(f, fid)
+	if why != "":
+		return why
+	if fid == f.formation_id:
+		f.form_to = ""
+		f.form_left = 0
+	elif fid != f.form_to:
+		f.form_to = fid
+		f.form_left = transition_ticks(f, fid)
+		sim.emit("formation_start", f.id, -1, f.pos, fid)
+	return ""
+
+func _transition_step(f: FleetState) -> void:
+	if f.form_left <= 0:
+		return
+	f.form_left -= 1
+	if f.form_left > 0:
+		return
+	f.formation_id = f.form_to
+	f.form_to = ""
+	f.speed = _speed(f)
+	_apply_shape(f)
+	sim.emit("formation_changed", f.id, -1, f.pos, f.formation_id)
+
+# 지형이 허용하지 않는 진형으로 시작한 전대는 즉시 바뀐다(대회랑은 강제 진형, 그 밖에는 허용되는 첫 진형)
+func _enforce_terrain(f: FleetState) -> void:
+	if terrain_class == "" or terrain_allowed(f.formation_id):
+		return
+	var z: Dictionary = C.formation_rules.terrain[terrain_class]
+	var to: String = z.forced if z.has("forced") else ""
+	if to == "":
+		for id in formation_ids():
+			if terrain_allowed(id):
+				to = id
+				break
+	f.formation_id = to
+	f.form_to = ""
+	f.form_left = 0
+	f.speed = _speed(f)
+	_apply_shape(f)
+
+# 배치도(표시·발사 위치용 기하): 정본 진형 7종 각각에 POC 배치 모양을 재사용한다(Q10)
+func _apply_shape(f: FleetState) -> void:
+	f.shape = BattleRules.FORM_SHAPE[maxi(0, formation_ids().find(_form_id(f)))]
+	f.form = BattleRules.formation_offsets(f.shape, sim.R.ship_gap)
+
+# 상성(정본 §5.4): 교전 거리대에서 우위 진형이면 피해 배율. 팔진은 양쪽 모두 판정을 무효화한다
+func affinity_wins(a: String, b: String) -> bool:
+	var fr: Dictionary = C.formation_rules
+	return a != fr.master_id and b != fr.master_id and fr.affinity.get(a, "") == b
 
 # ============================================================ 질의
 func total0(f: FleetState) -> int:
@@ -197,17 +295,22 @@ func commander_mul(f: FleetState, bd: String) -> float:
 func morale_mul(f: FleetState) -> float:
 	return float(C.damage.morale_base) + float(f.morale_bp) / float(C.damage.morale_div_bp)
 
-func formation_mul(f: FleetState) -> float:
-	return float(C.damage.formation_damage_mul.get(_form_id(f), 1.0))
+# 진형 배율(§4.3): 장사진 ×0.9, 전환 중 ×0.8, 교전 거리대 상성 우위 ×1.2
+func formation_mul(f: FleetState, tgt: FleetState, bd: String) -> float:
+	var fr: Dictionary = C.formation_rules
+	var m := float(C.damage.formation_damage_mul.get(_form_id(f), 1.0))
+	if f.form_left > 0:
+		m *= float(fr.transition_damage_mul)
+	if bd == fr.affinity_band and affinity_wins(_form_id(f), _form_id(tgt)):
+		m *= float(fr.affinity_mul)
+	return m
 
 # 피해 [§4.3]: 범주 기본 피해 × 플랫폼 배율 × 함종 거리대 계수 × 지휘관 × 사기 × 진형 × 지형 (× 돌격, 방어태세)
-func damage_of(f: FleetState, cat: String, n_total: float, coef: float, bd: String) -> float:
+func damage_of(f: FleetState, tgt: FleetState, cat: String, n_total: float, coef: float, bd: String) -> float:
 	var d := float(C.weapons[cat].base_damage) * platform_mul(n_total) * coef
-	d *= commander_mul(f, bd) * morale_mul(f) * formation_mul(f) * float(C.damage.terrain_mul)
+	d *= commander_mul(f, bd) * morale_mul(f) * formation_mul(f, tgt, bd) * float(C.damage.terrain_mul)
 	if f.charge > 0:
 		d *= sim.R.charge_power_mul
-	if f.defense:
-		d *= sim.R.defense_power_mul
 	return d
 
 # ============================================================ 사격 계획
@@ -326,6 +429,7 @@ func step() -> void:
 		if f.dead or f.max_hull == 0:
 			continue
 		_recover(f)
+		_transition_step(f)
 		if f.mstate == "retreat":
 			continue   # 퇴각 중인 전대는 공격하지 못한다(§4.6)
 		for cat in C.categories:
@@ -389,7 +493,7 @@ func _plan_shot(f: FleetState, cat: String, tgt: FleetState, q: Array) -> Dictio
 	var eid := sim.st.new_event_id()
 	var acc := hit_bp(f, tgt, cat)
 	return {"src": f, "tgt": tgt, "cat": cat, "band": bd, "wband": wband, "sector": sector(f.pos, tgt), "acc": acc,
-		"dmg": damage_of(f, cat, n_total, coef, wband), "n": n_total, "eid": eid,
+		"dmg": damage_of(f, tgt, cat, n_total, coef, wband), "n": n_total, "eid": eid,
 		"hit": sim.rng.bp(sim.st.tick, eid, 1) < acc}
 
 func _resolve(s: Dictionary) -> void:
@@ -406,8 +510,6 @@ func _resolve(s: Dictionary) -> void:
 func apply_hull(src: FleetState, tgt: FleetState, dmg: float, bd: String, sec: String, eid: int) -> int:
 	if tgt.dead:
 		return 0
-	if tgt.defense:
-		dmg *= sim.R.defense_damage_taken_mul
 	var loss := mini(roundi(dmg), tgt.hull)
 	tgt.hull -= loss
 	var cum := tgt.max_hull - tgt.hull

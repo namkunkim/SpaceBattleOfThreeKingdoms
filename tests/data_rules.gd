@@ -11,8 +11,8 @@ const EXEMPT_FILES := {
 	"battle_fingerprint.gd": "지문 형식",
 	"tick_clock.gd": "실시간 시계 정책(UI 감속 단계, 프레임당 틱 상한). 규칙 값이 아니다",
 }
-# 단위 환산 상수 정의 줄(이름으로 허용)
-const UNIT_CONSTS := ["FORM_COUNT", "TICK_HZ", "TICK_S", "REF_DT", "MILLI", "BP"]
+# 단위 환산 상수 정의 줄(이름으로 허용). FORM_SHAPE는 진형 7종 → 배치도 번호 대응표(기하, 규칙 값 아님)
+const UNIT_CONSTS := ["FORM_COUNT", "FORM_SHAPE", "TICK_HZ", "TICK_S", "REF_DT", "MILLI", "BP"]
 # rules.gd에서 이 함수 안은 진형 슬롯 기하라 검사에서 뺀다(M3에서 본편 진형 7종으로 교체)
 const EXEMPT_FUNCS := {"rules.gd": ["formation_offsets"]}
 
