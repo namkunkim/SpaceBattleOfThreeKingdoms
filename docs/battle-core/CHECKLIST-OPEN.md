@@ -1,6 +1,6 @@
 # 더 파악해야 할 것 (컨셉 세션 체크리스트)
 
-갱신: 2026-10-04 (3차 세션). 범위는 적벽 시나리오 하나다.
+갱신: 2026-10-04 (4차 세션). 범위는 적벽 시나리오 하나다.
 확인하면 `[x]`로 바꾸고, 결과가 문서에 들어간 곳을 적는다. 결정이 필요하면 `BATTLE_DECISIONS.md`에 Q번호로 남긴다.
 
 **표시**
@@ -64,7 +64,7 @@ M1 병합(`29978b7`) 3차 세션 리뷰: `REVIEW-M1.md`. 컨셉 세션이 `tests
 - [~] 감속이 틱 폭이 아니라 누산기 소비 속도만 바꾸는가: 코어(`TickClock.set_speed`)는 맞다. UI의 선택 감속은 아직 `Engine.time_scale`이다 → 후속(M10 전, UI 세션과 협의)
 - [~] 투영 v0 필드: `tick`·`clock`·`cp`와 `counts`·`control` 자리까지. `chain_op`·`pending_decisions[].time_left`·곧 열릴 분기는 빈 자리 → M2·M6·M7
 - [ ] 조용한 구간 판정과 AI 입력이 공개 투영만 쓰는가(정보 경계): 투영에 안개가 없고 `PocEnemyAi`가 전지적이다(알려진 결함) → M6
-- [ ] M2: 코어가 시나리오 JSON의 `difficulty_policy`와 `deploy_delay_s`를 그대로 읽는가
+- [x] M2: 코어가 시나리오 JSON의 `difficulty_policy`와 `deploy_delay_s`를 그대로 읽는가 → 수용(`REVIEW-M2.md`, `06be305`). 함종·진형은 M2b로 `data/scenarios/base/`에 스냅숏을 두었다
 - [ ] M4 기준선: 자동 해결 200회의 길이, 승률, 종료 경로가 세트 RX 예측(표준 15~16분, 파도 3번)과 얼마나 다른가. 지금 기준선은 POC 규칙이라 M3 뒤에 다시 잡는다
 
 **M1 기준 보완 (3차 세션, 구현 세션에 전달)**

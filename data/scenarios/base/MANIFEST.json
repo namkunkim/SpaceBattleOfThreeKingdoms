@@ -1,0 +1,24 @@
+{
+ "source": "C:\\WorkSpace\\Seonghanji",
+ "files": {
+  "ship-types.json": "c2c0902caa0315cb",
+  "formations.json": "50ac481eff929f8c",
+  "red-cliffs-demo-setup.json": "e7f4df99d6f6ad67",
+  "red-cliffs-ai-rules.json": "bcabcd477f037465",
+  "red-cliffs-chain-explosion-rules.json": "6246a37596e9cc5a",
+  "red-cliffs-combat-effects-rules.json": "1b8528c8d31dcac7",
+  "red-cliffs-combat-resource-rules.json": "78c9a4bc0e0dcddc",
+  "red-cliffs-fast-craft-rules.json": "712c62c324f9751c",
+  "red-cliffs-fog-of-war-rules.json": "37d31f836469d152",
+  "red-cliffs-formation-rules.json": "19412efaf9e186d2",
+  "red-cliffs-interception-rules.json": "64968ac07af4a341",
+  "red-cliffs-movement-rules.json": "c2a030b7b1cd073f",
+  "red-cliffs-phase-ledger-rules.json": "356aa63b60366558",
+  "red-cliffs-sensor-ew-rules.json": "2fd29faf1d4eacc3",
+  "red-cliffs-terrain-rules.json": "741d89c6d458f89c",
+  "red-cliffs-victory-rules.json": "19ce5c21e831c3f1",
+  "red-cliffs-weapon-allocation-rules.json": "10d7ce0455c68747"
+ },
+ "source_head": "f0b39b96ec630dfd3586e180693b28d5eefd11fd",
+ "source_dirty": true
+}
