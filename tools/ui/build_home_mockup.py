@@ -1,7 +1,7 @@
-"""홈 화면 목업(docs/ui/mockup-home-v1.html)을 만든다.
+"""홈 화면 목업(docs/ui/mockup-home-v1.html, v2.html)을 만든다.
 
 본편 data/maps/galaxy-map.json에서 지도 표시에 필요한 것만 줄여 뽑아
-tools/ui/home_v1_template.html의 /*MAP_DATA*/ 자리에 넣는다. 값을 고치지 않는다.
+tools/ui/home_v*_template.html의 /*MAP_DATA*/ 자리에 넣는다. 값을 고치지 않는다.
 실행: python tools/ui/build_home_mockup.py [본편 경로]   (기본 C:\\WorkSpace\\Seonghanji)
 """
 import base64, hashlib, json, sys
@@ -10,8 +10,7 @@ from pathlib import Path
 SRC = Path(sys.argv[1] if len(sys.argv) > 1 else r"C:\WorkSpace\Seonghanji")
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
-TEMPLATE = HERE / "home_v1_template.html"
-OUT = ROOT / "docs" / "ui" / "mockup-home-v1.html"
+PAGES = [("home_v1_template.html", "mockup-home-v1.html"), ("home_v2_template.html", "mockup-home-v2.html")]
 MAP = SRC / "data" / "maps" / "galaxy-map.json"
 
 
@@ -50,7 +49,7 @@ data = {
     "systems": [[s["id"], s["name"], s["display_name"], s["grade"], round(s["position"][0]), round(s["position"][1])]
                 for s in g["systems"]],
     "regions": [[r["id"], r["name"], r["system"], bool(r.get("is_seat")), round(r["position"][0]), round(r["position"][1]),
-                 ints(rdp([tuple(p) for p in r["boundary"]] + [tuple(r["boundary"][0])], 30))]
+                 ints(r["boundary"])]
                 for r in g["regions"]],
     "routes": [[r["id"], r["kind"], r["display_policy"], r.get("corridor"), ints(rdp([tuple(p) for p in r["line"]], 25))]
                for r in g["routes"]],
@@ -67,6 +66,10 @@ data = {
         "gas": base64.b64encode(bytes(max(0, min(255, int(v))) for v in field["gas"])).decode(),
     },
 }
-html = TEMPLATE.read_text(encoding="utf-8").replace("/*MAP_DATA*/null", json.dumps(data, ensure_ascii=False, separators=(",", ":")))
-OUT.write_text(html, encoding="utf-8")
-print(OUT, len(html), "bytes")
+payload = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
+for tpl, out in PAGES:
+    if not (HERE / tpl).exists():
+        continue
+    html = (HERE / tpl).read_text(encoding="utf-8").replace("/*MAP_DATA*/null", payload)
+    (ROOT / "docs" / "ui" / out).write_text(html, encoding="utf-8")
+    print(out, len(html), "bytes")
