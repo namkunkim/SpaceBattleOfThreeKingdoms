@@ -1,0 +1,41 @@
+name: Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ['claude/**']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 도구 설치 (Godot, JDK 17, Android SDK, 키스토어)
+        run: |
+          sudo env HOME="$HOME" bash tools/cloud-setup.sh
+          sudo chown -R "$USER" "$HOME"
+
+      - name: 임포트 + 코어 규칙 테스트
+        run: |
+          godot --headless --import
+          godot --headless --script tests/core_rules.gd | tee /tmp/core.log
+          grep -q CORE_RULES_PASS /tmp/core.log
+
+      - name: 디버그 APK 내보내기
+        env:
+          GODOT_ANDROID_KEYSTORE_DEBUG_USER: androiddebugkey
+          GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD: android
+        run: |
+          export ANDROID_HOME="$HOME/android-sdk"
+          export GODOT_ANDROID_KEYSTORE_DEBUG_PATH="$HOME/debug.keystore"
+          mkdir -p out/android
+          godot --headless --export-debug "Android 태블릿" out/android/SpaceBattleOfThreeKingdoms.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SpaceBattleOfThreeKingdoms-debug-apk
+          path: out/android/SpaceBattleOfThreeKingdoms.apk
+          retention-days: 14
+          compression-level: 0
