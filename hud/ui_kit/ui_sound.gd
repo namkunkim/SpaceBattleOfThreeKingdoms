@@ -26,8 +26,23 @@ const EVENTS := {
 	"volley": {"bus": "Sfx", "file": "battle/volley", "synth": ["noise", 2400.0, 600.0, 0.16, 0.22], "gap": 0.09},
 	"ship_kill": {"bus": "Sfx", "file": "battle/ship_kill", "synth": ["boom", 180.0, 50.0, 0.45, 0.45], "gap": 0.07},
 	"fleet_destroyed": {"bus": "Sfx", "file": "battle/fleet_destroyed", "synth": ["boom", 120.0, 30.0, 1.3, 0.8], "gap": 0.5},
+	"laser_light": {"bus": "Sfx", "file": "battle/laser_light", "synth": ["noise", 3000.0, 900.0, 0.2, 0.2], "gap": 0.15},
+	"laser_heavy": {"bus": "Sfx", "file": "battle/laser_heavy", "synth": ["boom", 300.0, 90.0, 0.6, 0.5], "gap": 0.4},
+	"missile_launch": {"bus": "Sfx", "file": "battle/missile_launch", "synth": ["noise", 1500.0, 400.0, 0.5, 0.3], "gap": 0.25},
+	"missile_hit": {"bus": "Sfx", "file": "battle/missile_hit", "synth": ["boom", 200.0, 60.0, 0.5, 0.5], "gap": 0.1},
+	"fighter_launch": {"bus": "Sfx", "file": "battle/fighter_launch", "synth": ["noise", 800.0, 2000.0, 0.6, 0.25], "gap": 0.4},
+	"fighter_guns": {"bus": "Sfx", "file": "battle/fighter_guns", "synth": ["noise", 3500.0, 1500.0, 0.2, 0.2], "gap": 0.2},
+	"fighter_dock": {"bus": "Sfx", "file": "battle/fighter_dock", "synth": ["tone", 500.0, 300.0, 0.25, 0.3], "gap": 0.3},
+	"engine_boost": {"bus": "Sfx", "file": "battle/engine_boost", "synth": ["boom", 90.0, 160.0, 0.6, 0.4], "gap": 0.5},
+	"shield_hit": {"bus": "Sfx", "file": "battle/shield_hit", "synth": ["tone", 1400.0, 700.0, 0.2, 0.3], "gap": 0.1},
+	"armor_hit": {"bus": "Sfx", "file": "battle/armor_hit", "synth": ["boom", 400.0, 120.0, 0.15, 0.4], "gap": 0.1},
+	"chain_explosion": {"bus": "Sfx", "file": "battle/chain_explosion", "synth": ["boom", 150.0, 40.0, 1.0, 0.7], "gap": 0.5},
+	"fire_ignite": {"bus": "Sfx", "file": "battle/fire_ignite", "synth": ["noise", 1200.0, 300.0, 0.6, 0.3], "gap": 0.5},
 	"fleet_lost": {"bus": "Ui", "file": "ui/fleet_lost", "synth": ["alarm", 440.0, 330.0, 0.7, 0.5], "gap": 1.0, "vibrate": 80},
 }
+
+# 루프 3종: 원샷 훅이 아니라 종류마다 재생기 하나(동시에 최대 3개). set_loop("engine_loop", 0.6)으로 켜고, 0이면 끈다.
+const LOOPS := ["beam_loop", "engine_loop", "fire_loop"]
 
 static var history: Array = []   # 최근 사건(테스트·디버그용)
 # 음높이 흔들기 전용 난수(리뷰 W-4). 전역 난수를 쓰면 POC 규칙 난수열이 밀려 결정론이 깨진다.
@@ -41,6 +56,19 @@ static func vibrate(ms: int) -> void:
 var _streams := {}
 var _last := {}
 var _players: Array[AudioStreamPlayer] = []
+var _loops := {}
+
+# level 0~1. 0이면 멈춘다. 자산이 없으면 아무것도 하지 않는다(루프는 합성 임시음이 없다).
+func set_loop(name: String, level: float) -> void:
+	var lp: AudioStreamPlayer = _loops.get(name)
+	if lp == null or lp.stream == null:
+		return
+	if level <= 0.001:
+		lp.stop()
+		return
+	lp.volume_db = linear_to_db(clampf(level, 0.0, 1.0))
+	if not lp.playing:
+		lp.play()
 
 func _ready() -> void:
 	for b in ["Sfx", "Ui"]:
@@ -53,6 +81,15 @@ func _ready() -> void:
 		var p := AudioStreamPlayer.new()
 		add_child(p)
 		_players.append(p)
+	for l in LOOPS:
+		var lp := AudioStreamPlayer.new()
+		lp.name = l
+		lp.bus = "Sfx"
+		var path: String = AUDIO_DIR + "battle/" + l + ".wav"
+		if ResourceLoader.exists(path):
+			lp.stream = load(path)
+		add_child(lp)
+		_loops[l] = lp
 	apply_volume()
 
 static func apply_volume() -> void:

@@ -53,6 +53,12 @@ func _run() -> void:
 	if not TestCheck.ok(self, _has("undo"), "undo sound"): return
 	deck.renderer.fx_event.emit("volley")
 	if not TestCheck.ok(self, _has("volley"), "renderer volley hook"): return
+	battle.sfx_event.emit("laser_heavy")
+	if not TestCheck.ok(self, _has("laser_heavy"), "core sfx hook"): return
+	deck.sound.set_loop("engine_loop", 0.5)
+	if not TestCheck.ok(self, deck.sound._loops.engine_loop.playing, "loop on"): return
+	deck.sound.set_loop("engine_loop", 0.0)
+	if not TestCheck.ok(self, not deck.sound._loops.engine_loop.playing, "loop off"): return
 	# 같은 사건은 최소 간격 안에서 한 번만
 	var n := UiSound.history.count("ship_kill")
 	for i in 5:
