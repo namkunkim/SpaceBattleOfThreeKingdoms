@@ -27,7 +27,7 @@ if [ ! -d "$ANDROID_HOME/platform-tools" ]; then
   mkdir -p "$ANDROID_HOME/cmdline-tools"
   wget -nv https://dl.google.com/android/repository/commandlinetools-linux-${CMDLINE}_latest.zip -O /tmp/c.zip
   unzip -q -o /tmp/c.zip -d "$ANDROID_HOME/cmdline-tools" && mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
-  yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null
+  { yes || true; } | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null
   "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platform-tools" "build-tools;35.0.1" "platforms;android-35" "cmdline-tools;latest" >/dev/null
 fi
 
