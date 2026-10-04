@@ -61,6 +61,13 @@ button{font-family:inherit;color:inherit}
 .zoom button.pm{min-width:52px;font-size:24px;font-weight:300;color:var(--ink-2)}
 .zoom button.pm:active{background:rgba(201,164,92,.15)}
 .pt.comp .lb{display:none}
+/* 외부 세력: 제어 불가. 위치만 흐릿하게 */
+.ext .plate{position:absolute;transform:translate(-50%,-50%);text-align:center;white-space:nowrap;opacity:.62;transition:opacity .2s}
+.ext .plate b{display:block;font-family:var(--serif);font-weight:600;font-size:16px;letter-spacing:4px;color:#aab3bd;text-shadow:0 0 10px #000}
+.ext .plate small{display:block;font-size:10px;letter-spacing:1px;color:#6f7a86;margin-top:2px}
+.ext .plate i{font-style:normal;font-size:9px;letter-spacing:2px;color:#56616d;border:1px solid #2a3340;padding:0 5px;margin-top:3px;display:inline-block}
+.ext:hover .plate,.ext.sel .plate{opacity:.95}
+.ext .hit{width:120px;height:60px;left:-60px;top:-30px}
 /* 전대 명패: 전투 HUD 명패와 같은 틀(흑칠 바탕·세력 테두리·함선 막대) */
 .sqd .plate{position:absolute;transform:translate(-50%,-100%);margin-top:-14px;min-width:132px;padding:5px 8px 6px;background:rgba(5,9,14,.82);border:1px solid var(--line);border-left:2px solid var(--c);white-space:nowrap;text-align:left}
 .sqd .plate b{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--ink)}
@@ -386,6 +393,75 @@ function drawBackground(t){
     const a=.35+.35*Math.sin(t*.0012+s.p);cx.fillStyle=`rgba(${s.c},${a*s.d+.1})`;cx.fillRect(px,py,s.r,s.r);
   }
 }
+// ===================================================================== 외부 세력(제어 불가, 위치만)
+// 근거: 본편 design-overview.md §2.3, diplomacy.md §2~§3, star-map.md §2.3·§3, region-power.md(안문권·양주·병주).
+// 이역 권역의 성계 외곽 배치는 본편에서도 미작성(star-map.md §8)이라, 아래 좌표는 방위·접근 경로에 맞춘 시안용 개략 배치다.
+const EXT_GROUP={
+  north:{name:'북적',col:'190,170,130'},west:{name:'서융',col:'190,150,100'},far:{name:'서방',col:'160,140,190'},
+  east:{name:'동이 연합',col:'130,160,200'},south:{name:'남만',col:'130,170,140'}};
+const EXT=[
+  {id:'X-XIONGNU',name:'흉노',g:'north',at:[17400,4300],r:2300,from:[19122,8130],sub:'이민족 · 변경 압력',
+   desc:'병주 북방의 이민족. 안문권은 흉노 접경이라 조세보다 방비가 더 든다. 병주 전화 계수(0.50)의 원인이 이민족 침입이다.',via:'병주 북방 변경',src:'design-overview §2.3 · region-power(안문권·병주)'},
+  {id:'X-XIANBEI',name:'선비',g:'north',at:[21300,2100],r:2700,from:[22387,6100],sub:'이민족 · 변경 압력',
+   desc:'북방 초원의 이민족. 상시 변경 압력이며 회유·이간·용병 고용의 대상이다.',via:'유주·병주 북방 변경',src:'design-overview §2.3'},
+  {id:'X-WUHUAN',name:'오환',g:'north',at:[25200,2900],r:1700,from:[22387,6100],sub:'이민족 · 변경 압력',
+   desc:'유주 동북의 이민족. 회유·이간·용병 고용의 대상이다.',via:'유주 동북 변경',src:'design-overview §2.3'},
+  {id:'X-QIANG',name:'강족',g:'west',at:[7600,12600],r:2500,from:[10719,8070],sub:'이민족 · 반란',
+   desc:'양주·옹주 서남 변경의 이민족. 양주 전화 계수(0.60)의 원인이 강족 반란이다. 마초는 이민족 병력을 끌어들인다.',via:'양주 남서 변경',src:'design-overview §2.3 · region-power(양주) · world-state'},
+  {id:'X-XIYU',name:'서역',g:'far',at:[-1400,5900],r:1900,from:[848,5700],sub:'소국들 · 교역로',
+   desc:'하서회랑 너머의 소국들. 서역 항로 통행세와 사치재가 오가고, 이탈·약탈 사건이 일어난다.',via:'하서회랑(양주 돈황권)',src:'diplomacy §3.3~3.4 · star-map §3'},
+  {id:'X-KUSHAN',name:'대월지',g:'far',at:[-6600,6900],r:2600,from:[-1400,5900],sub:'쿠샨 · 책봉 대상',
+   desc:'서역 너머의 교역 대국. 위가 「친위대월지왕」으로 책봉할 수 있는 원거리 동맹이다. 배신하지 않지만 사산조에 스스로 무너진다.',via:'하서회랑 → 서역',src:'diplomacy §3'},
+  {id:'X-SASAN',name:'사산조',g:'far',at:[-12200,8100],r:2600,from:[-6600,6900],sub:'교섭 불가 · 서방의 위협',
+   desc:'대월지를 잠식하며 서서히 다가오는 서방의 위협. 동맹 대상이 아니다.',via:'대월지 너머',src:'diplomacy §1 · §3.5~3.6'},
+  {id:'X-ROME',name:'로마',g:'far',at:[-17800,9200],r:3100,from:[-12200,8100],sub:'교섭 불가 대국',
+   desc:'배경 압력이자 교역 상대. 끌어들이면 매국으로 간주되어 천명이 크게 깎인다. 하서회랑이 서방 접촉의 유일 관문이다.',via:'하서회랑 → 서역 → … ',src:'design-overview §2.3 · star-map §3(하서회랑)'},
+  {id:'X-BUYEO',name:'부여',g:'east',at:[30600,1400],r:1700,from:[28128,4730],sub:'동이 연합 · 혼인 동맹',
+   desc:'요동 공손씨와 혼인 동맹(위구태는 공손도의 사위). 부여 궁기를 용병으로 낸다.',via:'노룡회랑 → 요동',src:'diplomacy §2'},
+  {id:'X-GOGURYEO',name:'고구려',g:'east',at:[31900,4300],r:1900,from:[28128,4730],sub:'동이 연합 · 최대 군사력',
+   desc:'동이 연합의 최대 군사력. 개마무사를 용병으로 낸다. 위·고구려 전쟁(244)은 연합 결속도에 따라 발동한다.',via:'노룡회랑 → 요동',src:'diplomacy §2'},
+  {id:'X-SAMHAN',name:'삼한·예·옥저',g:'east',at:[33600,8200],r:1700,from:[28128,4730],sub:'동이 연합 · 소세력',
+   desc:'동이 연합 주변의 소세력들.',via:'요동 동남',src:'diplomacy §2.1'},
+  {id:'X-WA',name:'왜',g:'east',at:[35000,13600],r:1800,from:[23998,9180],sub:'동이 연합 · 해상 세력',sea:true,
+   desc:'해상 세력. 왜를 거치는 우회 항행으로 노룡회랑이 막혀도 동이와 접촉을 이어 간다. 왜 수군을 용병으로 낸다.',via:'해상 경로(동해 변경)',src:'diplomacy §2.1·§2.3'},
+  {id:'X-NANMAN',name:'남만',g:'south',at:[10600,25800],r:2500,from:[11702,20500],sub:'이역 · 남방',
+   desc:'남중 너머의 남방 이역. 남중은 아직 미개척 성계이고 남중산도로만 이어진다.',via:'남중산도 → 남중',src:'star-map §2.3·§8(이역 권역)'},
+];
+function extFade(){ // 천하·성역 단계에서만, 확대할수록 옅어진다
+  if(mode!=='g'&&mode!=='t')return 0;return mode==='g'?1:.6;
+}
+function drawExternal(t){
+  const k=extFade();if(k<=0)return;
+  cx.save();cx.globalAlpha=k;
+  // 접근 경로(점선): 제어할 수 없는 길이라 회색
+  for(const e of EXT){
+    const [ax,ay]=w2s(...e.from),[bx,by]=w2s(...e.at),col=EXT_GROUP[e.g].col;
+    cx.strokeStyle=`rgba(${col},.28)`;cx.lineWidth=1;cx.setLineDash(e.sea?[1,5]:[5,7]);cx.lineDashOffset=-t*.01;
+    cx.beginPath();cx.moveTo(ax,ay);cx.lineTo(bx,by);cx.stroke();cx.setLineDash([]);
+  }
+  // 세력 영역: 흐릿한 안개 + 점선 테두리
+  for(const e of EXT){
+    const [x,y]=w2s(...e.at),R=e.r*cam.s,col=EXT_GROUP[e.g].col;if(!onScreen(x,y,R))continue;
+    const g=cx.createRadialGradient(x,y,0,x,y,R);g.addColorStop(0,`rgba(${col},.13)`);g.addColorStop(.7,`rgba(${col},.05)`);g.addColorStop(1,`rgba(${col},0)`);
+    cx.fillStyle=g;cx.beginPath();cx.arc(x,y,R,0,7);cx.fill();
+    cx.strokeStyle=`rgba(${col},.22)`;cx.setLineDash([2,6]);cx.beginPath();cx.arc(x,y,R*.72,0,7);cx.stroke();cx.setLineDash([]);
+  }
+  // 화면 밖 무리 방향 표시(가장자리 화살표)
+  const groups={};for(const e of EXT){(groups[e.g]=groups[e.g]||[]).push(e)}
+  cx.font='11px sans-serif';
+  for(const [gk,list] of Object.entries(groups)){
+    const c=[list.reduce((a,e)=>a+e.at[0],0)/list.length,list.reduce((a,e)=>a+e.at[1],0)/list.length];
+    const [x,y]=w2s(...c);if(onScreen(x,y,-40))continue;
+    // 화면 가운데에서 그 무리 쪽으로 쏜 선이 보이는 사각형 가장자리와 만나는 곳
+    const [ox,oy]=center(),a=Math.atan2(y-oy,x-ox),dx=Math.cos(a),dy=Math.sin(a);
+    const L=96,R=W-reserve()-28,T=TOP+40,B=H-104;
+    const tt=Math.min(dx>0?(R-ox)/dx:dx<0?(L-ox)/dx:1e9,dy>0?(B-oy)/dy:dy<0?(T-oy)/dy:1e9);
+    const ex=ox+dx*tt,ey=oy+dy*tt;
+    const col=EXT_GROUP[gk].col;cx.fillStyle=`rgba(${col},.75)`;cx.save();cx.translate(ex,ey);cx.rotate(a);cx.beginPath();cx.moveTo(8,0);cx.lineTo(-4,-6);cx.lineTo(-4,6);cx.fill();cx.restore();
+    cx.textAlign=Math.cos(a)>.3?'right':Math.cos(a)<-.3?'left':'center';cx.fillText(EXT_GROUP[gk].name,ex-Math.cos(a)*16,ey-Math.sin(a)*16+4);
+  }
+  cx.restore();
+}
 function drawTerrain(){
   if(!layers.terrain)return;
   const [x0,y0]=w2s(0,0);
@@ -445,7 +521,6 @@ function drawRoutes(t){
     if(showName){const w=cx.measureText(c.name).width+12;cx.fillStyle='rgba(5,8,13,.75)';cx.fillRect(gx-w/2,gy+9,w,17);cx.fillStyle='#f0b190';cx.fillText(c.name,gx,gy+22)}
   }
   if(showName){const [x,y]=w2s(21878,16200);const n='장강 대항로',w=cx.measureText(n).width+12;cx.fillStyle='rgba(5,8,13,.75)';cx.fillRect(x-w/2,y-9,w,18);cx.fillStyle='#8ff0e3';cx.fillText(n,x,y+4)}
-  for(const e of DATA.external){const [x,y]=w2s(...e.at);cx.fillStyle='#d79a78';cx.font='600 13px sans-serif';cx.fillText('◂ '+e.name,x+20,y-10)}
 }
 function drawCityDots(){
   if((mode==='o'||mode==='f'))return;
@@ -794,6 +869,11 @@ function addNode(o){
   nodesEl.appendChild(el);o.el=el;NODES.push(o);
 }
 function sysOwners(s){return [...new Set(s.regions.map(id=>RGN[id].owner).flatMap(o=>o==='split'?['wei','shu']:[o]).filter(o=>o!=='war'))]}
+for(const e of EXT){
+  addNode({id:e.id,cls:'ext',modes:['g','t'],at:e.at,aria:e.name+' (외부 세력)',
+    html:`<div class="plate"><b>${e.name}</b><small>${e.sub}</small><i>${EXT_GROUP[e.g].name} · 제어 불가</i></div><span class="hit"></span>`,
+    tap:()=>select({type:'ext',id:e.id})});
+}
 for(const s of DATA.systems){
   // 이름표 위치: 형주 전역 4곳은 고정, 나머지는 권역 경계 꼭짓점의 평균(성역 덩어리 가운데)
   let at=SYS_LABEL_AT[s.id];
@@ -839,7 +919,7 @@ function placeNodes(){
     const vis=n.modes.includes(mode)&&(!n.layer||layers[n.layer])&&x>-120&&x<W+120&&y>-80&&y<H+80;
     n.el.classList.toggle('hide',!vis);
     n.el.style.transform=`translate(${x}px,${y}px)`;
-    const isSel=sel&&((sel.type==='sqd'&&n.id===sel.id)||(sel.type==='sys'&&n.id===sel.id)||(sel.type==='rgn'&&n.id===sel.id)||(sel.type==='body'&&n.id===sel.id));
+    const isSel=sel&&((sel.type==='ext'&&n.id===sel.id)||(sel.type==='sqd'&&n.id===sel.id)||(sel.type==='sys'&&n.id===sel.id)||(sel.type==='rgn'&&n.id===sel.id)||(sel.type==='body'&&n.id===sel.id));
     n.el.classList.toggle('sel',!!isSel);
   }
 }
@@ -880,6 +960,13 @@ function select(s){
     body=`<p class="p-desc">${DESC[b.name]||gen}</p><div class="sec">소유</div><div class="row" data-rgn="${r.id}">${glyphSVG(b.owner,22)}<div class="t">${fac(b.owner)}<small>${r.name} · 세입 ${r.income}</small></div><div class="v">›</div></div>`+
       (b.name==='구지'?`<div class="sec">이 궤도의 전투</div><div class="row" data-act="battle"><svg width="22" height="22" viewBox="0 0 18 18">${shapeSVG(F.war,9,9,7.5)}</svg><div class="t">적벽대전<small>건안 13년 겨울 · 교전 임박</small></div><div class="v" style="color:var(--warn)">›</div></div>`:'');
     foot=(f?`<button class="btn" data-act="fam" data-fam="${f.id}">행성계 보기</button>`:'')+(r.id==='RGN-04'?battleBtn:`<button class="btn" data-act="sysup2" data-sys="${r.sys}">성역 정보</button>`);
+  }else if(s.type==='ext'){
+    const e=EXT.find(e=>e.id===s.id),gr=EXT_GROUP[e.g];
+    eye=`외부 세력 · ${gr.name}`;title=e.name;sub=`${e.sub} · 제어 불가`;
+    body=`<p class="p-desc">${e.desc}</p><div class="sec">접근 경로</div><div class="row"><div class="t">${e.via}</div></div>
+      <div class="sec">같은 무리</div><div class="tags">${EXT.filter(x=>x.g===e.g).map(x=>`<span class="tag" data-ext="${x.id}" style="cursor:pointer">${x.name}</span>`).join('')}</div>
+      <p class="note">외부 세력은 지휘·명령 대상이 아니며 위치만 표시한다. 이역 권역의 외곽 배치는 본편에서도 미작성(star-map.md §8)이라 시안용 개략 위치다. 근거: ${e.src}.</p>`;
+    foot=`<button class="btn" data-act="extfocus">여기로</button>`;
   }else if(s.type==='sqd'){
     const q=SQ.find(q=>q.id===s.id),o=F[q.f];
     eye=`전대 · ${{shu:'유비군',wu:'손권군',wei:'조조군'}[q.f]}`;title=q.name;sub=`${q.frm_name} · ${q.alive}/${q.total}척${q.flag?' · 기함 전대':''}${q.delay?` · 출발 대기 ${q.delay}초`:''}`;
@@ -906,7 +993,7 @@ function select(s){
   $('pEye').textContent=eye;$('pTitle').textContent=title;$('pSub').textContent=sub;$('pBody').innerHTML=body;$('pFoot').innerHTML=foot;$('pBody').scrollTop=0;
   if(s.type==='battle'&&(mode!=='o'&&mode!=='f'))goTo({x:BF.cx,y:BF.cy,s:cam.s},450);
   else if(s.type==='rgn'&&(mode!=='o'&&mode!=='f'))goTo({x:RGN[s.id].at[0],y:RGN[s.id].at[1],s:cam.s},450);
-  else if(s.type==='sqd'){}
+  else if(s.type==='sqd'||s.type==='ext'){}
   else if(s.type==='body')goTo({x:BODY[s.id].at[0],y:BODY[s.id].at[1],s:cam.s},400);
   else if(s.type==='sys'&&(mode!=='o'&&mode!=='f'))goTo({x:SYS[s.id].labelAt[0],y:SYS[s.id].labelAt[1],s:cam.s},450);
 }
@@ -914,12 +1001,14 @@ function closePanel(){sel=null;document.body.classList.remove('panel-open')}
 $('pClose').onclick=closePanel;
 $('panel').addEventListener('pointerdown',e=>e.stopPropagation());
 $('panel').addEventListener('click',e=>{
+  const xe=e.target.closest('[data-ext]');if(xe){select({type:'ext',id:xe.dataset.ext});return}
   const a=e.target.closest('[data-act]'),r=e.target.closest('[data-rgn]');
   if(r){const R=RGN[r.dataset.rgn];select({type:'rgn',id:R.id});if(mode==='g'||mode==='t')goTo({x:R.at[0],y:R.at[1],s:lvScale('s')});return}
   if(!a)return;const act=a.dataset.act;
   if(act==='sortie'){const t=$('toast');t.classList.add('on');setTimeout(()=>t.classList.remove('on'),1800)}
   if(act==='fam')goFam(DATA.families.find(f=>f.id===a.dataset.fam));
   if(act==='bf')goLevel('f');
+  if(act==='extfocus'&&sel&&sel.type==='ext'){const x=EXT.find(x=>x.id===sel.id);goTo({x:x.at[0],y:x.at[1],s:Math.min(cam.s,lvScale('t')*.9)})}
   if(act==='orbit')goFam(DATA.families.find(f=>f.name==='구지'));
   if(act==='sysup2')select({type:'sys',id:a.dataset.sys});
   if(act==='battle')select({type:'battle'});
@@ -929,6 +1018,9 @@ $('panel').addEventListener('click',e=>{
 
 // ===================================================================== 입력: 드래그 이동, 휠·두 손가락 확대(손가락 중심 기준)
 const ptrs=new Map();let pinch0=null,moved=false;
+// 바깥으로 갈수록 끌림이 약해지고, 손을 떼면 안쪽으로 돌아온다
+function rubber(v,lo,hi,d){const out=(v<lo&&d>0)||(v>hi&&d<0);if(!out)return 1;const over=v<lo?lo-v:v-hi;return 1/(1+over/1500)}
+function settle(){const x=Math.max(-21000,Math.min(39500,cam.x)),y=Math.max(-1500,Math.min(30000,cam.y));if(x!==cam.x||y!==cam.y)goTo({x,y,s:cam.s},400)}
 function zoomAt(px,py,f){
   const s1=Math.min(sMax(),Math.max(sMin(),cam.s*f));
   const [wx,wy]=s2w(px,py);cam.s=s1;const [nx,ny]=s2w(px,py);cam.x+=wx-nx;cam.y+=wy-ny;anim=null;
@@ -939,11 +1031,11 @@ cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);ptrs.set
   if(ptrs.size===2){const [a,b]=[...ptrs.values()];pinch0={d:Math.hypot(a.x-b.x,a.y-b.y),s:cam.s}}});
 cv.addEventListener('pointermove',e=>{
   if(!ptrs.has(e.pointerId))return;const p=ptrs.get(e.pointerId);const dx=e.clientX-p.x,dy=e.clientY-p.y;
-  if(ptrs.size===1){if(Math.abs(dx)+Math.abs(dy)>2)moved=true;cam.x-=dx/cam.s;cam.y-=dy/cam.s}
+  if(ptrs.size===1){if(Math.abs(dx)+Math.abs(dy)>2)moved=true;cam.x-=dx/cam.s*rubber(cam.x,-21000,39500,dx);cam.y-=dy/cam.s*rubber(cam.y,-1500,30000,dy);}
   ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
   if(ptrs.size===2&&pinch0){moved=true;const [a,b]=[...ptrs.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);zoomAt((a.x+b.x)/2,(a.y+b.y)/2,(pinch0.s*d/pinch0.d)/cam.s)}
 });
-const up=e=>{ptrs.delete(e.pointerId);if(ptrs.size<2)pinch0=null;
+const up=e=>{ptrs.delete(e.pointerId);if(ptrs.size<2)pinch0=null;if(moved&&ptrs.size===0)settle();
   if(!moved&&ptrs.size===0&&e.type==='pointerup'){
     // 두 번 탭: 그 지점을 기준으로 2배 확대
     const now=performance.now();
@@ -991,7 +1083,7 @@ function frame(t){
   if(t-hudT>250){hudT=t;const tt=Math.floor(CBT.t);$('cbtT').textContent=String(Math.floor(tt/60)).padStart(2,'0')+':'+String(tt%60).padStart(2,'0');
     $('cbtA').textContent=SQ.filter(q=>q.f!=='wei').reduce((a,q)=>a+q.alive,0)+'/'+SQ.filter(q=>q.f!=='wei').reduce((a,q)=>a+q.total,0);
     $('cbtW').textContent=SQ.filter(q=>q.f==='wei').reduce((a,q)=>a+q.alive,0)+'/'+SQ.filter(q=>q.f==='wei').reduce((a,q)=>a+q.total,0)}
-  drawBackground(t);drawTerritory();drawTerrain();drawRoutes(t);drawCityDots();drawBeacon(t);drawSystems(t);drawShips(t);drawVignette();
+  drawBackground(t);drawTerritory();drawTerrain();drawExternal(t);drawRoutes(t);drawCityDots();drawBeacon(t);drawSystems(t);drawShips(t);drawVignette();
   placeNodes();
   requestAnimationFrame(frame);
 }
