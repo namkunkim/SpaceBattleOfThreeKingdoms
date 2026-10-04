@@ -1,0 +1,122 @@
+[
+  {
+    "id": "SHP-01",
+    "name": "강습모함",
+    "ship_class": "모함",
+    "role": "함재기·강습정 운용",
+    "length_m": 1300,
+    "weapon_specs": ["주포 광선포 4문 (4광초)", "부포 20문", "근접 방어 16기", "미사일 24발 / 발사관 4", "단좌 기동병기 24기 · 무인 기동병기 48기 · 강습정 16정"],
+    "phase_coefficients": {
+      "contact": 0.7,
+      "barrage": 0.6,
+      "engagement": 0.8,
+      "assault": 2.0,
+      "resolution": 1.0
+    }
+  },
+  {
+    "id": "SHP-02",
+    "name": "공성함",
+    "ship_class": "공성함",
+    "role": "궤도 요새·방어망 관통",
+    "length_m": 1050,
+    "weapon_specs": ["관통포 4문 (6광초)", "부포 12문", "근접 방어 12기", "관통탄 80발", "강하정 8정"],
+    "phase_coefficients": {
+      "contact": 0.5,
+      "barrage": 1.2,
+      "engagement": 0.6,
+      "assault": 0.8,
+      "resolution": 0.5
+    }
+  },
+  {
+    "id": "SHP-03",
+    "name": "포격함",
+    "ship_class": "주력함",
+    "role": "장거리 포화",
+    "length_m": 900,
+    "weapon_specs": ["장포신 광선포 8문 (6광초)", "부포 8문", "근접 방어 12기", "미사일 160발 / 발사관 24"],
+    "phase_coefficients": {
+      "contact": 0.9,
+      "barrage": 1.8,
+      "engagement": 0.7,
+      "assault": 0.5,
+      "resolution": 0.8
+    }
+  },
+  {
+    "id": "SHP-04",
+    "name": "전열함",
+    "ship_class": "주력함",
+    "role": "정면 교전",
+    "length_m": 750,
+    "weapon_specs": ["주포 광선포 16문 (4광초)", "부포 24문", "근접 방어 12기", "미사일 48발 / 발사관 8"],
+    "phase_coefficients": {
+      "contact": 0.8,
+      "barrage": 1.0,
+      "engagement": 1.6,
+      "assault": 0.9,
+      "resolution": 1.1
+    }
+  },
+  {
+    "id": "SHP-05",
+    "name": "보급함",
+    "ship_class": "지원함",
+    "role": "수리·보급",
+    "length_m": 800,
+    "weapon_specs": ["근접 방어 8기", "미사일 비축 600발", "관통탄 비축 200발", "기동병기 예비 40기", "수리 도크 2기"],
+    "phase_coefficients": {
+      "contact": 0.4,
+      "barrage": 0.4,
+      "engagement": 0.5,
+      "assault": 0.4,
+      "resolution": null
+    }
+  },
+  {
+    "id": "SHP-06",
+    "name": "전자전함",
+    "ship_class": "초계함",
+    "role": "탐지·교란",
+    "length_m": 400,
+    "weapon_specs": ["부포 8문", "근접 방어 6기", "교란탄 12발 (10광초)", "무인 정찰기 8기"],
+    "phase_coefficients": {
+      "contact": 1.9,
+      "barrage": 1.1,
+      "engagement": 0.9,
+      "assault": 0.7,
+      "resolution": 0.6
+    }
+  },
+  {
+    "id": "SHP-07",
+    "name": "요격함",
+    "ship_class": "초계함",
+    "role": "고속 요격·호위",
+    "length_m": 480,
+    "weapon_specs": ["고속 요격포 8문 (4광초)", "근접 방어 16기", "단거리 미사일 32발"],
+    "phase_coefficients": {
+      "contact": 1.5,
+      "barrage": 0.8,
+      "engagement": 1.4,
+      "assault": 1.3,
+      "resolution": 0.9
+    }
+  },
+  {
+    "id": "SHP-08",
+    "name": "고속정",
+    "ship_class": "소형정",
+    "role": "단거리 정찰·연락·기습",
+    "length_m": 180,
+    "weapon_specs": ["임무 장비 1종 탑재", "요격·뇌격·정찰·구조 중 선택", "제한 연료·탄약 운용"],
+    "phase_coefficients": {
+      "contact": 1.7,
+      "barrage": 0.5,
+      "engagement": 0.8,
+      "assault": 1.5,
+      "resolution": 0.4
+    }
+  }
+]
