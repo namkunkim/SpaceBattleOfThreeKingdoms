@@ -19,13 +19,15 @@ static func def(name: String, x: float, y: float, comp: Array, flag := false, fo
 	return {"name": name, "role": name, "ships": n, "lv": 1, "x": x, "y": y, "flag": flag, "p": 0, "wait": 0,
 		"composition": c, "formation_id": form, "command": cmd, "start_morale_bp": 10000}
 
-static func sim(ally: Array, foe: Array, seed_id := 1, mode := "") -> BattleSim:
+static func sim(ally: Array, foe: Array, seed_id := 1, mode := "", tune := Callable()) -> BattleSim:
 	var rules: Dictionary = PocSetup.profile().rules
 	rules.world_w = 1600.0
 	rules.world_h = 900.0
 	var cb := combat()
 	if mode != "":
 		cb.damage_mode = mode
+	if tune.is_valid():
+		tune.call(cb)
 	var s := BattleSim.new(seed_id, BattleRules.TICK_HZ, {
 		"profile_id": "salvo-test", "rules": rules, "ally": ally, "foe": foe, "reinf": [], "combat": cb})
 	s.st.ai_timer = 1 << 40

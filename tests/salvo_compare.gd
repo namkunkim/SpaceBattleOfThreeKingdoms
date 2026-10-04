@@ -4,6 +4,7 @@ extends SceneTree
 # 조건 A: 통제된 소 대 대 교전(함종 구성이 같은 12척 대 32척). 조건 B: 적벽 시나리오(표준 난이도), 플레이어 전대가 5초마다 가까운 적을 공격.
 #
 # 실행: godot --headless --path . -s tests/salvo_compare.gd -- --runs 100 [--scen A,B] [--out user://salvo_compare.json]
+#        [--period 15] [--dmg-scale 0.25]   주기(초)와 기본 피해 배율. M4에서 (a) 주기만 줄임 (b) 주기와 피해를 같은 비율로 줄임을 잴 때 쓴다(P12)
 
 const MAX_S := 1800.0
 const MODES := ["fixed", "sqrt", "linear"]
@@ -16,6 +17,16 @@ func _arg(name: String, def: String) -> String:
 	var i := a.find(name)
 	return a[i + 1] if i >= 0 and i + 1 < a.size() else def
 
+# 주기·피해 변형(기본은 JSON 그대로)
+func _tune(cb: Dictionary) -> void:
+	var period := _arg("--period", "")
+	if period != "":
+		cb.period_s = float(period)
+	var scale := float(_arg("--dmg-scale", "1.0"))
+	if scale != 1.0:
+		for cat in cb.weapons:
+			cb.weapons[cat].base_damage = float(cb.weapons[cat].base_damage) * scale
+
 func _mix(n: int) -> Array:
 	# 포격 25%, 전열 50%, 요격 17%, 보급 8% 정도의 비율
 	var art := maxi(1, n / 4)
@@ -25,7 +36,7 @@ func _mix(n: int) -> Array:
 
 func _play_a(seed_id: int, mode: String) -> Dictionary:
 	var F := SalvoFixture
-	var s := F.sim([F.def("소", 300, 450, _mix(12), true)], [F.def("대", 1300, 450, _mix(32))], seed_id, mode)
+	var s := F.sim([F.def("소", 300, 450, _mix(12), true)], [F.def("대", 1300, 450, _mix(32))], seed_id, mode, _tune)
 	var f0: FleetState = s.st.fleets[0]
 	var f1: FleetState = s.st.fleets[1]
 	f0.target_id = f1.id
@@ -36,6 +47,7 @@ func _play_a(seed_id: int, mode: String) -> Dictionary:
 func _play_b(seed_id: int, mode: String) -> Dictionary:
 	var p := ScenarioProfile.load_profile("res://data/profiles/red_cliffs_rt.json", "표준")
 	p.combat.damage_mode = mode
+	_tune(p.combat)
 	var s := BattleSim.new(seed_id, BattleRules.TICK_HZ, p)
 	var max_tick := int(MAX_S * s.st.hz)
 	while not s.st.over and s.st.tick < max_tick:
