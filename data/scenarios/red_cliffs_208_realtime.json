@@ -253,18 +253,24 @@
    "commander": {
     "id": "CHR-0128",
     "name": "유비",
-    "command": 82
+    "command": 82,
+    "might": 73,
+    "intellect": 76
    },
    "vice_commander": {
     "id": "CHR-0130",
     "name": "장비",
-    "command": 88
+    "command": 88,
+    "might": 98,
+    "intellect": 45
    },
    "staff": [
     {
      "id": "CHR-0134",
      "name": "제갈량",
-     "command": 92
+     "command": 92,
+     "might": 38,
+     "intellect": 100
     }
    ],
    "flagship": true,
@@ -298,7 +304,9 @@
    "commander": {
     "id": "CHR-0107",
     "name": "관우",
-    "command": 95
+    "command": 95,
+    "might": 97,
+    "intellect": 75
    },
    "vice_commander": null,
    "staff": [],
@@ -333,7 +341,9 @@
    "commander": {
     "id": "CHR-0325",
     "name": "유기",
-    "command": 48
+    "command": 48,
+    "might": 38,
+    "intellect": 30
    },
    "vice_commander": null,
    "staff": [],
@@ -368,7 +378,9 @@
    "commander": {
     "id": "CHR-0136",
     "name": "조운",
-    "command": 91
+    "command": 91,
+    "might": 96,
+    "intellect": 76
    },
    "vice_commander": null,
    "staff": [],
@@ -400,18 +412,24 @@
    "commander": {
     "id": "CHR-0211",
     "name": "주유",
-    "command": 96
+    "command": 96,
+    "might": 72,
+    "intellect": 95
    },
    "vice_commander": {
     "id": "CHR-0185",
     "name": "감녕",
-    "command": 82
+    "command": 82,
+    "might": 96,
+    "intellect": 70
    },
    "staff": [
     {
      "id": "CHR-0186",
      "name": "노숙",
-     "command": 82
+     "command": 82,
+     "might": 40,
+     "intellect": 92
     }
    ],
    "flagship": true,
@@ -453,18 +471,24 @@
    "commander": {
     "id": "CHR-0207",
     "name": "정보",
-    "command": 84
+    "command": 84,
+    "might": 82,
+    "intellect": 70
    },
    "vice_commander": {
     "id": "CHR-0212",
     "name": "주태",
-    "command": 78
+    "command": 78,
+    "might": 90,
+    "intellect": 56
    },
    "staff": [
     {
      "id": "CHR-0199",
      "name": "여몽",
-     "command": 92
+     "command": 92,
+     "might": 80,
+     "intellect": 94
     }
    ],
    "flagship": false,
@@ -502,18 +526,24 @@
    "commander": {
     "id": "CHR-0217",
     "name": "황개",
-    "command": 82
+    "command": 82,
+    "might": 85,
+    "intellect": 68
    },
    "vice_commander": {
     "id": "CHR-0216",
     "name": "한당",
-    "command": 80
+    "command": 80,
+    "might": 80,
+    "intellect": 62
    },
    "staff": [
     {
      "id": "CHR-0187",
      "name": "능통",
-     "command": 84
+     "command": 84,
+     "might": 88,
+     "intellect": 64
     }
    ],
    "flagship": false,
@@ -548,23 +578,31 @@
    "commander": {
     "id": "CHR-0034",
     "name": "조조",
-    "command": 96
+    "command": 96,
+    "might": 72,
+    "intellect": 91
    },
    "vice_commander": {
     "id": "CHR-0047",
     "name": "허저",
-    "command": 70
+    "command": 70,
+    "might": 96,
+    "intellect": 32
    },
    "staff": [
     {
      "id": "CHR-0031",
      "name": "정욱",
-     "command": 78
+     "command": 78,
+     "might": 45,
+     "intellect": 89
     },
     {
      "id": "CHR-0001",
      "name": "가후",
-     "command": 70
+     "command": 70,
+     "might": 32,
+     "intellect": 97
     }
    ],
    "flagship": true,
@@ -618,7 +656,9 @@
    "commander": {
     "id": "CHR-0033",
     "name": "조인",
-    "command": 89
+    "command": 89,
+    "might": 80,
+    "intellect": 70
    },
    "vice_commander": null,
    "staff": [],
@@ -660,12 +700,16 @@
    "commander": {
     "id": "CHR-0017",
     "name": "서황",
-    "command": 90
+    "command": 90,
+    "might": 89,
+    "intellect": 72
    },
    "vice_commander": {
     "id": "CHR-0009",
     "name": "만총",
-    "command": 78
+    "command": 78,
+    "might": 60,
+    "intellect": 85
    },
    "staff": [],
    "flagship": false,
@@ -706,7 +750,9 @@
    "commander": {
     "id": "CHR-0010",
     "name": "문빙",
-    "command": 82
+    "command": 82,
+    "might": 70,
+    "intellect": 68
    },
    "vice_commander": null,
    "staff": [],
@@ -748,12 +794,16 @@
    "commander": {
     "id": "CHR-0330",
     "name": "채모",
-    "command": 53
+    "command": 53,
+    "might": 28,
+    "intellect": 25
    },
    "vice_commander": {
     "id": "CHR-0329",
     "name": "장윤",
-    "command": 77
+    "command": 77,
+    "might": 39,
+    "intellect": 17
    },
    "staff": [],
    "flagship": false,
@@ -790,7 +840,9 @@
    "commander": {
     "id": "CHR-0084",
     "name": "조순",
-    "command": 72
+    "command": 72,
+    "might": 56,
+    "intellect": 16
    },
    "vice_commander": null,
    "staff": [],
@@ -825,7 +877,9 @@
    "commander": {
     "id": "CHR-0036",
     "name": "조홍",
-    "command": 76
+    "command": 76,
+    "might": 79,
+    "intellect": 45
    },
    "vice_commander": null,
    "staff": [],

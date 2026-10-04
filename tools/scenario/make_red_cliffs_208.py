@@ -20,7 +20,8 @@ def C(t, n, eq=None):
 
 def P(cid):
     c = CHAR[cid]
-    return {"id": cid, "name": c["name"], "command": c["stats"]["통솔"]}
+    st = c["stats"]
+    return {"id": cid, "name": c["name"], "command": st["통솔"], "might": st["무력"], "intellect": st["지력"]}
 
 
 def sq(id, fac, name, cmd, vice, staff, flag, pos, frm, comp, basis, **kw):
