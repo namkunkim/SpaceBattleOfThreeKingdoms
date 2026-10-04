@@ -93,6 +93,7 @@ M3 리뷰(2026-10-04): `REVIEW-M3.md`. 수용. 후속은 방향 배분 잔여 �
 
 ## 5. 구현이 있어야 닫히는 설계 문제
 
+- [ ] **(대기열) 적벽 작전 지도(은하맵 홈) Godot 구현**: 시안 `docs/ui/mockup-galaxy-map-v1.html`, 설계 `docs/ui/GALAXY-MAP-REDESIGN.md` §5. 타이틀 → 작전 지도 → 브리핑. 본편 `galaxy-map.json`에서 적벽 전역 스냅숏을 뽑아 쓴다. 강릉 소유(위)는 컨셉 추정이라 확인한다
 - [ ] **(대기열) 전투 효과음 연결**: `tools/gen_sfx.py`가 만든 `assets/audio/battle/` 19종(목록은 그 폴더 `README.md`). `salvo`·`volley`·`ship_kill`·`fleet_destroyed`는 기존 훅이 바로 쓴다. 나머지(레이저·미사일·함재기·엔진·보호막·화공)는 `ui_sound.gd` EVENTS에 넣고 코어 사건에 붙인다. `*_loop`는 원샷 훅이 아니라 따로 재생기가 필요하다
 - [ ] **(대기열) M7 AI 대 AI 1000시드 기준선**: 난이도 입문·표준·상급(극한은 40시드 4.8%로 목표 안). `tools/m7/baseline.sh 표준 1000 8`(약 2시간), 상급·극한은 판당 훨씬 오래 걸려 밤새 돌린다. 지금은 40~80시드 값만 있다(`M7-NOTES` §3). 표준 조조 승률 목표 60%(지금 35%)·길이 15~18분(지금 14분)·입문 무명령 50~70%(지금 90%) 레버: 조조 시작 사기, `range_band_hold`, 위임 아군 `engage_trigger_r`, 입문 규모
 재측정 목표·순서·레버·사람 플레이 테스트는 `BALANCE-PLAN-M4.md`에 정리했다(2026-10-04).
