@@ -5,7 +5,8 @@ extends RefCounted
 # 편성, 난이도 적용(difficulty_policy), 투입 시각(deploy_delay_s), realtime_rules는 모두 데이터에서 읽는다.
 # 순수 변환이다. 파일은 ProfileLoader로만 읽는다.
 #
-# 만든 프로필: {profile_id, difficulty, rules, ally, foe, reinf, scenario: {...}}
+# 만든 프로필: {profile_id, difficulty, rules, ally, foe, reinf, combat, scenario: {...}}
+#  - combat: 사격·피해 규칙 사전(data/profiles/combat_m3.json). 프로필 정의에 combat_rules_path가 있을 때만 채워진다(M3)
 #  - rules: base 프로필의 규칙 수치에 rule_overrides와 전장 크기(battlefield_bounds)를 덮은 것
 #  - ally/foe: 전대 정의 사전(PocSetup과 같은 키 + squadron_id, morale_group, start_morale_bp, formation_id, composition)
 #  - scenario: {difficulty_policy, difficulty_profile, realtime_rules, escape_points, ...}. RuleSet이 읽는다
@@ -19,9 +20,14 @@ static func load_profile(def_path: String, difficulty := "") -> Dictionary:
 	var base := ProfileLoader.read_json(def.base_profile)
 	if scn.is_empty() or base.is_empty():
 		return {}
-	return build(def, scn, base, difficulty if difficulty != "" else def.default_difficulty)
+	var combat := {}
+	if def.has("combat_rules_path"):
+		combat = ProfileLoader.read_json(def.combat_rules_path).get("combat", {})
+		if combat.is_empty():
+			return {}
+	return build(def, scn, base, difficulty if difficulty != "" else def.default_difficulty, combat)
 
-static func build(def: Dictionary, scn: Dictionary, base: Dictionary, difficulty: String) -> Dictionary:
+static func build(def: Dictionary, scn: Dictionary, base: Dictionary, difficulty: String, combat := {}) -> Dictionary:
 	var order: Array = scn.difficulty_order
 	var rank := order.find(difficulty)
 	if rank < 0:
@@ -60,14 +66,17 @@ static func build(def: Dictionary, scn: Dictionary, base: Dictionary, difficulty
 				# 함종별 척 수 × count_factor를 half-up 정수 반올림(정수 연산), 원래 1척 이상이면 최소 1척
 				n = maxi(1, (n * factor_milli + BattleRules.MILLI / 2) / BattleRules.MILLI) if n >= 1 else 0
 			ships += n
-			comp.append({"ship_type_id": c.ship_type_id, "count": n})
+			var entry := {"ship_type_id": c.ship_type_id, "count": n}
+			if c.has("mission_equipment_id"):
+				entry.mission_equipment_id = c.mission_equipment_id
+			comp.append(entry)
 		var d := {
 			"name": sq.commander.name, "role": sq.name, "ships": ships, "lv": 1,
 			"x": sq.initial_position[0], "y": sq.initial_position[1],
 			"flag": (sq.id == player_flag) if side == 0 else bool(sq.get("flagship", false)),
 			"wait": sq.get("deploy_delay_s", 0), "p": 0,
 			"squadron_id": sq.id, "faction_id": sq.faction_id, "commander_id": sq.commander.id,
-			"formation_id": sq.formation_id, "composition": comp,
+			"formation_id": sq.formation_id, "composition": comp, "command": int(sq.commander.get("command", 0)),
 		}
 		if is_cao:
 			d.morale_group = sq.morale_group
@@ -82,6 +91,7 @@ static func build(def: Dictionary, scn: Dictionary, base: Dictionary, difficulty
 		"difficulty": difficulty,
 		"rules": rules,
 		"ally": ally, "foe": foe, "reinf": [],
+		"combat": combat,
 		"scenario": {
 			"scenario_id": scn.scenario_id,
 			"difficulty_policy": scn.difficulty_policy,

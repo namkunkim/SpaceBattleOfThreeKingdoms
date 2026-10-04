@@ -46,7 +46,7 @@ func think(sim: BattleSim) -> void:
 		if f.ships < f.max_ships * sim.R.ai_defend_share and not f.defense:
 			_do(sim, f, "def_on")
 		var t := st.live_target(f)
-		if t:
+		if t and sim.salvo == null:   # 미사일·함재기는 POC 규칙. salvo 규칙은 범주별 주기로 스스로 쏜다
 			var d := f.pos.distance_to(t.pos)
 			if f.missile_cd <= 0 and st.ecp >= sim.R.missile_cost_bp and d <= sim.R.missile_r and sim.rng.bp(st.tick, eid, 2) < sim.R.ai_missile_bp:
 				_do(sim, f, "missile", t.id)

@@ -10,10 +10,13 @@ var world := Vector2.ZERO
 # 시나리오 데이터(시나리오 프로필일 때만 채워진다): 난이도 프로필, difficulty_policy, realtime_rules 등.
 # realtime_rules의 status "proposed" 값도 그대로 들어 있다. 규칙 동작은 M3 이후 단계가 이 값을 읽는다.
 var scenario := {}
+# 사격·피해 규칙(M3, data/profiles/combat_m3.json). 비어 있으면 POC 규칙이다. 코어는 BattleSim.salvo.C로 읽는다.
+var c := {}
 
 static func from_profile(profile: Dictionary) -> RuleSet:
 	var rs := from_dict(profile.rules)
 	rs.scenario = profile.get("scenario", {})
+	rs.c = profile.get("combat", {})
 	return rs
 
 # realtime_rules 안의 값을 "a.b.c" 경로로 읽는다. 없으면 fallback.

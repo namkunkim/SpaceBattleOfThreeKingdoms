@@ -53,5 +53,14 @@ static func squadron(st: BattleState, f: FleetState) -> Dictionary:
 		"range": f.range_r,
 		"form": f.form,
 		"control": "",   # 직접·위임(Q20). M7에서 채운다
-		"counts": {},    # 함종 × 손상 단계. M2·M3에서 채운다
+		"counts": f.stages.duplicate(true),   # 함종 × 손상 단계 [무손상, 경파, 중파, 대파, 격침]. POC 규칙이면 빈 사전
+		"hull": f.hull, "max_hull": f.max_hull,
+		"energy_milli": f.energy_m, "heat_milli": f.heat_m, "ammo": f.ammo.duplicate(), "suppressed": f.supp.duplicate(),
+		"next_fire_s": _next_fire_s(f, hz),
 	}
+
+static func _next_fire_s(f: FleetState, hz: float) -> Dictionary:
+	var out := {}
+	for cat in f.next_fire:
+		out[cat] = f.next_fire[cat] / hz
+	return out

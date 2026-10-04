@@ -15,6 +15,15 @@ static func of(st: BattleState) -> String:
 			q.call(f.pos.x), q.call(f.pos.y), q.call(f.heading),
 			f.target_id, int(f.has_move), q.call(f.move_to.x), q.call(f.move_to.y),
 			f.missile_cd, f.fighter_cd, f.charge, f.flank_msg, int(f.defense), f.fire_id, int(f.in_cmd), f.wait])
+	for f in st.fleets:
+		if f.max_hull > 0:
+			var sg := PackedStringArray()
+			for t in f.stages:
+				sg.append(",".join(PackedStringArray((f.stages[t] as Array).map(func(n): return str(n)))))
+			var nf := PackedStringArray()
+			for cat in f.next_fire:
+				nf.append("%d.%d" % [f.next_fire[cat], f.ammo[cat]])
+			parts.append("h%d:%d,%d,%d,%d,%d,%d,%d|%s|%s" % [f.id, f.hull, f.lost_ships, f.loss_total, f.loss_exposed, f.energy_m, f.heat_m, f.sorties_m, ";".join(sg), ",".join(nf)])
 	for m in st.missiles:
 		parts.append("m%d:%d,%d,%d,%d,%d,%d" % [m.id, q.call(m.pos.x), q.call(m.pos.y), m.target_id, m.dmg, q.call(m.v), m.age])
 	for s in st.swarms:

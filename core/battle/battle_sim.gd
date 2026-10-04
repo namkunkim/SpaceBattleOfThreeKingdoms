@@ -22,6 +22,7 @@ var _ai := PocEnemyAi.new()
 var T := {}
 var sub_ms := 0              # 틱마다 정해진다(_tick)
 var _reinf_def: Array = []
+var salvo: SalvoCombat = null   # M3 사격·피해 규칙. combat 사전이 있는 프로필에서만 켜진다(없으면 POC 규칙)
 
 # profile: 프로필 사전({profile_id, rules, ally, foe, reinf}). 비우면 POC 프로필(기준선 동등).
 func _init(seed_id: int = 0, hz: int = BattleRules.TICK_HZ, profile: Dictionary = {}) -> void:
@@ -44,10 +45,14 @@ func _init(seed_id: int = 0, hz: int = BattleRules.TICK_HZ, profile: Dictionary 
 	T.CP_REGEN = BattleRules.ticks(R.cp_regen_s, hz)
 	T.ECP_REGEN = BattleRules.ticks(R.ecp_regen_s, hz)
 	_reinf_def = profile.get("reinf", [])
+	if not profile.get("combat", {}).is_empty():
+		salvo = SalvoCombat.new(self, profile.combat)
 	for d in profile.ally:
 		_spawn(d, 0)
 	for d in profile.foe:
 		_spawn(d, 1)
+	if salvo:
+		salvo.finish_setup()
 
 # ============================================================ 공개 API
 func queue(cmd: Dictionary) -> void:
@@ -145,6 +150,8 @@ func _spawn(d: Dictionary, side: int) -> FleetState:
 	st.form_counter += 1
 	f.form = BattleRules.formation_offsets(f.form_id % BattleRules.FORM_COUNT, R.ship_gap * (1.0 if f.form_id < BattleRules.FORM_COUNT else R.formation_loose_mul))
 	st.fleets.append(f)
+	if salvo:
+		salvo.init_fleet(f, d)
 	emit("spawn", f.id)
 	return f
 
@@ -174,6 +181,10 @@ func apply_dmg(src: FleetState, tgt: FleetState, amt: float) -> void:
 			src.xp -= need
 			src.lv += 1
 			emit("level_up", src.id, -1, src.pos)
+	book_loss(src, tgt, a)
+
+# 척 수(1/1000척)가 a만큼 줄어든 것을 기록한다: 누계, 표시 척 수, 손실 사건, 격침. POC 피해와 salvo 피해가 함께 쓴다.
+func book_loss(src: FleetState, tgt: FleetState, a: int) -> void:
 	if tgt.side == 1:
 		st.killed += a
 	else:
@@ -288,9 +299,19 @@ func apply(c: Dictionary) -> void:
 			for f in s:
 				f.defense = true
 			emit("say", L.id, -1, L.pos, "ai_def")
-		"missile", "fighter":
-			_cmd_weapon(c, s, L, kind == "missile")
+		"missile", "fighter", "volley":
+			if salvo:
+				for f in s:
+					salvo.pull(f)   # 일제사격 지금: 다음 주기를 당긴다(§4.3). 비용은 자원 규칙이 받는다
+				emit("say", L.id, -1, L.pos, "missile" if side == 0 else "ai_missile")
+			elif kind == "volley":
+				_reject(L, "unknown_command", side)
+			else:
+				_cmd_weapon(c, s, L, kind == "missile")
 		"charge":
+			if salvo:
+				_cmd_charge_salvo(s, L, side)
+				return
 			if _cp(side) < R.charge_cost_bp:
 				_reject(L, "cp_charge", side)
 				return
@@ -373,6 +394,30 @@ func apply(c: Dictionary) -> void:
 				f.defense = bool(o[3])
 		_:
 			_reject(L, "unknown_command", side)
+
+# 돌격(Q28·Q42): 열 40%와 사기 안정 조건. CP는 쓰지 않는다. 조건을 채우지 못한 전대는 빠지고, 모두 못 채우면 거부한다.
+func _cmd_charge_salvo(s: Array[FleetState], L: FleetState, side: int) -> void:
+	var ok: Array[FleetState] = []
+	var why := ""
+	for f in s:
+		var w := salvo.charge_block(f)
+		if w == "":
+			ok.append(f)
+		else:
+			why = w
+	if ok.is_empty():
+		_reject(L, why, side)
+		return
+	for f in ok:
+		salvo.charge_pay(f)
+		f.charge = T.CHARGE_S
+		f.defense = false
+		if st.live_target(f) == null:
+			var t := st.nearest_foe(f, R.charge_seek_r)
+			if t:
+				f.target_id = t.id
+	emit("say", L.id, -1, L.pos, "charge")
+	emit("charge", L.id)
 
 func _cmd_weapon(c: Dictionary, s: Array[FleetState], L: FleetState, missile: bool) -> void:
 	var side := int(c.side)
@@ -463,6 +508,8 @@ func _substep(first: bool) -> void:
 		st.ai_timer += R.ai_period_ms
 		_ai.think(self)
 	_fleet_phase(first)
+	if salvo and first:
+		salvo.step()
 	_separate()
 	_move_missiles()
 	_move_swarms()
@@ -493,8 +540,11 @@ func _fleet_phase(timers: bool) -> void:
 			f.target_id = -1
 		var has_dest := false
 		var dest := Vector2.ZERO
+		var chase_r: float = f.range_r * R.chase_range_share
+		if salvo and f.charge > 0:
+			chase_r = float(salvo.C.bands.assault_r)   # 돌격은 강습 거리까지 붙는다
 		if tgt:
-			if f.pos.distance_to(tgt.pos) > f.range_r * R.chase_range_share:
+			if f.pos.distance_to(tgt.pos) > chase_r:
 				has_dest = true
 				dest = tgt.pos
 		elif f.has_move:
@@ -504,6 +554,8 @@ func _fleet_phase(timers: bool) -> void:
 				has_dest = true
 				dest = f.move_to
 		var spd := rs.move_speed(f.spd, f.defense, f.charge > 0)
+		if salvo:
+			spd = f.speed * (R.defense_speed_mul if f.defense else 1.0) * (R.charge_speed_mul if f.charge > 0 else 1.0)
 		if has_dest:
 			var a := atan2(dest.y - f.pos.y, dest.x - f.pos.x)
 			_turn(f, a)
@@ -519,6 +571,8 @@ func _fleet_phase(timers: bool) -> void:
 		if ft:
 			if not has_dest:
 				_turn(f, atan2(ft.pos.y - f.pos.y, ft.pos.x - f.pos.x))
+			if salvo:
+				continue   # 사격은 salvo.step()이 범주별 주기로 한다
 			var fm := rs.flank_mul(f.pos, ft.pos, ft.heading)
 			apply_dmg(f, ft, f.ships * R.fire_share * rs.power(f.lv, f.charge > 0, f.in_cmd, f.defense) * fm * dt)
 			if fm > 1.0 and f.flank_msg <= 0:
