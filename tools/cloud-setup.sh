@@ -3,7 +3,7 @@
 # claude.ai/code 환경 설정의 setup script에 이 파일 내용을 붙여넣는다.
 # 네트워크 허용: github.com, dl.google.com, repo1.maven.org, services.gradle.org
 # 빌드:  godot --headless --export-debug "Android 태블릿" out/android/SpaceBattleOfThreeKingdoms.apk
-# 테스트: godot --headless --script tests/core_rules.gd
+# 테스트: godot --headless --import (최초 1회, class_name 캐시 생성) 후 godot --headless --script tests/core_rules.gd
 set -euo pipefail
 GODOT_VER=4.7.2-stable
 ANDROID_HOME=$HOME/android-sdk
