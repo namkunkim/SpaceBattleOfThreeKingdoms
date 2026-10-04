@@ -24,6 +24,8 @@ func _init(s: BattleSim, combat: Dictionary) -> void:
 func init_fleet(f: FleetState, d: Dictionary) -> void:
 	f.formation_id = d.get("formation_id", C.default_formation)
 	f.cmd_stat = int(d.get("command", 0))
+	# 지휘관 능력치(거리대별 보정, §4.3). 데이터에 없는 능력치는 통솔로 대신한다
+	f.stats = {"command": f.cmd_stat, "might": int(d.get("might", f.cmd_stat)), "intellect": int(d.get("intellect", f.cmd_stat))}
 	f.morale_bp = int(d.get("start_morale_bp", 0))
 	if f.morale_bp <= 0:
 		f.morale_bp = BattleRules.BP
@@ -38,6 +40,7 @@ func init_fleet(f: FleetState, d: Dictionary) -> void:
 	for t in f.comp0:
 		f.stages[t] = [f.comp0[t], 0, 0, 0, 0]
 		f.max_hull += f.comp0[t] * int(C.ship_types[t].cost) * int(C.hull.points_per_cost)
+		f.cost0 += f.comp0[t] * int(C.ship_types[t].cost)
 	f.hull = f.max_hull
 	f.ships = total * BattleRules.MILLI
 	f.max_ships = f.ships
@@ -182,9 +185,14 @@ func platform_mul(n: float) -> float:
 			return n
 	return sqrt(n)
 
-func commander_mul(f: FleetState) -> float:
+# 지휘관 보정(§4.3): 거리대마다 쓰는 능력치가 다르다. 둘 이상이면 평균
+func commander_mul(f: FleetState, bd: String) -> float:
 	var c: Dictionary = C.damage.commander
-	return 1.0 + float(c.span) * clampf((float(f.cmd_stat) - float(c.pivot)) / float(c.spread), -1.0, 1.0)
+	var names: Array = c.stat_by_band[bd]
+	var sum := 0.0
+	for n in names:
+		sum += float(f.stats[n])
+	return 1.0 + float(c.span) * clampf((sum / names.size() - float(c.pivot)) / float(c.spread), -1.0, 1.0)
 
 func morale_mul(f: FleetState) -> float:
 	return float(C.damage.morale_base) + float(f.morale_bp) / float(C.damage.morale_div_bp)
@@ -193,9 +201,9 @@ func formation_mul(f: FleetState) -> float:
 	return float(C.damage.formation_damage_mul.get(_form_id(f), 1.0))
 
 # 피해 [§4.3]: 범주 기본 피해 × 플랫폼 배율 × 함종 거리대 계수 × 지휘관 × 사기 × 진형 × 지형 (× 돌격, 방어태세)
-func damage_of(f: FleetState, cat: String, n_total: float, coef: float) -> float:
+func damage_of(f: FleetState, cat: String, n_total: float, coef: float, bd: String) -> float:
 	var d := float(C.weapons[cat].base_damage) * platform_mul(n_total) * coef
-	d *= commander_mul(f) * morale_mul(f) * formation_mul(f) * float(C.damage.terrain_mul)
+	d *= commander_mul(f, bd) * morale_mul(f) * formation_mul(f) * float(C.damage.terrain_mul)
 	if f.charge > 0:
 		d *= sim.R.charge_power_mul
 	if f.defense:
@@ -318,6 +326,8 @@ func step() -> void:
 		if f.dead or f.max_hull == 0:
 			continue
 		_recover(f)
+		if f.mstate == "retreat":
+			continue   # 퇴각 중인 전대는 공격하지 못한다(§4.6)
 		for cat in C.categories:
 			if st.tick < f.next_fire[cat]:
 				continue
@@ -345,11 +355,19 @@ func step() -> void:
 				continue
 			_set_supp(f, cat, "")
 			_consume(f, cat, uses_sortie)
-			f.next_fire[cat] = st.tick + BattleRules.ticks(float(C.period_s), st.hz)
+			f.next_fire[cat] = st.tick + BattleRules.ticks(float(C.period_s), st.hz) + _stagger(f, cat)
 			shots.append(_plan_shot(f, cat, pick.tgt, q))
 	# 같은 틱의 피해는 위에서 모두 피해 전 스냅숏으로 계산했다. 이제 표적별로 적용한다.
 	for s in shots:
 		_resolve(s)
+
+# 첫 일제 뒤 다음 주기에 0~N초를 더해 같은 진영 전대들의 일제가 한 틱에 몰리지 않게 한다(M3 리뷰 후보, 0이면 끔)
+func _stagger(f: FleetState, cat: String) -> int:
+	var n := BattleRules.ticks(float(C.first_volley_stagger_s.value), sim.st.hz)
+	if n <= 0 or f.fired.has(cat):
+		return 0
+	f.fired[cat] = true
+	return sim.rng.u32(sim.st.tick, f.id, C.categories.find(cat)) % (n + 1)
 
 func _set_supp(f: FleetState, cat: String, why: String) -> void:
 	if f.supp[cat] != why:
@@ -360,16 +378,18 @@ func _set_supp(f: FleetState, cat: String, why: String) -> void:
 func _plan_shot(f: FleetState, cat: String, tgt: FleetState, q: Array) -> Dictionary:
 	var dist := f.pos.distance_to(tgt.pos)
 	var bd := band(f, dist)
+	# 퇴각 상태 전대가 관련된 사격은 결착 거리대다(§4.2). 손상 단계 비율(heavy_share)은 실제 거리대를 쓴다
+	var wband := "resolution" if tgt.mstate == "retreat" else bd
 	var n_total := 0.0
 	var wsum := 0.0
 	for p in q:
 		n_total += p.n
-		wsum += p.n * float(C.ship_types[p.type].phase[bd])
+		wsum += p.n * float(C.ship_types[p.type].phase[wband])
 	var coef := wsum / n_total
 	var eid := sim.st.new_event_id()
 	var acc := hit_bp(f, tgt, cat)
-	return {"src": f, "tgt": tgt, "cat": cat, "band": bd, "sector": sector(f.pos, tgt), "acc": acc,
-		"dmg": damage_of(f, cat, n_total, coef), "n": n_total, "eid": eid,
+	return {"src": f, "tgt": tgt, "cat": cat, "band": bd, "wband": wband, "sector": sector(f.pos, tgt), "acc": acc,
+		"dmg": damage_of(f, cat, n_total, coef, wband), "n": n_total, "eid": eid,
 		"hit": sim.rng.bp(sim.st.tick, eid, 1) < acc}
 
 func _resolve(s: Dictionary) -> void:
@@ -377,13 +397,15 @@ func _resolve(s: Dictionary) -> void:
 	var tgt: FleetState = s.tgt
 	sim.emit("salvo", f.id, tgt.id, tgt.pos, {"cat": s.cat, "hit": s.hit, "dmg": roundi(s.dmg), "acc": s.acc, "band": s.band, "sector": s.sector, "n": s.n})
 	if s.hit and not tgt.dead:
-		apply_hull(f, tgt, s.dmg, s.band, s.sector, s.eid)
+		var loss := apply_hull(f, tgt, s.dmg, s.band, s.sector, s.eid)
+		if sim.morale:
+			sim.morale.hit(tgt, loss, s.wband, s.sector)
 
 # ============================================================ 피해 적용
 # 선체 → 손실 척 수(누적 단조) → 맞은 방향 배분 → 손상 단계 → 표시 척 수
-func apply_hull(src: FleetState, tgt: FleetState, dmg: float, bd: String, sec: String, eid: int) -> void:
+func apply_hull(src: FleetState, tgt: FleetState, dmg: float, bd: String, sec: String, eid: int) -> int:
 	if tgt.dead:
-		return
+		return 0
 	if tgt.defense:
 		dmg *= sim.R.defense_damage_taken_mul
 	var loss := mini(roundi(dmg), tgt.hull)
@@ -402,6 +424,7 @@ func apply_hull(src: FleetState, tgt: FleetState, dmg: float, bd: String, sec: S
 		a = tgt.ships
 	tgt.ships -= a
 	sim.book_loss(src, tgt, a)
+	return loss
 
 func _exposure(f: FleetState, sec: String) -> Array:
 	var tab: Dictionary = C.loss.exposure
@@ -450,6 +473,8 @@ func _depart_one(f: FleetState, bd: String, sec: String, eid: int, k: int) -> vo
 	else:
 		s[STAGE_SUNK] += 1
 	f.lost_ships += 1
+	if sim.morale:
+		sim.morale.ship_departed(f)
 	f.loss_total += 1
 	if was_exposed:
 		f.loss_exposed += 1

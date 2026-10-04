@@ -24,6 +24,10 @@ static func of(st: BattleState) -> String:
 			for cat in f.next_fire:
 				nf.append("%d.%d" % [f.next_fire[cat], f.ammo[cat]])
 			parts.append("h%d:%d,%d,%d,%d,%d,%d,%d|%s|%s" % [f.id, f.hull, f.lost_ships, f.loss_total, f.loss_exposed, f.energy_m, f.heat_m, f.sorties_m, ";".join(sg), ",".join(nf)])
+	parts.append("ev%d,%d" % [st.army_ev[0], st.army_ev[1]])
+	for f in st.fleets:
+		if f.max_hull > 0:
+			parts.append("m%d:%d,%s,%s,%d,%d,%d,%d,%d,%d" % [f.id, f.morale_bp, f.mstate, f.out, int(f.retreat_order), int(f.retreat_counted), f.loss_mul_until, f.loss_mul_bp, f.cost0, int(f.fired.size()) + (int(f.arrived) << 8)])
 	for m in st.missiles:
 		parts.append("m%d:%d,%d,%d,%d,%d,%d" % [m.id, q.call(m.pos.x), q.call(m.pos.y), m.target_id, m.dmg, q.call(m.v), m.age])
 	for s in st.swarms:

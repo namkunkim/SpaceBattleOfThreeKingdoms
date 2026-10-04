@@ -46,7 +46,9 @@ var form_counter := 0
 var next_event_id := 1
 var over := false
 var win := false
-var end_reason := ""      # "annihilation" | "flagship_lost"
+var end_reason := ""      # POC: "annihilation" | "flagship_lost". 시나리오: Victory.REASONS의 값
+var army_ev := [0, 0]     # 진영별 군 사기 사건 누적(감소분 − 회복분, 0 아래로 내려가지 않는다)
+var result := {}          # 결산(승패 확정 때 Victory가 채운다)
 var end_tick := -1
 var end_ms := -1
 

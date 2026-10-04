@@ -22,6 +22,8 @@ var _ai := PocEnemyAi.new()
 var T := {}
 var sub_ms := 0              # 틱마다 정해진다(_tick)
 var _reinf_def: Array = []
+var morale: MoraleCore = null   # M4 사기. 시나리오 프로필(salvo + realtime_rules)에서만 켜진다
+var victory: Victory = null     # M4 승패(§4.12). 없으면 POC 종료 조건(기함 상실·섬멸)
 var salvo: SalvoCombat = null   # M3 사격·피해 규칙. combat 사전이 있는 프로필에서만 켜진다(없으면 POC 규칙)
 
 # profile: 프로필 사전({profile_id, rules, ally, foe, reinf}). 비우면 POC 프로필(기준선 동등).
@@ -53,6 +55,13 @@ func _init(seed_id: int = 0, hz: int = BattleRules.TICK_HZ, profile: Dictionary 
 		_spawn(d, 1)
 	if salvo:
 		salvo.finish_setup()
+		st.cp = 0   # CP는 salvo 규칙에서 쓰지 않는다(M4). 자원은 탄약·에너지·열·함재기다
+		st.ecp = 0
+		var cb: Dictionary = profile.combat
+		if cb.has("morale") and not rs.scenario.is_empty():
+			morale = MoraleCore.new(self, cb.morale)
+			if cb.has("victory"):
+				victory = Victory.new(self, cb.victory)
 
 # ============================================================ 공개 API
 func queue(cmd: Dictionary) -> void:
@@ -144,6 +153,9 @@ func _spawn(d: Dictionary, side: int) -> FleetState:
 	f.home = f.pos
 	f.sq_id = d.get("squadron_id", "")
 	f.morale_group = d.get("morale_group", "")
+	f.faction = d.get("faction_id", "")
+	f.group_id = d.get("group_id", "")
+	f.commander_id = d.get("commander_id", "")
 	f.start_morale_bp = int(d.get("start_morale_bp", 0))
 	f.range_r = R.range_r
 	f.form_id = st.form_counter
@@ -202,11 +214,26 @@ func _kill(f: FleetState, src: FleetState) -> void:
 	if f.dead:
 		return
 	f.dead = true
+	f.out = "sunk"
+	f.died_pos = f.pos
 	f.ships = 0
 	for o in st.fleets:
 		if o.target_id == f.id:
 			o.target_id = -1
 	emit("destroyed", f.id, src.id if src else -1, f.pos)
+
+# 항복·탈출로 전투에서 빠진다(M4). 격침(_kill)과 달리 척 수는 그대로다.
+func remove_fleet(f: FleetState, why: String) -> void:
+	if f.dead:
+		return
+	f.dead = true
+	f.out = why
+	f.died_pos = f.pos
+	f.has_move = false
+	for o in st.fleets:
+		if o.target_id == f.id:
+			o.target_id = -1
+	emit("surrender" if why == "surrender" else "escape", f.id, -1, f.pos)
 
 func _fire_missiles(f: FleetState, tgt: FleetState) -> void:
 	var eid := st.new_event_id()
@@ -280,7 +307,17 @@ func apply(c: Dictionary) -> void:
 	if s.is_empty():
 		_reject(null, "no_selection", side)
 		return
+	if morale:
+		# 강제 퇴각 중인 전대는 명령을 받지 않는다(§4.6)
+		s = s.filter(func(f): return not morale.forced(f))
+		if s.is_empty():
+			if not (kind.begins_with("ai_") or kind == "def_on"):
+				_reject(null, "retreating", side)
+			return
 	var L := _lead(s)
+	if morale and kind in ["stop", "move", "attack", "charge"]:
+		for f in s:
+			f.retreat_order = false
 	match kind:
 		"stop":
 			for f in s:
@@ -340,12 +377,27 @@ func apply(c: Dictionary) -> void:
 				f.has_move = true
 				f.move_to = pf.pos + Vector2(cos(a), sin(a)) * R.rally_radius
 			emit("say", L.id, -1, L.pos, "rally")
+		"morale_rally":
+			var why := morale.rally(side, str(c.get("args", {}).get("id", ""))) if morale else "unknown_command"
+			if why != "":
+				_reject(L, why, side)
 		"retreat":
+			if morale:
+				# 후퇴는 버튼이 아니라 탈출 지점까지의 이동이다(§4.12)
+				for f in s:
+					f.target_id = -1
+					f.defense = false
+					f.retreat_order = true
+					f.has_move = true
+					f.move_to = morale.exit_point(f.side)
+				emit("say", L.id, -1, L.pos, "retreat")
+				return
 			var W := rs.world
 			for f in s:
 				var t := st.nearest_foe(f, R.retreat_seek_r)
 				f.target_id = -1
-				var a := atan2(f.pos.y - t.pos.y, f.pos.x - t.pos.x) if t else PI
+				# 표적이 없으면 바라보는 방향의 반대로 물러난다(M1 목록: 고정 방향(서쪽)이라 적 쪽으로 갈 수 있었다)
+				var a := atan2(f.pos.y - t.pos.y, f.pos.x - t.pos.x) if t else f.heading + PI
 				f.has_move = true
 				f.move_to = Vector2(clampf(f.pos.x + cos(a) * R.retreat_dist, R.retreat_margin, W.x - R.retreat_margin), clampf(f.pos.y + sin(a) * R.retreat_dist, R.retreat_margin, W.y - R.retreat_margin))
 			emit("say", L.id, -1, L.pos, "retreat")
@@ -476,12 +528,13 @@ func _turn(f: FleetState, a: float) -> void:
 
 func _tick() -> void:
 	st.tick += 1
-	var r := _regen(st.cp, st.cp_rem, T.CP_REGEN, R.cp_max_bp)
-	st.cp = r[0]
-	st.cp_rem = r[1]
-	r = _regen(st.ecp, st.ecp_rem, T.ECP_REGEN, R.cp_max_bp)
-	st.ecp = r[0]
-	st.ecp_rem = r[1]
+	if not salvo:
+		var r := _regen(st.cp, st.cp_rem, T.CP_REGEN, R.cp_max_bp)
+		st.cp = r[0]
+		st.cp_rem = r[1]
+		r = _regen(st.ecp, st.ecp_rem, T.ECP_REGEN, R.cp_max_bp)
+		st.ecp = r[0]
+		st.ecp_rem = r[1]
 	# 틱 안의 하위 걸음: 한 걸음이 0.05초(기준 POC의 프레임 폭)를 넘지 않게 나눈다. 한 걸음의 순서는 기준과 같다
 	# (증원 → AI → 함대 이동·사격 → 간격 → 미사일 → 함재기 → 승패). 0.1초 한 걸음으로 돌리면 추격·사격 순서의
 	# 이산화로 통계가 어긋난다(charge30에서 killed +15%, KS D 0.83). 틱·명령·기록·난수·사건은 10Hz 그대로이고
@@ -510,10 +563,15 @@ func _substep(first: bool) -> void:
 	_fleet_phase(first)
 	if salvo and first:
 		salvo.step()
+		if morale:
+			morale.step()
 	_separate()
 	_move_missiles()
 	_move_swarms()
-	if st.flag(0) == null:
+	if victory:
+		if first:
+			victory.check()
+	elif st.flag(0) == null:
 		_end(false, "flagship_lost")
 	elif st.alive(1).is_empty():
 		if not st.reinf and not _reinf_def.is_empty():
@@ -535,6 +593,10 @@ func _fleet_phase(timers: bool) -> void:
 				f.flank_msg -= 1
 		var fl: FleetState = flags[f.side]
 		f.in_cmd = fl == null or fl == f or f.pos.distance_to(fl.pos) < R.cmd_r
+		if morale and morale.forced(f):
+			f.target_id = -1
+			f.has_move = true
+			f.move_to = morale.exit_point(f.side)
 		var tgt := st.live_target(f)
 		if tgt == null:
 			f.target_id = -1

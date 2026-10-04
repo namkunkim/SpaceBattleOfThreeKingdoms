@@ -5,6 +5,8 @@ extends SceneTree
 #
 # 실행: godot --headless --path . -s tests/autoresolve.gd -- --runs 200 [--hz 10] [--out user://autoresolve.json]
 #        [--baseline res://tests/fixtures/m1_baseline.json] [--policies none,attack5,charge30]
+# M4 적벽 기준선: --profile red_cliffs [--difficulty 표준] [--policies none,attack] [--period 15] [--dmg-scale 0.25] [--stagger 15]
+#   BALANCE-PLAN-M4 §3의 측정값(길이, 승률, 종료 경로, 첫 일제 동기화, 파도, 사기 곡선)을 판마다 한 줄로 낸다. 정책 attack은 5초마다 가까운 적 공격(일제사격 명령 없음)
 
 const MAX_S := 1800.0
 # KS 통계량 D의 한계는 제안서 §9.2의 0.136(효과 크기 기준)이다. 200 대 200에서 0.136은 5% 유의수준 임계값과 같아
@@ -33,6 +35,9 @@ func _run() -> void:
 	var out_path := _arg("--out", "user://autoresolve.json")
 	var base_path := _arg("--baseline", "")
 	var pols := _arg("--policies", "none,attack5,charge30").split(",")
+	if _arg("--profile", "") == "red_cliffs":
+		_run_rc(runs, out_path, _arg("--policies", "none,attack").split(","))
+		return
 	var result := {"meta": {"hz": hz, "runs": runs, "max_s": MAX_S}, "policies": {}}
 	var ok := true
 	var base := {}
@@ -208,3 +213,135 @@ static func compare(base_rows: Array, rows: Array) -> Dictionary:
 			if d >= ks_max:
 				out.pass = false
 	return out
+
+
+# ============================================================ M4 적벽 기준선
+func _tune(cb: Dictionary) -> void:
+	var period := _arg("--period", "")
+	if period != "":
+		cb.period_s = float(period)
+	var scale := float(_arg("--dmg-scale", "1.0"))
+	if scale != 1.0:
+		for cat in cb.weapons:
+			cb.weapons[cat].base_damage = float(cb.weapons[cat].base_damage) * scale
+	var stag := _arg("--stagger", "")
+	if stag != "":
+		cb.first_volley_stagger_s.value = float(stag)
+
+func _run_rc(runs: int, out_path: String, pols: Array) -> void:
+	var diff := _arg("--difficulty", "표준")
+	var result := {"meta": {"runs": runs, "difficulty": diff, "period": _arg("--period", ""), "dmg_scale": _arg("--dmg-scale", "1.0"),
+		"stagger": _arg("--stagger", "")}, "policies": {}}
+	var from := int(_arg("--from", "0"))
+	for pol in pols:
+		var rows := []
+		var t0 := Time.get_ticks_msec()
+		for i in runs:
+			rows.append(play_rc(from + i, pol, diff))
+		var summ := summarize_rc(rows)
+		result.policies[pol] = {"runs": rows if _arg("--rows", "0") == "1" else [], "summary": summ}
+		print("%s %s: %s (%.1fs)" % [diff, pol, JSON.stringify(summ), (Time.get_ticks_msec() - t0) / 1000.0])
+	var f := FileAccess.open(out_path, FileAccess.WRITE)
+	if f:
+		f.store_string(JSON.stringify(result, "	"))
+		f.close()
+	print("AUTORESOLVE_RC_DONE")
+	quit(0)
+
+func play_rc(seed_id: int, pol: String, diff: String) -> Dictionary:
+	var p := ScenarioProfile.load_profile("res://data/profiles/red_cliffs_rt.json", diff)
+	_tune(p.combat)
+	var sim := BattleSim.new(seed_id, BattleRules.TICK_HZ, p)
+	var hz: int = sim.st.hz
+	var max_tick := int(MAX_S * hz)
+	var first_fire := {}      # 전대 id → 첫 일제 틱
+	var first_hit := -1
+	var retreats := []
+	var curve := []
+	while not sim.st.over and sim.st.tick < max_tick:
+		if pol == "attack" and sim.st.tick % (5 * hz) == 0:
+			for a in sim.st.alive(0):
+				var n := sim.st.nearest_foe(a, 1e9)
+				if n:
+					sim.queue(BattleSim.command(0, [a.id], "attack", n.id))
+		elif pol == "charge30" and sim.st.tick == 30 * hz:
+			var ids := []
+			for a in sim.st.alive(0):
+				ids.append(a.id)
+			sim.queue(BattleSim.command(0, ids, "charge"))
+		sim.step()
+		for e in sim.drain_events():
+			if e.kind == "salvo":
+				if not first_fire.has(e.sq):
+					first_fire[e.sq] = e.tick
+				if first_hit < 0 and e.value.hit:
+					first_hit = e.tick
+			elif e.kind == "morale_state" and e.value.to == "retreat":
+				retreats.append([snappedf(e.tick / float(hz), 0.1), sim.st.by_id(e.sq).sq_id])
+		if sim.st.tick % (30 * hz) == 0:
+			curve.append([sim.morale.army_bp(0), sim.morale.army_bp(1)])
+	var st := sim.st
+	var r := st.result
+	# 첫 일제 동기화: 같은 진영에서 첫 일제가 같은 초에 겹치는 전대의 비율(전대가 둘 이상일 때)
+	var sync := [0, 0]
+	var by_sec := {}
+	for id in first_fire:
+		var f := st.by_id(id)
+		var k := "%d:%d" % [f.side, first_fire[id] / hz]
+		by_sec[k] = by_sec.get(k, 0) + 1
+	var fired := [0, 0]
+	for id in first_fire:
+		var f := st.by_id(id)
+		fired[f.side] += 1
+		if by_sec["%d:%d" % [f.side, first_fire[id] / hz]] > 1:
+			sync[f.side] += 1
+	var join := {}
+	for id in first_fire:
+		var f := st.by_id(id)
+		if f.side == 1:
+			join[f.sq_id] = snappedf(first_fire[id] / float(hz), 0.1)
+	var res := r if st.over else {}
+	return {"seed": seed_id, "win": st.over and st.win, "reason": st.end_reason if st.over else "timeout", "limited": bool(r.get("limited", false)),
+		"t": st.end_ms / 1000.0 if st.over else st.clock_s(),
+		"ally_cost_loss_bp": int(res.cost.alliance.loss_bp) if st.over else -1, "foe_cost_loss_bp": int(res.cost.foe.loss_bp) if st.over else -1,
+		"first_hit_t": snappedf(first_hit / float(hz), 0.1) if first_hit >= 0 else -1.0,
+		"sync_ally": float(sync[0]) / maxf(1.0, fired[0]), "sync_foe": float(sync[1]) / maxf(1.0, fired[1]),
+		"fired_ally": fired[0], "fired_foe": fired[1],
+		"join": join, "retreats": retreats, "curve": curve,
+		"army_end": [sim.morale.army_bp(0), sim.morale.army_bp(1)], "plague_bp": sim.morale.plague_bp_total,
+		"fp": sim.fingerprint()}
+
+static func summarize_rc(rows: Array) -> Dictionary:
+	var n := float(rows.size())
+	var wins := 0
+	var reasons := {}
+	var ts := []
+	var sums := {"sync_ally": 0.0, "sync_foe": 0.0, "first_hit_t": 0.0, "ally_loss": 0.0, "foe_loss": 0.0, "plague": 0.0, "retreats": 0.0}
+	var limited := 0
+	var wave_n := {}
+	for r in rows:
+		wins += 1 if r.win else 0
+		limited += 1 if r.limited else 0
+		reasons[r.reason] = reasons.get(r.reason, 0) + 1
+		ts.append(r.t)
+		sums.sync_ally += r.sync_ally
+		sums.sync_foe += r.sync_foe
+		sums.first_hit_t += r.first_hit_t
+		sums.ally_loss += maxf(0, r.ally_cost_loss_bp)
+		sums.foe_loss += maxf(0, r.foe_cost_loss_bp)
+		sums.plague += r.plague_bp
+		sums.retreats += r.retreats.size()
+		for k in r.join:
+			wave_n[k] = wave_n.get(k, 0.0) + r.join[k]
+	ts.sort()
+	var q := func(p: float) -> float: return ts[mini(ts.size() - 1, int(p * ts.size()))] if not ts.is_empty() else 0.0
+	var wave := {}
+	for k in wave_n:
+		wave[k] = snappedf(wave_n[k] / n, 0.1)
+	var se := sqrt(float(wins) / n * (1.0 - float(wins) / n) / n)
+	return {"n": rows.size(), "win_rate": snappedf(wins / n, 0.001), "win_se": snappedf(se, 0.001), "limited": limited,
+		"reasons": reasons, "t_mean": snappedf(float(ts.reduce(func(a, b): return a + b, 0.0)) / n, 0.1),
+		"t_p10": q.call(0.1), "t_median": q.call(0.5), "t_p90": q.call(0.9),
+		"first_hit_t": snappedf(sums.first_hit_t / n, 0.1), "sync_ally": snappedf(sums.sync_ally / n, 0.001), "sync_foe": snappedf(sums.sync_foe / n, 0.001),
+		"ally_cost_loss_bp": snappedf(sums.ally_loss / n, 1.0), "foe_cost_loss_bp": snappedf(sums.foe_loss / n, 1.0),
+		"plague_bp": snappedf(sums.plague / n, 1.0), "retreats": snappedf(sums.retreats / n, 0.01), "join_mean_s": wave}

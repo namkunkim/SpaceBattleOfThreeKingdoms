@@ -8,7 +8,7 @@ extends RefCounted
 # 만든 프로필: {profile_id, difficulty, rules, ally, foe, reinf, combat, scenario: {...}}
 #  - combat: 사격·피해 규칙 사전(data/profiles/combat_m3.json). 프로필 정의에 combat_rules_path가 있을 때만 채워진다(M3)
 #  - rules: base 프로필의 규칙 수치에 rule_overrides와 전장 크기(battlefield_bounds)를 덮은 것
-#  - ally/foe: 전대 정의 사전(PocSetup과 같은 키 + squadron_id, morale_group, start_morale_bp, formation_id, composition)
+#  - ally/foe: 전대 정의 사전(PocSetup과 같은 키 + squadron_id, faction_id, commander_id, group_id, might, intellect, morale_group, start_morale_bp, formation_id, composition)
 #  - scenario: {difficulty_policy, difficulty_profile, realtime_rules, escape_points, ...}. RuleSet이 읽는다
 
 # 프로필 정의 경로에서 읽어 만든다.
@@ -44,6 +44,11 @@ static func build(def: Dictionary, scn: Dictionary, base: Dictionary, difficulty
 		if sq.get("flagship", false) and scn.factions.any(func(f): return f.id == sq.faction_id and f.control == "player"):
 			player_flag = sq.id
 
+	var group_of := {}
+	for g in scn.get("fleet_groups", []):
+		for sid in g.squadron_ids:
+			group_of[sid] = g.id
+
 	var rules: Dictionary = base.rules.duplicate(true)
 	for k in def.rule_overrides:
 		rules[k] = def.rule_overrides[k]
@@ -77,6 +82,8 @@ static func build(def: Dictionary, scn: Dictionary, base: Dictionary, difficulty
 			"wait": sq.get("deploy_delay_s", 0), "p": 0,
 			"squadron_id": sq.id, "faction_id": sq.faction_id, "commander_id": sq.commander.id,
 			"formation_id": sq.formation_id, "composition": comp, "command": int(sq.commander.get("command", 0)),
+			"might": int(sq.commander.get("might", 0)), "intellect": int(sq.commander.get("intellect", 0)),
+			"group_id": group_of.get(sq.id, ""),
 		}
 		if is_cao:
 			d.morale_group = sq.morale_group
@@ -98,6 +105,8 @@ static func build(def: Dictionary, scn: Dictionary, base: Dictionary, difficulty
 			"difficulty_order": order,
 			"difficulty_profile": dprof,
 			"escape_points": scn.get("escape_points", {}),
+			"factions": scn.factions.map(func(f): return {"id": f.id, "control": f.control}),
+			"fleet_groups": scn.get("fleet_groups", []),
 			"realtime_rules": scn.realtime_rules,
 			"chain_explosion_override": scn.get("chain_explosion_override", {}),
 		},

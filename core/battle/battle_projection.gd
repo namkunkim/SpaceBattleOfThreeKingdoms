@@ -21,20 +21,27 @@ static func build(sim: BattleSim, side: int) -> Dictionary:
 			pts.append(p.pos)
 		sw.append({"id": s.id, "side": s.side, "src_id": s.src_id, "target_id": s.target_id, "pts": pts,
 			"life_s": float(s.life) / st.hz, "striking": s.striking})
-	return {
+	var d := {
 		"side": side,
 		"tick": st.tick,
 		"hz": st.hz,
 		"clock_s": st.clock_s(),
-		"cp_bp": st.cp if side == 0 else st.ecp,
 		"reinf": st.reinf,
 		"killed_milli": st.killed if side == 0 else st.lost,
 		"lost_milli": st.lost if side == 0 else st.killed,
-		"outcome": {"over": st.over, "win": st.win if side == 0 else (st.over and not st.win), "reason": st.end_reason, "end_tick": st.end_tick},
+		"outcome": {"over": st.over, "win": st.win if side == 0 else (st.over and not st.win), "reason": st.end_reason, "end_tick": st.end_tick,
+			"limited": bool(st.result.get("limited", false)), "result": st.result},
 		"squadrons": sqs,
 		"missiles": ms,
 		"swarms": sw,
 	}
+	if sim.salvo == null:
+		d.cp_bp = st.cp if side == 0 else st.ecp   # CP는 POC 규칙에만 있다(M4: salvo 규칙은 CP를 쓰지 않는다)
+	if sim.morale:
+		d.army_morale_bp = {"own": sim.morale.army_bp(side), "foe": sim.morale.army_bp(1 - side)}
+		d.morale_crisis = sim.morale.army_bp(side) < sim.morale.crisis_bp()
+		d.time_limit_s = int(sim.salvo.C.victory.time_limit_s)
+	return d
 
 static func squadron(st: BattleState, f: FleetState) -> Dictionary:
 	var hz := float(st.hz)
@@ -53,6 +60,8 @@ static func squadron(st: BattleState, f: FleetState) -> Dictionary:
 		"range": f.range_r,
 		"form": f.form,
 		"control": "",   # 직접·위임(Q20). M7에서 채운다
+		"morale_bp": f.morale_bp, "mstate": f.mstate, "out": f.out, "retreat_order": f.retreat_order,
+		"faction_id": f.faction, "group_id": f.group_id,
 		"counts": f.stages.duplicate(true),   # 함종 × 손상 단계 [무손상, 경파, 중파, 대파, 격침]. POC 규칙이면 빈 사전
 		"hull": f.hull, "max_hull": f.max_hull,
 		"energy_milli": f.energy_m, "heat_milli": f.heat_m, "ammo": f.ammo.duplicate(), "suppressed": f.supp.duplicate(),
