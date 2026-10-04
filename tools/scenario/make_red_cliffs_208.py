@@ -21,7 +21,7 @@ def C(t, n, eq=None):
 def P(cid):
     c = CHAR[cid]
     st = c["stats"]
-    return {"id": cid, "name": c["name"], "command": st["통솔"], "might": st["무력"], "intellect": st["지력"]}
+    return {"id": cid, "name": c["name"], "command": st["통솔"], "might": st["무력"], "intellect": st["지력"], "charm": st["매력"]}
 
 
 def sq(id, fac, name, cmd, vice, staff, flag, pos, frm, comp, basis, **kw):
@@ -202,8 +202,8 @@ if __name__ == "__main__":
                 "army_recovery_bp": {"enemy_squadron_retreat_or_surrender": 300, "flagship_boarding_success": 1000},
                 "army_loss_bp": {"own_squadron_retreat_or_surrender": 500, "chain_fire_hit": 2500, "feigned_surrender_hit": 4000,
                                  "flagship_boarding_allowed": 4000, "duel_loss": 4000, "ambush_hit": 1500},
-                "rally": [{"id": "liu_bei_rally", "squadron_id": "RC-LIU-SQ-01", "uses": 1},
-                          {"id": "zhou_yu_rally", "squadron_id": "RC-SUN-SQ-01", "uses": 1, "status": "proposed"}],
+                "rally": [{"id": "liu_bei_rally", "squadron_id": "RC-LIU-SQ-01", "uses": 1, "charm": CHAR["CHR-0128"]["stats"]["매력"]},
+                          {"id": "zhou_yu_rally", "squadron_id": "RC-SUN-SQ-01", "uses": 1, "charm": CHAR["CHR-0211"]["stats"]["매력"], "status": "proposed"}],
                 "rally_effect": {"radius": 200, "morale_bp_at_charm_99": 1200, "scale": "charm / 99", "loss_mul": 0.5, "loss_mul_s": 30},
                 "crisis_threshold_bp": 4500, "collapse_threshold_bp": 3000,
                 "status": "proposed"},
