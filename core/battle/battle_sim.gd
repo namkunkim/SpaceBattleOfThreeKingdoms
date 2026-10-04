@@ -25,6 +25,8 @@ var _reinf_def: Array = []
 var morale: MoraleCore = null   # M4 사기. 시나리오 프로필(salvo + realtime_rules)에서만 켜진다
 var victory: Victory = null     # M4 승패(§4.12). 없으면 POC 종료 조건(기함 상실·섬멸)
 var salvo: SalvoCombat = null   # M3 사격·피해 규칙. combat 사전이 있는 프로필에서만 켜진다(없으면 POC 규칙)
+var terrain: BattleTerrain = null   # M6 지형. combat.terrain이 있을 때
+var detect: Detection = null    # M6 탐지·전쟁 안개. combat.detection이 있을 때만 켜진다(없으면 완전 정보)
 
 # profile: 프로필 사전({profile_id, rules, ally, foe, reinf}). 비우면 POC 프로필(기준선 동등).
 func _init(seed_id: int = 0, hz: int = BattleRules.TICK_HZ, profile: Dictionary = {}) -> void:
@@ -59,6 +61,11 @@ func _init(seed_id: int = 0, hz: int = BattleRules.TICK_HZ, profile: Dictionary 
 		st.cp = 0   # CP는 salvo 규칙에서 쓰지 않는다(M4). 자원은 탄약·에너지·열·함재기다
 		st.ecp = 0
 		var cb: Dictionary = profile.combat
+		if cb.has("terrain"):
+			terrain = BattleTerrain.new(cb.terrain)
+			salvo.terr = terrain
+		if cb.has("detection"):
+			detect = Detection.new(self, cb.detection, terrain if terrain else BattleTerrain.new({}))
 		if cb.has("morale") and not rs.scenario.is_empty():
 			morale = MoraleCore.new(self, cb.morale)
 			if cb.has("victory"):
@@ -77,7 +84,7 @@ func projection(side: int) -> Dictionary:
 	return BattleProjection.build(self, side)
 
 func fingerprint() -> String:
-	return BattleFingerprint.of(st)
+	return BattleFingerprint.of(st, detect)
 
 # 즉시 적용 명령. 틱 사이에 상태는 변하지 않으므로 "다음 step() 첫머리에 적용"과 결과가 같고,
 # 재생(replay)도 같은 틱 번호로 같은 결과를 낸다. 화면이 명령 직후 상태를 바로 읽을 수 있다.
@@ -297,6 +304,62 @@ func _clear_path(f: FleetState) -> void:
 func _reject(lead: FleetState, reason: String, side: int) -> void:
 	emit("rejected", lead.id if lead else -1, side, Vector2.ZERO, reason)
 
+# ============================================================ 시야(M6)
+# 전대가 쏘거나 따라갈 수 있는 적인가: 진영 접촉표의 확인·추정 접촉. 안개가 없으면(POC·테스트) 살아 있으면 된다.
+func sees(f: FleetState, t: FleetState) -> bool:
+	return t != null and not t.dead and (detect == null or detect.can_target(f.side, t.id))
+
+# 지정 표적(살아 있고 보이는 것만)
+func sight_target(f: FleetState) -> FleetState:
+	var t := st.live_target(f)
+	return t if sees(f, t) else null
+
+# 진영이 아는 표적 위치. 접촉이 없거나 안개가 없으면 실제 위치
+func known_pos(f: FleetState, t: FleetState) -> Vector2:
+	if detect == null:
+		return t.pos
+	return detect.rec(f.side, t.id).get("pos", t.pos)
+
+func sight_foe(f: FleetState, max_r: float) -> FleetState:
+	if detect == null:
+		return st.nearest_foe(f, max_r)
+	var best: FleetState = null
+	var bd := max_r
+	for o in st.fleets:
+		if o.side == f.side or not sees(f, o):
+			continue
+		var d := f.pos.distance_to(known_pos(f, o))
+		if d < bd:
+			bd = d
+			best = o
+	return best
+
+# 화면용 사건. 보이지 않는 적이 낸 사건은 빼거나 가린다(안개 경계). 안개가 없으면 그대로.
+# 보이지 않는 적의 일제사격은 사격 사실만 남긴다(맞은 쪽은 아군이라 알 수 있다) — 조용한 구간을 끝내는 신호(리뷰 V-2).
+func drain_events_for(side: int) -> Array[Dictionary]:
+	var evs := drain_events()
+	if detect == null:
+		return evs
+	var out: Array[Dictionary] = []
+	for e in evs:
+		var e2 := e
+		if e.kind == "contact":
+			if side != 0:
+				continue
+		else:
+			var a := st.by_id(int(e.sq))
+			if a and a.side != side and not detect.contacts[side].has(a.id):
+				if e.kind != "salvo":
+					continue
+				e2 = e.duplicate()
+				e2.sq = -1
+			var b := st.by_id(int(e.other))
+			if b and b.side != side and not detect.contacts[side].has(b.id):
+				e2 = e2.duplicate()
+				e2.other = -1
+		out.append(e2)
+	return out
+
 func _cp(side: int) -> int:
 	return st.cp if side == 0 else st.ecp
 
@@ -388,8 +451,8 @@ func apply(c: Dictionary) -> void:
 			for f in s:
 				f.charge = T.CHARGE_S
 				f.defense = false
-				if st.live_target(f) == null:
-					var t := st.nearest_foe(f, R.charge_seek_r)
+				if sight_target(f) == null:
+					var t := sight_foe(f, R.charge_seek_r)
 					if t:
 						f.target_id = t.id
 			emit("say", L.id, -1, L.pos, "charge")
@@ -426,7 +489,7 @@ func apply(c: Dictionary) -> void:
 				return
 			var W := rs.world
 			for f in s:
-				var t := st.nearest_foe(f, R.retreat_seek_r)
+				var t := sight_foe(f, R.retreat_seek_r)
 				f.target_id = -1
 				# 표적이 없으면 바라보는 방향의 반대로 물러난다(M1 목록: 고정 방향(서쪽)이라 적 쪽으로 갈 수 있었다)
 				var a := atan2(f.pos.y - t.pos.y, f.pos.x - t.pos.x) if t else f.heading + PI
@@ -469,6 +532,9 @@ func apply(c: Dictionary) -> void:
 			var t := st.by_id(int(c.target_id))
 			if t == null or t.dead or t.side == side:
 				_reject(L, "bad_target", side)
+				return
+			if detect and not detect.can_target(side, t.id):
+				_reject(L, "no_contact", side)   # 접촉이 없는 적은 지정할 수 없다(M6)
 				return
 			for f in s:
 				f.target_id = t.id
@@ -513,8 +579,8 @@ func _cmd_charge_salvo(s: Array[FleetState], L: FleetState, side: int) -> void:
 		salvo.charge_pay(f)
 		f.charge = T.CHARGE_S
 		f.defense = false
-		if st.live_target(f) == null:
-			var t := st.nearest_foe(f, R.charge_seek_r)
+		if sight_target(f) == null:
+			var t := sight_foe(f, R.charge_seek_r)
 			if t:
 				f.target_id = t.id
 	emit("say", L.id, -1, L.pos, "charge")
@@ -612,6 +678,8 @@ func _substep(first: bool) -> void:
 		_ai.think(self)
 	_fleet_phase(first)
 	if salvo and first:
+		if detect:
+			detect.step()
 		salvo.step()
 		if morale:
 			morale.step()
@@ -648,7 +716,7 @@ func _fleet_phase(timers: bool) -> void:
 			f.has_move = true
 			f.move_to = morale.exit_point(f.side)
 			_clear_path(f)
-		var tgt := st.live_target(f)
+		var tgt := sight_target(f)
 		if tgt == null:
 			f.target_id = -1
 		var has_dest := false
@@ -657,9 +725,10 @@ func _fleet_phase(timers: bool) -> void:
 		if salvo and f.charge > 0:
 			chase_r = float(salvo.C.bands.assault_r)   # 돌격은 강습 거리까지 붙는다
 		if tgt:
-			if f.pos.distance_to(tgt.pos) > chase_r:
+			var tp := known_pos(f, tgt)
+			if f.pos.distance_to(tp) > chase_r:
 				has_dest = true
-				dest = tgt.pos
+				dest = tp
 		elif f.has_move:
 			if f.pos.distance_to(f.move_to) < R.arrive_r:
 				if f.route.is_empty():
@@ -673,6 +742,8 @@ func _fleet_phase(timers: bool) -> void:
 		var spd := rs.move_speed(f.spd, f.defense, f.charge > 0)
 		if salvo:
 			spd = f.speed * (R.charge_speed_mul if f.charge > 0 else 1.0)
+			if terrain:
+				spd *= float(BattleRules.BP) / float(terrain.move_cost_bp(f.pos))   # 성운·잔해·그림자는 느리다(§4.10)
 		if has_dest and f.strafe and tgt == null:
 			# 평행 이동: 방향을 유지한 채 전진 속도의 일부로 목적지를 향해 옆으로 간다(§4.2)
 			var dd := f.pos.distance_to(dest)
@@ -692,11 +763,12 @@ func _fleet_phase(timers: bool) -> void:
 			_turn(f, f.face_to)
 			if absf(BattleRules.ang_diff(f.heading, f.face_to)) < deg_to_rad(float(salvo.C.movement.face_tolerance_deg)):
 				f.face_set = false
-		var ft: FleetState = tgt if (tgt and f.pos.distance_to(tgt.pos) <= f.range_r) else st.nearest_foe(f, f.range_r)
+		var ft: FleetState = tgt if (tgt and f.pos.distance_to(known_pos(f, tgt)) <= f.range_r) else sight_foe(f, f.range_r)
 		f.fire_id = ft.id if ft else -1
 		if ft:
 			if not has_dest and not f.face_set:
-				_turn(f, atan2(ft.pos.y - f.pos.y, ft.pos.x - f.pos.x))
+				var fp := known_pos(f, ft)
+				_turn(f, atan2(fp.y - f.pos.y, fp.x - f.pos.x))
 			if salvo:
 				continue   # 사격은 salvo.step()이 범주별 주기로 한다
 			var fm := rs.flank_mul(f.pos, ft.pos, ft.heading)

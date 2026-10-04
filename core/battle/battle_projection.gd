@@ -9,13 +9,23 @@ extends RefCounted
 static func build(sim: BattleSim, side: int) -> Dictionary:
 	var st := sim.st
 	var sqs: Array[Dictionary] = []
+	var fog := sim.detect != null
 	for f in st.fleets:
-		sqs.append(squadron(st, f))
+		if not fog or f.side == side:
+			sqs.append(squadron(st, f))
+	if fog:
+		# 안개(M6): 적은 진영 접촉표의 확인·추정·상실 접촉만, 줄인 형태로 준다. 미탐지 적은 어디에도 없다.
+		for c in sim.detect.foes(side):
+			sqs.append(contact(sim, c))
 	var ms := []
 	for m in st.missiles:
+		if fog and m.side != side:
+			continue   # salvo 규칙에는 미사일이 없다. 생기면 접촉 규칙으로 다시 정한다
 		ms.append({"id": m.id, "pos": m.pos, "side": m.side, "target_id": m.target_id})
 	var sw := []
 	for s in st.swarms:
+		if fog and s.side != side:
+			continue
 		var pts := []
 		for p in s.pts:
 			pts.append(p.pos)
@@ -41,6 +51,23 @@ static func build(sim: BattleSim, side: int) -> Dictionary:
 		d.army_morale_bp = {"own": sim.morale.army_bp(side), "foe": sim.morale.army_bp(1 - side)}
 		d.morale_crisis = sim.morale.army_bp(side) < sim.morale.crisis_bp()
 		d.time_limit_s = int(sim.salvo.C.victory.time_limit_s)
+	return d
+
+# 적 접촉의 공개 형태. 확인: 이름·역할·초상·방향과 전력 구간. 추정·상실: 위치(마지막으로 안 곳)와 오차 반경, 신뢰도뿐이다.
+# 함종·척 수·선체·사기·표적·진형은 어느 상태에서도 공개하지 않는다.
+static func contact(sim: BattleSim, c: Dictionary) -> Dictionary:
+	var t := sim.st.by_id(c.id)
+	var d := {"id": c.id, "side": t.side, "contact": c.state, "pos": c.pos, "err_r": c.err_r, "conf_bp": c.conf_bp,
+		"faction": "wei" if t.side == 1 else "shu"}
+	if c.state == "confirmed":
+		d.name = t.name
+		d.role = t.role
+		d.portrait = t.portrait
+		d.commander_id = t.name
+		d.faction_id = t.faction
+		d.heading = t.heading
+		d.strength_band = sim.detect.strength_band(t)
+		d.max_strength_band = int(sim.detect.D.strength_bands)
 	return d
 
 static func squadron(st: BattleState, f: FleetState) -> Dictionary:

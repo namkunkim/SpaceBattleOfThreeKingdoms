@@ -3,7 +3,7 @@ extends RefCounted
 
 # 상태 지문(Q40): 정수와 0.001 격자로 양자화한 값만 넣어 sha256을 낸다.
 
-static func of(st: BattleState) -> String:
+static func of(st: BattleState, detect: Detection = null) -> String:
 	var q := BattleRules.q_int
 	var parts := PackedStringArray()
 	parts.append("t%d,%d|cp%d,%d,%d,%d|k%d,%d|r%d,%d|ai%d|id%d,%d,%d|o%d,%d,%s" % [
@@ -39,4 +39,11 @@ static func of(st: BattleState) -> String:
 	for s in st.swarms:
 		var p0: Vector2 = s.pts[0].pos if s.pts.size() > 0 else Vector2.ZERO
 		parts.append("s%d:%d,%d,%d,%d,%d,%d" % [s.id, s.target_id, s.life, s.dps, q.call(p0.x), q.call(p0.y), s.pts.size()])
+	if detect:
+		for side in 2:
+			var ids: Array = detect.contacts[side].keys()
+			ids.sort()
+			for id in ids:
+				var r: Dictionary = detect.contacts[side][id]
+				parts.append("c%d:%d,%s,%d,%d,%d,%d" % [side, id, r.state, r.seen, q.call(r.pos.x), q.call(r.pos.y), r.conf_bp])
 	return "|".join(parts).sha256_text()

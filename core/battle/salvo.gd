@@ -14,6 +14,7 @@ const STAGE_SUNK := 4
 
 var sim: BattleSim
 var C: Dictionary
+var terr: BattleTerrain = null   # M6 지형 구역(사거리·사격각). 없으면 개활
 var terrain_class := ""   # 전장 지형 등급(C.formation_rules.terrain의 키). ""이면 개활이라 진형 제한 없음(§4.7)
 
 func _init(s: BattleSim, combat: Dictionary) -> void:
@@ -273,6 +274,8 @@ func hit_bp(f: FleetState, tgt: FleetState, cat: String) -> int:
 	var acc := clampi(int(C.weapons[cat].base_accuracy_bp) + fire - defense, int(h.min_bp), int(h.max_bp))
 	if not f.in_cmd:
 		acc = maxi(int(h.min_bp), acc - int(h.out_of_command_bp))
+	if sim.detect:
+		acc = acc * sim.detect.hit_mul_bp(f.side, tgt.id) / BattleRules.BP   # 추정 사격은 신뢰도를 곱한다(§4.9)
 	return acc
 
 func platform_mul(n: float) -> float:
@@ -320,22 +323,27 @@ func qualifying(f: FleetState, cat: String, tgt: FleetState) -> Array:
 	var dist := f.pos.distance_to(tgt.pos)
 	var bearing := atan2(tgt.pos.y - f.pos.y, tgt.pos.x - f.pos.x)
 	var off := rad_to_deg(absf(BattleRules.ang_diff(f.heading, bearing)))
+	var rmul := 1.0
+	var adelta := 0.0
+	if terr:
+		rmul = terr.range_mul(f.pos, tgt.pos)   # 사격선이 성운·잔해·그림자를 지나면 사거리와 사격각이 줄어든다(§4.10)
+		adelta = terr.arc_delta(f.pos, tgt.pos)
 	for p in platforms(f, cat):
-		if dist <= p.range and off <= p.arc * 0.5 + 0.001:
+		if dist <= p.range * rmul and off <= maxf(0.0, p.arc + adelta) * 0.5 + 0.001:
 			out.append(p)
 	return out
 
 func _pick_target(f: FleetState, cat: String) -> Dictionary:
 	var best: FleetState = null
 	var best_q: Array = []
-	var cur := sim.st.live_target(f)
+	var cur := sim.sight_target(f)
 	if cur:
 		var q := qualifying(f, cat, cur)
 		if not q.is_empty():
 			return {"tgt": cur, "q": q}
 	var bd := 1e9
 	for o in sim.st.fleets:
-		if o.dead or o.side == f.side:
+		if o.dead or o.side == f.side or not sim.sees(f, o):
 			continue
 		var d := f.pos.distance_to(o.pos)
 		if d >= bd:

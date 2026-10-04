@@ -227,6 +227,16 @@ func _tune(cb: Dictionary) -> void:
 	var stag := _arg("--stagger", "")
 	if stag != "":
 		cb.first_volley_stagger_s.value = float(stag)
+	# M6 탐지 재조정 레버(수치는 데이터 그대로가 기본). --fog 0이면 안개를 끈다(완전 정보, M5 기준선과 비교용)
+	if _arg("--fog", "1") == "0":
+		cb.erase("detection")
+	elif cb.has("detection"):
+		if _arg("--confirmed", "") != "":
+			cb.detection.confirmed = int(_arg("--confirmed", ""))
+		if _arg("--estimated", "") != "":
+			cb.detection.estimated = int(_arg("--estimated", ""))
+	if _arg("--terrain", "1") == "0":
+		cb.erase("terrain")
 
 func _run_rc(runs: int, out_path: String, pols: Array) -> void:
 	var diff := _arg("--difficulty", "표준")
@@ -258,10 +268,13 @@ func play_rc(seed_id: int, pol: String, diff: String) -> Dictionary:
 	var first_hit := -1
 	var retreats := []
 	var curve := []
+	var conf_t := [-1, -1]       # 진영별 첫 확인 접촉 틱(M6)
+	var conf_n := [0, 0]         # 진영별 확인 접촉이 하나라도 있던 표본 수
+	var samples := 0
 	while not sim.st.over and sim.st.tick < max_tick:
 		if pol == "attack" and sim.st.tick % (5 * hz) == 0:
 			for a in sim.st.alive(0):
-				var n := sim.st.nearest_foe(a, 1e9)
+				var n := sim.sight_foe(a, 1e9)   # 플레이어도 접촉이 있는 적만 지정할 수 있다(M6)
 				if n:
 					sim.queue(BattleSim.command(0, [a.id], "attack", n.id))
 		elif pol == "charge30" and sim.st.tick == 30 * hz:
@@ -270,6 +283,17 @@ func play_rc(seed_id: int, pol: String, diff: String) -> Dictionary:
 				ids.append(a.id)
 			sim.queue(BattleSim.command(0, ids, "charge"))
 		sim.step()
+		if sim.detect and sim.st.tick % hz == 0:
+			samples += 1
+			for sd in 2:
+				var any := false
+				for k in sim.detect.contacts[sd]:
+					if sim.detect.contacts[sd][k].state == "confirmed":
+						any = true
+				if any:
+					conf_n[sd] += 1
+					if conf_t[sd] < 0:
+						conf_t[sd] = sim.st.tick
 		for e in sim.drain_events():
 			if e.kind == "salvo":
 				if not first_fire.has(e.sq):
@@ -309,6 +333,8 @@ func play_rc(seed_id: int, pol: String, diff: String) -> Dictionary:
 		"fired_ally": fired[0], "fired_foe": fired[1],
 		"join": join, "retreats": retreats, "curve": curve,
 		"army_end": [sim.morale.army_bp(0), sim.morale.army_bp(1)], "plague_bp": sim.morale.plague_bp_total,
+		"conf_t": [snappedf(conf_t[0] / float(hz), 0.1) if conf_t[0] >= 0 else -1.0, snappedf(conf_t[1] / float(hz), 0.1) if conf_t[1] >= 0 else -1.0],
+		"conf_share": [float(conf_n[0]) / maxf(1.0, samples), float(conf_n[1]) / maxf(1.0, samples)],
 		"fp": sim.fingerprint()}
 
 static func summarize_rc(rows: Array) -> Dictionary:
@@ -319,6 +345,9 @@ static func summarize_rc(rows: Array) -> Dictionary:
 	var sums := {"sync_ally": 0.0, "sync_foe": 0.0, "first_hit_t": 0.0, "ally_loss": 0.0, "foe_loss": 0.0, "plague": 0.0, "retreats": 0.0}
 	var limited := 0
 	var wave_n := {}
+	var conf_ever := [0, 0]      # 한 번이라도 확인 접촉을 얻은 판 수(M6)
+	var conf_first := [0.0, 0.0]
+	var conf_share := [0.0, 0.0]
 	for r in rows:
 		wins += 1 if r.win else 0
 		limited += 1 if r.limited else 0
@@ -331,6 +360,11 @@ static func summarize_rc(rows: Array) -> Dictionary:
 		sums.foe_loss += maxf(0, r.foe_cost_loss_bp)
 		sums.plague += r.plague_bp
 		sums.retreats += r.retreats.size()
+		for sd in 2:
+			if r.conf_t[sd] >= 0.0:
+				conf_ever[sd] += 1
+				conf_first[sd] += r.conf_t[sd]
+			conf_share[sd] += r.conf_share[sd]
 		for k in r.join:
 			wave_n[k] = wave_n.get(k, 0.0) + r.join[k]
 	ts.sort()
@@ -344,4 +378,7 @@ static func summarize_rc(rows: Array) -> Dictionary:
 		"t_p10": q.call(0.1), "t_median": q.call(0.5), "t_p90": q.call(0.9),
 		"first_hit_t": snappedf(sums.first_hit_t / n, 0.1), "sync_ally": snappedf(sums.sync_ally / n, 0.001), "sync_foe": snappedf(sums.sync_foe / n, 0.001),
 		"ally_cost_loss_bp": snappedf(sums.ally_loss / n, 1.0), "foe_cost_loss_bp": snappedf(sums.foe_loss / n, 1.0),
-		"plague_bp": snappedf(sums.plague / n, 1.0), "retreats": snappedf(sums.retreats / n, 0.01), "join_mean_s": wave}
+		"plague_bp": snappedf(sums.plague / n, 1.0), "retreats": snappedf(sums.retreats / n, 0.01), "join_mean_s": wave,
+		"confirm_ally": snappedf(conf_ever[0] / n, 0.001), "confirm_foe": snappedf(conf_ever[1] / n, 0.001),
+		"confirm_first_ally_s": snappedf(conf_first[0] / maxf(1.0, conf_ever[0]), 0.1), "confirm_first_foe_s": snappedf(conf_first[1] / maxf(1.0, conf_ever[1]), 0.1),
+		"confirm_share_ally": snappedf(conf_share[0] / n, 0.001), "confirm_share_foe": snappedf(conf_share[1] / n, 0.001)}

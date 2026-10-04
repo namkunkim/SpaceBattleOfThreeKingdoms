@@ -24,6 +24,9 @@ static func sim(ally: Array, foe: Array, seed_id := 1, mode := "", tune := Calla
 	rules.world_w = 1600.0
 	rules.world_h = 900.0
 	var cb := combat()
+	# 규칙 단위 테스트는 완전 정보·개활에서 한다. 안개와 지형은 tests/detection_rules.gd가 tune으로 켠다(M6)
+	cb.erase("detection")
+	cb.erase("terrain")
 	if mode != "":
 		cb.damage_mode = mode
 	if tune.is_valid():

@@ -30,6 +30,10 @@ def main():
     frm_rules = load("red-cliffs-formation-rules.json")
     frm = {f["id"]: f for f in load("formations.json")}
     move = load("red-cliffs-movement-rules.json")
+    sens = load("red-cliffs-sensor-ew-rules.json")
+    fog = load("red-cliffs-fog-of-war-rules.json")
+    terr = load("red-cliffs-terrain-rules.json")
+    ai = load("red-cliffs-ai-rules.json")
 
     cost = {s["id"]: s["unit_cost"] for s in setup["ship_types"]}
     types = {}
@@ -236,6 +240,42 @@ def main():
                 "face_nearest_foe": True,
                 "phase_stagger": True,
                 "note": "초기 방향은 가장 가까운 적 전대를 향한다(§4.2). 주기 시작 틱은 전대 ID에서 유도해 엇갈린다(§4.3)",
+            },
+            # M6 탐지와 전쟁 안개(§4.9). 점수 식과 임계는 본편 sensor-ew, 기억·신뢰도 감쇠는 fog-of-war(턴 → 60초 환산)
+            "detection": {
+                "ship_sensor": sens["ship_sensor_points"],
+                "ship_ew": sens["ship_ew_points"],
+                "equip_sensor": sens["fast_equipment_sensor_points"],
+                "equip_ew": sens["fast_equipment_ew_points"],
+                "intellect_bands": sens["intelligence_bands"],
+                "distance_units_per_point": sens["distance_penalty"]["units_per_point"],
+                "confirmed": 30,
+                "confirmed_status": "proposed (본편 37. M6 측정: 37이면 표준 조조가 확인 등급을 거의 못 받는다 — attack 32%, none 0%. 30이면 100%. EXPERIENCE-DESIGN §8 3안)",
+                "estimated": sens["thresholds"]["estimated"],
+                "turn_s": 60,
+                "memory_s": fog["contact_lifecycle"]["estimated_memory_turns"] * 60,
+                "lost_s": 60,
+                "confidence_bp": fog["contact_lifecycle"]["estimated_confidence_basis_points"],
+                "confidence_loss_bp_per_turn": fog["contact_lifecycle"]["stale_confidence_loss_per_turn"],
+                "confidence_min_bp": fog["contact_lifecycle"]["minimum_confidence_basis_points"],
+                "error_radius": fog["contact_lifecycle"]["base_error_radius"],
+                "error_radius_per_turn": fog["contact_lifecycle"]["error_radius_per_stale_turn"],
+                "eval_period_s": 1,
+                "strength_bands": 4,
+                "sensor_bp_clamp": [-6000, 3000],
+                "no_contact_patrol": {"offset": ai["postures"]["cao_cao"]["patrol_offset"], "source": "본편 red-cliffs-ai-rules.json cao_cao.no_contact_action=patrol. 접촉이 없고 투입 대기가 끝난 조조군 전대는 이 방향으로 전진한다"},
+                "eval_status": "proposed (평가 주기 1초는 실시간 환산. 본편은 턴마다 한 번. strength_bands: 확인 접촉에 공개하는 전력 구간 수)",
+                "source": "본편 red-cliffs-sensor-ew-rules.json, red-cliffs-fog-of-war-rules.json. 신뢰도 시작값은 시나리오 realtime_rules.fog_override가 덮는다",
+            },
+            "terrain": {
+                "zones": [
+                    {"id": z["id"], "type": z["type"], "name": z["name"], "rect": [z["shape"]["x"], z["shape"]["y"], z["shape"]["width"], z["shape"]["height"]],
+                     "move_cost_bp": z["effects"]["movement_cost_basis_points"], "sensor_bp": z["effects"]["observer_sensor_percent"] * 100,
+                     "conceal": z["effects"]["target_concealment_points"], "range_bp": z["effects"]["weapon_range_basis_points"],
+                     "arc_deg": z["effects"]["weapon_arc_delta_deg"]}
+                    for z in terr["zones"]
+                ],
+                "source": "본편 red-cliffs-terrain-rules.json. 겹침: 이동 비용 최댓값, 센서 합(−60~+30), 은폐 합, 사거리는 구역 ID 순 곱, 사격각 합",
             },
         },
     }

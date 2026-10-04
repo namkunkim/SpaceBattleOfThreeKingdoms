@@ -664,6 +664,147 @@
    "face_nearest_foe": true,
    "phase_stagger": true,
    "note": "초기 방향은 가장 가까운 적 전대를 향한다(§4.2). 주기 시작 틱은 전대 ID에서 유도해 엇갈린다(§4.3)"
+  },
+  "detection": {
+   "ship_sensor": {
+    "SHP-01": 3,
+    "SHP-02": 1,
+    "SHP-03": 1,
+    "SHP-04": 1,
+    "SHP-05": 2,
+    "SHP-06": 8,
+    "SHP-07": 2,
+    "SHP-08": 0
+   },
+   "ship_ew": {
+    "SHP-01": 1,
+    "SHP-02": 0,
+    "SHP-03": 0,
+    "SHP-04": 0,
+    "SHP-05": 1,
+    "SHP-06": 3,
+    "SHP-07": 0,
+    "SHP-08": 0
+   },
+   "equip_sensor": {
+    "FAST-EQ-INTERCEPT": 1,
+    "FAST-EQ-TORPEDO": 0,
+    "FAST-EQ-RECON": 6,
+    "FAST-EQ-RESCUE": 2
+   },
+   "equip_ew": {
+    "FAST-EQ-INTERCEPT": 0,
+    "FAST-EQ-TORPEDO": 0,
+    "FAST-EQ-RECON": 1,
+    "FAST-EQ-RESCUE": 1
+   },
+   "intellect_bands": [
+    {
+     "min": 0,
+     "max": 49,
+     "sensor_points": 0
+    },
+    {
+     "min": 50,
+     "max": 69,
+     "sensor_points": 6
+    },
+    {
+     "min": 70,
+     "max": 84,
+     "sensor_points": 12
+    },
+    {
+     "min": 85,
+     "max": 94,
+     "sensor_points": 16
+    },
+    {
+     "min": 95,
+     "max": 100,
+     "sensor_points": 20
+    }
+   ],
+   "distance_units_per_point": 25,
+   "confirmed": 30,
+   "confirmed_status": "proposed (본편 37. M6 측정: 37이면 표준 조조가 확인 등급을 거의 못 받는다 — attack 32%, none 0%. 30이면 100%. EXPERIENCE-DESIGN §8 3안)",
+   "estimated": 15,
+   "turn_s": 60,
+   "memory_s": 180,
+   "lost_s": 60,
+   "confidence_bp": 5000,
+   "confidence_loss_bp_per_turn": 1000,
+   "confidence_min_bp": 1500,
+   "error_radius": 30,
+   "error_radius_per_turn": 25,
+   "eval_period_s": 1,
+   "strength_bands": 4,
+   "sensor_bp_clamp": [
+    -6000,
+    3000
+   ],
+   "no_contact_patrol": {
+    "offset": [
+     -60,
+     40
+    ],
+    "source": "본편 red-cliffs-ai-rules.json cao_cao.no_contact_action=patrol. 접촉이 없고 투입 대기가 끝난 조조군 전대는 이 방향으로 전진한다"
+   },
+   "eval_status": "proposed (평가 주기 1초는 실시간 환산. 본편은 턴마다 한 번. strength_bands: 확인 접촉에 공개하는 전력 구간 수)",
+   "source": "본편 red-cliffs-sensor-ew-rules.json, red-cliffs-fog-of-war-rules.json. 신뢰도 시작값은 시나리오 realtime_rules.fog_override가 덮는다"
+  },
+  "terrain": {
+   "zones": [
+    {
+     "id": "TRN-NEBULA-01",
+     "type": "nebula",
+     "name": "적운 성운",
+     "rect": [
+      600,
+      50,
+      120,
+      120
+     ],
+     "move_cost_bp": 13333,
+     "sensor_bp": -2000,
+     "conceal": 8,
+     "range_bp": 8500,
+     "arc_deg": -10
+    },
+    {
+     "id": "TRN-DEBRIS-01",
+     "type": "debris",
+     "name": "파쇄 잔해대",
+     "rect": [
+      680,
+      100,
+      140,
+      120
+     ],
+     "move_cost_bp": 15385,
+     "sensor_bp": -500,
+     "conceal": 3,
+     "range_bp": 9000,
+     "arc_deg": -5
+    },
+    {
+     "id": "TRN-SHADOW-01",
+     "type": "planet_shadow",
+     "name": "행성 그림자",
+     "rect": [
+      1250,
+      300,
+      180,
+      180
+     ],
+     "move_cost_bp": 11111,
+     "sensor_bp": -1500,
+     "conceal": 12,
+     "range_bp": 8000,
+     "arc_deg": -15
+    }
+   ],
+   "source": "본편 red-cliffs-terrain-rules.json. 겹침: 이동 비용 최댓값, 센서 합(−60~+30), 은폐 합, 사거리는 구역 ID 순 곱, 사격각 합"
   }
  }
 }
