@@ -7,6 +7,46 @@ extends RefCounted
 
 var v := {}
 var world := Vector2.ZERO
+# 시나리오 데이터(시나리오 프로필일 때만 채워진다): 난이도 프로필, difficulty_policy, realtime_rules 등.
+# realtime_rules의 status "proposed" 값도 그대로 들어 있다. 규칙 동작은 M3 이후 단계가 이 값을 읽는다.
+var scenario := {}
+
+static func from_profile(profile: Dictionary) -> RuleSet:
+	var rs := from_dict(profile.rules)
+	rs.scenario = profile.get("scenario", {})
+	return rs
+
+# realtime_rules 안의 값을 "a.b.c" 경로로 읽는다. 없으면 fallback.
+func rt(path: String, fallback: Variant = null) -> Variant:
+	var cur: Variant = scenario.get("realtime_rules", {})
+	for key in path.split("."):
+		if typeof(cur) == TYPE_DICTIONARY and cur.has(key):
+			cur = cur[key]
+		elif typeof(cur) == TYPE_ARRAY and key.is_valid_int() and int(key) < cur.size():
+			cur = cur[int(key)]
+		else:
+			return fallback
+	return cur
+
+# status가 "proposed"인 realtime_rules 노드의 경로 목록(잠정값 추적용).
+func proposed_paths() -> Array[String]:
+	var out: Array[String] = []
+	_walk_proposed(scenario.get("realtime_rules", {}), "", out)
+	return out
+
+static func _walk_proposed(node: Variant, path: String, out: Array[String]) -> void:
+	if typeof(node) == TYPE_DICTIONARY:
+		if node.get("status", "") == "proposed":
+			out.append(path if path != "" else "realtime_rules")
+		for k in node:
+			_walk_proposed(node[k], k if path == "" else path + "." + k, out)
+	elif typeof(node) == TYPE_ARRAY:
+		for i in node.size():
+			_walk_proposed(node[i], "%s.%d" % [path, i], out)
+
+# 난이도 프로필의 AI 값(ai-design §9). 시나리오 프로필이 아니면 빈 사전.
+func difficulty_ai() -> Dictionary:
+	return scenario.get("difficulty_profile", {}).get("ai", {})
 
 static func from_dict(rules: Dictionary) -> RuleSet:
 	var rs := RuleSet.new()

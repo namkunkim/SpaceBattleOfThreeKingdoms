@@ -20,7 +20,7 @@ var _events: Array[Dictionary] = []
 var _ai := PocEnemyAi.new()
 # 초 단위 규칙값의 틱 수(틱 폭에 따라)
 var T := {}
-var sub_ms := 50
+var sub_ms := 0              # 틱마다 정해진다(_tick)
 var _reinf_def: Array = []
 
 # profile: 프로필 사전({profile_id, rules, ally, foe, reinf}). 비우면 POC 프로필(기준선 동등).
@@ -28,7 +28,7 @@ func _init(seed_id: int = 0, hz: int = BattleRules.TICK_HZ, profile: Dictionary 
 	if profile.is_empty():
 		profile = PocSetup.profile()
 	profile_id = profile.profile_id
-	rs = RuleSet.from_dict(profile.rules)
+	rs = RuleSet.from_profile(profile)
 	R = rs.v
 	st = BattleState.new()
 	st.hz = hz
@@ -137,6 +137,9 @@ func _spawn(d: Dictionary, side: int) -> FleetState:
 	f.wait = BattleRules.ticks(float(d.get("wait", 0)), st.hz)
 	f.portrait = d.p
 	f.home = f.pos
+	f.sq_id = d.get("squadron_id", "")
+	f.morale_group = d.get("morale_group", "")
+	f.start_morale_bp = int(d.get("start_morale_bp", 0))
 	f.range_r = R.range_r
 	f.form_id = st.form_counter
 	st.form_counter += 1
@@ -225,7 +228,7 @@ func _launch_fighters(f: FleetState, tgt: FleetState) -> void:
 			"pos": _rand_ship(f, eid, k + 1),
 			"a": rng.unit(st.tick, eid, k + 2) * TAU,
 			"r": R.swarm_r0 + rng.unit(st.tick, eid, k + 3) * R.swarm_r_rand,
-			"w": (-1.0 if rng.bp(st.tick, eid, k + 4) < 5000 else 1.0) * (R.swarm_w0 + rng.unit(st.tick, eid, k + 5) * R.swarm_w_rand),
+			"w": (-1.0 if rng.bp(st.tick, eid, k + 4) < BattleRules.BP / 2 else 1.0) * (R.swarm_w0 + rng.unit(st.tick, eid, k + 5) * R.swarm_w_rand),
 		})
 	st.swarms.append(s)
 	f.fighter_cd = T.FIGHTER_CD_S
@@ -453,7 +456,7 @@ func _tick() -> void:
 
 func _substep(first: bool) -> void:
 	st.clock_ms += sub_ms
-	if not st.reinf and st.clock_ms > R.reinf_ms:
+	if not st.reinf and not _reinf_def.is_empty() and st.clock_ms > R.reinf_ms:
 		_spawn_reinf()
 	st.ai_timer -= sub_ms
 	if st.ai_timer <= 0:
@@ -466,7 +469,7 @@ func _substep(first: bool) -> void:
 	if st.flag(0) == null:
 		_end(false, "flagship_lost")
 	elif st.alive(1).is_empty():
-		if not st.reinf:
+		if not st.reinf and not _reinf_def.is_empty():
 			_spawn_reinf()
 		else:
 			_end(true, "annihilation")

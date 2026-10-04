@@ -13,7 +13,7 @@ const CORE_FORBIDDEN := [
 ]
 const CORE_CLASSES := [
 	"BattleSim", "BattleState", "FleetState", "BattleRules", "BattleRng", "BattleProjection", "BattleFingerprint",
-	"TickClock", "PocSetup", "PocEnemyAi",
+	"TickClock", "PocSetup", "PocEnemyAi", "RuleSet", "ScenarioProfile", "ProfileLoader",
 ]
 const SCREEN_DIRS := ["res://view", "res://hud", "res://input"]
 

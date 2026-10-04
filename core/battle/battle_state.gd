@@ -9,7 +9,7 @@ class Missile:
 	var target_id := -1
 	var src_id := -1
 	var dmg := 0          # 1/1000척
-	var v := 260.0
+	var v := 0.0
 	var wob := 0.0
 	var age := 0          # ms
 	var side := 0

@@ -1,0 +1,17 @@
+{
+ "schema_version": 1,
+ "profile_id": "red-cliffs-208-rt",
+ "note": "적벽 시나리오 프로필. 편성·난이도·투입 시각·realtime_rules는 시나리오 JSON에서 읽고, 규칙 수치는 base 프로필(POC)에서 가져온 뒤 아래 덮어쓰기를 적용한다. M3에서 실시간 규칙이 들어오면 base가 바뀐다.",
+ "scenario_path": "res://data/scenarios/red_cliffs_208_realtime.json",
+ "base_profile": "res://data/profiles/poc_corridor.json",
+ "default_difficulty": "표준",
+ "rule_overrides": {
+  "ai_advance_speed": 0.0
+ },
+ "rule_overrides_note": "ai_advance_speed 0: 투입 대기 중인 전대는 배치 위치에서 기다린다(realtime_rules.deploy_rule). POC AI는 대기 중에 천천히 전진했다.",
+ "side_by_control": {
+  "player": 0,
+  "ai_delegate": 0,
+  "ai": 1
+ }
+}

@@ -34,3 +34,6 @@ var wait := 0             # 적 AI 대기 틱
 var is_flag := false
 var home := Vector2.ZERO
 var range_r := 0.0
+var sq_id := ""           # 시나리오 전대 ID (POC 프로필은 빈 문자열)
+var morale_group := ""
+var start_morale_bp := 0  # 시작 사기(M4에서 쓴다)

@@ -1,0 +1,94 @@
+class_name ScenarioProfile
+extends RefCounted
+
+# 시나리오 JSON(data/scenarios/)과 프로필 정의(data/profiles/)를 합쳐 BattleSim이 받는 프로필 사전을 만든다.
+# 편성, 난이도 적용(difficulty_policy), 투입 시각(deploy_delay_s), realtime_rules는 모두 데이터에서 읽는다.
+# 순수 변환이다. 파일은 ProfileLoader로만 읽는다.
+#
+# 만든 프로필: {profile_id, difficulty, rules, ally, foe, reinf, scenario: {...}}
+#  - rules: base 프로필의 규칙 수치에 rule_overrides와 전장 크기(battlefield_bounds)를 덮은 것
+#  - ally/foe: 전대 정의 사전(PocSetup과 같은 키 + squadron_id, morale_group, start_morale_bp, formation_id, composition)
+#  - scenario: {difficulty_policy, difficulty_profile, realtime_rules, escape_points, ...}. RuleSet이 읽는다
+
+# 프로필 정의 경로에서 읽어 만든다.
+static func load_profile(def_path: String, difficulty := "") -> Dictionary:
+	var def := ProfileLoader.read_json(def_path)
+	if def.is_empty():
+		return {}
+	var scn := ProfileLoader.read_json(def.scenario_path)
+	var base := ProfileLoader.read_json(def.base_profile)
+	if scn.is_empty() or base.is_empty():
+		return {}
+	return build(def, scn, base, difficulty if difficulty != "" else def.default_difficulty)
+
+static func build(def: Dictionary, scn: Dictionary, base: Dictionary, difficulty: String) -> Dictionary:
+	var order: Array = scn.difficulty_order
+	var rank := order.find(difficulty)
+	if rank < 0:
+		push_error("알 수 없는 난이도: %s" % difficulty)
+		return {}
+	var dprof: Dictionary = scn.difficulty_profiles[difficulty]
+	var factor_milli := roundi(float(dprof.count_factor) * BattleRules.MILLI)
+
+	var side_of := {}
+	var player_flag := ""
+	for f in scn.factions:
+		side_of[f.id] = int(def.side_by_control[f.control])
+	for sq in scn.squadrons:
+		if sq.get("flagship", false) and scn.factions.any(func(f): return f.id == sq.faction_id and f.control == "player"):
+			player_flag = sq.id
+
+	var rules: Dictionary = base.rules.duplicate(true)
+	for k in def.rule_overrides:
+		rules[k] = def.rule_overrides[k]
+	var b: Array = scn.battlefield_bounds
+	rules.world_w = float(b[2]) - float(b[0])
+	rules.world_h = float(b[3]) - float(b[1])
+
+	var ally := []
+	var foe := []
+	for sq in scn.squadrons:
+		var side: int = side_of[sq.faction_id]
+		var is_cao: bool = sq.has("deploy_min_difficulty")
+		if is_cao and rank < order.find(sq.deploy_min_difficulty):
+			continue
+		var ships := 0
+		var comp := []
+		for c in sq.composition:
+			var n: int = int(c.count)
+			if is_cao:
+				# 함종별 척 수 × count_factor를 half-up 정수 반올림(정수 연산), 원래 1척 이상이면 최소 1척
+				n = maxi(1, (n * factor_milli + BattleRules.MILLI / 2) / BattleRules.MILLI) if n >= 1 else 0
+			ships += n
+			comp.append({"ship_type_id": c.ship_type_id, "count": n})
+		var d := {
+			"name": sq.commander.name, "role": sq.name, "ships": ships, "lv": 1,
+			"x": sq.initial_position[0], "y": sq.initial_position[1],
+			"flag": (sq.id == player_flag) if side == 0 else bool(sq.get("flagship", false)),
+			"wait": sq.get("deploy_delay_s", 0), "p": 0,
+			"squadron_id": sq.id, "faction_id": sq.faction_id, "commander_id": sq.commander.id,
+			"formation_id": sq.formation_id, "composition": comp,
+		}
+		if is_cao:
+			d.morale_group = sq.morale_group
+			d.start_morale_bp = int(dprof.start_morale_bp[sq.morale_group])
+		else:
+			d.start_morale_bp = 10000
+		(ally if side == 0 else foe).append(d)
+
+	return {
+		"schema_version": 1,
+		"profile_id": def.profile_id,
+		"difficulty": difficulty,
+		"rules": rules,
+		"ally": ally, "foe": foe, "reinf": [],
+		"scenario": {
+			"scenario_id": scn.scenario_id,
+			"difficulty_policy": scn.difficulty_policy,
+			"difficulty_order": order,
+			"difficulty_profile": dprof,
+			"escape_points": scn.get("escape_points", {}),
+			"realtime_rules": scn.realtime_rules,
+			"chain_explosion_override": scn.get("chain_explosion_override", {}),
+		},
+	}
