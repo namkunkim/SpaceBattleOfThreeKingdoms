@@ -10,21 +10,23 @@
    "delegated": {"name": "인물 위임", "note": "지휘관 성향(dispositions)에서 방침을 고른다. 기본값"}
   },
   "dispositions": {"절의": "cautious", "명사": "balanced", "실무": "balanced", "야심": "aggressive", "무뢰": "aggressive"},
+  "disposition_retreat_ship_share": {"실무": 0.45, "note": "성향별 퇴각(제안서 §5.2·§5.3, 정본 dispositions.md §7.1 실무 = 손익 계산). 방침 위에 얹는다: 남은 선체 비율이 max(방침 retreat_ship_share, 이 값) 미만이면 질서 퇴각. 0.45는 제안값(1000시드 레버)"},
   "commanders": {
+   "note": "성향은 정본 dispositions.md §4(명장 150인). 미배정(유기·형주 수군 2·조순)은 §6 일반 규칙. 군주(유비·조조)는 §7.1 표에 없어 명사·야심으로 둔다(REVIEW-M7 F-8)",
    "CHR-0128": {"disposition": "명사"},
    "CHR-0107": {"disposition": "절의"},
    "CHR-0325": {"disposition": "실무"},
    "CHR-0136": {"disposition": "절의"},
    "CHR-0211": {"disposition": "명사"},
-   "CHR-0207": {"disposition": "명사"},
-   "CHR-0217": {"disposition": "무뢰", "posture": "scheming", "note": "화공대. M9에서 계략 예약을 이 방침이 맡는다"},
+   "CHR-0207": {"disposition": "실무"},
+   "CHR-0217": {"disposition": "절의", "posture": "scheming", "note": "화공대. M9에서 계략 예약을 이 방침이 맡는다"},
    "CHR-0034": {"disposition": "야심"},
-   "CHR-0033": {"disposition": "무뢰"},
+   "CHR-0033": {"disposition": "절의"},
    "CHR-0017": {"disposition": "실무"},
    "CHR-0010": {"disposition": "실무"},
    "CHR-0330": {"disposition": "실무"},
    "CHR-0084": {"disposition": "무뢰"},
-   "CHR-0036": {"disposition": "야심"}
+   "CHR-0036": {"disposition": "실무"}
   },
   "factions": {
    "cao_cao": {"posture_id": "aggressive_pressure", "standoff": 100, "pursuit_step": 110, "no_contact": "advance", "engage_trigger_r": 0, "estimated_min_conf_bp": 4500},

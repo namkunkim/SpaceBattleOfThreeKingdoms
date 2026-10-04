@@ -214,7 +214,10 @@ func _retreat(sim: BattleSim, f: FleetState, P: Dictionary) -> void:
 	if sim.morale == null or f.retreat_order:
 		return
 	var rm := int(P.retreat_morale_bp)
-	if (rm > 0 and f.morale_bp < rm) or (float(P.retreat_ship_share) > 0.0 and float(f.ships) < float(f.max_ships) * float(P.retreat_ship_share)):
+	# 성향별 손실 임계(실무)는 방침 위에 얹는다: 둘 중 높은 남은 선체 비율에서 퇴각(§5.2·§5.3)
+	var disp := str(A.commanders.get(f.commander_id, {}).get("disposition", ""))
+	var share := maxf(float(P.retreat_ship_share), float(A.get("disposition_retreat_ship_share", {}).get(disp, 0.0)))
+	if (rm > 0 and f.morale_bp < rm) or (share > 0.0 and float(f.ships) < float(f.max_ships) * share):
 		sim.apply(BattleSim.command(f.side, [f.id], "retreat"))   # 질서 퇴각: 탈출 지점으로(§5.3)
 		stats.retreat += 1
 
