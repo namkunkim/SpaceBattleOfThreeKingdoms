@@ -157,6 +157,7 @@
 > **갱신 (2026-10-03, 2차 세션):** 위장 항복과 화공 재설계는 제안서 v0.3 §4.11에 들어갔다. 실시간 전용 수치는 모두 JSON의 `realtime_rules`에 모았다. 여기에는 연환·역병, 사기 사건, 화공, 결정 카드, 시드 변주, 조조 성향, what-if 카드가 들어간다.
 
 - 제안서 §4.1의 데모 편성표와 §4.12의 기함 조건을 이 시나리오로 바꾼다(M2에서 데이터와 함께).
+- G8-04 키 경로(코어는 `rs.rt("a.b.c")`로 읽는다, 모두 `status: "proposed"`): `commander_succession.confusion.{duration_s, penalty_stage_equivalent, max_stage, effect_per_stage.*}`(60초·2단계 상당·상한 4단계), `commander_casualties.{capture_radius, rescue_radius}`(120), `commander_casualties.table`(판정표 6줄), `commander_casualties.cao_cao.*`, `commander_casualties.instant_result.*`. 값은 제안서 §4.14, 구현은 M9.
 - M2에서 코어가 이 파일을 읽어 난이도를 적용한다. 코드에 규칙 수치를 두지 않는다. `realtime_rules`의 `status: "proposed"` 항목은 제안값이고, M4·M9에서 측정해 생성기(`tools/scenario/make_red_cliffs_208.py`)로 고친다.
 - 정본 편성 화면(UI 세션, `roster_screen.gd`)이 이 파일을 읽는다. 전투 전에는 조조군의 전대 수·구성·투입 시각을 숨긴다(`REVIEW-UI-v2.md` W-3).
 - 본편 쪽에 S5(통솔 값 불일치)를 알렸다(`UPSTREAM-ISSUES.md` A1). 답을 기다린다.

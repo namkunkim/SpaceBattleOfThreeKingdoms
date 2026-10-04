@@ -84,7 +84,7 @@
 
 | 우선 | 일 | 메모 |
 |---|---|---|
-| 1 | **구현 세션 M2 이후 리뷰** | M1은 수용했다(`REVIEW-M1.md`). 다음은 M2(코어가 시나리오 JSON과 `realtime_rules`를 데이터로 읽는지). 병합되면 알려 달라고 해 두었다 |
+| 1 | ~~구현 세션 M2 리뷰~~ | 수용했다(`REVIEW-M2.md`). M2b 스냅숏(`data/scenarios/base/`)과 후속 A(G8-04 잠정값 키, 2026-10-04 `commander_succession`·`commander_casualties`)도 끝났다. 남은 것은 후속 B·C(구현 세션, M3). M3 병합 때 리뷰하고 테스트를 재실행한다 |
 | 2 | ~~본편 판정 반영~~ | 끝났다(위 3차 세션). 본편 main 병합과 본편 코드(A5·A6) 후속만 지켜본다 |
 | 3 | **UI 세션 새 병합분 리뷰** | 리뷰 항목은 모두 닫혔다. 새 병합이 있을 때만 본다. 의심 80 결정 카드 전환과 `realtime_rules.decision_cards`를 알렸다 |
 | 4 | **M4 이후 밸런스** | `BALANCE-PLAN-M4.md`의 기준대로 한다. 제안값은 JSON에서 `status: "proposed"`로 표시돼 있다 |

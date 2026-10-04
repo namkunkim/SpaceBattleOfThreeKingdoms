@@ -83,6 +83,7 @@ M1 병합(`29978b7`) 3차 세션 리뷰: `REVIEW-M1.md`. 컨셉 세션이 `tests
 - [x] A7 채모·장윤 서술(정사 / 연의)
 - [x] C4 역사 감수: 사관 서술, what-if 해설, 후일담의 인용(채모의 출사, 연의 회차 번호)
 - [x] G8-04 장수 부상·전사·포로 규칙 → 본편 V-74로 확정(2026-10-04). `{조조_상태}` 슬롯과 §4.14를 고쳤다. 포획 반경 120·혼선 2단계는 잠정값이라 M9에서 측정한다(`UPSTREAM-ISSUES.md` §E)
+- [x] G8-04 잠정값을 `realtime_rules`에 `status: "proposed"`로 추가(2026-10-04, REVIEW-M2 후속 A): `commander_succession`, `commander_casualties`. 키 경로는 `SCENARIO-RED-CLIFFS-208.md` §실시간 규칙 부분. 구현 세션은 M9 전에 `proposed_paths()`에 두 키를 넣으면 된다
 
 ## 5. 구현이 있어야 닫히는 설계 문제
 
