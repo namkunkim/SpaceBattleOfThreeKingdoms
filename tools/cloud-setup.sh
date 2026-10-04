@@ -9,14 +9,15 @@ GODOT_VER=4.7.2-stable
 ANDROID_HOME=$HOME/android-sdk
 CMDLINE=11076708
 
+export DEBIAN_FRONTEND=noninteractive
 apt-get update -qq && apt-get install -y -qq openjdk-17-jdk-headless unzip wget >/dev/null
 
 # Godot + 내보내기 템플릿
 if ! command -v godot >/dev/null; then
   base=https://github.com/godotengine/godot-builds/releases/download/$GODOT_VER
-  wget -q $base/Godot_v${GODOT_VER}_linux.x86_64.zip -O /tmp/g.zip && unzip -q -o /tmp/g.zip -d /tmp/g
+  wget -nv $base/Godot_v${GODOT_VER}_linux.x86_64.zip -O /tmp/g.zip && unzip -q -o /tmp/g.zip -d /tmp/g
   install /tmp/g/Godot_v${GODOT_VER}_linux.x86_64 /usr/local/bin/godot
-  wget -q $base/Godot_v${GODOT_VER}_export_templates.tpz -O /tmp/t.zip && unzip -q -o /tmp/t.zip -d /tmp/t
+  wget -nv $base/Godot_v${GODOT_VER}_export_templates.tpz -O /tmp/t.zip && unzip -q -o /tmp/t.zip -d /tmp/t
   tdir=$HOME/.local/share/godot/export_templates/${GODOT_VER/-stable/.stable}
   mkdir -p "$tdir" && cp -r /tmp/t/templates/* "$tdir"
 fi
@@ -24,7 +25,7 @@ fi
 # Android SDK
 if [ ! -d "$ANDROID_HOME/platform-tools" ]; then
   mkdir -p "$ANDROID_HOME/cmdline-tools"
-  wget -q https://dl.google.com/android/repository/commandlinetools-linux-${CMDLINE}_latest.zip -O /tmp/c.zip
+  wget -nv https://dl.google.com/android/repository/commandlinetools-linux-${CMDLINE}_latest.zip -O /tmp/c.zip
   unzip -q -o /tmp/c.zip -d "$ANDROID_HOME/cmdline-tools" && mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
   yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null
   "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platform-tools" "build-tools;35.0.1" "platforms;android-35" "cmdline-tools;latest" >/dev/null
