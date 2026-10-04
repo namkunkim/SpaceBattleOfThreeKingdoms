@@ -94,6 +94,7 @@ M3 리뷰(2026-10-04): `REVIEW-M3.md`. 수용. 후속은 방향 배분 잔여 �
 
 ## 5. 구현이 있어야 닫히는 설계 문제
 
+- [ ] **(대기열) 서막(첫 진입 배경 서사)** (UI 세션, 2026-10-04 검토): `NARRATIVE-RED-CLIFFS.md` §11. 타이틀 "출격 준비" → 서막 6장(첫 회만, `prologue_seen`) → 브리핑, 타이틀에 "서막" 다시 보기, 건너뛰기·동작 줄이기. 같은 작업에서 §11.3 타이틀·브리핑 문구(성간 삼국·촉한·위·회랑·제독) 교체. 테스트: `tests/ui_flow.gd`에 첫 회 표시·두 번째 건너뜀, `capture_ui.gd`에 `prologue` 장면. 로컬 세션에서 본편 `prologue.md` 집필 지침과 문안 대조
 - [x] 전투 효과음 연결(2026-10-05): 원샷 12종을 `ui_sound.gd` EVENTS에 넣었다. 코어 사건 연결은 `FleetBattle3D.sfx_event` → 덱 `sound.play`: 일제사격(artillery→laser_heavy, line_fire→laser_light)·missile_launch·missile_hit·fighter_launch·charge→engine_boost. 루프 3종은 `UiSound.set_loop(이름, 0~1)` 재생기(종류마다 하나, 동시 최대 3). 테스트 `tests/ui_sound.gd`
 - [ ] **(대기열) 효과음 후속**: ① 코어에 사건이 없어 못 붙인 것: fighter_guns·fighter_dock(함재기 교전·회수), shield_hit·armor_hit(피격 종류), chain_explosion·fire_ignite·fire_loop(화공 M9). ② 루프를 부르는 쪽이 없다: engine_loop(함대 이동 중), beam_loop(지속 사격 중)을 렌더러·투영 상태로 `set_loop`에 연결
 - [ ] **(대기열) M7 AI 대 AI 1000시드 기준선** (REVIEW-M7 F-1·F-2 반영 완료, 이제 돌릴 수 있다. 표준 80시드 51.2%·14.2분. M8 보급을 켠 main도 80시드 결과가 같다(`REVIEW-M8.md` §7.1)): 난이도 입문·표준·상급(극한은 40시드 4.8%로 목표 안). `tools/m7/baseline.sh 표준 1000 8`(약 2시간), 상급·극한은 판당 훨씬 오래 걸려 밤새 돌린다. 지금은 40~80시드 값만 있다(`M7-NOTES` §3). 표준 조조 승률 목표 60%(지금 35%)·길이 15~18분(지금 14분)·입문 무명령 50~70%(지금 90%) 레버: 조조 시작 사기, `range_band_hold`, 위임 아군 `engage_trigger_r`, 입문 규모
