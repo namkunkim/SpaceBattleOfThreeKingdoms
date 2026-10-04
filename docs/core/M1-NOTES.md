@@ -107,4 +107,4 @@ godot --headless --path . -s tests/autoresolve.gd -- --runs 200 --hz 10 --baseli
 - 5초 공격 정책의 길이 −1.4%는 보류. M3 시작 때 같은 증상이 남아 있으면 이분 탐색을 한 번 한다. 0.55초·9.05초는 POC 전용이라 기준선을 다시 잡지 않고 M3 새 규칙으로 대체될 때 사라진다.
 - 선택 감속을 `Engine.time_scale`에서 `TickClock.set_speed`로 옮길 때, Q55의 유휴 5초 해제 타이머가 감속의 영향을 받지 않는 **실시간 기준**인지 확인한다(UI 세션 `battle_pacing.gd`는 지금 `UiDraw.real_dt`로 `Engine.time_scale`을 나눠 실시간을 얻는다. 코어 시계 속도로 옮기면 `Engine.time_scale`이 1이 되므로 이 보정이 그대로 맞는지 같이 본다).
 - 정보 경계와 투영의 빈 자리(`counts`, `control`, `chain_op`, `pending_decisions`)는 M6·M7. POC HUD 이중 구조는 M10.
-- 다음 M2: 시나리오 JSON의 `difficulty_policy`, `deploy_delay_s`, `realtime_rules`(status "proposed" 포함)를 데이터로 읽게 한다. `core/battle/poc_setup.gd`와 `BattleRules`의 상수가 대상이다.
+- M2는 끝났다(2026-10-04, main `06be305`). 결과와 남은 일은 `docs/core/M2-NOTES.md`.
