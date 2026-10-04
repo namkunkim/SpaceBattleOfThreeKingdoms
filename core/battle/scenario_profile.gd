@@ -7,12 +7,13 @@ extends RefCounted
 #
 # 만든 프로필: {profile_id, difficulty, rules, ally, foe, reinf, combat, scenario: {...}}
 #  - combat: 사격·피해 규칙 사전(data/profiles/combat_m3.json). 프로필 정의에 combat_rules_path가 있을 때만 채워진다(M3)
+#  - ai: 지휘관 AI 수치 사전(data/profiles/ai_m7.json, M7). 프로필 정의에 ai_rules_path가 있을 때만 채워진다
 #  - rules: base 프로필의 규칙 수치에 rule_overrides와 전장 크기(battlefield_bounds)를 덮은 것
 #  - ally/foe: 전대 정의 사전(PocSetup과 같은 키 + squadron_id, faction_id, commander_id, group_id, might, intellect, morale_group, start_morale_bp, formation_id, composition)
 #  - scenario: {difficulty_policy, difficulty_profile, realtime_rules, escape_points, ...}. RuleSet이 읽는다
 
 # 프로필 정의 경로에서 읽어 만든다.
-static func load_profile(def_path: String, difficulty := "") -> Dictionary:
+static func load_profile(def_path: String, difficulty := "", dprof_override := {}) -> Dictionary:
 	var def := ProfileLoader.read_json(def_path)
 	if def.is_empty():
 		return {}
@@ -20,12 +21,17 @@ static func load_profile(def_path: String, difficulty := "") -> Dictionary:
 	var base := ProfileLoader.read_json(def.base_profile)
 	if scn.is_empty() or base.is_empty():
 		return {}
+	if not dprof_override.is_empty() and scn.difficulty_profiles.has(difficulty):
+		scn.difficulty_profiles[difficulty].merge(dprof_override, true)   # 밸런스 측정용(autoresolve --count-factor 등). 게임 흐름에서는 쓰지 않는다
 	var combat := {}
 	if def.has("combat_rules_path"):
 		combat = ProfileLoader.read_json(def.combat_rules_path).get("combat", {})
 		if combat.is_empty():
 			return {}
-	return build(def, scn, base, difficulty if difficulty != "" else def.default_difficulty, combat)
+	var p := build(def, scn, base, difficulty if difficulty != "" else def.default_difficulty, combat)
+	if def.has("ai_rules_path") and not p.is_empty():
+		p.ai = ProfileLoader.read_json(def.ai_rules_path).get("ai", {})   # M7 지휘관 AI 수치. 없으면 POC AI
+	return p
 
 static func build(def: Dictionary, scn: Dictionary, base: Dictionary, difficulty: String, combat := {}) -> Dictionary:
 	var order: Array = scn.difficulty_order

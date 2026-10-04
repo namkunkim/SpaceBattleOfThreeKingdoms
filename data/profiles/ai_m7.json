@@ -1,0 +1,45 @@
+{
+ "ai": {
+  "status": "proposed",
+  "note": "M7 지휘관 AI 수치. 방침 5종(제안서 §5.2), 성향 → 방침 대응(정본 dispositions.md §7.1), 진영 교리(본편 red-cliffs-ai-rules.json), 전황 반응(§5.2). 모두 제안값이고 M7 기준선(AI 대 AI)에서 맞춘다. 거리대 일정(포화 → 교전 → 강습)은 시나리오 realtime_rules.range_band_hold를 읽는다.",
+  "postures": {
+   "aggressive": {"name": "적극", "bias": 0.6, "hold_mul": 0.5, "min_dist": 0, "kite": false, "charge": true, "retreat_morale_bp": 0, "retreat_ship_share": 0.0, "defend_share": 0.2},
+   "balanced": {"name": "균형", "bias": 0.0, "hold_mul": 1.0, "min_dist": 0, "kite": false, "charge": false, "retreat_morale_bp": 0, "retreat_ship_share": 0.0, "defend_share": 0.3},
+   "cautious": {"name": "신중", "bias": -0.6, "hold_mul": 1.5, "min_dist": 170, "kite": true, "charge": false, "retreat_morale_bp": 4000, "retreat_ship_share": 0.45, "defend_share": 0.5},
+   "scheming": {"name": "계략 중시", "bias": -0.3, "hold_mul": 2.0, "min_dist": 240, "kite": true, "charge": false, "retreat_morale_bp": 4000, "retreat_ship_share": 0.4, "defend_share": 0.4},
+   "delegated": {"name": "인물 위임", "note": "지휘관 성향(dispositions)에서 방침을 고른다. 기본값"}
+  },
+  "dispositions": {"절의": "cautious", "명사": "balanced", "실무": "balanced", "야심": "aggressive", "무뢰": "aggressive"},
+  "commanders": {
+   "CHR-0128": {"disposition": "명사"},
+   "CHR-0107": {"disposition": "절의"},
+   "CHR-0325": {"disposition": "실무"},
+   "CHR-0136": {"disposition": "절의"},
+   "CHR-0211": {"disposition": "명사"},
+   "CHR-0207": {"disposition": "명사"},
+   "CHR-0217": {"disposition": "무뢰", "posture": "scheming", "note": "화공대. M9에서 계략 예약을 이 방침이 맡는다"},
+   "CHR-0034": {"disposition": "야심"},
+   "CHR-0033": {"disposition": "무뢰"},
+   "CHR-0017": {"disposition": "실무"},
+   "CHR-0010": {"disposition": "실무"},
+   "CHR-0330": {"disposition": "실무"},
+   "CHR-0084": {"disposition": "무뢰"},
+   "CHR-0036": {"disposition": "야심"}
+  },
+  "factions": {
+   "cao_cao": {"posture_id": "aggressive_pressure", "standoff": 100, "pursuit_step": 110, "no_contact": "advance", "engage_trigger_r": 0, "estimated_min_conf_bp": 4500},
+   "sun_quan": {"posture_id": "allied_defensive", "standoff": 150, "pursuit_step": 70, "no_contact": "hold", "engage_trigger_r": 300, "estimated_min_conf_bp": 4500,
+    "note": "손권군 전대는 아군 전대에서 300 안에 들어온 적에게 접근한다(realtime_rules.sun_support_ai). 추정 사격 신뢰도 요구치는 본편 6500이 추정 접촉 신뢰도를 넘어 사격이 불가능해 4500으로 둔다(제안서 §5.2)"},
+   "liu_bei": {"posture_id": "allied_defensive", "standoff": 150, "pursuit_step": 70, "no_contact": "hold", "engage_trigger_r": 300, "estimated_min_conf_bp": 4500}
+  },
+  "delegate_level": {"think_depth": 2, "mistake_bp": 500, "reaction_s": 0},
+  "reaction": {"crisis_bias": -0.3, "foe_weak_bias": 0.3, "foe_weak_band": 2, "charge_bias": 0.5, "charge_dist_share": 1.0},
+  "slack": 20,
+  "hold_clamp": [0.5, 1.5],
+  "score": {"base": 0.55, "span": 0.6, "estimated_mul": 1.25},
+  "decisions": {
+   "crisis": {"effect_s": 120, "bias_mod": 0.5, "rearm_gap_bp": 500},
+   "pursuit": {"effect_s": 60, "bias_mod": 0.5, "radius": 500, "recommend_min_army_bp": 6000}
+  }
+ }
+}

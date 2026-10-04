@@ -102,7 +102,7 @@ DIFF = {
            "start_morale_bp": {"northern": 8000, "jing_navy": 6000},
            "ai": {"think_depth": 1, "mistake_bp": 2500, "reaction_s": 120, "chain_risk_response": False, "chain_detect_mean_s": None, "suspicion_per_s": 0.4},
            "note": "역병과 원정 피로가 크고 형주 수군이 훈련되지 않았다. 조조는 밀집(연환)을 풀지 않는다."},
-    "표준": {"count_factor": 0.70, "target_cost_ratio": 1.24,
+    "표준": {"count_factor": 0.90, "target_cost_ratio": 1.24,
            "start_morale_bp": {"northern": 8000, "jing_navy": 6500},
            "ai": {"think_depth": 2, "mistake_bp": 1000, "reaction_s": 60, "chain_risk_response": True, "chain_detect_mean_s": 60, "suspicion_per_s": 0.8},
            "note": "본편 데모의 보통 난이도에 해당한다."},

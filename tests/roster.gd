@@ -34,12 +34,12 @@ func _run() -> void:
 	var p := Commanders.person("CHR-0207")
 	if not TestCheck.ok(self, p.get("name", "") == "정보" and p.get("faction", "") == "wu" and p.get("portrait", 0) == -1, "person CHR-0207 %s" % p): return
 	if not TestCheck.ok(self, Commanders.person("CHR-0134").get("portrait", -1) == 2 and Commanders.person("liu_bei").is_empty(), "portrait by CHR id"): return
-	# W-2: 입문 4 · 표준 5 · 상급 7개 전대, 0.7 배율 half-up, 원래 1척 이상이면 최소 1척
+	# W-2: 입문 4 · 표준 5 · 상급 7개 전대. 입문 0.7 배율 half-up(표준은 M7에서 0.9로 올렸다), 원래 1척 이상이면 최소 1척
 	var n := {}
 	for diff in ["입문", "표준", "상급", "극한"]:
 		n[diff] = ScenarioRoster.deployed(d, "cao_cao", diff).size()
 	if not TestCheck.ok(self, n.입문 == 4 and n.표준 == 5 and n.상급 == 7 and n.극한 == 7, "deploy by difficulty %s" % n): return
-	var cao1: Dictionary = ScenarioRoster.deployed(d, "cao_cao", "표준")[0]
+	var cao1: Dictionary = ScenarioRoster.deployed(d, "cao_cao", "입문")[0]
 	var want := {"SHP-01": 1, "SHP-03": 3, "SHP-04": 6}
 	for c in cao1.composition:
 		if want.has(c.ship_type_id) and int(c.count) != want[c.ship_type_id]:

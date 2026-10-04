@@ -26,6 +26,9 @@ var morale: MoraleCore = null   # M4 사기. 시나리오 프로필(salvo + real
 var victory: Victory = null     # M4 승패(§4.12). 없으면 POC 종료 조건(기함 상실·섬멸)
 var salvo: SalvoCombat = null   # M3 사격·피해 규칙. combat 사전이 있는 프로필에서만 켜진다(없으면 POC 규칙)
 var terrain: BattleTerrain = null   # M6 지형. combat.terrain이 있을 때
+var cai: CommanderAi = null     # M7 지휘관 AI. 프로필에 ai 수치가 있을 때(적벽)만. 없으면 POC AI
+var decisions: DecisionBoard = null   # M7 결정 카드(시나리오 realtime_rules.decision_cards가 있을 때)
+var first_hit_tick := -1        # 첫 명중 틱(양측이 아는 공개 사실). AI의 거리대 일정이 이 시각에서 센다
 var detect: Detection = null    # M6 탐지·전쟁 안개. combat.detection이 있을 때만 켜진다(없으면 완전 정보)
 
 # profile: 프로필 사전({profile_id, rules, ally, foe, reinf}). 비우면 POC 프로필(기준선 동등).
@@ -70,6 +73,8 @@ func _init(seed_id: int = 0, hz: int = BattleRules.TICK_HZ, profile: Dictionary 
 			morale = MoraleCore.new(self, cb.morale)
 			if cb.has("victory"):
 				victory = Victory.new(self, cb.victory)
+	if not profile.get("ai", {}).is_empty() and salvo and morale:
+		enable_commander_ai(profile.ai)
 
 # ============================================================ 공개 API
 func queue(cmd: Dictionary) -> void:
@@ -80,11 +85,30 @@ func drain_events() -> Array[Dictionary]:
 	_events = []
 	return out
 
+# 지휘관 AI와 결정 카드를 켠다(프로필 ai 수치가 있을 때 _init이 부른다. 규칙 단위 테스트도 쓴다)
+func enable_commander_ai(cfg: Dictionary) -> void:
+	cai = CommanderAi.new(cfg)
+	var dc: Dictionary = rs.rt("decision_cards", {})
+	if not dc.is_empty() and morale:
+		decisions = DecisionBoard.new(self, dc, cfg.decisions)
+
+# "전 전대 수동" 설정(§5.4): 켜면 모든 아군 전대가 직접 지휘가 된다. 끄면 모두 위임으로 돌아간다
+func set_manual_all(on: bool) -> void:
+	for f in st.fleets:
+		if f.side == 0:
+			f.control = "direct" if on else "delegate"
+
 func projection(side: int) -> Dictionary:
 	return BattleProjection.build(self, side)
 
 func fingerprint() -> String:
-	return BattleFingerprint.of(st, detect)
+	var extra := ""
+	if cai:
+		var parts := PackedStringArray()
+		for f in st.fleets:
+			parts.append("%d.%s.%s.%d.%d.%d.%d" % [f.id, f.control, f.posture, f.bias_until, roundi(f.bias_mod * 1000.0), f.pursue_id, f.ai_seen])
+		extra = "ai%d|%s|%s" % [first_hit_tick, ",".join(parts), decisions.fingerprint() if decisions else ""]
+	return BattleFingerprint.of(st, detect, extra)
 
 # 즉시 적용 명령. 틱 사이에 상태는 변하지 않으므로 "다음 step() 첫머리에 적용"과 결과가 같고,
 # 재생(replay)도 같은 틱 번호로 같은 결과를 낸다. 화면이 명령 직후 상태를 바로 읽을 수 있다.
@@ -92,7 +116,17 @@ func issue(cmd: Dictionary) -> void:
 	var c := cmd.duplicate(true)
 	c.tick = st.tick
 	command_log.append(c)
+	_mark_direct(c)
 	apply(c)
+
+# 플레이어가 명령한 전대는 직접 지휘가 된다(§5.4). AI 명령은 apply()를 바로 불러 여기를 거치지 않는다.
+const DIRECT_KINDS := ["stop", "move", "attack", "charge", "retreat", "rally", "formation", "restore", "def", "missile", "fighter", "volley"]
+
+func _mark_direct(c: Dictionary) -> void:
+	if int(c.side) != 0 or not (str(c.kind) in DIRECT_KINDS):
+		return
+	for f in _cmd_fleets(c):
+		f.control = "direct"
 
 # 한 틱 진행. 대기 중인 명령을 먼저 적용한다.
 func step() -> void:
@@ -102,6 +136,7 @@ func step() -> void:
 		c = c.duplicate(true)
 		c.tick = st.tick
 		command_log.append(c)
+		_mark_direct(c)
 		apply(c)
 	_tick()
 
@@ -373,6 +408,12 @@ func _spend(side: int, amt: int) -> void:
 func apply(c: Dictionary) -> void:
 	var side := int(c.side)
 	var kind: String = c.kind
+	if kind == "decide":
+		# 결정 카드 응답(M7). args {id, option}. 전대 선택이 없다
+		var why: String = decisions.resolve(int(c.args.get("id", -1)), str(c.args.get("option", "")), "player") if decisions and side == 0 else "unknown_command"
+		if why != "":
+			_reject(null, why, side)
+		return
 	var s := _cmd_fleets(c)
 	if s.is_empty():
 		_reject(null, "no_selection", side)
@@ -381,7 +422,7 @@ func apply(c: Dictionary) -> void:
 		# 강제 퇴각 중인 전대는 명령을 받지 않는다(§4.6)
 		s = s.filter(func(f): return not morale.forced(f))
 		if s.is_empty():
-			if not (kind.begins_with("ai_") or kind == "def_on"):
+			if not (kind.begins_with("ai_") or kind == "def_on" or kind == "delegate" or kind == "posture"):
 				_reject(null, "retreating", side)
 			return
 	var L := _lead(s)
@@ -392,6 +433,22 @@ func apply(c: Dictionary) -> void:
 		for f in s:
 			_clear_path(f)
 	match kind:
+		"delegate":
+			# 위임으로 돌리기(§5.4): 지휘관 AI가 다시 이동·표적을 정한다. 퇴각 명령은 그대로 둔다
+			if side != 0:
+				return
+			for f in s:
+				f.control = "delegate"
+			emit("say", L.id, -1, L.pos, "delegate")
+		"posture":
+			# 전투 방침 지정(§5.2). args.id = aggressive | balanced | cautious | scheming | delegated(인물 위임)
+			var pid := str(c.get("args", {}).get("id", ""))
+			if cai == null or not cai.A.postures.has(pid):
+				_reject(L, "unknown_command", side)
+				return
+			for f in s:
+				f.posture = pid
+			emit("say", L.id, -1, L.pos, "posture")
 		"stop":
 			for f in s:
 				f.target_id = -1
@@ -675,7 +732,10 @@ func _substep(first: bool) -> void:
 	st.ai_timer -= sub_ms
 	if st.ai_timer <= 0:
 		st.ai_timer += R.ai_period_ms
-		_ai.think(self)
+		if cai:
+			cai.think(self)
+		else:
+			_ai.think(self)
 	_fleet_phase(first)
 	if salvo and first:
 		if detect:
@@ -683,6 +743,8 @@ func _substep(first: bool) -> void:
 		salvo.step()
 		if morale:
 			morale.step()
+		if decisions:
+			decisions.step()
 	_separate()
 	_move_missiles()
 	_move_swarms()
