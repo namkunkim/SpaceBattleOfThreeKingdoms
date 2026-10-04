@@ -79,7 +79,7 @@
   },
   "표준": {
    "count_factor": 0.9,
-   "target_cost_ratio": 1.24,
+   "target_cost_ratio": 1.65,
    "start_morale_bp": {
     "northern": 8000,
     "jing_navy": 6500
