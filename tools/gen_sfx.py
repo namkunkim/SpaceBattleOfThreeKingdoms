@@ -5,7 +5,9 @@
 import math, os, random, struct
 
 SR = 44100
-OUT = os.path.join(os.path.dirname(__file__), "..", "assets", "audio", "battle")
+AUDIO = os.path.join(os.path.dirname(__file__), "..", "assets", "audio")
+OUT = os.path.join(AUDIO, "battle")
+UI_OUT = os.path.join(AUDIO, "ui")  # UI 효과음: ui_sound.gd EVENTS의 file "ui/<이름>"
 
 
 def n(d):
@@ -100,7 +102,7 @@ def loopify(x, xf):  # 꼬리를 머리에 교차 페이드해 이음매를 없�
     return body
 
 
-def write(name, x, loop=False):
+def write(name, x, loop=False, out=None):
     if loop:  # 루프는 끝 페이드·과구동 없이 정규화만
         m = max(abs(v) for v in x) or 1.0
         x = [v * 0.8 / m for v in x]
@@ -111,7 +113,7 @@ def write(name, x, loop=False):
         smpl = struct.pack("<9I", 0, 0, 10**9 // SR, 60, 0, 0, 0, 1, 0)
         smpl += struct.pack("<6I", 0, 0, 0, len(x) - 1, 0, 0)
         chunks += b"smpl" + struct.pack("<I", len(smpl)) + smpl
-    with open(os.path.join(OUT, name + ".wav"), "wb") as f:
+    with open(os.path.join(out or OUT, name + ".wav"), "wb") as f:
         f.write(b"RIFF" + struct.pack("<I", 4 + len(chunks)) + b"WAVE" + chunks)
     print("%-18s %.2fs" % (name, len(x) / SR))
 
@@ -277,9 +279,66 @@ def fire_loop():  # 번지는 불: 저음 굉음 + 타닥임
     return loopify(x, n(0.3))
 
 
+# ── UI 효과음 (assets/audio/ui/) ─────────────────────
+def blip(dur, f0, f1, g=1.0, shape="sine", decay=None):  # 짧은 음 하나: 높이 미끄럼 + 배음
+    base = osc(dur, sweep(f0, f1, dur), shape)
+    if shape == "sine":
+        base = mix((base, 1.0, 0), (osc(dur, sweep(f0 * 2, f1 * 2, dur), "sine"), 0.25, 0))
+    return env(base, ad(0.004, decay or dur / 3))
+
+
+def ui_button():
+    return finish(blip(0.06, 1250, 1150), 0.5, 1.1)
+
+
+def ui_tab():
+    return finish(blip(0.07, 900, 1000), 0.45, 1.1)
+
+
+def ui_confirm():
+    return finish(mix((blip(0.09, 660, 660), 1, 0), (blip(0.14, 990, 990), 1, 0.07)), 0.6, 1.1)
+
+
+def ui_confirm_heavy():
+    return finish(mix((blip(0.18, 330, 330, decay=0.12), 1, 0), (blip(0.3, 660, 660, decay=0.2), 1, 0.12),
+                      (lp(brown(0.3, 3), 400), 0.5, 0)), 0.75, 1.3)
+
+
+def ui_denied():
+    return finish(mix((blip(0.1, 220, 200, shape="square"), 0.6, 0), (blip(0.12, 180, 160, shape="square"), 0.6, 0.11)), 0.5, 1.0)
+
+
+def ui_undo():
+    return finish(mix((blip(0.08, 990, 990), 1, 0), (blip(0.12, 660, 660), 1, 0.07)), 0.55, 1.1)
+
+
+def ui_pause():
+    return finish(blip(0.16, 520, 390, decay=0.08), 0.55, 1.1)
+
+
+def ui_alert():
+    x = mix(*[(blip(0.14, 880 if k % 2 == 0 else 660, 880 if k % 2 == 0 else 660, decay=0.1), 1, 0.16 * k) for k in range(4)])
+    return finish(echo(x, 0.12, 0.25, 2), 0.7, 1.3)
+
+
+def ui_decision():
+    return finish(echo(mix((blip(0.18, 523, 523, decay=0.1), 1, 0), (blip(0.3, 784, 784, decay=0.15), 1, 0.12)), 0.1, 0.3, 2), 0.7, 1.1)
+
+
+def ui_warn_branch():
+    return finish(mix((blip(0.1, 740, 740), 1, 0), (blip(0.14, 880, 880), 1, 0.09)), 0.6, 1.1)
+
+
+def ui_fleet_lost():
+    x = mix(*[(blip(0.22, 440 if k % 2 == 0 else 330, 440 if k % 2 == 0 else 330, shape="tri", decay=0.15), 1, 0.2 * k) for k in range(3)])
+    return finish(echo(x, 0.14, 0.3, 2), 0.75, 1.4)
+
+
 SOUNDS = [laser_light, laser_heavy, volley, salvo, missile_launch, missile_hit, fighter_launch, fighter_guns,
           fighter_dock, engine_boost, shield_hit, armor_hit, ship_kill, fleet_destroyed, chain_explosion, fire_ignite]
 LOOPS = [beam_loop, engine_loop, fire_loop]
+UI = [ui_button, ui_tab, ui_confirm, ui_confirm_heavy, ui_denied, ui_undo, ui_pause, ui_alert, ui_decision, ui_warn_branch,
+      ui_fleet_lost]
 
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
@@ -287,3 +346,6 @@ if __name__ == "__main__":
         write(f.__name__, f())
     for f in LOOPS:
         write(f.__name__, f(), loop=True)
+    os.makedirs(UI_OUT, exist_ok=True)
+    for f in UI:
+        write(f.__name__[3:], f(), out=UI_OUT)

@@ -26,4 +26,4 @@
 
 - 기존 사건 이름과 같은 4종은 `hud/ui_kit/ui_sound.gd`가 합성 임시음 대신 바로 쓴다.
 - `*_loop`는 WAV `smpl` 청크에 루프 구간을 넣었다. Godot가 `loop_mode=Forward`로 임포트한다.
-- UI 효과음(버튼·경보 등)은 지금처럼 `ui_sound.gd`의 합성음을 쓴다.
+- UI 효과음 11종(`assets/audio/ui/`: button·tab·confirm·confirm_heavy·denied·undo·pause·alert·decision·warn_branch·fleet_lost)도 같은 생성기가 만든다. `ui_sound.gd`의 합성 임시음은 파일이 없을 때만 쓰는 대비책이다.
