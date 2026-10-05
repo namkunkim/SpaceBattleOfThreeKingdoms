@@ -94,16 +94,16 @@ func _drag(e: InputEventScreenDrag) -> void:
 		_update_pinch()
 		return
 	if mode == "pending" and (e.position - (tc.start as Vector2)).length() > TAP_MOVE:
-		if origin_fleet and origin_fleet.side == 0:
+		if battle.multi:   # 다중 모드: 어디서 시작하든 끌기 = 범위 선택(명령은 탭으로)
+			mode = "box"
+			battle.drag = {"s": tc.start, "c": e.position, "btn": -1, "moved": true, "mode": "box", "shift": true, "last": e.position}
+		elif origin_fleet and origin_fleet.side == 0:
 			mode = "order"
 			if not battle.selected.has(origin_fleet):
 				battle.selected.clear()
 				battle.selected.append(origin_fleet)
 				battle.inspect = null
 				battle.refresh_panel()
-		elif battle.multi:
-			mode = "box"
-			battle.drag = {"s": tc.start, "c": e.position, "btn": -1, "moved": true, "mode": "box", "shift": true, "last": e.position}
 		else:
 			mode = "pan"
 	if mode == "pan":

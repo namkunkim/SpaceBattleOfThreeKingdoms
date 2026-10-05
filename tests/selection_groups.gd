@@ -100,6 +100,14 @@ func _run() -> void:
 		await _settle()
 		if not TestCheck.ok(self, battle.selected.has(f1) and battle.selected.has(f2), "box selects inside"): return
 		if not TestCheck.ok(self, battle.cam_pos.is_equal_approx(cam0) and battle.drag.is_empty(), "box does not pan"): return
+	# 2b. 다중 모드에서 선택된 전대 위에서 시작한 끌기도 범위 선택(명령 아님)
+	battle.selected.assign([f1])
+	TestPoke.fleet(battle, f1, {"has_move": false})
+	_touch(0, p1, true)
+	_move(0, p1, p1 + Vector2(220, 160))
+	_touch(0, p1 + Vector2(220, 160), false)
+	await _settle()
+	if not TestCheck.ok(self, not f1.has_move and battle.presentation.touch.order.is_empty(), "multi drag from selected fleet is not an order"): return
 	# 3. 다중 모드 해제 후 빈 곳 끌기는 팬
 	battle.multi = false
 	_touch(0, box_a, true)
