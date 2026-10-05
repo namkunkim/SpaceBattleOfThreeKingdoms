@@ -56,6 +56,11 @@ func _run() -> void:
 			battle.update_sim(0.05)
 		battle.selected.clear()
 		battle.selected.append(battle.fleets[1])
+		if mode == "select":
+			battle.groups[1] = [battle.fleets[0].id, battle.fleets[1].id]
+			battle.groups[2] = [battle.fleets[2].id]
+			if deck:
+				deck._set_info_open(true)
 		battle.refresh_panel()
 		battle.cam_pos = battle.fleets[1].pos + Vector2(260.0, 40.0)
 		battle.cam_z = 1.0
