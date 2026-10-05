@@ -11,7 +11,7 @@
 | 피격·격침 | 2D 점 파편 | 방어막 섬광(육각 무늬), 선체 피격 섬광, 화구·충격파·불씨·연기, 표류하며 타는 잔해, 함대 궤멸 시 연쇄 폭발 |
 | 공간감 | 배경판 + 격자 | 높이가 다른 공간 먼지(시차), 원경판, 빛 번짐 후처리 |
 | HUD | 절대 좌표, 기본 폰트, 단색 상자 | 흑칠·금장 테마, Pretendard·본명조, 앵커 배치(16:9·16:10·21:9) |
-| 화면 흐름 | 브리핑·일시정지·종료 카드 1종 | 타이틀(전투 허브) → 브리핑 → 전투 → 일시정지·설정 → 결과 |
+| 화면 흐름 | 브리핑·일시정지·종료 카드 1종 | 타이틀(전투 허브) → 서막(첫 회만) → 브리핑 → 전투 → 일시정지·설정 → 결과 |
 | 입력 | 마우스 | 마우스 + 터치(제안서 §7.2) |
 
 ## 파일
@@ -26,7 +26,8 @@ view/fleet_render/
 hud/ui_kit/
   presentation.gd        진입점. FleetBattle3D가 만든다. POC 3D 함대·HUD를 숨긴다(지우지 않는다)
   command_deck.gd        전투 HUD와 화면 전환
-  deck_screens.gd        타이틀, 브리핑, 일시정지, 설정, 결과
+  deck_screens.gd        타이틀, 서막, 브리핑, 일시정지, 설정, 결과
+  prologue_text.gd       서막 문안 8장(PrologueText.PAGES, 정본 NARRATIVE-RED-CLIFFS §11.2)
   tactical_overlay.gd    명패, 선택 괄호, 사거리 부채꼴, 명령선·도착 예상, 터치 끌기 미리보기
   radar_scope.gd         전술도
   battle_pacing.gd       시간 진행: 선택 감속 ×0.2·5초 유휴 해제(Q31·Q55), 조용한 구간 자동 ×4·건너뛰기(Q52)
@@ -82,7 +83,7 @@ M1이 만들 `view/battle_view_3d.gd`, `view/camera_rig.gd`, `view/fx_layer.gd`,
 ```
 godot --headless --path . --script tests/smoke.gd        # 기존 규칙 스모크
 godot --headless --path . --script tests/touch_input.gd  # 터치 8항목 + 마우스 클릭
-godot --headless --path . --script tests/ui_flow.gd      # 타이틀→브리핑→전투→일시정지→결과→타이틀
+godot --headless --path . --script tests/ui_flow.gd      # 타이틀→서막(첫 회·다시 보기·건너뛰기)→브리핑→전투→일시정지→결과→타이틀
 godot --headless --path . --script tests/pacing.gd       # Q52 자동 ×4·건너뛰기, Q53 포커스 상실 일시정지
 godot --headless --path . --script tests/touch_hold.gd   # 길게 누르기 툴팁, 툴팁 뒤 떼면 명령 취소
 godot --headless --path . --script tests/touch_targets.gd  # 터치 목표 크기 표(out/touch-targets.md)

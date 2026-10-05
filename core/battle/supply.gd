@@ -18,6 +18,7 @@ var S: Dictionary
 var ship := ""
 var need := 0             # 한 주기의 bp·틱
 var light_ticks := 0
+var still_eps := 0.0     # 틱당 정지 판정 px = still_eps_px_s / hz
 var bases: Array = []     # {key, faction, side, pos}
 
 func _init(s: BattleSim, cfg: Dictionary) -> void:
@@ -26,6 +27,7 @@ func _init(s: BattleSim, cfg: Dictionary) -> void:
 	ship = str(S.ship_type_id)
 	need = BattleRules.ticks(float(S.stationary_s), sim.st.hz) * BattleRules.BP
 	light_ticks = BattleRules.ticks(float(S.repair.light_recover_s), sim.st.hz)
+	still_eps = float(S.still_eps_px_s) / sim.st.hz
 	for b in S.bases:
 		var side := -1
 		for f in sim.st.fleets:
@@ -145,7 +147,7 @@ func step() -> void:
 			f.sup_ammo = f.sup_ammo * n / f.sup_n
 			f.sup_mat = f.sup_mat * n / f.sup_n
 			f.sup_n = n
-		var still := f.pos.distance_to(f.sup_pos) <= float(S.still_eps)
+		var still := f.pos.distance_to(f.sup_pos) <= still_eps
 		f.sup_pos = f.pos
 		if not still:
 			f.sup_since = -1

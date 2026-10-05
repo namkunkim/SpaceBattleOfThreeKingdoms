@@ -264,6 +264,15 @@ func play_rc(seed_id: int, pol: String, diff: String) -> Dictionary:
 		ov.count_factor = float(_arg("--count-factor", ""))   # M7 레버 측정: 난이도의 조조군 규모
 	var p := ScenarioProfile.load_profile("res://data/profiles/red_cliffs_rt.json", diff, ov)
 	_tune(p.combat)
+	# M9 비교: --no-chain 1(화공 끔), --no-m9 1(화공·승계·강습 모두 끔 = M8 코드와 같은 판), --wind "540,600"(기류 창 시작 범위)
+	if _arg("--no-chain", "0") == "1" or _arg("--no-m9", "0") == "1":
+		p.scenario.realtime_rules.erase("chain_operation")
+	if _arg("--no-m9", "0") == "1":
+		for k in ["command", "stratagem", "assault"]:
+			p.combat.erase(k)
+	if _arg("--wind", "") != "":
+		var w := _arg("--wind", "").split(",")
+		p.scenario.realtime_rules.wind_window.start_after_first_hit_s = [int(w[0]), int(w[1])]
 	var sim := BattleSim.new(seed_id, BattleRules.TICK_HZ, p)
 	var hz: int = sim.st.hz
 	var max_tick := int(MAX_S * hz)
@@ -347,7 +356,22 @@ func play_rc(seed_id: int, pol: String, diff: String) -> Dictionary:
 		"conf_t": [snappedf(conf_t[0] / float(hz), 0.1) if conf_t[0] >= 0 else -1.0, snappedf(conf_t[1] / float(hz), 0.1) if conf_t[1] >= 0 else -1.0],
 		"conf_share": [float(conf_n[0]) / maxf(1.0, samples), float(conf_n[1]) / maxf(1.0, samples)],
 		"supply": sup,
+		"m9": _m9_row(sim),
 		"fp": sim.fingerprint()}
+
+# M9 통계: 화공 경과(서신·발동·간파·번짐·차단·창 시각), 승계, 강습 [시도, 성공]
+static func _m9_row(sim: BattleSim) -> Dictionary:
+	var out := {}
+	if sim.chain:
+		var c := sim.chain
+		out.chain = c.stats.duplicate(true)
+		out.chain.mode = c.mode
+		out.chain.win_start_s = c.win_start / float(sim.st.hz) if c.win_start >= 0 else -1.0
+	if sim.cmd:
+		out.cmd = sim.cmd.stats.duplicate()
+	if sim.assault:
+		out.assault = sim.assault.stats.duplicate(true)
+	return out
 
 static func summarize_rc(rows: Array) -> Dictionary:
 	var n := float(rows.size())

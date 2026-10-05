@@ -167,6 +167,7 @@ func settle(win: bool, reason: String, limited: bool, cond: Dictionary) -> Dicti
 		"conditions": {"alliance": cond.alliance.duplicate(), "foe": cond.foe.duplicate()},
 		"commanders": {"alliance": commander_fate(flag_fleet(0)), "foe": commander_fate(flag_fleet(1))},
 		"captured_in_retreat": failed,
+		"casualties": _casualties(failed),
 		"fleets": fleets,
 	}
 
@@ -198,3 +199,14 @@ func commander_fate(f: FleetState) -> String:
 	if near_e > rad:
 		return "severe"
 	return "severe" if near_f <= near_e else "captured"
+
+# M9 장수 사상 전체(G8-04): 상태가 바뀐 전대 지휘관과 이은 사람. 퇴각 실패(6행)는 포로로 적는다
+func _casualties(failed: Array) -> Array:
+	var out := []
+	if sim.cmd == null:
+		return out
+	for f in sim.st.fleets:
+		var s := "captured" if failed.has(f.sq_id) else f.cmdr_state
+		if s != "unhurt" or f.cmdr_sub != "":
+			out.append({"sq": f.sq_id, "person": f.commander_id, "state": s, "sub": f.cmdr_sub})
+	return out

@@ -118,8 +118,8 @@ func rally(side: int, rally_id: String) -> String:
 	for f in sim.st.fleets:
 		if f.sq_id == def.squadron_id and f.side == side and f.out == "":
 			src = f
-	if src == null:
-		return "rally_no_source"
+	if src == null or (sim.cmd and sim.cmd.incapacitated(src) and src.cmdr_sub == ""):
+		return "rally_no_source"   # 결집하는 지휘관이 지휘 불능이고 이은 사람도 없으면 못 한다(M9)
 	rally_uses[rally_id] -= 1
 	var e: Dictionary = sim.rs.rt("morale_events.rally_effect", {})
 	var gain := int(e.morale_bp_at_charm_99) * int(def.get("charm", M.rally_charm_max)) / int(M.rally_charm_max)

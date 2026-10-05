@@ -1,7 +1,8 @@
 class_name GameSettings
 extends RefCounted
 
-# 사용자 설정(user://settings.cfg): UI 크기, 전체 화면, 빛 번짐, 표시 밀도, 음량, 조용한 구간 자동 ×4(Q52), 선택 감속(Q31·Q55).
+# 사용자 설정(user://settings.cfg): UI 크기, 전체 화면, 빛 번짐, 표시 밀도, 음량, 조용한 구간 자동 ×4(Q52), 선택 감속(Q31·Q55),
+# 동작 줄이기(EXPERIENCE-DESIGN §7), 서막 본 적 있음(prologue_seen, NARRATIVE-RED-CLIFFS §11.1).
 
 const PATH := "user://settings.cfg"
 const UI_SCALES := [0.9, 1.0, 1.15, 1.3]
@@ -20,6 +21,8 @@ static var vol_master := 0.8
 static var vol_sfx := 0.8
 static var vol_ui := 0.7
 static var ship_density := 1   # 표시 함선 밀도 0 낮음 / 1 보통 / 2 높음(리뷰 C-1·C-4)
+static var reduce_motion := false   # 동작 줄이기: 타이틀·브리핑·서막 뒤 카메라 흐름을 멈춘다
+static var prologue_seen := false   # 서막을 한 번 봤거나 건너뛰었다. 다음 출격 준비부터 서막 없이 브리핑으로
 static var _loaded := false
 
 static func load_cfg() -> void:
@@ -42,6 +45,8 @@ static func load_cfg() -> void:
 	vol_master = float(cf.get_value("audio", "master", 0.8))
 	vol_sfx = float(cf.get_value("audio", "sfx", 0.8))
 	vol_ui = float(cf.get_value("audio", "ui", 0.7))
+	reduce_motion = bool(cf.get_value("display", "reduce_motion", false))
+	prologue_seen = bool(cf.get_value("progress", "prologue_seen", false))
 
 # 첫 실행 표시 밀도. 모바일(안드로이드 태블릿)은 실기기 측정 전이라 보수적으로 낮음(35%)에서 시작한다.
 # 측정(tests/bench_density.gd)으로 값이 정해지면 여기만 바꾼다.
@@ -60,7 +65,17 @@ static func save_cfg() -> void:
 	cf.set_value("audio", "master", vol_master)
 	cf.set_value("audio", "sfx", vol_sfx)
 	cf.set_value("audio", "ui", vol_ui)
+	cf.set_value("display", "reduce_motion", reduce_motion)
+	cf.set_value("progress", "prologue_seen", prologue_seen)
 	cf.save(PATH)
+
+# 서막을 봤다고 기록한다. 설정 파일 하나에 같이 저장한다(새 저장 파일을 만들지 않는다).
+static func mark_prologue_seen() -> void:
+	load_cfg()
+	if prologue_seen:
+		return
+	prologue_seen = true
+	save_cfg()
 
 static func apply(win: Window) -> void:
 	load_cfg()

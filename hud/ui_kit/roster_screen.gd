@@ -74,7 +74,7 @@ func _draw_panel(c: Control) -> void:
 		UiDraw.text(c, Vector2(36, 92), "시나리오 자료를 읽지 못했습니다", "serif_bold", 24, UiTheme.WARN)
 		return
 	UiDraw.text(c, Vector2(36, 92), str(data.get("title", "")), "serif_bold", 30, UiTheme.INK)
-	var note := "시나리오 자료 그대로의 편성입니다. 지금 시험 전투(적벽 회랑)는 이 편성이 아닙니다."
+	var note := "시나리오 자료 그대로의 편성입니다. 지금 시험 전투(POC)는 이 편성이 아닙니다."
 	if reveal:
 		note = "전부 공개 · %s 난이도의 배치입니다(조조군 규모 배율과 투입 난이도 적용)." % difficulty
 	UiDraw.text(c, Vector2(36, 118), note, "regular", 12, UiTheme.INK_3)

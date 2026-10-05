@@ -91,6 +91,9 @@ static func build(def: Dictionary, scn: Dictionary, base: Dictionary, difficulty
 			"traits": sq.commander.get("traits", []),
 			"might": int(sq.commander.get("might", 0)), "intellect": int(sq.commander.get("intellect", 0)),
 			"group_id": group_of.get(sq.id, ""),
+			"level": int(sq.commander.get("level", 1)) if sq.commander.get("level") != null else 1,
+			"vice_commander": sq.get("vice_commander") if sq.get("vice_commander") != null else {},
+			"staff": sq.get("staff", []),
 		}
 		if is_cao:
 			d.morale_group = sq.morale_group
@@ -108,6 +111,7 @@ static func build(def: Dictionary, scn: Dictionary, base: Dictionary, difficulty
 		"combat": combat,
 		"scenario": {
 			"scenario_id": scn.scenario_id,
+			"difficulty": difficulty,
 			"difficulty_policy": scn.difficulty_policy,
 			"difficulty_order": order,
 			"difficulty_profile": dprof,

@@ -157,7 +157,7 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 	_build_sound()
 	battle.battle_event.connect(_on_event)
 	GameSettings.apply(get_window())
-	get_window().title = "성한지 — 적벽 회랑"
+	get_window().title = "성한지 — 적벽"
 	show_screen("title")
 
 # 되돌리기·빠른 알림은 선택 패널(접힘 L1 / 펼침 L2) 또는 결정 카드 바로 위에 뜬다.
@@ -183,6 +183,18 @@ func show_screen(name: String) -> void:
 	var in_battle := name == "" or name == "pause" or name == "settings_pause" or name == "result"
 	hud.visible = in_battle and name != "result"
 	overlay.visible = in_battle and name != "result"
+
+# 출격 준비: 서막을 아직 안 봤으면 서막(첫 회만), 아니면 브리핑(NARRATIVE-RED-CLIFFS §11.1).
+# 진입 흐름이 바뀌어도 "첫 진입 때 한 번, 전투 브리핑 전"은 이 함수 하나로 지킨다.
+func open_prologue_or_brief() -> void:
+	GameSettings.load_cfg()
+	if GameSettings.prologue_seen:
+		show_screen("brief")
+	else:
+		open_prologue()
+
+func open_prologue() -> void:
+	show_screen("prologue")
 
 func begin_battle() -> void:
 	if battle.G.state != "brief":
@@ -282,14 +294,14 @@ func _draw_top(c: Control) -> void:
 	var w := c.size.x
 	# 촉한
 	UiDraw.seal(c, Rect2(18, 17, 44, 44), 0)
-	UiDraw.text(c, Vector2(74, 34), "촉한 연합함대", "serif_bold", 15, UiTheme.INK)
+	UiDraw.text(c, Vector2(74, 34), "손유 연합함대", "serif_bold", 15, UiTheme.INK)
 	var fa := a.x / maxf(1.0, a.y)
 	UiDraw.text(c, Vector2(318, 34), "%d척 · %d%%" % [roundi(a.x), roundi(fa * 100.0)], "semibold", 12, UiTheme.INK_2, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
 	_side_bar(c, Rect2(74, 44, 244, 9), 0, fa, UiTheme.ALLY, false)
 	UiDraw.text(c, Vector2(74, 68), "%d개 함대 건재" % int(a.z), "regular", 11, UiTheme.INK_3)
 	# 위
 	UiDraw.seal(c, Rect2(w - 62, 17, 44, 44), 1)
-	UiDraw.text(c, Vector2(w - 74, 34), "위 원정군", "serif_bold", 15, UiTheme.INK, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
+	UiDraw.text(c, Vector2(w - 74, 34), "조조군", "serif_bold", 15, UiTheme.INK, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
 	var fe := e.x / maxf(1.0, e.y)
 	UiDraw.text(c, Vector2(w - 318, 34), "%d%% · %d척" % [roundi(fe * 100.0), roundi(e.x)], "semibold", 12, UiTheme.INK_2)
 	_side_bar(c, Rect2(w - 318, 44, 244, 9), 1, fe, UiTheme.FOE, true)
@@ -401,7 +413,7 @@ func _draw_objectives(c: Control) -> void:
 				down += 1
 	var rows := [
 		[true, "기함 유비 생존", "유지 중" if pf else "실패", UiTheme.LIFE if pf else UiTheme.FOE],
-		[false, "위 원정군 격파  %d / %d" % [down, total], "진행" if down < total else "완료", UiTheme.WARN if down < total else UiTheme.LIFE],
+		[false, "조조군 격파  %d / %d" % [down, total], "진행" if down < total else "완료", UiTheme.WARN if down < total else UiTheme.LIFE],
 		[false, "별동대 대응", "경보" if battle.G.reinf else "대기", UiTheme.FOE if battle.G.reinf else UiTheme.INK_3],
 	]
 	var y := 50.0
@@ -813,6 +825,7 @@ func _build_sound() -> void:
 	_hook_buttons(self)
 	renderer.fx_event.connect(func(k: String): sound.play(k))
 	battle.sfx_event.connect(func(k: String): sound.play(k))
+	battle.sfx_loop.connect(func(k: String, lv: float): sound.set_loop(k, lv))
 	pacing.incoming.connect(func(): sound.play("warn_branch"))
 	pacing.changed.connect(func():
 		if src.state() == "pause":
