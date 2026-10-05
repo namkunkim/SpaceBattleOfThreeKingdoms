@@ -157,6 +157,12 @@
 - **구현 후속 F-1(M10 사람 플레이 테스트 전):** `SalvoCombat._wound`가 누적 선체 비율로 손상을 다시 잡아, 수리·경파 회복이 다음 피격 한 번에 사라진다. F-2 AI 보급, F-3 UI(M10), F-4 `still_eps` 초당 값은 리뷰 §8.
 - 다음 리뷰는 M9(계략과 강습).
 
+## 서막(첫 진입 배경 서사) (2026-10-05, 클라우드 컨셉 세션 "게임 초입 배경 서사")
+
+- 설계·문안: `NARRATIVE-RED-CLIFFS.md` §11. 타이틀 "출격 준비" → 서막 8장(시대 가·나 + 적벽 1~6, 첫 회만) → 브리핑. 타이틀·브리핑의 POC 문구(성간 삼국·촉한·위·적벽 회랑·유비 제독) 교체 목록 §11.3.
+- 구현: 클라우드 UI 세션 "(CLOUD_ING) 서막(첫 진입 배경 서사) UI 구현"이 브랜치 `claude/prologue-ui`에 마쳤다(문서 브랜치 `claude/loving-noether-atbnid` 포함, 헤드리스 UI 테스트 13종 통과). 문안은 `hud/ui_kit/prologue_text.gd` 한 곳.
+- 남은 것(로컬): ① `claude/prologue-ui`를 main에 병합. 천하 지도 브랜치 `claude/sharp-hopper-roo4tn`과 `command_deck.gd`·`deck_screens.gd`·`FleetBattle3D.gd`가 겹친다(CHECKLIST-OPEN "서막 후속") ② 본편 `prologue.md`·`star-map.md`와 문안 대조(특히 시대 장 가·나) ③ 화면 확인 ④ 인장 글자 蜀·魏·吳 유지 여부는 컨셉 결정 대기.
+
 ## 남은 일 (컨셉 세션이 할 수 있는 것)
 
 | 우선 | 일 | 메모 |
