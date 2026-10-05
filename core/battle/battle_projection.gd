@@ -15,6 +15,12 @@ static func build(sim: BattleSim, side: int) -> Dictionary:
 			var q := squadron(st, f)
 			if sim.supply and f.side == side:
 				q.supply = sim.supply.squadron_state(f)   # M8: 배정 공급원·진행·재고. 적 항목에는 넣지 않는다
+			if sim.salvo and f.side == side:
+				# 진형 탭용: 진형 ID마다 이 전대의 선택 불가 사유 코드("" = 가능)와 전환 시간(초). 규칙은 salvo가 판정한다
+				var fi := {}
+				for fid in sim.salvo.formation_ids():
+					fi[fid] = {"block": sim.salvo.form_block(f, fid), "secs": float(sim.salvo.transition_ticks(f, fid)) / st.hz}
+				q.form_info = fi
 			if sim.cmd and f.side == side:
 				# M9: 지휘관 상태·이은 사람·혼선 남은 초(지휘 공백이면 -1)·불이익 단계
 				q.commander_state = f.cmdr_state
