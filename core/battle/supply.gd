@@ -233,6 +233,7 @@ func _complete(f: FleetState, src: Dictionary) -> void:
 		if g:
 			g.sup_mat -= int(S.repair.materials)
 		fixed = 1
+		f.healed_mod += 1
 	if _reloadable(f, src):
 		f.sup_ammo = f.sup_n * int(S.per_ship.ammo)
 		f.sup_mat = f.sup_n * int(S.per_ship.materials)
@@ -250,6 +251,7 @@ func _light_recover(f: FleetState) -> void:
 		n += s[1]
 		s[0] += s[1]
 		s[1] = 0
+	f.healed_wound += n
 	if n > 0:
 		sim.emit("light_recovered", f.id, -1, f.pos, n)
 
@@ -275,5 +277,5 @@ func squadron_state(f: FleetState) -> Dictionary:
 func fingerprint() -> String:
 	var parts := PackedStringArray()
 	for f in sim.st.fleets:
-		parts.append("%d.%d.%s.%d.%d.%d.%d.%d.%d.%d" % [f.id, f.hit_tick, f.sup_src, f.sup_prog, f.sup_since, int(f.sup_still), f.sup_ammo, f.sup_mat, f.sup_n, f.supplied])
+		parts.append("%d.%d.%d.%d.%s.%d.%d.%d.%d.%d.%d.%d" % [f.id, f.hit_tick, f.healed_wound, f.healed_mod, f.sup_src, f.sup_prog, f.sup_since, int(f.sup_still), f.sup_ammo, f.sup_mat, f.sup_n, f.supplied])
 	return "sup|" + ",".join(parts)
