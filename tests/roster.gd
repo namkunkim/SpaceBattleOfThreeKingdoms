@@ -63,5 +63,15 @@ func _run() -> void:
 	await _frames()
 	if not TestCheck.ok(self, deck.screen == "brief", "back to brief"): return
 	if not TestCheck.ok(self, battle.presentation.src.composition(battle.fleets[0].id).is_empty(), "POC has no class counters"): return
+	# 손권 함대 누락 회귀: 전투 시작 투영에 촉·오 전대가 모두 있고 세력 키가 시나리오 세력과 같다(조조군은 적 투영에서)
+	var sim := BattleSim.new(1, BattleRules.TICK_HZ, ScenarioProfile.load_profile("res://data/profiles/red_cliffs_rt.json"))
+	var cnt := {}
+	for sq in BattleProjection.build(sim, 0).squadrons:
+		cnt[sq.faction] = int(cnt.get(sq.faction, 0)) + 1
+	if not TestCheck.ok(self, cnt.get("shu", 0) == 4 and cnt.get("wu", 0) == 3 and cnt.size() == 2, "projection factions %s" % cnt): return
+	for f in sim.st.fleets:
+		if f.side == 1 and BattleProjection.faction_key(f) != "wei":
+			TestCheck.ok(self, false, "cao faction key")
+			return
 	print("ROSTER_PASS")
 	quit(0)

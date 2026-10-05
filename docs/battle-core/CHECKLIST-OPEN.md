@@ -155,3 +155,9 @@ M3 리뷰(2026-10-04): `REVIEW-M3.md`. 수용. 후속은 방향 배분 잔여 �
 - [ ] CI가 `core_rules` 하나만 돌린다(`.github/workflows/android.yml`). 테스트 12종 전부, 윈도우 빌드 잡 추가
 - [ ] 크래시·오류 수집 — 최소 `user://` 로그 파일과 내보내기 수단
 - [ ] 현지화 — `tr()` 0건. 해외 출시를 정하면 문자열 분리를 먼저 한다(국내 한정이면 보류)
+
+## 7. 태블릿 실기기 시험 발견 (2026-10-05)
+
+- [x] **손권 함대가 전장에 없다** — 원인: 호스트 `scripts/FleetBattle3D.gd:141`이 `BattleSim.new(seed)`로 POC 프로필을 써서 손권 전대 3개(주유·정보·황개)가 만들어지지 않는다. 윈도우도 같고 태블릿 전용이 아니다. M3~M9 NOTES가 적어 둔 "적벽 프로필 화면 연결은 M10" 그대로다. 코어·프로필 변환(`ScenarioProfile.load_profile("res://data/profiles/red_cliffs_rt.json")`)은 정상이다(손권 3·유비 4). 같이 고친 것: 투영 `faction`이 진영(side)만 봐서 손권군이 `shu`로 나오던 것 → `BattleProjection.faction_key()`(`core/battle/battle_projection.gd`, 시나리오 세력 ID 기준), `BattleSource.faction()`이 그 값을 읽음. 회귀 테스트 `tests/roster.gd`(투영에 shu 4·wu 3). 정본 대조: 손권 3개 전대는 B6(Q44)의 의도된 차이다(본편 demo-setup은 SQ-01뿐이고 SQ-01 요격 4·고속정 8 → 우리는 요격 3, 고속정 8은 황개 대로 옮긴 것으로 보이나 문서 확인 못 함)
+- [ ] **(M10 선행) 호스트를 적벽 프로필로 연결** — 위 항목의 실제 해소. 막는 것: ① `FleetBattle3D.init_game()` `BattleSim.new(battle_seed, TICK_HZ, ScenarioProfile.load_profile(...난이도))`로 교체 ② `groups = {1: [fleets[0].id], ...}`(`FleetBattle3D.gd:151`) 인덱스 하드코딩을 `group_id`/`fleet_groups` 기반으로 ③ 브리핑 편성표 `ALLY_DEF`·`FOE_DEF`(`deck_screens.gd:256`, 결산 `:591`)를 시나리오 편성(`ScenarioRoster.deployed`)으로 ④ 렌더러가 side 색만 쓰므로 손권군을 세력 색·인장으로 구분(`Factions` 키는 이미 `wu`) ⑤ POC 전제 테스트(`battle_flow`, `smoke`, `capture_ui` 등)와 POC CP·방어진형 코드 정리. 완료 기준: 캡처에 손권 3개 전대가 오(吳) 인장으로 뜨고 `roster` 테스트의 "POC has no class counters" 가정을 시나리오 카운터 확인으로 바꾼다
+

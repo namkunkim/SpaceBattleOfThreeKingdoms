@@ -75,10 +75,16 @@ static func build(sim: BattleSim, side: int) -> Dictionary:
 
 # 적 접촉의 공개 형태. 확인: 이름·역할·초상·방향과 전력 구간. 추정·상실: 위치(마지막으로 안 곳)와 오차 반경, 신뢰도뿐이다.
 # 함종·척 수·선체·사기·표적·진형은 어느 상태에서도 공개하지 않는다.
+# 세력 표시 키(shu/wu/wei). 시나리오 세력 ID가 정본이고, 없으면(POC) 진영으로 나눈다. 손권군(side 0)이 촉으로 나오던 원인(2026-10-05).
+const FACTION_KEY := {"liu_bei": "shu", "sun_quan": "wu", "cao_cao": "wei"}
+
+static func faction_key(f: FleetState) -> String:
+	return FACTION_KEY.get(f.faction, "wei" if f.side == 1 else "shu")
+
 static func contact(sim: BattleSim, c: Dictionary) -> Dictionary:
 	var t := sim.st.by_id(c.id)
 	var d := {"id": c.id, "side": t.side, "contact": c.state, "pos": c.pos, "err_r": c.err_r, "conf_bp": c.conf_bp,
-		"faction": "wei" if t.side == 1 else "shu"}
+		"faction": faction_key(t)}
 	if c.state == "confirmed":
 		d.name = t.name
 		d.role = t.role
@@ -96,7 +102,7 @@ static func contact(sim: BattleSim, c: Dictionary) -> Dictionary:
 static func squadron(st: BattleState, f: FleetState) -> Dictionary:
 	var hz := float(st.hz)
 	return {
-		"id": f.id, "side": f.side, "faction": "wei" if f.side == 1 else "shu", "name": f.name, "role": f.role,
+		"id": f.id, "side": f.side, "faction": faction_key(f), "name": f.name, "role": f.role,
 		"portrait": f.portrait, "commander_id": f.name,
 		"pos": f.pos, "heading": f.heading,
 		"ships_milli": f.ships, "max_ships_milli": f.max_ships, "shown_milli": f.shown,
