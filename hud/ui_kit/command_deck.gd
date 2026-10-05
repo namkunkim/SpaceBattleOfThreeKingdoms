@@ -796,6 +796,9 @@ func _set_tab(i: int) -> void:
 	for b in cmd_buttons:
 		b.queue_free()
 	cmd_buttons.clear()
+	if TABS[i][0] == "진형" and src.has_formations():
+		_build_formation_cards()
+		return
 	var rules := src.rules()
 	for id in TABS[i][1]:
 		if not src.has_command(id):
@@ -820,6 +823,43 @@ func _set_tab(i: int) -> void:
 			_hook_buttons(b)
 		if hold_tip:
 			hold_tip.register(b)
+
+# 진형 탭(코어 진형 7종): 선택 전대에 대한 카드. 규칙·시간은 코어 투영을 읽을 뿐이다.
+func _build_formation_cards() -> void:
+	var opts := src.formation_options()
+	if opts.is_empty():
+		var l := UiTheme.label("함대를 선택하십시오", "Muted", 12)
+		cmd_grid.add_child(l)
+		cmd_buttons.append(l)
+		return
+	for o in opts:
+		var b := FormationTab.FormButton.new(o, self)
+		b.pressed.connect(_on_formation_pressed.bind(b))
+		cmd_grid.add_child(b)
+		cmd_buttons.append(b)
+		if sound:
+			_hook_buttons(b)
+		if hold_tip:
+			hold_tip.register(b)
+
+func _on_formation_pressed(b: Control) -> void:
+	if b.opt.state == "locked":
+		show_toast("%s: %s" % [b.opt.name, b.opt.reason])
+		return
+	battle.cmds.do_formation(str(b.opt.id))
+
+func _refresh_formations() -> void:
+	var opts := src.formation_options()
+	var have_cards: bool = not cmd_buttons.is_empty() and cmd_buttons[0] is FormationTab.FormButton
+	if opts.is_empty():
+		if have_cards or cmd_buttons.is_empty():
+			_set_tab(tab_index)
+		return
+	if not have_cards or opts.size() != cmd_buttons.size():
+		_set_tab(tab_index)
+		return
+	for k in opts.size():
+		cmd_buttons[k].set_option(opts[k])
 
 # 길게 눌러 확정: 누르는 동안 버튼에 고리가 차고, 다 차면 명령을 실행한다. 일찍 떼면 취소.
 # ------------------------------------------------------------ 효과음 훅
@@ -879,6 +919,9 @@ func _confirm_tick(delta: float) -> void:
 		battle.do_cmd(_confirm_btn.cmd.id)
 
 func _refresh_cmds() -> void:
+	if TABS[tab_index][0] == "진형" and src.has_formations():
+		_refresh_formations()
+		return
 	var s: Array = battle.my_sel()
 	for b in cmd_buttons:
 		var id: String = b.cmd.id

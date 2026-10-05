@@ -192,6 +192,15 @@
 - 테스트 `tests/selection_groups.gd`(SELECTION_GROUPS_PASS) 추가, 기존 26종 통과. 캡처 `capture_ui select`(1920×1200)에서 겹침 없음.
 - 같은 입력 코드의 §7 5·6번(카메라 이탈, 목표 끌기 실패)은 원인이 불명확해 고치지 않고 재현 조건만 `NOTES-GROUP-SELECT.md`에 적었다. `CHECKLIST-OPEN.md` §7이 다른 세션의 미커밋 수정 중이라 이 파일의 내용을 §7에 옮겨 적어야 한다.
 
+## 진형 탭 구현 (2026-10-05, 구현 세션 "진형 선택 UI") — CHECKLIST §7 "진형이 방어뿐" 처리, 호스트 연결만 M10
+
+- 설계: `docs/ui/FORMATION-TAB-SPEC.md`(본편 `ship-specs.md` §5·`screens.md` §3 반영). **코어 진형은 10종이 아니라 7종**(Q10)이다. 10종은 POC 배치 이름이다.
+- 구현: `hud/ui_kit/formation_tab.gd`(카드 옵션 계산 `FormationTab.options` + `FormButton`), `command_deck.gd` 진형 탭(`src.has_formations()`일 때만 7종 카드, 아니면 기존 방어진형), `BattleSource.combat`·`formation_options()`, `BattleCommands.formation_to(ids, fid)`·`do_formation(fid)`(**대상 ID 배열을 받는 한 곳** — 그룹 진형(§8)은 그룹 ID 배열을 넘기면 된다), 투영 `form_info`(전대별 진형마다 `block` 사유 코드·`secs` 전환 시간, 코어 규칙 불변), 뷰 모델 `formation_id`·`form_to`·`form_left_s`·`form_info`.
+- 카드: 현재 / 전환 중 `전환 N초` / 잠김(사유 토스트) / 전환 시간이 표준 30초보다 길면 노랑 / 현재 칸은 전환 중 누르면 전환 취소. 툴팁(길게 누르기): 지시명·화력·방어·탐지·기동 %·요구 통솔·상성 힌트(5각, 장사 ×0.9, 팔진 무효)·잠김 사유.
+- 테스트 `tests/formation_ui.gd`(FORMATION_UI_PASS): 명령 → `formation_id` 변경(전환 30초 후), 전환 취소, 팔진 거부 사유(`formation_master`), 다중 선택, 카드 이름·순서·상성 힌트. 캡처 `tests/capture_formation.gd`(2560×1600, `out/ui-formation-2560.png`).
+- **남은 것(M10):** 호스트(`FleetBattle3D`)가 POC 규칙(salvo=null)이라 코어가 `formation` 명령을 거부하고 `src.combat`이 비어 있다. 호스트가 시나리오 프로필로 바뀌면 `BattleSource.combat`에 `sim.salvo.C`를 넣으면 탭이 선다. 태블릿 증상은 그때 실제로 해소된다.
+- 후속: 정보 패널(`_info_single`)의 진형 이름은 아직 POC `FORM_NAMES`다. 그룹 진형 UI(§8), 전환 중 목적지 고리·진형 아이콘 연동은 범위 밖.
+
 ## 남은 일 (컨셉 세션이 할 수 있는 것)
 
 | 우선 | 일 | 메모 |

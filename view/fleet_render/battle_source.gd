@@ -157,6 +157,21 @@ func has_command(id: String) -> bool:
 		return rules().has("defense")
 	return true
 
+# ------------------------------------------------------------ 진형 탭(M5 진형, docs/ui/FORMATION-TAB-SPEC.md)
+# combat: 코어 규칙 사전(`combat.formations`·`formation_rules`). POC 호스트는 비어 있어(salvo 규칙 아님) 진형 탭이 안 선다.
+# 시나리오 프로필 호스트(M10)가 이 값을 채운다.
+var combat := {}
+
+func formation_options() -> Array:
+	var sel := []
+	for f in battle.my_sel():
+		if f.side == 0:
+			sel.append({"formation_id": f.formation_id, "form_to": f.form_to, "form_left_s": f.form_left_s, "form_info": f.form_info})
+	return FormationTab.options(combat, sel)
+
+func has_formations() -> bool:
+	return not combat.is_empty()
+
 # 공격 방향: "front" | "side" | "rear" (표적 기준)
 func attack_dir(att_id: int, tgt_id: int) -> String:
 	var a = battle.by_id(att_id)
