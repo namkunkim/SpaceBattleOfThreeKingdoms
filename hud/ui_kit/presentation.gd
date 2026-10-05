@@ -60,9 +60,17 @@ func _tune_environment() -> void:
 			env.adjustment_contrast = 1.08
 			env.adjustment_saturation = 1.06
 
+var _fps_t := 0.0
+
 func _process(delta: float) -> void:
 	if battle.fleets.is_empty() or renderer == null:
 		return
+	# 디버그 빌드에서만: 2초마다 FPS·표시 함선 수를 출력한다(태블릿 실측용, adb logcat -s godot)
+	if OS.is_debug_build():
+		_fps_t += delta
+		if _fps_t >= 2.0:
+			_fps_t = 0.0
+			print("FPS ", Engine.get_frames_per_second(), " ships ", renderer.visible_ship_count(), " state ", src.state(), " speed ", src.speed())
 	if not is_same(battle.fleets[0], _first_fleet):
 		_first_fleet = battle.fleets[0]
 		renderer.reset()

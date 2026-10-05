@@ -9,15 +9,22 @@ extends Node3D
 # 소리 훅: "volley"(일제 포화), "ship_kill"(함선 격침). 표현 계층이 효과음으로 잇는다.
 signal fx_event(kind: String)
 
-const LOD_DIR := "res://assets/models/fleet_lod/"
-const SRC_DIR := "res://assets/models/user_ver3_runtime/"
 const CLASS_NAMES := ["전열함", "화력함", "공성함", "보급_수리함", "전자전함", "호위함", "항모"]
 enum { LINE, FIRE, SIEGE, SUPPLY, EW, ESCORT, CARRIER }
 const CLASS_LABEL := ["전열", "화력", "공성", "보급", "전자전", "호위", "항모"]
 # 함종별 선체 길이(3D 단위). 원본 모델은 길이 약 1.9.
 const CLASS_LEN := [1.15, 1.0, 1.2, 0.9, 0.88, 0.6, 1.25]
 const MODEL_LEN := 1.9
-const HULL_STRETCH := Vector3(1.0, 1.5, 1.9)
+# 함선은 3D 모델이 아니라 바닥에 눕힌 평면 위의 셰이더 실루엣이다(`ship_sprite.gdshader`, 참고 영상 방식).
+# 평면 길이 = MODEL_LEN, 폭 = SHIP_WIDTH(길이:폭 약 4:1). 실제 크기는 CLASS_LEN과 _ship_xform의 배율이 정한다.
+const SHIP_WIDTH := 0.48
+const PLANE_K := 1.6   # ship_sprite.gdshader의 PLANE_K와 같아야 한다
+const HULL_STRETCH := Vector3(0.75, 1.0, 1.0)   # x = 길이 배율(대열에서 앞뒤 함선이 겹치지 않게)
+const CLASS_FAT := [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]   # 함종별 폭 미세 조정(실루엣 자체는 셰이더 kind가 정한다)
+const C_ALLY_HULL := Color(0.09, 0.13, 0.19)
+const C_FOE_HULL := Color(0.17, 0.11, 0.1)
+const C_ALLY_OUTLINE := Color(0.62, 0.9, 1.0)
+const C_FOE_OUTLINE := Color(1.0, 0.72, 0.5)
 # 표시 함선 = 정원 × 고정 배율(리뷰 C-1). 손실은 같은 배율로 줄어든다. 화면 숫자는 언제나 실제 척 수다.
 # 배율은 설정의 "함선 표시"(낮음·보통·높음)로 고른다(리뷰 C-4, 모바일 성능).
 const VIS_RATIOS := [0.35, 0.6, 0.85]
@@ -28,6 +35,14 @@ const GAP_LAT := 13.0
 const GAP_FWD := 25.0
 const LAYER_H := 0.34
 const LOD_NEAR_ZOOM := 1.05
+const WORLD_AABB := AABB(Vector3(-120, -6, -120), Vector3(240, 12, 240))   # 함선이 월드 좌표로 움직이므로 컬링 상자를 전장 전체로 둔다
+# 대형 추종(뷰 전용 연출). 함선마다 자기 슬롯 목표를 지연 추종한다. 코어 상태·전역 난수와 무관하다(리뷰 REVIEW-FLEET-VISUAL).
+const SIM_STEP := 1.0 / 30.0     # 추종 갱신 주기(태블릿 예산: 정지한 전대는 갱신하지 않는다)
+const TAU_MIN := 0.25            # 함선별 추종 시간 상수(초). 슬롯마다 TAU_MIN~TAU_MAX
+const TAU_MAX := 0.95
+const SWAY := 0.22               # 이동 중 개체 흔들림 진폭(3D 단위)
+const MOVE_EPS := 0.3            # 이 속도(3D 단위/초) 이상이면 속도 방향을 보고, 아니면 전대 방향을 본다
+const REFORM_MIN := 0.6          # 진형 전환 때 함선이 슬롯을 향해 수렴하는 최소 tau 배율
 
 const C_ALLY_BEAM := Color(0.42, 0.9, 1.0, 1.0)
 const C_FOE_BEAM := Color(1.0, 0.52, 0.28, 1.0)
@@ -40,7 +55,20 @@ const C_FLASH := Color(2.4, 2.4, 2.6)
 class Slot:
 	var cls := 0
 	var idx := 0
-	var pos := Vector3.ZERO
+	var pos := Vector3.ZERO      # 현재 월드 위치(대형 추종 결과)
+	var home := Vector3.ZERO     # 진형 슬롯(전대 로컬: 전방 -Z, 측면 +X)
+	var vel := Vector3.ZERO
+	var yaw := 0.0               # 월드 yaw(모델 기준)
+	var tau := 0.5
+	var phase := 0.0
+	var trail := 0.0             # 항적 세기 0~1(속도에 따라)
+	var trail_sent := 0.0        # 마지막으로 MultiMesh에 쓴 항적 값(변화가 작으면 다시 쓰지 않는다)
+	var scl := Vector3.ONE       # 선체 배율(함종·기함)
+	var gsz := 0.4               # 엔진광 크기
+	var cph := 1.0               # 흔들림 위상의 cos/sin(갱신마다 삼각함수를 부르지 않으려고 미리 계산)
+	var sph := 0.0
+	var cph2 := 1.0
+	var sph2 := 0.0
 	var half_len := 0.4
 	var rank := 0.0
 	var alive := true
@@ -61,6 +89,10 @@ class FleetVis:
 	var die_acc := 0.0
 	var lod := -1
 	var formation := -1
+	var rest := 0                # 연속으로 목표에 닿아 있던 갱신 횟수(3 이상이면 갱신 생략)
+	var last_pos := Vector3(1e9, 0, 0)
+	var last_rot := 1e9
+	var acc := 0.0
 
 var src: BattleSource
 var meshes := [[], []]
@@ -75,6 +107,7 @@ var beams: BeamPool
 var dust: MultiMeshInstance3D
 var rng := RandomNumberGenerator.new()
 var clock := 0.0
+var _detail := -1.0   # 확대 정도에 따른 함선 세부 표현(0~1)
 var _missile_last := {}
 
 func setup(source: BattleSource) -> void:
@@ -91,46 +124,35 @@ func setup(source: BattleSource) -> void:
 	_build_far_backdrop()
 
 func _load_assets() -> void:
-	for lod in [1, 2]:
-		var arr := []
+	var plane := PlaneMesh.new()
+	plane.size = Vector2(MODEL_LEN * PLANE_K, SHIP_WIDTH)   # 뒤쪽 (PLANE_K-1)/PLANE_K 구간은 항적 자리
+	plane.center_offset = Vector3(MODEL_LEN * (PLANE_K - 1.0) * 0.5, 0.0, 0.0)   # 선체 중심이 원점에 오게
+	for lod in 2:
+		meshes[lod] = []
 		for n in CLASS_NAMES:
-			arr.append(_first_mesh((load(LOD_DIR + "%s_lod%d.glb" % [n, lod]) as PackedScene).instantiate(), true))
-		meshes[lod - 1] = arr
+			meshes[lod].append(plane)
+	var sh := load("res://view/fleet_render/ship_sprite.gdshader") as Shader
 	for side in 2:
 		var arr := []
-		for n in CLASS_NAMES:
-			var base := _first_material((load(SRC_DIR + n + ".glb") as PackedScene).instantiate())
-			var m: StandardMaterial3D = base.duplicate() if base is StandardMaterial3D else StandardMaterial3D.new()
-			m.vertex_color_use_as_albedo = true
-			m.rim_enabled = true
-			m.rim = 0.35
-			m.rim_tint = 0.6
+		for c in CLASS_NAMES.size():
+			var m := ShaderMaterial.new()
+			m.shader = sh
+			m.set_shader_parameter("hull_color", C_ALLY_HULL if side == 0 else C_FOE_HULL)
+			m.set_shader_parameter("rim_color", C_ALLY_OUTLINE if side == 0 else C_FOE_OUTLINE)
+			m.set_shader_parameter("fat", CLASS_FAT[c])
+			m.set_shader_parameter("kind", c)   # 함종 번호 = 실루엣 종류
+			var tex_path := "res://assets/ships/silhouette/%d.png" % c
+			if ResourceLoader.exists(tex_path):
+				m.set_shader_parameter("ship_tex", load(tex_path))
+				m.set_shader_parameter("use_tex", true)
 			arr.append(m)
 		mats[side] = arr
 	wreck_mat = StandardMaterial3D.new()
 	wreck_mat.albedo_color = Color(0.09, 0.08, 0.08)
 	wreck_mat.emission_enabled = true
 	wreck_mat.emission = Color(1.0, 0.35, 0.1)
-	wreck_mat.emission_energy_multiplier = 0.6
+	wreck_mat.emission_energy_multiplier = 0.2
 	wreck_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-
-func _first_mesh(n: Node, free_after: bool) -> Mesh:
-	var found: Mesh = null
-	var stack := [n]
-	while not stack.is_empty() and found == null:
-		var c: Node = stack.pop_back()
-		if c is MeshInstance3D:
-			found = (c as MeshInstance3D).mesh
-		stack.append_array(c.get_children())
-	if free_after:
-		n.free()
-	return found
-
-func _first_material(n: Node) -> Material:
-	var m := _first_mesh(n, false)
-	var mat: Material = m.surface_get_material(0) if m else null
-	n.free()
-	return mat
 
 func _build_far_backdrop() -> void:
 	# 넓은 화면·원거리 확대에서 전장 배경판 바깥이 보이지 않도록 아래에 더 큰 원경판을 깐다.
@@ -276,6 +298,95 @@ func _assign_class(pts: Array, flag: bool, seed_v: int) -> Array:
 		out[best]["flag"] = true
 	return out
 
+# ------------------------------------------------------------ 대형 추종 (뷰 전용)
+# 함선마다 슬롯 목표를 tau(0.25~0.95초) 지연으로 따라간다. 선회하면 바깥쪽 슬롯의 목표가 더 빨리 움직여 안쪽보다 뒤처졌다 부채꼴로 펼쳐지고,
+# 진형이 바뀌면 슬롯이 재배정되어 함선이 새 자리로 흘러간다. 코어 상태·전투 난수에 닿지 않고 추종 갱신에는 난수가 없다(tau·위상은 전대 id 시드).
+func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
+	if dt <= 0.0:
+		return
+	v.acc += dt
+	if v.acc < SIM_STEP:
+		return
+	var step := minf(v.acc, 0.25)
+	v.acc = 0.0
+	var fpos := src.to3(sq.pos)
+	var frot := -float(sq.heading) - PI * 0.5
+	var moved := fpos.distance_squared_to(v.last_pos) > 1e-8 or absf(frot - v.last_rot) > 1e-5
+	v.last_pos = fpos
+	v.last_rot = frot
+	if not moved and v.rest >= 3:
+		return
+	var fb := Basis(Vector3.UP, frot)
+	var h_fleet := -float(sq.heading) - PI   # 전대 방향의 모델 yaw
+	var ca := cos(clock * 0.9)
+	var sa := sin(clock * 0.9)
+	var cb := cos(clock * 0.7)
+	var sb := sin(clock * 0.7)
+	var sw := SWAY if moved else 0.0
+	var maxerr := 0.0
+	var maxtr := 0.0
+	var yk := 1.0 - exp(-step / 0.35)
+	var eps2 := MOVE_EPS * MOVE_EPS
+	var inv := 1.0 / step
+	var gl := v.glow.multimesh
+	var gi := -1
+	for s: Slot in v.slots:
+		gi += 1
+		if not s.alive:
+			continue
+		var t := fpos + fb * s.home
+		if sw > 0.0:
+			t.x += sw * (sa * s.cph + ca * s.sph)
+			t.z += sw * (cb * s.cph2 - sb * s.sph2)
+		var d := (t - s.pos) * (step / (s.tau + step))   # 지수 추종의 유리 근사(안정, 오버슈트 없음)
+		s.pos += d
+		s.vel = d * inv
+		var e2 := (t - s.pos).length_squared()
+		maxerr = maxf(maxerr, e2)
+		var sp2 := s.vel.length_squared()
+		var want := h_fleet
+		if sp2 > eps2:
+			want = -atan2(s.vel.z, s.vel.x) - PI
+		s.yaw = lerp_angle(s.yaw, want, yk)
+		var c := cos(s.yaw)
+		var sn := sin(s.yaw)
+		var mm: MultiMesh = v.mmis[s.cls].multimesh
+		mm.set_instance_transform(s.idx, _xform_cs(s, c, sn))
+		s.trail += (smoothstep(MOVE_EPS, 2.5, sqrt(sp2)) - s.trail) * 0.3
+		maxtr = maxf(maxtr, s.trail)
+		if absf(s.trail - s.trail_sent) > 0.02:
+			s.trail_sent = s.trail
+			mm.set_instance_custom_data(s.idx, Color(s.trail, 0.0, 0.0, 0.0))
+		# 엔진광은 선미(전방의 반대)에: 전방 = (-cos yaw, 0, sin yaw)
+		gl.set_instance_transform(gi, Transform3D(Basis.from_scale(Vector3.ONE * s.gsz), s.pos + Vector3(c, 0.0, -sn) * (s.half_len * 0.98)))
+	v.rest = v.rest + 1 if (maxerr < 0.0004 and maxtr < 0.02) else 0
+
+# 진형이 바뀌면 새 슬롯을 앞쪽 순서대로 기존 함선에 다시 배정한다(함종 구성은 그대로).
+func _reform(v: FleetVis, sq: Dictionary) -> void:
+	v.formation = sq.formation
+	v.rest = 0
+	var alive: Array = v.slots.filter(func(x): return x.alive)
+	var n := alive.size()
+	if n == 0:
+		return
+	var pts := formation_points(sq.formation, n)
+	var S := src.unit_scale()
+	var order_new := range(n)
+	order_new.sort_custom(func(a, b): return pts[a].x > pts[b].x)
+	var order_old := range(n)
+	order_old.sort_custom(func(a, b): return alive[a].rank < alive[b].rank)
+	var minf_ := 1e9
+	var maxf_ := -1e9
+	for p in pts:
+		minf_ = minf(minf_, p.x)
+		maxf_ = maxf(maxf_, p.x)
+	var span := maxf(1.0, maxf_ - minf_)
+	for i in n:
+		var s: Slot = alive[order_old[i]]
+		var p: Vector3 = pts[order_new[i]]
+		s.home = Vector3(p.z * S, p.y, -p.x * S)
+		s.rank = (maxf_ - p.x) / span
+
 # ------------------------------------------------------------ fleets
 func _make_vis(sq: Dictionary) -> FleetVis:
 	var v := FleetVis.new()
@@ -313,12 +424,27 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 		s.flag = cls[i].get("flag", false)
 		var p: Vector3 = pts[i]
 		# 함대 로컬 공간: 전방 = -Z, 측면 = +X (POC _build_fleet_3d와 같은 축)
-		s.pos = Vector3(p.z * S, p.y + jr.randf_range(-0.06, 0.06), -p.x * S)
-		var L: float = CLASS_LEN[s.cls] * (1.8 if s.flag else 1.0)
+		s.home = Vector3(p.z * S, p.y + jr.randf_range(-0.06, 0.06), -p.x * S)
+		s.tau = lerpf(TAU_MIN, TAU_MAX, jr.randf())
+		s.phase = jr.randf() * TAU
+		s.cph = cos(s.phase)
+		s.sph = sin(s.phase)
+		s.cph2 = cos(s.phase * 1.3)
+		s.sph2 = sin(s.phase * 1.3)
+		var L: float = CLASS_LEN[s.cls] * HULL_STRETCH.x * (1.8 if s.flag else 1.0)
 		s.half_len = L * 0.5
+		s.scl = HULL_STRETCH * ((CLASS_LEN[s.cls] / MODEL_LEN) * (1.8 if s.flag else 1.0))
+		s.gsz = s.half_len * (0.6 if s.cls != ESCORT else 0.5)
 		s.idx = per_class[s.cls].size()
 		per_class[s.cls].append(s)
 		v.slots.append(s)
+	var fpos := src.to3(sq.pos)
+	var frot := -float(sq.heading) - PI * 0.5
+	for s in v.slots:
+		s.pos = _target(s, fpos, frot, 0.0)
+		s.yaw = -float(sq.heading) - PI
+	v.last_pos = fpos
+	v.last_rot = frot
 	for c in CLASS_NAMES.size():
 		var list: Array = per_class[c]
 		if list.is_empty():
@@ -327,14 +453,16 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 		var mm := MultiMesh.new()
 		mm.transform_format = MultiMesh.TRANSFORM_3D
 		mm.use_colors = true
+		mm.use_custom_data = true
 		mm.mesh = meshes[1][c]
 		mm.instance_count = list.size()
 		var tint := C_ALLY_TINT if v.side == 0 else C_FOE_TINT
 		for s in list:
-			mm.set_instance_transform(s.idx, _ship_xform(s, jr.randf_range(-0.035, 0.035)))
+			mm.set_instance_transform(s.idx, _ship_xform(s))
 			mm.set_instance_color(s.idx, tint)
 		var mi := MultiMeshInstance3D.new()
 		mi.multimesh = mm
+		mi.custom_aabb = WORLD_AABB
 		mi.material_override = mats[v.side][c]
 		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		v.node.add_child(mi)
@@ -351,8 +479,8 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 	var ec := C_ALLY_ENGINE if v.side == 0 else C_FOE_ENGINE
 	for i in v.slots.size():
 		var s: Slot = v.slots[i]
-		var sz := s.half_len * (0.9 if s.cls != ESCORT else 0.7)
-		gm.set_instance_transform(i, Transform3D(Basis.from_scale(Vector3.ONE * sz), s.pos + Vector3(0.0, 0.0, s.half_len * 0.98)))
+		var sz := s.half_len * (0.6 if s.cls != ESCORT else 0.5)
+		gm.set_instance_transform(i, _glow_xform(s, sz))
 		gm.set_instance_color(i, ec)
 		gm.set_instance_custom_data(i, Color(0.0, 0.0, jr.randf(), 0.75 if s.cls != ESCORT else 0.55))
 	v.glow = MultiMeshInstance3D.new()
@@ -361,15 +489,32 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 	gmat.shader = load("res://view/fleet_render/fx_sprite_add.gdshader")
 	v.glow.material_override = gmat
 	v.glow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	v.glow.custom_aabb = AABB(Vector3(-20, -5, -20), Vector3(40, 10, 40))
+	v.glow.custom_aabb = WORLD_AABB
 	v.node.add_child(v.glow)
 	v.alive_n = v.slots.size()
 	v.lod = 1
 
-func _ship_xform(s: Slot, yaw: float) -> Transform3D:
-	var k: float = (CLASS_LEN[s.cls] / MODEL_LEN) * (1.8 if s.flag else 1.0)
-	var b := Basis(Vector3.UP, -PI * 0.5 + yaw) * Basis.from_scale(HULL_STRETCH * k)
-	return Transform3D(b, s.pos)
+func _ship_xform(s: Slot) -> Transform3D:
+	return _xform_cs(s, cos(s.yaw), sin(s.yaw))
+
+# 회전 행렬 Basis(UP, yaw)와 배율을 직접 조립한다(갱신 루프의 비용을 줄이려고).
+func _xform_cs(s: Slot, c: float, sn: float) -> Transform3D:
+	return Transform3D(Basis(Vector3(c * s.scl.x, 0.0, -sn * s.scl.x), Vector3(0.0, s.scl.y, 0.0), Vector3(sn * s.scl.z, 0.0, c * s.scl.z)), s.pos)
+
+# 선체 전방(월드). 모델 yaw a = -h - PI 이므로 전방각 h = -a - PI, 전방 = (cos h, 0, sin h).
+func _fwd(s: Slot) -> Vector3:
+	var h := -s.yaw - PI
+	return Vector3(cos(h), 0.0, sin(h))
+
+func _glow_xform(s: Slot, sz: float) -> Transform3D:
+	return Transform3D(Basis.from_scale(Vector3.ONE * sz), s.pos - _fwd(s) * (s.half_len * 0.98))
+
+# 슬롯 목표(월드): 전대 위치 + 전대 회전 x 슬롯 (+ 이동 중 개체 흔들림)
+func _target(s: Slot, fpos: Vector3, frot: float, sway: float) -> Vector3:
+	var t := fpos + Basis(Vector3.UP, frot) * s.home
+	if sway > 0.0:
+		t += Vector3(sin(clock * 0.9 + s.phase), 0.0, cos(clock * 0.7 + s.phase * 1.3)) * (SWAY * sway)
+	return t
 
 func _hide_slot(v: FleetVis, s: Slot) -> void:
 	s.alive = false
@@ -380,11 +525,11 @@ func _hide_slot(v: FleetVis, s: Slot) -> void:
 	var gi := v.slots.find(s)
 	v.glow.multimesh.set_instance_custom_data(gi, Color(0, 0, 0, 0))
 
-func slot_world(v: FleetVis, s: Slot) -> Vector3:
-	return v.node.to_global(s.pos)
+func slot_world(_v: FleetVis, s: Slot) -> Vector3:
+	return s.pos
 
-func bow_world(v: FleetVis, s: Slot) -> Vector3:
-	return v.node.to_global(s.pos + Vector3(0.0, 0.0, -s.half_len))
+func bow_world(_v: FleetVis, s: Slot) -> Vector3:
+	return s.pos + _fwd(s) * s.half_len
 
 # 지금 화면에 살아 있는 표시 함선 수(성능 측정용, 규칙 값 아님)
 func visible_ship_count() -> int:
@@ -431,10 +576,18 @@ func update(dt: float) -> void:
 			_free_vis(vis[id])
 			vis.erase(id)
 	var near := src.zoom() >= LOD_NEAR_ZOOM
+	var detail := smoothstep(1.0, 1.9, src.zoom())
+	if absf(detail - _detail) > 0.01:
+		_detail = detail
+		for side in mats:
+			for m in side:
+				(m as ShaderMaterial).set_shader_parameter("detail", detail)
 	for sq in sqs:
 		var v: FleetVis = vis[sq.id]
-		v.node.position = src.to3(sq.pos)
-		v.node.rotation.y = -sq.heading - PI * 0.5
+		if sq.formation != v.formation:
+			_reform(v, sq)
+		if not sq.dead:
+			_follow(v, sq, dt)
 		var want := 0 if near else 1
 		if v.lod != want:
 			v.lod = want
@@ -506,7 +659,10 @@ func _pick_victim(v: FleetVis) -> Slot:
 			best = s
 	if best:
 		return best
-	var alive := v.slots.filter(func(s): return s.alive and not s.flag)
+	# 최근 피격이 없으면 전열(rank 작은 쪽)에서 우선 고른다. 앞줄이 먼저 깎이고 뒤 함선이 메운다.
+	var alive := v.slots.filter(func(s): return s.alive and not s.flag and s.rank < 0.45)
+	if alive.is_empty():
+		alive = v.slots.filter(func(s): return s.alive and not s.flag)
 	if alive.is_empty():
 		alive = v.slots.filter(func(s): return s.alive)
 	if alive.is_empty():
@@ -520,8 +676,31 @@ func _kill_one(v: FleetVis) -> void:
 		return
 	var w := slot_world(v, s)
 	_hide_slot(v, s)
+	_close_ranks(v, s.home)
 	explode(w, s.half_len * 2.0, v.side)
 	_spawn_wreck(v, s, w)
+
+# 빈자리 메우기: 구멍 바로 뒤의 가장 가까운 함선이 그 자리로 올라오고, 그 함선의 옛 자리가 새 구멍이 된다. 최대 5번 이어 꼬리까지 당긴다.
+# 기함은 제자리를 지킨다. 함선은 _follow의 추종으로 천천히 올라온다(뷰 전용, 난수 없음).
+func _close_ranks(v: FleetVis, gap: Vector3) -> void:
+	var hole := gap
+	var reach := src.unit_scale() * GAP_FWD * 2.2
+	for hop in 5:
+		var best: Slot = null
+		var bd := 1e9
+		for s in v.slots:
+			if not s.alive or s.flag or s.home.z <= hole.z + 0.05:
+				continue
+			var d := Vector2(s.home.x - hole.x, (s.home.z - hole.z) * 0.5).length()
+			if d < bd:
+				bd = d
+				best = s
+		if best == null or bd > reach:
+			break
+		var h := best.home
+		best.home = hole
+		hole = h
+	v.rest = 0
 
 func _dying(v: FleetVis, dt: float) -> void:
 	if not v.dying:
@@ -560,7 +739,8 @@ func _spawn_wreck(v: FleetVis, s: Slot, w: Vector3) -> void:
 	mi.material_override = mat
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(mi)
-	mi.global_transform = v.node.global_transform * _ship_xform(s, 0.0)
+	mi.global_transform = _ship_xform(s)
+	mi.scale *= 0.4   # 잔해는 작은 파편으로(평면 실루엣 그대로면 큰 판자로 보인다)
 	var drift := Vector3(rng.randf_range(-0.6, 0.6), rng.randf_range(-0.5, -0.1), rng.randf_range(-0.6, 0.6))
 	var spin := Vector3(rng.randf_range(-1, 1), rng.randf_range(-1, 1), rng.randf_range(-1, 1)).normalized() * rng.randf_range(0.6, 1.8)
 	wrecks.append({"node": mi, "mat": mat, "vel": drift, "spin": spin, "age": 0.0, "life": rng.randf_range(2.2, 3.2), "ember": 0.0})
@@ -578,7 +758,7 @@ func _update_wrecks(dt: float) -> void:
 		var k: float = w.age / w.life
 		var mat: StandardMaterial3D = w.mat
 		mat.albedo_color.a = 1.0 - k * k
-		mat.emission_energy_multiplier = 1.2 * (1.0 - k)
+		mat.emission_energy_multiplier = 0.4 * (1.0 - k)
 		w.ember -= dt
 		if w.ember <= 0.0 and k < 0.7:
 			w.ember = 0.12

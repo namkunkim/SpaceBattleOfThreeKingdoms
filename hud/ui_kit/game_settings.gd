@@ -51,7 +51,8 @@ static func load_cfg() -> void:
 # 첫 실행 표시 밀도. 모바일(안드로이드 태블릿)은 실기기 측정 전이라 보수적으로 낮음(35%)에서 시작한다.
 # 측정(tests/bench_density.gd)으로 값이 정해지면 여기만 바꾼다.
 static func default_density() -> int:
-	return 0 if OS.has_feature("mobile") else 1
+	# 태블릿 실측(SM-X736N, 2026-10-05): 높음 1,152척도 120fps. Q59: 모바일 기본은 높음, PC는 보통.
+	return 2 if OS.has_feature("mobile") else 1
 
 static func save_cfg() -> void:
 	var cf := ConfigFile.new()

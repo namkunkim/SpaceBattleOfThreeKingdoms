@@ -46,7 +46,7 @@ func s2w(sp: Vector2) -> Vector2:
 func clamp_cam() -> void:
 	cam_pos.x = clampf(cam_pos.x, 0.0, WORLD.x)
 	cam_pos.y = clampf(cam_pos.y, 0.0, WORLD.y)
-	cam_z = clampf(cam_z, 0.35, 1.7)
+	cam_z = clampf(cam_z, 0.35, 2.8)
 
 func zoom(mp: Vector2, factor: float) -> void:
 	var before := s2w(mp)

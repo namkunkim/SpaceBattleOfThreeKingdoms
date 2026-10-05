@@ -101,6 +101,7 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 	overlay = TacticalOverlay.new()
 	add_child(overlay)
 	overlay.setup(battle)
+	overlay.renderer = renderer
 	hud = Control.new()
 	hud.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	hud.mouse_filter = Control.MOUSE_FILTER_IGNORE
