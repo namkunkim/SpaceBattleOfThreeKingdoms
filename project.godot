@@ -11,8 +11,12 @@ config_version=5
 [application]
 
 config/name="SpaceBattleOfThreeKingdoms"
-run/main_scene="res://scenes/FleetBattle3D.tscn"
+run/main_scene="res://scenes/WorldMap.tscn"
 config/features=PackedStringArray("4.7")
+
+[autoload]
+
+WorldLink="*res://scripts/world_link.gd"
 
 [display]
 

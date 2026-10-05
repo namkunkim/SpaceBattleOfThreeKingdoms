@@ -154,7 +154,8 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 	battle.battle_event.connect(_on_event)
 	GameSettings.apply(get_window())
 	get_window().title = "성한지 — 적벽 회랑"
-	show_screen("title")
+	# 천하 지도에서 출격했으면 타이틀을 건너뛰고 브리핑부터(WORLD-MAP-LINK §2)
+	show_screen("brief" if battle.has_method("routed") and battle.routed() else "title")
 
 # ------------------------------------------------------------ 화면 흐름
 func show_screen(name: String) -> void:
@@ -186,7 +187,14 @@ func restart() -> void:
 	battle._restart()
 	show_screen("")
 
+# 천하 지도에서 들어온 전투는 "타이틀로" 대신 "천하로"
+func title_label() -> String:
+	return "천하로" if battle.has_method("routed") and battle.routed() else "타이틀로"
+
 func to_title() -> void:
+	if battle.has_method("routed") and battle.routed():
+		battle.back_to_world()
+		return
 	battle.init_game()
 	_clear_log()
 	show_screen("title")

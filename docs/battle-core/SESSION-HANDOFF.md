@@ -157,6 +157,13 @@
 - **구현 후속 F-1(M10 사람 플레이 테스트 전):** `SalvoCombat._wound`가 누적 선체 비율로 손상을 다시 잡아, 수리·경파 회복이 다음 피격 한 번에 사라진다. F-2 AI 보급, F-3 UI(M10), F-4 `still_eps` 초당 값은 리뷰 §8.
 - 다음 리뷰는 M9(계략과 강습).
 
+## 천하 지도 연동 (2026-10-05, 클라우드 세션, 브랜치 `claude/sharp-hopper-roo4tn`)
+
+- 설계와 구현 메모: `WORLD-MAP-LINK.md`. 진입 화면이 천하 지도(`scenes/WorldMap.tscn`)로 바뀌었다. 세분화는 구지 행성계 한 곳뿐이다.
+- 계약 `BattleBrief`·`BattleOutcome`(`scripts/world/`), autoload `WorldLink`, 자동 해결은 적벽 프로필을 스레드로 돌린다. 직접 지휘 전장은 아직 POC 편성(M10 후속).
+- 데이터: `tools/scenario/make_world_208.py` → `data/scenarios/base/world_208.json`(본편 지도 v3 스냅숏).
+- 테스트 `tests/world_link.gd` 추가, 기존 테스트 통과. main 병합과 화면 확인은 로컬에서 한다.
+
 ## 남은 일 (컨셉 세션이 할 수 있는 것)
 
 | 우선 | 일 | 메모 |

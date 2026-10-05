@@ -134,7 +134,10 @@ func init_game() -> void:
 		view3d.free_fleet(f)
 	vm.reset()
 	fx.clear()
-	battle_seed = randi()
+	# 천하 지도에서 들어온 전투면 BattleBrief의 시드를 쓴다(같은 Brief = 같은 전투, WORLD-MAP-LINK §3).
+	# 편성은 아직 POC 프로필이다. 적벽 편성은 M10에서 이 자리에 brief.profile()로 들어온다.
+	var link := get_node_or_null("/root/WorldLink")
+	battle_seed = link.brief.seed if link and link.routed() else randi()
 	sim = BattleSim.new(battle_seed)
 	clock = TickClock.new()
 	_sim_acc_clock = TickClock.new()
@@ -172,6 +175,18 @@ func _restart() -> void:
 
 func _quit() -> void:
 	get_tree().quit()
+
+# 천하 지도에서 들어온 전투인가(결과 화면의 "천하로", 시작 화면 생략)
+func routed() -> bool:
+	var link := get_node_or_null("/root/WorldLink")
+	return link != null and link.routed()
+
+# 천하 지도로 돌아간다. 전투가 끝났으면 결과(BattleOutcome)를, 아니면 결과 없이.
+func back_to_world() -> void:
+	var link := get_node_or_null("/root/WorldLink")
+	if link == null:
+		return
+	link.back_to_world(BattleOutcome.from_sim(sim, link.brief) if sim.st.over else null)
 
 func _toggle_menu() -> void:
 	if G.state == "play":
