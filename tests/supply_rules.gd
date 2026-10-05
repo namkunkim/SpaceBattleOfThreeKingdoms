@@ -197,6 +197,21 @@ func _run() -> void:
 	_ticks(s, 1)
 	if not TestCheck.ok(self, r.stages["SHP-04"] == [4, 0, 0, 0, 0] and _count(s.drain_events(), "light_recovered", r.id) == 1, "120초 무피격: 경파 3척 → 무손상"): return
 
+	# 회복·수리는 다음 작은 피격에 사라지지 않는다(REVIEW-M8 F-1). 선체는 그대로, 되찾은 척 수만 목표에서 뺀다. 선체 50%: 하한 문턱(75·40%)에서 멀다
+	s = _sim([_d("S", 800, 450, [["SHP-05", 1], ["SHP-04", 2]], "liu_bei", true), _d("R", 925, 450, [["SHP-04", 20]])])
+	r = s.st.fleets[1]
+	s.salvo.apply_hull(null, r, r.max_hull * 0.5, "engagement", "front", s.st.new_event_id())
+	r.hit_tick = s.st.tick
+	var hull0 := r.hull
+	var mod0 := s.salvo._stage_sum(r, 2)
+	_sec(s, 121)
+	var intact := s.salvo._stage_sum(r, 0)
+	var mod1 := s.salvo._stage_sum(r, 2)
+	if not TestCheck.ok(self, r.hull == hull0 and s.salvo._stage_sum(r, 1) == 0 and mod1 < mod0 and r.healed_wound > 0 and r.healed_mod > 0, "회복·수리: 선체 그대로, 경파 0, 중파 %d → %d" % [mod0, mod1]): return
+	s.salvo.apply_hull(null, r, maxf(1.0, r.max_hull * 0.009), "engagement", "front", s.st.new_event_id())
+	var intact2 := s.salvo._stage_sum(r, 0)
+	if not TestCheck.ok(self, intact2 >= intact - 1 and s.salvo._stage_sum(r, 2) <= mod1 + 1, "선체 1%% 미만 피해: 무손상 %d → %d, 중파 %d → %d" % [intact, intact2, mod1, s.salvo._stage_sum(r, 2)]): return
+
 	# 실제 명중이 hit_tick을 남긴다
 	s = SalvoFixture.sim([_d("A", 600, 450, [["SHP-03", 6]], "liu_bei", true)], [_d("B", 800, 450, [["SHP-04", 6]], "cao_cao")], 1, "", func(cb): cb.supply = full.supply)
 	var last_hit := -1

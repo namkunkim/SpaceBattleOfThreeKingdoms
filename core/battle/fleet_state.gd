@@ -99,6 +99,8 @@ var ai_seen := -1             # 처음 접촉을 안 틱(난이도 반응 지연
 
 # --- M8 보급과 수리 ---
 var hit_tick := -1            # 마지막으로 명중을 받은 틱(경파 자연 회복의 기준)
+var healed_wound := 0         # 경파 자연 회복으로 무손상이 된 척 수 누계. _wound가 손상 목표에서 뺀다(REVIEW-M8 F-1)
+var healed_mod := 0           # 수리로 중파 → 경파가 된 척 수 누계. _wound가 중파 하한에서 뺀다
 var sup_src := ""             # 배정된 공급원 키(기지 ID 또는 "f<전대 ID>"). ""이면 배정 없음
 var sup_prog := 0             # 이번 주기 진행(bp·틱). 처리량만큼 쌓인다
 var sup_since := -1           # 정지를 시작한 틱(처리 순서). 움직이면 -1

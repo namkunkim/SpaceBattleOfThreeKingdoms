@@ -646,7 +646,9 @@ func _wound(f: FleetState) -> void:
 	for fl in C.stage.hull_floor:
 		if ratio_bp < int(fl.below_bp):
 			mod_min = maxi(mod_min, survivors * int(fl.moderate_share_bp) / BattleRules.BP)
-	var worn := (survivors * (BattleRules.BP - ratio_bp) + BattleRules.BP / 2) / BattleRules.BP
+	# 수리·회복으로 되찾은 척 수는 누적 선체 목표에서 뺀다. 선체 점수는 그대로(REVIEW-M8 F-1)
+	mod_min -= f.healed_mod
+	var worn := (survivors * (BattleRules.BP - ratio_bp) + BattleRules.BP / 2) / BattleRules.BP - f.healed_wound
 	var cur_mod := _stage_sum(f, 2)
 	var mod_target := mini(survivors, maxi(cur_mod, mod_min))
 	var wound_target := mini(survivors, maxi(maxi(_stage_sum(f, 1) + cur_mod, worn), mod_target))
