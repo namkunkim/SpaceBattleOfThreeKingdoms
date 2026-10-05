@@ -64,6 +64,7 @@ func _run() -> void:
 		if mode == "select":
 			battle.groups[1] = [battle.fleets[0].id, battle.fleets[1].id]
 			battle.groups[2] = [battle.fleets[2].id]
+			battle.multi = true   # 다중 모드 버튼 강조 확인
 			if deck:
 				deck._set_info_open(true)
 		battle.refresh_panel()

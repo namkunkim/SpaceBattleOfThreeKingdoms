@@ -69,7 +69,8 @@ var cut_tween: Tween
 var cut_cool := 0.0
 var radar: RadarScope
 var info: Control
-var save_btn: Control
+var multi_btn: DeckWidgets.IconButton
+var grp_btns: Array[DeckWidgets.IconButton] = []
 var info_open := false
 var cmd_panel: Control
 var cmd_tabs: Array = []
@@ -153,7 +154,7 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 		hold_tip.register(c)
 	for c in cmd_buttons:
 		hold_tip.register(c)
-	hold_tip.register(save_btn)
+	hold_tip.register(multi_btn)
 	screens = Screens.build_all(self)
 	_build_sound()
 	battle.battle_event.connect(_on_event)
@@ -246,6 +247,7 @@ func _process(delta: float) -> void:
 		if _redraw_acc >= 0.1:
 			_redraw_acc = 0.0
 			_refresh_cmds()
+			_refresh_group_btns()
 			for c in [top_bar, cp_bar, objectives, info, toast]:
 				c.queue_redraw()
 			for i in speed_btns.size():
@@ -759,30 +761,32 @@ func _build_commands() -> void:
 	hud.add_child(strip)
 	_anchor(strip, Control.PRESET_BOTTOM_RIGHT, Vector2(Strip.WIDTH, Strip.CELL.y), Vector2(-16, -272))
 	strip.setup(self)
-	# 터치용 편성 저장(PC는 Ctrl+숫자)
-	save_btn = W.IconButton.new("", "편성")
-	save_btn.tooltip_text = "선택한 전대를 편성 번호에 저장 (Ctrl+숫자)"
-	save_btn.pressed.connect(_save_group)
-	hud.add_child(save_btn)
-	_anchor(save_btn, Control.PRESET_BOTTOM_RIGHT, Vector2(52, Strip.CELL.y), Vector2(-16 - Strip.WIDTH - 4, -272))
+	# 선택 도구(터치): [다중] [1]~[5] 전대 띠 왼쪽. 번호 탭 = 편성 호출, 길게 누름 = 현재 선택 저장(PC는 Ctrl+숫자)
+	multi_btn = W.IconButton.new("", "다중")
+	multi_btn.tooltip_text = "다중 선택: 탭으로 추가·해제, 빈 곳 끌기로 범위 선택"
+	multi_btn.pressed.connect(func(): battle.multi = not battle.multi)
+	var tools: Array[Control] = [multi_btn]
+	for n in range(1, SelectionSet.SLOTS + 1):
+		var gb := W.IconButton.new("", str(n))
+		gb.tooltip_text = "편성 %d: 탭 = 선택, 길게 누름 = 현재 선택 저장" % n
+		gb.button_down.connect(battle._group_down.bind(n))
+		gb.button_up.connect(battle._group_up.bind(n))
+		grp_btns.append(gb)
+		tools.append(gb)
+	for i in tools.size():
+		hud.add_child(tools[i])
+		_anchor(tools[i], Control.PRESET_BOTTOM_RIGHT, Vector2(52, Strip.CELL.y), Vector2(-16 - Strip.WIDTH - 4 - (tools.size() - 1 - i) * 56, -272))
 	_set_tab(0)
 
-# 선택을 첫 빈 편성 번호에 저장한다(모두 차 있으면 9번을 덮어쓴다).
-func _save_group() -> void:
-	if battle.my_sel().is_empty():
-		battle.toast("저장할 전대를 먼저 선택하세요")
-		return
-	for n in range(1, 10):
-		var g: Array = battle.group_fleets(n)
-		if not g.is_empty() and battle.same_sel(g):
-			battle.toast("이미 편성 %d입니다" % n)
-			return
-	var slot := 9
-	for n in range(1, 10):
-		if battle.group_fleets(n).is_empty():
-			slot = n
-			break
-	battle.assign_group(slot)
+# 편성 버튼 표시: 빈 번호는 숫자만, 있으면 "번호·인원". 지금 선택과 같으면 강조.
+func _refresh_group_btns() -> void:
+	multi_btn.active = battle.multi
+	multi_btn.queue_redraw()
+	for i in grp_btns.size():
+		var g: Array = battle.group_fleets(i + 1)
+		grp_btns[i].caption = str(i + 1) if g.is_empty() else "%d·%d" % [i + 1, g.size()]
+		grp_btns[i].active = not g.is_empty() and battle.same_sel(g)
+		grp_btns[i].queue_redraw()
 
 func _set_tab(i: int) -> void:
 	tab_index = i

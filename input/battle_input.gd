@@ -50,11 +50,8 @@ func click_at(sp: Vector2, btn: int, shift: bool) -> void:
 	var f = hit_fleet(sp)
 	var sel: Array = host.selected
 	if btn == MOUSE_BUTTON_LEFT and f and f.side == 0:
-		if shift:
-			if sel.has(f):
-				sel.erase(f)
-			else:
-				sel.append(f)
+		if shift or host.multi:
+			SelectionSet.toggle(sel, f)
 		else:
 			if sel.size() == 1 and sel[0] == f and Time.get_ticks_msec() - _last_click < 400:
 				host.cam_pos = f.pos
@@ -76,6 +73,18 @@ func click_at(sp: Vector2, btn: int, shift: bool) -> void:
 	if f == null:
 		host.inspect = null
 		host.refresh_panel()
+
+# 드래그 박스(마우스 왼쪽 끌기, 터치는 다중 모드의 빈 곳 끌기). 아군만, 추가 모드면 기존 선택에 더한다.
+func box_select(a: Vector2, b: Vector2, additive: bool) -> void:
+	var got := SelectionSet.in_rect(host.alive(0), Rect2(a, Vector2.ZERO).expand(b), host.w2s)
+	if got.is_empty():
+		return
+	if additive or host.multi:
+		SelectionSet.add_all(host.selected, got)
+	else:
+		host.selected.assign(got)
+	host.inspect = null
+	host.refresh_panel()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
@@ -110,20 +119,7 @@ func _input(event: InputEvent) -> void:
 		if not drag.moved:
 			click_at(drag.s, drag.btn, drag.shift)
 		elif drag.mode == "box":
-			var r := Rect2(drag.s, Vector2.ZERO).expand(drag.c)
-			var got: Array = []
-			for f in host.alive(0):
-				if r.has_point(host.w2s(f.pos)):
-					got.append(f)
-			if not got.is_empty():
-				if drag.shift:
-					for f in got:
-						if not host.selected.has(f):
-							host.selected.append(f)
-				else:
-					host.selected.assign(got)
-				host.inspect = null
-				host.refresh_panel()
+			box_select(drag.s, drag.c, drag.shift)
 		host.drag = {}
 
 func _key(e: InputEventKey) -> void:
@@ -167,20 +163,14 @@ func group_up(n: int) -> void:
 		select_group(n)
 
 func group_fleets(n: int) -> Array:
+	SelectionSet.prune(host.groups, host.by_id)
 	var out: Array = []
 	for id in host.groups.get(n, []):
-		var f = host.by_id(id)
-		if f and not f.dead:
-			out.append(f)
+		out.append(host.by_id(id))
 	return out
 
 func same_sel(g: Array) -> bool:
-	if g.size() != host.selected.size():
-		return false
-	for f in g:
-		if not host.selected.has(f):
-			return false
-	return true
+	return SelectionSet.same(g, host.selected)
 
 func select_group(n: int) -> void:
 	if host.G.state != "play":
@@ -203,8 +193,5 @@ func assign_group(n: int) -> void:
 	if s.is_empty():
 		host.toast("저장할 함대를 먼저 선택하세요")
 		return
-	var ids := []
-	for f in s:
-		ids.append(f.id)
-	host.groups[n] = ids
-	host.toast("편성 %d에 %d개 전대 저장" % [n, ids.size()])
+	host.groups[n] = SelectionSet.ids(s)
+	host.toast("편성 %d에 %d개 전대 저장" % [n, s.size()])

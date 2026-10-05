@@ -84,6 +84,7 @@ var G := {}
 var selected: Array = []
 var inspect = null
 var groups := {}
+var multi := false   # 다중 선택 모드(터치): 탭 = 추가/해제, 빈 곳 끌기 = 범위 선택
 var marker := {}
 var drag := {}
 var now_t := 0.0
@@ -142,6 +143,7 @@ func init_game() -> void:
 	clock = TickClock.new()
 	_sim_acc_clock = TickClock.new()
 	selected.clear()
+	multi = false
 	inspect = null
 	marker = {}
 	drag = {}

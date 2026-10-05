@@ -4,7 +4,7 @@ extends Node
 # 터치 조작(제안서 v0.2 §7.2). 마우스 조작은 POC 입력 처리를 그대로 쓴다.
 #  - 탭: 선택(아군) / 공격(적, 선택이 있을 때) / 이동(빈 곳, 선택이 있을 때)
 #  - 아군 함대에서 끌기: 빈 곳에 놓으면 이동, 적 위에 놓으면 공격, 출발 함대 위로 되돌리면 취소
-#  - 빈 곳에서 끌기: 화면 이동
+#  - 빈 곳에서 끌기: 화면 이동 (다중 모드 `battle.multi`에서는 범위 선택 상자, 아군 탭은 추가/해제)
 #  - 길게 누르기(아군): 선택에 추가/제외
 #  - 두 손가락: 확대·축소와 화면 이동
 #
@@ -37,10 +37,7 @@ func _process(delta: float) -> void:
 		press_t += delta
 		if press_t >= LONG_PRESS and origin_fleet and origin_fleet.side == 0:
 			mode = "long"
-			if battle.selected.has(origin_fleet):
-				battle.selected.erase(origin_fleet)
-			else:
-				battle.selected.append(origin_fleet)
+			SelectionSet.toggle(battle.selected, origin_fleet)
 			battle.inspect = null
 			battle.refresh_panel()
 			UiSound.vibrate(30)
@@ -79,6 +76,9 @@ func _touch(e: InputEventScreenTouch) -> void:
 		return
 	if mode == "pending":
 		battle._click_at(e.position, MOUSE_BUTTON_LEFT, false)
+	elif mode == "box":
+		battle.input_node.box_select(battle.drag.s, e.position, true)
+		battle.drag = {}
 	elif mode == "order":
 		_finish_order(e.position)
 	mode = "" if touches.is_empty() else mode
@@ -101,11 +101,16 @@ func _drag(e: InputEventScreenDrag) -> void:
 				battle.selected.append(origin_fleet)
 				battle.inspect = null
 				battle.refresh_panel()
+		elif battle.multi:
+			mode = "box"
+			battle.drag = {"s": tc.start, "c": e.position, "btn": -1, "moved": true, "mode": "box", "shift": true, "last": e.position}
 		else:
 			mode = "pan"
 	if mode == "pan":
 		battle.cam_pos -= (e.position - last) / battle.cam_z
 		battle._clamp_cam()
+	elif mode == "box":
+		battle.drag.c = e.position
 	elif mode == "order":
 		_update_order(e.position)
 
@@ -129,6 +134,7 @@ func _finish_order(p: Vector2) -> void:
 func _begin_pinch() -> void:
 	mode = "pinch"
 	order = {}
+	battle.drag = {}
 	origin_fleet = null
 	var pts := _two()
 	pinch_d = maxf(1.0, pts[0].distance_to(pts[1]))

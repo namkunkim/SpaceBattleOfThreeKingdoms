@@ -54,10 +54,7 @@ func _process(delta: float) -> void:
 			_long_done = true
 			var f = fleets()[_press_i]
 			if not f.dead:
-				if battle.selected.has(f):
-					battle.selected.erase(f)
-				else:
-					battle.selected.append(f)
+				SelectionSet.toggle(battle.selected, f)
 				battle.inspect = null
 				battle.refresh_panel()
 				UiSound.vibrate(30)
@@ -129,6 +126,12 @@ func _release(p: Vector2) -> void:
 		if k >= 0 and k < bs.size() and k < 2:
 			battle.select_group(bs[k])
 			return
+	# 다중 모드: 탭 = 추가/해제
+	if battle.multi:
+		SelectionSet.toggle(battle.selected, f)
+		battle.inspect = null
+		battle.refresh_panel()
+		return
 	# 탭: 이미 그 전대 하나만 선택돼 있으면 화면을 옮긴다
 	if battle.selected.size() == 1 and battle.selected[0] == f:
 		battle.cam_pos = f.pos
