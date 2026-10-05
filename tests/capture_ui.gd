@@ -3,7 +3,7 @@ extends SceneTree
 # 상품화 표현 계층 캡처. 화면이 있는 실행에서만 의미가 있다.
 # godot --path . --script tests/capture_ui.gd -- <장면> <출력 png> [UI 크기]
 # 폰 130% 배치 확인: --resolution 1600x720 ... -- battle res://out/ui-phone.png 1.3
-# 장면: title | prologue [장 0~7] | brief | quiet | battle | select | hold | undo | decision | wu | pause | suspend | result | settings | incoming | salvo | roster | roster_full
+# 장면: title | prologue [장 0~7] | brief | quiet | battle | select | hold | undo | decision | wu | pause | suspend | result | settings | incoming | salvo | roster | roster_full | nohud(F1 HUD 숨김)
 const SEED := 20261003
 
 func _initialize() -> void:
@@ -71,7 +71,11 @@ func _run() -> void:
 		battle.cam_z = 1.0
 		for i in 150:
 			await process_frame
-		if mode == "pause":
+		if mode == "nohud":
+			battle.toggle_hud()
+			for i in 5:
+				await process_frame
+		elif mode == "pause":
 			battle._toggle_menu()
 			for i in 30:
 				await process_frame
