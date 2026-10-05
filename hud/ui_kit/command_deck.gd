@@ -154,8 +154,14 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 	battle.battle_event.connect(_on_event)
 	GameSettings.apply(get_window())
 	get_window().title = "성한지 — 적벽 회랑"
-	# 천하 지도에서 출격했으면 타이틀을 건너뛰고 브리핑부터(WORLD-MAP-LINK §2)
-	show_screen("brief" if battle.has_method("routed") and battle.routed() else "title")
+	# 천하 지도에서 출격했으면 타이틀을 건너뛴다(WORLD-MAP-LINK §2). 서막(첫 진입 한 번, 브리핑 전)이 있으면 그것부터
+	if battle.has_method("routed") and battle.routed():
+		if has_method("open_prologue_or_brief"):
+			call("open_prologue_or_brief")
+		else:
+			show_screen("brief")
+	else:
+		show_screen("title")
 
 # ------------------------------------------------------------ 화면 흐름
 func show_screen(name: String) -> void:
