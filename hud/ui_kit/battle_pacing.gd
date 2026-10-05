@@ -114,7 +114,7 @@ func _process(delta: float) -> void:
 		GameSettings.SLOW_ON_SELECT:
 			slow = src.has_selection() and _idle < IDLE and not _order_done
 		GameSettings.SLOW_WHILE_HANDLING:
-			slow = src.has_selection() and (_held or deck.overlay.touch.mode == "order")
+			slow = src.has_selection() and ((_held and deck.overlay.touch.mode != "ignore") or deck.overlay.touch.mode == "order")
 		_:
 			slow = false
 	slow = slow or forced_slow

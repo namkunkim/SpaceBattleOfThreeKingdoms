@@ -116,23 +116,37 @@ func _run() -> void:
 	_touch(0, box_b, false)
 	await _settle()
 	if not TestCheck.ok(self, battle.cam_pos.is_equal_approx(cam0) and battle.selected.has(f1) and battle.selected.has(f2), "no selection: empty drag box-selects, no pan"): return
-	# 3a. 선택이 있을 때 빈 곳 끌기 = 선택 전체 이동(범위 선택 아님, 팬 아님)
+	# 3a. 선택이 있을 때: 선택 밖(빈 곳·미선택 전대)에서 시작한 끌기는 무시(명령·범위 선택·팬 아님)
 	TestPoke.fleet(battle, f1, {"has_move": false})
 	TestPoke.fleet(battle, f2, {"has_move": false})
 	var to_p := box_a + Vector2(-150, 0)
 	_touch(0, box_a, true)
 	_move(0, box_a, to_p)
-	if not TestCheck.ok(self, not battle.presentation.touch.order.is_empty() and battle.drag.is_empty(), "selection: empty drag previews an order"): return
+	if not TestCheck.ok(self, battle.presentation.touch.mode == "ignore" and battle.presentation.touch.order.is_empty() and battle.drag.is_empty(), "selection: empty drag is ignored"): return
 	_touch(0, to_p, false)
 	await _settle()
-	if not TestCheck.ok(self, f1.has_move and f2.has_move and battle.selected.size() == 2 and battle.cam_pos.is_equal_approx(cam0), "selection: empty drag moves all selected"): return
-	# 3b. 시작 지점으로 되돌려 놓으면 취소
+	if not TestCheck.ok(self, not f1.has_move and not f2.has_move and battle.selected.size() == 2 and battle.cam_pos.is_equal_approx(cam0), "selection: empty drag does nothing"): return
+	battle.selected.assign([f1])
+	_touch(0, p2, true)
+	_move(0, p2, p2 + Vector2(120, 0))
+	_touch(0, p2 + Vector2(120, 0), false)
+	await _settle()
+	if not TestCheck.ok(self, not f1.has_move and not f2.has_move and battle.selected == [f1], "selection: drag from unselected fleet is ignored"): return
+	# 3a2. 선택된 전대에서 시작한 끌기 = 선택 전체 이동(끝점은 어디든)
+	battle.selected.assign([f1, f2])
+	_touch(0, p1, true)
+	_move(0, p1, to_p)
+	if not TestCheck.ok(self, not battle.presentation.touch.order.is_empty() and battle.drag.is_empty(), "selection: drag from selected previews an order"): return
+	_touch(0, to_p, false)
+	await _settle()
+	if not TestCheck.ok(self, f1.has_move and f2.has_move and battle.selected.size() == 2 and battle.cam_pos.is_equal_approx(cam0), "selection: drag from selected moves all selected"): return
+	# 3b. 출발 전대 위로 되돌려 놓으면 취소
 	TestPoke.fleet(battle, f1, {"has_move": false})
 	TestPoke.fleet(battle, f2, {"has_move": false})
-	_touch(0, box_a, true)
-	_move(0, box_a, to_p)
-	_move(0, to_p, box_a + Vector2(6, 0))
-	_touch(0, box_a + Vector2(6, 0), false)
+	_touch(0, p1, true)
+	_move(0, p1, to_p)
+	_move(0, to_p, p1 + Vector2(6, 0))
+	_touch(0, p1 + Vector2(6, 0), false)
 	await _settle()
 	if not TestCheck.ok(self, not f1.has_move and not f2.has_move, "drag back to start cancels"): return
 	# 3c. 선택이 있을 때 적 탭 = 공격 지정

@@ -20,9 +20,8 @@ const CANCEL_R := 46.0
 
 var battle: Node
 var touches := {}          # index -> {start, pos, t0}
-var mode := ""             # "", "pending", "pan", "order", "pinch", "long"
+var mode := ""             # "", "pending", "ignore", "box", "order", "pinch", "long"
 var origin_fleet = null
-var order_from := Vector2.ZERO   # 빈 곳에서 시작한 끌기 명령의 시작 화면 좌표(취소 판정)
 var press_t := 0.0
 var pinch_d := 0.0
 var pinch_c := Vector2.ZERO
@@ -99,16 +98,14 @@ func _drag(e: InputEventScreenDrag) -> void:
 		if battle.multi:   # 다중 모드: 어디서 시작하든 끌기 = 범위 선택(명령은 탭으로)
 			mode = "box"
 			battle.drag = {"s": tc.start, "c": e.position, "btn": -1, "moved": true, "mode": "box", "shift": true, "last": e.position}
-		elif origin_fleet and origin_fleet.side == 0:
+		elif not battle.my_sel().is_empty():
+			# 선택이 있으면 선택된 전대에서 시작한 끌기만 이동·공격으로 인정, 그 밖에서 시작하면 무시
+			mode = "order" if (origin_fleet and origin_fleet.side == 0 and battle.selected.has(origin_fleet)) else "ignore"
+		elif origin_fleet and origin_fleet.side == 0:   # 선택이 없으면 아군에서 끌기 = 그 전대 선택 + 명령
 			mode = "order"
-			if not battle.selected.has(origin_fleet):
-				battle.selected.clear()
-				battle.selected.append(origin_fleet)
-				battle.inspect = null
-				battle.refresh_panel()
-		elif not battle.my_sel().is_empty():   # 선택이 있으면 빈 곳(또는 적) 끌기 = 선택 전체 이동
-			mode = "order"
-			order_from = tc.start
+			battle.selected.append(origin_fleet)
+			battle.inspect = null
+			battle.refresh_panel()
 		else:   # 선택이 없으면 끌기 = 범위 선택. 화면 이동은 두 손가락
 			mode = "box"
 			battle.drag = {"s": tc.start, "c": e.position, "btn": -1, "moved": true, "mode": "box", "shift": false, "last": e.position}
@@ -120,12 +117,12 @@ func _drag(e: InputEventScreenDrag) -> void:
 # 끌기 명령 미리보기. 전대에서 시작했으면 그 전대, 빈 곳에서 시작했으면 선택의 첫 전대에서 그린다.
 # 취소: 시작 지점(전대 또는 처음 짚은 곳) 근처로 되돌려 놓기.
 func _update_order(p: Vector2) -> void:
-	if origin_fleet == null and battle.my_sel().is_empty():   # 끌기 도중 선택 전대가 모두 사라짐
+	if origin_fleet == null or battle.my_sel().is_empty():   # 끌기 도중 선택 전대가 모두 사라짐
 		order = {}
 		return
 	var tgt = battle._hit_fleet(p)
-	var src = origin_fleet if origin_fleet else battle.my_sel()[0]
-	var start: Vector2 = battle.w2s(origin_fleet.pos) if origin_fleet else order_from
+	var src = origin_fleet
+	var start: Vector2 = battle.w2s(origin_fleet.pos)
 	order = {"from_fleet": src, "to": p, "target": tgt if (tgt and tgt.side == 1) else null, "cancel": p.distance_to(start) < CANCEL_R}
 	order_preview_changed.emit()
 

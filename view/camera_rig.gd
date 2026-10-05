@@ -47,6 +47,29 @@ func clamp_cam() -> void:
 	cam_pos.x = clampf(cam_pos.x, 0.0, WORLD.x)
 	cam_pos.y = clampf(cam_pos.y, 0.0, WORLD.y)
 	cam_z = clampf(cam_z, 0.35, 2.8)
+	if camera == null:
+		return
+	# 화면 네 모서리가 전장 안에 있게 한다. 전장이 화면보다 작으면 그 축은 가운데에 둔다(원근이라 몇 번 반복).
+	var corners := [Vector2.ZERO, Vector2(vsize.x, 0.0), Vector2(0.0, vsize.y), vsize]
+	for _i in 4:
+		update()
+		var lo := Vector2(INF, INF)
+		var hi := Vector2(-INF, -INF)
+		for c in corners:
+			var w := s2w(c)
+			lo = lo.min(w)
+			hi = hi.max(w)
+		var d := Vector2.ZERO
+		for a in 2:
+			if hi[a] - lo[a] > WORLD[a]:
+				d[a] = WORLD[a] * 0.5 - (lo[a] + hi[a]) * 0.5
+			elif lo[a] < 0.0:
+				d[a] = -lo[a]
+			elif hi[a] > WORLD[a]:
+				d[a] = WORLD[a] - hi[a]
+		if d.length() < 0.5:
+			break
+		cam_pos += d
 
 func zoom(mp: Vector2, factor: float) -> void:
 	var before := s2w(mp)
