@@ -13,9 +13,12 @@ uniform bool use_tex = false;                                 // false면 아래
 uniform float detail : hint_range(0.0, 1.0) = 0.0;   // 확대할수록 1: 판 이음선, 안쪽 윤곽, 함교 창, 엔진 노즐, 포탑 고리가 나타난다
 
 varying vec4 inst;
+varying float spd;   // 함선별 속도 0~1(INSTANCE_CUSTOM.x): 선미 항적의 세기
+const float PLANE_K = 1.6;   // 평면 길이 / 선체 길이. 선체가 앞 1/1.6, 나머지 뒤쪽이 항적 자리
 
 void vertex() {
 	inst = COLOR;
+	spd = INSTANCE_CUSTOM.x;
 }
 
 float bump(float p, float c, float w) {
@@ -53,8 +56,18 @@ float hull(int k, float p) {
 }
 
 void fragment() {
-	if (use_tex) {
-		vec4 t = texture(ship_tex, UV);
+	vec2 suv = vec2(UV.x * PLANE_K, UV.y);
+	if (suv.x > 1.0) {   // 선미 항적: 가늘고 밝은 선이 뒤로 갈수록 옅어진다
+		float tl = (suv.x - 1.0) / (PLANE_K - 1.0);
+		float w = 0.3 * (1.0 - tl) + 0.02;
+		float a = (1.0 - smoothstep(w * 0.4, w, abs(suv.y * 2.0 - 1.0))) * pow(1.0 - tl, 1.6) * spd;
+		if (a < 0.02) {
+			discard;
+		}
+		ALBEDO = rim_color * 1.3 * inst.rgb;
+		ALPHA = a;
+	} else if (use_tex) {
+		vec4 t = texture(ship_tex, suv);
 		float m = t.a;
 		if (m < 0.04) {
 			discard;
@@ -62,20 +75,20 @@ void fragment() {
 		// 알파를 흐려 바깥쪽 가장자리만 남긴다 -> 밝은 테두리
 		vec2 r = vec2(7.0 / 512.0, 7.0 / 128.0);
 		float blur = 0.0;
-		blur += texture(ship_tex, UV + vec2(r.x, 0.0)).a + texture(ship_tex, UV - vec2(r.x, 0.0)).a;
-		blur += texture(ship_tex, UV + vec2(0.0, r.y)).a + texture(ship_tex, UV - vec2(0.0, r.y)).a;
-		blur += texture(ship_tex, UV + r * 0.7).a + texture(ship_tex, UV - r * 0.7).a;
-		blur += texture(ship_tex, UV + vec2(r.x, -r.y) * 0.7).a + texture(ship_tex, UV + vec2(-r.x, r.y) * 0.7).a;
+		blur += texture(ship_tex, suv + vec2(r.x, 0.0)).a + texture(ship_tex, suv - vec2(r.x, 0.0)).a;
+		blur += texture(ship_tex, suv + vec2(0.0, r.y)).a + texture(ship_tex, suv - vec2(0.0, r.y)).a;
+		blur += texture(ship_tex, suv + r * 0.7).a + texture(ship_tex, suv - r * 0.7).a;
+		blur += texture(ship_tex, suv + vec2(r.x, -r.y) * 0.7).a + texture(ship_tex, suv + vec2(-r.x, r.y) * 0.7).a;
 		blur /= 8.0;
-		float edge = clamp(m * (1.0 - blur) * 2.4, 0.0, 1.0) * (UV.y < 0.5 ? 1.0 : 0.6);
+		float edge = clamp(m * (1.0 - blur) * 2.4, 0.0, 1.0) * (suv.y < 0.5 ? 1.0 : 0.6);
 		float tex_amt = 0.3 + 0.7 * detail;   // 멀리서는 어두운 실루엣, 확대할수록 선체 무늬가 드러난다
 		vec3 body = mix(hull_color, t.rgb * 0.9, tex_amt);
-		vec3 c2 = mix(body, rim_color, edge) + rim_color * 0.25 * smoothstep(0.1, 0.0, abs(UV.y - 0.5)) * m * (1.0 - tex_amt);
+		vec3 c2 = mix(body, rim_color, edge) + rim_color * 0.25 * smoothstep(0.1, 0.0, abs(suv.y - 0.5)) * m * (1.0 - tex_amt);
 		ALBEDO = c2 * inst.rgb;
 		ALPHA = smoothstep(0.04, 0.5, m);
 	} else {
-	float p = UV.x * 2.0 - 1.0;
-	float q = (UV.y * 2.0 - 1.0) / fat;
+	float p = suv.x * 2.0 - 1.0;
+	float q = (suv.y * 2.0 - 1.0) / fat;
 	float h = hull(kind, p);
 	// 항모 선미 격납고 홈
 	if (kind == 6 && p > 0.82 && abs(q) < 0.24) {

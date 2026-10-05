@@ -18,6 +18,7 @@ const MODEL_LEN := 1.9
 # 함선은 3D 모델이 아니라 바닥에 눕힌 평면 위의 셰이더 실루엣이다(`ship_sprite.gdshader`, 참고 영상 방식).
 # 평면 길이 = MODEL_LEN, 폭 = SHIP_WIDTH(길이:폭 약 4:1). 실제 크기는 CLASS_LEN과 _ship_xform의 배율이 정한다.
 const SHIP_WIDTH := 0.48
+const PLANE_K := 1.6   # ship_sprite.gdshader의 PLANE_K와 같아야 한다
 const HULL_STRETCH := Vector3(0.75, 1.0, 1.0)   # x = 길이 배율(대열에서 앞뒤 함선이 겹치지 않게)
 const CLASS_FAT := [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]   # 함종별 폭 미세 조정(실루엣 자체는 셰이더 kind가 정한다)
 const C_ALLY_HULL := Color(0.09, 0.13, 0.19)
@@ -60,6 +61,7 @@ class Slot:
 	var yaw := 0.0               # 월드 yaw(모델 기준)
 	var tau := 0.5
 	var phase := 0.0
+	var trail := 0.0             # 항적 세기 0~1(속도에 따라)
 	var half_len := 0.4
 	var rank := 0.0
 	var alive := true
@@ -116,7 +118,8 @@ func setup(source: BattleSource) -> void:
 
 func _load_assets() -> void:
 	var plane := PlaneMesh.new()
-	plane.size = Vector2(MODEL_LEN, SHIP_WIDTH)
+	plane.size = Vector2(MODEL_LEN * PLANE_K, SHIP_WIDTH)   # 뒤쪽 (PLANE_K-1)/PLANE_K 구간은 항적 자리
+	plane.center_offset = Vector3(MODEL_LEN * (PLANE_K - 1.0) * 0.5, 0.0, 0.0)   # 선체 중심이 원점에 오게
 	for lod in 2:
 		meshes[lod] = []
 		for n in CLASS_NAMES:
@@ -309,6 +312,7 @@ func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 	var sway := 1.0 if moved else 0.0
 	var h_fleet := -float(sq.heading) - PI   # 전대 방향의 모델 yaw
 	var maxerr := 0.0
+	var maxtr := 0.0
 	var yk := 1.0 - exp(-step / 0.35)
 	for s in v.slots:
 		if not s.alive:
@@ -324,13 +328,16 @@ func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 			want = -atan2(s.vel.z, s.vel.x) - PI
 		s.yaw = lerp_angle(s.yaw, want, yk)
 		v.mmis[s.cls].multimesh.set_instance_transform(s.idx, _ship_xform(s))
+		s.trail = lerpf(s.trail, smoothstep(MOVE_EPS, 2.5, s.vel.length()), 0.3)
+		maxtr = maxf(maxtr, s.trail)
+		v.mmis[s.cls].multimesh.set_instance_custom_data(s.idx, Color(s.trail, 0.0, 0.0, 0.0))
 	var gi := 0
 	for s in v.slots:
 		if s.alive:
 			var sz: float = s.half_len * (0.6 if s.cls != ESCORT else 0.5)
 			v.glow.multimesh.set_instance_transform(gi, _glow_xform(s, sz))
 		gi += 1
-	v.rest = v.rest + 1 if maxerr < 0.0004 else 0
+	v.rest = v.rest + 1 if (maxerr < 0.0004 and maxtr < 0.02) else 0
 
 # 진형이 바뀌면 새 슬롯을 앞쪽 순서대로 기존 함선에 다시 배정한다(함종 구성은 그대로).
 func _reform(v: FleetVis, sq: Dictionary) -> void:
@@ -418,6 +425,7 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 		var mm := MultiMesh.new()
 		mm.transform_format = MultiMesh.TRANSFORM_3D
 		mm.use_colors = true
+		mm.use_custom_data = true
 		mm.mesh = meshes[1][c]
 		mm.instance_count = list.size()
 		var tint := C_ALLY_TINT if v.side == 0 else C_FOE_TINT

@@ -7,6 +7,7 @@ extends Control
 var battle: Node
 var touch: TouchController
 var t := 0.0
+var renderer: FleetRenderer   # 목적지 진형 고리(슬롯 배치)를 그릴 때 읽는다
 
 func setup(b: Node) -> void:
 	battle = b
@@ -108,6 +109,7 @@ func _orders(f) -> void:
 		var r: Vector2 = battle.w2s(f.move_to + dir * 22.0 - dir.orthogonal() * 14.0)
 		draw_colored_polygon(PackedVector2Array([tip, l, r]), Color(UiTheme.GOLD_HI, 0.85))
 		UiDraw.diamond(self, b, 5.0, Color(UiTheme.GOLD_HI, 0.9), false)
+		_dest_rings(f, dir)
 		var spd: float = 62.0 * f.spd * (0.5 if f.defense else 1.0)
 		var eta := int(f.pos.distance_to(f.move_to) / maxf(1.0, spd))
 		var label := "도착 %d:%02d" % [eta / 60, eta % 60]
@@ -116,6 +118,21 @@ func _orders(f) -> void:
 		draw_rect(box, Color(0.03, 0.05, 0.07, 0.88))
 		draw_rect(box, Color(UiTheme.GOLD_HI, 0.6), false, 1.0)
 		UiDraw.text(self, box.position + Vector2(9, 15.5), label, "semibold", 12, UiTheme.GOLD_HI)
+
+# 목적지의 진형 고리: 함선 슬롯마다 작은 고리를 진형 배치로 놓는다(참고 영상). 많으면 일부만 그린다.
+func _dest_rings(f, dir: Vector2) -> void:
+	if renderer == null or not renderer.vis.has(f.id):
+		return
+	var v: FleetRenderer.FleetVis = renderer.vis[f.id]
+	var sq := renderer.src.squadron(f.id)
+	var pts := renderer.formation_points(sq.formation, v.alive_n)
+	var side := dir.rotated(PI * 0.5)
+	var step := maxi(1, pts.size() / 28)
+	var col := Color(UiTheme.GOLD_HI, 0.5)
+	for i in range(0, pts.size(), step):
+		var p: Vector3 = pts[i]
+		var c: Vector2 = f.move_to + dir * p.x + side * p.z
+		draw_polyline(_ground_ring(c, 4.5, 10), col, 1.2, true)
 
 func _reticle(c: Vector2, col: Color) -> void:
 	var r := 16.0 + sin(t * 5.0) * 1.5
