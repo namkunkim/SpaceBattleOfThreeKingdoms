@@ -15,6 +15,15 @@
   - 함대 표현은 은하영웅전설 수준(MultiMesh·LOD, 일제 포화). 입력은 터치와 마우스.
 - 측정값: Intel Arc 130V 내장 GPU, Compatibility, 1600×900에서 표시 함선 약 760척, 60fps.
 
+## 서막 (2026-10-05, 클라우드 UI 세션, 브랜치 `claude/prologue-ui`)
+
+- 흐름: 타이틀 "출격 준비" → `command_deck.open_prologue_or_brief()` → 첫 회면 서막, 아니면 브리핑. 타이틀 "서막" 버튼 = 다시 보기. 첫 회 판정은 `user://settings.cfg` `[progress] prologue_seen`(끝까지 보거나 건너뛰면 기록).
+- 화면: `deck_screens.gd` PrologueScreen. 전장 위 어두운 막(0.80) + 가운데 Noto Serif KR 26pt, 장 표시(가·나·一~六)·진행 점, 오른쪽 아래 "건너뛰기  Esc"(180×52, 여백 56). 탭·클릭·Space·Enter = 다음 장, Esc·건너뛰기 = 브리핑. 자동 넘김 없음. 카메라는 기존 brief 흐름을 쓰고, 새 설정 "동작 줄이기"(진행 탭, `GameSettings.reduce_motion`)면 타이틀·서막·브리핑 모두 멈추고 글자 페이드도 끈다.
+- 문안: `hud/ui_kit/prologue_text.gd` 한 곳(§11.2 그대로). **본편 `prologue.md`·`star-map.md` 대조 전**이다(로컬).
+- §11.3 문구: 타이틀·브리핑·상단 바·목표·결과·구 HUD·종료 문구·참모 첫 대사에서 성간 삼국·촉한 연합·위 원정군·위(魏)·적벽 회랑·유비 제독을 손유 연합/조조군/적벽 전투/연합 총지휘 유비로. 편성 숫자(6 대 7)는 그대로. `factions.gd`: 표시 이름만 유비군·조조군·손권군(지금 화면에 쓰이지 않음), 키(shu/wei/wu)는 본편 세력 ID와 엮여 있고 인장 글리프(蜀·魏·吳)는 C-3 세력 표지라 유지(바꾸려면 컨셉 결정).
+- 테스트: `tests/ui_flow.gd`(첫 회 서막·탭/Space 넘김·마지막 장 → 브리핑·설정 파일 기록·두 번째 건너뜀·다시 보기·건너뛰기 버튼·Esc). 실행 전 설정 파일을 백업하고 끝나면 되돌린다. `capture_ui.gd -- prologue <png> [장]`은 화면 있는 실행에서만.
+- 남은 것: CHECKLIST-OPEN "(대기열) 서막 후속".
+
 ## 1차 목표 플랫폼(Q56)
 
 - **안드로이드 태블릿 + 윈도우 PC**. 폰은 1차 목표가 아니다.

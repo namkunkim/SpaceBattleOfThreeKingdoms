@@ -1,6 +1,6 @@
 extends SceneTree
 
-# 화면 흐름 검증(헤드리스): 실제 버튼 위치를 마우스로 눌러 타이틀 → 브리핑 → 전투 → 일시정지 → 계속 → 결과 → 타이틀.
+# 화면 흐름 검증(헤드리스): 실제 버튼 위치를 마우스로 눌러 타이틀 → 서막(첫 회) → 브리핑 → 전투 → 일시정지 → 계속 → 결과 → 타이틀.
 # 터치(탭)로도 HUD 버튼이 눌리는지 확인한다.
 
 func _initialize() -> void:
@@ -42,6 +42,20 @@ func _find_button(n: Node, text: String) -> Button:
 			return b
 	return null
 
+func _key(code: Key) -> void:
+	var k := InputEventKey.new()
+	k.keycode = code
+	k.pressed = true
+	root.push_input(k, true)
+
+func _restore_cfg(bytes: PackedByteArray) -> void:
+	if bytes.is_empty():
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(GameSettings.PATH))
+	else:
+		var f := FileAccess.open(GameSettings.PATH, FileAccess.WRITE)
+		f.store_buffer(bytes)
+		f.close()
+
 func _frames(n := 6) -> void:
 	for i in n:
 		await process_frame
@@ -52,9 +66,49 @@ func _run() -> void:
 	await _frames()
 	var deck = battle.presentation.hud
 	if not TestCheck.ok(self, deck.screen == "title" and battle.G.state == "brief", "starts at title"): return
+	# 서막(NARRATIVE-RED-CLIFFS §11): 첫 회만 출격 준비 → 서막 → 브리핑. 실제 설정 파일은 끝나고 되돌린다.
+	var saved_cfg := FileAccess.get_file_as_bytes(GameSettings.PATH) if FileAccess.file_exists(GameSettings.PATH) else PackedByteArray()
+	GameSettings.load_cfg()
+	GameSettings.prologue_seen = false
 	_click(_find_button(deck, "출격 준비"))
 	await _frames()
-	if not TestCheck.ok(self, deck.screen == "brief", "title -> brief (%s)" % deck.screen): return
+	var pro = deck.screens["prologue"]
+	if not TestCheck.ok(self, deck.screen == "prologue" and pro.page == 0, "first run: title -> prologue (%s)" % deck.screen): return
+	_click(pro, true)
+	await _frames()
+	if not TestCheck.ok(self, pro.page == 1, "tap -> next page"): return
+	_key(KEY_SPACE)
+	await _frames()
+	if not TestCheck.ok(self, pro.page == 2 and deck.screen == "prologue" and battle.G.state == "brief", "space -> next page, no pause"): return
+	for i in PrologueText.PAGES.size() - 3:
+		_click(pro)
+		await _frames()
+	if not TestCheck.ok(self, pro.page == PrologueText.PAGES.size() - 1, "last page"): return
+	_click(pro)
+	await _frames()
+	if not TestCheck.ok(self, deck.screen == "brief" and GameSettings.prologue_seen, "last page -> brief, seen saved"): return
+	var cf := ConfigFile.new()
+	if not TestCheck.ok(self, cf.load(GameSettings.PATH) == OK and bool(cf.get_value("progress", "prologue_seen", false)), "prologue_seen in settings.cfg"): return
+	_click(_find_button(deck, "뒤로"))
+	await _frames()
+	_click(_find_button(deck, "출격 준비"))
+	await _frames()
+	if not TestCheck.ok(self, deck.screen == "brief", "second run: title -> brief (%s)" % deck.screen): return
+	# 다시 보기 + 건너뛰기(버튼·Esc)
+	_click(_find_button(deck, "뒤로"))
+	await _frames()
+	_click(_find_button(deck, "서막"))
+	await _frames()
+	if not TestCheck.ok(self, deck.screen == "prologue" and pro.page == 0, "title replay button -> prologue"): return
+	_click(_find_button(deck, "건너뛰기  Esc"), true)
+	await _frames()
+	if not TestCheck.ok(self, deck.screen == "brief", "skip button -> brief"): return
+	deck.open_prologue()
+	await _frames()
+	_key(KEY_ESCAPE)
+	await _frames()
+	if not TestCheck.ok(self, deck.screen == "brief", "esc -> brief"): return
+	_restore_cfg(saved_cfg)
 	_click(_find_button(deck, "출  격"), true)
 	await _frames()
 	if not TestCheck.ok(self, deck.screen == "" and battle.G.state == "play", "brief -> battle by touch"): return
@@ -69,10 +123,7 @@ func _run() -> void:
 	await _frames()
 	if not TestCheck.ok(self, battle.selected.size() == battle.alive(0).size(), "touch command button"): return
 	# Space로 일시정지
-	var k := InputEventKey.new()
-	k.keycode = KEY_SPACE
-	k.pressed = true
-	root.push_input(k, true)
+	_key(KEY_SPACE)
 	await _frames()
 	if not TestCheck.ok(self, deck.screen == "pause" and battle.G.state == "pause", "space -> pause (%s/%s)" % [deck.screen, battle.G.state]): return
 	_click(_find_button(deck, "계속"))

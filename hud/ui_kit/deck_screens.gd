@@ -1,13 +1,14 @@
 extends RefCounted
 
-# 전투 밖 화면: 타이틀(전투 허브), 브리핑, 일시정지, 설정, 결과.
-# 타이틀과 브리핑 뒤에는 실제 3D 전장이 그대로 보인다(POC "brief" 상태의 카메라 흔들림).
+# 전투 밖 화면: 타이틀(전투 허브), 서막, 브리핑, 일시정지, 설정, 결과.
+# 타이틀·서막·브리핑 뒤에는 실제 3D 전장이 그대로 보인다(POC "brief" 상태의 카메라 흔들림).
 
 const W := preload("res://hud/ui_kit/deck_widgets.gd")
 
 static func build_all(deck: Control) -> Dictionary:
 	var out := {
 		"title": TitleScreen.new(deck),
+		"prologue": PrologueScreen.new(deck),
 		"brief": BriefScreen.new(deck),
 		"pause": PauseScreen.new(deck),
 		"settings": SettingsScreen.new(deck, "title"),
@@ -29,17 +30,17 @@ class TitleScreen extends Control:
 		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		mouse_filter = Control.MOUSE_FILTER_STOP
 		var col := VBoxContainer.new()
-		col.position = Vector2(118, 470)
+		col.position = Vector2(118, 452)
 		col.add_theme_constant_override("separation", 4)
 		add_child(col)
 		var go := ScreenKit.menu_button("출격 준비", true)
 		go.custom_minimum_size = Vector2(280, 54)
-		go.pressed.connect(func(): deck.show_screen("brief"))
+		go.pressed.connect(func(): deck.open_prologue_or_brief())
 		col.add_child(go)
 		var spacer := Control.new()
 		spacer.custom_minimum_size = Vector2(0, 10)
 		col.add_child(spacer)
-		for spec in [["설정", func(): deck.show_screen("settings")], ["종료", func(): deck.get_tree().quit()]]:
+		for spec in [["서막", func(): deck.open_prologue()], ["설정", func(): deck.show_screen("settings")], ["종료", func(): deck.get_tree().quit()]]:
 			var b := ScreenKit.menu_button(spec[0])
 			b.custom_minimum_size = Vector2(280, 52)
 			b.pressed.connect(spec[1])
@@ -63,20 +64,20 @@ class TitleScreen extends Control:
 		var x := 118.0
 		UiDraw.text(self, Vector2(x, 196), "星 漢 志", "serif_wide", 18, UiTheme.GOLD)
 		UiDraw.text(self, Vector2(x - 4, 300), "성한지", "serif_bold", 96, UiTheme.INK, HORIZONTAL_ALIGNMENT_LEFT, -1, 0)
-		UiDraw.text(self, Vector2(x, 348), "적벽 회랑 전투", "serif", 26, UiTheme.GOLD_HI)
+		UiDraw.text(self, Vector2(x, 348), "적벽 전투", "serif", 26, UiTheme.GOLD_HI)
 		ScreenKit.rule(self, Vector2(x, 374), Vector2(x + 380, 374))
-		UiDraw.text(self, Vector2(x, 410), "성간 삼국의 함대가 적벽 회랑에서 맞선다.", "regular", 15, UiTheme.INK_2)
-		UiDraw.text(self, Vector2(x, 434), "기함을 지키며 위 원정군을 회랑에서 몰아내라.", "regular", 15, UiTheme.INK_2)
+		UiDraw.text(self, Vector2(x, 404), "건안 13년 겨울, 구지의 궤도에서 손권과 유비가 조조를 맞는다.", "regular", 15, UiTheme.INK_2)
+		UiDraw.text(self, Vector2(x, 428), "기함을 지키며 조조군을 적벽에서 몰아내라.", "regular", 15, UiTheme.INK_2)
 		UiDraw.text(self, Vector2(x, vs.y - 30), "개발 빌드 · 전투 규칙 POC · 표현 계층 ui-fleet-visuals", "regular", 11, UiTheme.INK_4)
 		var a := 0.5 + 0.5 * sin(t * 1.4)
 		UiDraw.text(self, Vector2(vs.x - 56, vs.y - 290), "적 함대 접근 중", "medium", 12, Color(UiTheme.FOE_HI, 0.5 + a * 0.5), HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
 	func _draw_card(c: Control) -> void:
 		UiDraw.text(c, Vector2(24, 34), "시 나 리 오", "eyebrow", 11, UiTheme.GOLD)
-		UiDraw.text(c, Vector2(24, 70), "적벽 회랑 전투", "serif_bold", 24, UiTheme.INK)
+		UiDraw.text(c, Vector2(24, 70), "적벽 전투", "serif_bold", 24, UiTheme.INK)
 		UiDraw.seal(c, Rect2(c.size.x - 108, 24, 38, 38), 0)
 		UiDraw.text(c, Vector2(c.size.x - 61, 49), "對", "serif", 13, UiTheme.INK_3, HORIZONTAL_ALIGNMENT_CENTER, 0.0)
 		UiDraw.seal(c, Rect2(c.size.x - 52, 24, 38, 38), 1)
-		var rows := [["편성", "촉한 연합 6개 함대  대  위 원정군 7개 함대"], ["승리", "위 원정군 전멸 (증원 포함)"], ["패배", "기함 유비 격침"], ["지휘", "직접 지휘 · 실시간 · 일시정지 가능"]]
+		var rows := [["편성", "손유 연합 6개 함대  대  조조군 7개 함대"], ["승리", "조조군 전멸 (증원 포함)"], ["패배", "기함 유비 격침"], ["지휘", "직접 지휘 · 실시간 · 일시정지 가능"]]
 		var y := 108.0
 		for r in rows:
 			UiDraw.text(c, Vector2(24, y), r[0], "semibold", 12, UiTheme.GOLD)
@@ -84,6 +85,102 @@ class TitleScreen extends Control:
 			y += 26.0
 	func on_show() -> void:
 		pass
+
+# ------------------------------------------------------------ 서막
+# NARRATIVE-RED-CLIFFS §11: 실제 전장 위 어두운 막 + 가운데 명조 문장, 8장(PrologueText.PAGES).
+# 탭·클릭·Space = 다음 장, 건너뛰기(Esc) = 브리핑. 자동 넘김 없음. 마지막 장 다음은 브리핑.
+# 글자는 UI 크기 설정(content_scale_factor)을 따르고, 카메라 흐름은 동작 줄이기면 멈춘다(FleetBattle3D brief 상태).
+class PrologueScreen extends Control:
+	const TEXT_W := 960.0
+	var deck: Control
+	var page := 0
+	var t := 0.0   # 장이 바뀐 뒤 흐른 실제 시간(글자 페이드)
+	var line: Label
+	var skip: Button
+	func _init(d: Control) -> void:
+		deck = d
+		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		mouse_filter = Control.MOUSE_FILTER_STOP
+		line = Label.new()
+		line.add_theme_font_override("font", UiTheme.font("serif"))
+		line.add_theme_font_size_override("font_size", 26)
+		line.add_theme_color_override("font_color", UiTheme.INK)
+		line.add_theme_constant_override("line_spacing", 14)
+		line.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		line.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		line.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(line)
+		line.set_anchors_preset(Control.PRESET_CENTER)
+		line.offset_left = -TEXT_W * 0.5
+		line.offset_right = TEXT_W * 0.5
+		line.offset_top = -120
+		line.offset_bottom = 120
+		# 건너뛰기: 타이틀 시나리오 카드와 같은 오른쪽 아래 여백(56), 터치 높이 52
+		skip = Button.new()
+		skip.text = "건너뛰기  Esc"
+		skip.focus_mode = Control.FOCUS_NONE
+		skip.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		add_child(skip)
+		skip.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+		skip.offset_left = -56 - 180
+		skip.offset_top = -56 - 52
+		skip.offset_right = -56
+		skip.offset_bottom = -56
+		skip.pressed.connect(finish)
+	func open_at(i: int) -> void:
+		page = clampi(i, 0, PrologueText.PAGES.size() - 1)
+		t = 0.0
+		line.text = PrologueText.PAGES[page][1]
+		queue_redraw()
+	func on_show() -> void:
+		open_at(0)
+	func next() -> void:
+		if page + 1 >= PrologueText.PAGES.size():
+			finish()
+			return
+		if deck.sound:
+			deck.sound.play("button")
+		open_at(page + 1)
+	# 끝까지 봤거나 건너뛰었다: 첫 회 기록 후 브리핑으로
+	func finish() -> void:
+		GameSettings.mark_prologue_seen()
+		deck.show_screen("brief")
+	func _gui_input(e: InputEvent) -> void:
+		if e is InputEventMouseButton and e.button_index == MOUSE_BUTTON_LEFT and not e.pressed:
+			accept_event()
+			next()
+	func _input(e: InputEvent) -> void:
+		if not is_visible_in_tree() or not (e is InputEventKey) or not e.pressed or e.echo:
+			return
+		if e.keycode == KEY_SPACE or e.keycode == KEY_ENTER:
+			get_viewport().set_input_as_handled()
+			next()
+		elif e.keycode == KEY_ESCAPE:
+			get_viewport().set_input_as_handled()
+			finish()
+	func _process(delta: float) -> void:
+		if t < 1.0:
+			t += UiDraw.real_dt(delta)
+			line.modulate.a = 1.0 if GameSettings.reduce_motion else clampf(t / 0.6, 0.0, 1.0)
+			queue_redraw()
+	func _draw() -> void:
+		var vs := size
+		draw_rect(Rect2(Vector2.ZERO, vs), Color(0.01, 0.015, 0.03, 0.80))
+		var cx := vs.x * 0.5
+		var cy := vs.y * 0.5
+		var a := line.modulate.a
+		# 장 표시(가·나 = 시대, 一~六 = 적벽까지)와 위아래 괘선
+		UiDraw.text(self, Vector2(cx, cy - 150), PrologueText.PAGES[page][0], "serif", 18, Color(UiTheme.GOLD, a), HORIZONTAL_ALIGNMENT_CENTER, 0.0)
+		ScreenKit.rule(self, Vector2(cx - 200, cy - 130), Vector2(cx + 200, cy - 130))
+		ScreenKit.rule(self, Vector2(cx - 200, cy + 132), Vector2(cx + 200, cy + 132))
+		# 진행 점: 지금 장은 금색, 지난 장은 옅게
+		var n := PrologueText.PAGES.size()
+		for i in n:
+			var p := Vector2(cx + (i - (n - 1) * 0.5) * 22.0, cy + 172)
+			UiDraw.diamond(self, p, 4.0 if i == page else 3.0, UiTheme.GOLD_HI if i == page else Color(UiTheme.GOLD, 0.55 if i < page else 0.2))
+		UiDraw.text(self, Vector2(cx, vs.y - 74), "화면을 누르거나 Space로 다음", "regular", 13, UiTheme.INK_3, HORIZONTAL_ALIGNMENT_CENTER, 0.0)
+		UiDraw.text(self, Vector2(118, 96), "序 幕", "serif_wide", 16, UiTheme.GOLD)
 
 # ------------------------------------------------------------ 브리핑
 class BriefScreen extends Control:
@@ -121,8 +218,8 @@ class BriefScreen extends Control:
 		draw_rect(Rect2(Vector2.ZERO, size), Color(0.01, 0.015, 0.03, 0.78))
 	func _draw_panel(c: Control) -> void:
 		var b: Node = deck.battle
-		UiDraw.text(c, Vector2(36, 48), "촉 한 연 합 함 대 · 작 전 브 리 핑", "eyebrow", 11, UiTheme.GOLD)
-		UiDraw.text(c, Vector2(36, 92), "적벽 회랑 전투", "serif_bold", 34, UiTheme.INK)
+		UiDraw.text(c, Vector2(36, 48), "손 유 연 합 함 대 · 작 전 브 리 핑", "eyebrow", 11, UiTheme.GOLD)
+		UiDraw.text(c, Vector2(36, 92), "적벽 전투", "serif_bold", 34, UiTheme.INK)
 		UiDraw.seal(c, Rect2(c.size.x - 132, 38, 44, 44), 0)
 		UiDraw.text(c, Vector2(c.size.x - 78, 67), "對", "serif", 14, UiTheme.INK_3, HORIZONTAL_ALIGNMENT_CENTER, 0.0)
 		UiDraw.seal(c, Rect2(c.size.x - 68, 38, 44, 44), 1)
@@ -131,7 +228,7 @@ class BriefScreen extends Control:
 		var x := 36.0
 		var y := 150.0
 		UiDraw.text(c, Vector2(x, y), "작 전 개 요", "eyebrow", 11, UiTheme.GOLD)
-		var body := ["사령관 유비 제독. 위 원정군 7개 분함대가 회랑을 건너오고 있습니다.", "교전 중 적 증원이 측면에서 나타날 수 있습니다.", "기함을 지키면서 적 함대를 모두 격파하십시오."]
+		var body := ["연합 총지휘 유비. 조조군 7개 분함대가 적벽으로 건너오고 있습니다.", "교전 중 적 증원이 측면에서 나타날 수 있습니다.", "기함을 지키면서 적 함대를 모두 격파하십시오."]
 		y += 30.0
 		for line in body:
 			UiDraw.text(c, Vector2(x, y), line, "regular", 14, UiTheme.INK_2)
@@ -249,6 +346,7 @@ class SettingsScreen extends Control:
 	var fast_chk: CheckButton
 	var slow_btns: Array = []
 	var vib_chk: CheckButton
+	var motion_chk: CheckButton
 	var pending_slow := 0
 	var density_btns: Array = []
 	var vol_sliders := {}
@@ -313,6 +411,7 @@ class SettingsScreen extends Control:
 			slow_btns.append(b)
 		pages[1].add_child(UiTheme.label("선택하면: 명령하거나 5초 동안 입력이 없으면 풀림 · 조작 중에만: 누르고 있거나 끄는 동안", "Muted"))
 		vib_chk = _check(pages[1], "진동 (경보·결정·아군 손실·길게 누르기)")
+		motion_chk = _check(pages[1], "동작 줄이기 (타이틀·서막·브리핑 뒤 카메라 멈춤)")
 		# 소리
 		for it in [["master", "전체 음량"], ["sfx", "전투 효과음"], ["ui", "UI·알림음"]]:
 			var r := _row(pages[2], it[1])
@@ -408,6 +507,7 @@ class SettingsScreen extends Control:
 		fast_chk.button_pressed = GameSettings.auto_fast
 		pending_slow = GameSettings.slow_mode
 		vib_chk.button_pressed = GameSettings.vibrate
+		motion_chk.button_pressed = GameSettings.reduce_motion
 		pending_density = GameSettings.ship_density
 		for k in vol_sliders:
 			_orig_vol[k] = _get_vol(k)
@@ -426,6 +526,7 @@ class SettingsScreen extends Control:
 		GameSettings.auto_fast = fast_chk.button_pressed
 		GameSettings.slow_mode = pending_slow
 		GameSettings.vibrate = vib_chk.button_pressed
+		GameSettings.reduce_motion = motion_chk.button_pressed
 		for k in vol_sliders:
 			_set_vol(k, vol_sliders[k].value)
 		if GameSettings.ship_density != pending_density:
@@ -499,7 +600,7 @@ class ResultScreen extends Control:
 		_column(Vector2(cx + 20, 420), 1)
 	func _column(o: Vector2, side: int) -> void:
 		var b: Node = deck.battle
-		UiDraw.text(self, o, "촉 한 연 합 함 대" if side == 0 else "위 원 정 군", "eyebrow", 11, UiTheme.GOLD)
+		UiDraw.text(self, o, "손 유 연 합 함 대" if side == 0 else "조 조 군", "eyebrow", 11, UiTheme.GOLD)
 		var y := o.y + 14.0
 		var i := 0
 		for f in b.fleets:

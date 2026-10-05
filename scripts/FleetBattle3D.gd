@@ -44,8 +44,8 @@ const REJECT := {
 	"no_selection": "먼저 아군 함대를 선택하세요",
 }
 const END_TEXT := {
-	"flagship_lost": "기함이 격침되었습니다. 지휘 계통이 무너진 함대는 회랑에서 철수합니다.",
-	"annihilation": "위 원정군이 회랑에서 모두 사라졌습니다. 회랑은 연합의 손에 남습니다.",
+	"flagship_lost": "기함이 격침되었습니다. 지휘 계통이 무너진 함대는 적벽에서 철수합니다.",
+	"annihilation": "조조군이 적벽에서 모두 사라졌습니다. 적벽의 궤도는 연합의 손에 남습니다.",
 }
 
 # 표현 계층(view/fleet_render, hud/ui_kit)이 교신·알림을 받는 통로. kind: "", "foe", "sys", "toast"
@@ -164,7 +164,7 @@ func _start() -> void:
 		if f.side == 1 and not f.is_flag:
 			foe = f
 			break
-	get_tree().create_timer(0.9).timeout.connect(func(): if G.state == "play": add_log("위군 선봉, 회랑 진입 확인.", "foe", foe))
+	get_tree().create_timer(0.9).timeout.connect(func(): if G.state == "play": add_log("조조군 선봉, 적벽 진입 확인.", "foe", foe))
 
 func _restart() -> void:
 	init_game()
@@ -222,7 +222,8 @@ func _process(delta: float) -> void:
 			G.end_t -= dt
 			if G.end_t <= 0.0:
 				_show_end()
-	elif G.state == "brief":
+	elif G.state == "brief" and not GameSettings.reduce_motion:
+		# 타이틀·서막·브리핑 뒤 전장이 천천히 흐른다. 동작 줄이기면 멈춘다.
 		rig.cam_pos.x = 900.0 + sin(now_t / 5.0) * 120.0
 	rig.update()
 	view3d.sync(fleets)

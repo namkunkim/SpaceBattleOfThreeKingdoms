@@ -180,9 +180,9 @@ func build(host: Node, ui_control: Control, viewport_size: Vector2, radar_contro
 
 	# ---- 오버레이 ----
 	brief_ov = _overlay(
-		"촉한 연합함대 · 작전 브리핑",
-		"적벽 회랑 전투",
-		"사령관 유비 제독. 위(魏) 원정군 7개 분함대가 회랑을 건너오고 있습니다. 교전 중 적 증원이 측면에서 나타날 가능성이 있습니다. 기함을 지키면서 적 함대를 모두 격파하십시오.\n\n"
+		"손유 연합함대 · 작전 브리핑",
+		"적벽 전투",
+		"연합 총지휘 유비. 조조군 7개 분함대가 적벽으로 건너오고 있습니다. 교전 중 적 증원이 측면에서 나타날 가능성이 있습니다. 기함을 지키면서 적 함대를 모두 격파하십시오.\n\n"
 		+ "• 측면·배후 공격: 적의 옆구리를 치면 화력 +30%, 뒤를 잡으면 +60%.\n"
 		+ "• 지휘 범위: 기함 주위 원 밖의 함대는 화력이 25% 떨어집니다.\n"
 		+ "• 커맨드 포인트: 상단 게이지로 미사일, 함재기, 돌격 명령을 쓸 수 있습니다.\n\n"
@@ -273,7 +273,7 @@ func add_log(text: String, kind: String, f) -> void:
 func show_end(win: bool, text: String, killed: float, lost: float, clock_s: float) -> void:
 	end_ov.visible = true
 	(end_ov.get_meta("eyebrow") as Label).text = "작전 성공" if win else "작전 실패"
-	(end_ov.get_meta("title") as Label).text = "회랑을 지켜냈습니다" if win else "기함 격침"
+	(end_ov.get_meta("title") as Label).text = "적벽을 지켜냈습니다" if win else "기함 격침"
 	var t := int(clock_s)
 	(end_ov.get_meta("body") as Label).text = "%s\n\n격침한 적 함정  %d\n잃은 아군 함정  %d\n교전 시간  %d:%02d" % [text, roundi(killed), roundi(lost), t / 60, t % 60]
 
