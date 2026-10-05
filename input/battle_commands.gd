@@ -10,8 +10,11 @@ var host: Node
 func _init(h: Node) -> void:
 	host = h
 
-static func make(kind: String, ids: Array, target_id := -1, point := Vector2.ZERO) -> Dictionary:
-	return {"kind": kind, "ids": ids, "target_id": target_id, "point": point}
+static func make(kind: String, ids: Array, target_id := -1, point := Vector2.ZERO, args := {}) -> Dictionary:
+	var c := {"kind": kind, "ids": ids, "target_id": target_id, "point": point}
+	if not args.is_empty():
+		c["args"] = args
+	return c
 
 func _ids(s: Array) -> Array:
 	var out := []
@@ -33,6 +36,21 @@ func do_cmd(id: String) -> void:
 		return
 	host.issue(make(id, _ids(s)))
 	host.refresh_panel()
+
+# 진형 변경. 대상 전대 ID 배열 ids를 받는다(선택·그룹 어느 쪽이든 이 함수 하나로 보낸다). 가능 여부·시간은 코어가 판정한다.
+func formation_to(ids: Array, fid: String) -> void:
+	if host.G.state != "play" or ids.is_empty():
+		return
+	host.issue(make("formation", ids, -1, Vector2.ZERO, {"id": fid}))
+	host.refresh_panel()
+
+# 현재 선택에 진형 변경(진형 탭)
+func do_formation(fid: String) -> void:
+	var s: Array = host.my_sel()
+	if s.is_empty():
+		host.toast("먼저 아군 함대를 선택하세요")
+		return
+	formation_to(_ids(s), fid)
 
 # 선택 전체가 현재 배치를 유지한 채 목표 지점으로 이동
 func order_move(w: Vector2) -> void:

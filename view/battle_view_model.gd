@@ -38,6 +38,10 @@ class FleetView:
 	var dead := false
 	var range_r := 300.0
 	var control := ""
+	var formation_id := ""            # 진형 탭용(salvo 규칙에서만 값이 있다)
+	var form_to := ""
+	var form_left_s := 0.0
+	var form_info := {}
 	# 화면 전용
 	var speech := ""
 	var speech_t := 0.0
@@ -143,6 +147,10 @@ func apply(proj: Dictionary) -> Array[FleetView]:
 		f.in_cmd = s.in_cmd
 		f.dead = s.dead
 		f.control = s.control
+		f.formation_id = s.get("formation_id", "")
+		f.form_to = s.get("form_to", "")
+		f.form_left_s = s.get("form_left_s", 0.0)
+		f.form_info = s.get("form_info", {})
 	# 참조는 모두 생긴 뒤에 잇는다
 	for s in proj.squadrons:
 		var f: FleetView = by_id[s.id]
