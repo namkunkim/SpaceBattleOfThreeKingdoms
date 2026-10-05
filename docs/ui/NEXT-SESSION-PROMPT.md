@@ -31,6 +31,27 @@
 - UI-3에서 안전 영역(`input/touch/safe_area.gd`), 가로 고정, ETC2/ASTC 압축 설정, Android 내보내기 프리셋, 모바일 첫 실행 표시 밀도(낮음, 임시), 밀도 측정 도구(`tests/bench_density.gd`)를 넣었다. 자세한 것은 `docs/ui/ANDROID-EXPORT.md`.
 - **아직 못 한 것: 실제 내보내기와 실기기 확인.** 이 PC에는 내보내기 템플릿·JDK·Android SDK가 없어 APK를 한 번도 만들지 못했다. 사용자가 설치한 뒤 ANDROID-EXPORT.md의 "사용자가 해야 할 것"을 따른다.
 
+## HUD 장르 관례 교체 완료 (2026-10-05, main `cf5d3f9`)
+
+`docs/ui/HUD-GENRE-CONVENTIONS.md` §5의 V-1~V-8을 구현했다. 외형만 바꾸고 자리는 그대로다.
+- **실제로 뜨는 HUD는 `hud/ui_kit/command_deck.gd`다.** 문서가 가리킨 `hud/battle_hud.gd`·`fleet_labels.gd`·`radar.gd`는 상품화 HUD가 있으면 숨겨지는 POC라 거의 건드리지 않았다(`C_RIVET`, "SYSTEM" 문구, 금색 육각 CP 표시가 거기 남아 있다).
+- V-1 `radar_scope.gd`: 사각 미니맵(240×162, 카메라 범위 사각 틀, 탭·끌기 점프). 클래스 이름 `RadarScope`는 유지.
+- V-2 상단 바: 연속 막대. `BattleSource.morale(side)`·`phase()`가 빈 값이면 전력(척 수 비율)만 그린다. 값이 생기면 사기·임계 눈금·국면이 자동으로 나온다. 지휘력(POC 자원)은 연속 막대.
+- V-3 `squadron_strip.gd`: 카드 7장(글리프·이름·막대, 초상 없음), 저장 편성 아라비아 숫자 배지(배지 탭 = 편성 선택). 숫자 키 1~9, Ctrl+숫자 저장, 터치는 "편성" 버튼(첫 빈 번호). `DeckWidgets.GroupButton` 삭제.
+- V-4 탭 [태세][진형][무장]. 진형 탭은 방어진형 하나뿐(M10에서 코어 진형이 붙으면 채운다).
+- V-5 선택 패널 접기(L1 88)/펼치기(L2 158), 패널 탭으로 전환.
+- V-6 `tactical_overlay.gd` 명패: 초상·Lv 삭제, 글리프·이름·막대·지휘 상태·경고 하나. 클릭 판정 `FleetLabels.label_rect`와 같은 98×34.
+- V-7 `OrnateStyle`을 먹빛 반투명 판 + 먹선 하나로, `UiTheme.GOLD*` 토큰 값을 불 주황으로 교체(이름은 유지).
+- V-8 교신 로그: 글자만 3줄.
+- 캡처: `capture_ui.gd -- select`(편성 배지·L2), `-- battle`(L1).
+
+**남은 것**
+- 명패 사기 모양, 상단 국면·결정 n/5: 값이 코어에서 올 때까지 자리만 있다(`BattleSource`).
+- 미니맵 지형 구역 먹선: POC에 지형이 없다. 전대 띠 2줄 접기 미구현.
+- PC에서 명령 패널(반투명) 아래로 적 명패가 비친다. 의도적으로 그대로 둠.
+- `UiDraw.seg_bar` 쓰는 곳 없음(삭제 가능). POC `battle_hud.gd` 외형 정리.
+- 컨셉 세션의 §2 점검(VII 화면과 비교)과 출시 전 전문가 확인은 캡처를 보낸 뒤에 한다.
+
 ## 사용자 작업 방식
 
 - 판단은 Claude가 하고 특이점이 없으면 확인 없이 진행한다. 결정이 정말 필요한 것만 묻는다.
