@@ -159,6 +159,14 @@
 - **F-4 완료(2026-10-05, 구현 세션):** 데이터 키를 `still_eps_px_s` 0.5(초당 px)로 바꾸고 `SupplyCore`가 `/ hz`로 틱당 값을 환산한다(10Hz에서 0.05로 같다). `supply_rules` §11에 10Hz·20Hz에서 초당 0.4px는 정지, 0.6px는 이동 확인. 10종 통과. 10Hz 결과 불변이라 80시드 측정 생략.
 - 다음 리뷰는 M9(계략과 강습).
 
+## M9 구현 완료 (2026-10-05, 구현 세션 "M9 계략과 강습") — 리뷰는 컨셉 세션이
+
+- 구현 메모: `docs/core/M9-NOTES.md`(구조 §1, 규칙 표 §2, 편차 16건 §3, 측정 §4, 컨셉에 알릴 것 §6). 테스트 `tests/stratagem_rules.gd`(STRATAGEM_RULES_PASS)·`tests/succession_rules.gd`(SUCCESSION_RULES_PASS)와 기존 전부 통과(main의 F-1·F-4 병합 뒤 재확인).
+- `core/battle/stratagem.gd` 화공(기류 창, 서신·의심 가감·경고, 투항 중 불사격, 발동 5조건 확정, 위력·번짐·등급, 센서 장애·위험 지대, 간파·2회차, 차단 3종, 의심 80 결정 카드, 황개 AI, 연환 간격 AI), `core/battle/command.gd` 장수 사상(G8-04 1·3·4·5행)·함대 승계·혼선·지휘 한도 단계, `core/battle/assault.gd` 부대 강습·기함 진입·강행 돌입(수치는 모두 제안값). 새 데이터는 `combat_m3.json`의 `stratagem`·`command`·`assault`.
+- 효과음: `chain_explosion`·`fire_ignite` → `sfx_event`, `fire_loop` → 새 신호 `sfx_loop` → `UiSound.set_loop`.
+- 측정: 표준 M9 끔 51.2%(M8과 같음), 화공만 끔 41.2%(승계·혼선 −10%p), M9 57.5%·14.1분(화공 발동 35%, 발동판 86%). 상급 5.0%, 발동 25%(목표 27.4%). **기류 창은 데이터 그대로 둔다**: 실시간 코어에서는 창(첫 명중 + 540~600초 ≈ 14분)이 판 막바지라 발동률이 판 길이에 묶인다. 창을 300~360초로 당기면 표준 연합 95%.
+- 다음 구현 단계는 M10(화면 개편). 리뷰 기준: `CHECKLIST-OPEN.md` §3의 M9 항목.
+
 ## 남은 일 (컨셉 세션이 할 수 있는 것)
 
 | 우선 | 일 | 메모 |
