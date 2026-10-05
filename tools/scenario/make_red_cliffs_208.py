@@ -216,7 +216,7 @@ if __name__ == "__main__":
                 "feigned_surrender": {
                     "letter_uses": 1, "ceasefire_while_suspicion_below": 100,
                     "suspicion_per_s": "difficulty_profiles.*.ai.suspicion_per_s",
-                    "modifiers": {"fast_approach_rate_mul": 1.5, "escort_per_squadron_per_s": 0.3, "escort_radius": 100,
+                    "modifiers": {"fast_approach_rate_mul": 1.5, "escort_per_squadron_per_s": 0.3, "escort_radius": 130,
                                   "alliance_hit_near_host": 10, "alliance_hit_radius": 300, "in_nebula_rate_mul": 0.5,
                                   "self_inflicted_hull_damage_min": 0.10, "self_inflicted_start_suspicion": -30, "cheng_yu_absent_rate_mul": 0.5},
                     "on_detected": {"target_to_dispersed": True, "focus_fire_on_host": True, "alliance_army_loss_bp": 1500},

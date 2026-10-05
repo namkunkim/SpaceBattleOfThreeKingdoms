@@ -1153,7 +1153,7 @@
     "modifiers": {
      "fast_approach_rate_mul": 1.5,
      "escort_per_squadron_per_s": 0.3,
-     "escort_radius": 100,
+     "escort_radius": 130,
      "alliance_hit_near_host": 10,
      "alliance_hit_radius": 300,
      "in_nebula_rate_mul": 0.5,
