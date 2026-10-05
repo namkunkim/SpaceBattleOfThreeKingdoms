@@ -1,16 +1,17 @@
 class_name UiTheme
 extends RefCounted
 
-# 디자인 토큰과 Godot Theme. 흑칠(짙은 남흑) 바탕 + 금장 테두리 + 진영 홀로그램 색.
+# 디자인 토큰과 Godot Theme. 먹빛 반투명 판 + 가는 먹선 + 적벽의 불(주황)·물(청록) 강조색.
+# GOLD* 토큰은 이름만 남은 강조색이다(값은 불 주황). 사용처가 많아 이름은 바꾸지 않았다.
 # 진영은 색만으로 구분하지 않는다: 촉 = 사각·蜀 인장, 위 = 마름모·魏 인장.
 
-const BG_TOP := Color(0.082, 0.11, 0.157, 0.94)
-const BG_BOTTOM := Color(0.031, 0.043, 0.07, 0.96)
+const BG_TOP := Color(0.04, 0.055, 0.07, 0.78)
+const BG_BOTTOM := Color(0.03, 0.04, 0.055, 0.82)
 const BG_DEEP := Color(0.02, 0.03, 0.05, 0.97)
-const GOLD := Color("c9a45c")
-const GOLD_HI := Color("f3dda4")
-const GOLD_LO := Color("6d5631")
-const GOLD_LINE := Color(0.79, 0.64, 0.36, 0.38)
+const GOLD := Color("e0873f")
+const GOLD_HI := Color("ffc99a")
+const GOLD_LO := Color("6b4326")
+const GOLD_LINE := Color(0.62, 0.78, 0.76, 0.30)   # 패널 먹선(물빛)
 const INK := Color("eef2f4")
 const INK_2 := Color("b9c4cd")
 const INK_3 := Color("7f8b97")

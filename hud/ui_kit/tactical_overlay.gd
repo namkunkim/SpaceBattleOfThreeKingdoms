@@ -145,62 +145,55 @@ func _brackets(f, col: Color) -> void:
 	draw_colored_polygon(PackedVector2Array([tip, l, r]), Color(col, 0.85))
 
 func _plate(f) -> void:
+	# 명패(V-6): 소유 글리프 · 이름 · 연속 막대 · 지휘 상태 · 가장 급한 경고 하나. 초상·레벨 없음.
 	var s: Vector2 = battle.w2s(f.pos)
 	var foe: bool = f.side == 1
 	var sel: bool = battle.selected.has(f) or battle.inspect == f
-	var pw := 146.0
-	var ph := 38.0
-	var r := Rect2(s.x - 22.0, s.y - 64.0, pw, ph)
+	var r := Rect2(s.x - 22.0, s.y - 58.0, 98.0, 34.0)   # 클릭 판정(FleetLabels.label_rect)과 같다
 	var src: BattleSource = battle.presentation.src
 	var fk := src.faction(f.id)
 	var sc: Color = Factions.of(fk).color
 	draw_line(Vector2(s.x, r.end.y), Vector2(s.x, s.y - 8.0), Color(sc, 0.45), 1.0)
 	draw_circle(Vector2(s.x, s.y - 8.0), 2.0, Color(sc, 0.8))
-	var top := Color(0.16, 0.055, 0.04, 0.9) if foe else Color(0.04, 0.1, 0.12, 0.9)
-	draw_polygon(PackedVector2Array([r.position, Vector2(r.end.x, r.position.y), r.end, Vector2(r.position.x, r.end.y)]), PackedColorArray([top, top, Color(0.02, 0.035, 0.055, 0.93), Color(0.02, 0.035, 0.055, 0.93)]))
+	draw_rect(r, Color(0.16, 0.055, 0.04, 0.78) if foe else Color(0.03, 0.07, 0.09, 0.78))
 	draw_rect(r, UiTheme.GOLD_HI if sel else Color(sc, 0.5), false, 1.5 if sel else 1.0)
 	if sel:
 		draw_rect(r.grow(2.5), Color(UiTheme.GOLD_HI, 0.3), false, 1.0)
-	var pr := Rect2(r.position + Vector2(3, 3), Vector2(32, 32))
-	draw_texture_rect(battle._portrait_tex(f.portrait), pr, false)
-	UiDraw.faction_seal(self, Rect2(pr.position + Vector2(20, 20), Vector2(15, 15)), fk)
-	# 지휘 상태: ● 직접 지휘 / ○ 위임(Q20). 코어가 값을 주기 전에는 그리지 않는다.
+	UiDraw.faction_glyph(self, r.position + Vector2(12, 13), 5.0, fk, sc)
+	if f.is_flag:
+		UiDraw.text(self, r.position + Vector2(20, 14), "旗", "serif_bold", 10, UiTheme.GOLD_HI, HORIZONTAL_ALIGNMENT_LEFT, -1, 3)
+	var nx := 33.0 if f.is_flag else 22.0
+	UiDraw.text(self, r.position + Vector2(nx, 17), f.fname, "serif_bold", 13, UiTheme.INK)
+	# 지휘 상태: ● 직접 / ○ 위임(Q20). 코어가 값을 주기 전에는 그리지 않는다.
 	var cm := src.command_mode(f.id) if not foe else ""
 	if cm != "":
-		var own := cm == "direct"
-		var dp := pr.position + Vector2(5.5, 26.5)
+		var dp := r.end - Vector2(24, 21)
 		draw_circle(dp, 3.6, Color(0.02, 0.03, 0.05, 0.9))
-		if own:
+		if cm == "direct":
 			draw_circle(dp, 2.6, sc)
 		else:
 			draw_arc(dp, 2.6, 0.0, TAU, 12, sc, 1.2, true)
-	if f.is_flag:
-		UiDraw.text(self, pr.position + Vector2(2, 11), "旗", "serif_bold", 11, UiTheme.GOLD_HI, HORIZONTAL_ALIGNMENT_LEFT, -1, 3)
-	UiDraw.text(self, r.position + Vector2(42, 17), f.fname, "serif_bold", 14, UiTheme.INK)
-	var cnt := "%d척" % ceili(f.ships)
-	UiDraw.text(self, Vector2(r.end.x - 7.0, r.position.y + 16.0), cnt, "medium", 11, UiTheme.INK_2, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
+	# 가장 급한 경고 하나: 지휘 범위 밖 > 돌격 > 방어진형
+	var tag := ""
+	var tcol := UiTheme.WARN
+	if not f.in_cmd and not foe:
+		tag = "warn"
+	elif f.charge_t > 0.0:
+		tag = "charge"
+		tcol = UiTheme.GOLD_HI
+	elif f.defense:
+		tag = "def"
+		tcol = UiTheme.ALLY_HI
+	if tag != "":
+		UiDraw.icon(self, tag, Rect2(r.end.x - 18.0, r.position.y + 5.0, 14, 14), tcol, 1.3)
 	var frac: float = f.ships / f.max_ships
-	UiDraw.cheap_bar(self, Rect2(r.position + Vector2(42, 23), Vector2(96, 5)), frac, 10, UiTheme.FOE if foe else UiTheme.LIFE)
-	# 상태 기호
-	var gx := r.position.x + 42.0
-	var gy := r.position.y + 30.0
-	draw_rect(Rect2(gx, gy + 2, 96, 2), UiTheme.SLOT)
+	var bar := Rect2(r.position + Vector2(6, 23), Vector2(86, 5))
+	draw_rect(bar, UiTheme.SLOT)
+	draw_rect(Rect2(bar.position, Vector2(bar.size.x * frac, bar.size.y)), UiTheme.FOE if foe else UiTheme.LIFE)
 	if not foe:
 		var cd: float = 1.0 - f.missile_cd / 18.0
-		draw_rect(Rect2(gx, gy + 2, 96 * cd, 2), UiTheme.CP if f.missile_cd <= 0.0 else Color(UiTheme.CP, 0.45))
-	var tags: Array = []
-	if f.defense:
-		tags.append(["def", UiTheme.ALLY_HI])
-	if f.charge_t > 0.0:
-		tags.append(["charge", UiTheme.GOLD_HI])
-	if not f.in_cmd and not foe:
-		tags.append(["warn", UiTheme.WARN])
-	var tx := r.end.x + 3.0
-	for tg in tags:
-		var ir := Rect2(tx, r.position.y + 2.0, 16, 16)
-		draw_rect(ir.grow(1.0), Color(0.02, 0.03, 0.05, 0.85))
-		UiDraw.icon(self, tg[0], ir, tg[1], 1.3)
-		tx += 19.0
+		draw_rect(Rect2(r.position + Vector2(6, 30), Vector2(86, 2)), UiTheme.SLOT)
+		draw_rect(Rect2(r.position + Vector2(6, 30), Vector2(86 * cd, 2)), UiTheme.CP if f.missile_cd <= 0.0 else Color(UiTheme.CP, 0.45))
 
 func _symbol(f) -> void:
 	# 원거리: 진영 기호 + 방향 + 이름

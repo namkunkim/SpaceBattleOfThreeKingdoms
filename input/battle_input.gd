@@ -132,7 +132,7 @@ func _key(e: InputEventKey) -> void:
 		return
 	if host.G.state != "play":
 		return
-	if e.keycode >= KEY_1 and e.keycode <= KEY_4:
+	if e.keycode >= KEY_1 and e.keycode <= KEY_9:
 		var n: int = e.keycode - KEY_0
 		if e.ctrl_pressed or e.meta_pressed:
 			assign_group(n)
@@ -184,7 +184,7 @@ func select_group(n: int) -> void:
 		return
 	var g := group_fleets(n)
 	if g.is_empty():
-		host.toast("비어 있는 그룹입니다 · 길게 눌러 저장")
+		host.toast("비어 있는 편성입니다 · Ctrl+숫자로 저장")
 		return
 	if same_sel(g):
 		var c := Vector2.ZERO
@@ -204,4 +204,4 @@ func assign_group(n: int) -> void:
 	for f in s:
 		ids.append(f.id)
 	host.groups[n] = ids
-	host.toast("그룹 %s에 %d개 함대 저장" % [["I", "II", "III", "IV"][n - 1], ids.size()])
+	host.toast("편성 %d에 %d개 전대 저장" % [n, ids.size()])

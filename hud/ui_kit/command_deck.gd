@@ -2,7 +2,8 @@ extends Control
 
 # 명령 데크: 전투 HUD 전체와 화면 흐름(타이틀 → 브리핑 → 전투 → 일시정지/결과).
 # 전투 규칙과 입력은 POC(FleetBattle3D.gd)가 그대로 처리한다. 여기서는 읽고, 명령은 POC 함수로 넘긴다.
-# 화면 배치는 제안서 v0.2 §7.1을 따른다. 코어에 아직 없는 값(사기, 국면, 탄약·열)은 자리를 두지 않는다.
+# 화면 배치는 제안서 v0.2 §7.1, 외형은 docs/ui/HUD-GENRE-CONVENTIONS.md를 따른다(자리는 장르 관례, 외형은 우리 것).
+# 코어에 아직 없는 값(사기, 국면, 탄약·열)은 BattleSource가 빈 값을 주면 그리지 않는다.
 
 const W := preload("res://hud/ui_kit/deck_widgets.gd")
 const Screens := preload("res://hud/ui_kit/deck_screens.gd")
@@ -26,7 +27,10 @@ const CMD_INFO := {
 	"missile": {"label": "미사일", "icon": "missile", "tone": "hot"},
 	"fighter": {"label": "함재기", "icon": "fighter", "tone": "hot"},
 }
-const TABS := [["태세", ["stop", "def", "charge", "rally", "retreat", "all"]], ["무장", ["missile", "fighter"]]]
+# 탭 3개(Q22). 진형 탭은 코어 진형(M5·M10)이 붙기 전까지 방어진형 하나뿐이다.
+const TABS := [["태세", ["stop", "charge", "rally", "retreat", "all"]], ["진형", ["def"]], ["무장", ["missile", "fighter"]]]
+const INFO_L1 := 88.0
+const INFO_L2 := 158.0
 
 var battle: Node
 var src: BattleSource
@@ -65,7 +69,8 @@ var cut_tween: Tween
 var cut_cool := 0.0
 var radar: RadarScope
 var info: Control
-var groups_row: HBoxContainer
+var save_btn: Control
+var info_open := false
 var cmd_panel: Control
 var cmd_tabs: Array = []
 var cmd_grid: GridContainer
@@ -138,10 +143,8 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 	edge_pulse.setup(self)
 	decision_card.visibility_changed.connect(func():
 		info.visible = not decision_card.visible
-		undo_bar.offset_top = -(decision_card.size.y + 14 + 10 + 60) if decision_card.visible else -(158 + 14 + 8 + 60)
-		undo_bar.offset_bottom = undo_bar.offset_top + 60
-		quick_alert.offset_top = undo_bar.offset_top - 2
-		quick_alert.offset_bottom = quick_alert.offset_top + 64)
+		_layout_floaters())
+	_layout_floaters()
 	# 터치 길게 누르기 툴팁: HUD 위, 전환 화면 아래
 	hold_tip = HoldTip.new()
 	add_child(hold_tip)
@@ -149,12 +152,20 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 		hold_tip.register(c)
 	for c in cmd_buttons:
 		hold_tip.register(c)
+	hold_tip.register(save_btn)
 	screens = Screens.build_all(self)
 	_build_sound()
 	battle.battle_event.connect(_on_event)
 	GameSettings.apply(get_window())
 	get_window().title = "성한지 — 적벽"
 	show_screen("title")
+
+# 되돌리기·빠른 알림은 선택 패널(접힘 L1 / 펼침 L2) 또는 결정 카드 바로 위에 뜬다.
+func _layout_floaters() -> void:
+	undo_bar.offset_top = -(decision_card.size.y + 14 + 10 + 60) if decision_card.visible else -(info.size.y + 14 + 8 + 60)
+	undo_bar.offset_bottom = undo_bar.offset_top + 60
+	quick_alert.offset_top = undo_bar.offset_top - 2
+	quick_alert.offset_bottom = quick_alert.offset_top + 64
 
 # ------------------------------------------------------------ 화면 흐름
 func show_screen(name: String) -> void:
@@ -236,8 +247,6 @@ func _process(delta: float) -> void:
 			_refresh_cmds()
 			for c in [top_bar, cp_bar, objectives, info, toast]:
 				c.queue_redraw()
-			for g in groups_row.get_children():
-				g.queue_redraw()
 			for i in speed_btns.size():
 				speed_btns[i].active = pacing.user_speed == i + 1 and pacing.mode == pacing.Mode.USER
 				speed_btns[i].queue_redraw()
@@ -288,14 +297,14 @@ func _draw_top(c: Control) -> void:
 	UiDraw.text(c, Vector2(74, 34), "손유 연합함대", "serif_bold", 15, UiTheme.INK)
 	var fa := a.x / maxf(1.0, a.y)
 	UiDraw.text(c, Vector2(318, 34), "%d척 · %d%%" % [roundi(a.x), roundi(fa * 100.0)], "semibold", 12, UiTheme.INK_2, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
-	UiDraw.seg_bar(c, Rect2(74, 44, 244, 9), fa, 20, UiTheme.ALLY)
+	_side_bar(c, Rect2(74, 44, 244, 9), 0, fa, UiTheme.ALLY, false)
 	UiDraw.text(c, Vector2(74, 68), "%d개 함대 건재" % int(a.z), "regular", 11, UiTheme.INK_3)
 	# 위
 	UiDraw.seal(c, Rect2(w - 62, 17, 44, 44), 1)
 	UiDraw.text(c, Vector2(w - 74, 34), "조조군", "serif_bold", 15, UiTheme.INK, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
 	var fe := e.x / maxf(1.0, e.y)
 	UiDraw.text(c, Vector2(w - 318, 34), "%d%% · %d척" % [roundi(fe * 100.0), roundi(e.x)], "semibold", 12, UiTheme.INK_2)
-	UiDraw.seg_bar(c, Rect2(w - 318, 44, 244, 9), fe, 20, UiTheme.FOE, UiTheme.SLOT, true)
+	_side_bar(c, Rect2(w - 318, 44, 244, 9), 1, fe, UiTheme.FOE, true)
 	UiDraw.text(c, Vector2(w - 74, 68), ("별동대 출현 · " if battle.G.reinf else "") + "%d개 함대 확인" % int(e.z), "regular", 11, UiTheme.WARN if battle.G.reinf else UiTheme.INK_3, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
 	# 가운데: 상태와 시계
 	var mx := w * 0.5
@@ -319,27 +328,41 @@ func _draw_top(c: Control) -> void:
 	var tt := int(battle.G.t)
 	UiDraw.text(c, Vector2(mx, 62), "%02d:%02d" % [tt / 60, tt % 60], "serif", 28, UiTheme.INK, HORIZONTAL_ALIGNMENT_CENTER, 0.0)
 	# 결정 분기 진행(EXPERIENCE-DESIGN §5). 코어에 분기가 없으면 그리지 않는다.
+	var ph := src.phase()
+	if ph != "":
+		UiDraw.text(c, Vector2(mx - 56, 61), ph, "semibold", 11, UiTheme.INK_2, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
 	var dp := src.decision_progress()
 	if not dp.is_empty():
 		UiDraw.text(c, Vector2(mx + 56, 61), "결정 %d/%d" % [dp.done, dp.total], "semibold", 11, UiTheme.GOLD_HI)
 
+# 진영 막대: 연속 막대. 군 사기 값이 있으면 사기와 임계 눈금, 없으면 전력(척 수 비율).
+func _side_bar(c: Control, r: Rect2, side: int, ship_frac: float, col: Color, rtl: bool) -> void:
+	var m := src.morale(side)
+	var frac := ship_frac
+	if not m.is_empty():
+		frac = float(m.value) / maxf(1.0, float(m.max))
+	frac = clampf(frac, 0.0, 1.0)
+	c.draw_rect(r, UiTheme.SLOT)
+	var fw := r.size.x * frac
+	c.draw_rect(Rect2(Vector2(r.end.x - fw, r.position.y) if rtl else r.position, Vector2(fw, r.size.y)), col)
+	c.draw_rect(r.grow(0.5), UiTheme.LINE, false, 1.0)
+	if not m.is_empty():
+		for tk in m.get("ticks", []):
+			var k: float = float(tk) / maxf(1.0, float(m.max))
+			var x: float = r.end.x - r.size.x * k if rtl else r.position.x + r.size.x * k
+			c.draw_line(Vector2(x, r.position.y - 2), Vector2(x, r.end.y + 2), UiTheme.INK_2, 1.0)
+
+# 지휘력(POC 자원): 연속 막대 + 숫자. 칸 나눔 없음.
 func _draw_cp(c: Control) -> void:
 	var w := c.size.x
-	var cp: float = battle.G.cp
 	var g := c.size.y
-	c.draw_polygon(PackedVector2Array([Vector2(0, 0), Vector2(w, 0), Vector2(w, g), Vector2(0, g)]), PackedColorArray([Color(0.03, 0.05, 0.08, 0.0), Color(0.03, 0.05, 0.08, 0.0), Color(0.03, 0.05, 0.08, 0.0), Color(0.03, 0.05, 0.08, 0.0)]))
-	c.draw_rect(Rect2(40, 2, w - 80, g - 4), Color(0.03, 0.05, 0.08, 0.82))
+	var cp: float = battle.G.cp
+	c.draw_rect(Rect2(40, 2, w - 80, g - 4), Color(0.03, 0.05, 0.08, 0.7))
 	UiDraw.text(c, Vector2(52, 17), "지휘력", "semibold", 11, UiTheme.INK_3)
-	for i in 10:
-		var center := Vector2(112 + i * 20, g * 0.5)
-		var fill := clampf(cp - i, 0.0, 1.0)
-		UiDraw.diamond(c, center, 6.5, Color(0.07, 0.1, 0.16))
-		UiDraw.diamond(c, center, 6.5, Color(0.17, 0.23, 0.34), false)
-		if fill >= 1.0:
-			UiDraw.diamond(c, center, 5.5, UiTheme.CP)
-			UiDraw.diamond(c, center + Vector2(-1, -1), 2.0, Color(0.9, 0.94, 1.0, 0.8))
-		elif fill > 0.0:
-			UiDraw.diamond(c, center, 5.5 * fill, Color(UiTheme.CP, 0.6))
+	var bar := Rect2(110, 9, w - 80 - 70 - 16, 8)
+	c.draw_rect(bar, UiTheme.SLOT)
+	c.draw_rect(Rect2(bar.position, Vector2(bar.size.x * clampf(cp / 10.0, 0.0, 1.0), bar.size.y)), UiTheme.CP)
+	c.draw_rect(bar.grow(0.5), UiTheme.LINE, false, 1.0)
 	UiDraw.text(c, Vector2(w - 50, 18), str(int(cp)), "bold", 14, Color("cddaff"), HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
 
 # ------------------------------------------------------------ 우측 상단
@@ -405,7 +428,7 @@ func _draw_objectives(c: Control) -> void:
 # ------------------------------------------------------------ 교신 기록
 func _build_log() -> void:
 	log_box = VBoxContainer.new()
-	log_box.add_theme_constant_override("separation", 5)
+	log_box.add_theme_constant_override("separation", 4)
 	log_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hud.add_child(log_box)
 	log_box.position = Vector2(16, 40)
@@ -424,29 +447,19 @@ func _clear_log() -> void:
 	log_items.clear()
 
 func add_log_entry(kind: String, text: String, fleet_id: int) -> void:
-	var f = battle.by_id(fleet_id) if fleet_id >= 0 else null
 	var stamp := int(battle.G.t)
 	var item := W.DrawPanel.new(func(c: Control):
 		var col := UiTheme.ALLY
-		var bg := Color(0.05, 0.09, 0.11, 0.9)
 		if kind == "foe":
 			col = UiTheme.FOE
-			bg = Color(0.13, 0.05, 0.04, 0.9)
 		elif kind == "sys":
 			col = UiTheme.WARN
-			bg = Color(0.13, 0.1, 0.03, 0.9)
-		c.draw_polygon(PackedVector2Array([Vector2.ZERO, Vector2(c.size.x, 0), c.size, Vector2(0, c.size.y)]), PackedColorArray([bg, Color(bg, 0.25), Color(bg, 0.25), bg]))
+		c.draw_rect(Rect2(Vector2.ZERO, c.size), Color(0.03, 0.05, 0.065, 0.72))
 		c.draw_rect(Rect2(0, 0, 2, c.size.y), col)
-		if f:
-			c.draw_texture_rect(battle._portrait_tex(f.portrait), Rect2(6, 5, 34, 34), false)
-			c.draw_rect(Rect2(6, 5, 34, 34), Color(1, 1, 1, 0.12), false, 1.0)
-		else:
-			c.draw_rect(Rect2(6, 5, 34, 34), Color(col, 0.4), false, 1.0)
-			UiDraw.icon(c, "warn", Rect2(11, 10, 24, 24), col, 1.6)
-		UiDraw.text(c, Vector2(50, 20), text, "medium", 13, UiTheme.INK)
-		UiDraw.text(c, Vector2(50, 36), "%02d:%02d · %s" % [stamp / 60, stamp % 60, f.fname + " 함대" if f else "작전 통보"], "regular", 11, UiTheme.INK_3))
+		UiDraw.text(c, Vector2(10, 19), "%02d:%02d" % [stamp / 60, stamp % 60], "regular", 11, UiTheme.INK_3)
+		UiDraw.text(c, Vector2(52, 19), text, "bold" if kind == "sys" else "medium", 13, UiTheme.GOLD_HI if kind == "sys" else UiTheme.INK))
 	item.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	item.custom_minimum_size = Vector2(372, 44)
+	item.custom_minimum_size = Vector2(372, 28)
 	log_box.add_child(item)
 	log_box.move_child(item, 0)
 	item.modulate.a = 0.0
@@ -454,7 +467,7 @@ func add_log_entry(kind: String, text: String, fleet_id: int) -> void:
 	var tw := item.create_tween().set_ignore_time_scale()
 	tw.tween_property(item, "modulate:a", 1.0, 0.3)
 	log_items.append({"node": item, "age": 0.0})
-	while log_items.size() > 4:
+	while log_items.size() > 3:
 		var old = log_items.pop_front()
 		old.node.queue_free()
 
@@ -475,7 +488,7 @@ func _build_cut() -> void:
 	cut = W.DrawPanel.new(_draw_cut, UiTheme.ornate(false))
 	cut.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hud.add_child(cut)
-	_anchor(cut, Control.PRESET_BOTTOM_LEFT, Vector2(456, 112), Vector2(16, -248))
+	_anchor(cut, Control.PRESET_BOTTOM_LEFT, Vector2(456, 112), Vector2(16, -194))
 	cut.modulate.a = 0.0
 
 func _draw_cut(c: Control) -> void:
@@ -569,13 +582,23 @@ func _build_radar() -> void:
 	radar = RadarScope.new()
 	hud.add_child(radar)
 	radar.setup(battle)
-	_anchor(radar, Control.PRESET_BOTTOM_LEFT, Vector2(208, 208), Vector2(14, -14))
+	_anchor(radar, Control.PRESET_BOTTOM_LEFT, Vector2(RadarScope.W, RadarScope.H), Vector2(14, -14))
 
 # ------------------------------------------------------------ 하단 정보 패널
 func _build_info() -> void:
 	info = W.DrawPanel.new(_draw_info, UiTheme.ornate())
 	hud.add_child(info)
-	_anchor(info, Control.PRESET_CENTER_BOTTOM, Vector2(640, 158), Vector2(0, -14))
+	_anchor(info, Control.PRESET_CENTER_BOTTOM, Vector2(640, INFO_L1), Vector2(0, -14))
+	info.gui_input.connect(func(e: InputEvent):
+		if e is InputEventMouseButton and e.button_index == MOUSE_BUTTON_LEFT and e.pressed:
+			_set_info_open(not info_open))
+
+# 선택 패널 접기(L1) / 펼치기(L2)
+func _set_info_open(on: bool) -> void:
+	info_open = on
+	_anchor(info, Control.PRESET_CENTER_BOTTOM, Vector2(640, INFO_L2 if on else INFO_L1), Vector2(0, -14))
+	_layout_floaters()
+	info.queue_redraw()
 
 func _draw_info(c: Control) -> void:
 	var sel: Array = battle.my_sel()
@@ -591,53 +614,37 @@ func _draw_info(c: Control) -> void:
 	else:
 		_info_none(c)
 
-func _frame(c: Control, r: Rect2, tex: Texture2D, faction: String) -> void:
-	var cut_k := 14.0
-	var outer := PackedVector2Array([r.position + Vector2(cut_k, 0), Vector2(r.end.x, r.position.y), r.end - Vector2(0, cut_k), r.end - Vector2(cut_k, 0), Vector2(r.position.x, r.end.y), r.position + Vector2(0, cut_k)])
-	c.draw_colored_polygon(outer, UiTheme.GOLD_LO)
-	c.draw_texture_rect(tex, r.grow(-3.0), false)
-	# 모서리를 잘라 낸 금장 틀
-	c.draw_colored_polygon(PackedVector2Array([r.position, r.position + Vector2(cut_k + 3, 0), r.position + Vector2(0, cut_k + 3)]), UiTheme.BG_TOP)
-	c.draw_colored_polygon(PackedVector2Array([r.end, r.end - Vector2(cut_k + 3, 0), r.end - Vector2(0, cut_k + 3)]), UiTheme.BG_BOTTOM)
-	outer.append(outer[0])
-	c.draw_polyline(outer, UiTheme.GOLD, 1.6, true)
-	var inner := PackedVector2Array()
-	for p in outer:
-		inner.append(r.get_center() + (p - r.get_center()) * 0.96)
-	c.draw_polyline(inner, Color(UiTheme.GOLD_HI, 0.35), 1.0, true)
-	c.draw_polygon(PackedVector2Array([Vector2(r.position.x + 3, r.end.y - 34), Vector2(r.end.x - 3, r.end.y - 34), Vector2(r.end.x - 3 - cut_k * 0.8, r.end.y - 3), Vector2(r.position.x + 3, r.end.y - 3)]), PackedColorArray([Color(0, 0, 0, 0), Color(0, 0, 0, 0), Color(0.02, 0.03, 0.05, 0.92), Color(0.02, 0.03, 0.05, 0.92)]))
-	UiDraw.faction_seal(c, Rect2(r.end.x - 31, r.position.y + 8, 22, 22), faction)
-
 func _info_single(c: Control, f) -> void:
 	var foe: bool = f.side == 1
-	var pr := Rect2(13, 13, 132, 132)
-	_frame(c, pr, battle._portrait_tex(f.portrait), src.faction(f.id))
-	UiDraw.text(c, pr.position + Vector2(10, pr.size.y - 12), f.role.get_slice(" · ", 0), "medium", 11, UiTheme.GOLD_HI)
-	var x := 162.0
-	UiDraw.text(c, Vector2(x, 42), f.fname, "serif_bold", 26, UiTheme.INK)
-	var nw := UiDraw.text_w(f.fname, "serif_bold", 26)
-	UiDraw.text(c, Vector2(x + nw + 10, 40), Commanders.zi(f.fname), "serif", 14, UiTheme.GOLD_HI)
-	var meta: String = "%s · 숙련 Lv.%d" % [battle.FORM_NAMES[f.form_id % battle.FORM_NAMES.size()], f.lv]
+	# 초상은 작게(52), 따냄 없는 사각. 함종 구성과 상태 칩은 펼쳤을 때만(L2).
+	var pr := Rect2(14, 14, 52, 52)
+	c.draw_texture_rect(battle._portrait_tex(f.portrait), pr, false)
+	c.draw_rect(pr, UiTheme.GOLD_LINE, false, 1.0)
+	UiDraw.faction_seal(c, Rect2(pr.end.x - 14, pr.end.y - 14, 16, 16), src.faction(f.id))
+	var x := 82.0
+	UiDraw.text(c, Vector2(x, 34), f.fname, "serif_bold", 20, UiTheme.INK)
+	var nw := UiDraw.text_w(f.fname, "serif_bold", 20)
+	UiDraw.text(c, Vector2(x + nw + 8, 33), f.role.get_slice(" · ", 0), "regular", 11, UiTheme.INK_3)
+	var meta: String = battle.FORM_NAMES[f.form_id % battle.FORM_NAMES.size()]
 	if f.defense:
 		meta += " · 방어진형"
 	elif f.charge_t > 0.0:
 		meta += " · 돌격"
-	UiDraw.text(c, Vector2(c.size.x - 18, 40), (("적 · " if foe else "") + meta), "regular", 12, UiTheme.INK_3, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
-	# 함선 막대: 남은 수 + 방금 잃은 몫(빗금)
+	UiDraw.text(c, Vector2(c.size.x - 40, 32), (("적 · " if foe else "") + meta), "regular", 12, UiTheme.INK_3, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
+	_chevron(c)
+	# 함선 막대: 남은 수 + 방금 잃은 몫(연속 막대)
 	var frac: float = f.ships / f.max_ships
-	var bar := Rect2(x + 44, 60, c.size.x - x - 44 - 104, 9)
-	UiDraw.text(c, Vector2(x, 69), "함선", "regular", 12, UiTheme.INK_3)
+	var bar := Rect2(x + 4, 52, c.size.x - x - 4 - 100, 9)
 	c.draw_rect(bar, Color(0.04, 0.06, 0.09))
-	c.draw_rect(bar, Color(0.14, 0.19, 0.26), false, 1.0)
-	c.draw_rect(Rect2(bar.position + Vector2(1, 1), Vector2((bar.size.x - 2) * frac, bar.size.y - 2)), UiTheme.FOE if foe else UiTheme.LIFE)
+	c.draw_rect(Rect2(bar.position, Vector2(bar.size.x * frac, bar.size.y)), UiTheme.FOE if foe else UiTheme.LIFE)
 	var shown_frac: float = f.shown / f.max_ships
 	if shown_frac > frac:
-		c.draw_rect(Rect2(bar.position + Vector2(1 + (bar.size.x - 2) * frac, 1), Vector2((bar.size.x - 2) * (shown_frac - frac), bar.size.y - 2)), Color(UiTheme.FOE, 0.5))
-	for i in range(1, 10):
-		var xx := bar.position.x + bar.size.x * i / 10.0
-		c.draw_line(Vector2(xx, bar.position.y + 1), Vector2(xx, bar.end.y - 1), Color(0, 0, 0, 0.55))
-	UiDraw.text(c, Vector2(c.size.x - 18, 70), "%d" % ceili(f.ships), "bold", 15, UiTheme.INK, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
-	UiDraw.text(c, Vector2(c.size.x - 52, 70), "/ %d척" % int(f.max_ships), "regular", 11, UiTheme.INK_3, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
+		c.draw_rect(Rect2(bar.position + Vector2(bar.size.x * frac, 0), Vector2(bar.size.x * (shown_frac - frac), bar.size.y)), Color(UiTheme.FOE, 0.5))
+	c.draw_rect(bar.grow(0.5), UiTheme.LINE, false, 1.0)
+	UiDraw.text(c, Vector2(c.size.x - 18, 61), "%d" % ceili(f.ships), "bold", 15, UiTheme.INK, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
+	UiDraw.text(c, Vector2(c.size.x - 52, 61), "/ %d척" % int(f.max_ships), "regular", 11, UiTheme.INK_3, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
+	if not info_open:
+		return
 	# 함종 구성: 화면 숫자는 코어 카운터만(리뷰 C-1). 카운터가 없으면(POC) 보이는 함종 이름만 숫자 없이 쓴다.
 	var comp: Array = src.composition(f.id)
 	var cx := x
@@ -645,14 +652,13 @@ func _info_single(c: Control, f) -> void:
 		var names := PackedStringArray()
 		for it in renderer.composition(f.id):
 			names.append(str(it[0]))
-		UiDraw.text(c, Vector2(cx, 96), "표시 편성  " + " · ".join(names), "regular", 11, UiTheme.INK_4)
+		UiDraw.text(c, Vector2(cx, 88), "표시 편성  " + " · ".join(names), "regular", 11, UiTheme.INK_4)
 	for it in comp:
 		var label: String = it[0]
-		UiDraw.text(c, Vector2(cx, 96), label, "regular", 11, UiTheme.INK_3)
+		UiDraw.text(c, Vector2(cx, 88), label, "regular", 11, UiTheme.INK_3)
 		var lw := UiDraw.text_w(label, "regular", 11)
-		UiDraw.text(c, Vector2(cx + lw + 4, 96), str(it[1]), "semibold", 12, UiTheme.INK_2)
+		UiDraw.text(c, Vector2(cx + lw + 4, 88), str(it[1]), "semibold", 12, UiTheme.INK_2)
 		cx += lw + UiDraw.text_w(str(it[1]), "semibold", 12) + 16
-	# 상태 칩
 	var chips: Array = []
 	if f.is_flag:
 		chips.append(["기함", UiTheme.GOLD_HI])
@@ -666,17 +672,24 @@ func _info_single(c: Control, f) -> void:
 		var dir := src.attack_dir(f.id, f.fire_t.id)
 		chips.append(["%s 교전 중%s" % [f.fire_t.fname, RuleText.flank_chip(src.rules(), dir)], UiTheme.GOLD_HI if dir != "front" else UiTheme.INK_2])
 	var chx := x
-	var chy := 112.0
+	var chy := 104.0
 	for ch in chips:
 		var tw := UiDraw.text_w(ch[0], "medium", 11) + 16.0
 		if chx + tw > c.size.x - 14:
 			chx = x
 			chy += 24.0
 		var r := Rect2(chx, chy, tw, 20)
-		c.draw_rect(r, Color(0.05, 0.08, 0.12, 0.95))
+		c.draw_rect(r, Color(0.03, 0.05, 0.07, 0.7))
 		c.draw_rect(r, Color(ch[1], 0.45), false, 1.0)
 		UiDraw.text(c, r.position + Vector2(8, 14), ch[0], "medium", 11, ch[1])
 		chx += tw + 6.0
+
+# 접기·펼치기 표시(패널을 탭하면 바뀐다)
+func _chevron(c: Control) -> void:
+	var cx := c.size.x - 20.0
+	var cy := 20.0
+	var d := -3.0 if info_open else 3.0
+	c.draw_polyline(PackedVector2Array([Vector2(cx - 6, cy - d), Vector2(cx, cy + d), Vector2(cx + 6, cy - d)]), UiTheme.INK_3, 1.6, true)
 
 func _info_multi(c: Control, sel: Array) -> void:
 	var tot := 0.0
@@ -686,7 +699,10 @@ func _info_multi(c: Control, sel: Array) -> void:
 		mx += f.max_ships
 	UiDraw.text(c, Vector2(20, 34), "선 택 함 대", "eyebrow", 11, UiTheme.GOLD)
 	UiDraw.text(c, Vector2(20, 64), "%d개 함대" % sel.size(), "serif_bold", 24, UiTheme.INK)
-	UiDraw.text(c, Vector2(c.size.x - 18, 62), "%d / %d척" % [ceili(tot), int(mx)], "semibold", 14, UiTheme.INK_2, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
+	UiDraw.text(c, Vector2(c.size.x - 40, 62), "%d / %d척" % [ceili(tot), int(mx)], "semibold", 14, UiTheme.INK_2, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
+	_chevron(c)
+	if not info_open:
+		return
 	var x := 20.0
 	for f in sel.slice(0, 8):
 		var r := Rect2(x, 78, 66, 66)
@@ -700,11 +716,11 @@ func _info_multi(c: Control, sel: Array) -> void:
 func _info_none(c: Control) -> void:
 	var a := _side_totals(0)
 	var e := _side_totals(1)
-	UiDraw.text(c, Vector2(c.size.x * 0.5, 50), "함대를 선택하십시오", "serif_bold", 20, UiTheme.INK, HORIZONTAL_ALIGNMENT_CENTER, 0.0)
-	UiDraw.text(c, Vector2(c.size.x * 0.5, 78), "함대 클릭 · 드래그로 범위 선택 · 그룹 I–IV · A 전 함대", "regular", 12, UiTheme.INK_3, HORIZONTAL_ALIGNMENT_CENTER, 0.0)
-	UiDraw.text(c, Vector2(c.size.x * 0.5 - 20, 116), "아군 %d개 함대 · %d척" % [int(a.z), roundi(a.x)], "semibold", 13, UiTheme.ALLY_HI, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
-	UiDraw.text(c, Vector2(c.size.x * 0.5 + 20, 116), "적 %d개 함대 · %d척 확인" % [int(e.z), roundi(e.x)], "semibold", 13, UiTheme.FOE_HI)
-	UiDraw.diamond(c, Vector2(c.size.x * 0.5, 111), 3.0, UiTheme.GOLD)
+	UiDraw.text(c, Vector2(c.size.x * 0.5, 40), "함대를 선택하십시오", "serif_bold", 20, UiTheme.INK, HORIZONTAL_ALIGNMENT_CENTER, 0.0)
+	UiDraw.text(c, Vector2(c.size.x * 0.5, 62), "함대 클릭 · 드래그로 범위 선택 · 편성 1–9 · A 전 함대", "regular", 12, UiTheme.INK_3, HORIZONTAL_ALIGNMENT_CENTER, 0.0)
+	UiDraw.text(c, Vector2(c.size.x * 0.5 - 20, 80), "아군 %d개 함대 · %d척" % [int(a.z), roundi(a.x)], "semibold", 13, UiTheme.ALLY_HI, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
+	UiDraw.text(c, Vector2(c.size.x * 0.5 + 20, 80), "적 %d개 함대 · %d척 확인" % [int(e.z), roundi(e.x)], "semibold", 13, UiTheme.FOE_HI)
+	UiDraw.diamond(c, Vector2(c.size.x * 0.5, 75), 3.0, UiTheme.GOLD)
 
 # ------------------------------------------------------------ 명령 패널
 func _build_commands() -> void:
@@ -737,21 +753,35 @@ func _build_commands() -> void:
 	mc.add_theme_constant_override("margin_right", 4)
 	mc.add_child(cmd_grid)
 	vb.add_child(mc)
-	groups_row = HBoxContainer.new()
-	groups_row.add_theme_constant_override("separation", 6)
-	hud.add_child(groups_row)
-	_anchor(groups_row, Control.PRESET_BOTTOM_RIGHT, Vector2(346, 52), Vector2(-16, -274))
-	# 전대 띠(U4): 그룹 탭 바로 위. 탭 선택, 길게 눌러 추가, 끌어서 명령
+	# 전대 띠(U4, V-3): 카드 7장. 저장 편성은 카드 위 숫자 배지(1~9). 탭 선택, 길게 눌러 추가, 끌어서 명령
 	strip = Strip.new()
 	hud.add_child(strip)
-	_anchor(strip, Control.PRESET_BOTTOM_RIGHT, Vector2(346, 60), Vector2(-16, -332))
+	_anchor(strip, Control.PRESET_BOTTOM_RIGHT, Vector2(Strip.WIDTH, Strip.CELL.y), Vector2(-16, -272))
 	strip.setup(self)
-	for i in 4:
-		var g := W.GroupButton.new(i + 1, self)
-		g.button_down.connect(battle._group_down.bind(i + 1))
-		g.button_up.connect(battle._group_up.bind(i + 1))
-		groups_row.add_child(g)
+	# 터치용 편성 저장(PC는 Ctrl+숫자)
+	save_btn = W.IconButton.new("", "편성")
+	save_btn.tooltip_text = "선택한 전대를 편성 번호에 저장 (Ctrl+숫자)"
+	save_btn.pressed.connect(_save_group)
+	hud.add_child(save_btn)
+	_anchor(save_btn, Control.PRESET_BOTTOM_RIGHT, Vector2(52, Strip.CELL.y), Vector2(-16 - Strip.WIDTH - 4, -272))
 	_set_tab(0)
+
+# 선택을 첫 빈 편성 번호에 저장한다(모두 차 있으면 9번을 덮어쓴다).
+func _save_group() -> void:
+	if battle.my_sel().is_empty():
+		battle.toast("저장할 전대를 먼저 선택하세요")
+		return
+	for n in range(1, 10):
+		var g: Array = battle.group_fleets(n)
+		if not g.is_empty() and battle.same_sel(g):
+			battle.toast("이미 편성 %d입니다" % n)
+			return
+	var slot := 9
+	for n in range(1, 10):
+		if battle.group_fleets(n).is_empty():
+			slot = n
+			break
+	battle.assign_group(slot)
 
 func _set_tab(i: int) -> void:
 	tab_index = i
