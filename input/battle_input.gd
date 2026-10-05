@@ -127,6 +127,9 @@ func _input(event: InputEvent) -> void:
 		host.drag = {}
 
 func _key(e: InputEventKey) -> void:
+	if e.keycode == KEY_F1:
+		host.toggle_hud()
+		return
 	if e.keycode == KEY_SPACE:
 		host._toggle_menu()
 		return

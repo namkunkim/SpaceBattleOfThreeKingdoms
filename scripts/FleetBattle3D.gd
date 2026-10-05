@@ -53,6 +53,8 @@ signal battle_event(kind: String, text: String, fleet_id: int)
 signal sfx_event(name: String)   # 코어 사건 → 효과음 이름(UiSound 사건)
 const PRESENTATION := "res://hud/ui_kit/presentation.gd"
 var presentation: Node = null
+var hud_hidden := false   # F1 녹화용: HUD만 숨긴다(3D·VFX·진행은 그대로)
+var _saved_title := ""
 
 # ---- 코어와 시간 ----
 var sim: BattleSim
@@ -183,6 +185,20 @@ func _toggle_menu() -> void:
 func _close_menu() -> void:
 	hud.menu_ov.visible = false
 	G.state = "play"
+
+# 영상 촬영용 HUD 숨김(LEGAL-YOUTUBE-RISK §3-①-B). 창 제목도 중립으로 바꿔 게임 이름이 잡히지 않게 한다.
+func toggle_hud() -> void:
+	hud_hidden = not hud_hidden
+	if presentation and presentation.hud:
+		presentation.hud.get_parent().visible = not hud_hidden
+	else:
+		ui.visible = not hud_hidden
+	var win := get_window()
+	if hud_hidden:
+		_saved_title = win.title
+		win.title = "Capture"
+	else:
+		win.title = _saved_title
 
 func _toggle_speed() -> void:
 	G.speed = 2 if G.speed == 1 else 1
