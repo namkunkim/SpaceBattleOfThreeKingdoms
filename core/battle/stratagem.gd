@@ -459,8 +459,10 @@ func host_think(f: FleetState, foes: Array[Dictionary]) -> bool:
 		return true
 	var t := st.by_id(int(tg.id))
 	if window_open() and ignite_block(f, t) == "":
+		# 투항 중이면 120까지 붙어 위력을 키운다. 창 끝 무렵, 의심이 마지막 경고(80)를 넘었을 때, 위장이 없을 때(맞고 있다)는 바로 놓는다
 		var late := st.tick >= win_start + BattleRules.ticks(float(H.late_fire_s), st.hz)
-		if td <= float(H.approach) + float(H.fire_tol) or late:
+		var hot := mode != "feign" or susp_m >= int(O.feigned_surrender.warnings.back()) * BattleRules.MILLI
+		if td <= float(H.approach) + float(H.fire_tol) or late or hot:
 			sim.apply(BattleSim.command(0, [f.id], "ignite", t.id))
 			return true
 	# 흐름(+X) ±(콘 − 10°) 안에서 접근
