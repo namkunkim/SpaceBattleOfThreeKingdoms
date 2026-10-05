@@ -1,17 +1,20 @@
 class_name RadarScope
 extends Control
 
-# 원형 전술도: 금장 눈금 테, 회전 탐색선, 진영 기호와 방향, 기함 지휘 범위, 현재 화면 범위(사다리꼴).
-# 클릭하거나 끌면 그 지점으로 화면을 옮긴다.
+# 사각 미니맵: 전장 비율 그대로의 반투명 판. 진영 기호와 방향, 기함 지휘 범위, 현재 카메라 범위 사각 틀.
+# 누르거나 끌면 그 지점으로 화면을 옮긴다. 탐지 안개가 생기면 접촉만 그린다(M10).
+# 클래스 이름은 호환용으로 남겼다(RadarScope).
 
 var battle: Node
 var t := 0.0
-const SIZE := 208.0
+const W := 240.0   # 전장 3400×2300에 맞춘 비율
+const H := 162.0
+const PAD := 6.0
 
 func setup(b: Node) -> void:
 	battle = b
-	custom_minimum_size = Vector2(SIZE, SIZE)
-	size = Vector2(SIZE, SIZE)
+	custom_minimum_size = Vector2(W, H)
+	size = Vector2(W, H)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	gui_input.connect(_on_input)
 
@@ -25,64 +28,33 @@ func _process(delta: float) -> void:
 		_acc = 0.0
 		queue_redraw()
 
-func _r() -> float:
-	return SIZE * 0.5 - 18.0
+func _map() -> Rect2:
+	return Rect2(Vector2(PAD, PAD), Vector2(W, H) - Vector2(PAD, PAD) * 2.0)
 
 func _scale() -> float:
-	var ws: Vector2 = battle.WORLD
-	return _r() * 1.86 / ws.length()
+	return _map().size.x / battle.WORLD.x
 
 func _w2r(p: Vector2) -> Vector2:
-	return (p - battle.WORLD * 0.5) * _scale() + Vector2(SIZE, SIZE) * 0.5
+	return _map().position + p * _scale()
 
 func _r2w(p: Vector2) -> Vector2:
-	return (p - Vector2(SIZE, SIZE) * 0.5) / _scale() + battle.WORLD * 0.5
+	return (p - _map().position) / _scale()
 
 func _draw() -> void:
 	if battle == null or battle.G.is_empty():
 		return
-	var c := Vector2(SIZE, SIZE) * 0.5
-	var R := _r()
-	draw_circle(c, R + 16.0, Color(0.03, 0.045, 0.07, 0.95))
-	draw_arc(c, R + 16.0, 0.0, TAU, 96, UiTheme.GOLD_LO, 2.0, true)
-	draw_arc(c, R + 10.0, 0.0, TAU, 96, Color(UiTheme.GOLD, 0.55), 1.2, true)
-	var minor := PackedVector2Array()
-	var major_l := PackedVector2Array()
-	for i in 72:
-		var a := TAU * i / 72.0
-		var major := i % 18 == 0
-		var r1 := R + 10.0
-		var r2 := R + (3.0 if major else (6.0 if i % 6 == 0 else 8.0))
-		var arr := major_l if major else minor
-		arr.append(c + Vector2(cos(a), sin(a)) * r1)
-		arr.append(c + Vector2(cos(a), sin(a)) * r2)
-		if major:
-			major_l = arr
-		else:
-			minor = arr
-	draw_multiline(minor, Color(UiTheme.GOLD, 0.5), 1.0)
-	draw_multiline(major_l, UiTheme.GOLD_HI, 1.6)
-	draw_circle(c, R, Color(0.025, 0.07, 0.12, 0.96))
+	var m := _map()
+	draw_rect(Rect2(Vector2.ZERO, size), Color(0.03, 0.04, 0.055, 0.78))
+	draw_rect(Rect2(Vector2.ZERO, size).grow(-0.5), UiTheme.GOLD_LINE, false, 1.0)
+	draw_rect(m, Color(0.1, 0.18, 0.2, 0.55))
+	# 먹선 눈금: 전장을 4×3으로 가른다
 	for i in range(1, 4):
-		draw_arc(c, R * i / 4.0, 0.0, TAU, 64, Color(0.47, 0.7, 1.0, 0.12), 1.0, true)
-	draw_line(c + Vector2(-R, 0), c + Vector2(R, 0), Color(0.47, 0.7, 1.0, 0.1))
-	draw_line(c + Vector2(0, -R), c + Vector2(0, R), Color(0.47, 0.7, 1.0, 0.1))
-	var a0 := _w2r(Vector2.ZERO)
-	var a1 := _w2r(battle.WORLD)
-	draw_rect(Rect2(a0, a1 - a0), Color(0.3, 0.55, 0.9, 0.08))
-	draw_rect(Rect2(a0, a1 - a0), Color(0.3, 0.55, 0.9, 0.25), false, 1.0)
-	# 탐색선 잔상
-	var sw := t * 1.1
-	var fan := PackedVector2Array([c])
-	var cols := PackedColorArray([Color(0.47, 0.82, 1.0, 0.0)])
-	for k in 15:
-		var a := sw - k * 0.035
-		fan.append(c + Vector2(cos(a), sin(a)) * R)
-		cols.append(Color(0.47, 0.82, 1.0, 0.24 * (1.0 - k / 14.0)))
-	draw_polygon(fan, cols)
+		draw_line(Vector2(m.position.x + m.size.x * i / 4.0, m.position.y), Vector2(m.position.x + m.size.x * i / 4.0, m.end.y), Color(UiTheme.GOLD_LINE, 0.12), 1.0)
+	for i in range(1, 3):
+		draw_line(Vector2(m.position.x, m.position.y + m.size.y * i / 3.0), Vector2(m.end.x, m.position.y + m.size.y * i / 3.0), Color(UiTheme.GOLD_LINE, 0.12), 1.0)
 	var pf = battle.flag(0)
 	if pf:
-		draw_arc(_w2r(pf.pos), battle.CMD_R * _scale(), 0.0, TAU, 48, Color(UiTheme.ALLY, 0.45), 1.0, true)
+		draw_arc(_w2r(pf.pos), battle.CMD_R * _scale(), 0.0, TAU, 48, Color(UiTheme.ALLY, 0.4), 1.0, true)
 	for f in battle.fleets:
 		if f.dead:
 			continue
@@ -90,23 +62,20 @@ func _draw() -> void:
 		var sel: bool = battle.selected.has(f)
 		var fk: String = battle.presentation.src.faction(f.id)
 		var col: Color = Color.WHITE if sel else Factions.of(fk).color
-		UiDraw.faction_glyph(self, p, 3.6 if not f.is_flag else 4.4, fk, col)
-		var hd := Vector2(cos(f.heading), sin(f.heading))
-		draw_line(p, p + hd * 8.0, col, 1.2, true)
-		if f.is_flag:
-			draw_rect(Rect2(p - Vector2(7, 7), Vector2(14, 14)), UiTheme.GOLD_HI, false, 1.0)
+		UiDraw.faction_glyph(self, p, 3.4 if not f.is_flag else 4.2, fk, col)
+		draw_line(p, p + Vector2(cos(f.heading), sin(f.heading)) * 8.0, col, 1.2, true)
 		if f.has_move and f.side == 0:
 			UiDraw.dashed_poly(self, PackedVector2Array([p, _w2r(f.move_to)]), Color(UiTheme.GOLD_HI, 0.7), 1.0, 3.0, 3.0)
-	# 현재 화면이 보는 전장 범위
+	# 현재 카메라 범위: 화면 네 모서리의 바깥 사각 틀
 	var vs: Vector2 = get_viewport_rect().size
-	var corners := [battle.s2w(Vector2(0, 0)), battle.s2w(Vector2(vs.x, 0)), battle.s2w(vs), battle.s2w(Vector2(0, vs.y))]
-	var poly := PackedVector2Array()
-	for q in corners:
+	var lo := Vector2(INF, INF)
+	var hi := Vector2(-INF, -INF)
+	for q in [battle.s2w(Vector2(0, 0)), battle.s2w(Vector2(vs.x, 0)), battle.s2w(vs), battle.s2w(Vector2(0, vs.y))]:
 		var rp := _w2r(q)
-		poly.append(c + (rp - c).limit_length(R))
-	poly.append(poly[0])
-	draw_polyline(poly, Color(0.55, 1.0, 0.68, 0.8), 1.3, true)
-	UiDraw.text(self, Vector2(c.x, c.y - R - 19.0), "N", "semibold", 11, UiTheme.GOLD_HI, HORIZONTAL_ALIGNMENT_CENTER, 0.0)
+		lo = lo.min(rp)
+		hi = hi.max(rp)
+	var frame := Rect2(lo, hi - lo).intersection(m)
+	draw_rect(frame, Color(UiTheme.GOLD_HI, 0.85), false, 1.4)
 
 func _on_input(e: InputEvent) -> void:
 	if battle.G.state == "brief":
@@ -114,8 +83,7 @@ func _on_input(e: InputEvent) -> void:
 	var press: bool = e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT
 	var dragm: bool = e is InputEventMouseMotion and (e.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0
 	if press or dragm:
-		var c := Vector2(SIZE, SIZE) * 0.5
-		if (e.position - c).length() <= _r() + 4.0:
-			battle.cam_pos = _r2w(e.position)
+		if _map().grow(4.0).has_point(e.position):
+			battle.cam_pos = _r2w(e.position).clamp(Vector2.ZERO, battle.WORLD)
 			battle._clamp_cam()
 			accept_event()

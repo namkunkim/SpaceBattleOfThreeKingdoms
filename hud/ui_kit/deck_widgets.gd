@@ -58,9 +58,7 @@ class CmdButton extends Button:
 	func _draw() -> void:
 		var r := Rect2(Vector2.ZERO, size)
 		var hov := is_hovered() or pinned
-		var top := Color(0.11, 0.16, 0.25) if hov else Color(0.086, 0.13, 0.2)
-		var bot := Color(0.05, 0.075, 0.12)
-		draw_polygon(PackedVector2Array([r.position, Vector2(r.end.x, 0), r.end, Vector2(0, r.end.y)]), PackedColorArray([top, top, bot, bot]))
+		draw_rect(r, Color(0.07, 0.1, 0.12, 0.88) if hov else Color(0.04, 0.06, 0.08, 0.78))
 		draw_rect(r.grow(-0.5), UiTheme.GOLD if hov else UiTheme.LINE, false, 1.0)
 		var tint: Color = UiTheme.INK
 		match cmd.get("tone", ""):
@@ -108,32 +106,3 @@ class TabButton extends Button:
 		if on:
 			var w := size.x * 0.5
 			draw_rect(Rect2(size.x * 0.25, size.y - 2, w, 2), UiTheme.GOLD)
-
-# 그룹 탭: 로마 숫자 + 소속 지휘관 초상
-class GroupButton extends Button:
-	var n := 1
-	var deck: Node
-	func _init(i: int, d: Node) -> void:
-		n = i
-		deck = d
-		focus_mode = Control.FOCUS_NONE
-		custom_minimum_size = Vector2(82, 52)
-		tooltip_text = "그룹 %s 선택 (%d) · 길게 누르거나 Ctrl+%d로 저장" % [["I", "II", "III", "IV"][i - 1], i, i]
-	func _draw() -> void:
-		var b: Node = deck.battle
-		var g: Array = b.group_fleets(n)
-		var on: bool = not g.is_empty() and b.same_sel(g)
-		var r := Rect2(Vector2.ZERO, size)
-		draw_rect(r, Color(0.07, 0.1, 0.15, 0.94))
-		draw_rect(r.grow(-0.5), UiTheme.ALLY if on else (UiTheme.GOLD_LO if is_hovered() else UiTheme.LINE), false, 1.0)
-		if on:
-			draw_rect(Rect2(0, size.y - 2, size.x, 2), UiTheme.ALLY)
-		var col := UiTheme.ALLY_HI if on else (UiTheme.INK_2 if not g.is_empty() else UiTheme.INK_4)
-		UiDraw.text(self, Vector2(6, size.y * 0.5 + 5), ["I", "II", "III", "IV"][n - 1], "serif_bold", 13, col, HORIZONTAL_ALIGNMENT_CENTER, 22)
-		var x := 30.0
-		for f in g.slice(0, 3):
-			draw_texture_rect(b._portrait_tex(f.portrait), Rect2(x, 8, 22, 22), false)
-			draw_rect(Rect2(x, 8, 22, 22), Color(0, 0, 0, 0.6), false, 1.0)
-			x += 16.0
-		if g.is_empty():
-			UiDraw.text(self, Vector2(30, size.y * 0.5 + 4), "비어 있음", "regular", 10, UiTheme.INK_4)

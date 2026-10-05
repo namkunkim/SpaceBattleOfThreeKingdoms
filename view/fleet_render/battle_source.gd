@@ -197,6 +197,15 @@ var incoming_override := {}
 func decision_incoming() -> Dictionary:
 	return incoming_override
 
+# 군 사기(제안서 §4.12, Q21): {"value": 현재, "max": 최대, "ticks": [임계 값, ...]}. 없으면 {}.
+# POC에는 사기가 없다. 값이 없으면 상단 바는 전력(척 수 비율)만 그린다. 가짜 값으로 채우지 않는다.
+func morale(_side: int) -> Dictionary:
+	return {}
+
+# 국면 이름(접적·교전 등). POC에는 없어 ""(화면에서 숨긴다).
+func phase() -> String:
+	return ""
+
 # 코어에 결정 분기가 생기면 {"done": 2, "total": 5}를 돌려준다. POC에는 없으므로 비운다(화면에서 숨긴다).
 func decision_progress() -> Dictionary:
 	return {}
