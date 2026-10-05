@@ -3,7 +3,7 @@ extends SceneTree
 # 상품화 표현 계층 캡처. 화면이 있는 실행에서만 의미가 있다.
 # godot --path . --script tests/capture_ui.gd -- <장면> <출력 png> [UI 크기]
 # 폰 130% 배치 확인: --resolution 1600x720 ... -- battle res://out/ui-phone.png 1.3
-# 장면: title | brief | quiet | battle | select | hold | undo | decision | wu | pause | suspend | result | settings | incoming | salvo | roster | roster_full
+# 장면: title | prologue [장 0~7] | brief | quiet | battle | select | hold | undo | decision | wu | pause | suspend | result | settings | incoming | salvo | roster | roster_full
 const SEED := 20261003
 
 func _initialize() -> void:
@@ -20,7 +20,7 @@ func _run() -> void:
 	var deck = battle.presentation.hud if battle.presentation else null
 	if deck and mode != "suspend":
 		deck.guard.enabled = false   # 캡처 창이 포커스를 잃어도 일시정지하지 않는다
-	if args.size() > 2 and mode != "settings":
+	if args.size() > 2 and mode != "settings" and mode != "prologue":
 		GameSettings.ui_scale = float(args[2])
 		GameSettings.apply(root.get_window())
 	if mode == "title":
@@ -40,6 +40,11 @@ func _run() -> void:
 	elif mode == "roster" or mode == "roster_full":
 		deck.screens["roster"].open_roster(mode == "roster_full", "표준")
 		for i in 30:
+			await process_frame
+	elif mode == "prologue":
+		deck.open_prologue()
+		deck.screens["prologue"].open_at(int(args[2]) if args.size() > 2 else 0)
+		for i in 60:
 			await process_frame
 	elif mode == "brief":
 		if deck:
@@ -118,7 +123,7 @@ func _run() -> void:
 		elif mode == "result":
 			battle.G.killed = 412.0
 			battle.G.lost = 168.0
-			battle.end_game(true, "위 원정군이 회랑에서 모두 사라졌습니다. 회랑은 연합의 손에 남습니다.")
+			battle.end_game(true, "조조군이 적벽에서 모두 사라졌습니다. 적벽의 궤도는 연합의 손에 남습니다.")
 			for i in 160:
 				await process_frame
 	print("UI_FPS ", Engine.get_frames_per_second(), " ships ", battle.presentation.renderer.vis.values().reduce(func(a, v): return a + v.alive_n, 0) if battle.presentation else 0)
