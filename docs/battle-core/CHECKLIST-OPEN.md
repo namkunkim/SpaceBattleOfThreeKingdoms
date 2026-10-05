@@ -97,7 +97,7 @@ M3 리뷰(2026-10-04): `REVIEW-M3.md`. 수용. 후속은 방향 배분 잔여 �
 - [x] 전투 효과음 연결(2026-10-05): 원샷 12종을 `ui_sound.gd` EVENTS에 넣었다. 코어 사건 연결은 `FleetBattle3D.sfx_event` → 덱 `sound.play`: 일제사격(artillery→laser_heavy, line_fire→laser_light)·missile_launch·missile_hit·fighter_launch·charge→engine_boost. 루프 3종은 `UiSound.set_loop(이름, 0~1)` 재생기(종류마다 하나, 동시 최대 3). 테스트 `tests/ui_sound.gd`
 - [ ] **(대기열) 효과음 후속**: ① 코어에 사건이 없어 못 붙인 것: fighter_guns·fighter_dock(함재기 교전·회수), shield_hit·armor_hit(피격 종류), chain_explosion·fire_ignite·fire_loop(화공 M9). ② 루프를 부르는 쪽이 없다: engine_loop(함대 이동 중), beam_loop(지속 사격 중)을 렌더러·투영 상태로 `set_loop`에 연결
 - [ ] **(대기열) M7 AI 대 AI 1000시드 기준선** (REVIEW-M7 F-1·F-2 반영 완료, 이제 돌릴 수 있다. 표준 80시드 51.2%·14.2분. M8 보급을 켠 main도 80시드 결과가 같다(`REVIEW-M8.md` §7.1)): 난이도 입문·표준·상급(극한은 40시드 4.8%로 목표 안). `tools/m7/baseline.sh 표준 1000 8`(약 2시간), 상급·극한은 판당 훨씬 오래 걸려 밤새 돌린다. 지금은 40~80시드 값만 있다(`M7-NOTES` §3). 표준 조조 승률 목표 60%(지금 35%)·길이 15~18분(지금 14분)·입문 무명령 50~70%(지금 90%) 레버: 조조 시작 사기, `range_band_hold`, 위임 아군 `engage_trigger_r`, 입문 규모
-- [ ] **(대기열) REVIEW-M8 F-1 수리·회복 유지** (구현 세션, M10 사람 플레이 테스트 전): `SalvoCombat._wound`가 누적 선체 비율로 손상 목표를 다시 잡아, 수리·경파 회복이 다음 피격 한 번에 사라진다. 회복한 만큼을 목표 계산에서 빼거나 회복 시점 선체를 기준선으로 쓴다. 선체 점수는 바꾸지 않는다. 테스트: 회복 뒤 선체 1% 미만 피해로는 무손상 척 수가 거의 그대로
+- [x] **REVIEW-M8 F-1 수리·회복 유지** 완료(2026-10-05): `healed_wound`·`healed_mod`를 `_wound` 목표에서 뺌, 선체 그대로, `supply_rules` 확인 추가. 표준 80시드 51.2%·14.2분, 시드별 차이 0/80
 - [ ] **(대기열) REVIEW-M8 F-2 AI 보급 행동**: F-1과 1000시드 기준선 뒤 보급 효과를 보고 위임 AI·조조 AI에 `resupply` 임계(중파·탄약 비율)를 더할지 정한다. F-4(`still_eps` 초당 값)는 낮음, 아무 때나
 재측정 목표·순서·레버·사람 플레이 테스트는 `BALANCE-PLAN-M4.md`에 정리했다(2026-10-04).
 
