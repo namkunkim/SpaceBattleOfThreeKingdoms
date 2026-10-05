@@ -219,7 +219,7 @@ class PauseScreen extends Control:
 		var x := 420.0
 		c.draw_line(Vector2(x - 30, 146), Vector2(x - 30, c.size.y - 36), Color(UiTheme.GOLD, 0.15))
 		UiDraw.text(c, Vector2(x, 160), "단 축 키", "eyebrow", 11, UiTheme.GOLD)
-		var keys := [["S", "정지"], ["D", "방어진형"], ["C", "돌격"], ["R", "기함 집결"], ["G", "후퇴"], ["M", "미사일"], ["F", "함재기"], ["A", "전 함대 선택"], ["1–4", "그룹 선택 · Ctrl+숫자 저장"], ["Space", "일시정지"]]
+		var keys := [["S", "정지"], ["D", "방어진형"], ["C", "돌격"], ["R", "기함 집결"], ["G", "후퇴"], ["M", "미사일"], ["F", "함재기"], ["A", "전 함대 선택"], ["1–9", "편성 선택 · Ctrl+숫자 저장"], ["Space", "일시정지"]]
 		if not deck.src.has_command("def"):
 			keys = keys.filter(func(k): return k[0] != "D")
 		var y := 192.0

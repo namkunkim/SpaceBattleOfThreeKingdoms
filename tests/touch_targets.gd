@@ -22,8 +22,6 @@ func _collect(n: Node, screen: String) -> void:
 func _name(c: Control) -> String:
 	if "cmd" in c:
 		return "명령 " + c.cmd.label
-	if c is DeckWidgets.GroupButton:
-		return "그룹 탭"
 	if c is DeckWidgets.TabButton:
 		return "탭 " + str(c.get_meta("label"))
 	if c is DeckWidgets.IconButton:
