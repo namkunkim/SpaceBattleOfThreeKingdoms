@@ -51,6 +51,7 @@ const END_TEXT := {
 # 표현 계층(view/fleet_render, hud/ui_kit)이 교신·알림을 받는 통로. kind: "", "foe", "sys", "toast"
 signal battle_event(kind: String, text: String, fleet_id: int)
 signal sfx_event(name: String)   # 코어 사건 → 효과음 이름(UiSound 사건)
+signal sfx_loop(name: String, level: float)   # 코어 사건 → 루프 효과음(UiSound.set_loop). M9 화공 fire_loop
 const PRESENTATION := "res://hud/ui_kit/presentation.gd"
 var presentation: Node = null
 
@@ -288,8 +289,9 @@ func restore_orders(snap: Dictionary) -> void:
 		ids.append(int(id))
 	issue({"kind": "restore", "ids": ids, "args": {"orders": snap}})
 
-# 코어 사건 → 효과음. 코어에 아직 없는 사건: 함재기 기관포·회수, 보호막·장갑 피격, 연쇄 폭발, 화공(M9)
-const SFX_OF := {"missile_launch": "missile_launch", "missile_hit": "missile_hit", "fighter_launch": "fighter_launch", "charge": "engine_boost"}
+# 코어 사건 → 효과음. 코어에 아직 없는 사건: 함재기 기관포·회수, 보호막·장갑 피격
+const SFX_OF := {"missile_launch": "missile_launch", "missile_hit": "missile_hit", "fighter_launch": "fighter_launch", "charge": "engine_boost",
+	"chain_explosion": "chain_explosion", "fire_ignite": "fire_ignite"}   # M9 화공: 발동 폭발, 불붙음(번짐 포함)
 const SFX_OF_CAT := {"artillery": "laser_heavy", "line_fire": "laser_light"}
 
 func _on_event(e: Dictionary) -> void:
@@ -298,6 +300,8 @@ func _on_event(e: Dictionary) -> void:
 		sfx_event.emit(SFX_OF[e.kind])
 	elif e.kind == "salvo" and SFX_OF_CAT.has(e.value.cat):
 		sfx_event.emit(SFX_OF_CAT[e.value.cat])
+	elif e.kind == "fire_loop":
+		sfx_loop.emit("fire_loop", 1.0 if e.value.on else 0.0)   # 불이 타는 동안(발동 ~ 번짐 끝)
 	match e.kind:
 		"say":
 			if f:

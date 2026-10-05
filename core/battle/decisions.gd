@@ -5,7 +5,7 @@ extends RefCounted
 # 카드 수명: 예고(precursor_s) → 열림 → 응답(decide 명령) 또는 time_game_s 뒤 추천안 적용("위임 처리").
 # 시간은 게임 시계다. 코어는 멈추지 않는다(입문 정지·표준 ×0.2는 호스트가 속도로 만든다).
 # 카드 종류(M7): morale_crisis(연합 군 사기가 위기 임계 아래로), pursuit(확인한 적 전대가 퇴각 상태로).
-# 화공·의심 카드는 M9. 응답은 지휘관 AI의 일시 가중(bias_mod)·추격 표적으로 반영된다.
+# M9: suspicion_80(의심 80, ChainOp가 연다. 시간은 간파까지 남은 초 − 2, 최대 30). 응답은 지휘관 AI의 일시 가중(bias_mod)·추격 표적으로 반영된다.
 
 var sim: BattleSim
 var cfg: Dictionary          # realtime_rules.decision_cards
@@ -32,7 +32,7 @@ func pending() -> Array[Dictionary]:
 	for c in cards:
 		if st.tick >= c.open_tick:
 			out.append({"id": c.id, "kind": c.kind, "ref": c.ref, "options": c.options.duplicate(true), "rec": c.rec,
-				"time_left": float(c.deadline_tick - st.tick) / st.hz, "time_total": float(cfg.time_game_s)})
+				"time_left": float(c.deadline_tick - st.tick) / st.hz, "time_total": float(c.time_total)})
 	return out
 
 func upcoming() -> Array[Dictionary]:
@@ -55,16 +55,34 @@ func step() -> void:
 	_detect_crisis()
 	_detect_pursuit()
 	for c in cards.duplicate():
-		if st.tick == c.open_tick:
+		if st.tick == c.open_tick and not c.has("announced"):
+			c.announced = true
 			sim.emit("decision_open", -1, int(c.ref), Vector2.ZERO, {"id": c.id, "kind": c.kind})
 		if st.tick >= c.deadline_tick:
 			resolve(c.id, c.rec, "delegate")
 
 func _open(kind: String, ref: int, options: Array, rec: String) -> void:
+	open_card(kind, ref, options, rec, float(cfg.time_game_s), float(cfg.precursor_s))
+
+# 카드를 연다(시간·예고를 지정). 카드 ID를 돌려준다
+func open_card(kind: String, ref: int, options: Array, rec: String, time_s: float, precursor_s: float) -> int:
 	var st := sim.st
-	var open := st.tick + _ticks(float(cfg.precursor_s))
-	cards.append({"id": _seq, "kind": kind, "ref": ref, "open_tick": open, "deadline_tick": open + _ticks(float(cfg.time_game_s)), "options": options, "rec": rec})
+	var open := st.tick + _ticks(precursor_s)
+	var id := _seq
+	var c := {"id": id, "kind": kind, "ref": ref, "open_tick": open, "deadline_tick": open + _ticks(time_s), "options": options, "rec": rec, "time_total": time_s}
+	cards.append(c)
 	_seq += 1
+	if precursor_s <= 0.0:
+		c.announced = true
+		sim.emit("decision_open", -1, ref, Vector2.ZERO, {"id": id, "kind": kind})
+	return id
+
+# 응답 없이 닫는다(상황이 지나갔다: 의심 80 카드가 열린 채 간파)
+func drop(id: int) -> void:
+	var c := card(id)
+	if not c.is_empty():
+		cards.erase(c)
+		sim.emit("decision_resolved", -1, int(c.ref), Vector2.ZERO, {"id": id, "kind": c.kind, "option": "", "by": "expired"})
 
 func _detect_crisis() -> void:
 	var m := sim.morale
@@ -117,6 +135,10 @@ func resolve(id: int, option: String, by: String) -> String:
 
 func _apply(c: Dictionary, option: String) -> void:
 	var st := sim.st
+	if c.kind == "suspicion_80":
+		if sim.chain:
+			sim.chain.card_resolve(option)
+		return
 	var mods := {"defend": -1.0, "counter": 1.0, "pursue": 1.0, "hold": 0.0}
 	var d: Dictionary = A.crisis if c.kind == "morale_crisis" else A.pursuit
 	var foe := st.by_id(int(c.ref)) if c.kind == "pursuit" else null

@@ -31,6 +31,9 @@ var decisions: DecisionBoard = null   # M7 결정 카드(시나리오 realtime_r
 var first_hit_tick := -1        # 첫 명중 틱(양측이 아는 공개 사실). AI의 거리대 일정이 이 시각에서 센다
 var detect: Detection = null    # M6 탐지·전쟁 안개. combat.detection이 있을 때만 켜진다(없으면 완전 정보)
 var supply: SupplyCore = null   # M8 보급과 수리. combat.supply가 있을 때만 켜진다
+var chain: ChainOp = null       # M9 화공·위장 항복. 시나리오 chain_operation과 combat.stratagem이 있을 때
+var cmd: CommandCore = null     # M9 장수 사상·지휘 승계·혼선. 시나리오와 combat.command가 있을 때
+var assault: AssaultCore = null # M9 강습(부대 강습·기함 진입). 시나리오와 combat.assault가 있을 때
 
 # profile: 프로필 사전({profile_id, rules, ally, foe, reinf}). 비우면 POC 프로필(기준선 동등).
 func _init(seed_id: int = 0, hz: int = BattleRules.TICK_HZ, profile: Dictionary = {}) -> void:
@@ -76,6 +79,12 @@ func _init(seed_id: int = 0, hz: int = BattleRules.TICK_HZ, profile: Dictionary 
 			morale = MoraleCore.new(self, cb.morale)
 			if cb.has("victory"):
 				victory = Victory.new(self, cb.victory)
+			if cb.has("command"):
+				cmd = CommandCore.new(self, cb.command)
+			if cb.has("stratagem") and not rs.rt("chain_operation", {}).is_empty():
+				chain = ChainOp.new(self, cb.stratagem)
+			if cb.has("assault"):
+				assault = AssaultCore.new(self, cb.assault)
 	if not profile.get("ai", {}).is_empty() and salvo and morale:
 		enable_commander_ai(profile.ai)
 
@@ -113,6 +122,10 @@ func fingerprint() -> String:
 		extra = "ai%d|%s|%s" % [first_hit_tick, ",".join(parts), decisions.fingerprint() if decisions else ""]
 	if supply:
 		extra += supply.fingerprint()   # M8. 보급이 없으면 M7 지문과 같다
+	if chain:
+		extra += chain.fingerprint()    # M9
+	if cmd:
+		extra += cmd.fingerprint()
 	return BattleFingerprint.of(st, detect, extra)
 
 # 즉시 적용 명령. 틱 사이에 상태는 변하지 않으므로 "다음 step() 첫머리에 적용"과 결과가 같고,
@@ -125,7 +138,8 @@ func issue(cmd: Dictionary) -> void:
 	apply(c)
 
 # 플레이어가 명령한 전대는 직접 지휘가 된다(§5.4). AI 명령은 apply()를 바로 불러 여기를 거치지 않는다.
-const DIRECT_KINDS := ["stop", "move", "attack", "charge", "retreat", "rally", "formation", "restore", "def", "missile", "fighter", "volley"]
+const DIRECT_KINDS := ["stop", "move", "attack", "charge", "retreat", "rally", "formation", "restore", "def", "missile", "fighter", "volley",
+	"letter", "withdraw", "ignite", "assault"]
 
 func _mark_direct(c: Dictionary) -> void:
 	if int(c.side) != 0 or not (str(c.kind) in DIRECT_KINDS):
@@ -534,6 +548,29 @@ func apply(c: Dictionary) -> void:
 				f.has_move = true
 				f.move_to = pf.pos + Vector2(cos(a), sin(a)) * R.rally_radius
 			emit("say", L.id, -1, L.pos, "rally")
+		"letter", "withdraw", "ignite":
+			# 화공(M9, §4.11): 서신, 서신 철회, 발동(target_id = 표적). 운용 전대(황개 화공대)만
+			if chain == null or side != 0:
+				_reject(L, "unknown_command", side)
+				return
+			var why := ""
+			match kind:
+				"letter":
+					why = chain.letter(L)
+				"withdraw":
+					why = chain.withdraw(L) if L.sq_id == chain.host_sq else "chain_host"
+				"ignite":
+					why = chain.ignite(L, st.by_id(int(c.target_id)))
+			if why != "":
+				_reject(L, why, side)
+		"assault":
+			# 강습(M9): args.type = unit(부대 강습) | flagship(기함 진입, 진형이 안 열렸으면 강행 돌입). target_id = 표적
+			if assault == null:
+				_reject(L, "unknown_command", side)
+				return
+			var why := assault.attempt(L, st.by_id(int(c.target_id)), str(c.get("args", {}).get("type", "unit")))
+			if why != "":
+				_reject(L, why, side)
 		"morale_rally":
 			var why := morale.rally(side, str(c.get("args", {}).get("id", ""))) if morale else "unknown_command"
 			if why != "":
@@ -748,6 +785,10 @@ func _substep(first: bool) -> void:
 		salvo.step()
 		if morale:
 			morale.step()
+		if chain:
+			chain.step()
+		if cmd:
+			cmd.step()
 		if supply:
 			supply.step()
 		if decisions:
@@ -813,6 +854,8 @@ func _fleet_phase(timers: bool) -> void:
 			spd = f.speed * (R.charge_speed_mul if f.charge > 0 else 1.0)
 			if terrain:
 				spd *= float(BattleRules.BP) / float(terrain.move_cost_bp(f.pos))   # 성운·잔해·그림자는 느리다(§4.10)
+			if cmd:
+				spd *= 1.0 + cmd.penalty(f, "move_pct")   # 승계 혼선·지휘 한도 초과(§4.14)
 		if has_dest and f.strafe and tgt == null:
 			# 평행 이동: 방향을 유지한 채 전진 속도의 일부로 목적지를 향해 옆으로 간다(§4.2)
 			var dd := f.pos.distance_to(dest)

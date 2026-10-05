@@ -27,6 +27,9 @@ func init_fleet(f: FleetState, d: Dictionary) -> void:
 	f.formation_id = d.get("formation_id", C.default_formation)
 	f.cmd_stat = int(d.get("command", 0))
 	f.traits = d.get("traits", [])
+	f.level = int(d.get("level", 1))
+	f.vice = d.get("vice_commander", {})
+	f.staff = d.get("staff", [])
 	# 지휘관 능력치(거리대별 보정, §4.3). 데이터에 없는 능력치는 통솔로 대신한다
 	f.stats = {"command": f.cmd_stat, "might": int(d.get("might", f.cmd_stat)), "intellect": int(d.get("intellect", f.cmd_stat))}
 	f.morale_bp = int(d.get("start_morale_bp", 0))
@@ -128,6 +131,8 @@ func transition_ticks(f: FleetState, fid: String) -> int:
 	var s := float(fr.untrained_transition_s) if f.cmd_stat < int(C.formations[fid].required_command) else float(fr.transition_s)
 	if master_ok(f):
 		s /= float(fr.master_transition_div)
+	if sim.cmd:
+		s /= 1.0 + sim.cmd.penalty(f, "formation_change_pct")   # 승계 혼선·지휘 한도 초과(§4.14): 변경 속도 −8%/단계 → 시간이 늘어난다
 	return BattleRules.ticks(s, sim.st.hz)
 
 # 진형 전환 시작. 현재 진형으로 되돌리면 전환을 취소한다. 사유 코드 또는 "".
@@ -172,6 +177,17 @@ func _enforce_terrain(f: FleetState) -> void:
 	f.form_left = 0
 	f.speed = _speed(f)
 	_apply_shape(f)
+
+# 진형을 즉시 바꾼다(화공 간파·긴급 분산, M9). 진행 중인 전환은 취소한다
+func force_formation(f: FleetState, fid: String) -> void:
+	if f.formation_id == fid:
+		return
+	f.formation_id = fid
+	f.form_to = ""
+	f.form_left = 0
+	f.speed = _speed(f)
+	_apply_shape(f)
+	sim.emit("formation_changed", f.id, -1, f.pos, fid)
 
 # 배치도(표시·발사 위치용 기하): 정본 진형 7종 각각에 POC 배치 모양을 재사용한다(Q10)
 func _apply_shape(f: FleetState) -> void:
@@ -276,6 +292,8 @@ func hit_bp(f: FleetState, tgt: FleetState, cat: String) -> int:
 		acc = maxi(int(h.min_bp), acc - int(h.out_of_command_bp))
 	if sim.detect:
 		acc = acc * sim.detect.hit_mul_bp(f.side, tgt.id) / BattleRules.BP   # 추정 사격은 신뢰도를 곱한다(§4.9)
+	if sim.cmd:
+		acc = roundi(acc * (1.0 + sim.cmd.penalty(f, "hit_pct")))   # 승계 혼선·지휘 한도 초과(§4.14)
 	return acc
 
 func platform_mul(n: float) -> float:
@@ -289,6 +307,8 @@ func platform_mul(n: float) -> float:
 # 지휘관 보정(§4.3): 거리대마다 쓰는 능력치가 다르다. 둘 이상이면 평균
 func commander_mul(f: FleetState, bd: String) -> float:
 	var c: Dictionary = C.damage.commander
+	if f.boarded:
+		return 1.0   # 기함 진입을 당했다: 지휘관 보정 소멸(§4.11 강습)
 	var names: Array = c.stat_by_band[bd]
 	var sum := 0.0
 	for n in names:
@@ -346,13 +366,15 @@ func _pick_target(f: FleetState, cat: String) -> Dictionary:
 	var best: FleetState = null
 	var best_q: Array = []
 	var cur := sim.sight_target(f)
+	if cur and sim.chain and sim.chain.truce(f, cur):
+		cur = null   # 투항 중인 황개와 조조군은 서로 쏘지 않는다(§4.11)
 	if cur:
 		var q := qualifying(f, cat, cur)
 		if not q.is_empty():
 			return {"tgt": cur, "q": q}
 	var bd := 1e9
 	for o in sim.st.fleets:
-		if o.dead or o.side == f.side or not sim.sees(f, o):
+		if o.dead or o.side == f.side or not sim.sees(f, o) or (sim.chain and sim.chain.truce(f, o)):
 			continue
 		var d := f.pos.distance_to(_aim(f, o))
 		if d >= bd:
@@ -521,13 +543,20 @@ func _resolve(s: Dictionary) -> void:
 	sim.emit("salvo", f.id, tgt.id, tgt.pos, {"cat": s.cat, "hit": s.hit, "dmg": roundi(s.dmg), "acc": s.acc, "band": s.band, "sector": s.sector, "n": s.n})
 	if s.hit and not tgt.dead:
 		tgt.hit_tick = sim.st.tick   # 경파 자연 회복의 기준(M8)
+		if s.sector != "front":
+			tgt.fr_hits.append(sim.st.tick)   # 강습 진형 붕괴 판정(M9)
+			if C.has("assault") and tgt.fr_hits.size() > int(C.assault.open_hits):
+				tgt.fr_hits.pop_front()   # 판정에는 최근 open_hits개만 필요하다
+		if sim.chain:
+			sim.chain.on_hit(f, tgt)   # 투항 중 연합의 명중은 의심을 올린다
 		var loss := apply_hull(f, tgt, s.dmg, s.band, s.sector, s.eid)
 		if sim.morale:
 			sim.morale.hit(tgt, loss, s.wband, s.sector)
 
 # ============================================================ 피해 적용
 # 선체 → 손실 척 수(누적 단조) → 맞은 방향 배분 → 손상 단계 → 표시 척 수
-func apply_hull(src: FleetState, tgt: FleetState, dmg: float, bd: String, sec: String, eid: int) -> int:
+# heavy_bp ≥ 0이면 이탈 중 대파 비중을 거리대 대신 이 값으로 쓴다(화공 0.25, §4.11)
+func apply_hull(src: FleetState, tgt: FleetState, dmg: float, bd: String, sec: String, eid: int, heavy_bp := -1) -> int:
 	if tgt.dead:
 		return 0
 	var loss := mini(roundi(dmg), tgt.hull)
@@ -536,7 +565,7 @@ func apply_hull(src: FleetState, tgt: FleetState, dmg: float, bd: String, sec: S
 	var want := total0(tgt) * cum / tgt.max_hull
 	var k := 0
 	while tgt.lost_ships < want:
-		_depart_one(tgt, bd, sec, eid, k)
+		_depart_one(tgt, bd, sec, eid, k, heavy_bp)
 		k += 1
 	_wound(tgt)
 	refresh_range(tgt)
@@ -564,7 +593,7 @@ func _pick_type(f: FleetState, group: Array) -> String:
 	return best
 
 # 이탈 한 척: 맞은 방향 노출 함종 60%, 나머지 40%. 각 묶음에서는 척 수가 가장 많은 함종부터(함종 ID 순 동률).
-func _depart_one(f: FleetState, bd: String, sec: String, eid: int, k: int) -> void:
+func _depart_one(f: FleetState, bd: String, sec: String, eid: int, k: int, heavy_override := -1) -> void:
 	var expo: Array = _exposure(f, sec)
 	var rest: Array = []
 	var all_ids: Array = f.comp0.keys()
@@ -589,7 +618,7 @@ func _depart_one(f: FleetState, bd: String, sec: String, eid: int, k: int) -> vo
 		s[1] -= 1
 	else:
 		s[0] -= 1
-	var heavy_bp: int = int(C.stage.heavy_share_bp[bd])
+	var heavy_bp: int = int(C.stage.heavy_share_bp[bd]) if heavy_override < 0 else heavy_override
 	if sim.rng.bp(sim.st.tick, eid, 1 + k + 1) < heavy_bp:
 		s[STAGE_HEAVY] += 1
 	else:

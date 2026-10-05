@@ -108,3 +108,14 @@ var sup_n := 0                # 보급함 전대: 지난번 보급함 수(재고
 var sup_ammo := 0             # 보급함 전대 재고: 탄약 단위
 var sup_mat := 0              # 보급함 전대 재고: 물자
 var supplied := 0             # 끝낸 보급 주기 수(통계)
+
+# --- M9 지휘 승계·강습 ---
+var level := 1                # 지휘관 레벨(승계 순서. 데이터에 없으면 1)
+var vice: Dictionary = {}     # 전대 부지휘관 정의 {id, name, command, might, intellect, traits}. 없으면 빈 사전
+var staff: Array = []         # 전대 참모 정의 목록
+var cmdr_state := "unhurt"    # 전대 지휘관 상태: unhurt | light | severe | killed | captured (악화 방향으로만, G8-04)
+var cmdr_sub := ""            # 지휘관이 지휘 불능이라 능력치를 이은 사람(부지휘관 → 첫 참모). ""이면 없음
+var confuse_until := -1       # 이 틱 전까지 명령 혼선(승계). 지휘 공백이면 아주 큰 값
+var fr_hits: Array[int] = []  # 최근 측면·후면 명중 틱(강습 진형 붕괴 판정)
+var assault_cd := 0           # 이 틱부터 다시 강습할 수 있다
+var boarded := false          # 기함 진입을 당해 지휘관 보정이 사라졌다
