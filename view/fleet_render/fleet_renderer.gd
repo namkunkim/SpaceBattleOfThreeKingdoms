@@ -62,6 +62,13 @@ class Slot:
 	var tau := 0.5
 	var phase := 0.0
 	var trail := 0.0             # 항적 세기 0~1(속도에 따라)
+	var trail_sent := 0.0        # 마지막으로 MultiMesh에 쓴 항적 값(변화가 작으면 다시 쓰지 않는다)
+	var scl := Vector3.ONE       # 선체 배율(함종·기함)
+	var gsz := 0.4               # 엔진광 크기
+	var cph := 1.0               # 흔들림 위상의 cos/sin(갱신마다 삼각함수를 부르지 않으려고 미리 계산)
+	var sph := 0.0
+	var cph2 := 1.0
+	var sph2 := 0.0
 	var half_len := 0.4
 	var rank := 0.0
 	var alive := true
@@ -309,34 +316,49 @@ func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 	v.last_rot = frot
 	if not moved and v.rest >= 3:
 		return
-	var sway := 1.0 if moved else 0.0
+	var fb := Basis(Vector3.UP, frot)
 	var h_fleet := -float(sq.heading) - PI   # 전대 방향의 모델 yaw
+	var ca := cos(clock * 0.9)
+	var sa := sin(clock * 0.9)
+	var cb := cos(clock * 0.7)
+	var sb := sin(clock * 0.7)
+	var sw := SWAY if moved else 0.0
 	var maxerr := 0.0
 	var maxtr := 0.0
 	var yk := 1.0 - exp(-step / 0.35)
-	for s in v.slots:
+	var eps2 := MOVE_EPS * MOVE_EPS
+	var inv := 1.0 / step
+	var gl := v.glow.multimesh
+	var gi := -1
+	for s: Slot in v.slots:
+		gi += 1
 		if not s.alive:
 			continue
-		var t := _target(s, fpos, frot, sway)
-		var k := 1.0 - exp(-step / s.tau)
-		var np: Vector3 = s.pos.lerp(t, k)
-		s.vel = (np - s.pos) / step
-		s.pos = np
-		maxerr = maxf(maxerr, np.distance_squared_to(t))
+		var t := fpos + fb * s.home
+		if sw > 0.0:
+			t.x += sw * (sa * s.cph + ca * s.sph)
+			t.z += sw * (cb * s.cph2 - sb * s.sph2)
+		var d := (t - s.pos) * (step / (s.tau + step))   # 지수 추종의 유리 근사(안정, 오버슈트 없음)
+		s.pos += d
+		s.vel = d * inv
+		var e2 := (t - s.pos).length_squared()
+		maxerr = maxf(maxerr, e2)
+		var sp2 := s.vel.length_squared()
 		var want := h_fleet
-		if s.vel.length() > MOVE_EPS:
+		if sp2 > eps2:
 			want = -atan2(s.vel.z, s.vel.x) - PI
 		s.yaw = lerp_angle(s.yaw, want, yk)
-		v.mmis[s.cls].multimesh.set_instance_transform(s.idx, _ship_xform(s))
-		s.trail = lerpf(s.trail, smoothstep(MOVE_EPS, 2.5, s.vel.length()), 0.3)
+		var c := cos(s.yaw)
+		var sn := sin(s.yaw)
+		var mm: MultiMesh = v.mmis[s.cls].multimesh
+		mm.set_instance_transform(s.idx, _xform_cs(s, c, sn))
+		s.trail += (smoothstep(MOVE_EPS, 2.5, sqrt(sp2)) - s.trail) * 0.3
 		maxtr = maxf(maxtr, s.trail)
-		v.mmis[s.cls].multimesh.set_instance_custom_data(s.idx, Color(s.trail, 0.0, 0.0, 0.0))
-	var gi := 0
-	for s in v.slots:
-		if s.alive:
-			var sz: float = s.half_len * (0.6 if s.cls != ESCORT else 0.5)
-			v.glow.multimesh.set_instance_transform(gi, _glow_xform(s, sz))
-		gi += 1
+		if absf(s.trail - s.trail_sent) > 0.02:
+			s.trail_sent = s.trail
+			mm.set_instance_custom_data(s.idx, Color(s.trail, 0.0, 0.0, 0.0))
+		# 엔진광은 선미(전방의 반대)에: 전방 = (-cos yaw, 0, sin yaw)
+		gl.set_instance_transform(gi, Transform3D(Basis.from_scale(Vector3.ONE * s.gsz), s.pos + Vector3(c, 0.0, -sn) * (s.half_len * 0.98)))
 	v.rest = v.rest + 1 if (maxerr < 0.0004 and maxtr < 0.02) else 0
 
 # 진형이 바뀌면 새 슬롯을 앞쪽 순서대로 기존 함선에 다시 배정한다(함종 구성은 그대로).
@@ -405,8 +427,14 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 		s.home = Vector3(p.z * S, p.y + jr.randf_range(-0.06, 0.06), -p.x * S)
 		s.tau = lerpf(TAU_MIN, TAU_MAX, jr.randf())
 		s.phase = jr.randf() * TAU
+		s.cph = cos(s.phase)
+		s.sph = sin(s.phase)
+		s.cph2 = cos(s.phase * 1.3)
+		s.sph2 = sin(s.phase * 1.3)
 		var L: float = CLASS_LEN[s.cls] * HULL_STRETCH.x * (1.8 if s.flag else 1.0)
 		s.half_len = L * 0.5
+		s.scl = HULL_STRETCH * ((CLASS_LEN[s.cls] / MODEL_LEN) * (1.8 if s.flag else 1.0))
+		s.gsz = s.half_len * (0.6 if s.cls != ESCORT else 0.5)
 		s.idx = per_class[s.cls].size()
 		per_class[s.cls].append(s)
 		v.slots.append(s)
@@ -467,8 +495,11 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 	v.lod = 1
 
 func _ship_xform(s: Slot) -> Transform3D:
-	var k: float = (CLASS_LEN[s.cls] / MODEL_LEN) * (1.8 if s.flag else 1.0)
-	return Transform3D(Basis(Vector3.UP, s.yaw) * Basis.from_scale(HULL_STRETCH * k), s.pos)
+	return _xform_cs(s, cos(s.yaw), sin(s.yaw))
+
+# 회전 행렬 Basis(UP, yaw)와 배율을 직접 조립한다(갱신 루프의 비용을 줄이려고).
+func _xform_cs(s: Slot, c: float, sn: float) -> Transform3D:
+	return Transform3D(Basis(Vector3(c * s.scl.x, 0.0, -sn * s.scl.x), Vector3(0.0, s.scl.y, 0.0), Vector3(sn * s.scl.z, 0.0, c * s.scl.z)), s.pos)
 
 # 선체 전방(월드). 모델 yaw a = -h - PI 이므로 전방각 h = -a - PI, 전방 = (cos h, 0, sin h).
 func _fwd(s: Slot) -> Vector3:
