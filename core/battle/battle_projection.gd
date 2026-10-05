@@ -15,6 +15,12 @@ static func build(sim: BattleSim, side: int) -> Dictionary:
 			var q := squadron(st, f)
 			if sim.supply and f.side == side:
 				q.supply = sim.supply.squadron_state(f)   # M8: 배정 공급원·진행·재고. 적 항목에는 넣지 않는다
+			if sim.cmd and f.side == side:
+				# M9: 지휘관 상태·이은 사람·혼선 남은 초(지휘 공백이면 -1)·불이익 단계
+				q.commander_state = f.cmdr_state
+				q.commander_sub = f.cmdr_sub
+				q.confusion_s = (-1.0 if f.confuse_until >= CommandCore.FOREVER else maxf(0.0, float(f.confuse_until - st.tick) / st.hz)) if sim.cmd.confused(f) else 0.0
+				q.penalty_stages = sim.cmd.stages(f)
 			sqs.append(q)
 	if fog:
 		# 안개(M6): 적은 진영 접촉표의 확인·추정·상실 접촉만, 줄인 형태로 준다. 미탐지 적은 어디에도 없다.
@@ -61,6 +67,10 @@ static func build(sim: BattleSim, side: int) -> Dictionary:
 		d.army_morale_bp = {"own": sim.morale.army_bp(side), "foe": sim.morale.army_bp(1 - side)}
 		d.morale_crisis = sim.morale.army_bp(side) < sim.morale.crisis_bp()
 		d.time_limit_s = int(sim.salvo.C.victory.time_limit_s)
+	if sim.chain:
+		d.chain_op = sim.chain.view(side)   # M9 화공: 상태·의심·기류 창(공개), 운용 진영에는 자산·불붙은 전대
+	if sim.cmd:
+		d.fleet_groups = sim.cmd.group_view(side)   # M9 함대 지휘(현재 제독·기함 전대·지휘 공백). 자기 진영만
 	return d
 
 # 적 접촉의 공개 형태. 확인: 이름·역할·초상·방향과 전력 구간. 추정·상실: 위치(마지막으로 안 곳)와 오차 반경, 신뢰도뿐이다.
@@ -77,6 +87,9 @@ static func contact(sim: BattleSim, c: Dictionary) -> Dictionary:
 		d.faction_id = t.faction
 		d.heading = t.heading
 		d.strength_band = sim.detect.strength_band(t)
+		if sim.chain:
+			d.dense = sim.chain.dense(t)   # 화공 표적 조건(밀집 여부)만 공개한다. 진형 ID는 공개하지 않는다(M9)
+			d.feigning = sim.chain.truce_id(t.id)
 		d.max_strength_band = int(sim.detect.D.strength_bands)
 	return d
 

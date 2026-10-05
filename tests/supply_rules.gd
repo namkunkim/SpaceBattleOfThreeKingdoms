@@ -250,5 +250,15 @@ func _run() -> void:
 	var fp := rc.fingerprint()
 	rc.st.fleets[0].sup_prog += 1
 	if not TestCheck.ok(self, rc.fingerprint() != fp, "지문이 보급 상태를 포함"): return
+	# --- 11. 정지 판정은 초당 값(still_eps_px_s 0.5)이다: 10Hz·20Hz에서 같은 초당 이동이 같은 판정 (REVIEW-M8 F-4) ---
+	for hz in [10, 20]:
+		for v in [0.4, 0.6]:
+			var hs := _sim([_d("H", 800, 450, [["SHP-04", 1]])])
+			hs.st.hz = hz
+			var hsup := SupplyCore.new(hs, S)
+			var hf: FleetState = hs.st.fleets[0]
+			hf.pos.x += v / hz
+			hsup.step()
+			if not TestCheck.ok(self, hf.sup_still == (v < float(S.still_eps_px_s)), "%dHz 초당 %.1fpx: 정지 %s" % [hz, v, hf.sup_still]): return
 	print("SUPPLY_RULES_PASS")
 	quit(0)

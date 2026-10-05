@@ -795,6 +795,7 @@ func _build_sound() -> void:
 	_hook_buttons(self)
 	renderer.fx_event.connect(func(k: String): sound.play(k))
 	battle.sfx_event.connect(func(k: String): sound.play(k))
+	battle.sfx_loop.connect(func(k: String, lv: float): sound.set_loop(k, lv))
 	pacing.incoming.connect(func(): sound.play("warn_branch"))
 	pacing.changed.connect(func():
 		if src.state() == "pause":

@@ -39,7 +39,7 @@ func _bias(sim: BattleSim, f: FleetState, P: Dictionary, view: Dictionary, weak:
 	return a
 
 # ============================================================ 입력: 공개 투영에서 적 접촉만
-func _foes(view: Dictionary, side: int) -> Array[Dictionary]:
+func _foes(view: Dictionary, side: int, dense_ids: Array = []) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	for s in view.squadrons:
 		if s.side == side or s.get("dead", false):
@@ -50,7 +50,8 @@ func _foes(view: Dictionary, side: int) -> Array[Dictionary]:
 		var band: int = int(s.get("strength_band", 0))
 		if band == 0 and s.has("ships_milli"):
 			band = clampi(ceili(4 * float(s.ships_milli) / float(s.max_ships_milli)), 1, 4)
-		out.append({"id": s.id, "pos": s.pos, "state": state, "conf_bp": int(s.get("conf_bp", 10000)), "band": band if band > 0 else 4})
+		out.append({"id": s.id, "pos": s.pos, "state": state, "conf_bp": int(s.get("conf_bp", 10000)), "band": band if band > 0 else 4,
+			"dense": bool(s.get("dense", dense_ids.has(s.get("formation_id", ""))))})
 	return out
 
 # ============================================================ 한 번 생각
@@ -69,7 +70,9 @@ func _think_side(sim: BattleSim, side: int) -> void:
 	var view := sim.projection(side)
 	last_view[side] = view
 	last_known[side] = sim.detect.contacts[side].keys() if sim.detect else []
-	var foes := _foes(view, side)
+	var foes := _foes(view, side, sim.chain.X.dense if sim.chain else [])
+	if sim.chain and side == 1:
+		foes.assign(foes.filter(func(c): return not sim.chain.truce_id(int(c.id))))   # 투항 중인 황개는 표적이 아니다(공개된 사실)
 	var lvl: Dictionary = sim.rs.difficulty_ai() if side == 1 else A.delegate_level
 	var allies: Array[Vector2] = []
 	for s in view.squadrons:
@@ -82,6 +85,8 @@ func _think_fleet(sim: BattleSim, f: FleetState, side: int, foes: Array[Dictiona
 	var st := sim.st
 	if sim.morale and sim.morale.fleeing(f):
 		return   # 퇴각 중(강제·명령)이다. 탈출 지점까지 간다
+	if sim.chain and side == 0 and sim.chain.host_think(f, foes):
+		return   # 황개 화공대: 화공 일정(M9 chain_host_ai)
 	var F: Dictionary = A.factions.get(f.faction, A.factions.cao_cao)
 	var P: Dictionary = A.postures[posture_of(f)]
 	var min_conf := int(F.estimated_min_conf_bp)
@@ -140,7 +145,7 @@ func _think_fleet(sim: BattleSim, f: FleetState, side: int, foes: Array[Dictiona
 	if f.charge > 0:
 		chase_r = float(sim.salvo.C.bands.assault_r)
 	var dir: Vector2 = (best.pos - f.pos) / maxf(d, 0.001)
-	var aim: Vector2 = best.pos - dir * D
+	var aim: Vector2 = _linked(sim, f, best.pos - dir * D)
 	if f.pursue_until > st.tick and f.pursue_id == best.id:
 		_do(sim, f, "ai_target", best.id)   # 추격: 붙을 때까지 쫓는다
 	elif d > D + slack:
@@ -154,6 +159,8 @@ func _think_fleet(sim: BattleSim, f: FleetState, side: int, foes: Array[Dictiona
 		if f.has_move:
 			_do(sim, f, "ai_move", -1, f.pos)
 	_charge(sim, f, P, a, d)
+	if sim.assault:
+		sim.assault.ai_try(f, best)   # 강습 거리에서 진형이 열렸으면 강습(M9)
 
 # 현재 목표 거리: 첫 명중 뒤 포화 → 교전 → 강습 일정(realtime_rules.range_band_hold). a가 높으면 단계를 짧게 쓴다.
 func _desired(sim: BattleSim, f: FleetState, F: Dictionary, P: Dictionary, a: float) -> float:
@@ -230,6 +237,21 @@ func _charge(sim: BattleSim, f: FleetState, P: Dictionary, a: float, d: float) -
 		return
 	sim.apply(BattleSim.command(f.side, [f.id], "charge"))
 	stats.charge += 1
+
+# 연환 대형 유지(§4.11, 제안값): 조조의 밀집 전대는 가장 가까운 밀집 아군과 120~180 간격을 유지하려 한다.
+# 간격이 벌어지면 이동 목표를 그 아군 쪽 150 지점으로 cohesion만큼 끌어당긴다(가까워지는 쪽은 전대 간격 규칙이 막는다)
+func _linked(sim: BattleSim, f: FleetState, aim: Vector2) -> Vector2:
+	if sim.chain == null or f.side != 1 or not sim.chain.dense(f):
+		return aim
+	var sp: Array = sim.rs.rt("chain_operation.linked_formation_ai.spacing")
+	var near: FleetState = null
+	for o in sim.st.alive(1):
+		if o != f and sim.chain.dense(o) and sim.st.tick >= o.wait and (near == null or f.pos.distance_to(o.pos) < f.pos.distance_to(near.pos)):
+			near = o
+	if near == null or f.pos.distance_to(near.pos) <= float(sp[1]):
+		return aim
+	var keep := near.pos + (f.pos - near.pos).normalized() * (float(sp[0]) + float(sp[1])) / 2.0
+	return aim.lerp(keep, float(sim.chain.X.linked.cohesion))
 
 func _do(sim: BattleSim, f: FleetState, kind: String, target_id := -1, point := Vector2.ZERO) -> void:
 	sim.apply(BattleSim.command(f.side, [f.id], kind, target_id, point))

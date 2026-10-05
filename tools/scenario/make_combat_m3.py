@@ -37,6 +37,9 @@ def main():
     fc = load("red-cliffs-fast-craft-rules.json")
     sc = fc["supply_contract"]
     inv = fc["supply_inventory_contract"]
+    chain = load("red-cliffs-chain-explosion-rules.json")
+    ce = effects["chain_explosion"]
+    clr = setup["command_limit_rules"]
 
     cost = {s["id"]: s["unit_cost"] for s in setup["ship_types"]}
     types = {}
@@ -295,10 +298,69 @@ def main():
                 "priority": ["ammo_ratio_asc", "still_since_asc", "squadron_id_asc"],
                 "priority_note": "본편은 남은 연료 비율 → 들어온 턴 → 전대 ID. 연료가 없어 탄약 비율로 옮겼다(§4.13)",
                 "stationary_s": sc["required_stationary_turns"] * 60,
-                "still_eps": 0.05,
+                "still_eps_px_s": 0.5,
                 "repair": {"materials": 1, "light_recover_s": 120},
-                "status": "proposed (Q48: 본편 1턴 정지 → 60초. 손상된 보급함 전대의 처리량 50%·25%는 본편의 턴당 슬롯 크레딧 대신 진행 속도로 옮겼다(60초 → 120초·240초). 정지는 틱당 이동 still_eps px 이하. 기지는 재고 무한·수리 물자 없음. 수리: 주기마다 물자 1로 중파 1척 → 경파, 경파는 마지막 피격 뒤 120초면 무손상(P16))",
+                "status": "proposed (Q48: 본편 1턴 정지 → 60초. 손상된 보급함 전대의 처리량 50%·25%는 본편의 턴당 슬롯 크레딧 대신 진행 속도로 옮겼다(60초 → 120초·240초). 정지는 초당 이동 still_eps_px_s px 이하(틱 폭으로 환산). 기지는 재고 무한·수리 물자 없음. 수리: 주기마다 물자 1로 중파 1척 → 경파, 경파는 마지막 피격 뒤 120초면 무손상(P16))",
                 "source": "본편 red-cliffs-fast-craft-rules.json supply_contract·supply_inventory_contract(재고 손실 floor(재고 × (N − d) / N), 전량 보충만, 같은 세력 기지에서 재적재)",
+            },
+            # M9 화공(§4.11). 발동 조건·위력·번짐·의심·차단 수치는 시나리오 realtime_rules.chain_operation이 정본이고,
+            # 여기에는 본편 연쇄 폭발 규칙(진형 분류, 흐름 방향)과 전투 효과(센서 장애, 임시 위험 지대), 실시간 AI 값만 둔다
+            "stratagem": {
+                "dense": chain["dense_formation_ids"],
+                "dispersed": chain["dispersed_formation_ids"],
+                "disperse_to": "FRM-05",
+                "wind_dir": chain["flow"]["direction"],
+                "sensor_bp": ce["sensor_modifier_percent"] * 100,
+                "sensor_s": ce["sensor_duration_turns"] * 60,
+                "hazard": {
+                    "size": [ce["temporary_terrain"]["width"], ce["temporary_terrain"]["height"]],
+                    "duration_s": ce["temporary_terrain"]["duration_turns"] * 60,
+                    "move_cost_bp": ce["temporary_terrain"]["effects"]["movement_cost_basis_points"],
+                    "sensor_bp": ce["temporary_terrain"]["effects"]["observer_sensor_percent"] * 100,
+                    "conceal": ce["temporary_terrain"]["effects"]["target_concealment_points"],
+                    "range_bp": ce["temporary_terrain"]["effects"]["weapon_range_basis_points"],
+                    "arc_deg": ce["temporary_terrain"]["effects"]["weapon_arc_delta_deg"],
+                },
+                "interceptor": {"ship_types": ["SHP-07"], "equipment": ["FAST-EQ-INTERCEPT"]},
+                "shock_ref_power": ce["reactor_damage_percent_of_pre_damage_maximum_hull"] / 100,
+                "cheng_yu_id": "CHR-0031",
+                "detected_focus": {"radius": 400, "duration_s": 60},
+                "host_ai": {"standoff": 280, "stage": 300, "approach": 120, "fire_tol": 2, "late_fire_s": 160, "letter_margin_s": 10,
+                            "slack": 5, "back_step": 30, "cone_margin_deg": 10},
+                "linked": {"cohesion": 0.5},
+                "status": "proposed (센서 장애·위험 지대는 본편 2턴 → 120초. 간파 뒤 집중 사격 반경 400·60초, 황개 AI 대기 300·접근 120·창 끝 20초 전 240 안 발동, 연환 간격 끌림 0.5는 실시간 제안값)",
+                "source": "본편 red-cliffs-chain-explosion-rules.json(밀집·분산 진형, 흐름 +X ±60°), red-cliffs-combat-effects-rules.json chain_explosion(센서 −40%, 160×160 위험 지대)",
+            },
+            # M9 지휘 한도와 승계 불이익(§4.14). 혼선 단계·단계당 효과는 시나리오 realtime_rules.commander_succession
+            "command": {
+                "limit_base": clr["recommended_base_cost"],
+                "limit_per_command": clr["recommended_cost_per_command"],
+                "over_tier_ratio": clr["over_tier_ratio"],
+                "max_tier": clr["max_penalty_tier"],
+                "injury_bp": {"severe_below": 4000, "light_below": 7500},
+                "status": "proposed (한도 비용은 남은 척의 함종 비용 합. 전대 지휘관이 중상이면 부지휘관 → 첫 참모가 능력치를 잇는다)",
+                "source": "본편 red-cliffs-demo-setup.json command_limit_rules, G8-04 4·5행 선체 구간(척 수 비율)",
+            },
+            # M9 강습(§4.11 강습, 정본 combat.md §6). 정본에 확률 수치가 없어 모두 제안값이다
+            "assault": {
+                "carrier": "SHP-01",
+                "open_window_s": 30,
+                "open_hits": 3,
+                "assault_type_might": 85,
+                "assault_type_hits": 2,
+                "elite_ids": ["CHR-0107", "CHR-0130"],
+                "elite_hits": 1,
+                "base_bp": 5000,
+                "might_bp": 100,
+                "min_bp": 1000,
+                "max_bp": 9000,
+                "forced_div": 3,
+                "unit": {"capture_ships": 1, "target_morale_bp": 1500},
+                "flagship": {"target_morale_bp": 4000, "escort_trait": "호치", "escort_trait_mul_bp": 5000},
+                "forced_fail": {"carrier_loss": 1, "own_morale_bp": 3000},
+                "cooldown_s": 60,
+                "status": "proposed (성공률 = clamp(5000 + (침입측 최고 무력 − 방어측 최고 무력) × 100, 1000, 9000), 강행 돌입은 1/3. 강습형 = 무력 85 이상, 특급 = 관우·장비(정본 명단 중 이 판에 있는 인물). 일기토는 후속)",
+                "source": "정본 combat.md §6.1~§6.2-b, 제안서 §4.11 강습",
             },
         },
     }

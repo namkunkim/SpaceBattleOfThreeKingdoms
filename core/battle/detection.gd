@@ -85,6 +85,8 @@ func sensor_of(f: FleetState) -> int:
 	var bp: int = int(sim.salvo.C.formations[sim.salvo._form_id(f)].detection_bp)
 	var lim: Array = D.sensor_bp_clamp
 	bp += terr.sensor_bp(f.pos, int(lim[0]), int(lim[1]))
+	if sim.chain:
+		bp += sim.chain.sensor_bp(f.side)   # 화공 직후 조조 진영 센서 −40% 120초(M9)
 	var ship := _sum(f, D.ship_sensor, D.equip_sensor)
 	var s := (ship * (BattleRules.BP + bp) + BattleRules.BP / 2) / BattleRules.BP
 	var iq := int(f.stats.get("intellect", 0))
