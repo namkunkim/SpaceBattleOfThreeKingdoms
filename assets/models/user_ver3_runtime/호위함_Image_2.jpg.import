@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://wbd3jy3448y7"
-path="res://.godot/imported/호위함_Image_2.jpg-8e779f9ecbe9ba59936156309c250996.ctex"
+path.s3tc="res://.godot/imported/호위함_Image_2.jpg-8e779f9ecbe9ba59936156309c250996.s3tc.ctex"
+path.etc2="res://.godot/imported/호위함_Image_2.jpg-8e779f9ecbe9ba59936156309c250996.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "b3c00d7018f1360518dfd505f92f0662"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/user_ver3_runtime/호위함_Image_2.jpg"
-dest_files=["res://.godot/imported/호위함_Image_2.jpg-8e779f9ecbe9ba59936156309c250996.ctex"]
+dest_files=["res://.godot/imported/호위함_Image_2.jpg-8e779f9ecbe9ba59936156309c250996.s3tc.ctex", "res://.godot/imported/호위함_Image_2.jpg-8e779f9ecbe9ba59936156309c250996.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -39,5 +41,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=0
+process/size_limit=1024
 detect_3d/compress_to=1

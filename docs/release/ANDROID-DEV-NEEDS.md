@@ -1,0 +1,47 @@
+# 안드로이드 개발에 필요한 것
+
+1차 목표는 안드로이드 태블릿(Q56). 이미 해 둔 준비와 실기기 확인 항목은 `docs/ui/ANDROID-EXPORT.md`에 있다. 이 문서는 **앞으로 필요한 것**만 적는다. 갱신: 2026-10-05.
+
+## 1. 개발 환경 (2026-10-05 설치 완료, 디버그 APK 내보내기 성공)
+
+설치 위치: 내보내기 템플릿 `%APPDATA%\Godot\export_templates\4.7.2.stable`, JDK 17(Temurin 17.0.20) `C:\Program Files\Eclipse Adoptium\jdk-17.0.20.101-hotspot`, SDK `C:\Users\nk782\Tools\AndroidSdk`(build-tools 36.1.0, platform android-36.1, `PATH`에 platform-tools, `ANDROID_HOME` 설정). 편집기 설정의 JDK·SDK 경로도 맞췄다. 남은 것은 태블릿 연결 확인뿐이다. 아래 표는 설치 목록이다.
+
+| 필요 | 비고 |
+|---|---|
+| Godot 4.7.2 내보내기 템플릿 | 편집기 → 내보내기 템플릿 관리. 현재 `%APPDATA%\Godot\export_templates` 비어 있음 |
+| JDK 17 | 편집기 설정 → 내보내기 → Android → Java SDK 경로 |
+| Android SDK | 명령줄 도구, platform-tools(adb), build-tools, platform. 정확한 버전은 편집기 내보내기 창 안내를 따른다 |
+| 시험 태블릿 1대 | 탭 S7 이상(Q57)이면 기준 기기와 같다. 개발자 옵션 + USB 디버깅. Wi-Fi 디버깅(`adb pair`)도 가능 |
+| 디버그 키스토어 | 편집기가 자동 생성하는 것을 쓴다. 릴리스용과 섞지 않는다 |
+
+확인: `adb devices`에 기기가 보이고, 프리셋 "Android 태블릿"의 "원격 디버그로 실행"이 성공하면 끝.
+
+## 2. 프로젝트에 아직 비어 있는 것
+
+- [ ] **런처 아이콘** `export_presets.cfg`의 `launcher_icons/*` 3개가 빈 값(기본 Godot 아이콘). 192×192 + 적응형 전경·배경 432×432
+- [ ] **뒤로 가기 버튼 처리** (Q58 확정, 구현 대기) 코드에 `NOTIFICATION_WM_GO_BACK_REQUEST` 처리가 없다. 전투 중 일시정지, 일시정지 화면에서 재개, 타이틀에서 종료 확인, 그 밖의 화면은 한 단계 뒤로. `application/config/auto_accept_quit=false` 필요 여부를 구현 때 확인한다
+- [ ] **저장 경로** `user://settings.cfg`만 쓴다. 안드로이드에서도 `user://`로 동작하므로 변경 불필요. 진행 저장이 생기면 같은 경로에 둔다
+- [ ] **릴리스 서명·AAB** 지금은 APK 개발용. Play 배포는 Gradle 빌드(`gradle_build/use_gradle_build=true`, 안드로이드 빌드 템플릿 설치)와 릴리스 키스토어가 필요하다. 키스토어와 비밀번호는 저장소에 넣지 않는다(환경변수 또는 편집기 설정). 배포는 범위 밖이면 보류
+- [x] **최소 사양** 갤럭시 탭 S7 이상으로 확정(Q57): 스냅드래곤 865+, Adreno 650, RAM 6GB, 2560×1600, 안드로이드 10(SDK 29) 이상, arm64, GLES3. Gradle 빌드를 쓰게 되면 `gradle_build/min_sdk=29`로 둔다(그 전에는 효력 없음)
+- [x] **APK 용량** 200MB → 78MB(2026-10-05). 함선 모델 텍스처 24장(`assets/models/user_ver3_runtime/*_Image_*.jpg.import`)을 무손실 2048²에서 VRAM 압축 + `size_limit=1024`로, `quaternius_ultimate_spaceships`(29MB, 게임 코드가 안 씀)를 내보내기 제외로 바꿨다. 남은 큰 것: `libgodot_android.so` 24MB, 한글 폰트 OTF 4종 약 25MB(서브셋하면 더 줄지만 글리프 누락 위험이라 보류)
+
+## 3. 실기기에서만 정할 수 있는 것 (M11)
+
+1. 표시 밀도 기본값. PC 기준선은 함선 수와 FPS가 무관했다. `tests/bench_density.gd`를 태블릿에서 돌릴 수 있게 하거나 설정 화면 FPS 표시로 대신한다
+2. 빛 번짐 후처리 켬·끔 FPS 차이(채움률 병목 의심)
+3. 터치: 길게 누르기 0.45초, 선택 감속(Q31·Q36), 버튼 크기 100%
+4. 안전 영역: 카메라 구멍·내비게이션 바·화면 회전
+5. 백그라운드 복귀 자동 일시정지(`session_guard.gd`), 진동
+6. 발열·배터리: 15분 판을 연속 3판 돌려 FPS 하락 확인
+
+## 4. 진행 순서 제안
+
+1. 환경 설치 → 빈 APK 실행 확인(§1)
+2. 뒤로 가기·아이콘(§2 앞 두 개). 코드는 UI 세션 몫
+3. 실기기 측정(§3 1~2) → 밀도·빛 번짐 기본값 확정
+4. 터치·안전 영역 확인(§3 3~5) → 문제는 `CHECKLIST-OPEN.md`에 항목으로
+5. 서명·AAB는 배포를 정한 뒤
+
+## 5. 사용자 결정이 필요한 것
+
+- Play 스토어 배포 여부: **차후 결정**(2026-10-05). 그때까지는 APK 직접 설치만, §2의 서명·AAB 항목은 보류

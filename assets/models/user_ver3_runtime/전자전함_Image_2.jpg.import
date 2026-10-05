@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b64gca2mkhg67"
-path="res://.godot/imported/전자전함_Image_2.jpg-48489a990f5c9cfe4005f5203f0d1b03.ctex"
+path.s3tc="res://.godot/imported/전자전함_Image_2.jpg-48489a990f5c9cfe4005f5203f0d1b03.s3tc.ctex"
+path.etc2="res://.godot/imported/전자전함_Image_2.jpg-48489a990f5c9cfe4005f5203f0d1b03.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "130031d4babdd5351e293f03f9fddde0"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/user_ver3_runtime/전자전함_Image_2.jpg"
-dest_files=["res://.godot/imported/전자전함_Image_2.jpg-48489a990f5c9cfe4005f5203f0d1b03.ctex"]
+dest_files=["res://.godot/imported/전자전함_Image_2.jpg-48489a990f5c9cfe4005f5203f0d1b03.s3tc.ctex", "res://.godot/imported/전자전함_Image_2.jpg-48489a990f5c9cfe4005f5203f0d1b03.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -39,5 +41,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=0
+process/size_limit=1024
 detect_3d/compress_to=1
