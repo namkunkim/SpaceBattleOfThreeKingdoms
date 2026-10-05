@@ -60,17 +60,23 @@ func click_at(sp: Vector2, btn: int, shift: bool) -> void:
 		_last_click = Time.get_ticks_msec()
 		host.refresh_panel()
 		return
-	if f and f.side == 1:
+	# 왼쪽 탭/클릭: 선택, 적 = 공격(선택 있을 때), 빈 곳 = 해제. 이동은 터치 끌기·마우스 우클릭.
+	if btn == MOUSE_BUTTON_RIGHT and not host.my_sel().is_empty():
+		if f and f.side == 1:
+			cmds.order_attack(f)
+		elif f == null:
+			cmds.order_move(host.s2w(sp))
+		return
+	if f and f.side == 1:   # 선택이 있으면 공격 지정, 없으면 정보 보기
 		if not host.my_sel().is_empty():
 			cmds.order_attack(f)
 		else:
 			host.inspect = f
 			host.refresh_panel()
 		return
-	if f == null and not host.my_sel().is_empty():
-		cmds.order_move(host.s2w(sp))
-		return
 	if f == null:
+		if not host.multi:   # 다중 모드에서는 선택을 유지한다(범위·추가 선택 중 실수로 풀리지 않게)
+			host.selected.clear()
 		host.inspect = null
 		host.refresh_panel()
 

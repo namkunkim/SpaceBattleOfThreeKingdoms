@@ -79,7 +79,7 @@ func _run() -> void:
 	_touch(0, fp, false)
 	await _settle()
 	if not TestCheck.ok(self, f.target == foe, "drag attack"): return
-	# 5. 빈 곳 끌기 = 화면 이동
+	# 5. 빈 곳 끌기 = 범위 선택(화면은 그대로)
 	var cam0: Vector2 = battle.cam_pos
 	var empty := Vector2.ZERO
 	for cand in [Vector2(800, 560), Vector2(1000, 520), Vector2(600, 600), Vector2(1100, 400), Vector2(500, 420)]:
@@ -92,7 +92,7 @@ func _run() -> void:
 		_move(0, empty, empty + Vector2(-200, 0))
 		_touch(0, empty + Vector2(-200, 0), false)
 		await _settle()
-		if not TestCheck.ok(self, battle.cam_pos.x > cam0.x + 50.0, "pan %s -> %s" % [cam0, battle.cam_pos]): return
+		if not TestCheck.ok(self, battle.cam_pos.is_equal_approx(cam0) and battle.drag.is_empty(), "empty drag does not pan %s -> %s" % [cam0, battle.cam_pos]): return
 	# 6. 두 손가락 확대
 	var z0: float = battle.cam_z
 	_touch(0, Vector2(700, 450), true)

@@ -761,7 +761,7 @@ func _build_commands() -> void:
 	hud.add_child(strip)
 	_anchor(strip, Control.PRESET_BOTTOM_RIGHT, Vector2(Strip.WIDTH, Strip.CELL.y), Vector2(-16, -272))
 	strip.setup(self)
-	# 선택 도구(터치): [다중] [1]~[5] 전대 띠 왼쪽. 번호 탭 = 편성 호출, 길게 누름 = 현재 선택 저장(PC는 Ctrl+숫자)
+	# 선택 도구(터치): [다중] [1]~[5] 오른쪽 가장자리 세로 열. 번호 탭 = 편성 호출, 길게 누름 = 현재 선택 저장(PC는 Ctrl+숫자)
 	multi_btn = W.IconButton.new("", "다중")
 	multi_btn.tooltip_text = "다중 선택: 탭으로 추가·해제, 빈 곳 끌기로 범위 선택"
 	multi_btn.pressed.connect(func(): battle.multi = not battle.multi)
@@ -775,7 +775,8 @@ func _build_commands() -> void:
 		tools.append(gb)
 	for i in tools.size():
 		hud.add_child(tools[i])
-		_anchor(tools[i], Control.PRESET_BOTTOM_RIGHT, Vector2(52, Strip.CELL.y), Vector2(-16 - Strip.WIDTH - 4 - (tools.size() - 1 - i) * 56, -272))
+		# 오른쪽 가장자리 세로 열(작전 목표 아래): 엄지가 닿고 전장 가운데를 가리지 않는다
+		_anchor(tools[i], Control.PRESET_TOP_RIGHT, Vector2(52, 52), Vector2(-16, 216 + i * 56))
 	_set_tab(0)
 
 # 편성 버튼 표시: 빈 번호는 숫자만, 있으면 "번호·인원". 지금 선택과 같으면 강조.

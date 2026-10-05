@@ -2,9 +2,10 @@ class_name TouchController
 extends Node
 
 # 터치 조작(제안서 v0.2 §7.2). 마우스 조작은 POC 입력 처리를 그대로 쓴다.
-#  - 탭: 선택(아군) / 공격(적, 선택이 있을 때) / 이동(빈 곳, 선택이 있을 때)
-#  - 아군 함대에서 끌기: 빈 곳에 놓으면 이동, 적 위에 놓으면 공격, 출발 함대 위로 되돌리면 취소
-#  - 빈 곳에서 끌기: 화면 이동 (다중 모드 `battle.multi`에서는 범위 선택 상자, 아군 탭은 추가/해제)
+#  - 탭: 선택(아군) / 선택이 있으면 적 탭 = 공격, 없으면 정보 / 선택이 있을 때 빈 곳 탭 = 선택 해제
+#  - 선택이 있을 때 끌기(아군 전대 또는 빈 곳에서 시작): 선택 전체 이동. 적 위에 놓으면 공격, 시작 지점으로 되돌리면 취소
+#  - 선택이 없을 때 빈 곳 끌기: 범위 선택 상자(화면 이동은 두 손가락)
+#  - 다중 모드 `battle.multi`: 끌기 = 범위 선택(기존 선택에 더함), 아군 탭 = 추가/해제, 빈 곳 탭은 선택 유지
 #  - 길게 누르기(아군): 선택에 추가/제외
 #  - 두 손가락: 확대·축소와 화면 이동
 #
@@ -21,6 +22,7 @@ var battle: Node
 var touches := {}          # index -> {start, pos, t0}
 var mode := ""             # "", "pending", "pan", "order", "pinch", "long"
 var origin_fleet = null
+var order_from := Vector2.ZERO   # 빈 곳에서 시작한 끌기 명령의 시작 화면 좌표(취소 판정)
 var press_t := 0.0
 var pinch_d := 0.0
 var pinch_c := Vector2.ZERO
@@ -77,7 +79,7 @@ func _touch(e: InputEventScreenTouch) -> void:
 	if mode == "pending":
 		battle._click_at(e.position, MOUSE_BUTTON_LEFT, false)
 	elif mode == "box":
-		battle.input_node.box_select(battle.drag.s, e.position, true)
+		battle.input_node.box_select(battle.drag.s, e.position, false)
 		battle.drag = {}
 	elif mode == "order":
 		_finish_order(e.position)
@@ -104,20 +106,27 @@ func _drag(e: InputEventScreenDrag) -> void:
 				battle.selected.append(origin_fleet)
 				battle.inspect = null
 				battle.refresh_panel()
-		else:
-			mode = "pan"
-	if mode == "pan":
-		battle.cam_pos -= (e.position - last) / battle.cam_z
-		battle._clamp_cam()
-	elif mode == "box":
+		elif not battle.my_sel().is_empty():   # 선택이 있으면 빈 곳(또는 적) 끌기 = 선택 전체 이동
+			mode = "order"
+			order_from = tc.start
+		else:   # 선택이 없으면 끌기 = 범위 선택. 화면 이동은 두 손가락
+			mode = "box"
+			battle.drag = {"s": tc.start, "c": e.position, "btn": -1, "moved": true, "mode": "box", "shift": false, "last": e.position}
+	if mode == "box":
 		battle.drag.c = e.position
 	elif mode == "order":
 		_update_order(e.position)
 
+# 끌기 명령 미리보기. 전대에서 시작했으면 그 전대, 빈 곳에서 시작했으면 선택의 첫 전대에서 그린다.
+# 취소: 시작 지점(전대 또는 처음 짚은 곳) 근처로 되돌려 놓기.
 func _update_order(p: Vector2) -> void:
+	if origin_fleet == null and battle.my_sel().is_empty():   # 끌기 도중 선택 전대가 모두 사라짐
+		order = {}
+		return
 	var tgt = battle._hit_fleet(p)
-	var cancel: bool = origin_fleet != null and p.distance_to(battle.w2s(origin_fleet.pos)) < CANCEL_R
-	order = {"from_fleet": origin_fleet, "to": p, "target": tgt if (tgt and tgt.side == 1) else null, "cancel": cancel}
+	var src = origin_fleet if origin_fleet else battle.my_sel()[0]
+	var start: Vector2 = battle.w2s(origin_fleet.pos) if origin_fleet else order_from
+	order = {"from_fleet": src, "to": p, "target": tgt if (tgt and tgt.side == 1) else null, "cancel": p.distance_to(start) < CANCEL_R}
 	order_preview_changed.emit()
 
 func _finish_order(p: Vector2) -> void:
