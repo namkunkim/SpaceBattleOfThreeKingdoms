@@ -28,10 +28,18 @@ static func flank_rule(r: Dictionary) -> String:
 		return "측면 공격 화력 %s, 배후 공격 %s" % [_pct(fl.side), _pct(fl.rear)]
 	return "측면 명중 %+d%%p·적 사기 타격 %s, 후면 %+d%%p·%s" % [int(fl.side.hit), _x(fl.side.morale), int(fl.rear.hit), _x(fl.rear.morale)]
 
+# 지휘 범위 밖 불이익: POC는 화력 배율, v02는 명중률 −N%p.
+static func out_of_cmd(r: Dictionary) -> String:
+	if r.set == "poc":
+		return "화력 %s" % _pct(r.out_of_cmd_fire).replace("-", "−")
+	return "명중률 −%d%%p" % int(r.out_of_cmd_hit)
+
 static func cmd_range_rule(r: Dictionary) -> String:
-	return "기함 지휘 범위 밖의 함대는 화력 %s" % _pct(r.out_of_cmd_fire).replace("-", "−")
+	return "기함 지휘 범위 밖의 함대는 %s" % out_of_cmd(r)
 
 static func cost_rule(r: Dictionary) -> String:
+	if r.set != "poc":
+		return "돌격: 열 용량 %d%%, 사기 %d%% 이상일 때만" % [roundi(r.charge.heat * 100.0), roundi(r.charge.get("min_morale", 0.6) * 100.0)]
 	return "지휘력으로 미사일(%d)·함재기(%d)·돌격(%d) 사용" % [r.missile.cost, r.fighter.cost, r.charge.cost]
 
 static func defense_rule(r: Dictionary) -> String:
@@ -56,7 +64,7 @@ static func cmd(r: Dictionary, id: String) -> Dictionary:
 				return {"desc": "가장 가까운 적에게 돌입합니다." + (" 방어진형은 풀립니다." if c.get("ends_defense", false) else ""), "fx": fx, "foot": "지속 %d초 · 길게 눌러 확정" % int(c.dur)}
 			return {"desc": "가장 가까운 적에게 돌입합니다. 열 용량의 %d%%를 쓰고, 사기가 안정일 때만 쓸 수 있습니다." % roundi(c.heat * 100.0), "fx": [["열 용량", "%d%%" % roundi(c.heat * 100.0), false]], "foot": "길게 눌러 확정"}
 		"rally":
-			return {"desc": "선택한 함대가 기함 주위로 모여 지휘 범위 안으로 들어옵니다. 범위 밖 함대는 화력 %s입니다." % _pct(r.out_of_cmd_fire).replace("-", "−")}
+			return {"desc": "선택한 함대가 기함 주위로 모여 지휘 범위 안으로 들어옵니다. 범위 밖 함대는 %s입니다." % out_of_cmd(r)}
 		"retreat":
 			return {"desc": "가장 가까운 적의 반대쪽으로 전선을 물립니다.", "foot": "길게 눌러 확정"}
 		"missile":

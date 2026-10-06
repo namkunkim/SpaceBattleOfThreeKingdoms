@@ -219,6 +219,11 @@
 - 테스트: 안개 시작이라 적이 필요한 곳은 `TestPoke.foe_beside`로 적 하나를 옮긴다(`battle_flow`, `smoke`, `pacing`, `decision_flow`, `selection_groups`, `touch_input`, `squadron_strip`, `capture_ui`). `battle_flow`는 CP·미사일·방어진형 단계를 뺐다. 전 테스트 통과(touch_hold·ui_flow 포함).
 - **남은 정리(POC 잔재):** `BattleSource.rules()`의 "poc" 규칙 문구(툴팁 수치), `FleetBattle3D` CMDS·REJECT의 CP 문구와 POC 함수(`power`·`apply_dmg`·`fire_missiles`), 정보 패널 `FORM_NAMES`. `rule_text` 테스트가 POC 대조라 함께 정리해야 한다. 캡처: `capture_ui wu`/`battle`(1920×1200).
 
+## POC 잔재 정리: 화면 문구 (2026-10-07, 구현 세션)
+
+- `BattleSource.rules()`가 salvo 프로필이면 코어 `combat` 값으로 `set:"v02"`를 만든다(측면 +10%p·후면 +25%p 명중, 사기 ×1.25·×1.5, 지휘 범위 밖 명중 −10%p, 돌격 열 40%·사기 60%). `has_command`가 salvo에서 방어진형·미사일·함재기를 숨기고 정보 패널 미사일·함재기 칩도 뺀다. 테스트 `tests/rule_text_salvo.gd` 추가.
+- **남긴 것(범위 밖):** POC 경로(`profile_def=""`)와 POC 함수(`power`·`apply_dmg`·`fire_missiles`), CMDS·REJECT의 CP 문구, `FORM_NAMES`는 POC 테스트(`rule_text`·`core_rules`)가 쓰므로 그대로 둔다. POC 경로 삭제는 별도 결정.
+
 ## 남은 일 (컨셉 세션이 할 수 있는 것)
 
 | 우선 | 일 | 메모 |

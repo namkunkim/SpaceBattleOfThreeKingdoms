@@ -140,6 +140,8 @@ func set_speed(n: int) -> void:
 # 코어가 확정 규칙(v0.2: Q33 방향 = 명중률 보정, Q42 돌격 = 열 40%·사기 안정, 방어진형 삭제)으로 바뀌면
 # 여기서 set = "v02"와 그 값을 돌려주고, 문구는 rule_text.gd의 v02 틀로 자동으로 바뀐다.
 func rules() -> Dictionary:
+	if battle.sim.salvo:
+		return _salvo_rules()
 	return {
 		"set": "poc",
 		"flank": {"model": "damage", "side": 1.3, "rear": 1.6},
@@ -151,10 +153,26 @@ func rules() -> Dictionary:
 		"cmd_range": battle.CMD_R,
 	}
 
-# 지금 규칙에 있는 명령(진형·태세 탭 구성). v02에서는 "def"(방어진형)가 빠진다.
+# set = "v02": salvo 규칙(적벽 프로필)의 문구용 값. 방향은 정면 대비 명중 가산(방어 보정 차), 사기 타격은 구역 가중.
+func _salvo_rules() -> Dictionary:
+	var c: Dictionary = combat
+	var d: Dictionary = c.sector.defense_bp
+	var w: Dictionary = c.morale.hit.sector_weight_bp
+	var bp := float(BattleRules.BP)
+	return {
+		"set": "v02",
+		"flank": {"model": "hit",
+			"side": {"hit": (d.front - d.flank) / 100.0, "morale": w.flank / bp},
+			"rear": {"hit": (d.front - d.rear) / 100.0, "morale": w.rear / bp}},
+		"out_of_cmd_hit": c.hit.out_of_command_bp / 100.0,
+		"charge": {"heat": c.charge.heat_share_bp / bp, "min_morale": c.charge.min_morale_bp / bp},
+		"cmd_range": battle.CMD_R,
+	}
+
+# 지금 규칙에 있는 명령(진형·태세 탭 구성). salvo 규칙에는 방어진형·미사일·함재기가 없다.
 func has_command(id: String) -> bool:
-	if id == "def":
-		return rules().has("defense")
+	if battle.sim.salvo:
+		return not id in ["def", "missile", "fighter"]
 	return true
 
 # ------------------------------------------------------------ 진형 탭(M5 진형, docs/ui/FORMATION-TAB-SPEC.md)
