@@ -37,6 +37,7 @@ func _sq(f) -> Dictionary:
 		"missile_cd": f.missile_cd, "fighter_cd": f.fighter_cd,
 		"speech": f.speech, "speech_t": f.speech_t,
 		"has_move": f.has_move, "move_to": f.move_to, "lv": f.lv, "range": f.range_r,
+			"contact": f.contact,
 	}
 
 func missiles() -> Array:
@@ -59,6 +60,9 @@ func state() -> String:
 
 func clock_s() -> float:
 	return battle.G.get("t", 0.0)
+
+func slow() -> float:
+	return float(battle.G.get("slow", 1.0))
 
 func speed() -> int:
 	return int(battle.G.get("speed", 1))
@@ -83,10 +87,8 @@ func unit_scale() -> float:
 const ENGAGE_MARGIN := 1.15
 
 # 조용한 구간인가: 어느 아군·적 전대도 교전 거리대에 없고, 날아가는 미사일·함재기도 없다.
-# 임시 판정이다. 코어의 "알림 분기"가 생기면 이 함수만 코어 판정으로 바꾼다.
-# 안개(M6, 리뷰 V-2): 코어 투영이 이미 적을 **접촉**(확인·추정·상실)만 준다. 시나리오 프로필로 바뀌면(M10) 이 함수가 보는 적은
-# 투영의 접촉뿐이어야 하고(상실은 뺀다), 미탐지 적의 위치로 자동 ×4가 풀리면 안개가 샌다.
-# 미탐지 적이 쏘면 `drain_events_for`가 주는 사격 사건(`sq` = -1)으로 조용한 구간이 끝난다.
+# 안개(M6, 리뷰 V-2): 보는 적은 투영의 접촉(확인·추정)뿐이다. 상실 접촉은 뺀다. `battle.fleets`는 투영 뷰 모델이라
+# 미탐지 적의 위치로 자동 ×4가 풀리지 않는다. 미탐지 적이 쏘면 `drain_events_for`가 주는 사격 사건(`sq` = -1)으로 끝난다.
 func quiet() -> bool:
 	if not battle.missiles.is_empty() or not battle.swarms.is_empty():
 		return false
@@ -95,7 +97,7 @@ func quiet() -> bool:
 		if a.dead or a.side != 0:
 			continue
 		for b in battle.fleets:
-			if b.dead or b.side == 0:
+			if b.dead or b.side == 0 or b.contact == "lost":
 				continue
 			if a.pos.distance_to(b.pos) <= maxf(reach, maxf(a.range_r, b.range_r) * ENGAGE_MARGIN):
 				return false
@@ -110,7 +112,7 @@ func engage_eta() -> float:
 		if a.dead or a.side != 0:
 			continue
 		for b in battle.fleets:
-			if b.dead or b.side == 0:
+			if b.dead or b.side == 0 or b.contact == "lost":
 				continue
 			var gap: float = a.pos.distance_to(b.pos) - maxf(reach, maxf(a.range_r, b.range_r) * ENGAGE_MARGIN)
 			best = minf(best, maxf(0.0, gap) / maxf(1.0, 62.0 * (a.spd + b.spd)))
@@ -126,9 +128,9 @@ func order_signature() -> String:
 func has_selection() -> bool:
 	return not battle.my_sel().is_empty()
 
-# 시간 배율(선택 감속 ×0.2). POC는 dt로 움직이므로 엔진 시간 배율로 늦춘다. UI는 UiDraw.real_dt로 실제 시간을 쓴다.
+# 선택 감속 배율(×0.2). 코어 TickClock의 누산기 소비 속도만 바꾼다(`FleetBattle3D._process`가 G.speed와 곱한다). Engine.time_scale은 건드리지 않는다.
 func set_time_scale(k: float) -> void:
-	Engine.time_scale = k
+	battle.G.slow = k
 
 # 배속 설정. 표현 계층이 전투 시계를 바꾸는 유일한 통로다(POC는 프레임당 시뮬레이션 횟수).
 func set_speed(n: int) -> void:

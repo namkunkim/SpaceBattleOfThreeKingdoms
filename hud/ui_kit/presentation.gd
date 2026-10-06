@@ -80,7 +80,7 @@ func _process(delta: float) -> void:
 	var st := src.state()
 	var dt := 0.0
 	if st == "play":
-		dt = minf(0.05, delta) * src.speed()
+		dt = minf(0.05, delta) * src.speed() * src.slow()
 	elif st == "end":
 		dt = minf(0.05, delta)
 	renderer.update(dt)

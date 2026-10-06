@@ -591,6 +591,7 @@ func update(dt: float) -> void:
 				(m as ShaderMaterial).set_shader_parameter("detail", detail)
 	for sq in sqs:
 		var v: FleetVis = vis[sq.id]
+		v.node.visible = sq.contact != "lost"   # 상실 접촉은 마지막 위치에 모델 없이 표식만 남는다
 		if sq.formation != v.formation:
 			_reform(v, sq)
 		if not sq.dead:
