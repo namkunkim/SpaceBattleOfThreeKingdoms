@@ -182,15 +182,17 @@ func attack_dir(att_id: int, tgt_id: int) -> String:
 	return "rear" if m > 1.45 else ("side" if m > 1.05 else "front")
 
 # ------------------------------------------------------------ 세력(C-3)
-# 세력 키: "shu"(촉) | "wei"(위) | "wu"(오). 지금 POC는 진영(side)만 있어 촉·위로 나눈다.
-# faction_override는 미리보기·캡처용이다. 코어에 세력 값이 생기면 그 값을 읽는다.
+# 세력 키: "shu"(촉) | "wei"(위) | "wu"(오). 투영의 faction(시나리오 세력 ID 기준)을 읽는다.
+# faction_override는 미리보기·캡처용이다.
 var faction_override := {}
 
 func faction(id: int) -> String:
 	if faction_override.has(id):
 		return faction_override[id]
 	var f = battle.by_id(id)
-	return "wei" if f and f.side == 1 else "shu"
+	if f == null:
+		return "shu"
+	return f.faction if f.faction != "" else ("wei" if f.side == 1 else "shu")
 
 # 지휘 상태(Q20, 리뷰 V-1): "direct"(직접 지휘 ●) | "delegated"(위임 ○) | ""(모름).
 # 세력과 무관하다(유비 전대도 위임할 수 있고 손권 전대에도 직접 명령할 수 있다). 세력은 글리프가 맡는다.

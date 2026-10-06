@@ -160,7 +160,8 @@ M3 리뷰(2026-10-04): `REVIEW-M3.md`. 수용. 후속은 방향 배분 잔여 �
 
 구현·UI 세션이 처리한다. 각 항목은 원인 확인부터 시작한다.
 
-- [ ] **손권 함대가 없음** — 로스터에는 `sun_quan`→`wu`가 있다(`view/fleet_render/scenario_roster.gd:22`). 태블릿 전투 화면에 안 뜨는 원인(배치·투영·세력 필터)을 찾는다
+- [x] **손권 함대가 없음** — 원인(2026-10-05): 호스트 `scripts/FleetBattle3D.gd:141`이 `BattleSim.new(seed)`로 POC 프로필을 써서 손권 전대 3개(주유·정보·황개)가 만들어지지 않는다. 윈도우도 같고 태블릿 전용이 아니다(M3~M9 NOTES의 "적벽 프로필 화면 연결은 M10"). 코어·`ScenarioProfile` 변환은 정상(손권 3·유비 4). 같이 고침: 투영 `faction`이 진영만 봐 손권군이 `shu`로 나오던 것 → `BattleProjection.faction_key()`·`BattleSource.faction()`, 회귀 테스트 `tests/roster.gd`. 정본 대조: 손권 3개 전대는 B6(Q44)의 의도된 차이(본편 demo-setup은 SQ-01뿐). 실제 해소는 아래 M10 선행 항목
+  - [ ] **(M10 선행) 호스트를 적벽 프로필로 연결** — 위 항목의 실제 해소. 막는 것: ① `FleetBattle3D.init_game()` `BattleSim.new(battle_seed, TICK_HZ, ScenarioProfile.load_profile(...난이도))`로 교체 ② `groups = {1: [fleets[0].id], ...}`(`FleetBattle3D.gd:151`) 인덱스 하드코딩을 `group_id`/`fleet_groups` 기반으로 ③ 브리핑 편성표 `ALLY_DEF`·`FOE_DEF`(`deck_screens.gd:256`, 결산 `:591`)를 시나리오 편성(`ScenarioRoster.deployed`)으로 ④ 렌더러가 side 색만 쓰므로 손권군을 세력 색·인장으로 구분(`Factions` 키는 이미 `wu`) ⑤ POC 전제 테스트(`battle_flow`, `smoke`, `capture_ui` 등)와 POC CP·방어진형 코드 정리. 완료 기준: 캡처에 손권 3개 전대가 오(吳) 인장으로 뜨고 `roster` 테스트의 "POC has no class counters" 가정을 시나리오 카운터 확인으로 바꾼다
 - [x] **진형이 "방어"뿐** — 진형 탭 구현(코어 7종 카드, `FORMATION-TAB-SPEC.md`). 호스트 연결(`BattleSource.combat`)은 M10. 원래 내용: 호스트 POC 프로필의 방어진형 버튼이 그대로 남은 상태(`SESSION-HANDOFF` M5 메모). M10 진형 탭(`formation_id`·`form_to` 투영 키)으로 10종 선택을 넣는다
 - [ ] **전대 그래픽이 조잡** — 검토·구현 거의 끝(`REVIEW-FLEET-VISUAL.md`). 원인은 함선 위치를 뷰가 한 번 만들어 전대 노드에 붙여 강체로 움직이고, 진형 변경이 화면에 반영되지 않은 것이었다. 구현됨: PR0 실루엣 셰이더(윤곽), PR1·2 슬롯 추종·진형 전환, PR3 격침 빈자리, PR4 항적·목적지 고리, PR5 태블릿 실측(밀도 높음도 120fps). 남은 확인:
   - [ ] **태블릿 눈 확인(완료 기준)** — 사용자가 "자연스럽다"고 판단할 때까지. 이동 시작 시 대열 늘어남, 선회 부채꼴, 진형 전환 이동, 줌 인·기본 줌 둘 다
