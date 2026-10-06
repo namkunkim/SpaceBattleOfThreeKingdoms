@@ -81,6 +81,7 @@ func _run() -> void:
 	if not TestCheck.ok(self, picked[0] == 1, "quick alert choice"): return
 	# C-2
 	var shooter = null
+	TestPoke.foe_beside(battle, battle.flag(0))   # 안개 시작이라 적을 곁으로 옮겨 교전을 만든다
 	for i in 600:
 		for f in battle.alive(0):
 			if f.fire_t and not f.fire_t.dead:

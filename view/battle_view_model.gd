@@ -9,6 +9,7 @@ class FleetView:
 	var id := 0
 	var side := 0
 	var faction := ""
+	var group_id := ""               # 시나리오 함대 ID(RC-LIU-FLT-01 …). POC는 빈 문자열
 	var fname := ""
 	var role := ""
 	var portrait := 0
@@ -42,6 +43,7 @@ class FleetView:
 	var form_to := ""
 	var form_left_s := 0.0
 	var form_info := {}
+	var counts := {}                  # 함종 × 손상 단계 [무손상, 경파, 중파, 대파, 격침](자기 전대만. salvo 규칙에서만 값이 있다)
 	# 화면 전용
 	var speech := ""
 	var speech_t := 0.0
@@ -102,18 +104,22 @@ func apply(proj: Dictionary) -> Array[FleetView]:
 	tick = proj.tick
 	hz = proj.hz
 	clock_s = proj.clock_s
-	cp = proj.cp_bp / 10000.0
+	cp = proj.get("cp_bp", 0) / 10000.0
 	reinf = proj.reinf
 	killed = proj.killed_milli / 1000.0
 	lost = proj.lost_milli / 1000.0
 	outcome = proj.outcome
 	for s in proj.squadrons:
+		if s.has("contact"):
+			_apply_contact(s, advanced, fresh)
+			continue
 		var f: FleetView = by_id.get(s.id)
 		if f == null:
 			f = FleetView.new()
 			f.id = s.id
 			f.side = s.side
 			f.faction = s.faction
+			f.group_id = s.group_id
 			f.fname = s.name
 			f.role = s.role
 			f.portrait = s.portrait
@@ -151,8 +157,11 @@ func apply(proj: Dictionary) -> Array[FleetView]:
 		f.form_to = s.get("form_to", "")
 		f.form_left_s = s.get("form_left_s", 0.0)
 		f.form_info = s.get("form_info", {})
+		f.counts = s.get("counts", {})
 	# 참조는 모두 생긴 뒤에 잇는다
 	for s in proj.squadrons:
+		if s.has("contact"):
+			continue
 		var f: FleetView = by_id[s.id]
 		f.target = by_id.get(s.target_id) if s.target_id >= 0 else null
 		f.fire_t = by_id.get(s.firing_at) if s.firing_at >= 0 else null
@@ -194,6 +203,41 @@ func apply(proj: Dictionary) -> Array[FleetView]:
 		swarms.append(sv)
 	interpolate(alpha)
 	return fresh
+
+# 안개(M6): 적은 접촉으로만 온다(확인·추정·상실). 위치는 접촉이 아는 위치(추정·상실은 마지막으로 안 위치)다.
+# 정확한 척 수·진형·표적은 공개되지 않으므로 전력 구간을 고정 척 수에 비례해 보여 주고(표시 전용), 상실 접촉은 마지막 위치에 남긴다.
+# ponytail: 오차 반경·신뢰도·상실 표시 UI는 아직 없다(M10 이후 안개 UI).
+const CONTACT_SHIPS := 10.0
+func _apply_contact(s: Dictionary, advanced: bool, fresh: Array[FleetView]) -> void:
+	var f: FleetView = by_id.get(s.id)
+	if f == null:
+		f = FleetView.new()
+		f.id = s.id
+		f.side = s.side
+		f.fname = "미확인 함대"
+		f.max_ships = CONTACT_SHIPS
+		f.ships = CONTACT_SHIPS
+		f.shown = CONTACT_SHIPS
+		for i in 28:   # 진형은 비공개: 4열 횡대 격자
+			f.form.append(Vector2(-(i / 7) * 20.0, (i % 7 - 3) * 20.0))
+		f.ppos = s.pos
+		f.tpos = s.pos
+		by_id[f.id] = f
+		fleets.append(f)
+		fresh.append(f)
+	elif advanced:
+		f.ppos = f.tpos
+		f.pheading = f.theading
+	f.faction = s.faction
+	f.tpos = s.pos
+	if s.contact == "confirmed":
+		f.fname = s.name
+		f.role = s.role
+		f.portrait = s.portrait
+		f.group_id = ""
+		f.theading = s.heading
+		f.ships = CONTACT_SHIPS * float(s.strength_band) / float(s.max_strength_band)
+		f.shown = f.ships
 
 # 틱 사이 보간. alpha 0 = 직전 틱, 1 = 이번 틱.
 func interpolate(a: float) -> void:

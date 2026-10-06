@@ -21,6 +21,11 @@ const SHIP_WIDTH := 0.48
 const PLANE_K := 1.6   # ship_sprite.gdshader의 PLANE_K와 같아야 한다
 const HULL_STRETCH := Vector3(0.75, 1.0, 1.0)   # x = 길이 배율(대열에서 앞뒤 함선이 겹치지 않게)
 const CLASS_FAT := [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]   # 함종별 폭 미세 조정(실루엣 자체는 셰이더 kind가 정한다)
+# 외관(skin): 0 = 아군(유비군), 1 = 적, 2 = 손권군(오). 손권군은 아군이지만 선체·엔진·빔 색을 세력 색(보라)으로 구분한다.
+const C_WU_HULL := Color(0.14, 0.1, 0.22)
+const C_WU_OUTLINE := Color(0.78, 0.7, 1.0)
+const C_WU_ENGINE := Color(0.7, 0.55, 1.0)
+const C_WU_TINT := Color(1.0, 0.95, 1.06)
 const C_ALLY_HULL := Color(0.09, 0.13, 0.19)
 const C_FOE_HULL := Color(0.17, 0.11, 0.1)
 const C_ALLY_OUTLINE := Color(0.62, 0.9, 1.0)
@@ -79,6 +84,7 @@ class Slot:
 class FleetVis:
 	var id := 0
 	var side := 0
+	var skin := 0
 	var node: Node3D
 	var mmis: Array = []
 	var glow: MultiMeshInstance3D
@@ -96,7 +102,7 @@ class FleetVis:
 
 var src: BattleSource
 var meshes := [[], []]
-var mats := [[], []]
+var mats := [[], [], []]   # skin별 함종 재질(0 아군, 1 적, 2 손권군)
 var wreck_mat: StandardMaterial3D
 var vis := {}
 var shots: Array = []
@@ -132,13 +138,13 @@ func _load_assets() -> void:
 		for n in CLASS_NAMES:
 			meshes[lod].append(plane)
 	var sh := load("res://view/fleet_render/ship_sprite.gdshader") as Shader
-	for side in 2:
+	for side in 3:
 		var arr := []
 		for c in CLASS_NAMES.size():
 			var m := ShaderMaterial.new()
 			m.shader = sh
-			m.set_shader_parameter("hull_color", C_ALLY_HULL if side == 0 else C_FOE_HULL)
-			m.set_shader_parameter("rim_color", C_ALLY_OUTLINE if side == 0 else C_FOE_OUTLINE)
+			m.set_shader_parameter("hull_color", [C_ALLY_HULL, C_FOE_HULL, C_WU_HULL][side])
+			m.set_shader_parameter("rim_color", [C_ALLY_OUTLINE, C_FOE_OUTLINE, C_WU_OUTLINE][side])
 			m.set_shader_parameter("fat", CLASS_FAT[c])
 			m.set_shader_parameter("kind", c)   # 함종 번호 = 실루엣 종류
 			var tex_path := "res://assets/ships/silhouette/%d.png" % c
@@ -392,6 +398,7 @@ func _make_vis(sq: Dictionary) -> FleetVis:
 	var v := FleetVis.new()
 	v.id = sq.id
 	v.side = sq.side
+	v.skin = 2 if (sq.side == 0 and sq.faction == "wu") else sq.side
 	v.node = Node3D.new()
 	v.node.name = "FleetVis-%d" % sq.id
 	add_child(v.node)
@@ -456,14 +463,14 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 		mm.use_custom_data = true
 		mm.mesh = meshes[1][c]
 		mm.instance_count = list.size()
-		var tint := C_ALLY_TINT if v.side == 0 else C_FOE_TINT
+		var tint: Color = [C_ALLY_TINT, C_FOE_TINT, C_WU_TINT][v.skin]
 		for s in list:
 			mm.set_instance_transform(s.idx, _ship_xform(s))
 			mm.set_instance_color(s.idx, tint)
 		var mi := MultiMeshInstance3D.new()
 		mi.multimesh = mm
 		mi.custom_aabb = WORLD_AABB
-		mi.material_override = mats[v.side][c]
+		mi.material_override = mats[v.skin][c]
 		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		v.node.add_child(mi)
 		v.mmis.append(mi)
@@ -476,7 +483,7 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 	quad.size = Vector2.ONE
 	gm.mesh = quad
 	gm.instance_count = v.slots.size()
-	var ec := C_ALLY_ENGINE if v.side == 0 else C_FOE_ENGINE
+	var ec: Color = [C_ALLY_ENGINE, C_FOE_ENGINE, C_WU_ENGINE][v.skin]
 	for i in v.slots.size():
 		var s: Slot = v.slots[i]
 		var sz := s.half_len * (0.6 if s.cls != ESCORT else 0.5)
@@ -637,7 +644,7 @@ func reset() -> void:
 	_missile_last.clear()
 
 func _update_flash(v: FleetVis) -> void:
-	var tint := C_ALLY_TINT if v.side == 0 else C_FOE_TINT
+	var tint: Color = [C_ALLY_TINT, C_FOE_TINT, C_WU_TINT][v.skin]
 	for s in v.slots:
 		if s.flash_until > 0.0 and clock >= s.flash_until:
 			s.flash_until = 0.0

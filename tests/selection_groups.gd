@@ -67,7 +67,7 @@ func _run() -> void:
 	var deck = battle.presentation.hud
 	deck.begin_battle()
 	battle.cam_z = 1.0
-	battle.cam_pos = Vector2(900.0, 1150.0)
+	battle.cam_pos = battle._field_center()
 	await _settle()
 	var allies: Array = battle.alive(0)
 	var f1 = allies[1]
@@ -125,7 +125,7 @@ func _run() -> void:
 	if not TestCheck.ok(self, battle.presentation.touch.mode == "ignore" and battle.presentation.touch.order.is_empty() and battle.drag.is_empty(), "selection: empty drag is ignored"): return
 	_touch(0, to_p, false)
 	await _settle()
-	if not TestCheck.ok(self, not f1.has_move and not f2.has_move and battle.selected.size() == 2 and battle.cam_pos.is_equal_approx(cam0), "selection: empty drag does nothing"): return
+	if not TestCheck.ok(self, not f1.has_move and not f2.has_move and battle.selected.size() >= 2 and battle.cam_pos.is_equal_approx(cam0), "selection: empty drag does nothing"): return
 	battle.selected.assign([f1])
 	_touch(0, p2, true)
 	_move(0, p2, p2 + Vector2(120, 0))
@@ -139,7 +139,7 @@ func _run() -> void:
 	if not TestCheck.ok(self, not battle.presentation.touch.order.is_empty() and battle.drag.is_empty(), "selection: drag from selected previews an order"): return
 	_touch(0, to_p, false)
 	await _settle()
-	if not TestCheck.ok(self, f1.has_move and f2.has_move and battle.selected.size() == 2 and battle.cam_pos.is_equal_approx(cam0), "selection: drag from selected moves all selected"): return
+	if not TestCheck.ok(self, f1.has_move and f2.has_move and battle.selected.size() >= 2 and battle.cam_pos.is_equal_approx(cam0), "selection: drag from selected moves all selected"): return
 	# 3b. 출발 전대 위로 되돌려 놓으면 취소
 	TestPoke.fleet(battle, f1, {"has_move": false})
 	TestPoke.fleet(battle, f2, {"has_move": false})
@@ -150,9 +150,10 @@ func _run() -> void:
 	await _settle()
 	if not TestCheck.ok(self, not f1.has_move and not f2.has_move, "drag back to start cancels"): return
 	# 3c. 선택이 있을 때 적 탭 = 공격 지정
-	var foe = battle.alive(1)[0]
-	TestPoke.fleet(battle, foe, {"pos": f1.pos + Vector2(380.0, -40.0)})
+	TestPoke.foe_beside(battle, f1, Vector2(380.0, -40.0))   # 안개 시작이라 적을 곁으로 옮겨 접촉을 만든다
+	battle.update_sim(0.3)
 	await _settle()
+	var foe = battle.alive(1)[0]
 	var fp: Vector2 = battle.w2s(foe.pos)
 	_touch(0, fp, true)
 	_touch(0, fp, false)

@@ -278,6 +278,7 @@ func _build_top() -> void:
 	cp_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hud.add_child(cp_bar)
 	_anchor(cp_bar, Control.PRESET_CENTER_TOP, Vector2(380, 26), Vector2(0, 96))
+	cp_bar.visible = src.uses_cp()
 
 func _side_totals(side: int) -> Vector3:
 	var cur := 0.0
@@ -810,7 +811,7 @@ func _set_tab(i: int) -> void:
 		for c in battle.CMDS:
 			if c.id == id:
 				spec["key"] = c.key
-				spec["cost"] = c.cost
+				spec["cost"] = c.cost if src.uses_cp() else 0
 		var b := W.CmdButton.new(spec, self)
 		if spec.get("confirm", false):
 			b.set_meta("hold_confirm", true)

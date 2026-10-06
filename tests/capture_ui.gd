@@ -61,6 +61,8 @@ func _run() -> void:
 			battle.update_sim(0.05)
 		battle.selected.clear()
 		battle.selected.append(battle.fleets[1])
+		TestPoke.foe_beside(battle, battle.fleets[1], Vector2(380.0, -40.0))   # 안개 시작이라 적을 곁으로 옮겨 접촉·교전 장면을 만든다
+		battle.update_sim(0.5)
 		if mode == "select":
 			battle.groups[1] = [battle.fleets[0].id, battle.fleets[1].id]
 			battle.groups[2] = [battle.fleets[2].id]
@@ -106,10 +108,10 @@ func _run() -> void:
 			for i in 20:
 				await process_frame
 		elif mode == "wu":
-			# 오(吳) 세력 표시 확인용: 아군 전대 둘을 동맹 세력으로 바꿔 그린다(캡처 전용)
-			battle.presentation.src.faction_override = {battle.fleets[2].id: "wu", battle.fleets[3].id: "wu"}
+			# 오(吳) 세력 표시 확인: 적벽 프로필의 손권군 전대 3개(주유·정보·황개)가 오 인장·보라 선체로 뜬다
 			battle.selected.clear()
-			battle.selected.append(battle.fleets[2])
+			battle.selected.append(battle.fleets[4])
+			battle.cam_pos = battle.fleets[4].pos + Vector2(120.0, 40.0)
 			for i in 20:
 				await process_frame
 		elif mode == "incoming":

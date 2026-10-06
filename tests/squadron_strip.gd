@@ -40,7 +40,7 @@ func _run() -> void:
 	GameSettings.slow_mode = GameSettings.SLOW_OFF
 	deck.begin_battle()
 	battle.cam_z = 1.0
-	battle.cam_pos = Vector2(900.0, 1150.0)
+	battle.cam_pos = battle._field_center()
 	await _frames()
 	var strip: Control = deck.strip
 	var c1: Vector2 = strip.get_global_transform() * strip.cell_rect(1).get_center()
@@ -55,7 +55,7 @@ func _run() -> void:
 	if not TestCheck.ok(self, battle.selected.size() == 1 and battle.selected[0] == f1, "tap selects"): return
 	# 다시 탭: 화면 이동
 	battle.cam_pos = Vector2(200, 200)
-	battle.cam_z = 2.0
+	battle.cam_z = 2.8
 	_mouse(c1, true)
 	_mouse(c1, false)
 	await _frames()
