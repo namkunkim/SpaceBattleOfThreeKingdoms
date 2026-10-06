@@ -20,7 +20,7 @@ const ICONS := {
 	"target": [[[14, 3], [14, 9]], [[14, 19], [14, 25]], [[3, 14], [9, 14]], [[19, 14], [25, 14]]],
 }
 
-# 실제 경과 시간. 선택 감속(Engine.time_scale)과 무관하게 UI 연출·입력 판정이 같은 속도로 돈다.
+# 실제 경과 시간. 선택 감속은 코어 TickClock 배율이라 delta가 이미 실제 시간이다. Engine.time_scale을 쓰는 곳(헤드리스 등)을 위해 나눗셈을 둔다.
 static func real_dt(delta: float) -> float:
 	return delta / maxf(0.001, Engine.time_scale)
 

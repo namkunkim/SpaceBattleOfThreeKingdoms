@@ -43,6 +43,9 @@ class FleetView:
 	var form_to := ""
 	var form_left_s := 0.0
 	var form_info := {}
+	var contact := ""                 # 적 접촉 상태: confirmed | estimated | lost. 자기 전대는 빈 문자열
+	var err_r := 0.0                  # 접촉 오차 반경(전장 px)
+	var conf := 1.0                   # 접촉 신뢰도 0~1
 	var counts := {}                  # 함종 × 손상 단계 [무손상, 경파, 중파, 대파, 격침](자기 전대만. salvo 규칙에서만 값이 있다)
 	# 화면 전용
 	var speech := ""
@@ -206,7 +209,7 @@ func apply(proj: Dictionary) -> Array[FleetView]:
 
 # 안개(M6): 적은 접촉으로만 온다(확인·추정·상실). 위치는 접촉이 아는 위치(추정·상실은 마지막으로 안 위치)다.
 # 정확한 척 수·진형·표적은 공개되지 않으므로 전력 구간을 고정 척 수에 비례해 보여 주고(표시 전용), 상실 접촉은 마지막 위치에 남긴다.
-# ponytail: 오차 반경·신뢰도·상실 표시 UI는 아직 없다(M10 이후 안개 UI).
+# 오차 반경·신뢰도·상실 표시는 TacticalOverlay._contact가 그린다.
 const CONTACT_SHIPS := 10.0
 func _apply_contact(s: Dictionary, advanced: bool, fresh: Array[FleetView]) -> void:
 	var f: FleetView = by_id.get(s.id)
@@ -230,6 +233,9 @@ func _apply_contact(s: Dictionary, advanced: bool, fresh: Array[FleetView]) -> v
 		f.pheading = f.theading
 	f.faction = s.faction
 	f.tpos = s.pos
+	f.contact = s.contact
+	f.err_r = s.err_r
+	f.conf = s.conf_bp / 10000.0
 	if s.contact == "confirmed":
 		f.fname = s.name
 		f.role = s.role

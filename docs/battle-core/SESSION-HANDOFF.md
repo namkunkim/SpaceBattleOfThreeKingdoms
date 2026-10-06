@@ -219,6 +219,15 @@
 - 테스트: 안개 시작이라 적이 필요한 곳은 `TestPoke.foe_beside`로 적 하나를 옮긴다(`battle_flow`, `smoke`, `pacing`, `decision_flow`, `selection_groups`, `touch_input`, `squadron_strip`, `capture_ui`). `battle_flow`는 CP·미사일·방어진형 단계를 뺐다. 전 테스트 통과(touch_hold·ui_flow 포함).
 - **남은 정리(POC 잔재):** `BattleSource.rules()`의 "poc" 규칙 문구(툴팁 수치), `FleetBattle3D` CMDS·REJECT의 CP 문구와 POC 함수(`power`·`apply_dmg`·`fire_missiles`), 정보 패널 `FORM_NAMES`. `rule_text` 테스트가 POC 대조라 함께 정리해야 한다. 캡처: `capture_ui wu`/`battle`(1920×1200).
 
+## M10 본편 1차: 안개 UI·감속·quiet() (2026-10-07, 구현 세션, 브랜치 `claude/eloquent-ritchie-c85488`)
+
+- 안개 UI: `FleetView.contact·err_r·conf` 추가(`_apply_contact`), `TacticalOverlay._contact`가 추정 = 오차 반경 점선 고리 + "추정 N%"(신뢰도로 진하기), 상실 = 흐린 고리 + "상실 · 마지막 위치"를 그린다. 상실 접촉은 3D 모델·명패를 숨긴다(`fleet_renderer`, 오버레이). 캡처 `capture_ui fog`.
+- 감속: `BattleSource.set_time_scale`이 `battle.G.slow`를 쓰고 `FleetBattle3D._process`가 `clock.set_speed(G.speed * G.slow)`로 코어 TickClock에 넘긴다. `Engine.time_scale`은 1 고정. 뷰 dt(`_tick_view`, `presentation`)도 `slow`를 곱한다. 테스트의 `Engine.time_scale` 검사를 `G.slow`로 바꿨다. `decision_flow`는 소리 간격(1초, 실제 시간) 때문에 대기 1.1초를 넣었다(감속이 타이머를 늘리지 않게 됨).
+- `quiet()`/`engage_eta()`: 뷰 모델(= 투영 접촉)만 보고 상실 접촉은 제외.
+- heading: 틱당 최대 변화 약 0.9°(`tests/fog_ui.gd` 측정, 급선회 명령 포함)라 계단으로 안 보일 크기. 눈 확인은 태블릿 몫.
+- 테스트 `tests/fog_ui.gd`(FOG_UI_PASS), 기존 전 테스트 통과.
+- **병합 주의:** POC 정리 세션과 겹칠 수 있는 파일은 `battle_source.gd`(위 함수들 + `_sq`에 `contact`)·`FleetBattle3D.gd`(G.slow 3줄). POC 잔재 영역은 건드리지 않았다. 진형 탭 실투영은 `formation_ui`·`roster` 통과로 확인(호스트 `combat` 연결됨).
+
 ## 남은 일 (컨셉 세션이 할 수 있는 것)
 
 | 우선 | 일 | 메모 |

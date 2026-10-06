@@ -59,7 +59,9 @@ func _draw() -> void:
 		UiDraw.diamond(self, battle.w2s(battle.marker.pos), 5.0, col)
 	var compact: bool = battle.cam_z < 0.55
 	for f in battle.fleets:
-		if not f.dead:
+		if f.contact != "":
+			_contact(f)
+		if not f.dead and f.contact != "lost":
 			if compact:
 				_symbol(f)
 			else:
@@ -160,6 +162,19 @@ func _brackets(f, col: Color) -> void:
 	var l: Vector2 = battle.w2s(f.pos + hx * (bx + 18.0) + hy * 15.0)
 	var r: Vector2 = battle.w2s(f.pos + hx * (bx + 18.0) - hy * 15.0)
 	draw_colored_polygon(PackedVector2Array([tip, l, r]), Color(col, 0.85))
+
+# 안개 접촉(M6): 추정은 오차 반경 점선 고리와 신뢰도, 상실은 마지막 위치의 흐린 고리와 표식. 확인은 오차가 없어 명패만 그린다.
+func _contact(f) -> void:
+	if f.contact == "confirmed":
+		return
+	var lost: bool = f.contact == "lost"
+	var a := 0.18 if lost else lerpf(0.25, 0.7, f.conf)
+	var col := Color(UiTheme.FOE, a)
+	UiDraw.dashed_poly(self, _ground_ring(f.pos, maxf(f.err_r, 12.0), 64), col, 1.4, 4.0, 6.0)
+	var s: Vector2 = battle.w2s(f.pos)
+	UiDraw.diamond(self, s, 4.0, Color(UiTheme.FOE, a + 0.15))
+	var txt := "상실 · 마지막 위치" if lost else "추정 %d%%" % roundi(f.conf * 100.0)
+	UiDraw.text(self, s + Vector2(8, -8), txt, "serif_bold", 12, Color(UiTheme.INK_2, 0.55 if lost else 0.9), HORIZONTAL_ALIGNMENT_LEFT, -1, 3)
 
 func _plate(f) -> void:
 	# 명패(V-6): 소유 글리프 · 이름 · 연속 막대 · 지휘 상태 · 가장 급한 경고 하나. 초상·레벨 없음.

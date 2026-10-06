@@ -67,17 +67,17 @@ func _run() -> void:
 	k.pressed = true
 	root.push_input(k, true)
 	await _frames(3)
-	if not TestCheck.ok(self, pacing.slow and is_equal_approx(Engine.time_scale, 0.2), "select -> x0.2"): return
+	if not TestCheck.ok(self, pacing.slow and is_equal_approx(battle.G.slow, 0.2), "select -> x0.2"): return
 	await create_timer(5.4, true, false, true).timeout
 	await _frames(2)
-	if not TestCheck.ok(self, not pacing.slow and is_equal_approx(Engine.time_scale, 1.0) and battle.selected.size() == 1, "idle 5s -> x1, selection kept"): return
+	if not TestCheck.ok(self, not pacing.slow and is_equal_approx(battle.G.slow, 1.0) and battle.selected.size() == 1, "idle 5s -> x1, selection kept"): return
 	root.push_input(k, true)
 	await _frames(3)
 	if not TestCheck.ok(self, pacing.slow, "touch again -> slow again"): return
 	# 명령 확정(정지 명령)이면 해제
 	TestPoke.fleet(battle, battle.fleets[1], {"has_move": true, "move_to": battle.fleets[1].pos + Vector2(200, 0)})
 	await _frames(3)
-	if not TestCheck.ok(self, not pacing.slow and is_equal_approx(Engine.time_scale, 1.0), "order confirmed -> x1"): return
+	if not TestCheck.ok(self, not pacing.slow and is_equal_approx(battle.G.slow, 1.0), "order confirmed -> x1"): return
 	# W-7: 조작 중에만 감속 / 끔
 	GameSettings.slow_mode = GameSettings.SLOW_WHILE_HANDLING
 	battle.selected.clear()

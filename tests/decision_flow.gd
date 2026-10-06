@@ -59,14 +59,15 @@ func _run() -> void:
 	await create_timer(0.9).timeout
 	await _frames()
 	if not TestCheck.ok(self, exp[0] and picked[0] == -1 and not deck.quick_alert.visible, "quick alert expires without auto-apply"): return
-	# W-5: 알림이 떠 있는 동안 ×0.2, 열 때 소리
+	# W-5: 알림이 떠 있는 동안 ×0.2, 열 때 소리. 소리 간격(1초)은 실제 시간이라 앞 알림에서 충분히 기다린다(감속이 엔진 시간이 아니므로 타이머가 늘어나지 않는다)
+	await create_timer(1.1).timeout
 	UiSound.history.clear()
 	deck.quick_alert.open_alert({"text": "견본", "options": [{"label": "가", "rec": true}, {"label": "나"}], "time": 5.0})
 	await _frames()
-	if not TestCheck.ok(self, pacing.slow and is_equal_approx(Engine.time_scale, 0.2) and UiSound.history.has("warn_branch"), "quick alert slows to x0.2 + sound"): return
+	if not TestCheck.ok(self, pacing.slow and is_equal_approx(battle.G.slow, 0.2) and UiSound.history.has("warn_branch"), "quick alert slows to x0.2 + sound"): return
 	deck.quick_alert.close_alert()
 	await _frames()
-	if not TestCheck.ok(self, not pacing.slow and is_equal_approx(Engine.time_scale, 1.0), "closing alert restores speed"): return
+	if not TestCheck.ok(self, not pacing.slow and is_equal_approx(battle.G.slow, 1.0), "closing alert restores speed"): return
 	# W-6: 추천 없는 카드는 위임하지 않고 경고
 	got[0] = 99
 	deck.decision_card.open_card({"speaker_id": "CHR-0207", "line": "견본", "time": 0.5, "options": [{"label": "가"}, {"label": "나"}]})
