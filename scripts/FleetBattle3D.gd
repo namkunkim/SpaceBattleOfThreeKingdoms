@@ -19,9 +19,10 @@ const CMD_R := 560.0
 const MISSILE_R := 480.0
 const FIGHTER_R := 380.0
 const PORTRAIT_SHEET := "res://assets/portraits/commanders_sheet_v1.png"
-var ALLY_DEF: Array = PocSetup.profile().ally
-var FOE_DEF: Array = PocSetup.profile().foe
-var REINF_DEF: Array = PocSetup.profile().reinf
+var profile_def := "res://data/profiles/red_cliffs_rt.json"   # 적벽 시나리오 프로필. ""이면 POC 프로필(규칙 문구 대조 테스트 전용)
+var difficulty := "표준"
+var ALLY_DEF: Array = []   # 브리핑·결산 편성표: 시나리오 프로필의 아군(유비군+손권군) 전대
+var FOE_DEF: Array = []    # 브리핑 적 정보: 처음부터 배치되는 적 전대만(증원 전대는 안개 속, 규모를 미리 알리지 않는다)
 const CMDS := [
 	{"id": "stop", "key": "S", "name": "정지", "cost": 0},
 	{"id": "def", "key": "D", "name": "방어진형", "cost": 0},
@@ -139,7 +140,10 @@ func init_game() -> void:
 	vm.reset()
 	fx.clear()
 	battle_seed = randi()
-	sim = BattleSim.new(battle_seed)
+	var profile := ScenarioProfile.load_profile(profile_def, difficulty) if profile_def != "" else PocSetup.profile()
+	sim = BattleSim.new(battle_seed, BattleRules.TICK_HZ, profile)
+	ALLY_DEF = profile.ally.map(_with_portrait)
+	FOE_DEF = profile.foe.filter(func(d): return int(d.wait) == 0).map(_with_portrait)
 	clock = TickClock.new()
 	_sim_acc_clock = TickClock.new()
 	selected.clear()
@@ -150,11 +154,37 @@ func init_game() -> void:
 	G = {"t": 0.0, "cp": 3.0, "ecp": 3.0, "reinf": false, "state": "brief", "speed": 1, "killed": 0.0, "lost": 0.0, "panel_t": 0.0, "over": false, "end_t": -1.0, "end_win": false, "end_text": ""}
 	sim.drain_events()
 	_sync()
-	groups = {1: [fleets[0].id], 2: [fleets[1].id, fleets[3].id], 3: [fleets[2].id, fleets[4].id], 4: [fleets[5].id]}
-	rig.cam_pos = Vector2(900.0, 1150.0)
-	rig.cam_z = clampf(vsize.x / 1500.0, 0.45, 1.0)
+	_assign_default_groups()
+	rig.limit = sim.rs.world
+	rig.cam_pos = _field_center()
+	rig.cam_z = clampf(vsize.x / (sim.rs.world.x + 100.0), 0.45, 1.0)   # 전장 폭이 화면에 들어오게
 	hud.reset()
 	refresh_panel()
+
+# 프로필 전장 크기와 중심. 시나리오 좌표는 (0,0)에서 시작한다.
+func field() -> Vector2:
+	return rig.limit
+
+func _field_center() -> Vector2:
+	return rig.limit * 0.5
+
+# 프로필 전대 정의의 초상 번호(p)는 0 고정이라 인물 ID로 초상 시트 번호를 채운다. 없는 인물은 0.
+func _with_portrait(d: Dictionary) -> Dictionary:
+	var e := d.duplicate()
+	e.p = maxi(0, int(Commanders.PORTRAIT.get(d.get("commander_id", ""), d.get("p", 0))))
+	return e
+
+# 기본 그룹 1~n: 아군 시나리오 함대(fleet_groups) 하나가 번호 하나다(등장 순서). 코어 상태가 아닌 UI 편성이다.
+func _assign_default_groups() -> void:
+	groups = {}
+	var num := {}
+	for f in fleets:
+		if f.side != 0:
+			continue
+		if not num.has(f.group_id):
+			num[f.group_id] = num.size() + 1
+			groups[num[f.group_id]] = []
+		groups[num[f.group_id]].append(f.id)
 
 func _start() -> void:
 	hud.brief_ov.visible = false
@@ -243,7 +273,7 @@ func _process(delta: float) -> void:
 				_show_end()
 	elif G.state == "brief" and not GameSettings.reduce_motion:
 		# 타이틀·서막·브리핑 뒤 전장이 천천히 흐른다. 동작 줄이기면 멈춘다.
-		rig.cam_pos.x = 900.0 + sin(now_t / 5.0) * 120.0
+		rig.cam_pos.x = _field_center().x + sin(now_t / 5.0) * 120.0
 	rig.update()
 	view3d.sync(fleets)
 	hud.paint_cmds()

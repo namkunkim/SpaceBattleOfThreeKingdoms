@@ -49,6 +49,7 @@ func _run() -> void:
 	if not TestCheck.ok(self, pacing.mode == pacing.Mode.USER and battle.G.speed == 1, "touching the field cancels skip"): return
 	# 다시 건너뛰면 교전이 시작될 때 원래 배속으로 돌아온다
 	pacing.skip()
+	TestPoke.foe_beside(battle, battle.flag(0), Vector2(300, 0))   # 안개 시작: 적이 다가와 접촉이 생기는 상황을 만든다
 	var waited := 0.0
 	while src.quiet() and waited < 30.0 and battle.G.state == "play":
 		await process_frame

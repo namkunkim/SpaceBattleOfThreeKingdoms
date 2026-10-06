@@ -208,6 +208,17 @@
 - 고친 것: 투영 세력 키가 진영 기준이라 손권군이 `shu`로 나오던 것(`BattleProjection.faction_key`, `BattleSource.faction`). 테스트 `tests/roster.gd`에 투영 세력 수 확인 추가, 12종 통과.
 - **M10 시작 때 먼저 할 것:** §7의 "(M10 선행) 호스트를 적벽 프로필로 연결" 5항목. 이게 닫혀야 손권 함대가 화면에 뜬다(캡처 확인은 그때).
 
+## M10 선행: 호스트를 적벽 프로필로 연결 (2026-10-06, 구현 세션) — CHECKLIST §7 해당 항목 닫음
+
+- 호스트 `FleetBattle3D.init_game()`이 `ScenarioProfile.load_profile(profile_def, difficulty)`(기본 "표준")로 `BattleSim`을 만든다. `profile_def = ""`이면 POC 프로필(`rule_text` 테스트 전용). 아군 7개(유비 4 + 손권 3), 적은 안개라 접촉이 생겨야 보인다.
+- 기본 그룹은 `FleetView.group_id`(시나리오 함대 ID) 기준 1~3번(`_assign_default_groups`). `ALLY_DEF`·`FOE_DEF`는 프로필 편성에서 만든다(적은 처음부터 배치되는 전대만, 증원 규모는 숨김). 초상은 `Commanders.PORTRAIT`(없으면 0).
+- 뷰 모델: 접촉(`contact`)을 `FleetView`로 받는다(`_apply_contact`: "미확인 함대", 전력 구간을 10척 기준 비례 표시, 상실 접촉은 마지막 위치에 남음). 오차 반경·신뢰도·상실 표시 UI는 아직 없다(안개 UI 후속). `counts`(함종 카운터)·`group_id` 필드 추가.
+- `BattleSource`: `combat`이 `sim.salvo.C`를 읽어 진형 탭 7종이 선다(`tests/roster.gd`로 확인), `composition()`이 코어 카운터를 준다, `uses_cp()`(salvo면 CP 막대·비용 숨김).
+- 렌더러: `skin`(0 아군, 1 적, 2 손권군)으로 손권군 선체·엔진을 보라색으로 구분. 인장(吳)·글리프는 이미 세력 키 기반이다.
+- 카메라: `CameraRig.limit`(프로필 전장 1600×900)로 이동 범위를 제한하고 시작 위치·확대를 전장 기준으로 맞췄다. 3D 배경판은 3400×2300 그대로. 미니맵은 `battle.field()`.
+- 테스트: 안개 시작이라 적이 필요한 곳은 `TestPoke.foe_beside`로 적 하나를 옮긴다(`battle_flow`, `smoke`, `pacing`, `decision_flow`, `selection_groups`, `touch_input`, `squadron_strip`, `capture_ui`). `battle_flow`는 CP·미사일·방어진형 단계를 뺐다. 전 테스트 통과(touch_hold·ui_flow 포함).
+- **남은 정리(POC 잔재):** `BattleSource.rules()`의 "poc" 규칙 문구(툴팁 수치), `FleetBattle3D` CMDS·REJECT의 CP 문구와 POC 함수(`power`·`apply_dmg`·`fire_missiles`), 정보 패널 `FORM_NAMES`. `rule_text` 테스트가 POC 대조라 함께 정리해야 한다. 캡처: `capture_ui wu`/`battle`(1920×1200).
+
 ## 남은 일 (컨셉 세션이 할 수 있는 것)
 
 | 우선 | 일 | 메모 |

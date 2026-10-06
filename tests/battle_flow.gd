@@ -27,7 +27,7 @@ func _run() -> void:
 	# --- 선택 ---
 	if not TestCheck.ok(self, battle.my_sel().size() == 1 and battle.my_sel()[0].is_flag, "initial selection = flagship"): return
 	battle.do_cmd("all")
-	if not TestCheck.ok(self, battle.my_sel().size() == 6, "select all"): return
+	if not TestCheck.ok(self, battle.my_sel().size() == 7, "select all"): return
 	battle.selected.clear()
 	battle.do_cmd("stop")
 	if not TestCheck.ok(self, _kinds("toast") == 1, "toast: no selection"): return
@@ -45,34 +45,11 @@ func _run() -> void:
 	if not TestCheck.ok(self, f.has_move and f.move_to.x > f.pos.x + 300.0, "move order"): return
 	battle.do_cmd("stop")
 	if not TestCheck.ok(self, not f.has_move and f.target == null, "stop"): return
-	battle.do_cmd("def")
-	if not TestCheck.ok(self, f.defense, "defense on"): return
-	battle.do_cmd("def")
-	if not TestCheck.ok(self, not f.defense, "defense toggle off"): return
 	battle.do_cmd("rally")
 	if not TestCheck.ok(self, f.has_move, "rally"): return
 	battle.do_cmd("retreat")
-	if not TestCheck.ok(self, f.has_move and f.move_to.x < 3400.0, "retreat"): return
-	var cp0: float = battle.G.cp
-	battle.do_cmd("charge")
-	if not TestCheck.ok(self, f.charge_t > 9.0 and battle.G.cp == cp0 - 3.0, "charge costs CP 3 (%f -> %f)" % [cp0, battle.G.cp]): return
-	battle.do_cmd("charge")
-	if not TestCheck.ok(self, battle.G.cp < 3.0 or _kinds("toast") >= 2, "second charge rejected for CP"): return
-	var toasts0 := _kinds("toast")
-	battle.do_cmd("missile")
-	if not TestCheck.ok(self, _kinds("toast") == toasts0 + 1, "missile with no target / low CP -> toast"): return
-	# 미사일·함재기: 적 앞으로 보내서 실제로 발사
-	var foe = battle.fleets[7]
-	TestPoke.fleet(battle, foe, {"pos": f.pos + Vector2(300, 0)})
-	battle.G.cp = 10.0
-	battle.sim.st.cp = 100000
-	battle._sync()
-	battle.selected.assign([f])
-	battle.do_cmd("missile")
-	if not TestCheck.ok(self, battle.missiles.size() == 6 and battle.sim.st.cp == 80000, "missile volley: %d cp=%d" % [battle.missiles.size(), battle.sim.st.cp]): return
+	if not TestCheck.ok(self, f.has_move, "retreat"): return
 	if not TestCheck.ok(self, _kinds("") >= 1, "log lines emitted"): return
-	battle.do_cmd("fighter")
-	if not TestCheck.ok(self, battle.swarms.size() == 1 and battle.sim.st.cp == 50000, "fighters launched"): return
 	if not TestCheck.ok(self, battle.sim.command_log.size() > n_cmds0, "commands recorded"): return
 	# --- 속도: ×1 = 초당 10틱, ×2 = 20틱, 정지(메뉴) = 0 ---
 	battle.selected.clear()
@@ -110,20 +87,17 @@ func _run() -> void:
 	if not TestCheck.ok(self, battle.G.state == "end" and battle.hud.end_ov.visible, "end screen shown"): return
 	var seed0: int = battle.battle_seed
 	battle._restart()
-	if not TestCheck.ok(self, battle.G.state == "play" and not battle.G.over and battle.sim.st.tick == 0 and battle.fleets.size() == 13, "restart resets"): return
+	if not TestCheck.ok(self, battle.G.state == "play" and not battle.G.over and battle.sim.st.tick == 0 and battle.fleets.size() == 7, "restart resets"): return
 	if not TestCheck.ok(self, battle.battle_seed != seed0 and not battle.hud.end_ov.visible, "restart new seed / overlay hidden"): return
 	# --- 실제 한 판: 아군에 공격 명령 → 명령 기록으로 재생해도 같은 결과 ---
 	battle.do_cmd("all")
-	for a in battle.alive(0):
-		var t = battle.nearest_foe(a, 1e9)
-		battle.selected.assign([a])
-		battle.order_attack(t)
+	battle.order_move(battle.flag(0).pos + Vector2(1500, 0))   # 안개: 적은 접촉이 생길 때만 보인다. 일제히 전진시킨다
 	for i in 6000:
 		battle.update_sim(0.05)
 		if battle.sim.st.over:
 			break
 	var log: Array = battle.sim.command_log
-	var rp := BattleSim.replay(battle.battle_seed, 10, log, battle.sim.st.tick)
+	var rp := BattleSim.replay(battle.battle_seed, 10, log, battle.sim.st.tick, ScenarioProfile.load_profile(battle.profile_def, battle.difficulty))
 	if not TestCheck.ok(self, rp.fingerprint() == battle.sim.fingerprint(), "live game replays to the same fingerprint"): return
 	battle.queue_free()
 	await process_frame

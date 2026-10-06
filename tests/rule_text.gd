@@ -8,6 +8,7 @@ func _initialize() -> void:
 
 func _run() -> void:
 	var battle := (load("res://scenes/FleetBattle3D.tscn") as PackedScene).instantiate()
+	battle.profile_def = ""   # 이 테스트는 POC 규칙 문구를 POC 코어와 대조한다
 	root.add_child(battle)
 	await process_frame
 	var deck = battle.presentation.hud

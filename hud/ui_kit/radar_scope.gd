@@ -32,7 +32,7 @@ func _map() -> Rect2:
 	return Rect2(Vector2(PAD, PAD), Vector2(W, H) - Vector2(PAD, PAD) * 2.0)
 
 func _scale() -> float:
-	return _map().size.x / battle.WORLD.x
+	return _map().size.x / battle.field().x
 
 func _w2r(p: Vector2) -> Vector2:
 	return _map().position + p * _scale()
@@ -84,6 +84,6 @@ func _on_input(e: InputEvent) -> void:
 	var dragm: bool = e is InputEventMouseMotion and (e.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0
 	if press or dragm:
 		if _map().grow(4.0).has_point(e.position):
-			battle.cam_pos = _r2w(e.position).clamp(Vector2.ZERO, battle.WORLD)
+			battle.cam_pos = _r2w(e.position).clamp(Vector2.ZERO, battle.field())
 			battle._clamp_cam()
 			accept_event()

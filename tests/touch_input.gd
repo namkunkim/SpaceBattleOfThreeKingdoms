@@ -69,9 +69,10 @@ func _run() -> void:
 	await _settle()
 	if not TestCheck.ok(self, not f.has_move, "drag cancel"): return
 	# 4. 적 위에 놓아 공격
-	var foe = battle.fleets[6]
-	TestPoke.fleet(battle, foe, {"pos": f.pos + Vector2(380.0, -40.0)})
+	TestPoke.foe_beside(battle, f, Vector2(380.0, -40.0))   # 안개 시작이라 적을 곁으로 옮겨 접촉을 만든다
+	battle.update_sim(0.3)
 	await _settle()
+	var foe = battle.alive(1)[0]
 	sp = battle.w2s(f.pos)
 	var fp: Vector2 = battle.w2s(foe.pos)
 	_touch(0, sp, true)

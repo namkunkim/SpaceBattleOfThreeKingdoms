@@ -62,7 +62,12 @@ func _run() -> void:
 	_find_button(deck, "돌아가기").pressed.emit()
 	await _frames()
 	if not TestCheck.ok(self, deck.screen == "brief", "back to brief"): return
-	if not TestCheck.ok(self, battle.presentation.src.composition(battle.fleets[0].id).is_empty(), "POC has no class counters"): return
+	var comp: Array = battle.presentation.src.composition(battle.fleets[0].id)
+	var want_text := ScenarioRoster.composition_text(ScenarioRoster.squadron(ScenarioRoster.load_scenario(), "RC-LIU-SQ-01"))
+	var got := " · ".join(comp.map(func(it): return "%s %d" % [it[0], it[1]]))
+	if not TestCheck.ok(self, not comp.is_empty() and got == want_text, "scenario class counters: %s vs %s" % [got, want_text]): return
+	battle.selected.assign([battle.fleets[0]])
+	if not TestCheck.ok(self, battle.presentation.src.has_formations() and battle.presentation.src.formation_options().size() == 7, "formation tab: 7 cards from sim.salvo.C"): return
 	# 손권 함대 누락 회귀: 전투 시작 투영에 촉·오 전대가 모두 있고 세력 키가 시나리오 세력과 같다(조조군은 적 투영에서)
 	var sim := BattleSim.new(1, BattleRules.TICK_HZ, ScenarioProfile.load_profile("res://data/profiles/red_cliffs_rt.json"))
 	var cnt := {}

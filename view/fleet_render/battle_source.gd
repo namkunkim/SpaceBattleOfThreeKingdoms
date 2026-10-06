@@ -5,7 +5,7 @@ extends RefCounted
 # 지금은 POC(FleetBattle3D.gd)의 Fleet 객체를 읽는다. M1에서 BattleProjection이 정해지면
 # 이 파일만 고쳐 같은 모양의 사전을 돌려주면 된다.
 #
-# squadron 사전: {id, side, name, role, portrait, pos(px), heading, ships, max_ships, flagship,
+# squadron 사전: {id, side, faction, name, role, portrait, pos(px), heading, ships, max_ships, flagship,
 #                 dead, target_id, firing_at, formation, defense, charge_t, in_cmd,
 #                 missile_cd, fighter_cd, speech, speech_t, has_move, move_to, lv}
 
@@ -26,7 +26,7 @@ func squadron(id: int) -> Dictionary:
 
 func _sq(f) -> Dictionary:
 	return {
-		"id": f.id, "side": f.side, "name": f.fname, "role": f.role, "portrait": f.portrait,
+		"id": f.id, "side": f.side, "faction": faction(f.id), "name": f.fname, "role": f.role, "portrait": f.portrait,
 		"pos": f.pos, "heading": f.heading, "ships": f.ships, "max_ships": f.max_ships,
 		"flagship": f.is_flag, "dead": f.dead,
 		"target_id": f.target.id if f.target else -1,
@@ -158,9 +158,9 @@ func has_command(id: String) -> bool:
 	return true
 
 # ------------------------------------------------------------ 진형 탭(M5 진형, docs/ui/FORMATION-TAB-SPEC.md)
-# combat: 코어 규칙 사전(`combat.formations`·`formation_rules`). POC 호스트는 비어 있어(salvo 규칙 아님) 진형 탭이 안 선다.
-# 시나리오 프로필 호스트(M10)가 이 값을 채운다.
-var combat := {}
+# combat: 코어 규칙 사전(`combat.formations`·`formation_rules`). salvo 규칙(시나리오 프로필)이 아니면 비어 진형 탭이 안 선다.
+var combat: Dictionary:
+	get: return battle.sim.salvo.C if battle.sim.salvo else {}
 
 func formation_options() -> Array:
 	var sel := []
@@ -168,6 +168,10 @@ func formation_options() -> Array:
 		if f.side == 0:
 			sel.append({"formation_id": f.formation_id, "form_to": f.form_to, "form_left_s": f.form_left_s, "form_info": f.form_info})
 	return FormationTab.options(combat, sel)
+
+# 지휘력(CP)은 POC 규칙의 자원이다. salvo 규칙(시나리오 프로필)은 CP를 쓰지 않는다.
+func uses_cp() -> bool:
+	return battle.sim.salvo == null
 
 func has_formations() -> bool:
 	return not combat.is_empty()
@@ -201,10 +205,18 @@ func command_mode(_id: int) -> String:
 	return ""
 
 # ------------------------------------------------------------ 함종 카운터(리뷰 C-1)
-# 전대의 함종별 실제 척 수 [[함종 이름, 수], ...]. 코어가 시나리오 편성(ScenarioRoster)을 읽게 되면 그 카운터를 준다.
-# POC에는 함종 카운터가 없다(함선 수 하나뿐). 화면 숫자는 코어 카운터만 쓰므로 빈 배열을 돌려준다.
-func composition(_id: int) -> Array:
-	return []
+# 전대의 함종별 실제 척 수 [[함종 이름, 수], ...](코어 카운터, 격침·대파 제외 = 전력에 드는 척). 카운터가 없으면(적 접촉·POC) 빈 배열.
+func composition(id: int) -> Array:
+	var f = battle.by_id(id)
+	var out := []
+	if f == null:
+		return out
+	for t in f.counts:
+		var st: Array = f.counts[t]
+		var n: int = st[0] + st[1] + st[2]
+		if n > 0:
+			out.append([ScenarioRoster.SHIP_TYPES.get(t, {"short": t}).short, n])
+	return out
 
 # ------------------------------------------------------------ 결정 분기(EXPERIENCE-DESIGN §5)
 # 곧 분기(리뷰 V-4): 약 3초 전 예고. {"secs": 남은 게임 초, "pos": 관련 위치(전장 px)}. 없으면 {}.
