@@ -344,20 +344,16 @@ func _dir_menu() -> void:
 	draw_arc(ok, touch.MENU_OK_R, 0.0, TAU, 32, Color(col, 0.95), 2.5, true)
 	UiDraw.text(self, ok + Vector2(-20, 8), "확정", "semibold", 22, col)
 	UiDraw.text(self, c + Vector2(-72, -R * 0.62), "방향을 돌리고 확정", "semibold", 15, col)
+	_mode_pill(touch.menu_pill_rect())   # 원 안쪽(HUD에 잘리지 않게)
 
-# 이동 방식 안내(함대를 누르고 있을 때 번갈아 보인다): 끌기 시작하는 순간 보인 방식이 선택된다
-func _mode_hint(f) -> void:
+# 이동 방식 알약(터치 조작 메뉴 안): 현재 방식을 보여주고 누르면 전환된다
+func _mode_pill(r: Rect2) -> void:
 	var col := UiTheme.GOLD_HI
-	var c: Vector2 = battle.w2s(f.pos)
-	var txt := "이동: 선회" if touch.cycle_turn else "이동: 방향 고정"
-	var sz := Vector2(230, 52)
-	var r := Rect2(c + Vector2(-sz.x * 0.5, -touch.RING_R - 70.0), sz)
-	draw_rect(r, Color(0.03, 0.05, 0.07, 0.94))
-	draw_rect(r, Color(col, 0.95), false, 2.5)
-	var w := UiDraw.text_w(txt, "semibold", 22)
-	UiDraw.text(self, r.position + Vector2((r.size.x - w) * 0.5, sz.y * 0.5 + 8.0), txt, "semibold", 22, col)
-	var hint := "끌면 이 방식으로 이동"
-	UiDraw.text(self, r.position + Vector2(18, sz.y + 20.0), hint, "medium", 14, Color(col, 0.8))
+	draw_rect(r, Color(0.03, 0.05, 0.07, 0.92))
+	draw_rect(r, Color(col, 0.9), false, 2.0)
+	var txt: String = touch.pill_text()
+	var w := UiDraw.text_w(txt, "semibold", 20)
+	UiDraw.text(self, r.position + Vector2((r.size.x - w) * 0.5, r.size.y * 0.5 + 7.0), txt, "semibold", 20, col)
 
 # 회전 핸들: 단일 선택 함대 주위 링과 선두 방향 손잡이. 끄는 동안은 목표 방향 선과 부채꼴을 보여준다.
 func _turn_handle() -> void:
@@ -369,8 +365,8 @@ func _turn_handle() -> void:
 	draw_arc(c, touch.RING_R, 0.0, TAU, 48, Color(col, 0.35), 1.5, true)
 	var h: Vector2 = touch.handle_pos(f)
 	var tr: Dictionary = touch.turn
-	if touch.cycle_on and touch.mode == "pending":
-		_mode_hint(f)
+	if tr.is_empty() and touch.menu.is_empty() and touch.mode != "turn":
+		_mode_pill(touch.fleet_pill_rect(f))
 	if not tr.is_empty() and tr.fleet == f:
 		var tcol: Color = UiTheme.INK_3 if tr.cancel else col
 		if not tr.cancel:

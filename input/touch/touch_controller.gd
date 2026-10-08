@@ -22,8 +22,7 @@ const HANDLE_HIT := 40.0   # 핸들 잡기 반경
 const RING_BAND := 26.0    # 링 잡기 폭(±)
 const DWELL_T := 1.0       # 끌다가 이만큼 멈추면 그 자리가 목적지, 방향 메뉴가 뜬다
 const DWELL_MOVE := 14.0
-const CYCLE_START := 0.5   # 선택된 함대를 이만큼 누르고 있으면 이동 방식 안내가 번갈아 보이기 시작
-const CYCLE_T := 0.9       # 안내 하나가 보이는 시간(방향 고정 → 선회 → 방향 고정 …)
+const FACE_HOLD_T := 1.0   # 선택된 함대를 이만큼 누르고 있으면 제자리 방향 메뉴
 const MENU_R := 130.0      # 방향 원 반지름
 const MENU_OK_R := 46.0    # 가운데 확정 버튼 반경
 const MENU_BAND := 56.0    # 원 바깥으로 이만큼까지는 방향 조작, 그 밖을 누르면 취소
@@ -64,6 +63,21 @@ func _control_ok() -> bool:
 		battle.toast("일시정지 후 함대를 조작하세요")
 	return false
 
+# 이동 방식 토글 알약: 함대 조작 메뉴 안에 둔다(함대 아래, 방향 원 안). 누르면 방향 고정 ↔ 선회.
+const PILL := Vector2(210, 48)
+
+func pill_rect(c: Vector2) -> Rect2:
+	return Rect2(c - PILL * 0.5, PILL)
+
+func fleet_pill_rect(f) -> Rect2:
+	return pill_rect(battle.w2s(f.pos) + Vector2(0, RING_R + 44.0))
+
+func menu_pill_rect() -> Rect2:
+	return pill_rect(menu.c + Vector2(0, -MENU_R * 0.22))
+
+func pill_text() -> String:
+	return "이동: 선회" if turn_move else "이동: 방향 고정"
+
 func handle_pos(f) -> Vector2:
 	var c: Vector2 = battle.w2s(f.pos)
 	var d: Vector2 = battle.w2s(f.pos + Vector2(cos(f.heading), sin(f.heading)) * 100.0) - c
@@ -71,9 +85,7 @@ func handle_pos(f) -> Vector2:
 
 # 일시정지/재개 고정 버튼: 이 버튼을 누를 때만 전투 시계가 멈추고(G.hold) 다시 흐른다. 전장 터치는 정지시키지 않는다.
 var _resume: Button
-var turn_move := true     # false = 방향 고정 이동(평행), true = 선회 이동(진행 방향으로 돌며 이동). 바로 끌면 선회
-var cycle_on := false     # 선택된 함대를 누르고 있는 동안 이동 방식 안내가 번갈아 보이는 중
-var cycle_turn := false   # 지금 보이는 안내가 "선회"인가(아니면 "방향 고정")
+var turn_move := false   # false = 방향 고정 이동(평행), true = 선회 이동(진행 방향으로 돌며 이동)
 var menu := {}             # 도착 방향 메뉴: {fleet, world(목적지), c(메뉴 중심, 화면), strafe}. 열려 있는 동안 mode == "menu"
 var _dwell_t := 0.0
 var _dwell_p := Vector2.ZERO
@@ -169,14 +181,9 @@ func _process(delta: float) -> void:
 	if mode == "pending" and touches.size() == 1:
 		press_t += delta
 		if origin_fleet != null and origin_fleet == handle_fleet():
-			# 선택된 함대 1개를 가만히 누르고 있으면 "이동: 방향 고정"과 "이동: 선회"가 번갈아 보인다.
-			# 이때 끌기 시작하면 그 순간 보인 방식이 선택된다(선택 추가/해제 길게 누르기보다 우선).
-			if press_t >= CYCLE_START:
-				var turn_now := int((press_t - CYCLE_START) / CYCLE_T) % 2 == 1
-				if not cycle_on or turn_now != cycle_turn:
-					UiSound.vibrate(15)
-				cycle_on = true
-				cycle_turn = turn_now
+			# 선택된 함대 1개를 가만히 누르면 제자리 방향 메뉴(선택 추가/해제 길게 누르기보다 우선)
+			if press_t >= FACE_HOLD_T:
+				_open_menu(true)
 		elif press_t >= LONG_PRESS and origin_fleet and origin_fleet.side == 0:
 			mode = "long"
 			SelectionSet.toggle(battle.selected, origin_fleet)
@@ -211,7 +218,11 @@ func _touch(e: InputEventScreenTouch) -> void:
 		touches.erase(e.index)
 		return
 	if e.pressed:
-		cycle_on = false
+		var pf = handle_fleet()
+		if pf and fleet_pill_rect(pf).has_point(e.position):
+			turn_move = not turn_move   # 함대 아래 알약으로 이동 방식 전환
+			UiSound.vibrate(20)
+			return
 		touches[e.index] = {"start": e.position, "pos": e.position}
 		if touches.size() == 1:
 			mode = "pending"
@@ -222,6 +233,9 @@ func _touch(e: InputEventScreenTouch) -> void:
 				mode = "turn"
 				origin_fleet = hf
 				_update_turn(e.position)
+			elif hf and absf(e.position.distance_to(battle.w2s(hf.pos)) - RING_R) < RING_BAND:
+				mode = "slide"   # 링 위에서 끌기 = 방향 고정 평행 이동
+				origin_fleet = hf
 		elif touches.size() == 2:
 			_begin_pinch()
 		return
@@ -233,7 +247,6 @@ func _touch(e: InputEventScreenTouch) -> void:
 		if touches.is_empty():
 			mode = ""
 		return
-	cycle_on = false
 	if mode == "pending":
 		battle._click_at(e.position, MOUSE_BUTTON_LEFT, false)
 	elif mode == "box":
@@ -261,8 +274,6 @@ func _drag(e: InputEventScreenDrag) -> void:
 		_update_pinch()
 		return
 	if mode == "pending" and (e.position - (tc.start as Vector2)).length() > TAP_MOVE:
-		turn_move = cycle_turn if cycle_on else true   # 누르고 있을 때 보인 방식, 바로 끌면 선회
-		cycle_on = false
 		if battle.multi:   # 다중 모드: 어디서 시작하든 끌기 = 범위 선택(명령은 탭으로)
 			mode = "box"
 			battle.drag = {"s": tc.start, "c": e.position, "btn": -1, "moved": true, "mode": "box", "shift": true, "last": e.position}
@@ -347,6 +358,10 @@ func _menu_confirm() -> void:
 
 func _menu_press(e: InputEventScreenTouch) -> void:
 	var d: float = e.position.distance_to(menu.c)
+	if menu_pill_rect().has_point(e.position):
+		turn_move = not turn_move   # 방향 원 안 알약으로 이동 방식 전환(원은 열린 채 유지)
+		UiSound.vibrate(20)
+		return
 	if e.position.distance_to(menu_ok_pos()) < MENU_OK_R:
 		_menu_confirm()
 	elif d < MENU_R + MENU_BAND:
@@ -387,7 +402,6 @@ func _finish_order(p: Vector2) -> void:
 		battle.order_move(battle.s2w(p), o.slide)
 
 func _begin_pinch() -> void:
-	cycle_on = false
 	menu = {}
 	mode = "pinch"
 	order = {}
