@@ -287,12 +287,16 @@ func _hold_view() -> void:
 			UiDraw.dashed_poly(self, PackedVector2Array([c, d]), Color(col, 0.9), 2.5, 10.0, 6.0, -t * 40.0)
 			draw_arc(d, 18.0, 0.0, TAU, 32, Color(col, 0.9), 2.5, true)
 			UiDraw.diamond(self, d, 6.0, col)
-			UiDraw.text(self, d + Vector2(-26, 40), "평행 이동" if s.strafe else "이동", "semibold", 14, col)
+			UiDraw.text(self, d + Vector2(-26, -30), "평행 이동" if s.strafe else "이동", "semibold", 14, col)   # 아래쪽은 기존 "도착 0:04" 표식 자리
 		if s.face_set:
-			var dir: Vector2 = battle.w2s(s.pos + Vector2(cos(s.face_to), sin(s.face_to)) * 100.0) - c
+			# 이동 중이면 목적지에, 제자리 회전이면 함대에 도착 방향 화살표를 그린다
+			var wo: Vector2 = s.move_to if s.has_move else s.pos
+			var so: Vector2 = battle.w2s(wo)
+			var dir: Vector2 = battle.w2s(wo + Vector2(cos(s.face_to), sin(s.face_to)) * 100.0) - so
 			dir = dir.normalized()
-			var tip := c + dir * (touch.RING_R + 34.0)
-			draw_line(c + dir * touch.RING_R, tip, Color(col, 0.95), 4.0, true)
+			var r0 := 26.0 if s.has_move else touch.RING_R
+			var tip := so + dir * (r0 + 40.0)
+			draw_line(so + dir * r0, tip, Color(col, 0.95), 4.0, true)
 			var side := Vector2(-dir.y, dir.x) * 9.0
 			draw_colored_polygon(PackedVector2Array([tip + dir * 14.0, tip + side, tip - side]), Color(col, 0.95))
 

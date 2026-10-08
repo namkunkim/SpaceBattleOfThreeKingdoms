@@ -61,6 +61,23 @@ var _dwell_t := 0.0
 var _dwell_p := Vector2.ZERO
 var _hold_by_touch := false   # 이번 터치가 정지를 걸었는가(두 손가락 카메라 조작이면 되돌린다)
 
+# HUD 버튼·패널 위 터치인가(정지를 걸지 않는다). 화면 대부분을 덮는 전체 화면 컨트롤은 제외한다.
+func _over_hud(p: Vector2) -> bool:
+	var hud = battle.presentation.hud if battle.presentation else null
+	if hud == null:
+		return false
+	var vs: Vector2 = battle.get_viewport().get_visible_rect().size
+	var stack: Array = [hud]
+	while not stack.is_empty():
+		var n: Node = stack.pop_back()
+		for ch in n.get_children():
+			stack.append(ch)
+		if n is Control and n != hud and n.is_visible_in_tree() and n.mouse_filter == Control.MOUSE_FILTER_STOP:
+			var r: Rect2 = n.get_global_rect()
+			if r.has_point(p) and r.size.x * r.size.y < vs.x * vs.y * 0.4:
+				return true
+	return false
+
 func _build_resume() -> void:
 	var layer := CanvasLayer.new()
 	layer.layer = 8
@@ -121,7 +138,7 @@ func _touch(e: InputEventScreenTouch) -> void:
 		touches.erase(e.index)
 		return
 	if e.pressed:
-		if _resume and not (_resume.visible and _resume.get_global_rect().has_point(e.position)):
+		if _resume and not (_resume.visible and _resume.get_global_rect().has_point(e.position)) and not _over_hud(e.position):
 			if touches.is_empty():
 				_hold_by_touch = not battle.G.hold
 			battle.G.hold = true
