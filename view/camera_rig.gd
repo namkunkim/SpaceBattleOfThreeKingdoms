@@ -44,6 +44,8 @@ func s2w(sp: Vector2) -> Vector2:
 	var hit := o + n * t
 	return Vector2(hit.x / S + WORLD.x * 0.5, hit.z / S + WORLD.y * 0.5)
 
+var margin := 0.0   # 전장 크기에 대한 비율. 0이면 화면이 전장 안에만 머문다
+
 func clamp_cam() -> void:
 	cam_pos.x = clampf(cam_pos.x, 0.0, limit.x)
 	cam_pos.y = clampf(cam_pos.y, 0.0, limit.y)
@@ -62,12 +64,14 @@ func clamp_cam() -> void:
 			hi = hi.max(w)
 		var d := Vector2.ZERO
 		for a in 2:
+			var m: float = limit[a] * margin   # 화면이 전장 밖으로 벗어나도 되는 여유(두 손가락 이동용)
 			if hi[a] - lo[a] > limit[a]:
-				d[a] = limit[a] * 0.5 - (lo[a] + hi[a]) * 0.5
-			elif lo[a] < 0.0:
-				d[a] = -lo[a]
-			elif hi[a] > limit[a]:
-				d[a] = limit[a] - hi[a]
+				var off: float = (lo[a] + hi[a]) * 0.5 - limit[a] * 0.5
+				d[a] = -(off - clampf(off, -m, m))
+			elif lo[a] < -m:
+				d[a] = -m - lo[a]
+			elif hi[a] > limit[a] + m:
+				d[a] = limit[a] + m - hi[a]
 		if d.length() < 0.5:
 			break
 		cam_pos += d

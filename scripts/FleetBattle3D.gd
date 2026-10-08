@@ -145,6 +145,7 @@ func init_game() -> void:
 	if TOUCH_TEST and not profile.is_empty():
 		profile.ally = profile.ally.slice(0, 1)
 		profile.foe = []   # 적 함대 없음(터치 조작 시험)
+		rig.margin = 0.4   # 시작 배율에서도 두 손가락으로 화면을 옮길 수 있게
 		GameSettings.slow_mode = GameSettings.SLOW_OFF   # 선택 감속 끔(저장 설정은 건드리지 않는다)
 		# 이동 ×150: 화면 한 폭(1600)을 약 10초에 건넌다. 선회율도 ×15로 올린다: 선회 반경(속도÷선회율)이
 		# 도착 판정(settle 0.7×속도) 안에 들어야 목적지를 돌지 않는다. 조건은 선회율 > 82°/초(속도와 무관)
