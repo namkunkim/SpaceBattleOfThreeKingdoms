@@ -146,6 +146,11 @@ func init_game() -> void:
 		profile.ally = profile.ally.slice(0, 1)
 		profile.foe = []   # 적 함대 없음(터치 조작 시험)
 		GameSettings.slow_mode = GameSettings.SLOW_OFF   # 선택 감속 끔(저장 설정은 건드리지 않는다)
+		# 이동 ×150: 화면 한 폭(1600)을 약 10초에 건넌다. 선회율도 ×15로 올린다: 선회 반경(속도÷선회율)이
+		# 도착 판정(settle 0.7×속도) 안에 들어야 목적지를 돌지 않는다. 조건은 선회율 > 82°/초(속도와 무관)
+		for t in profile.combat.ship_types.values():
+			t.speed_per_turn *= 150
+		profile.combat.movement.turn_deg_per_s *= 15
 	sim = BattleSim.new(battle_seed, BattleRules.TICK_HZ, profile)
 	sim.endless = TOUCH_TEST
 	ALLY_DEF = profile.ally.map(_with_portrait)
