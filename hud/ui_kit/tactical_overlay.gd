@@ -77,6 +77,8 @@ func _draw() -> void:
 		_touch_order(touch.order)
 	if touch:
 		_turn_handle()
+		if battle.G.hold and battle.G.state == "play":
+			_hold_view()
 	if not battle.drag.is_empty() and battle.drag.mode == "box":
 		var r := Rect2(battle.drag.s, Vector2.ZERO).expand(battle.drag.c)
 		draw_rect(r, Color(UiTheme.GOLD_HI, 0.06))
@@ -256,6 +258,41 @@ func _speech(f) -> void:
 	draw_rect(r, Color(UiTheme.GOLD, 0.45 * a), false, 1.0)
 	draw_colored_polygon(PackedVector2Array([Vector2(r.position.x + 14, r.end.y), Vector2(r.position.x + 22, r.end.y), Vector2(r.position.x + 14, r.end.y + 6)]), Color(0.03, 0.045, 0.07, 0.92 * a))
 	UiDraw.text(self, r.position + Vector2(12, 17.5), f.speech, "medium", fs, Color(UiTheme.INK, a))
+
+# 정지 중 표시: 호박색 테두리·문구, 그리고 내려 둔 명령(목적지·표적·도착 방향)을 계속 보여준다. 재개하면 사라진다.
+func _hold_view() -> void:
+	var col := UiTheme.GOLD_HI
+	draw_rect(Rect2(Vector2.ZERO, size), Color(col, 0.7), false, 6.0)
+	var msg := "정지 — 명령 입력 중"
+	var w := UiDraw.text_w(msg, "semibold", 22) + 40.0
+	var box := Rect2(Vector2((size.x - w) * 0.5, 14.0), Vector2(w, 40.0))
+	draw_rect(box, Color(0.03, 0.05, 0.07, 0.9))
+	draw_rect(box, Color(col, 0.8), false, 1.5)
+	UiDraw.text(self, box.position + Vector2(20, 28), msg, "semibold", 22, col)
+	for v in battle.my_sel():
+		var s = battle.sim.st.by_id(v.id)
+		if s == null or s.dead:
+			continue
+		var c: Vector2 = battle.w2s(s.pos)
+		if s.target_id >= 0:
+			var tg = battle.sim.st.by_id(s.target_id)
+			if tg:
+				var tp: Vector2 = battle.w2s(tg.pos)
+				UiDraw.dashed_poly(self, PackedVector2Array([c, tp]), Color(UiTheme.FOE, 0.9), 2.5, 10.0, 6.0, -t * 40.0)
+				_reticle(tp, UiTheme.FOE)
+		elif s.has_move:
+			var d: Vector2 = battle.w2s(s.move_to)
+			UiDraw.dashed_poly(self, PackedVector2Array([c, d]), Color(col, 0.9), 2.5, 10.0, 6.0, -t * 40.0)
+			draw_arc(d, 18.0, 0.0, TAU, 32, Color(col, 0.9), 2.5, true)
+			UiDraw.diamond(self, d, 6.0, col)
+			UiDraw.text(self, d + Vector2(-26, 40), "평행 이동" if s.strafe else "이동", "semibold", 14, col)
+		if s.face_set:
+			var dir: Vector2 = battle.w2s(s.pos + Vector2(cos(s.face_to), sin(s.face_to)) * 100.0) - c
+			dir = dir.normalized()
+			var tip := c + dir * (touch.RING_R + 34.0)
+			draw_line(c + dir * touch.RING_R, tip, Color(col, 0.95), 4.0, true)
+			var side := Vector2(-dir.y, dir.x) * 9.0
+			draw_colored_polygon(PackedVector2Array([tip + dir * 14.0, tip + side, tip - side]), Color(col, 0.95))
 
 # 회전 핸들: 단일 선택 함대 주위 링과 선두 방향 손잡이. 끄는 동안은 목표 방향 선과 부채꼴을 보여준다.
 func _turn_handle() -> void:

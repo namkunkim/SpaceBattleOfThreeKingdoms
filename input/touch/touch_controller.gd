@@ -50,6 +50,7 @@ func handle_pos(f) -> Vector2:
 
 # 터치 정지: 전장을 짚으면 전투 시계를 멈추고(G.hold), 이 버튼으로 재개한다.
 var _resume: Button
+var _hold_by_touch := false   # 이번 터치가 정지를 걸었는가(두 손가락 카메라 조작이면 되돌린다)
 
 func _build_resume() -> void:
 	var layer := CanvasLayer.new()
@@ -57,13 +58,12 @@ func _build_resume() -> void:
 	add_child(layer)
 	_resume = Button.new()
 	_resume.text = "▶ 재개"
-	_resume.add_theme_font_size_override("font_size", 34)
-	_resume.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
-	_resume.custom_minimum_size = Vector2(260, 92)
-	_resume.offset_left = -130
-	_resume.offset_right = 130
+	_resume.add_theme_font_size_override("font_size", 38)
+	_resume.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+	_resume.offset_left = -330
+	_resume.offset_right = -40
 	_resume.offset_top = -190
-	_resume.offset_bottom = -98
+	_resume.offset_bottom = -70
 	_resume.visible = false
 	_resume.pressed.connect(func(): battle.G.hold = false)
 	layer.add_child(_resume)
@@ -98,6 +98,8 @@ func _unhandled_input(e: InputEvent) -> void:
 func _touch(e: InputEventScreenTouch) -> void:
 	if e.pressed:
 		if _resume and not (_resume.visible and _resume.get_global_rect().has_point(e.position)):
+			if touches.is_empty():
+				_hold_by_touch = not battle.G.hold
 			battle.G.hold = true
 		touches[e.index] = {"start": e.position, "pos": e.position}
 		if touches.size() == 1:
@@ -207,6 +209,9 @@ func _finish_order(p: Vector2) -> void:
 		battle.order_move(battle.s2w(p), o.slide)
 
 func _begin_pinch() -> void:
+	if _hold_by_touch:
+		battle.G.hold = false
+		_hold_by_touch = false
 	mode = "pinch"
 	order = {}
 	turn = {}
