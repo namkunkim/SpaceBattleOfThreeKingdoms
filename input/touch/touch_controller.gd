@@ -46,8 +46,22 @@ func setup(b: Node) -> void:
 
 # 회전 핸들: 단일 선택 함대의 선두 방향, 링 위. 선택이 1개가 아니면 없다.
 func handle_fleet():
+	if battle.TOUCH_TEST and not battle.G.hold:
+		return null   # 일시정지 중에만 회전 핸들·제자리 방향 메뉴
 	var s: Array = battle.my_sel()
 	return s[0] if (s.size() == 1 and not battle.multi) else null
+
+# 함대 명령(이동·평행 이동·방향 메뉴·공격)은 일시정지 중에만 낸다(시험 모드). 막히면 안내한다.
+var _hint_t := -10.0
+
+func _control_ok() -> bool:
+	if not battle.TOUCH_TEST or battle.G.hold:
+		return true
+	var now := Time.get_ticks_msec() / 1000.0
+	if now - _hint_t > 2.0:
+		_hint_t = now
+		battle.toast("일시정지 후 함대를 조작하세요")
+	return false
 
 func handle_pos(f) -> Vector2:
 	var c: Vector2 = battle.w2s(f.pos)
@@ -242,10 +256,13 @@ func _drag(e: InputEventScreenDrag) -> void:
 			battle.drag = {"s": tc.start, "c": e.position, "btn": -1, "moved": true, "mode": "box", "shift": true, "last": e.position}
 		elif not battle.my_sel().is_empty():
 			# 선택이 있으면 선택된 전대에서 시작한 끌기만 이동·공격으로 인정, 그 밖에서 시작하면 무시
-			mode = "order" if (origin_fleet and origin_fleet.side == 0 and battle.selected.has(origin_fleet)) else "ignore"
+			mode = "order" if (origin_fleet and origin_fleet.side == 0 and battle.selected.has(origin_fleet) and _control_ok()) else "ignore"
 			_dwell_t = 0.0
 			_dwell_p = e.position
 		elif origin_fleet and origin_fleet.side == 0:   # 선택이 없으면 아군에서 끌기 = 그 전대 선택 + 명령
+			if not _control_ok():
+				mode = "ignore"
+				return
 			mode = "order"
 			_dwell_t = 0.0
 			_dwell_p = e.position
