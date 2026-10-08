@@ -54,12 +54,11 @@ func handle_pos(f) -> Vector2:
 	var d: Vector2 = battle.w2s(f.pos + Vector2(cos(f.heading), sin(f.heading)) * 100.0) - c
 	return c + (d.normalized() if d.length() > 0.001 else Vector2.RIGHT) * RING_R
 
-# 터치 정지: 전장을 짚으면 전투 시계를 멈추고(G.hold), 이 버튼으로 재개한다.
+# 일시정지/재개 고정 버튼: 이 버튼을 누를 때만 전투 시계가 멈추고(G.hold) 다시 흐른다. 전장 터치는 정지시키지 않는다.
 var _resume: Button
 var menu := {}             # 도착 방향 메뉴: {fleet, world(목적지), c(메뉴 중심, 화면), strafe}. 열려 있는 동안 mode == "menu"
 var _dwell_t := 0.0
 var _dwell_p := Vector2.ZERO
-var _hold_by_touch := false   # 이번 터치가 정지를 걸었는가(두 손가락 카메라 조작이면 되돌린다)
 
 # HUD 버튼·패널의 화면 영역 목록(보이는 STOP 컨트롤 중 화면 40% 미만). 전체 화면을 덮는 컨트롤은 제외한다.
 func _hud_rects() -> Array:
@@ -130,19 +129,19 @@ func _build_resume() -> void:
 	layer.layer = 8
 	add_child(layer)
 	_resume = Button.new()
-	_resume.text = "▶ 재개"
+	_resume.text = "⏸ 일시정지"
 	_resume.add_theme_font_size_override("font_size", 38)
 	_resume.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	_resume.visible = false
-	_resume.pressed.connect(func(): battle.G.hold = false)
+	_resume.focus_mode = Control.FOCUS_NONE
+	_resume.pressed.connect(func(): battle.G.hold = not battle.G.hold)
 	layer.add_child(_resume)
 
 func _process(delta: float) -> void:
 	if _resume:
-		var show: bool = battle.G.state == "play" and battle.G.hold
-		if show and not _resume.visible:
-			_place_resume()
-		_resume.visible = show
+		_resume.visible = battle.G.state == "play"
+		_resume.text = "▶ 재개" if battle.G.hold else "⏸ 일시정지"
+		_place_resume()
 	delta = UiDraw.real_dt(delta)
 	if mode == "order" and touches.size() == 1 and not order.is_empty() and not order.cancel and order.target == null:
 		_dwell_t += delta
@@ -188,10 +187,6 @@ func _touch(e: InputEventScreenTouch) -> void:
 		touches.erase(e.index)
 		return
 	if e.pressed:
-		if _resume and not (_resume.visible and _resume.get_global_rect().has_point(e.position)) and not _over_hud(e.position):
-			if touches.is_empty():
-				_hold_by_touch = not battle.G.hold
-			battle.G.hold = true
 		touches[e.index] = {"start": e.position, "pos": e.position}
 		if touches.size() == 1:
 			mode = "pending"
@@ -218,8 +213,6 @@ func _touch(e: InputEventScreenTouch) -> void:
 		return
 	if mode == "pending":
 		battle._click_at(e.position, MOUSE_BUTTON_LEFT, false)
-		if _hold_by_touch and battle.my_sel().is_empty():
-			battle.G.hold = false   # 선택이 없으면 내릴 명령이 없다(선택 해제·정보 보기 탭은 정지하지 않는다)
 	elif mode == "box":
 		battle.input_node.box_select(battle.drag.s, e.position, false)
 		battle.drag = {}
@@ -365,9 +358,6 @@ func _finish_order(p: Vector2) -> void:
 
 func _begin_pinch() -> void:
 	menu = {}
-	if _hold_by_touch:
-		battle.G.hold = false
-		_hold_by_touch = false
 	mode = "pinch"
 	order = {}
 	turn = {}

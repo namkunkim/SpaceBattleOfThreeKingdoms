@@ -268,7 +268,7 @@ func _speech(f) -> void:
 func _hold_view() -> void:
 	var col := UiTheme.GOLD_HI
 	draw_rect(Rect2(Vector2.ZERO, size), Color(col, 0.7), false, 6.0)
-	var msg := "정지 — 명령 입력 중"
+	var msg := "일시정지 중"
 	var w := UiDraw.text_w(msg, "semibold", 22) + 40.0
 	var box := Rect2(Vector2((size.x - w) * 0.5, 14.0), Vector2(w, 40.0))
 	draw_rect(box, Color(0.03, 0.05, 0.07, 0.9))
