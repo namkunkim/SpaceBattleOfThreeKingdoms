@@ -297,7 +297,7 @@ func _order_marks(held: bool) -> void:
 			UiDraw.dashed_poly(self, PackedVector2Array([c, d]), Color(col, 0.9), 2.5, 10.0, 6.0, -t * 40.0)
 			draw_arc(d, 18.0, 0.0, TAU, 32, Color(col, 0.9), 2.5, true)
 			UiDraw.diamond(self, d, 6.0, col)
-			UiDraw.text(self, d + Vector2(-26, -30), "이동 · 방향 고정" if s.strafe else "이동", "semibold", 14, col)   # 아래쪽은 기존 "도착 0:04" 표식 자리
+			UiDraw.text(self, d + Vector2(-26, -30), "이동 · 방향 고정" if s.strafe else "이동 · 선회", "semibold", 14, col)   # 아래쪽은 기존 "도착 0:04" 표식 자리
 		if s.face_set:
 			# 이동 중이면 목적지에, 제자리 회전이면 함대에 도착 방향 화살표를 그린다
 			var wo: Vector2 = s.move_to if s.has_move else s.pos
@@ -374,7 +374,7 @@ func _touch_order(o: Dictionary) -> void:
 	var a: Vector2 = battle.w2s(o.from_fleet.pos)
 	var b: Vector2 = o.to
 	var col := UiTheme.GOLD_HI
-	var label := "이동 · 방향 고정" if o.get("slide", false) else "이동"
+	var label := "이동 · 방향 고정" if o.get("slide", false) else "이동 · 선회"
 	if o.cancel:
 		col = UiTheme.INK_3
 		label = "취소"

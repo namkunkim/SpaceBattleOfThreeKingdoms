@@ -71,6 +71,8 @@ func handle_pos(f) -> Vector2:
 # 일시정지/재개 고정 버튼: 이 버튼을 누를 때만 전투 시계가 멈추고(G.hold) 다시 흐른다. 전장 터치는 정지시키지 않는다.
 var _resume: Button
 var _float: Button
+var _mode_btn: Button
+var turn_move := false   # false = 방향 고정 이동(평행), true = 선회 이동(진행 방향으로 돌며 이동)
 var _float_t := 0.0
 const FLOAT_SHOW := 2.5   # 초(실제 시간)
 var menu := {}             # 도착 방향 메뉴: {fleet, world(목적지), c(메뉴 중심, 화면), strafe}. 열려 있는 동안 mode == "menu"
@@ -153,6 +155,14 @@ func _build_resume() -> void:
 	_resume.focus_mode = Control.FOCUS_NONE
 	_resume.pressed.connect(func(): battle.G.hold = false)
 	layer.add_child(_resume)
+	# 이동 방식 전환 버튼: 정지 중에만 보이고, 재개 버튼 바로 위에 둔다
+	_mode_btn = Button.new()
+	_mode_btn.add_theme_font_size_override("font_size", 24)
+	_mode_btn.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	_mode_btn.visible = false
+	_mode_btn.focus_mode = Control.FOCUS_NONE
+	_mode_btn.pressed.connect(func(): turn_move = not turn_move)
+	layer.add_child(_mode_btn)
 	# 플레이 중 화면을 짚으면 짚은 곳에 뜨는 일시정지 버튼(잠시 뒤 사라진다)
 	_float = Button.new()
 	_float.text = "⏸ 일시정지"
@@ -186,6 +196,10 @@ func _process(delta: float) -> void:
 		_resume.visible = battle.G.state == "play" and battle.G.hold
 		_resume.text = "▶ 재개"
 		_place_resume()
+		_mode_btn.visible = _resume.visible
+		_mode_btn.text = "이동: 선회" if turn_move else "이동: 방향 고정"
+		_mode_btn.size = Vector2(_resume.size.x, _resume.size.y * 0.5)
+		_mode_btn.position = _resume.position - Vector2(0, _mode_btn.size.y + 8.0)
 	delta = UiDraw.real_dt(delta)
 	if mode == "order" and touches.size() == 1 and not order.is_empty() and not order.cancel and order.target == null:
 		_dwell_t += delta
@@ -321,11 +335,11 @@ func _update_order(p: Vector2) -> void:
 	if p.distance_to(_dwell_p) > DWELL_MOVE:
 		_dwell_p = p
 		_dwell_t = 0.0
-	# 이동은 항상 방향 고정 평행 이동(선회 없음). 적 위에 놓으면 공격
+	# 이동 방식은 turn_move 토글(기본 방향 고정 평행 이동). 적 위에 놓으면 공격
 	var tgt = null if mode == "slide" else battle._hit_fleet(p)
 	var src = origin_fleet
 	var start: Vector2 = battle.w2s(origin_fleet.pos)
-	order = {"from_fleet": src, "to": p, "target": tgt if (tgt and tgt.side == 1) else null, "cancel": p.distance_to(start) < CANCEL_R, "slide": true}
+	order = {"from_fleet": src, "to": p, "target": tgt if (tgt and tgt.side == 1) else null, "cancel": p.distance_to(start) < CANCEL_R, "slide": not turn_move}
 	order_preview_changed.emit()
 
 func _open_menu(face := false) -> void:
@@ -364,7 +378,7 @@ func _menu_confirm() -> void:
 		if face:
 			battle.order_face(deg_to_rad(deg))
 		else:
-			battle.order_move(w, true, deg)   # 방향 고정 이동 + 이동하면서 정한 방향으로 돌아선다
+			battle.order_move(w, not turn_move, deg)   # 이동하면서(고정 이동) 또는 도착해서(선회 이동) 정한 방향으로 돌아선다
 
 func _menu_press(e: InputEventScreenTouch) -> void:
 	var d: float = e.position.distance_to(menu.c)
