@@ -146,12 +146,12 @@ func _build_resume() -> void:
 	layer.layer = 8
 	add_child(layer)
 	_resume = Button.new()
-	_resume.text = "⏸ 일시정지"
+	_resume.text = "▶ 재개"
 	_resume.add_theme_font_size_override("font_size", 38)
 	_resume.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	_resume.visible = false
 	_resume.focus_mode = Control.FOCUS_NONE
-	_resume.pressed.connect(func(): battle.G.hold = not battle.G.hold)
+	_resume.pressed.connect(func(): battle.G.hold = false)
 	layer.add_child(_resume)
 	# 플레이 중 화면을 짚으면 짚은 곳에 뜨는 일시정지 버튼(잠시 뒤 사라진다)
 	_float = Button.new()
@@ -182,8 +182,9 @@ func _process(delta: float) -> void:
 		if _float_t <= 0.0 or battle.G.hold or battle.G.state != "play":
 			_float.visible = false
 	if _resume:
-		_resume.visible = battle.G.state == "play"
-		_resume.text = "▶ 재개" if battle.G.hold else "⏸ 일시정지"
+		# 고정 버튼은 정지 중에만 "▶ 재개"로 보인다. 플레이 중에는 터치 지점의 일시정지 버튼만 쓴다.
+		_resume.visible = battle.G.state == "play" and battle.G.hold
+		_resume.text = "▶ 재개"
 		_place_resume()
 	delta = UiDraw.real_dt(delta)
 	if mode == "order" and touches.size() == 1 and not order.is_empty() and not order.cancel and order.target == null:

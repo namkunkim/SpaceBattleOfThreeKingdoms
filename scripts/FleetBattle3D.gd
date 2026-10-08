@@ -203,6 +203,7 @@ func _start() -> void:
 	hud.end_ov.visible = false
 	hud.menu_ov.visible = false
 	G.state = "play"
+	G.hold = TOUCH_TEST   # 전투에 들어가면 일시정지 상태로 시작(시험 모드): 이동·방향을 정한 뒤 재개한다
 	selected.assign([flag(0)])
 	refresh_panel()
 	add_log("전 함대, 전투 배치 완료.", "", fleets[0])
