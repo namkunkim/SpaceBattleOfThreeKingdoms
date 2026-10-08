@@ -34,6 +34,8 @@ var _consumed_index := -1
 
 func setup(b: Node) -> void:
 	battle = b
+	if b.TOUCH_TEST:
+		_build_resume()
 	Input.emulate_mouse_from_touch = true
 
 # 회전 핸들: 단일 선택 함대의 선두 방향, 링 위. 선택이 1개가 아니면 없다.
@@ -46,7 +48,29 @@ func handle_pos(f) -> Vector2:
 	var d: Vector2 = battle.w2s(f.pos + Vector2(cos(f.heading), sin(f.heading)) * 100.0) - c
 	return c + (d.normalized() if d.length() > 0.001 else Vector2.RIGHT) * RING_R
 
+# 터치 정지: 전장을 짚으면 전투 시계를 멈추고(G.hold), 이 버튼으로 재개한다.
+var _resume: Button
+
+func _build_resume() -> void:
+	var layer := CanvasLayer.new()
+	layer.layer = 8
+	add_child(layer)
+	_resume = Button.new()
+	_resume.text = "▶ 재개"
+	_resume.add_theme_font_size_override("font_size", 34)
+	_resume.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
+	_resume.custom_minimum_size = Vector2(260, 92)
+	_resume.offset_left = -130
+	_resume.offset_right = 130
+	_resume.offset_top = -190
+	_resume.offset_bottom = -98
+	_resume.visible = false
+	_resume.pressed.connect(func(): battle.G.hold = false)
+	layer.add_child(_resume)
+
 func _process(delta: float) -> void:
+	if _resume:
+		_resume.visible = battle.G.state == "play" and battle.G.hold
 	delta = UiDraw.real_dt(delta)
 	if mode == "pending" and touches.size() == 1:
 		press_t += delta
@@ -73,6 +97,8 @@ func _unhandled_input(e: InputEvent) -> void:
 
 func _touch(e: InputEventScreenTouch) -> void:
 	if e.pressed:
+		if _resume and not (_resume.visible and _resume.get_global_rect().has_point(e.position)):
+			battle.G.hold = true
 		touches[e.index] = {"start": e.position, "pos": e.position}
 		if touches.size() == 1:
 			mode = "pending"

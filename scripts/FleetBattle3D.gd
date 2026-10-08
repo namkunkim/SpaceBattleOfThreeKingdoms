@@ -158,7 +158,7 @@ func init_game() -> void:
 	inspect = null
 	marker = {}
 	drag = {}
-	G = {"t": 0.0, "cp": 3.0, "ecp": 3.0, "reinf": false, "state": "brief", "speed": 1, "slow": 1.0, "killed": 0.0, "lost": 0.0, "panel_t": 0.0, "over": false, "end_t": -1.0, "end_win": false, "end_text": ""}
+	G = {"t": 0.0, "cp": 3.0, "ecp": 3.0, "reinf": false, "state": "brief", "speed": 1, "slow": 1.0, "hold": false, "killed": 0.0, "lost": 0.0, "panel_t": 0.0, "over": false, "end_t": -1.0, "end_win": false, "end_text": ""}
 	sim.drain_events()
 	_sync()
 	_assign_default_groups()
@@ -260,7 +260,8 @@ func _process(delta: float) -> void:
 	var dt := minf(0.05, delta)
 	if G.state == "play":
 		input_node.poll_camera(dt)
-		clock.set_speed(float(G.speed) * G.slow)
+		var run := 0.0 if G.hold else 1.0   # 터치 중 정지(TOUCH_TEST): 재개 버튼을 누를 때까지
+		clock.set_speed(float(G.speed) * G.slow * run)
 		var n := clock.advance(delta)
 		for i in n:
 			if sim.st.over:
@@ -269,7 +270,7 @@ func _process(delta: float) -> void:
 		vm.alpha = clock.alpha()
 		_pump()
 		vm.interpolate(clock.alpha())
-		_tick_view(dt * G.speed * G.slow)
+		_tick_view(dt * G.speed * G.slow * run)
 		G.panel_t -= dt
 		if G.panel_t <= 0.0:
 			G.panel_t = 0.25
