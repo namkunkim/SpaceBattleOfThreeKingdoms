@@ -245,6 +245,8 @@ func _touch(e: InputEventScreenTouch) -> void:
 		return
 	if mode == "pending":
 		battle._click_at(e.position, MOUSE_BUTTON_LEFT, false)
+		if _hold_by_touch and battle.my_sel().is_empty():
+			battle.G.hold = false   # 선택이 없으면 내릴 명령이 없다(선택 해제·정보 보기 탭은 정지하지 않는다)
 	elif mode == "box":
 		battle.input_node.box_select(battle.drag.s, e.position, false)
 		battle.drag = {}
