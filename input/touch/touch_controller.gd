@@ -20,6 +20,11 @@ const CANCEL_R := 46.0
 const RING_R := 84.0       # 회전 핸들 링 반지름(화면 단위)
 const HANDLE_HIT := 40.0   # 핸들 잡기 반경
 const RING_BAND := 26.0    # 링 잡기 폭(±)
+const DWELL_T := 0.5       # 끌다가 이만큼 멈추면 그 자리가 목적지, 방향 메뉴가 뜬다
+const DWELL_MOVE := 14.0
+const MENU_R := 100.0      # 방향 메뉴 링 반지름
+const MENU_HIT := 40.0
+const MENU_DIRS := 8
 
 var battle: Node
 var touches := {}          # index -> {start, pos, t0}
@@ -50,6 +55,9 @@ func handle_pos(f) -> Vector2:
 
 # 터치 정지: 전장을 짚으면 전투 시계를 멈추고(G.hold), 이 버튼으로 재개한다.
 var _resume: Button
+var menu := {}             # 도착 방향 메뉴: {fleet, world(목적지), c(메뉴 중심, 화면), strafe}. 열려 있는 동안 mode == "menu"
+var _dwell_t := 0.0
+var _dwell_p := Vector2.ZERO
 var _hold_by_touch := false   # 이번 터치가 정지를 걸었는가(두 손가락 카메라 조작이면 되돌린다)
 
 func _build_resume() -> void:
@@ -72,6 +80,10 @@ func _process(delta: float) -> void:
 	if _resume:
 		_resume.visible = battle.G.state == "play" and battle.G.hold
 	delta = UiDraw.real_dt(delta)
+	if mode == "order" and touches.size() == 1 and not order.is_empty() and not order.cancel and order.target == null:
+		_dwell_t += delta
+		if _dwell_t >= DWELL_T:
+			_open_menu()
 	if mode == "pending" and touches.size() == 1:
 		press_t += delta
 		if press_t >= LONG_PRESS and origin_fleet and origin_fleet.side == 0:
@@ -96,6 +108,10 @@ func _unhandled_input(e: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 func _touch(e: InputEventScreenTouch) -> void:
+	if not menu.is_empty():
+		if e.pressed:
+			_menu_press(e.position)
+		return
 	if e.pressed:
 		if _resume and not (_resume.visible and _resume.get_global_rect().has_point(e.position)):
 			if touches.is_empty():
@@ -153,8 +169,12 @@ func _drag(e: InputEventScreenDrag) -> void:
 		elif not battle.my_sel().is_empty():
 			# 선택이 있으면 선택된 전대에서 시작한 끌기만 이동·공격으로 인정, 그 밖에서 시작하면 무시
 			mode = "order" if (origin_fleet and origin_fleet.side == 0 and battle.selected.has(origin_fleet)) else "ignore"
+			_dwell_t = 0.0
+			_dwell_p = e.position
 		elif origin_fleet and origin_fleet.side == 0:   # 선택이 없으면 아군에서 끌기 = 그 전대 선택 + 명령
 			mode = "order"
+			_dwell_t = 0.0
+			_dwell_p = e.position
 			battle.selected.append(origin_fleet)
 			battle.inspect = null
 			battle.refresh_panel()
@@ -174,12 +194,58 @@ func _update_order(p: Vector2) -> void:
 	if origin_fleet == null or battle.my_sel().is_empty():   # 끌기 도중 선택 전대가 모두 사라짐
 		order = {}
 		return
+	if p.distance_to(_dwell_p) > DWELL_MOVE:
+		_dwell_p = p
+		_dwell_t = 0.0
 	var slide := mode == "slide"
 	var tgt = null if slide else battle._hit_fleet(p)
 	var src = origin_fleet
 	var start: Vector2 = battle.w2s(origin_fleet.pos)
 	order = {"from_fleet": src, "to": p, "target": tgt if (tgt and tgt.side == 1) else null, "cancel": p.distance_to(start) < CANCEL_R, "slide": slide}
 	order_preview_changed.emit()
+
+func _open_menu() -> void:
+	var o := order
+	var f = o.from_fleet
+	var bounds: Vector2 = battle.get_viewport().get_visible_rect().size
+	var c: Vector2 = o.to
+	var m := MENU_R + MENU_HIT + 10.0
+	c = Vector2(clampf(c.x, m, bounds.x - m), clampf(c.y, m + 60.0, bounds.y - m))
+	menu = {"fleet": f, "world": battle.s2w(o.to), "to": o.to, "c": c}
+	mode = "menu"
+	order = {}
+	order_preview_changed.emit()
+	UiSound.vibrate(30)
+
+# 메뉴 항목의 화면 위치와 월드 각도(도). 인덱스 -1은 중앙(방향 지정 없음).
+func menu_item(i: int) -> Dictionary:
+	var c: Vector2 = menu.c
+	var a := TAU * i / MENU_DIRS - PI / 2.0   # 0번 = 화면 위쪽
+	var dir := Vector2(cos(a), sin(a))
+	var w: Vector2 = battle.s2w(menu.to + dir * 100.0) - battle.s2w(menu.to)
+	return {"pos": c + dir * MENU_R, "deg": rad_to_deg(w.angle())}
+
+func _menu_press(p: Vector2) -> void:
+	var f = menu.fleet
+	var w: Vector2 = menu.world
+	var c: Vector2 = menu.c
+	var pick := false
+	var deg = null
+	if p.distance_to(c) < MENU_HIT:
+		pick = true   # 중앙: 방향 지정 없이 이동
+	else:
+		for i in MENU_DIRS:
+			var it := menu_item(i)
+			if p.distance_to(it.pos) < MENU_HIT:
+				pick = true
+				deg = it.deg
+				break
+	menu = {}
+	mode = ""
+	origin_fleet = null
+	order_preview_changed.emit()
+	if pick and f and not f.dead and not battle.my_sel().is_empty():
+		battle.order_move(w, false, deg)
 
 func _update_turn(p: Vector2) -> void:
 	var f = origin_fleet
@@ -209,6 +275,7 @@ func _finish_order(p: Vector2) -> void:
 		battle.order_move(battle.s2w(p), o.slide)
 
 func _begin_pinch() -> void:
+	menu = {}
 	if _hold_by_touch:
 		battle.G.hold = false
 		_hold_by_touch = false

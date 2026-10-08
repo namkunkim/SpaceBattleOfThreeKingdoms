@@ -962,7 +962,11 @@ func _move_swarms() -> void:
 			apply_dmg(src, t, s.dps * dt)
 	st.swarms = st.swarms.filter(func(s): return s.life > 0)
 
+var endless := false   # 시험용: true면 승패가 나도 전투를 끝내지 않는다(적 없는 조작 시험)
+
 func _end(win: bool, reason: String) -> void:
+	if endless:
+		return
 	st.over = true
 	st.win = win
 	st.end_reason = reason

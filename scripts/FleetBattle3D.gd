@@ -144,11 +144,12 @@ func init_game() -> void:
 	var profile := ScenarioProfile.load_profile(profile_def, difficulty) if profile_def != "" else PocSetup.profile()
 	if TOUCH_TEST and not profile.is_empty():
 		profile.ally = profile.ally.slice(0, 1)
-		profile.foe = profile.foe.filter(func(d): return int(d.wait) == 0).slice(0, 1)
+		profile.foe = []   # 적 함대 없음(터치 조작 시험)
 		GameSettings.slow_mode = GameSettings.SLOW_OFF   # 선택 감속 끔(저장 설정은 건드리지 않는다)
 		for t in profile.combat.ship_types.values():
 			t.speed_per_turn *= 60   # 기본 속도 약 1유닛/초라 터치 이동이 멈춘 듯 보인다
 	sim = BattleSim.new(battle_seed, BattleRules.TICK_HZ, profile)
+	sim.endless = TOUCH_TEST
 	ALLY_DEF = profile.ally.map(_with_portrait)
 	FOE_DEF = profile.foe.filter(func(d): return int(d.wait) == 0).map(_with_portrait)
 	clock = TickClock.new()
@@ -477,8 +478,8 @@ func power(f) -> float:
 func do_cmd(id: String) -> void:
 	cmds.do_cmd(id)
 
-func order_move(w: Vector2, strafe := false) -> void:
-	cmds.order_move(w, strafe)
+func order_move(w: Vector2, strafe := false, facing_deg = null) -> void:
+	cmds.order_move(w, strafe, facing_deg)
 
 func order_face(rad: float) -> void:
 	cmds.order_face(rad)

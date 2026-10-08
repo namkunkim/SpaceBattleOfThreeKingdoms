@@ -79,6 +79,8 @@ func _draw() -> void:
 		_turn_handle()
 		if battle.G.hold and battle.G.state == "play":
 			_hold_view()
+		if not touch.menu.is_empty():
+			_dir_menu()
 	if not battle.drag.is_empty() and battle.drag.mode == "box":
 		var r := Rect2(battle.drag.s, Vector2.ZERO).expand(battle.drag.c)
 		draw_rect(r, Color(UiTheme.GOLD_HI, 0.06))
@@ -293,6 +295,24 @@ func _hold_view() -> void:
 			draw_line(c + dir * touch.RING_R, tip, Color(col, 0.95), 4.0, true)
 			var side := Vector2(-dir.y, dir.x) * 9.0
 			draw_colored_polygon(PackedVector2Array([tip + dir * 14.0, tip + side, tip - side]), Color(col, 0.95))
+
+# 도착 방향 메뉴: 목적지에서 8방향 + 중앙(방향 지정 없음). 메뉴 밖을 누르면 닫힌다(명령 취소).
+func _dir_menu() -> void:
+	var m: Dictionary = touch.menu
+	var col := UiTheme.GOLD_HI
+	var src: Vector2 = battle.w2s(m.fleet.pos)
+	UiDraw.dashed_poly(self, PackedVector2Array([src, m.to]), Color(col, 0.8), 2.5, 10.0, 6.0, -t * 40.0)
+	UiDraw.diamond(self, m.to, 6.0, col)
+	draw_circle(m.c, touch.MENU_HIT, Color(0.03, 0.05, 0.07, 0.85))
+	draw_arc(m.c, touch.MENU_HIT, 0.0, TAU, 32, Color(col, 0.9), 2.0, true)
+	UiDraw.text(self, m.c + Vector2(-20, 7), "자동", "semibold", 18, col)
+	var arrows := ["↑", "↗", "→", "↘", "↓", "↙", "←", "↖"]
+	for i in touch.MENU_DIRS:
+		var it: Dictionary = touch.menu_item(i)
+		draw_circle(it.pos, touch.MENU_HIT, Color(0.03, 0.05, 0.07, 0.85))
+		draw_arc(it.pos, touch.MENU_HIT, 0.0, TAU, 32, Color(col, 0.9), 2.0, true)
+		UiDraw.text(self, it.pos + Vector2(-10, 10), arrows[i], "semibold", 30, col)
+	UiDraw.text(self, m.c + Vector2(-70, touch.MENU_R + touch.MENU_HIT + 28.0), "도착 방향을 고르세요", "semibold", 16, col)
 
 # 회전 핸들: 단일 선택 함대 주위 링과 선두 방향 손잡이. 끄는 동안은 목표 방향 선과 부채꼴을 보여준다.
 func _turn_handle() -> void:
