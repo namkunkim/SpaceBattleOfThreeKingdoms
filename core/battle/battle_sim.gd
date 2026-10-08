@@ -869,8 +869,14 @@ func _fleet_phase(timers: bool) -> void:
 			var dd := f.pos.distance_to(dest)
 			f.pos += (dest - f.pos) / maxf(dd, 0.001) * minf(spd * float(salvo.C.movement.strafe_speed_bp) / float(BattleRules.BP) * dt, dd)
 			if f.face_set:
-				# 이동 명령에 방향이 함께 오면 이동하면서 그 방향으로 돌아서고, 그 뒤로는 고정이다
-				_turn(f, f.face_to)
+				# 이동 명령에 방향이 함께 오면 이동하는 내내 조금씩 돌아 도착할 때 그 방향이 되고, 그 뒤로는 고정이다.
+				# 남은 시간(남은 거리 ÷ 평행 이동 속도)에 맞춰 선회율을 정하고 선회율 한도(turn_deg_per_s)로 막는다
+				var dh := BattleRules.ang_diff(f.heading, f.face_to)
+				var sv := maxf(0.001, spd * float(salvo.C.movement.strafe_speed_bp) / float(BattleRules.BP))
+				var t_left := maxf(dt, f.pos.distance_to(dest) / sv)
+				var step := minf(absf(dh), absf(dh) * dt / t_left)
+				step = minf(step, deg_to_rad(float(salvo.C.movement.turn_deg_per_s)) * dt)
+				f.heading += signf(dh) * step
 				if absf(BattleRules.ang_diff(f.heading, f.face_to)) < deg_to_rad(float(salvo.C.movement.face_tolerance_deg)):
 					f.face_set = false
 		elif has_dest:

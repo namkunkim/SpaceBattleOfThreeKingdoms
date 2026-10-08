@@ -63,6 +63,21 @@ func _control_ok() -> bool:
 		battle.toast("일시정지 후 함대를 조작하세요")
 	return false
 
+# 이동 방식 토글 알약: 함대 조작 메뉴 안에 둔다(함대 아래, 방향 원 안). 누르면 방향 고정 ↔ 선회.
+const PILL := Vector2(210, 48)
+
+func pill_rect(c: Vector2) -> Rect2:
+	return Rect2(c - PILL * 0.5, PILL)
+
+func fleet_pill_rect(f) -> Rect2:
+	return pill_rect(battle.w2s(f.pos) + Vector2(0, RING_R + 44.0))
+
+func menu_pill_rect() -> Rect2:
+	return pill_rect(menu.c + Vector2(0, -MENU_R * 0.22))
+
+func pill_text() -> String:
+	return "이동: 선회" if turn_move else "이동: 방향 고정"
+
 func handle_pos(f) -> Vector2:
 	var c: Vector2 = battle.w2s(f.pos)
 	var d: Vector2 = battle.w2s(f.pos + Vector2(cos(f.heading), sin(f.heading)) * 100.0) - c
@@ -70,7 +85,6 @@ func handle_pos(f) -> Vector2:
 
 # 일시정지/재개 고정 버튼: 이 버튼을 누를 때만 전투 시계가 멈추고(G.hold) 다시 흐른다. 전장 터치는 정지시키지 않는다.
 var _resume: Button
-var _mode_btn: Button
 var turn_move := false   # false = 방향 고정 이동(평행), true = 선회 이동(진행 방향으로 돌며 이동)
 var menu := {}             # 도착 방향 메뉴: {fleet, world(목적지), c(메뉴 중심, 화면), strafe}. 열려 있는 동안 mode == "menu"
 var _dwell_t := 0.0
@@ -152,14 +166,6 @@ func _build_resume() -> void:
 	_resume.focus_mode = Control.FOCUS_NONE
 	_resume.pressed.connect(func(): battle.G.hold = not battle.G.hold)
 	layer.add_child(_resume)
-	# 이동 방식 전환 버튼: 정지 중에만 보이고, 재개 버튼 바로 위에 둔다
-	_mode_btn = Button.new()
-	_mode_btn.add_theme_font_size_override("font_size", 24)
-	_mode_btn.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	_mode_btn.visible = false
-	_mode_btn.focus_mode = Control.FOCUS_NONE
-	_mode_btn.pressed.connect(func(): turn_move = not turn_move)
-	layer.add_child(_mode_btn)
 
 func _process(delta: float) -> void:
 	if _resume:
@@ -167,10 +173,6 @@ func _process(delta: float) -> void:
 		_resume.visible = battle.G.state == "play"
 		_resume.text = "▶ 재개" if battle.G.hold else "⏸ 일시정지"
 		_place_resume()
-		_mode_btn.visible = _resume.visible and battle.G.hold
-		_mode_btn.text = "이동: 선회" if turn_move else "이동: 방향 고정"
-		_mode_btn.size = Vector2(_resume.size.x, _resume.size.y * 0.5)
-		_mode_btn.position = _resume.position - Vector2(0, _mode_btn.size.y + 8.0)
 	delta = UiDraw.real_dt(delta)
 	if mode == "order" and touches.size() == 1 and not order.is_empty() and not order.cancel and order.target == null:
 		_dwell_t += delta
@@ -216,6 +218,11 @@ func _touch(e: InputEventScreenTouch) -> void:
 		touches.erase(e.index)
 		return
 	if e.pressed:
+		var pf = handle_fleet()
+		if pf and fleet_pill_rect(pf).has_point(e.position):
+			turn_move = not turn_move   # 함대 아래 알약으로 이동 방식 전환
+			UiSound.vibrate(20)
+			return
 		touches[e.index] = {"start": e.position, "pos": e.position}
 		if touches.size() == 1:
 			mode = "pending"
@@ -351,6 +358,10 @@ func _menu_confirm() -> void:
 
 func _menu_press(e: InputEventScreenTouch) -> void:
 	var d: float = e.position.distance_to(menu.c)
+	if menu_pill_rect().has_point(e.position):
+		turn_move = not turn_move   # 방향 원 안 알약으로 이동 방식 전환(원은 열린 채 유지)
+		UiSound.vibrate(20)
+		return
 	if e.position.distance_to(menu_ok_pos()) < MENU_OK_R:
 		_menu_confirm()
 	elif d < MENU_R + MENU_BAND:
