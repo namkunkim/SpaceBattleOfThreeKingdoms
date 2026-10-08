@@ -118,39 +118,12 @@ func _free_center(want: Vector2, rad: float) -> Vector2:
 		y += 20.0
 	return best
 
-# 재개 버튼 자리: 사용자 지정 자리(명령 패널 왼쪽 빈 곳), HUD와 겹치면 다른 빈 곳
+# 재개 버튼 자리: 사용자 지정(명령 패널 왼쪽 빈 곳)
 func _place_resume() -> void:
 	var vs: Vector2 = battle.get_viewport().get_visible_rect().size
-	var rects := _hud_rects()
-	# 기본 자리(사용자 지정): 명령 패널 왼쪽, 함대 카드 오른쪽의 빈 곳. 화면 비율로 잡는다
-	var sz := Vector2(vs.x * 0.12, vs.y * 0.2)
-	var want := Rect2(Vector2(vs.x * 0.64, vs.y * 0.70), sz)
-	var clear := true
-	for h in rects:
-		if want.grow(8.0).intersects(h):
-			clear = false
-			break
-	if clear:
-		_resume.position = want.position
-		_resume.size = want.size
-		return
-	# 겹치면 빈 자리를 찾는다: 왼쪽 가장자리 아래→위, 안 되면 상단 중앙 아래
-	sz = Vector2(260, 100)
-	var pos := Vector2((vs.x - sz.x) * 0.5, 110.0)
-	var y := vs.y - sz.y - 24.0
-	while y > 80.0:
-		var r := Rect2(Vector2(24.0, y), sz).grow(8.0)
-		var hit := false
-		for h in rects:
-			if r.intersects(h):
-				hit = true
-				break
-		if not hit:
-			pos = Vector2(24.0, y)
-			break
-		y -= 20.0
-	_resume.position = pos
-	_resume.size = sz
+	# 사용자 지정 자리: 명령 패널 왼쪽, 함대 카드 오른쪽의 빈 곳. 화면 비율로 고정한다(HUD 판정으로 옮기지 않는다)
+	_resume.size = Vector2(vs.x * 0.12, vs.y * 0.2)
+	_resume.position = Vector2(vs.x * 0.64, vs.y * 0.70)
 
 func _build_resume() -> void:
 	var layer := CanvasLayer.new()
