@@ -20,7 +20,7 @@ const CANCEL_R := 46.0
 const RING_R := 84.0       # 회전 핸들 링 반지름(화면 단위)
 const HANDLE_HIT := 40.0   # 핸들 잡기 반경
 const RING_BAND := 26.0    # 링 잡기 폭(±)
-const DWELL_T := 0.5       # 끌다가 이만큼 멈추면 그 자리가 목적지, 방향 메뉴가 뜬다
+const DWELL_T := 1.0       # 끌다가 이만큼 멈추면 그 자리가 목적지, 방향 메뉴가 뜬다
 const DWELL_MOVE := 14.0
 const MENU_R := 130.0      # 방향 원 반지름
 const MENU_OK_R := 46.0    # 가운데 확정 버튼 반경
@@ -113,6 +113,7 @@ func _touch(e: InputEventScreenTouch) -> void:
 			_menu_press(e)
 		elif menu.get("drag", -1) == e.index:
 			menu.drag = -1
+		touches.erase(e.index)
 		return
 	if e.pressed:
 		if _resume and not (_resume.visible and _resume.get_global_rect().has_point(e.position)):
@@ -157,7 +158,7 @@ func _touch(e: InputEventScreenTouch) -> void:
 
 func _drag(e: InputEventScreenDrag) -> void:
 	if not menu.is_empty():
-		if menu.drag == e.index:
+		if menu.drag == e.index and e.position.distance_to(menu.c) > 18.0:
 			menu.a = (e.position - menu.c).angle()
 		return
 	if not touches.has(e.index):
@@ -218,7 +219,7 @@ func _open_menu() -> void:
 	var c: Vector2 = Vector2(clampf(o.to.x, m, bounds.x - m), clampf(o.to.y, m + 60.0, bounds.y - m))
 	# 화살표 시작 방향 = 함대의 현재 선두 방향(화면 각도)
 	var d: Vector2 = battle.w2s(f.pos + Vector2(cos(f.heading), sin(f.heading)) * 100.0) - battle.w2s(f.pos)
-	menu = {"fleet": f, "world": battle.s2w(o.to), "to": o.to, "c": c, "a": d.angle(), "drag": -1}
+	menu = {"fleet": f, "world": battle.s2w(o.to), "to": o.to, "c": c, "a": d.angle(), "drag": touches.keys()[0] if touches.size() == 1 else -1}   # 누르고 있는 손가락이 이어서 방향을 정한다
 	mode = "menu"
 	order = {}
 	order_preview_changed.emit()
