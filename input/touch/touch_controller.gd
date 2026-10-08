@@ -61,11 +61,12 @@ var _dwell_t := 0.0
 var _dwell_p := Vector2.ZERO
 var _hold_by_touch := false   # 이번 터치가 정지를 걸었는가(두 손가락 카메라 조작이면 되돌린다)
 
-# HUD 버튼·패널 위 터치인가(정지를 걸지 않는다). 화면 대부분을 덮는 전체 화면 컨트롤은 제외한다.
-func _over_hud(p: Vector2) -> bool:
+# HUD 버튼·패널의 화면 영역 목록(보이는 STOP 컨트롤 중 화면 40% 미만). 전체 화면을 덮는 컨트롤은 제외한다.
+func _hud_rects() -> Array:
+	var out := []
 	var hud = battle.presentation.hud if battle.presentation else null
 	if hud == null:
-		return false
+		return out
 	var vs: Vector2 = battle.get_viewport().get_visible_rect().size
 	var stack: Array = [hud]
 	while not stack.is_empty():
@@ -74,9 +75,69 @@ func _over_hud(p: Vector2) -> bool:
 			stack.append(ch)
 		if n is Control and n != hud and n.is_visible_in_tree() and n.mouse_filter == Control.MOUSE_FILTER_STOP:
 			var r: Rect2 = n.get_global_rect()
-			if r.has_point(p) and r.size.x * r.size.y < vs.x * vs.y * 0.4:
-				return true
+			if r.size.x * r.size.y < vs.x * vs.y * 0.4:
+				out.append(r)
+	return out
+
+# HUD 버튼·패널 위 터치인가(정지를 걸지 않는다)
+func _over_hud(p: Vector2) -> bool:
+	for r in _hud_rects():
+		if r.has_point(p):
+			return true
 	return false
+
+# 원(중심 c, 반지름 rad)이 사각형과 겹치는가
+static func _circle_hits(c: Vector2, rad: float, r: Rect2) -> bool:
+	var q := Vector2(clampf(c.x, r.position.x, r.end.x), clampf(c.y, r.position.y, r.end.y))
+	return q.distance_to(c) < rad
+
+# 원을 HUD를 피해 놓는다: 원하는 중심에서 가장 가까운 빈 자리(격자 탐색). 빈 자리가 없으면 화면 안으로만 당긴다.
+func _free_center(want: Vector2, rad: float) -> Vector2:
+	var vs: Vector2 = battle.get_viewport().get_visible_rect().size
+	var rects := _hud_rects()
+	var best := Vector2(clampf(want.x, rad, vs.x - rad), clampf(want.y, rad, vs.y - rad))
+	var best_d := INF
+	var found := false
+	var y := rad
+	while y <= vs.y - rad:
+		var x := rad
+		while x <= vs.x - rad:
+			var c := Vector2(x, y)
+			var ok := true
+			for r in rects:
+				if _circle_hits(c, rad, r):
+					ok = false
+					break
+			if ok:
+				var d := c.distance_to(want)
+				if d < best_d:
+					best_d = d
+					best = c
+					found = true
+			x += 20.0
+		y += 20.0
+	return best
+
+# 재개 버튼 자리: HUD와 겹치지 않는 곳(왼쪽 가장자리 아래→위, 안 되면 상단 중앙 아래)
+func _place_resume() -> void:
+	var vs: Vector2 = battle.get_viewport().get_visible_rect().size
+	var sz := Vector2(260, 100)
+	var rects := _hud_rects()
+	var pos := Vector2((vs.x - sz.x) * 0.5, 110.0)
+	var y := vs.y - sz.y - 24.0
+	while y > 80.0:
+		var r := Rect2(Vector2(24.0, y), sz).grow(8.0)
+		var hit := false
+		for h in rects:
+			if r.intersects(h):
+				hit = true
+				break
+		if not hit:
+			pos = Vector2(24.0, y)
+			break
+		y -= 20.0
+	_resume.position = pos
+	_resume.size = sz
 
 func _build_resume() -> void:
 	var layer := CanvasLayer.new()
@@ -85,18 +146,17 @@ func _build_resume() -> void:
 	_resume = Button.new()
 	_resume.text = "▶ 재개"
 	_resume.add_theme_font_size_override("font_size", 38)
-	_resume.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
-	_resume.offset_left = -330
-	_resume.offset_right = -40
-	_resume.offset_top = -190
-	_resume.offset_bottom = -70
+	_resume.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	_resume.visible = false
 	_resume.pressed.connect(func(): battle.G.hold = false)
 	layer.add_child(_resume)
 
 func _process(delta: float) -> void:
 	if _resume:
-		_resume.visible = battle.G.state == "play" and battle.G.hold
+		var show: bool = battle.G.state == "play" and battle.G.hold
+		if show and not _resume.visible:
+			_place_resume()
+		_resume.visible = show
 	delta = UiDraw.real_dt(delta)
 	if mode == "order" and touches.size() == 1 and not order.is_empty() and not order.cancel and order.target == null:
 		_dwell_t += delta
@@ -135,6 +195,10 @@ func _touch(e: InputEventScreenTouch) -> void:
 			_menu_press(e)
 		elif menu.get("drag", -1) == e.index:
 			menu.drag = -1
+			touches.erase(e.index)
+			if e.position.distance_to(menu_ok_pos()) < MENU_OK_R:
+				_menu_confirm()   # 확정 버튼 위에서 손을 떼면 바로 확정
+			return
 		touches.erase(e.index)
 		return
 	if e.pressed:
@@ -180,8 +244,8 @@ func _touch(e: InputEventScreenTouch) -> void:
 
 func _drag(e: InputEventScreenDrag) -> void:
 	if not menu.is_empty():
-		if menu.drag == e.index and e.position.distance_to(menu.c) > 18.0:
-			menu.a = (e.position - menu.c).angle()
+		if menu.drag == e.index and e.position.distance_to(menu.c) > 18.0 and e.position.distance_to(menu_ok_pos()) >= MENU_OK_R:
+			menu.a = (e.position - menu.c).angle()   # 확정 버튼 위로 옮기는 동안은 방향을 바꾸지 않는다
 		return
 	if not touches.has(e.index):
 		return
@@ -238,9 +302,7 @@ func _open_menu(face := false) -> void:
 	var f = origin_fleet if face else o.from_fleet
 	if face:
 		o = {"to": battle.w2s(f.pos)}
-	var bounds: Vector2 = battle.get_viewport().get_visible_rect().size
-	var m := MENU_R + MENU_BAND
-	var c: Vector2 = Vector2(clampf(o.to.x, m, bounds.x - m), clampf(o.to.y, m + 60.0, bounds.y - m))
+	var c: Vector2 = _free_center(o.to, MENU_R + 8.0)
 	# 화살표 시작 방향 = 함대의 현재 선두 방향(화면 각도)
 	var d: Vector2 = battle.w2s(f.pos + Vector2(cos(f.heading), sin(f.heading)) * 100.0) - battle.w2s(f.pos)
 	menu = {"fleet": f, "world": battle.s2w(o.to), "to": o.to, "c": c, "face": face, "a": d.angle(), "drag": touches.keys()[0] if touches.size() == 1 else -1}   # 누르고 있는 손가락이 이어서 방향을 정한다
@@ -258,22 +320,25 @@ func menu_deg() -> float:
 func menu_ok_pos() -> Vector2:
 	return menu.c + Vector2(0, MENU_R * 0.55)
 
+func _menu_confirm() -> void:
+	var f = menu.fleet
+	var w: Vector2 = menu.world
+	var deg := menu_deg()
+	var face: bool = menu.face
+	menu = {}
+	mode = ""
+	origin_fleet = null
+	order_preview_changed.emit()
+	if f and not f.dead and not battle.my_sel().is_empty():
+		if face:
+			battle.order_face(deg_to_rad(deg))
+		else:
+			battle.order_move(w, false, deg)
+
 func _menu_press(e: InputEventScreenTouch) -> void:
 	var d: float = e.position.distance_to(menu.c)
 	if e.position.distance_to(menu_ok_pos()) < MENU_OK_R:
-		var f = menu.fleet
-		var w: Vector2 = menu.world
-		var deg := menu_deg()
-		var face: bool = menu.face
-		menu = {}
-		mode = ""
-		origin_fleet = null
-		order_preview_changed.emit()
-		if f and not f.dead and not battle.my_sel().is_empty():
-			if face:
-				battle.order_face(deg_to_rad(deg))
-			else:
-				battle.order_move(w, false, deg)
+		_menu_confirm()
 	elif d < MENU_R + MENU_BAND:
 		menu.drag = e.index
 		menu.a = (e.position - menu.c).angle()

@@ -330,15 +330,20 @@ func _dir_menu() -> void:
 	draw_colored_polygon(PackedVector2Array([tip, tip - u * 30.0 + side * 15.0, tip - u * 30.0 - side * 15.0]), col)
 	if not m.face:
 		UiDraw.dashed_poly(self, PackedVector2Array([src, m.to]), Color(col, 0.9), 2.5, 10.0, 6.0, -t * 40.0)
-	# 목적지(원 중심): 십자 + 다이아몬드. 확정 버튼은 원 아래쪽에 둔다
-	draw_line(c + Vector2(-16, 0), c + Vector2(16, 0), Color(col, 0.9), 2.0, true)
-	draw_line(c + Vector2(0, -16), c + Vector2(0, 16), Color(col, 0.9), 2.0, true)
-	UiDraw.diamond(self, c, 6.0, col)
+	# 목적지: 십자 + 다이아몬드(HUD를 피해 원이 옮겨졌으면 원 중심과 가는 선으로 잇는다). 확정 버튼은 원 아래쪽에 둔다
+	var to: Vector2 = m.to
+	if m.face:
+		to = c
+	elif to.distance_to(c) > 8.0:
+		draw_line(to, c, Color(col, 0.5), 1.5, true)
+	draw_line(to + Vector2(-16, 0), to + Vector2(16, 0), Color(col, 0.9), 2.0, true)
+	draw_line(to + Vector2(0, -16), to + Vector2(0, 16), Color(col, 0.9), 2.0, true)
+	UiDraw.diamond(self, to, 6.0, col)
 	var ok: Vector2 = touch.menu_ok_pos()
 	draw_circle(ok, touch.MENU_OK_R, Color(0.1, 0.16, 0.1, 0.95))
 	draw_arc(ok, touch.MENU_OK_R, 0.0, TAU, 32, Color(col, 0.95), 2.5, true)
 	UiDraw.text(self, ok + Vector2(-20, 8), "확정", "semibold", 22, col)
-	UiDraw.text(self, c + Vector2(-110, R + 38.0), "원을 돌려 방향을 정하세요" if m.face else "원을 돌려 도착 방향을 정하세요", "semibold", 16, col)
+	UiDraw.text(self, c + Vector2(-72, -R * 0.55), "방향을 돌리고 확정", "semibold", 15, col)   # 원 안쪽(HUD에 잘리지 않게)
 
 # 회전 핸들: 단일 선택 함대 주위 링과 선두 방향 손잡이. 끄는 동안은 목표 방향 선과 부채꼴을 보여준다.
 func _turn_handle() -> void:
