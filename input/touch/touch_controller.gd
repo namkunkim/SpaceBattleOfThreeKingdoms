@@ -321,11 +321,11 @@ func _update_order(p: Vector2) -> void:
 	if p.distance_to(_dwell_p) > DWELL_MOVE:
 		_dwell_p = p
 		_dwell_t = 0.0
-	var slide := mode == "slide"
-	var tgt = null if slide else battle._hit_fleet(p)
+	# 이동은 항상 방향 고정 평행 이동(선회 없음). 적 위에 놓으면 공격
+	var tgt = null if mode == "slide" else battle._hit_fleet(p)
 	var src = origin_fleet
 	var start: Vector2 = battle.w2s(origin_fleet.pos)
-	order = {"from_fleet": src, "to": p, "target": tgt if (tgt and tgt.side == 1) else null, "cancel": p.distance_to(start) < CANCEL_R, "slide": slide}
+	order = {"from_fleet": src, "to": p, "target": tgt if (tgt and tgt.side == 1) else null, "cancel": p.distance_to(start) < CANCEL_R, "slide": true}
 	order_preview_changed.emit()
 
 func _open_menu(face := false) -> void:
@@ -364,7 +364,7 @@ func _menu_confirm() -> void:
 		if face:
 			battle.order_face(deg_to_rad(deg))
 		else:
-			battle.order_move(w, false, deg)
+			battle.order_move(w, true, deg)   # 방향 고정 이동 + 이동하면서 정한 방향으로 돌아선다
 
 func _menu_press(e: InputEventScreenTouch) -> void:
 	var d: float = e.position.distance_to(menu.c)

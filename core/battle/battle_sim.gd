@@ -868,6 +868,11 @@ func _fleet_phase(timers: bool) -> void:
 			# 평행 이동: 방향을 유지한 채 전진 속도의 일부로 목적지를 향해 옆으로 간다(§4.2)
 			var dd := f.pos.distance_to(dest)
 			f.pos += (dest - f.pos) / maxf(dd, 0.001) * minf(spd * float(salvo.C.movement.strafe_speed_bp) / float(BattleRules.BP) * dt, dd)
+			if f.face_set:
+				# 이동 명령에 방향이 함께 오면 이동하면서 그 방향으로 돌아서고, 그 뒤로는 고정이다
+				_turn(f, f.face_to)
+				if absf(BattleRules.ang_diff(f.heading, f.face_to)) < deg_to_rad(float(salvo.C.movement.face_tolerance_deg)):
+					f.face_set = false
 		elif has_dest:
 			var a := atan2(dest.y - f.pos.y, dest.x - f.pos.x)
 			_turn(f, a)
