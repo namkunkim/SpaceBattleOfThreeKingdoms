@@ -75,6 +75,8 @@ func _draw() -> void:
 		UiDraw.text(self, sp + Vector2(0, -6), ft.text, "serif_bold", 16, Color(ft.color, a), HORIZONTAL_ALIGNMENT_CENTER, 0.0, 4)
 	if touch and not touch.order.is_empty() and touch.order.from_fleet:
 		_touch_order(touch.order)
+	if touch:
+		_turn_handle()
 	if not battle.drag.is_empty() and battle.drag.mode == "box":
 		var r := Rect2(battle.drag.s, Vector2.ZERO).expand(battle.drag.c)
 		draw_rect(r, Color(UiTheme.GOLD_HI, 0.06))
@@ -255,12 +257,36 @@ func _speech(f) -> void:
 	draw_colored_polygon(PackedVector2Array([Vector2(r.position.x + 14, r.end.y), Vector2(r.position.x + 22, r.end.y), Vector2(r.position.x + 14, r.end.y + 6)]), Color(0.03, 0.045, 0.07, 0.92 * a))
 	UiDraw.text(self, r.position + Vector2(12, 17.5), f.speech, "medium", fs, Color(UiTheme.INK, a))
 
+# 회전 핸들: 단일 선택 함대 주위 링과 선두 방향 손잡이. 끄는 동안은 목표 방향 선과 부채꼴을 보여준다.
+func _turn_handle() -> void:
+	var f = touch.handle_fleet()
+	if f == null or f.dead or battle.G.state != "play":
+		return
+	var c: Vector2 = battle.w2s(f.pos)
+	var col := UiTheme.GOLD_HI
+	draw_arc(c, touch.RING_R, 0.0, TAU, 48, Color(col, 0.35), 1.5, true)
+	var h: Vector2 = touch.handle_pos(f)
+	var tr: Dictionary = touch.turn
+	if not tr.is_empty() and tr.fleet == f:
+		var tcol: Color = UiTheme.INK_3 if tr.cancel else col
+		if not tr.cancel:
+			var d: Vector2 = battle.w2s(f.pos + Vector2(cos(tr.rad), sin(tr.rad)) * 100.0) - c
+			var tip: Vector2 = c + d.normalized() * touch.RING_R
+			UiDraw.dashed_poly(self, PackedVector2Array([c, tip]), Color(tcol, 0.9), 2.0, 10.0, 6.0, -t * 40.0)
+			draw_circle(tip, 14.0, Color(tcol, 0.35))
+			draw_arc(tip, 14.0, 0.0, TAU, 24, Color(tcol, 0.95), 2.0, true)
+		UiDraw.text(self, c + Vector2(-16, touch.RING_R + 34.0), "취소" if tr.cancel else "회전", "semibold", 13, tcol)
+	else:
+		draw_circle(h, 12.0, Color(col, 0.28))
+		draw_arc(h, 12.0, 0.0, TAU, 24, Color(col, 0.95), 2.0, true)
+		UiDraw.diamond(self, h, 4.0, col)
+
 func _touch_order(o: Dictionary) -> void:
 	# 손가락으로 끄는 명령의 미리보기: 이동(금) / 공격(적색) / 취소(회색, 출발 함대 위)
 	var a: Vector2 = battle.w2s(o.from_fleet.pos)
 	var b: Vector2 = o.to
 	var col := UiTheme.GOLD_HI
-	var label := "이동"
+	var label := "평행 이동" if o.get("slide", false) else "이동"
 	if o.cancel:
 		col = UiTheme.INK_3
 		label = "취소"

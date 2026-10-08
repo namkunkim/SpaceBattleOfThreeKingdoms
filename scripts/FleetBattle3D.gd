@@ -476,8 +476,11 @@ func power(f) -> float:
 func do_cmd(id: String) -> void:
 	cmds.do_cmd(id)
 
-func order_move(w: Vector2) -> void:
-	cmds.order_move(w)
+func order_move(w: Vector2, strafe := false) -> void:
+	cmds.order_move(w, strafe)
+
+func order_face(rad: float) -> void:
+	cmds.order_face(rad)
 
 func order_attack(t) -> void:
 	cmds.order_attack(t)

@@ -53,12 +53,19 @@ func do_formation(fid: String) -> void:
 	formation_to(_ids(s), fid)
 
 # 선택 전체가 현재 배치를 유지한 채 목표 지점으로 이동
-func order_move(w: Vector2) -> void:
+func order_move(w: Vector2, strafe := false) -> void:
 	var s: Array = host.my_sel()
 	if s.is_empty():
 		return
-	host.issue(make("move", _ids(s), -1, w))
+	host.issue(make("move", _ids(s), -1, w, {"strafe": true} if strafe else {}))
 	host.marker = {"pos": w, "t": 1.2, "foe": false}
+
+# 선택 전체가 제자리에서 월드 각도(rad) 방향으로 돌아선다
+func order_face(rad: float) -> void:
+	var s: Array = host.my_sel()
+	if s.is_empty():
+		return
+	host.issue(make("face", _ids(s), -1, Vector2.ZERO, {"facing_deg": rad_to_deg(rad)}))
 
 func order_attack(t) -> void:
 	var s: Array = host.my_sel()

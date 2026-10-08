@@ -17,6 +17,9 @@ signal order_preview_changed
 const TAP_MOVE := 14.0
 const LONG_PRESS := 0.5
 const CANCEL_R := 46.0
+const RING_R := 84.0       # 회전 핸들 링 반지름(화면 단위)
+const HANDLE_HIT := 40.0   # 핸들 잡기 반경
+const RING_BAND := 26.0    # 링 잡기 폭(±)
 
 var battle: Node
 var touches := {}          # index -> {start, pos, t0}
@@ -25,12 +28,23 @@ var origin_fleet = null
 var press_t := 0.0
 var pinch_d := 0.0
 var pinch_c := Vector2.ZERO
+var turn := {}             # 회전 미리보기: {fleet, rad(월드 각도), cancel}
 var order := {}            # 끌기 명령 미리보기: {from: Vector2(px 화면), to, target, cancel}
 var _consumed_index := -1
 
 func setup(b: Node) -> void:
 	battle = b
 	Input.emulate_mouse_from_touch = true
+
+# 회전 핸들: 단일 선택 함대의 선두 방향, 링 위. 선택이 1개가 아니면 없다.
+func handle_fleet():
+	var s: Array = battle.my_sel()
+	return s[0] if (s.size() == 1 and not battle.multi) else null
+
+func handle_pos(f) -> Vector2:
+	var c: Vector2 = battle.w2s(f.pos)
+	var d: Vector2 = battle.w2s(f.pos + Vector2(cos(f.heading), sin(f.heading)) * 100.0) - c
+	return c + (d.normalized() if d.length() > 0.001 else Vector2.RIGHT) * RING_R
 
 func _process(delta: float) -> void:
 	delta = UiDraw.real_dt(delta)
@@ -64,6 +78,14 @@ func _touch(e: InputEventScreenTouch) -> void:
 			mode = "pending"
 			press_t = 0.0
 			origin_fleet = battle._hit_fleet(e.position)
+			var hf = handle_fleet()
+			if hf and e.position.distance_to(handle_pos(hf)) < HANDLE_HIT:
+				mode = "turn"
+				origin_fleet = hf
+				_update_turn(e.position)
+			elif hf and absf(e.position.distance_to(battle.w2s(hf.pos)) - RING_R) < RING_BAND:
+				mode = "slide"   # 링 위에서 끌기 = 방향 고정 평행 이동
+				origin_fleet = hf
 		elif touches.size() == 2:
 			_begin_pinch()
 		return
@@ -80,8 +102,10 @@ func _touch(e: InputEventScreenTouch) -> void:
 	elif mode == "box":
 		battle.input_node.box_select(battle.drag.s, e.position, false)
 		battle.drag = {}
-	elif mode == "order":
+	elif mode == "order" or mode == "slide":
 		_finish_order(e.position)
+	elif mode == "turn":
+		_finish_turn(e.position)
 	mode = "" if touches.is_empty() else mode
 	origin_fleet = null
 
@@ -111,7 +135,9 @@ func _drag(e: InputEventScreenDrag) -> void:
 			battle.drag = {"s": tc.start, "c": e.position, "btn": -1, "moved": true, "mode": "box", "shift": false, "last": e.position}
 	if mode == "box":
 		battle.drag.c = e.position
-	elif mode == "order":
+	elif mode == "turn":
+		_update_turn(e.position)
+	elif mode == "order" or mode == "slide":
 		_update_order(e.position)
 
 # 끌기 명령 미리보기. 전대에서 시작했으면 그 전대, 빈 곳에서 시작했으면 선택의 첫 전대에서 그린다.
@@ -120,11 +146,28 @@ func _update_order(p: Vector2) -> void:
 	if origin_fleet == null or battle.my_sel().is_empty():   # 끌기 도중 선택 전대가 모두 사라짐
 		order = {}
 		return
-	var tgt = battle._hit_fleet(p)
+	var slide := mode == "slide"
+	var tgt = null if slide else battle._hit_fleet(p)
 	var src = origin_fleet
 	var start: Vector2 = battle.w2s(origin_fleet.pos)
-	order = {"from_fleet": src, "to": p, "target": tgt if (tgt and tgt.side == 1) else null, "cancel": p.distance_to(start) < CANCEL_R}
+	order = {"from_fleet": src, "to": p, "target": tgt if (tgt and tgt.side == 1) else null, "cancel": p.distance_to(start) < CANCEL_R, "slide": slide}
 	order_preview_changed.emit()
+
+func _update_turn(p: Vector2) -> void:
+	var f = origin_fleet
+	if f == null or f.dead or battle.my_sel().is_empty():
+		turn = {}
+		return
+	var v: Vector2 = battle.s2w(p) - f.pos
+	turn = {"fleet": f, "rad": v.angle(), "cancel": p.distance_to(battle.w2s(f.pos)) < CANCEL_R * 0.6}
+	order_preview_changed.emit()
+
+func _finish_turn(_p: Vector2) -> void:
+	var t := turn
+	turn = {}
+	order_preview_changed.emit()
+	if not t.is_empty() and not t.cancel:
+		battle.order_face(t.rad)
 
 func _finish_order(p: Vector2) -> void:
 	var o := order
@@ -135,11 +178,12 @@ func _finish_order(p: Vector2) -> void:
 	if o.target:
 		battle.order_attack(o.target)
 	else:
-		battle.order_move(battle.s2w(p))
+		battle.order_move(battle.s2w(p), o.slide)
 
 func _begin_pinch() -> void:
 	mode = "pinch"
 	order = {}
+	turn = {}
 	battle.drag = {}
 	origin_fleet = null
 	var pts := _two()

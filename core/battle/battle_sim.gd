@@ -138,7 +138,7 @@ func issue(cmd: Dictionary) -> void:
 	apply(c)
 
 # 플레이어가 명령한 전대는 직접 지휘가 된다(§5.4). AI 명령은 apply()를 바로 불러 여기를 거치지 않는다.
-const DIRECT_KINDS := ["stop", "move", "attack", "charge", "retreat", "rally", "formation", "restore", "def", "missile", "fighter", "volley",
+const DIRECT_KINDS := ["stop", "move", "face", "attack", "charge", "retreat", "rally", "formation", "restore", "def", "missile", "fighter", "volley",
 	"letter", "withdraw", "ignite", "assault"]
 
 func _mark_direct(c: Dictionary) -> void:
@@ -445,7 +445,7 @@ func apply(c: Dictionary) -> void:
 				_reject(null, "retreating", side)
 			return
 	var L := _lead(s)
-	if morale and kind in ["stop", "move", "attack", "charge"]:
+	if morale and kind in ["stop", "move", "face", "attack", "charge"]:
 		for f in s:
 			f.retreat_order = false
 	if kind in ["stop", "attack", "charge", "retreat", "rally", "ai_move", "restore"]:
@@ -627,6 +627,14 @@ func apply(c: Dictionary) -> void:
 					f.face_set = true
 					f.face_to = BattleRules.quant(deg_to_rad(float(args.facing_deg)))
 			emit("say", L.id, -1, L.pos, "move_all" if s.size() > 1 else "move")
+		"face":
+			# 제자리 방향 전환: 이동·표적을 풀고 args.facing_deg를 향해 돌아선다(위치 고정). 도착 방향 지정(face_set)을 재사용한다
+			for f in s:
+				f.target_id = -1
+				f.has_move = false
+				_clear_path(f)
+				f.face_set = true
+				f.face_to = BattleRules.quant(deg_to_rad(float(c.get("args", {}).get("facing_deg", 0.0))))
 		"attack":
 			var t := st.by_id(int(c.target_id))
 			if t == null or t.dead or t.side == side:
