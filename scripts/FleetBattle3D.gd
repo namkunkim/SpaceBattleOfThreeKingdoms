@@ -145,8 +145,9 @@ func init_game() -> void:
 	if TOUCH_TEST and not profile.is_empty():
 		profile.ally = profile.ally.slice(0, 1)
 		profile.foe = profile.foe.filter(func(d): return int(d.wait) == 0).slice(0, 1)
+		GameSettings.slow_mode = GameSettings.SLOW_OFF   # 선택 감속 끔(저장 설정은 건드리지 않는다)
 		for t in profile.combat.ship_types.values():
-			t.speed_per_turn *= 20   # 기본 속도 약 1유닛/초(선택 중엔 ×0.2)라 터치 이동이 멈춘 듯 보인다
+			t.speed_per_turn *= 60   # 기본 속도 약 1유닛/초라 터치 이동이 멈춘 듯 보인다
 	sim = BattleSim.new(battle_seed, BattleRules.TICK_HZ, profile)
 	ALLY_DEF = profile.ally.map(_with_portrait)
 	FOE_DEF = profile.foe.filter(func(d): return int(d.wait) == 0).map(_with_portrait)
