@@ -70,11 +70,8 @@ func handle_pos(f) -> Vector2:
 
 # 일시정지/재개 고정 버튼: 이 버튼을 누를 때만 전투 시계가 멈추고(G.hold) 다시 흐른다. 전장 터치는 정지시키지 않는다.
 var _resume: Button
-var _float: Button
 var _mode_btn: Button
 var turn_move := false   # false = 방향 고정 이동(평행), true = 선회 이동(진행 방향으로 돌며 이동)
-var _float_t := 0.0
-const FLOAT_SHOW := 2.5   # 초(실제 시간)
 var menu := {}             # 도착 방향 메뉴: {fleet, world(목적지), c(메뉴 중심, 화면), strafe}. 열려 있는 동안 mode == "menu"
 var _dwell_t := 0.0
 var _dwell_p := Vector2.ZERO
@@ -148,12 +145,12 @@ func _build_resume() -> void:
 	layer.layer = 8
 	add_child(layer)
 	_resume = Button.new()
-	_resume.text = "▶ 재개"
+	_resume.text = "⏸ 일시정지"
 	_resume.add_theme_font_size_override("font_size", 38)
 	_resume.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	_resume.visible = false
 	_resume.focus_mode = Control.FOCUS_NONE
-	_resume.pressed.connect(func(): battle.G.hold = false)
+	_resume.pressed.connect(func(): battle.G.hold = not battle.G.hold)
 	layer.add_child(_resume)
 	# 이동 방식 전환 버튼: 정지 중에만 보이고, 재개 버튼 바로 위에 둔다
 	_mode_btn = Button.new()
@@ -163,40 +160,14 @@ func _build_resume() -> void:
 	_mode_btn.focus_mode = Control.FOCUS_NONE
 	_mode_btn.pressed.connect(func(): turn_move = not turn_move)
 	layer.add_child(_mode_btn)
-	# 플레이 중 화면을 짚으면 짚은 곳에 뜨는 일시정지 버튼(잠시 뒤 사라진다)
-	_float = Button.new()
-	_float.text = "⏸ 일시정지"
-	_float.add_theme_font_size_override("font_size", 30)
-	_float.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	_float.size = Vector2(230, 84)
-	_float.visible = false
-	_float.focus_mode = Control.FOCUS_NONE
-	_float.pressed.connect(func():
-		battle.G.hold = true
-		_float.visible = false)
-	layer.add_child(_float)
-
-func _show_float(p: Vector2) -> void:
-	if _float == null or battle.G.hold or battle.G.state != "play":
-		return
-	var vs: Vector2 = battle.get_viewport().get_visible_rect().size
-	var sz: Vector2 = _float.size
-	# 손가락에 가리지 않게 짚은 곳 위쪽에 둔다. 화면 밖으로 나가지 않게 당긴다.
-	_float.position = Vector2(clampf(p.x - sz.x * 0.5, 8.0, vs.x - sz.x - 8.0), clampf(p.y - sz.y - 70.0, 8.0, vs.y - sz.y - 8.0))
-	_float.visible = true
-	_float_t = FLOAT_SHOW
 
 func _process(delta: float) -> void:
-	if _float and _float.visible:
-		_float_t -= UiDraw.real_dt(delta)
-		if _float_t <= 0.0 or battle.G.hold or battle.G.state != "play":
-			_float.visible = false
 	if _resume:
-		# 고정 버튼은 정지 중에만 "▶ 재개"로 보인다. 플레이 중에는 터치 지점의 일시정지 버튼만 쓴다.
-		_resume.visible = battle.G.state == "play" and battle.G.hold
-		_resume.text = "▶ 재개"
+		# 고정 버튼(자리 A): 플레이 중 "⏸ 일시정지", 정지 중 "▶ 재개". 이동 방식 토글은 정지 중에만 위에 보인다.
+		_resume.visible = battle.G.state == "play"
+		_resume.text = "▶ 재개" if battle.G.hold else "⏸ 일시정지"
 		_place_resume()
-		_mode_btn.visible = _resume.visible
+		_mode_btn.visible = _resume.visible and battle.G.hold
 		_mode_btn.text = "이동: 선회" if turn_move else "이동: 방향 고정"
 		_mode_btn.size = Vector2(_resume.size.x, _resume.size.y * 0.5)
 		_mode_btn.position = _resume.position - Vector2(0, _mode_btn.size.y + 8.0)
@@ -245,8 +216,6 @@ func _touch(e: InputEventScreenTouch) -> void:
 		touches.erase(e.index)
 		return
 	if e.pressed:
-		if touches.is_empty() and not (_float and _float.visible and _float.get_global_rect().has_point(e.position)):
-			_show_float(e.position)
 		touches[e.index] = {"start": e.position, "pos": e.position}
 		if touches.size() == 1:
 			mode = "pending"
@@ -423,8 +392,6 @@ func _finish_order(p: Vector2) -> void:
 
 func _begin_pinch() -> void:
 	menu = {}
-	if _float:
-		_float.visible = false
 	mode = "pinch"
 	order = {}
 	turn = {}
