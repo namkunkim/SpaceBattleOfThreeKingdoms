@@ -24,7 +24,6 @@ const DWELL_T := 1.0       # 끌다가 이만큼 멈추면 그 자리가 목적�
 const DWELL_MOVE := 14.0
 const FACE_HOLD_T := 1.0   # 선택된 함대를 이만큼 누르고 있으면 제자리 방향 메뉴
 const MENU_R := 130.0      # 방향 원 반지름
-const MENU_OK_R := 46.0    # 가운데 확정 버튼 반경
 const MENU_BAND := 56.0    # 원 바깥으로 이만큼까지는 방향 조작, 그 밖을 누르면 취소
 
 var battle: Node
@@ -73,7 +72,7 @@ func fleet_pill_rect(f) -> Rect2:
 	return pill_rect(battle.w2s(f.pos) + Vector2(0, RING_R + 44.0))
 
 func menu_pill_rect() -> Rect2:
-	return pill_rect(menu.c + Vector2(0, -MENU_R * 0.22))
+	return pill_rect(menu.c + Vector2(0, MENU_R * 0.55))   # 방향 원 아래쪽(함대·화살표를 가리지 않는다)
 
 func pill_text() -> String:
 	return "이동: 선회" if turn_move else "이동: 방향 고정"
@@ -212,7 +211,7 @@ func _touch(e: InputEventScreenTouch) -> void:
 		elif menu.get("drag", -1) == e.index:
 			menu.drag = -1
 			touches.erase(e.index)
-			if menu.get("set", false) or e.position.distance_to(menu_ok_pos()) < MENU_OK_R:
+			if menu.get("set", false):
 				_menu_confirm()   # 방향을 정한 뒤 손을 떼면 자동 확정(확정 버튼 위에서 떼도 확정)
 			return
 		touches.erase(e.index)
@@ -261,7 +260,7 @@ func _touch(e: InputEventScreenTouch) -> void:
 
 func _drag(e: InputEventScreenDrag) -> void:
 	if not menu.is_empty():
-		if menu.drag == e.index and e.position.distance_to(menu.c) > 18.0 and e.position.distance_to(menu_ok_pos()) >= MENU_OK_R:
+		if menu.drag == e.index and e.position.distance_to(menu.c) > 18.0 and not menu_pill_rect().has_point(e.position):
 			menu.a = (e.position - menu.c).angle()   # 확정 버튼 위로 옮기는 동안은 방향을 바꾸지 않는다
 			menu.set = true
 		return
@@ -337,10 +336,6 @@ func menu_deg() -> float:
 	var dir := Vector2.from_angle(menu.a)
 	return rad_to_deg((battle.s2w(menu.to + dir * 100.0) - battle.s2w(menu.to)).angle())
 
-# 확정 버튼은 원 중심(목적지) 아래쪽에 둔다
-func menu_ok_pos() -> Vector2:
-	return menu.c + Vector2(0, MENU_R * 0.55)
-
 func _menu_confirm() -> void:
 	var f = menu.fleet
 	var w: Vector2 = menu.world
@@ -362,9 +357,7 @@ func _menu_press(e: InputEventScreenTouch) -> void:
 		turn_move = not turn_move   # 방향 원 안 알약으로 이동 방식 전환(원은 열린 채 유지)
 		UiSound.vibrate(20)
 		return
-	if e.position.distance_to(menu_ok_pos()) < MENU_OK_R:
-		_menu_confirm()
-	elif d < MENU_R + MENU_BAND:
+	if d < MENU_R + MENU_BAND:
 		menu.drag = e.index
 		menu.a = (e.position - menu.c).angle()
 		menu.set = true

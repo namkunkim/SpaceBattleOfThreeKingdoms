@@ -151,6 +151,7 @@ func init_game() -> void:
 		# 도착 판정(settle 0.7×속도) 안에 들어야 목적지를 돌지 않는다. 조건은 선회율 > 82°/초(속도와 무관)
 		for t in profile.combat.ship_types.values():
 			t.speed_per_turn *= 150
+		profile.combat.movement.face_turn_deg_per_s = profile.combat.movement.turn_deg_per_s * 4   # 제자리 회전은 완만하게(영상에서 너무 빨랐다)
 		profile.combat.movement.turn_deg_per_s *= 15
 	sim = BattleSim.new(battle_seed, BattleRules.TICK_HZ, profile)
 	sim.endless = TOUCH_TEST

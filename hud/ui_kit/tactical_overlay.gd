@@ -339,12 +339,8 @@ func _dir_menu() -> void:
 	draw_line(to + Vector2(-16, 0), to + Vector2(16, 0), Color(col, 0.9), 2.0, true)
 	draw_line(to + Vector2(0, -16), to + Vector2(0, 16), Color(col, 0.9), 2.0, true)
 	UiDraw.diamond(self, to, 6.0, col)
-	var ok: Vector2 = touch.menu_ok_pos()
-	draw_circle(ok, touch.MENU_OK_R, Color(0.1, 0.16, 0.1, 0.95))
-	draw_arc(ok, touch.MENU_OK_R, 0.0, TAU, 32, Color(col, 0.95), 2.5, true)
-	UiDraw.text(self, ok + Vector2(-20, 8), "확정", "semibold", 22, col)
-	UiDraw.text(self, c + Vector2(-72, -R * 0.62), "방향을 돌리고 확정", "semibold", 15, col)
-	_mode_pill(touch.menu_pill_rect())   # 원 안쪽(HUD에 잘리지 않게)
+	UiDraw.text(self, c + Vector2(-95, -R * 0.62), "방향을 돌리고 손을 떼면 확정", "semibold", 15, col)
+	_mode_pill(touch.menu_pill_rect())   # 원 아래쪽에 유지
 
 # 이동 방식 알약(터치 조작 메뉴 안): 현재 방식을 보여주고 누르면 전환된다
 func _mode_pill(r: Rect2) -> void:

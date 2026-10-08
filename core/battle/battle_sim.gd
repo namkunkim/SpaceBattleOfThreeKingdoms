@@ -743,9 +743,9 @@ static func _regen(cur: int, rem: int, period: int, cap: int) -> Array:
 	rem %= period
 	return [cur, rem]
 
-func _turn(f: FleetState, a: float) -> void:
+func _turn(f: FleetState, a: float, rate_deg := -1.0) -> void:
 	# salvo 규칙의 선회는 데이터(제자리 180°에 20초, §4.2). POC 규칙은 turn_rate
-	var m: float = (deg_to_rad(float(salvo.C.movement.turn_deg_per_s)) if salvo else float(R.turn_rate)) * dt
+	var m: float = (deg_to_rad(float(salvo.C.movement.turn_deg_per_s) if rate_deg < 0.0 else rate_deg) if salvo else float(R.turn_rate)) * dt
 	var dh := BattleRules.ang_diff(f.heading, a)
 	f.heading += dh if absf(dh) < m else signf(dh) * m
 
@@ -891,7 +891,8 @@ func _fleet_phase(timers: bool) -> void:
 				f.pos += Vector2(cos(f.heading), sin(f.heading)) * stp
 		if not has_dest and f.face_set:
 			# 도착 방향: 도착한 뒤 지정한 방향으로 돌아선다(§4.2). 맞출 때까지는 자동 조준보다 우선한다
-			_turn(f, f.face_to)
+			# 제자리 선회율은 movement.face_turn_deg_per_s가 있으면 그것(이동 중 선회율과 따로 정할 수 있다)
+			_turn(f, f.face_to, float(salvo.C.movement.get("face_turn_deg_per_s", -1.0)) if salvo else -1.0)
 			if absf(BattleRules.ang_diff(f.heading, f.face_to)) < deg_to_rad(float(salvo.C.movement.face_tolerance_deg)):
 				f.face_set = false
 		var ft: FleetState = tgt if (tgt and f.pos.distance_to(known_pos(f, tgt)) <= f.range_r) else sight_foe(f, f.range_r)
