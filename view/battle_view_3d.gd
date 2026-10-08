@@ -24,7 +24,7 @@ func setup(h: Node3D, camera_rig: CameraRig) -> void:
 	rig = camera_rig
 	_load_models()
 	_build_environment()
-	_build_backdrop()
+	build_backdrop()
 
 func _load_models() -> void:
 	for model_name in MODEL_NAMES:
@@ -55,8 +55,15 @@ func _build_environment() -> void:
 	host.add_child(rim)
 	rig.attach(host, rig.vsize)
 
-func _build_backdrop() -> void:
-	var W := CameraRig.WORLD
+var _backdrop: Array[Node] = []
+
+# 전장 배경판: 실제 전장(rig.limit) 크기로 깐다. 판이 전장보다 크면 경계가 안 보여 목적지가 보이지 않는 벽에서 잘리고 레이더와 어긋난다.
+# 전장이 바뀌면(init_game) 다시 부른다. 바깥은 전투장 원경판이 어둡게 채운다.
+func build_backdrop() -> void:
+	for n in _backdrop:
+		n.queue_free()
+	_backdrop.clear()
+	var W := rig.limit
 	var backdrop := MeshInstance3D.new()
 	var plane := PlaneMesh.new()
 	plane.size = W * CameraRig.S
@@ -66,8 +73,9 @@ func _build_backdrop() -> void:
 	material.albedo_color = Color(0.7, 0.8, 0.9, 1.0)
 	plane.material = material
 	backdrop.mesh = plane
-	backdrop.position.y = -1.0
+	backdrop.position = rig.w3(W * 0.5, -1.0)
 	host.add_child(backdrop)
+	_backdrop.append(backdrop)
 	# 200px 격자
 	var mesh := ImmediateMesh.new()
 	mesh.surface_begin(Mesh.PRIMITIVE_LINES)
@@ -95,6 +103,7 @@ func _build_backdrop() -> void:
 	gm.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	grid.material_override = gm
 	host.add_child(grid)
+	_backdrop.append(grid)
 
 # 전대 하나의 3D 노드(28척)를 만든다. FleetView의 root·nodes에 채운다.
 func build_fleet(f: BattleViewModel.FleetView) -> void:
