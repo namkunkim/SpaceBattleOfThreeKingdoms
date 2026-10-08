@@ -22,6 +22,7 @@ const HANDLE_HIT := 40.0   # 핸들 잡기 반경
 const RING_BAND := 26.0    # 링 잡기 폭(±)
 const DWELL_T := 1.0       # 끌다가 이만큼 멈추면 그 자리가 목적지, 방향 메뉴가 뜬다
 const DWELL_MOVE := 14.0
+const FACE_HOLD_T := 1.0   # 선택된 함대를 이만큼 누르고 있으면 제자리 방향 메뉴
 const MENU_R := 130.0      # 방향 원 반지름
 const MENU_OK_R := 46.0    # 가운데 확정 버튼 반경
 const MENU_BAND := 56.0    # 원 바깥으로 이만큼까지는 방향 조작, 그 밖을 누르면 취소
@@ -86,7 +87,11 @@ func _process(delta: float) -> void:
 			_open_menu()
 	if mode == "pending" and touches.size() == 1:
 		press_t += delta
-		if press_t >= LONG_PRESS and origin_fleet and origin_fleet.side == 0:
+		if origin_fleet != null and origin_fleet == handle_fleet():
+			# 선택된 함대 1개를 가만히 누르면 제자리 방향 메뉴(선택 추가/해제 길게 누르기보다 우선)
+			if press_t >= FACE_HOLD_T:
+				_open_menu(true)
+		elif press_t >= LONG_PRESS and origin_fleet and origin_fleet.side == 0:
 			mode = "long"
 			SelectionSet.toggle(battle.selected, origin_fleet)
 			battle.inspect = null
@@ -211,15 +216,17 @@ func _update_order(p: Vector2) -> void:
 	order = {"from_fleet": src, "to": p, "target": tgt if (tgt and tgt.side == 1) else null, "cancel": p.distance_to(start) < CANCEL_R, "slide": slide}
 	order_preview_changed.emit()
 
-func _open_menu() -> void:
+func _open_menu(face := false) -> void:
 	var o := order
-	var f = o.from_fleet
+	var f = origin_fleet if face else o.from_fleet
+	if face:
+		o = {"to": battle.w2s(f.pos)}
 	var bounds: Vector2 = battle.get_viewport().get_visible_rect().size
 	var m := MENU_R + MENU_BAND
 	var c: Vector2 = Vector2(clampf(o.to.x, m, bounds.x - m), clampf(o.to.y, m + 60.0, bounds.y - m))
 	# 화살표 시작 방향 = 함대의 현재 선두 방향(화면 각도)
 	var d: Vector2 = battle.w2s(f.pos + Vector2(cos(f.heading), sin(f.heading)) * 100.0) - battle.w2s(f.pos)
-	menu = {"fleet": f, "world": battle.s2w(o.to), "to": o.to, "c": c, "a": d.angle(), "drag": touches.keys()[0] if touches.size() == 1 else -1}   # 누르고 있는 손가락이 이어서 방향을 정한다
+	menu = {"fleet": f, "world": battle.s2w(o.to), "to": o.to, "c": c, "face": face, "a": d.angle(), "drag": touches.keys()[0] if touches.size() == 1 else -1}   # 누르고 있는 손가락이 이어서 방향을 정한다
 	mode = "menu"
 	order = {}
 	order_preview_changed.emit()
@@ -236,12 +243,16 @@ func _menu_press(e: InputEventScreenTouch) -> void:
 		var f = menu.fleet
 		var w: Vector2 = menu.world
 		var deg := menu_deg()
+		var face: bool = menu.face
 		menu = {}
 		mode = ""
 		origin_fleet = null
 		order_preview_changed.emit()
 		if f and not f.dead and not battle.my_sel().is_empty():
-			battle.order_move(w, false, deg)
+			if face:
+				battle.order_face(deg_to_rad(deg))
+			else:
+				battle.order_move(w, false, deg)
 	elif d < MENU_R + MENU_BAND:
 		menu.drag = e.index
 		menu.a = (e.position - menu.c).angle()

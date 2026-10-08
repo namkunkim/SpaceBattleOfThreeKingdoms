@@ -303,8 +303,9 @@ func _dir_menu() -> void:
 	var c: Vector2 = m.c
 	var R: float = touch.MENU_R
 	var src: Vector2 = battle.w2s(m.fleet.pos)
-	UiDraw.dashed_poly(self, PackedVector2Array([src, m.to]), Color(col, 0.8), 2.5, 10.0, 6.0, -t * 40.0)
-	UiDraw.diamond(self, m.to, 6.0, col)
+	if not m.face:
+		UiDraw.dashed_poly(self, PackedVector2Array([src, m.to]), Color(col, 0.8), 2.5, 10.0, 6.0, -t * 40.0)
+		UiDraw.diamond(self, m.to, 6.0, col)
 	draw_circle(c, R, Color(0.03, 0.05, 0.07, 0.55))
 	draw_arc(c, R, 0.0, TAU, 64, Color(col, 0.95), 3.0, true)
 	for i in 8:
@@ -318,7 +319,7 @@ func _dir_menu() -> void:
 	draw_circle(c, touch.MENU_OK_R, Color(0.1, 0.16, 0.1, 0.95))
 	draw_arc(c, touch.MENU_OK_R, 0.0, TAU, 32, Color(col, 0.95), 2.5, true)
 	UiDraw.text(self, c + Vector2(-20, 8), "확정", "semibold", 22, col)
-	UiDraw.text(self, c + Vector2(-110, R + 38.0), "원을 돌려 도착 방향을 정하세요", "semibold", 16, col)
+	UiDraw.text(self, c + Vector2(-110, R + 38.0), "원을 돌려 방향을 정하세요" if m.face else "원을 돌려 도착 방향을 정하세요", "semibold", 16, col)
 
 # 회전 핸들: 단일 선택 함대 주위 링과 선두 방향 손잡이. 끄는 동안은 목표 방향 선과 부채꼴을 보여준다.
 func _turn_handle() -> void:
