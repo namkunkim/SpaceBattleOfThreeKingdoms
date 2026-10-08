@@ -148,6 +148,7 @@ func init_game() -> void:
 		GameSettings.slow_mode = GameSettings.SLOW_OFF   # 선택 감속 끔(저장 설정은 건드리지 않는다)
 		for t in profile.combat.ship_types.values():
 			t.speed_per_turn *= 60   # 기본 속도 약 1유닛/초라 터치 이동이 멈춘 듯 보인다
+		profile.combat.movement.turn_deg_per_s *= 15   # 선회 반경(속도÷선회율)이 도착 반경 안에 들어야 목적지를 돌지 않는다
 	sim = BattleSim.new(battle_seed, BattleRules.TICK_HZ, profile)
 	sim.endless = TOUCH_TEST
 	ALLY_DEF = profile.ally.map(_with_portrait)
