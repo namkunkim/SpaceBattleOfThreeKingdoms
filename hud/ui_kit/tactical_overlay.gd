@@ -77,8 +77,11 @@ func _draw() -> void:
 		_touch_order(touch.order)
 	if touch:
 		_turn_handle()
-		if battle.G.hold and battle.G.state == "play":
-			_hold_view()
+		if battle.G.state == "play":
+			if battle.G.hold:
+				_hold_view()
+			else:
+				_order_marks(false)
 		if not touch.menu.is_empty():
 			_dir_menu()
 	if not battle.drag.is_empty() and battle.drag.mode == "box":
@@ -271,12 +274,19 @@ func _hold_view() -> void:
 	draw_rect(box, Color(0.03, 0.05, 0.07, 0.9))
 	draw_rect(box, Color(col, 0.8), false, 1.5)
 	UiDraw.text(self, box.position + Vector2(20, 28), msg, "semibold", 22, col)
+	_order_marks(true)
+
+# 선택 함대의 내려 둔 명령 표시. held(정지 중)면 목적지·표적까지, 아니면 도착 방향 화살표만(이동 중 최종 방향 안내).
+func _order_marks(held: bool) -> void:
+	var col := UiTheme.GOLD_HI
 	for v in battle.my_sel():
 		var s = battle.sim.st.by_id(v.id)
 		if s == null or s.dead:
 			continue
 		var c: Vector2 = battle.w2s(s.pos)
-		if s.target_id >= 0:
+		if not held:
+			pass
+		elif s.target_id >= 0:
 			var tg = battle.sim.st.by_id(s.target_id)
 			if tg:
 				var tp: Vector2 = battle.w2s(tg.pos)
@@ -296,9 +306,10 @@ func _hold_view() -> void:
 			dir = dir.normalized()
 			var r0 := 26.0 if s.has_move else touch.RING_R
 			var tip := so + dir * (r0 + 40.0)
-			draw_line(so + dir * r0, tip, Color(col, 0.95), 4.0, true)
+			var a := 0.95 if held else 0.7
+			draw_line(so + dir * r0, tip, Color(col, a), 4.0, true)
 			var side := Vector2(-dir.y, dir.x) * 9.0
-			draw_colored_polygon(PackedVector2Array([tip + dir * 14.0, tip + side, tip - side]), Color(col, 0.95))
+			draw_colored_polygon(PackedVector2Array([tip + dir * 14.0, tip + side, tip - side]), Color(col, a))
 
 # 도착 방향 원: 목적지를 중심으로 큰 원 하나, 원 위에서 화살표를 돌려 방향을 정하고 가운데 [확정]을 누른다. 원 밖을 누르면 취소.
 func _dir_menu() -> void:
@@ -307,9 +318,6 @@ func _dir_menu() -> void:
 	var c: Vector2 = m.c
 	var R: float = touch.MENU_R
 	var src: Vector2 = battle.w2s(m.fleet.pos)
-	if not m.face:
-		UiDraw.dashed_poly(self, PackedVector2Array([src, m.to]), Color(col, 0.8), 2.5, 10.0, 6.0, -t * 40.0)
-		UiDraw.diamond(self, m.to, 6.0, col)
 	draw_circle(c, R, Color(0.03, 0.05, 0.07, 0.55))
 	draw_arc(c, R, 0.0, TAU, 64, Color(col, 0.95), 3.0, true)
 	for i in 8:
@@ -318,11 +326,18 @@ func _dir_menu() -> void:
 	var u := Vector2.from_angle(m.a)
 	var tip := c + u * (R - 6.0)
 	var side := Vector2(-u.y, u.x)
-	draw_line(c + u * touch.MENU_OK_R, tip - u * 22.0, Color(col, 1.0), 6.0, true)
+	draw_line(c + u * 18.0, tip - u * 22.0, Color(col, 1.0), 6.0, true)
 	draw_colored_polygon(PackedVector2Array([tip, tip - u * 30.0 + side * 15.0, tip - u * 30.0 - side * 15.0]), col)
-	draw_circle(c, touch.MENU_OK_R, Color(0.1, 0.16, 0.1, 0.95))
-	draw_arc(c, touch.MENU_OK_R, 0.0, TAU, 32, Color(col, 0.95), 2.5, true)
-	UiDraw.text(self, c + Vector2(-20, 8), "확정", "semibold", 22, col)
+	if not m.face:
+		UiDraw.dashed_poly(self, PackedVector2Array([src, m.to]), Color(col, 0.9), 2.5, 10.0, 6.0, -t * 40.0)
+	# 목적지(원 중심): 십자 + 다이아몬드. 확정 버튼은 원 아래쪽에 둔다
+	draw_line(c + Vector2(-16, 0), c + Vector2(16, 0), Color(col, 0.9), 2.0, true)
+	draw_line(c + Vector2(0, -16), c + Vector2(0, 16), Color(col, 0.9), 2.0, true)
+	UiDraw.diamond(self, c, 6.0, col)
+	var ok: Vector2 = touch.menu_ok_pos()
+	draw_circle(ok, touch.MENU_OK_R, Color(0.1, 0.16, 0.1, 0.95))
+	draw_arc(ok, touch.MENU_OK_R, 0.0, TAU, 32, Color(col, 0.95), 2.5, true)
+	UiDraw.text(self, ok + Vector2(-20, 8), "확정", "semibold", 22, col)
 	UiDraw.text(self, c + Vector2(-110, R + 38.0), "원을 돌려 방향을 정하세요" if m.face else "원을 돌려 도착 방향을 정하세요", "semibold", 16, col)
 
 # 회전 핸들: 단일 선택 함대 주위 링과 선두 방향 손잡이. 끄는 동안은 목표 방향 선과 부채꼴을 보여준다.

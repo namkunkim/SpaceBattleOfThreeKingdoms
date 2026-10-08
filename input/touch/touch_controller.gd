@@ -254,9 +254,13 @@ func menu_deg() -> float:
 	var dir := Vector2.from_angle(menu.a)
 	return rad_to_deg((battle.s2w(menu.to + dir * 100.0) - battle.s2w(menu.to)).angle())
 
+# 확정 버튼은 원 중심(목적지) 아래쪽에 둔다
+func menu_ok_pos() -> Vector2:
+	return menu.c + Vector2(0, MENU_R * 0.55)
+
 func _menu_press(e: InputEventScreenTouch) -> void:
 	var d: float = e.position.distance_to(menu.c)
-	if d < MENU_OK_R:
+	if e.position.distance_to(menu_ok_pos()) < MENU_OK_R:
 		var f = menu.fleet
 		var w: Vector2 = menu.world
 		var deg := menu_deg()
