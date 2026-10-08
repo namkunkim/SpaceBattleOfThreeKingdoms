@@ -22,9 +22,9 @@ const HANDLE_HIT := 40.0   # 핸들 잡기 반경
 const RING_BAND := 26.0    # 링 잡기 폭(±)
 const DWELL_T := 0.5       # 끌다가 이만큼 멈추면 그 자리가 목적지, 방향 메뉴가 뜬다
 const DWELL_MOVE := 14.0
-const MENU_R := 100.0      # 방향 메뉴 링 반지름
-const MENU_HIT := 40.0
-const MENU_DIRS := 8
+const MENU_R := 130.0      # 방향 원 반지름
+const MENU_OK_R := 46.0    # 가운데 확정 버튼 반경
+const MENU_BAND := 56.0    # 원 바깥으로 이만큼까지는 방향 조작, 그 밖을 누르면 취소
 
 var battle: Node
 var touches := {}          # index -> {start, pos, t0}
@@ -110,7 +110,9 @@ func _unhandled_input(e: InputEvent) -> void:
 func _touch(e: InputEventScreenTouch) -> void:
 	if not menu.is_empty():
 		if e.pressed:
-			_menu_press(e.position)
+			_menu_press(e)
+		elif menu.get("drag", -1) == e.index:
+			menu.drag = -1
 		return
 	if e.pressed:
 		if _resume and not (_resume.visible and _resume.get_global_rect().has_point(e.position)):
@@ -154,6 +156,10 @@ func _touch(e: InputEventScreenTouch) -> void:
 	origin_fleet = null
 
 func _drag(e: InputEventScreenDrag) -> void:
+	if not menu.is_empty():
+		if menu.drag == e.index:
+			menu.a = (e.position - menu.c).angle()
+		return
 	if not touches.has(e.index):
 		return
 	var tc: Dictionary = touches[e.index]
@@ -208,44 +214,41 @@ func _open_menu() -> void:
 	var o := order
 	var f = o.from_fleet
 	var bounds: Vector2 = battle.get_viewport().get_visible_rect().size
-	var c: Vector2 = o.to
-	var m := MENU_R + MENU_HIT + 10.0
-	c = Vector2(clampf(c.x, m, bounds.x - m), clampf(c.y, m + 60.0, bounds.y - m))
-	menu = {"fleet": f, "world": battle.s2w(o.to), "to": o.to, "c": c}
+	var m := MENU_R + MENU_BAND
+	var c: Vector2 = Vector2(clampf(o.to.x, m, bounds.x - m), clampf(o.to.y, m + 60.0, bounds.y - m))
+	# 화살표 시작 방향 = 함대의 현재 선두 방향(화면 각도)
+	var d: Vector2 = battle.w2s(f.pos + Vector2(cos(f.heading), sin(f.heading)) * 100.0) - battle.w2s(f.pos)
+	menu = {"fleet": f, "world": battle.s2w(o.to), "to": o.to, "c": c, "a": d.angle(), "drag": -1}
 	mode = "menu"
 	order = {}
 	order_preview_changed.emit()
 	UiSound.vibrate(30)
 
-# 메뉴 항목의 화면 위치와 월드 각도(도). 인덱스 -1은 중앙(방향 지정 없음).
-func menu_item(i: int) -> Dictionary:
-	var c: Vector2 = menu.c
-	var a := TAU * i / MENU_DIRS - PI / 2.0   # 0번 = 화면 위쪽
-	var dir := Vector2(cos(a), sin(a))
-	var w: Vector2 = battle.s2w(menu.to + dir * 100.0) - battle.s2w(menu.to)
-	return {"pos": c + dir * MENU_R, "deg": rad_to_deg(w.angle())}
+# 화살표(화면 각도)를 월드 각도(도)로
+func menu_deg() -> float:
+	var dir := Vector2.from_angle(menu.a)
+	return rad_to_deg((battle.s2w(menu.to + dir * 100.0) - battle.s2w(menu.to)).angle())
 
-func _menu_press(p: Vector2) -> void:
-	var f = menu.fleet
-	var w: Vector2 = menu.world
-	var c: Vector2 = menu.c
-	var pick := false
-	var deg = null
-	if p.distance_to(c) < MENU_HIT:
-		pick = true   # 중앙: 방향 지정 없이 이동
-	else:
-		for i in MENU_DIRS:
-			var it := menu_item(i)
-			if p.distance_to(it.pos) < MENU_HIT:
-				pick = true
-				deg = it.deg
-				break
-	menu = {}
-	mode = ""
-	origin_fleet = null
-	order_preview_changed.emit()
-	if pick and f and not f.dead and not battle.my_sel().is_empty():
-		battle.order_move(w, false, deg)
+func _menu_press(e: InputEventScreenTouch) -> void:
+	var d: float = e.position.distance_to(menu.c)
+	if d < MENU_OK_R:
+		var f = menu.fleet
+		var w: Vector2 = menu.world
+		var deg := menu_deg()
+		menu = {}
+		mode = ""
+		origin_fleet = null
+		order_preview_changed.emit()
+		if f and not f.dead and not battle.my_sel().is_empty():
+			battle.order_move(w, false, deg)
+	elif d < MENU_R + MENU_BAND:
+		menu.drag = e.index
+		menu.a = (e.position - menu.c).angle()
+	else:   # 바깥 탭: 취소
+		menu = {}
+		mode = ""
+		origin_fleet = null
+		order_preview_changed.emit()
 
 func _update_turn(p: Vector2) -> void:
 	var f = origin_fleet

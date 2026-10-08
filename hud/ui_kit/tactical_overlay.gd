@@ -296,23 +296,29 @@ func _hold_view() -> void:
 			var side := Vector2(-dir.y, dir.x) * 9.0
 			draw_colored_polygon(PackedVector2Array([tip + dir * 14.0, tip + side, tip - side]), Color(col, 0.95))
 
-# 도착 방향 메뉴: 목적지에서 8방향 + 중앙(방향 지정 없음). 메뉴 밖을 누르면 닫힌다(명령 취소).
+# 도착 방향 원: 목적지를 중심으로 큰 원 하나, 원 위에서 화살표를 돌려 방향을 정하고 가운데 [확정]을 누른다. 원 밖을 누르면 취소.
 func _dir_menu() -> void:
 	var m: Dictionary = touch.menu
 	var col := UiTheme.GOLD_HI
+	var c: Vector2 = m.c
+	var R: float = touch.MENU_R
 	var src: Vector2 = battle.w2s(m.fleet.pos)
 	UiDraw.dashed_poly(self, PackedVector2Array([src, m.to]), Color(col, 0.8), 2.5, 10.0, 6.0, -t * 40.0)
 	UiDraw.diamond(self, m.to, 6.0, col)
-	draw_circle(m.c, touch.MENU_HIT, Color(0.03, 0.05, 0.07, 0.85))
-	draw_arc(m.c, touch.MENU_HIT, 0.0, TAU, 32, Color(col, 0.9), 2.0, true)
-	UiDraw.text(self, m.c + Vector2(-20, 7), "자동", "semibold", 18, col)
-	var arrows := ["↑", "↗", "→", "↘", "↓", "↙", "←", "↖"]
-	for i in touch.MENU_DIRS:
-		var it: Dictionary = touch.menu_item(i)
-		draw_circle(it.pos, touch.MENU_HIT, Color(0.03, 0.05, 0.07, 0.85))
-		draw_arc(it.pos, touch.MENU_HIT, 0.0, TAU, 32, Color(col, 0.9), 2.0, true)
-		UiDraw.text(self, it.pos + Vector2(-10, 10), arrows[i], "semibold", 30, col)
-	UiDraw.text(self, m.c + Vector2(-70, touch.MENU_R + touch.MENU_HIT + 28.0), "도착 방향을 고르세요", "semibold", 16, col)
+	draw_circle(c, R, Color(0.03, 0.05, 0.07, 0.55))
+	draw_arc(c, R, 0.0, TAU, 64, Color(col, 0.95), 3.0, true)
+	for i in 8:
+		var u := Vector2.from_angle(TAU * i / 8.0)
+		draw_line(c + u * (R - 10.0), c + u * R, Color(col, 0.6), 2.0, true)
+	var u := Vector2.from_angle(m.a)
+	var tip := c + u * (R - 6.0)
+	var side := Vector2(-u.y, u.x)
+	draw_line(c + u * touch.MENU_OK_R, tip - u * 22.0, Color(col, 1.0), 6.0, true)
+	draw_colored_polygon(PackedVector2Array([tip, tip - u * 30.0 + side * 15.0, tip - u * 30.0 - side * 15.0]), col)
+	draw_circle(c, touch.MENU_OK_R, Color(0.1, 0.16, 0.1, 0.95))
+	draw_arc(c, touch.MENU_OK_R, 0.0, TAU, 32, Color(col, 0.95), 2.5, true)
+	UiDraw.text(self, c + Vector2(-20, 8), "확정", "semibold", 22, col)
+	UiDraw.text(self, c + Vector2(-110, R + 38.0), "원을 돌려 도착 방향을 정하세요", "semibold", 16, col)
 
 # 회전 핸들: 단일 선택 함대 주위 링과 선두 방향 손잡이. 끄는 동안은 목표 방향 선과 부채꼴을 보여준다.
 func _turn_handle() -> void:
