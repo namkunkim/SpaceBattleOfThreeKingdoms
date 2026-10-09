@@ -21,6 +21,7 @@ const FIGHTER_R := 380.0
 const PORTRAIT_SHEET := "res://assets/portraits/commanders_sheet_v1.png"
 var profile_def := "res://data/profiles/red_cliffs_rt.json"   # 적벽 시나리오 프로필. ""이면 POC 프로필(규칙 문구 대조 테스트 전용)
 var difficulty := "표준"
+const TOUCH_TEST := false  # 태블릿 터치 시험용: 유비군 함대 2개, 조조군 첫 즉시 투입 전대 1개만 둔다. 시험 끝나면 false
 var ALLY_DEF: Array = []   # 브리핑·결산 편성표: 시나리오 프로필의 아군(유비군+손권군) 전대
 var FOE_DEF: Array = []    # 브리핑 적 정보: 처음부터 배치되는 적 전대만(증원 전대는 안개 속, 규모를 미리 알리지 않는다)
 const CMDS := [
@@ -141,7 +142,27 @@ func init_game() -> void:
 	fx.clear()
 	battle_seed = randi()
 	var profile := ScenarioProfile.load_profile(profile_def, difficulty) if profile_def != "" else PocSetup.profile()
+	if TOUCH_TEST and not profile.is_empty():
+		profile.ally = profile.ally.slice(0, 2)
+		profile.foe = profile.foe.filter(func(d): return int(d.wait) == 0).slice(0, 1)   # 적 함대 1개만(즉시 투입 중 첫 번째)
+		# 전장을 배경판의 가로·세로 2배(6800×4600)로 키우고 아군을 가운데로 옮긴다. 미니맵은 이 전장을 비례 축소해 보여 준다
+		var big := CameraRig.WORLD * 2.0
+		profile.rules.world_w = big.x
+		profile.rules.world_h = big.y
+		var shift := big * 0.5 - Vector2(profile.ally[0].x, profile.ally[0].y)
+		for d in profile.ally + profile.foe:   # 아군·적 같은 이동량: 원래 간격을 지킨다
+			d.x += shift.x
+			d.y += shift.y
+		rig.margin = 0.4   # 시작 배율에서도 두 손가락으로 화면을 옮길 수 있게
+		GameSettings.slow_mode = GameSettings.SLOW_OFF   # 선택 감속 끔(저장 설정은 건드리지 않는다)
+		# 이동 ×150: 화면 한 폭(1600)을 약 10초에 건넌다. 선회율도 ×15로 올린다: 선회 반경(속도÷선회율)이
+		# 도착 판정(settle 0.7×속도) 안에 들어야 목적지를 돌지 않는다. 조건은 선회율 > 82°/초(속도와 무관)
+		for t in profile.combat.ship_types.values():
+			t.speed_per_turn *= 150
+		profile.combat.movement.face_turn_deg_per_s = profile.combat.movement.turn_deg_per_s * 4   # 제자리 회전은 완만하게(영상에서 너무 빨랐다)
+		profile.combat.movement.turn_deg_per_s *= 15
 	sim = BattleSim.new(battle_seed, BattleRules.TICK_HZ, profile)
+	sim.endless = TOUCH_TEST
 	ALLY_DEF = profile.ally.map(_with_portrait)
 	FOE_DEF = profile.foe.filter(func(d): return int(d.wait) == 0).map(_with_portrait)
 	clock = TickClock.new()
@@ -151,13 +172,16 @@ func init_game() -> void:
 	inspect = null
 	marker = {}
 	drag = {}
-	G = {"t": 0.0, "cp": 3.0, "ecp": 3.0, "reinf": false, "state": "brief", "speed": 1, "slow": 1.0, "killed": 0.0, "lost": 0.0, "panel_t": 0.0, "over": false, "end_t": -1.0, "end_win": false, "end_text": ""}
+	G = {"t": 0.0, "cp": 3.0, "ecp": 3.0, "reinf": false, "state": "brief", "speed": 1, "slow": 1.0, "hold": false, "killed": 0.0, "lost": 0.0, "panel_t": 0.0, "over": false, "end_t": -1.0, "end_win": false, "end_text": ""}
 	sim.drain_events()
 	_sync()
 	_assign_default_groups()
 	rig.limit = sim.rs.world
+	view3d.build_backdrop()
 	rig.cam_pos = _field_center()
 	rig.cam_z = clampf(vsize.x / (sim.rs.world.x + 100.0), 0.45, 1.0)   # 전장 폭이 화면에 들어오게
+	if TOUCH_TEST:
+		rig.cam_z = 0.9   # 전장이 커서 전체를 담으면 함대가 작다. 시작은 함대가 읽히는 배율, 확대·축소는 두 손가락
 	hud.reset()
 	refresh_panel()
 
@@ -191,6 +215,7 @@ func _start() -> void:
 	hud.end_ov.visible = false
 	hud.menu_ov.visible = false
 	G.state = "play"
+	G.hold = TOUCH_TEST   # 전투에 들어가면 일시정지 상태로 시작(시험 모드): 이동·방향을 정한 뒤 재개한다
 	selected.assign([flag(0)])
 	refresh_panel()
 	add_log("전 함대, 전투 배치 완료.", "", fleets[0])
@@ -253,7 +278,8 @@ func _process(delta: float) -> void:
 	var dt := minf(0.05, delta)
 	if G.state == "play":
 		input_node.poll_camera(dt)
-		clock.set_speed(float(G.speed) * G.slow)
+		var run := 0.0 if G.hold else 1.0   # 터치 중 정지(TOUCH_TEST): 재개 버튼을 누를 때까지
+		clock.set_speed(float(G.speed) * G.slow * run)
 		var n := clock.advance(delta)
 		for i in n:
 			if sim.st.over:
@@ -262,7 +288,7 @@ func _process(delta: float) -> void:
 		vm.alpha = clock.alpha()
 		_pump()
 		vm.interpolate(clock.alpha())
-		_tick_view(dt * G.speed * G.slow)
+		_tick_view(dt * G.speed * G.slow * run)
 		G.panel_t -= dt
 		if G.panel_t <= 0.0:
 			G.panel_t = 0.25
@@ -469,8 +495,11 @@ func power(f) -> float:
 func do_cmd(id: String) -> void:
 	cmds.do_cmd(id)
 
-func order_move(w: Vector2) -> void:
-	cmds.order_move(w)
+func order_move(w: Vector2, strafe := false, facing_deg = null) -> void:
+	cmds.order_move(w, strafe, facing_deg)
+
+func order_face(rad: float) -> void:
+	cmds.order_face(rad)
 
 func order_attack(t) -> void:
 	cmds.order_attack(t)

@@ -138,7 +138,7 @@ func issue(cmd: Dictionary) -> void:
 	apply(c)
 
 # 플레이어가 명령한 전대는 직접 지휘가 된다(§5.4). AI 명령은 apply()를 바로 불러 여기를 거치지 않는다.
-const DIRECT_KINDS := ["stop", "move", "attack", "charge", "retreat", "rally", "formation", "restore", "def", "missile", "fighter", "volley",
+const DIRECT_KINDS := ["stop", "move", "face", "attack", "charge", "retreat", "rally", "formation", "restore", "def", "missile", "fighter", "volley",
 	"letter", "withdraw", "ignite", "assault"]
 
 func _mark_direct(c: Dictionary) -> void:
@@ -354,6 +354,7 @@ func _clear_path(f: FleetState) -> void:
 	f.route.clear()
 	f.strafe = false
 	f.face_set = false
+	f.speed_cap = 0.0
 
 func _reject(lead: FleetState, reason: String, side: int) -> void:
 	emit("rejected", lead.id if lead else -1, side, Vector2.ZERO, reason)
@@ -445,7 +446,7 @@ func apply(c: Dictionary) -> void:
 				_reject(null, "retreating", side)
 			return
 	var L := _lead(s)
-	if morale and kind in ["stop", "move", "attack", "charge"]:
+	if morale and kind in ["stop", "move", "face", "attack", "charge"]:
 		for f in s:
 			f.retreat_order = false
 	if kind in ["stop", "attack", "charge", "retreat", "rally", "ai_move", "restore"]:
@@ -606,6 +607,12 @@ func apply(c: Dictionary) -> void:
 			if salvo and pts.size() > int(salvo.C.movement.max_waypoints):
 				_reject(L, "too_many_waypoints", side)
 				return
+			# 그룹 이동 규칙: 함께 이동하는 함대는 그중 가장 느린 속도로 가서 대형을 유지한 채 같이 도착한다
+			var cap := 0.0
+			if s.size() > 1:
+				cap = 1e9
+				for f in s:
+					cap = minf(cap, f.speed)
 			var cen := Vector2.ZERO
 			for f in s:
 				cen += f.pos
@@ -615,6 +622,7 @@ func apply(c: Dictionary) -> void:
 				f.target_id = -1
 				f.has_move = true
 				_clear_path(f)
+				f.speed_cap = cap
 				for i in pts.size():
 					var w: Vector2 = pts[i]
 					var p := BattleRules.quant_v(Vector2(clampf(w.x + o.x, e, W.x - e), clampf(w.y + o.y, e, W.y - e)))
@@ -627,6 +635,14 @@ func apply(c: Dictionary) -> void:
 					f.face_set = true
 					f.face_to = BattleRules.quant(deg_to_rad(float(args.facing_deg)))
 			emit("say", L.id, -1, L.pos, "move_all" if s.size() > 1 else "move")
+		"face":
+			# 제자리 방향 전환: 이동·표적을 풀고 args.facing_deg를 향해 돌아선다(위치 고정). 도착 방향 지정(face_set)을 재사용한다
+			for f in s:
+				f.target_id = -1
+				f.has_move = false
+				_clear_path(f)
+				f.face_set = true
+				f.face_to = BattleRules.quant(deg_to_rad(float(c.get("args", {}).get("facing_deg", 0.0))))
 		"attack":
 			var t := st.by_id(int(c.target_id))
 			if t == null or t.dead or t.side == side:
@@ -735,9 +751,9 @@ static func _regen(cur: int, rem: int, period: int, cap: int) -> Array:
 	rem %= period
 	return [cur, rem]
 
-func _turn(f: FleetState, a: float) -> void:
+func _turn(f: FleetState, a: float, rate_deg := -1.0) -> void:
 	# salvo 규칙의 선회는 데이터(제자리 180°에 20초, §4.2). POC 규칙은 turn_rate
-	var m: float = (deg_to_rad(float(salvo.C.movement.turn_deg_per_s)) if salvo else float(R.turn_rate)) * dt
+	var m: float = (deg_to_rad(float(salvo.C.movement.turn_deg_per_s) if rate_deg < 0.0 else rate_deg) if salvo else float(R.turn_rate)) * dt
 	var dh := BattleRules.ang_diff(f.heading, a)
 	f.heading += dh if absf(dh) < m else signf(dh) * m
 
@@ -844,6 +860,7 @@ func _fleet_phase(timers: bool) -> void:
 				if f.route.is_empty():
 					f.has_move = false
 					f.strafe = false
+					f.speed_cap = 0.0
 				else:
 					f.move_to = f.route.pop_front()   # 다음 경유점
 			if f.has_move:
@@ -852,6 +869,8 @@ func _fleet_phase(timers: bool) -> void:
 		var spd := rs.move_speed(f.spd, f.defense, f.charge > 0)
 		if salvo:
 			spd = f.speed * (R.charge_speed_mul if f.charge > 0 else 1.0)
+			if f.speed_cap > 0.0 and f.charge <= 0:
+				spd = minf(spd, f.speed_cap)
 			if terrain:
 				spd *= float(BattleRules.BP) / float(terrain.move_cost_bp(f.pos))   # 성운·잔해·그림자는 느리다(§4.10)
 			if cmd:
@@ -860,6 +879,17 @@ func _fleet_phase(timers: bool) -> void:
 			# 평행 이동: 방향을 유지한 채 전진 속도의 일부로 목적지를 향해 옆으로 간다(§4.2)
 			var dd := f.pos.distance_to(dest)
 			f.pos += (dest - f.pos) / maxf(dd, 0.001) * minf(spd * float(salvo.C.movement.strafe_speed_bp) / float(BattleRules.BP) * dt, dd)
+			if f.face_set:
+				# 이동 명령에 방향이 함께 오면 이동하는 내내 조금씩 돌아 도착할 때 그 방향이 되고, 그 뒤로는 고정이다.
+				# 남은 시간(남은 거리 ÷ 평행 이동 속도)에 맞춰 선회율을 정하고 선회율 한도(turn_deg_per_s)로 막는다
+				var dh := BattleRules.ang_diff(f.heading, f.face_to)
+				var sv := maxf(0.001, spd * float(salvo.C.movement.strafe_speed_bp) / float(BattleRules.BP))
+				var t_left := maxf(dt, f.pos.distance_to(dest) / sv)
+				var step := minf(absf(dh), absf(dh) * dt / t_left)
+				step = minf(step, deg_to_rad(float(salvo.C.movement.turn_deg_per_s)) * dt)
+				f.heading += signf(dh) * step
+				if absf(BattleRules.ang_diff(f.heading, f.face_to)) < deg_to_rad(float(salvo.C.movement.face_tolerance_deg)):
+					f.face_set = false
 		elif has_dest:
 			var a := atan2(dest.y - f.pos.y, dest.x - f.pos.x)
 			_turn(f, a)
@@ -872,7 +902,8 @@ func _fleet_phase(timers: bool) -> void:
 				f.pos += Vector2(cos(f.heading), sin(f.heading)) * stp
 		if not has_dest and f.face_set:
 			# 도착 방향: 도착한 뒤 지정한 방향으로 돌아선다(§4.2). 맞출 때까지는 자동 조준보다 우선한다
-			_turn(f, f.face_to)
+			# 제자리 선회율은 movement.face_turn_deg_per_s가 있으면 그것(이동 중 선회율과 따로 정할 수 있다)
+			_turn(f, f.face_to, float(salvo.C.movement.get("face_turn_deg_per_s", -1.0)) if salvo else -1.0)
 			if absf(BattleRules.ang_diff(f.heading, f.face_to)) < deg_to_rad(float(salvo.C.movement.face_tolerance_deg)):
 				f.face_set = false
 		var ft: FleetState = tgt if (tgt and f.pos.distance_to(known_pos(f, tgt)) <= f.range_r) else sight_foe(f, f.range_r)
@@ -954,7 +985,11 @@ func _move_swarms() -> void:
 			apply_dmg(src, t, s.dps * dt)
 	st.swarms = st.swarms.filter(func(s): return s.life > 0)
 
+var endless := false   # 시험용: true면 승패가 나도 전투를 끝내지 않는다(적 없는 조작 시험)
+
 func _end(win: bool, reason: String) -> void:
+	if endless:
+		return
 	st.over = true
 	st.win = win
 	st.end_reason = reason

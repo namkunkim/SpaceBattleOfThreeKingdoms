@@ -118,6 +118,8 @@ func _process(delta: float) -> void:
 		_:
 			slow = false
 	slow = slow or forced_slow
+	if src.battle.TOUCH_TEST:
+		slow = false   # 터치 시험: 선택·터치·알림으로 시간이 느려지지 않는다(정지는 일시정지 버튼만)
 	_apply()
 
 func _apply() -> void:

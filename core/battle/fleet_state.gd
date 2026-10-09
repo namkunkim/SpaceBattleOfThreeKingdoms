@@ -84,6 +84,7 @@ var form_left := 0            # 전환 남은 틱
 var route: Array[Vector2] = []   # move_to 다음에 지날 경유점·목적지(§4.2)
 var strafe := false           # 평행 이동: 선회 없이 방향을 유지한 채 옆으로 이동
 var face_set := false         # 도착 방향 지정
+var speed_cap := 0.0          # 그룹 이동 속도 상한(0 = 없음). 함께 이동하는 함대 중 가장 느린 속도
 var face_to := 0.0
 var traits: Array = []        # 지휘관 특성(팔진 조건)
 var shape := -1               # 배치도 번호(BattleRules.formation_offsets의 kind). -1이면 POC(form_id)

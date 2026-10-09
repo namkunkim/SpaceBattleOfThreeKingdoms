@@ -44,6 +44,7 @@ func _draw() -> void:
 			ticks.append(battle.w2s(pf.pos + Vector2(cos(a), sin(a)) * r0))
 			ticks.append(battle.w2s(pf.pos + Vector2(cos(a), sin(a)) * r1))
 		draw_multiline(ticks, Color(UiTheme.ALLY, 0.34), 1.0)
+	_detect_rings()
 	var sel: Array = battle.my_sel()
 	if sel.size() == 1:
 		_weapon_arcs(sel[0])
@@ -75,10 +76,39 @@ func _draw() -> void:
 		UiDraw.text(self, sp + Vector2(0, -6), ft.text, "serif_bold", 16, Color(ft.color, a), HORIZONTAL_ALIGNMENT_CENTER, 0.0, 4)
 	if touch and not touch.order.is_empty() and touch.order.from_fleet:
 		_touch_order(touch.order)
+	if touch:
+		_turn_handle()
+		if battle.G.state == "play":
+			if battle.G.hold:
+				_hold_view()
+			else:
+				_order_marks(false)
+		if not touch.menu.is_empty():
+			_dir_menu()
 	if not battle.drag.is_empty() and battle.drag.mode == "box":
 		var r := Rect2(battle.drag.s, Vector2.ZERO).expand(battle.drag.c)
 		draw_rect(r, Color(UiTheme.GOLD_HI, 0.06))
 		draw_rect(r, Color(UiTheme.GOLD_HI, 0.85), false, 1.0)
+
+# 함대별 적 탐지 범위: 센서 점수에서 "확인"·"추정" 기준 점수를 뺀 만큼의 거리(적 전자전·지형 은폐가 없을 때). 안쪽 실선 = 확인, 바깥 점선 = 추정.
+# 적에게 전자전이나 은폐가 있으면 실제 범위는 이보다 줄어든다.
+func _detect_rings() -> void:
+	var det = battle.sim.detect
+	if det == null:
+		return
+	var upp := float(det.D.distance_units_per_point)
+	for f in battle.alive(0):
+		var sf = battle.sim.st.by_id(f.id)
+		if sf == null:
+			continue
+		var sc: int = det.sensor_of(sf)
+		var r_conf := maxf(0.0, float(sc - int(det.D.confirmed)) * upp)
+		var r_est := maxf(0.0, float(sc - int(det.D.estimated)) * upp)
+		var col := Color(UiTheme.ALLY_HI, 0.75 if battle.selected.has(f) else 0.45)   # 선택 여부와 관계없이 항상 보인다
+		if r_est > 0.0:
+			UiDraw.dashed_poly(self, _ground_ring(f.pos, r_est, 96), col, 1.6, 5.0, 6.0)
+		if r_conf > 0.0:
+			draw_polyline(_ground_ring(f.pos, r_conf, 72), col, 2.0, true)
 
 func _weapon_arcs(f) -> void:
 	# 광선 사거리 부채꼴(정면 ±60°)과 미사일 사거리 파선 원
@@ -255,12 +285,125 @@ func _speech(f) -> void:
 	draw_colored_polygon(PackedVector2Array([Vector2(r.position.x + 14, r.end.y), Vector2(r.position.x + 22, r.end.y), Vector2(r.position.x + 14, r.end.y + 6)]), Color(0.03, 0.045, 0.07, 0.92 * a))
 	UiDraw.text(self, r.position + Vector2(12, 17.5), f.speech, "medium", fs, Color(UiTheme.INK, a))
 
+# 정지 중 표시: 호박색 테두리·문구, 그리고 내려 둔 명령(목적지·표적·도착 방향)을 계속 보여준다. 재개하면 사라진다.
+func _hold_view() -> void:
+	var col := UiTheme.GOLD_HI
+	draw_rect(Rect2(Vector2.ZERO, size), Color(col, 0.7), false, 6.0)
+	var msg := "일시정지 중"
+	var w := UiDraw.text_w(msg, "semibold", 22) + 40.0
+	var box := Rect2(Vector2((size.x - w) * 0.5, 14.0), Vector2(w, 40.0))
+	draw_rect(box, Color(0.03, 0.05, 0.07, 0.9))
+	draw_rect(box, Color(col, 0.8), false, 1.5)
+	UiDraw.text(self, box.position + Vector2(20, 28), msg, "semibold", 22, col)
+	_order_marks(true)
+
+# 선택 함대의 내려 둔 명령 표시. held(정지 중)면 목적지·표적까지, 아니면 도착 방향 화살표만(이동 중 최종 방향 안내).
+func _order_marks(held: bool) -> void:
+	var col := UiTheme.GOLD_HI
+	for v in battle.my_sel():
+		var s = battle.sim.st.by_id(v.id)
+		if s == null or s.dead:
+			continue
+		var c: Vector2 = battle.w2s(s.pos)
+		if not held:
+			pass
+		elif s.target_id >= 0:
+			var tg = battle.sim.st.by_id(s.target_id)
+			if tg:
+				var tp: Vector2 = battle.w2s(tg.pos)
+				UiDraw.dashed_poly(self, PackedVector2Array([c, tp]), Color(UiTheme.FOE, 0.9), 2.5, 10.0, 6.0, -t * 40.0)
+				_reticle(tp, UiTheme.FOE)
+		elif s.has_move:
+			var d: Vector2 = battle.w2s(s.move_to)
+			UiDraw.dashed_poly(self, PackedVector2Array([c, d]), Color(col, 0.9), 2.5, 10.0, 6.0, -t * 40.0)
+			draw_arc(d, 18.0, 0.0, TAU, 32, Color(col, 0.9), 2.5, true)
+			UiDraw.diamond(self, d, 6.0, col)
+			UiDraw.text(self, d + Vector2(-26, -30), "이동 · 방향 고정" if s.strafe else "이동 · 선회", "semibold", 14, col)   # 아래쪽은 기존 "도착 0:04" 표식 자리
+		if s.face_set:
+			# 이동 중이면 목적지에, 제자리 회전이면 함대에 도착 방향 화살표를 그린다
+			var wo: Vector2 = s.move_to if s.has_move else s.pos
+			var so: Vector2 = battle.w2s(wo)
+			var dir: Vector2 = battle.w2s(wo + Vector2(cos(s.face_to), sin(s.face_to)) * 100.0) - so
+			dir = dir.normalized()
+			var r0 := 26.0 if s.has_move else touch.RING_R
+			var tip := so + dir * (r0 + 40.0)
+			var a := 0.95 if held else 0.7
+			draw_line(so + dir * r0, tip, Color(col, a), 4.0, true)
+			var side := Vector2(-dir.y, dir.x) * 9.0
+			draw_colored_polygon(PackedVector2Array([tip + dir * 14.0, tip + side, tip - side]), Color(col, a))
+
+# 도착 방향 원: 목적지를 중심으로 큰 원 하나, 원 위에서 화살표를 돌려 방향을 정하고 가운데 [확정]을 누른다. 원 밖을 누르면 취소.
+func _dir_menu() -> void:
+	var m: Dictionary = touch.menu
+	var col := UiTheme.GOLD_HI
+	var c: Vector2 = m.c
+	var R: float = touch.MENU_R
+	var src: Vector2 = battle.w2s(m.fleet.pos)
+	draw_circle(c, R, Color(0.03, 0.05, 0.07, 0.55))
+	draw_arc(c, R, 0.0, TAU, 64, Color(col, 0.95), 3.0, true)
+	for i in 8:
+		var u := Vector2.from_angle(TAU * i / 8.0)
+		draw_line(c + u * (R - 10.0), c + u * R, Color(col, 0.6), 2.0, true)
+	var u := Vector2.from_angle(m.a)
+	var tip := c + u * (R - 6.0)
+	var side := Vector2(-u.y, u.x)
+	draw_line(c + u * 18.0, tip - u * 22.0, Color(col, 1.0), 6.0, true)
+	draw_colored_polygon(PackedVector2Array([tip, tip - u * 30.0 + side * 15.0, tip - u * 30.0 - side * 15.0]), col)
+	if not m.face:
+		UiDraw.dashed_poly(self, PackedVector2Array([src, m.to]), Color(col, 0.9), 2.5, 10.0, 6.0, -t * 40.0)
+	# 목적지: 십자 + 다이아몬드(HUD를 피해 원이 옮겨졌으면 원 중심과 가는 선으로 잇는다). 확정 버튼은 원 아래쪽에 둔다
+	var to: Vector2 = m.to
+	if m.face:
+		to = c
+	elif to.distance_to(c) > 8.0:
+		draw_line(to, c, Color(col, 0.5), 1.5, true)
+	draw_line(to + Vector2(-16, 0), to + Vector2(16, 0), Color(col, 0.9), 2.0, true)
+	draw_line(to + Vector2(0, -16), to + Vector2(0, 16), Color(col, 0.9), 2.0, true)
+	UiDraw.diamond(self, to, 6.0, col)
+	UiDraw.text(self, c + Vector2(-95, -R * 0.62), "방향을 돌리고 손을 떼면 확정", "semibold", 15, col)
+	_mode_pill(touch.menu_pill_rect())   # 원 아래쪽에 유지
+
+# 이동 방식 알약(터치 조작 메뉴 안): 현재 방식을 보여주고 누르면 전환된다
+func _mode_pill(r: Rect2) -> void:
+	var col := UiTheme.GOLD_HI
+	draw_rect(r, Color(0.03, 0.05, 0.07, 0.92))
+	draw_rect(r, Color(col, 0.9), false, 2.0)
+	var txt: String = touch.pill_text()
+	var w := UiDraw.text_w(txt, "semibold", 20)
+	UiDraw.text(self, r.position + Vector2((r.size.x - w) * 0.5, r.size.y * 0.5 + 7.0), txt, "semibold", 20, col)
+
+# 회전 핸들: 단일 선택 함대 주위 링과 선두 방향 손잡이. 끄는 동안은 목표 방향 선과 부채꼴을 보여준다.
+func _turn_handle() -> void:
+	var f = touch.handle_fleet()
+	if f == null or f.dead or battle.G.state != "play":
+		return
+	var c: Vector2 = battle.w2s(f.pos)
+	var col := UiTheme.GOLD_HI
+	draw_arc(c, touch.RING_R, 0.0, TAU, 48, Color(col, 0.35), 1.5, true)
+	var h: Vector2 = touch.handle_pos(f)
+	var tr: Dictionary = touch.turn
+	if tr.is_empty() and touch.menu.is_empty() and touch.mode != "turn":
+		_mode_pill(touch.fleet_pill_rect(f))
+	if not tr.is_empty() and tr.fleet == f:
+		var tcol: Color = UiTheme.INK_3 if tr.cancel else col
+		if not tr.cancel:
+			var d: Vector2 = battle.w2s(f.pos + Vector2(cos(tr.rad), sin(tr.rad)) * 100.0) - c
+			var tip: Vector2 = c + d.normalized() * touch.RING_R
+			UiDraw.dashed_poly(self, PackedVector2Array([c, tip]), Color(tcol, 0.9), 2.0, 10.0, 6.0, -t * 40.0)
+			draw_circle(tip, 14.0, Color(tcol, 0.35))
+			draw_arc(tip, 14.0, 0.0, TAU, 24, Color(tcol, 0.95), 2.0, true)
+		UiDraw.text(self, c + Vector2(-16, touch.RING_R + 34.0), "취소" if tr.cancel else "회전", "semibold", 13, tcol)
+	else:
+		draw_circle(h, 12.0, Color(col, 0.28))
+		draw_arc(h, 12.0, 0.0, TAU, 24, Color(col, 0.95), 2.0, true)
+		UiDraw.diamond(self, h, 4.0, col)
+
 func _touch_order(o: Dictionary) -> void:
 	# 손가락으로 끄는 명령의 미리보기: 이동(금) / 공격(적색) / 취소(회색, 출발 함대 위)
 	var a: Vector2 = battle.w2s(o.from_fleet.pos)
 	var b: Vector2 = o.to
 	var col := UiTheme.GOLD_HI
-	var label := "이동"
+	var label := "이동 · 방향 고정" if o.get("slide", false) else "이동 · 선회"
 	if o.cancel:
 		col = UiTheme.INK_3
 		label = "취소"
