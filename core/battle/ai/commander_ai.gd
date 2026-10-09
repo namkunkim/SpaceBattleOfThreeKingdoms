@@ -206,7 +206,7 @@ func _no_contact(sim: BattleSim, f: FleetState, side: int, F: Dictionary) -> voi
 	# 목적지를 한 걸음(pursuit_step) 앞에 두면 도착 → 정지 → 다음 AI 주기 때까지 대기가 반복돼 움직였다 멈췄다 한다. 그래서 끝 지점을 준다.
 	# 기록이 없으면 본편 규칙대로 정찰 방향(no_contact_patrol.offset)으로 전장 끝까지 간다
 	var goal := Vector2.INF
-	var best := 1e18
+	var best := INF
 	for r in sim.detect.contacts[side].values():
 		var d := f.pos.distance_squared_to(r.pos)
 		if d < best:
