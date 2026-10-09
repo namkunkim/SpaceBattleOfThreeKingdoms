@@ -160,7 +160,7 @@ func init_game() -> void:
 	inspect = null
 	marker = {}
 	drag = {}
-	G = {"t": 0.0, "cp": 3.0, "ecp": 3.0, "reinf": false, "state": "brief", "speed": 1, "slow": 1.0, "hold": false, "killed": 0.0, "lost": 0.0, "panel_t": 0.0, "over": false, "end_t": -1.0, "end_win": false, "end_text": ""}
+	G = {"t": 0.0, "cp": 3.0, "ecp": 3.0, "reinf": false, "state": "brief", "speed": 1, "slow": 1.0, "killed": 0.0, "lost": 0.0, "panel_t": 0.0, "over": false, "end_t": -1.0, "end_win": false, "end_text": ""}
 	sim.drain_events()
 	_sync()
 	_assign_default_groups()
@@ -213,7 +213,6 @@ func _start() -> void:
 	hud.end_ov.visible = false
 	hud.menu_ov.visible = false
 	G.state = "play"
-	G.hold = true   # 전투에 들어가면 일시정지 상태로 시작: 이동·방향을 정한 뒤 재개한다
 	selected.assign([flag(0)])
 	refresh_panel()
 	add_log("전 함대, 전투 배치 완료.", "", fleets[0])
@@ -276,8 +275,7 @@ func _process(delta: float) -> void:
 	var dt := minf(0.05, delta)
 	if G.state == "play":
 		input_node.poll_camera(dt)
-		var run := 0.0 if G.hold else 1.0   # 정지(hold): 재개 버튼을 누를 때까지
-		clock.set_speed(float(G.speed) * G.slow * run)
+		clock.set_speed(float(G.speed) * G.slow)
 		var n := clock.advance(delta)
 		for i in n:
 			if sim.st.over:
@@ -286,7 +284,7 @@ func _process(delta: float) -> void:
 		vm.alpha = clock.alpha()
 		_pump()
 		vm.interpolate(clock.alpha())
-		_tick_view(dt * G.speed * G.slow * run)
+		_tick_view(dt * G.speed * G.slow)
 		G.panel_t -= dt
 		if G.panel_t <= 0.0:
 			G.panel_t = 0.25

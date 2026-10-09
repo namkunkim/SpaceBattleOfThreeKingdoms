@@ -23,7 +23,6 @@ func _run() -> void:
 	battle._start()
 	if not TestCheck.ok(self, battle.G.state == "play", "state"): return
 	battle._restart()
-	battle.G.hold = false   # 전투는 일시정지로 시작하므로 시간을 흘린다
 	seed(SEED)
 	# 120초 진행: 상태 값의 유효성(증원 전대는 프로필 투입 시각에 접촉으로만 나타난다)
 	for i in 2400:

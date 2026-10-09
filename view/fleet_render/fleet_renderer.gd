@@ -347,6 +347,7 @@ func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 	var fpos := src.to3(sq.pos)
 	var frot := -float(sq.heading) - PI * 0.5
 	var moved := fpos.distance_squared_to(v.last_pos) > 1e-8 or absf(frot - v.last_rot) > 1e-5
+	var fvel := (fpos - v.last_pos) / step if v.last_pos.x < 1e8 else Vector3.ZERO   # 전대 속도: 지수 추종의 정상 지연(속도×tau)을 목표에 미리 더해 상쇄한다
 	v.last_pos = fpos
 	v.last_rot = frot
 	if not moved and v.rest >= 3:
@@ -369,7 +370,7 @@ func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 		gi += 1
 		if not s.alive:
 			continue
-		var t := fpos + fb * s.home
+		var t := fpos + fb * s.home + fvel * s.tau
 		var hv := (t - s.pos) * (inv * step / (s.tau + step))   # 흔들림을 뺀 추종 속도: 선체 방향은 이것만 본다
 		if sw > 0.0:
 			t.x += sw * (sa * s.cph + ca * s.sph)

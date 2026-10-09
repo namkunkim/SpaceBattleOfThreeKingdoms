@@ -100,7 +100,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if event is InputEventMouseButton and event.pressed:
 		match event.button_index:
-			MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT:
+			MOUSE_BUTTON_LEFT, MOUSE_BUTTON_MIDDLE:   # 오른쪽은 MouseController(명령)
 				host.drag = {"s": event.position, "c": event.position, "btn": event.button_index, "moved": false, "mode": "", "shift": event.shift_pressed, "last": event.position}
 			MOUSE_BUTTON_WHEEL_UP:
 				host._zoom(event.position, 1.12)
@@ -122,7 +122,7 @@ func _input(event: InputEvent) -> void:
 			host._clamp_cam()
 		drag.last = event.position
 	elif event is InputEventMouseButton and not event.pressed and event.button_index == drag.btn:
-		if not drag.moved:
+		if not drag.moved and drag.btn == MOUSE_BUTTON_LEFT:
 			click_at(drag.s, drag.btn, drag.shift)
 		elif drag.mode == "box":
 			box_select(drag.s, drag.c, drag.shift)

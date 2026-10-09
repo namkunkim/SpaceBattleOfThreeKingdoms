@@ -117,7 +117,7 @@ func _process(delta: float) -> void:
 			slow = src.has_selection() and ((_held and deck.overlay.touch.mode != "ignore") or deck.overlay.touch.mode == "order")
 		_:
 			slow = false
-	slow = false   # 선택·터치·알림으로 시간이 느려지지 않는다(정지는 일시정지 버튼만)
+	slow = false   # 선택·터치·알림으로 시간이 느려지지 않는다
 	_apply()
 
 func _apply() -> void:

@@ -13,7 +13,6 @@ func _run() -> void:
 		await process_frame
 	var src: BattleSource = battle.presentation.src
 	battle.presentation.hud.begin_battle()
-	battle.G.hold = false   # 전투는 일시정지로 시작하므로 시간을 흘린다
 	await process_frame
 	# 접촉 필드: 적 전대를 아군 곁으로 옮겨 접촉시키고, 다시 멀리 보내 추정·상실로 흘려 본다.
 	var ally = battle.vm.alive(0)[0]

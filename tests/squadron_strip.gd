@@ -39,7 +39,6 @@ func _run() -> void:
 	GameSettings.auto_fast = false
 	GameSettings.slow_mode = GameSettings.SLOW_OFF
 	deck.begin_battle()
-	deck.battle.G.hold = false   # 전투는 일시정지로 시작하므로 시간을 흘린다
 	battle.cam_z = 1.0
 	battle.cam_pos = battle._field_center()
 	await _frames()

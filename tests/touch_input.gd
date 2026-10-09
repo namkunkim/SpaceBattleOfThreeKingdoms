@@ -31,6 +31,7 @@ func _settle() -> void:
 
 func _run() -> void:
 	var battle := (load("res://scenes/FleetBattle3D.tscn") as PackedScene).instantiate()
+	battle.move_mul = 1.0   # 일시정지가 없어 시간이 흐른다: 플레이용 이동 배율(×150)이면 확인 전에 도착해 버린다
 	root.add_child(battle)
 	await process_frame
 	var deck = battle.presentation.hud
@@ -73,6 +74,8 @@ func _run() -> void:
 	battle.update_sim(0.3)
 	await _settle()
 	var foe = battle.alive(1)[0]
+	battle.cam_pos = (f.pos + foe.pos) * 0.5   # 화면 가장자리 알림·HUD에 끌기 끝점이 걸리지 않게 둘 사이를 가운데로
+	await _settle()
 	sp = battle.w2s(f.pos)
 	var fp: Vector2 = battle.w2s(foe.pos)
 	_touch(0, sp, true)

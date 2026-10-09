@@ -26,6 +26,10 @@ func setup(b: Node) -> void:
 	touch.name = "TouchController"
 	add_child(touch)
 	touch.setup(battle)
+	var mouse := MouseController.new()
+	mouse.name = "MouseController"
+	add_child(mouse)
+	mouse.setup(battle, touch)
 	var hud_script := load("res://hud/ui_kit/command_deck.gd") if ResourceLoader.exists("res://hud/ui_kit/command_deck.gd") else null
 	if hud_script and hud_script.can_instantiate():
 		var layer := CanvasLayer.new()

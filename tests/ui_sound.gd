@@ -32,7 +32,6 @@ func _run() -> void:
 	GameSettings.auto_fast = false
 	GameSettings.slow_mode = GameSettings.SLOW_OFF
 	deck.begin_battle()
-	battle.G.hold = false   # 전투는 일시정지로 시작하므로 시간을 흘린다
 	await _frames()
 	UiSound.history.clear()
 	_click(deck.speed_btns[1])

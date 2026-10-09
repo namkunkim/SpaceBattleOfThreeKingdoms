@@ -23,7 +23,6 @@ func _run() -> void:
 	GameSettings.auto_fast = true
 	GameSettings.slow_mode = GameSettings.SLOW_OFF
 	deck.begin_battle()
-	deck.battle.G.hold = false   # 전투는 일시정지로 시작하므로 시간을 흘린다
 	await create_timer(1.3).timeout
 	await _frames()
 	if not TestCheck.ok(self, pacing.mode == pacing.Mode.AUTO, "auto x4 before incoming"): return
