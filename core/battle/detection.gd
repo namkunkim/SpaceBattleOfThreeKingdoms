@@ -79,7 +79,8 @@ func _sum(f: FleetState, ship_pts: Dictionary, equip_pts: Dictionary) -> int:
 		n += _count(f, t) * int(ship_pts.get(t, 0))
 	if f.equip != "":
 		n += _count(f, sim.salvo.C.fast_craft.ship_type_id) * int(equip_pts.get(f.equip, 0))
-	return n
+	var div := int(D.get("ship_points_div", 1))   # 시나리오 척 수 배율(적벽 3배). 함선 수에 비례하는 점수를 1배 기준으로 되돌린다
+	return (n + div / 2) / div
 
 func sensor_of(f: FleetState) -> int:
 	var bp: int = int(sim.salvo.C.formations[sim.salvo._form_id(f)].detection_bp)

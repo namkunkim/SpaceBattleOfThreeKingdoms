@@ -255,6 +255,7 @@ def main():
                 "equip_ew": sens["fast_equipment_ew_points"],
                 "intellect_bands": sens["intelligence_bands"],
                 "distance_units_per_point": sens["distance_penalty"]["units_per_point"],
+                "ship_points_div": 3,   # 적벽 척 수 3배: 함선 센서·전자전 합을 나눠 탐지 거리를 1배 때와 같게 둔다
                 "confirmed": 30,
                 "confirmed_status": "proposed (본편 37. M6 측정: 37이면 표준 조조가 확인 등급을 거의 못 받는다 — attack 32%, none 0%. 30이면 100%. EXPERIENCE-DESIGN §8 3안)",
                 "estimated": sens["thresholds"]["estimated"],
@@ -333,8 +334,8 @@ def main():
             },
             # M9 지휘 한도와 승계 불이익(§4.14). 혼선 단계·단계당 효과는 시나리오 realtime_rules.commander_succession
             "command": {
-                "limit_base": clr["recommended_base_cost"],
-                "limit_per_command": clr["recommended_cost_per_command"],
+                "limit_base": clr["recommended_base_cost"] * 3,   # 적벽 척 수 3배(make_red_cliffs_208.SHIP_SCALE)에 맞춘 한도 배율
+                "limit_per_command": clr["recommended_cost_per_command"] * 3,
                 "over_tier_ratio": clr["over_tier_ratio"],
                 "max_tier": clr["max_penalty_tier"],
                 "injury_bp": {"severe_below": 4000, "light_below": 7500},

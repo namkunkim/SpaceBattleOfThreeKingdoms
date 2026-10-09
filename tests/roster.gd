@@ -24,7 +24,7 @@ func _run() -> void:
 	var d := ScenarioRoster.load_scenario()
 	if not TestCheck.ok(self, d.get("factions", []).size() == 3 and d.get("squadrons", []).size() == 14, "scenario loaded"): return
 	var s := ScenarioRoster.squadron(d, "RC-LIU-SQ-01")
-	if not TestCheck.ok(self, ScenarioRoster.ship_count(s) == 7 and ScenarioRoster.composition_text(s) == "전열 4 · 보급 1 · 요격 2", "composition %s" % ScenarioRoster.composition_text(s)): return
+	if not TestCheck.ok(self, ScenarioRoster.ship_count(s) == 21 and ScenarioRoster.composition_text(s) == "전열 12 · 보급 3 · 요격 6", "composition %s" % ScenarioRoster.composition_text(s)): return
 	for sq in d.squadrons:
 		for c in sq.composition:
 			if not ScenarioRoster.SHIP_TYPES.has(c.ship_type_id):
@@ -40,7 +40,7 @@ func _run() -> void:
 		n[diff] = ScenarioRoster.deployed(d, "cao_cao", diff).size()
 	if not TestCheck.ok(self, n.입문 == 4 and n.표준 == 5 and n.상급 == 7 and n.극한 == 7, "deploy by difficulty %s" % n): return
 	var cao1: Dictionary = ScenarioRoster.deployed(d, "cao_cao", "입문")[0]
-	var want := {"SHP-01": 1, "SHP-03": 3, "SHP-04": 6}
+	var want := {"SHP-01": 4, "SHP-03": 8, "SHP-04": 17}   # 3배 편성(6·12·24) × 0.7 half-up
 	for c in cao1.composition:
 		if want.has(c.ship_type_id) and int(c.count) != want[c.ship_type_id]:
 			TestCheck.ok(self, false, "scaled %s = %d" % [c.ship_type_id, c.count])

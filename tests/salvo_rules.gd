@@ -38,7 +38,7 @@ func _run() -> void:
 	for f in rs0.st.fleets:
 		if f.sq_id == "RC-CAO-SQ-01":
 			cao = f
-	if not TestCheck.ok(self, cao != null and cao.ships == 26 * 1000 and cao.max_hull == (2 * 18 + 4 * 12 + 8 * 10 + 2 * 8 + 2 * 9 + 2 * 7 + 6 * 2) * 10 and cao.equip == "FAST-EQ-INTERCEPT", "조조 중군 선체 %d" % cao.max_hull): return
+	if not TestCheck.ok(self, cao != null and cao.ships == 78 * 1000 and cao.max_hull == (2 * 18 + 4 * 12 + 8 * 10 + 2 * 8 + 2 * 9 + 2 * 7 + 6 * 2) * 10 * 3 and cao.equip == "FAST-EQ-INTERCEPT", "조조 중군 선체 %d" % cao.max_hull): return
 	if not TestCheck.ok(self, is_equal_approx(cao.speed, 70.0 / 60.0 * 1.0) , "조조 중군 속도(보급함 70/턴, 안행진 0%%) %f" % cao.speed): return
 	var pr := rs0.projection(0)
 	if not TestCheck.ok(self, pr.squadrons[0].counts.size() > 0 and pr.squadrons[0].hull == pr.squadrons[0].max_hull, "투영 counts·hull"): return

@@ -294,20 +294,20 @@
    "composition": [
     {
      "ship_type_id": "SHP-04",
-     "count": 4
+     "count": 12
     },
     {
      "ship_type_id": "SHP-05",
-     "count": 1
+     "count": 3
     },
     {
      "ship_type_id": "SHP-07",
-     "count": 2
+     "count": 6
     }
    ],
    "historical_basis": "유비는 번구(樊口)에서 주유와 합류했다. 장비·제갈량의 전투 중 역할은 기록이 없어 본대 소속으로 둔다.",
-   "declared_total_cost": 62,
-   "command_limit": 204
+   "declared_total_cost": 186,
+   "command_limit": 612
   },
   {
    "id": "RC-LIU-SQ-02",
@@ -335,20 +335,20 @@
    "composition": [
     {
      "ship_type_id": "SHP-03",
-     "count": 2
+     "count": 6
     },
     {
      "ship_type_id": "SHP-04",
-     "count": 3
+     "count": 9
     },
     {
      "ship_type_id": "SHP-07",
-     "count": 2
+     "count": 6
     }
    ],
    "historical_basis": "『삼국지』 제갈량전: 관우의 수군 정예 1만.",
-   "declared_total_cost": 68,
-   "command_limit": 230
+   "declared_total_cost": 204,
+   "command_limit": 690
   },
   {
    "id": "RC-LIU-SQ-03",
@@ -376,20 +376,20 @@
    "composition": [
     {
      "ship_type_id": "SHP-03",
-     "count": 1
-    },
-    {
-     "ship_type_id": "SHP-04",
      "count": 3
     },
     {
+     "ship_type_id": "SHP-04",
+     "count": 9
+    },
+    {
      "ship_type_id": "SHP-05",
-     "count": 1
+     "count": 3
     }
    ],
    "historical_basis": "『삼국지』 제갈량전: 유기가 모은 강하의 병사 1만 이상. 유기는 하구(夏口)를 지켰다.",
-   "declared_total_cost": 50,
-   "command_limit": 136
+   "declared_total_cost": 150,
+   "command_limit": 408
   },
   {
    "id": "RC-LIU-FC-01",
@@ -417,7 +417,7 @@
    "composition": [
     {
      "ship_type_id": "SHP-08",
-     "count": 6,
+     "count": 18,
      "mission_equipment_id": "FAST-EQ-RECON"
     }
    ],
@@ -426,8 +426,8 @@
     "kind": "independent"
    },
    "historical_basis": "본편 데모 편성을 유지한다. 조운의 적벽 전투 기록은 없다.",
-   "declared_total_cost": 18,
-   "command_limit": 222
+   "declared_total_cost": 54,
+   "command_limit": 666
   },
   {
    "id": "RC-SUN-SQ-01",
@@ -477,28 +477,28 @@
    "composition": [
     {
      "ship_type_id": "SHP-01",
-     "count": 1
+     "count": 3
     },
     {
      "ship_type_id": "SHP-03",
-     "count": 3
+     "count": 9
     },
     {
      "ship_type_id": "SHP-04",
-     "count": 5
+     "count": 15
     },
     {
      "ship_type_id": "SHP-06",
-     "count": 2
+     "count": 6
     },
     {
      "ship_type_id": "SHP-07",
-     "count": 3
+     "count": 9
     }
    ],
    "historical_basis": "주유는 좌독(左督), 노숙은 찬군교위(贊軍校尉)로 종군했다. 감녕은 주유를 따라 오림에서 싸웠다(감녕전).",
-   "declared_total_cost": 143,
-   "command_limit": 232
+   "declared_total_cost": 429,
+   "command_limit": 696
   },
   {
    "id": "RC-SUN-SQ-02",
@@ -548,24 +548,24 @@
    "composition": [
     {
      "ship_type_id": "SHP-03",
-     "count": 2
+     "count": 6
     },
     {
      "ship_type_id": "SHP-04",
-     "count": 4
+     "count": 12
     },
     {
      "ship_type_id": "SHP-05",
-     "count": 1
+     "count": 3
     },
     {
      "ship_type_id": "SHP-07",
-     "count": 2
+     "count": 6
     }
    ],
    "historical_basis": "정보는 우독(右督). 주태·여몽은 주유·정보와 함께 조조를 오림에서 깨뜨렸다(주태전·여몽전).",
-   "declared_total_cost": 86,
-   "command_limit": 208
+   "declared_total_cost": 258,
+   "command_limit": 624
   },
   {
    "id": "RC-SUN-SQ-03",
@@ -615,21 +615,21 @@
    "composition": [
     {
      "ship_type_id": "SHP-04",
-     "count": 2
+     "count": 6
     },
     {
      "ship_type_id": "SHP-07",
-     "count": 1
+     "count": 3
     },
     {
      "ship_type_id": "SHP-08",
-     "count": 8,
+     "count": 24,
      "mission_equipment_id": "FAST-EQ-TORPEDO"
     }
    ],
    "historical_basis": "황개가 '조조군 배가 머리와 꼬리를 잇대었으니 불태우고 달아날 수 있다'고 건의하고 몽충·투함으로 화공했다(주유전). 한당·능통도 오림에서 싸웠다(한당전·능통전). 연쇄 폭발 작전의 폭발정을 이 전대가 운용한다.",
-   "declared_total_cost": 59,
-   "command_limit": 204
+   "declared_total_cost": 177,
+   "command_limit": 612
   },
   {
    "id": "RC-CAO-SQ-01",
@@ -690,31 +690,31 @@
    "composition": [
     {
      "ship_type_id": "SHP-01",
-     "count": 2
+     "count": 6
     },
     {
      "ship_type_id": "SHP-03",
-     "count": 4
+     "count": 12
     },
     {
      "ship_type_id": "SHP-04",
-     "count": 8
+     "count": 24
     },
     {
      "ship_type_id": "SHP-05",
-     "count": 2
+     "count": 6
     },
     {
      "ship_type_id": "SHP-06",
-     "count": 2
+     "count": 6
     },
     {
      "ship_type_id": "SHP-07",
-     "count": 2
+     "count": 6
     },
     {
      "ship_type_id": "SHP-08",
-     "count": 6,
+     "count": 18,
      "mission_equipment_id": "FAST-EQ-INTERCEPT"
     }
    ],
@@ -722,8 +722,8 @@
    "deploy_min_difficulty": "입문",
    "deploy_delay_s": 180,
    "historical_basis": "허저는 늘 조조를 호위했다. 정욱은 손권이 유비를 도울 것을 예견했고(정욱전), 가후는 동쪽 원정을 말렸다(가후전).",
-   "declared_total_cost": 230,
-   "command_limit": 232
+   "declared_total_cost": 690,
+   "command_limit": 696
   },
   {
    "id": "RC-CAO-SQ-02",
@@ -751,27 +751,27 @@
    "composition": [
     {
      "ship_type_id": "SHP-01",
-     "count": 1
+     "count": 3
     },
     {
      "ship_type_id": "SHP-03",
-     "count": 4
+     "count": 12
     },
     {
      "ship_type_id": "SHP-04",
-     "count": 10
+     "count": 30
     },
     {
      "ship_type_id": "SHP-07",
-     "count": 3
+     "count": 9
     }
    ],
    "morale_group": "northern",
    "deploy_min_difficulty": "입문",
    "deploy_delay_s": 0,
    "historical_basis": "조인은 형주 평정에 종군하고 전투 뒤 강릉을 지켰다(조인전).",
-   "declared_total_cost": 187,
-   "command_limit": 218
+   "declared_total_cost": 561,
+   "command_limit": 654
   },
   {
    "id": "RC-CAO-SQ-03",
@@ -809,27 +809,27 @@
    "composition": [
     {
      "ship_type_id": "SHP-02",
-     "count": 2
+     "count": 6
     },
     {
      "ship_type_id": "SHP-03",
-     "count": 5
+     "count": 15
     },
     {
      "ship_type_id": "SHP-04",
-     "count": 9
+     "count": 27
     },
     {
      "ship_type_id": "SHP-05",
-     "count": 1
+     "count": 3
     }
    ],
    "morale_group": "northern",
    "deploy_min_difficulty": "입문",
    "deploy_delay_s": 180,
    "historical_basis": "서황은 형주 정벌에 종군하고 뒤에 조인과 함께 강릉에서 주유를 막았다(서황전). 만총도 형주 정벌에 종군했다(만총전).",
-   "declared_total_cost": 186,
-   "command_limit": 220
+   "declared_total_cost": 558,
+   "command_limit": 660
   },
   {
    "id": "RC-CAO-SQ-04",
@@ -857,27 +857,27 @@
    "composition": [
     {
      "ship_type_id": "SHP-03",
-     "count": 4
+     "count": 12
     },
     {
      "ship_type_id": "SHP-04",
-     "count": 8
+     "count": 24
     },
     {
      "ship_type_id": "SHP-05",
-     "count": 1
+     "count": 3
     },
     {
      "ship_type_id": "SHP-07",
-     "count": 2
+     "count": 6
     }
    ],
    "morale_group": "jing_navy",
    "deploy_min_difficulty": "입문",
    "deploy_delay_s": 0,
    "historical_basis": "문빙은 유종과 함께 항복해 중용되었다(문빙전). 주유는 형주 항복군 7~8만이 '아직 의심을 품고 있다'고 보았다(『강표전』).",
-   "declared_total_cost": 150,
-   "command_limit": 204
+   "declared_total_cost": 450,
+   "command_limit": 612
   },
   {
    "id": "RC-CAO-SQ-05",
@@ -913,23 +913,23 @@
    "composition": [
     {
      "ship_type_id": "SHP-03",
-     "count": 3
+     "count": 9
     },
     {
      "ship_type_id": "SHP-04",
-     "count": 6
+     "count": 18
     },
     {
      "ship_type_id": "SHP-05",
-     "count": 1
+     "count": 3
     }
    ],
    "morale_group": "jing_navy",
    "deploy_min_difficulty": "표준",
    "deploy_delay_s": 180,
    "historical_basis": "채모는 유종의 항복을 이끌었고 정사에서는 처형되지 않았다. 채모·장윤의 처형은 『삼국지연의』의 장간 이야기다.",
-   "declared_total_cost": 104,
-   "command_limit": 146
+   "declared_total_cost": 312,
+   "command_limit": 438
   },
   {
    "id": "RC-CAO-SQ-06",
@@ -957,11 +957,11 @@
    "composition": [
     {
      "ship_type_id": "SHP-07",
-     "count": 6
+     "count": 18
     },
     {
      "ship_type_id": "SHP-08",
-     "count": 10,
+     "count": 30,
      "mission_equipment_id": "FAST-EQ-INTERCEPT"
     }
    ],
@@ -969,8 +969,8 @@
    "deploy_min_difficulty": "상급",
    "deploy_delay_s": 360,
    "historical_basis": "조순은 호표기를 이끌고 장판에서 유비를 추격했다(조순전). 그 정예 기동 부대를 고속 요격 전대로 옮긴다.",
-   "declared_total_cost": 72,
-   "command_limit": 184
+   "declared_total_cost": 216,
+   "command_limit": 552
   },
   {
    "id": "RC-CAO-SQ-07",
@@ -998,23 +998,23 @@
    "composition": [
     {
      "ship_type_id": "SHP-03",
-     "count": 3
+     "count": 9
     },
     {
      "ship_type_id": "SHP-04",
-     "count": 6
+     "count": 18
     },
     {
      "ship_type_id": "SHP-07",
-     "count": 2
+     "count": 6
     }
    ],
    "morale_group": "northern",
    "deploy_min_difficulty": "상급",
    "deploy_delay_s": 360,
    "historical_basis": "조홍의 적벽 종군은 기록이 분명하지 않다. 상급 이상에서만 배치하는 후군이다.",
-   "declared_total_cost": 110,
-   "command_limit": 192
+   "declared_total_cost": 330,
+   "command_limit": 576
   }
  ],
  "realtime_rules": {

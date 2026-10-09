@@ -231,7 +231,7 @@ func _run() -> void:
 	for diff in ["입문", "표준", "상급", "극한"]:
 		var sim := BattleSim.new(1, BattleRules.TICK_HZ, ScenarioProfile.load_profile("res://data/profiles/red_cliffs_rt.json", diff))
 		for f in sim.st.fleets:
-			var limit: int = 40 + f.cmd_stat * 2
+			var limit: int = 120 + f.cmd_stat * 6   # 척 수 3배에 맞춘 한도(combat_m3 command.limit_*)
 			if not TestCheck.ok(self, f.cost0 <= limit, "지휘 한도 초과 %s %s: %d > %d" % [diff, f.sq_id, f.cost0, limit]): return
 
 	print("FORMATION_RULES_PASS")

@@ -114,8 +114,8 @@ func _run() -> void:
 		if not TestCheck.ok(self, foes[diff].ally.size() == 7, "alliance fixed %s" % diff): return
 	var cao1_easy := _def(foes["입문"].foe, "RC-CAO-SQ-01")
 	var cao1_hard := _def(foes["상급"].foe, "RC-CAO-SQ-01")
-	# 중군 2,4,8,2,2,2,6척 × 0.7 half-up(최소 1) = 1,3,6,1,1,1,4 = 17 / 상급은 원래대로 26
-	if not TestCheck.ok(self, cao1_easy.ships == 17 and cao1_hard.ships == 26, "count_factor: %d %d" % [cao1_easy.ships, cao1_hard.ships]): return
+	# 중군 6,12,24,6,6,6,18척(3배) × 0.7 half-up(최소 1) = 4,8,17,4,4,4,13 = 54 / 상급은 원래대로 78
+	if not TestCheck.ok(self, cao1_easy.ships == 54 and cao1_hard.ships == 78, "count_factor: %d %d" % [cao1_easy.ships, cao1_hard.ships]): return
 	if not TestCheck.ok(self, _def(foes["입문"].foe, "RC-CAO-SQ-05").is_empty() and not _def(foes["표준"].foe, "RC-CAO-SQ-05").is_empty(), "deploy_min_difficulty"): return
 	var by_delay := {"RC-CAO-SQ-02": 0, "RC-CAO-SQ-04": 0, "RC-CAO-SQ-01": 180, "RC-CAO-SQ-03": 180, "RC-CAO-SQ-05": 180, "RC-CAO-SQ-06": 360, "RC-CAO-SQ-07": 360}
 	for id in by_delay:

@@ -99,7 +99,7 @@ func attempt(src: FleetState, t: FleetState, kind: String) -> String:
 		stats[key][1] += 1
 		if kind == "unit":
 			var per := float(t.max_hull) / float(maxi(1, sim.salvo.total0(t)))
-			sim.salvo.apply_hull(src, t, per * float(A.unit.capture_ships), "assault", sim.salvo.sector(src.pos, t), eid, 0)   # 나포: 이탈 처리(대파 0)
+			sim.salvo.apply_hull(src, t, ceilf(per * float(A.unit.capture_ships)), "assault", sim.salvo.sector(src.pos, t), eid, 0)   # 나포: 이탈 처리(대파 0). 척당 선체가 정수로 안 나뉘면 버림 때문에 0척이 되므로 올림
 			if sim.morale:
 				sim.morale.lose(t, int(A.unit.target_morale_bp))
 		else:

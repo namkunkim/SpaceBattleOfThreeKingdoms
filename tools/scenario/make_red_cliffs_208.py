@@ -11,8 +11,12 @@ COST = {s["id"]: s["unit_cost"] for s in SETUP["ship_types"]}
 EQ = {e["id"]: e["unit_cost"] for e in SETUP["ship_types"][7]["mission_equipment"]}
 
 
+SHIP_SCALE = 3   # 함종별 척 수 배율(2026-10-09 사용자 결정: 3배 확대). 아래 편성표는 1배 값이다
+LIMIT_SCALE = SHIP_SCALE   # 지휘 한도도 같은 배율로 올려 한도 초과 구간을 1배 때와 같게 둔다(combat_m3 command.limit_*)
+
+
 def C(t, n, eq=None):
-    d = {"ship_type_id": t, "count": n}
+    d = {"ship_type_id": t, "count": n * SHIP_SCALE}
     if eq:
         d["mission_equipment_id"] = eq
     return d
@@ -94,7 +98,7 @@ def cost(comp):
 
 for s in SQUADRONS:
     s["declared_total_cost"] = cost(s["composition"])
-    lim = 40 + 2 * s["commander"]["command"]
+    lim = (40 + 2 * s["commander"]["command"]) * LIMIT_SCALE
     s["command_limit"] = lim
 
 DIFF = {

@@ -16,7 +16,8 @@ func _sec(s: BattleSim, n: float) -> void:
 func _sim(ally: Array, foe: Array, terrain := true) -> BattleSim:
 	var full := SalvoFixture.combat()
 	return SalvoFixture.sim(ally, foe, 1, "", func(cb):
-		cb.detection = full.detection
+		cb.detection = full.detection.duplicate()
+		cb.detection.ship_points_div = 1   # 가짜 전대 척 수 그대로(적벽 3배 배율 없이) 점수 식을 본다
 		if terrain:
 			cb.terrain = full.terrain)
 

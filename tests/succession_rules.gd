@@ -43,7 +43,7 @@ func _group(s: BattleSim, id: String) -> Dictionary:
 
 func _run() -> void:
 	var s := _sim()
-	if not TestCheck.ok(self, s.cmd != null and str(s.rs.rt("commander_succession.status")) == "proposed" and int(s.cmd.K.limit_base) == 40, "데이터: 승계 제안값, 지휘 한도 40 + 통솔 × 2"): return
+	if not TestCheck.ok(self, s.cmd != null and str(s.rs.rt("commander_succession.status")) == "proposed" and int(s.cmd.K.limit_base) == 120, "데이터: 승계 제안값, 지휘 한도 120 + 통솔 × 6(척 수 3배)"): return
 
 	# --- 선체 구간(척 수 비율): < 75% 경상(지휘 유지), < 40% 중상(지휘 불능 → 부지휘관이 잇는다). 악화만 ---
 	var cheng := _f(s, "cheng")
@@ -126,16 +126,16 @@ func _run() -> void:
 	var foe_q: Array = s.projection(0).squadrons.filter(func(x): return x.side == 1)
 	if not TestCheck.ok(self, foe_q.all(func(x): return not x.has("commander_state")), "적 접촉에는 지휘관 상태가 없다"): return
 
-	# --- 지휘 한도 초과 단계: 비용 > 40 + 통솔 × 2면 한도의 25%마다 1단계, 상한 4 ---
+	# --- 지휘 한도 초과 단계: 비용 > 120 + 통솔 × 6(척 수 3배)이면 한도의 25%마다 1단계, 상한 4 ---
 	s = _sim()
 	cao = _f(s, "cao")
 	var cost := 0
 	for ty in cao.stages:
 		cost += s.salvo.present_of(cao, ty) * int(s.salvo.C.ship_types[ty].cost)
-	if not TestCheck.ok(self, s.cmd.limit_tier(cao) == 0, "조조 통솔 96: 한도 232 안 (비용 %d)" % cost): return
+	if not TestCheck.ok(self, s.cmd.limit_tier(cao) == 0, "조조 통솔 96: 한도 696 안 (비용 %d)" % cost): return
 	cao.cmd_stat = 70
-	var want := 0 if cost <= 180 else mini(4, ceili(float(cost - 180) / 45.0))
-	if not TestCheck.ok(self, want > 0 and s.cmd.limit_tier(cao) == want and s.cmd.stages(cao) == want, "통솔 70(허저): 한도 180, 비용 %d → %d단계" % [cost, want]): return
+	var want := 0 if cost <= 540 else mini(4, ceili(float(cost - 540) / 135.0))
+	if not TestCheck.ok(self, want > 0 and s.cmd.limit_tier(cao) == want and s.cmd.stages(cao) == want, "통솔 70(허저): 한도 540, 비용 %d → %d단계" % [cost, want]): return
 	cao.cmd_stat = 10
 	if not TestCheck.ok(self, s.cmd.limit_tier(cao) == 4, "상한 4단계"): return
 

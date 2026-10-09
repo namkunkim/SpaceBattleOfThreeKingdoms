@@ -726,6 +726,7 @@
     }
    ],
    "distance_units_per_point": 25,
+   "ship_points_div": 3,
    "confirmed": 30,
    "confirmed_status": "proposed (본편 37. M6 측정: 37이면 표준 조조가 확인 등급을 거의 못 받는다 — attack 32%, none 0%. 30이면 100%. EXPERIENCE-DESIGN §8 3안)",
    "estimated": 15,
@@ -931,8 +932,8 @@
    "source": "본편 red-cliffs-chain-explosion-rules.json(밀집·분산 진형, 흐름 +X ±60°), red-cliffs-combat-effects-rules.json chain_explosion(센서 −40%, 160×160 위험 지대)"
   },
   "command": {
-   "limit_base": 40,
-   "limit_per_command": 2,
+   "limit_base": 120,
+   "limit_per_command": 6,
    "over_tier_ratio": 0.25,
    "max_tier": 4,
    "injury_bp": {
