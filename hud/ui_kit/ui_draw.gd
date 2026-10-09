@@ -119,6 +119,8 @@ static func text(ci: CanvasItem, pos: Vector2, s: String, font_name: String, siz
 static func text_w(s: String, font_name: String, size: int) -> float:
 	return UiTheme.font(font_name).get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
 
+const DASH_MAX_SEG := 3000.0   # 이보다 긴 한 구간은 파선으로 쪼개지 않는다
+
 static func dashed_poly(ci: CanvasItem, pts: PackedVector2Array, color: Color, width: float, dash: float, gap: float, offset := 0.0) -> void:
 	# 파선 조각을 모아 한 번에 그린다(선 하나씩 그리면 2D 명령이 수백 개가 된다).
 	var segs := PackedVector2Array()
@@ -128,6 +130,11 @@ static func dashed_poly(ci: CanvasItem, pts: PackedVector2Array, color: Color, w
 		var b := pts[i + 1]
 		var seg := a.distance_to(b)
 		if seg <= 0.0:
+			continue
+		if seg > DASH_MAX_SEG or is_nan(seg):
+			# 카메라 가까이를 지나는 고리는 화면 좌표가 수십만 px로 튄다. 그대로 파선을 쪼개면 조각이 수십만 개가 되어
+			# 렌더 버퍼가 GB 단위로 불어 앱이 메모리 부족으로 죽는다(태블릿 6800×4600 전장에서 확인). 화면 밖 조각이라 건너뛴다.
+			acc += 0.0 if is_nan(seg) else seg
 			continue
 		var d := (b - a) / seg
 		var t := 0.0

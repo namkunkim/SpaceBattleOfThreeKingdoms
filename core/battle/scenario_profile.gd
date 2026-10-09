@@ -123,3 +123,20 @@ static func build(def: Dictionary, scn: Dictionary, base: Dictionary, difficulty
 			"chain_explosion_override": scn.get("chain_explosion_override", {}),
 		},
 	}
+
+# 전장을 big 크기로 키운다. 시나리오의 절대 좌표를 전장 비율대로 늘려(전대 초기 위치, 지형 구역, 보급 거점, 탈출 지점) 원래 배치 모양을 지킨다:
+# 아군은 서쪽 끝, 적은 동쪽 끝에서 시작하고 탈출 지점도 전장 가장자리에 남는다. 거리가 늘어난 만큼 접적까지 오래 걸린다.
+# 호스트와 재생(replay)이 같은 프로필을 만들도록 여기 둔다.
+static func enlarge_field(profile: Dictionary, big: Vector2) -> void:
+	var k := Vector2(big.x / float(profile.rules.world_w), big.y / float(profile.rules.world_h))
+	profile.rules.world_w = big.x
+	profile.rules.world_h = big.y
+	for d in profile.ally + profile.foe:
+		d.x *= k.x
+		d.y *= k.y
+	for z in profile.combat.get("terrain", {}).get("zones", []):
+		z.rect = [z.rect[0] * k.x, z.rect[1] * k.y, z.rect[2] * k.x, z.rect[3] * k.y]
+	for b in profile.combat.get("supply", {}).get("bases", []):
+		b.position = [b.position[0] * k.x, b.position[1] * k.y]
+	for e in profile.scenario.get("escape_points", {}).values():
+		e.position = [e.position[0] * k.x, e.position[1] * k.y]
