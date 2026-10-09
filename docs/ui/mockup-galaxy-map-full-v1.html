@@ -1,0 +1,1098 @@
+<!doctype html>
+<!-- 전체 은하 지도 시안 v1 — 2026-10-04. 적벽 작전 지도 시안(mockup-galaxy-map-v1.html)을 본편 19성역 전체로 넓힌 판.
+     설계 메모: docs/ui/GALAXY-MAP-REDESIGN.md §6. 데이터는 tools/ui/make_galaxy_full_data.py가 채운다.
+     좌표는 본편 data/maps/galaxy-map.json(route-first-curves-v3) bodies·routes·corridors 원본을 그대로 쓴다.
+     색·글꼴·세력 기호는 전투 HUD(hud/ui_kit/ui_theme.gd, factions.gd)와 같다. -->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>성한지 은하 지도</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600;700&display=swap">
+<style>
+:root{
+  --bg:#05080d; --bg-top:rgba(21,28,40,.94); --bg-bot:rgba(8,11,18,.96);
+  --gold:#c9a45c; --gold-hi:#f3dda4; --gold-lo:#6d5631; --gold-line:rgba(201,164,92,.38);
+  --ink:#eef2f4; --ink-2:#b9c4cd; --ink-3:#7f8b97; --ink-4:#56616d;
+  --ally:#5fe0cf; --foe:#ff7550; --wu:#b9a2ff; --warn:#f2b84b; --cp:#86aaff; --life:#86e39a;
+  --line:#2a3649; --slot:#141c27;
+  --serif:'Noto Serif KR',serif; --sans:'Pretendard','Noto Sans KR',system-ui,sans-serif;
+  --top:60px; --panel:380px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans);overflow:hidden;user-select:none;touch-action:none}
+canvas#map{position:fixed;inset:0;width:100%;height:100%;display:block}
+#nodes{position:fixed;inset:0;pointer-events:none}
+button{font-family:inherit;color:inherit}
+
+/* ---------- 상단 띠 ---------- */
+.top{position:fixed;left:0;right:0;top:0;height:var(--top);display:flex;align-items:center;gap:16px;padding:0 16px;
+  background:linear-gradient(180deg,rgba(5,8,13,.92),rgba(5,8,13,.55) 70%,transparent);z-index:5}
+.top::after{content:"";position:absolute;left:16px;right:16px;bottom:8px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-line) 15%,var(--gold-line) 85%,transparent)}
+.seal{width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--gold);color:var(--gold-hi);font-family:var(--serif);font-size:15px;letter-spacing:-1px;
+  background:radial-gradient(circle at 50% 30%,rgba(201,164,92,.25),transparent 70%);clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}
+.ttl b{display:block;font-family:var(--serif);font-size:17px;letter-spacing:2px}
+.ttl span{font-size:11px;color:var(--ink-3);letter-spacing:3px}
+.crumb{flex:1;display:flex;justify-content:center;gap:6px;font-size:13px;color:var(--ink-3)}
+.crumb button{background:none;border:0;padding:10px 6px;min-height:44px;color:var(--ink-3);cursor:pointer;letter-spacing:1px}
+.crumb button.on{color:var(--gold-hi)}
+.crumb i{font-style:normal;align-self:center;color:var(--ink-4)}
+.intel{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--ink-2)}
+.chip{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border:1px solid var(--line);background:rgba(20,28,39,.7)}
+.chip .dot{width:6px;height:6px;border-radius:50%;background:var(--warn);box-shadow:0 0 8px var(--warn)}
+.icon-btn{width:48px;height:48px;border:1px solid var(--line);background:rgba(20,28,39,.7);display:grid;place-items:center;cursor:pointer}
+
+/* ---------- 왼쪽 레이어 레일 ---------- */
+.rail{position:fixed;left:12px;top:calc(var(--top) + 16px);display:flex;flex-direction:column;gap:6px;z-index:4}
+.rail button{width:56px;height:56px;border:1px solid var(--line);background:rgba(10,15,22,.78);backdrop-filter:blur(6px);cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10px;color:var(--ink-3);letter-spacing:1px}
+.rail button svg{width:20px;height:20px}
+.rail button.on{border-color:var(--gold-line);color:var(--gold-hi);background:linear-gradient(180deg,rgba(201,164,92,.14),rgba(10,15,22,.8))}
+
+/* ---------- 왼쪽 아래 축척 단계 ---------- */
+.zoom{position:fixed;left:12px;bottom:16px;display:flex;align-items:stretch;z-index:4;border:1px solid var(--gold-line);background:rgba(8,12,18,.85);backdrop-filter:blur(8px)}
+.zoom button{min-width:76px;height:56px;border:0;border-right:1px solid var(--line);background:none;cursor:pointer;font-size:13px;color:var(--ink-3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.zoom button small{font-size:9px;letter-spacing:2px;color:var(--ink-4)}
+.zoom button:last-child{border-right:0}
+.zoom button.on{color:var(--gold-hi);background:linear-gradient(0deg,rgba(201,164,92,.18),transparent)}
+.zoom button.on small{color:var(--gold)}
+.zoom button.pm{min-width:52px;font-size:24px;font-weight:300;color:var(--ink-2)}
+.zoom button.pm:active{background:rgba(201,164,92,.15)}
+.pt.comp .lb{display:none}
+/* 외부 세력: 제어 불가. 위치만 흐릿하게 */
+.ext .plate{position:absolute;transform:translate(-50%,-50%);text-align:center;white-space:nowrap;opacity:.62;transition:opacity .2s}
+.ext .plate b{display:block;font-family:var(--serif);font-weight:600;font-size:16px;letter-spacing:4px;color:#aab3bd;text-shadow:0 0 10px #000}
+.ext .plate small{display:block;font-size:10px;letter-spacing:1px;color:#6f7a86;margin-top:2px}
+.ext .plate i{font-style:normal;font-size:9px;letter-spacing:2px;color:#56616d;border:1px solid #2a3340;padding:0 5px;margin-top:3px;display:inline-block}
+.ext:hover .plate,.ext.sel .plate{opacity:.95}
+.ext .hit{width:120px;height:60px;left:-60px;top:-30px}
+/* 전대 명패: 전투 HUD 명패와 같은 틀(흑칠 바탕·세력 테두리·함선 막대) */
+.sqd .plate{position:absolute;transform:translate(-50%,-100%);margin-top:-14px;min-width:132px;padding:5px 8px 6px;background:rgba(5,9,14,.82);border:1px solid var(--line);border-left:2px solid var(--c);white-space:nowrap;text-align:left}
+.sqd .plate b{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--ink)}
+.sqd .plate small{display:block;font-size:10px;color:var(--ink-3);margin:1px 0 4px}
+.sqd .bar{height:3px;background:#1b2430;position:relative}.sqd .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--c)}
+.sqd .plate em{position:absolute;right:7px;top:5px;font-style:normal;font-size:11px;color:var(--c)}
+.sqd.sel .plate{border-color:var(--gold);box-shadow:0 0 12px rgba(201,164,92,.35)}
+.sqd .hit{width:120px;height:56px;left:-60px;top:-62px}
+.sqd .plate .mini{display:none}
+/* 교전 연출 조작(전장 단계에서만) */
+.cbt{position:fixed;left:50%;top:66px;transform:translateX(-50%);z-index:5;display:none;align-items:center;gap:10px;height:48px;padding:0 6px 0 14px;
+  border:1px solid var(--gold-line);background:rgba(8,12,18,.86);backdrop-filter:blur(8px);font-size:12px;color:var(--ink-2);white-space:nowrap}
+body[data-mode=f] .cbt,body[data-mode=o] .cbt{display:flex}
+.cbt b{font-family:var(--serif);color:var(--gold-hi);letter-spacing:2px;font-weight:600}
+.cbt .sd{display:flex;align-items:center;gap:4px}.cbt .sd i{font-style:normal;font-variant-numeric:tabular-nums}
+.cbt button{width:44px;height:38px;border:1px solid var(--line);background:rgba(20,28,39,.8);cursor:pointer;font-size:15px;color:var(--ink)}
+.cbt button.on{border-color:var(--gold);color:var(--gold-hi)}
+/* 전장 전체가 보이는 축척에서는 명패를 지휘관·함선 수만 남긴다(겹침 방지). 더 확대하면 전체 명패 */
+body[data-plate=mini] .sqd .plate{min-width:0;padding:2px 6px;margin-top:-10px}
+body[data-plate=mini] .sqd .plate b,body[data-plate=mini] .sqd .plate small,body[data-plate=mini] .sqd .bar,body[data-plate=mini] .sqd .plate em{display:none}
+body[data-plate=mini] .sqd .plate .mini{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--ink)}
+body[data-plate=mini] .sqd .plate .mini i{font-style:normal;color:var(--c)}
+body[data-plate=mini] .sqd .hit{width:64px;height:34px;left:-32px;top:-36px}
+/* 상황 띠: 축척 막대와 겹치지 않게 오른쪽 아래 */
+body .ticker{left:auto;right:16px;transform:none}
+body.panel-open .ticker{opacity:0;pointer-events:none}
+.pt.comp.sel .lb{display:block}
+
+/* ---------- 아래 가운데 상황 띠 ---------- */
+.ticker{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:4;display:flex;align-items:center;gap:12px;height:56px;padding:0 20px 0 14px;cursor:pointer;
+  border:1px solid rgba(255,117,80,.45);background:linear-gradient(90deg,rgba(77,20,11,.85),rgba(8,12,18,.85));backdrop-filter:blur(8px);font-size:13px}
+.ticker .pulse{width:12px;height:12px;border-radius:50%;background:var(--foe);box-shadow:0 0 0 0 rgba(255,117,80,.7);animation:pl 1.8s infinite}
+@keyframes pl{70%{box-shadow:0 0 0 12px rgba(255,117,80,0)}100%{box-shadow:0 0 0 0 rgba(255,117,80,0)}}
+.ticker b{font-family:var(--serif);letter-spacing:2px}
+.ticker span{color:var(--ink-2)}
+body.panel-open .ticker{left:calc((100% - var(--panel)) / 2)}
+
+/* ---------- 지도 위 노드(HTML, 48dp 터치) ---------- */
+.n{position:absolute;left:0;top:0;pointer-events:auto;cursor:pointer;background:none;border:0;padding:0;transition:opacity .25s}
+.n.hide{opacity:0;pointer-events:none}
+.n .hit{position:absolute;left:-26px;top:-26px;width:52px;height:52px}
+/* 성역 배지 */
+.sys .plate{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:4px;white-space:nowrap}
+.sys .nm{font-family:var(--serif);font-size:22px;letter-spacing:6px;color:var(--ink);text-shadow:0 0 18px rgba(0,0,0,.9),0 0 2px #000;padding-left:6px}
+.sys .meta{display:flex;gap:6px;align-items:center;font-size:10px;letter-spacing:2px;color:var(--ink-3)}
+.sys .grade{border:1px solid var(--gold-lo);color:var(--gold);padding:1px 6px}
+.sys.sel .nm{color:var(--gold-hi)}
+/* 권역·행성 노드 */
+.pt .mk{position:absolute;transform:translate(-50%,-50%)}
+.pt .lb{position:absolute;left:16px;top:-10px;white-space:nowrap;font-size:13px;font-weight:500;color:var(--ink);text-shadow:0 0 6px #000,0 0 2px #000}
+.pt .lb small{display:block;font-size:10px;font-weight:400;color:var(--ink-3);letter-spacing:1px}
+.pt.left .lb{left:auto;right:16px;text-align:right}
+.pt.sel .lb{color:var(--gold-hi)}
+.pt .ring{position:absolute;left:-17px;top:-17px;width:34px;height:34px;border:1px solid var(--gold);opacity:0;transform:rotate(45deg) scale(.6);transition:.25s}
+.pt.sel .ring{opacity:1;transform:rotate(45deg) scale(1)}
+/* 전장 표지 */
+.beacon .lb{left:22px;top:-14px;font-family:var(--serif);font-size:15px;letter-spacing:3px;color:var(--foe-hi,#ffd3bd)}
+.beacon .lb small{font-family:var(--sans);color:var(--foe);letter-spacing:2px}
+
+/* ---------- 오른쪽 선택 패널(태블릿) / 하프 시트(좁은 화면) ---------- */
+.panel{position:fixed;top:calc(var(--top) + 8px);right:12px;bottom:16px;width:var(--panel);z-index:6;display:flex;flex-direction:column;
+  background:linear-gradient(180deg,var(--bg-top),var(--bg-bot));border:1px solid var(--gold-line);backdrop-filter:blur(10px);
+  transform:translateX(calc(100% + 24px));transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+body.panel-open .panel{transform:none}
+.panel::before,.panel::after{content:"";position:absolute;width:14px;height:14px;border:2px solid var(--gold);pointer-events:none}
+.panel::before{left:-1px;top:-1px;border-right:0;border-bottom:0}
+.panel::after{right:-1px;bottom:-1px;border-left:0;border-top:0}
+.p-head{padding:18px 20px 14px;border-bottom:1px solid rgba(201,164,92,.18);position:relative}
+.p-eye{font-size:10px;letter-spacing:4px;color:var(--gold)}
+.p-title{font-family:var(--serif);font-size:26px;letter-spacing:4px;margin:4px 0 2px}
+.p-sub{font-size:12px;color:var(--ink-3)}
+.p-close{position:absolute;right:8px;top:8px;width:48px;height:48px;border:0;background:none;cursor:pointer;color:var(--ink-3);font-size:22px}
+.p-body{flex:1;overflow:auto;padding:14px 20px;touch-action:pan-y}
+.p-desc{font-size:13px;line-height:1.65;color:var(--ink-2);margin:0 0 14px}
+.sec{font-size:10px;letter-spacing:3px;color:var(--gold);margin:16px 0 8px;display:flex;align-items:center;gap:8px}
+.sec::after{content:"";flex:1;height:1px;background:rgba(201,164,92,.2)}
+.row{display:flex;align-items:center;gap:10px;min-height:48px;padding:6px 10px;border:1px solid var(--line);background:rgba(20,28,39,.55);margin-bottom:6px;cursor:pointer}
+.row:hover{border-color:var(--gold-line)}
+.row .t{flex:1;font-size:14px}
+.row .t small{display:block;font-size:11px;color:var(--ink-3);margin-top:2px}
+.row .v{font-size:12px;color:var(--ink-2);text-align:right}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:11px;padding:4px 8px;border:1px solid var(--line);color:var(--ink-2);background:rgba(20,28,39,.6)}
+.tag.cor{border-color:rgba(214,120,72,.5);color:#f0b190}
+.tag.hwy{border-color:rgba(95,224,207,.4);color:var(--ally)}
+.vs{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:start}
+.vs .x{font-family:var(--serif);color:var(--gold);padding-top:22px}
+.side h4{margin:0 0 6px;font-size:12px;letter-spacing:2px;font-weight:500}
+.side .f{font-size:12px;color:var(--ink-2);padding:6px 8px;border-left:2px solid;margin-bottom:4px;background:rgba(20,28,39,.55)}
+.side .f small{display:block;color:var(--ink-3);font-size:10px}
+.terr{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.terr div{border:1px solid var(--line);padding:8px;font-size:11px;color:var(--ink-3);background:rgba(20,28,39,.55)}
+.terr b{display:block;font-size:12px;color:var(--ink);font-weight:500;margin-bottom:4px}
+.p-foot{padding:14px 20px 18px;border-top:1px solid rgba(201,164,92,.18);display:flex;gap:8px}
+.btn{flex:1;min-height:56px;border:1px solid var(--line);background:rgba(20,28,39,.8);cursor:pointer;font-size:14px;letter-spacing:2px}
+.btn.primary{flex:1.6;border-color:var(--gold);color:#1a1206;font-weight:700;background:linear-gradient(180deg,var(--gold-hi),var(--gold));font-family:var(--serif);font-size:16px;letter-spacing:4px;
+  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
+.btn.primary:active{filter:brightness(.9)}
+.note{font-size:10px;color:var(--ink-4);margin-top:10px;line-height:1.5}
+
+/* 브리핑 이동 확인(시안용) */
+.toast{position:fixed;left:50%;top:84px;transform:translate(-50%,-10px);opacity:0;z-index:9;padding:12px 18px;border:1px solid var(--gold);background:rgba(8,12,18,.95);font-size:13px;transition:.3s;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* 좁은 화면(폰·세로 태블릿): 패널은 하프 시트 */
+/* 천하 단계: 19성역이 겹치지 않게 이름표를 줄인다 */
+body[data-mode=g] .sys .nm{font-size:15px;letter-spacing:3px;padding-left:3px}
+body[data-mode=g] .sys .grade,body[data-mode=g] .sys .lbl{display:none}
+body[data-mode=g] .sys .meta svg{width:13px;height:13px}
+@media (max-width:900px){
+  :root{--panel:100%}
+  .panel{left:0;right:0;top:auto;bottom:0;width:auto;height:58%;transform:translateY(calc(100% + 24px));border-left:0;border-right:0}
+  body.panel-open .ticker{left:50%;opacity:0;pointer-events:none}
+  .crumb{display:none}
+  .intel .chip:first-child{display:none}
+  .zoom button{min-width:54px}
+  .zoom button small{display:none}
+  .zoom button.pm{min-width:44px}
+  .ticker{bottom:84px}
+}
+@media (max-width:560px){ .ttl span{display:none} .intel{display:none} }
+</style>
+</head>
+<body>
+<canvas id="map"></canvas>
+<div id="nodes"></div>
+
+<header class="top">
+  <div class="seal">赤壁</div>
+  <div class="ttl"><b>성한지 은하 지도</b><span>建安 13年 · 겨울</span></div>
+  <nav class="crumb" id="crumb"></nav>
+  <div class="intel">
+    <span class="chip"><span class="dot"></span>조조군 남하 · 오림 집결</span>
+    <button class="icon-btn" title="설정" aria-label="설정"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b9c4cd" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></button>
+  </div>
+</header>
+
+<div class="rail" id="rail">
+  <button data-layer="faction" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="7" height="7"/><path d="M17.5 3.5l4 4-4 4-4-4z"/><circle cx="7.5" cy="17" r="3.5"/></svg>세력</button>
+  <button data-layer="route" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 18c5 0 5-12 10-12s4 6 8 6"/><circle cx="3" cy="18" r="1.6"/><circle cx="21" cy="12" r="1.6"/></svg>항로</button>
+  <button data-layer="terrain" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 15c3-4 5 1 8-3s6 1 10-2"/><path d="M3 20c4-3 7 1 10-2s5 0 8-2" opacity=".6"/></svg>지형</button>
+  <button data-layer="base"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="2 3"><path d="M3 18c5 0 5-12 10-12s4 6 8 6"/></svg>기저</button>
+  <button data-layer="battle" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>전장</button>
+</div>
+
+<div class="zoom" id="zoom">
+  <button class="pm" data-z="-1" aria-label="축소">−</button>
+  <button data-lv="g">천하<small>GALAXY</small></button>
+  <button data-lv="t">성역<small>SECTOR</small></button>
+  <button data-lv="s">권역<small>REGION</small></button>
+  <button data-lv="o">행성계<small>SYSTEM</small></button>
+  <button data-lv="f">전장<small>FLEET</small></button>
+  <button class="pm" data-z="1" aria-label="확대">+</button>
+</div>
+
+<div class="cbt" id="cbt"><b>교전</b><span id="cbtT">00:00</span>
+  <span class="sd" style="color:var(--ally)">연합 <i id="cbtA">0</i></span><span class="sd" style="color:var(--foe)">조조 <i id="cbtW">0</i></span>
+  <button id="cbtPlay" class="on" aria-label="일시정지">❚❚</button><button id="cbtSpd" aria-label="배속">×1</button><button id="cbtReset" aria-label="처음부터">↺</button></div>
+<div class="ticker" id="ticker"><span class="pulse"></span><b>적벽</b><span>교전 임박 · 구지 궤도</span></div>
+
+<aside class="panel" id="panel">
+  <div class="p-head"><div class="p-eye" id="pEye"></div><div class="p-title" id="pTitle"></div><div class="p-sub" id="pSub"></div>
+    <button class="p-close" id="pClose" aria-label="닫기">×</button></div>
+  <div class="p-body" id="pBody"></div>
+  <div class="p-foot" id="pFoot"></div>
+</aside>
+<div class="toast" id="toast">브리핑 화면으로 이동합니다 (시안)</div>
+
+<script>
+// ===================================================================== 데이터
+// DATA는 tools/ui/make_galaxy_full_data.py가 본편 galaxy-map.json·regions.json·systems.json에서 채운다.
+const DATA = /*DATA*/{"world":[37312,30000],"systems":[{"id":"SYS-01","name":"사예","full":"중앙성역","grade":"특급","at":[19038,11380],"regions":["RGN-17","RGN-18","RGN-19"],"owner":"wei","capitals":["낙양","장안"]},{"id":"SYS-02","name":"예주","full":"예주성역","grade":"1급","at":[20225,11960],"regions":["RGN-12","RGN-13"],"owner":"wei","capitals":["허"]},{"id":"SYS-03","name":"연주","full":"연주성역","grade":"2급","at":[20649,11210],"regions":["RGN-34","RGN-35"],"owner":"wei","capitals":["진류"]},{"id":"SYS-04","name":"청주","full":"청주성역","grade":"2급","at":[23998,9180],"regions":["RGN-36","RGN-37"],"owner":"wei","capitals":["임치"]},{"id":"SYS-05","name":"서주","full":"서주성역","grade":"2급","at":[23710,11700],"regions":["RGN-38","RGN-39"],"owner":"wei","capitals":["하비"]},{"id":"SYS-06","name":"기주","full":"기주성역","grade":"특급","at":[20878,9720],"regions":["RGN-14","RGN-15","RGN-16"],"owner":"wei","capitals":["업"]},{"id":"SYS-07","name":"유주","full":"유주성역","grade":"1급","at":[22387,6100],"regions":["RGN-30","RGN-31"],"owner":"wei","capitals":["계"]},{"id":"SYS-08","name":"병주","full":"병주성역","grade":"2급","at":[19122,8130],"regions":["RGN-40","RGN-41"],"owner":"wei","capitals":["진양"]},{"id":"SYS-09","name":"옹주","full":"옹주성역","grade":"1급","at":[15179,11620],"regions":["RGN-27","RGN-28","RGN-29"],"owner":"ma","capitals":["장안 서부"]},{"id":"SYS-10","name":"양주","full":"양주성역","grade":"2급","at":[10719,8070],"regions":["RGN-42","RGN-43"],"owner":"ma","capitals":["무위"]},{"id":"SYS-11","name":"익주","full":"익주성역","grade":"특급","at":[11931,15330],"regions":["RGN-05","RGN-06","RGN-07"],"owner":"zhang","capitals":["성도"]},{"id":"SYS-12","name":"한중","full":"한중성역","grade":"특급","at":[14441,12930],"regions":["RGN-08","RGN-09"],"owner":"lu","capitals":["남정"]},{"id":"SYS-13","name":"형주","full":"형주성역","grade":"특급","at":[18775,13960],"regions":["RGN-01","RGN-02","RGN-03","RGN-04"],"owner":"wei","capitals":["양양","강릉","구지"]},{"id":"SYS-14","name":"남양","full":"남양성역","grade":"1급","at":[19105,13010],"regions":["RGN-25","RGN-26"],"owner":"wei","capitals":["완"]},{"id":"SYS-15","name":"오회","full":"오회성역","grade":"특급","at":[24405,13940],"regions":["RGN-20","RGN-21","RGN-22"],"owner":"wu","capitals":["건업","오"]},{"id":"SYS-16","name":"회남","full":"회남성역","grade":"1급","at":[22718,13430],"regions":["RGN-23","RGN-24"],"owner":"wei","capitals":["수춘"]},{"id":"SYS-17","name":"교주","full":"교주성역","grade":"2급","at":[13441,24970],"regions":["RGN-44","RGN-45"],"owner":"xie","capitals":["교지"]},{"id":"SYS-18","name":"요동","full":"요동성역","grade":"1급","at":[28128,4730],"regions":["RGN-32","RGN-33"],"owner":"kang","capitals":["양평"]},{"id":"SYS-19","name":"남중","full":"남중성역","grade":"2급","at":[11702,20500],"regions":["RGN-10","RGN-11"],"owner":"none","capitals":["미개척"]}],"regions":[{"id":"RGN-01","name":"북부권","sys":"SYS-13","seat":true,"at":[18775,13960],"poly":[[20083,14192],[20366,14738],[17916,14860],[18092,13418]],"owner":"wei","income":14,"pop":18,"prod":16,"def":"상","st":["양양","번성"],"rt":["한수항로","양번관문"],"note":"양번관문 · 한수 축"},{"id":"RGN-02","name":"중부권","sys":"SYS-13","seat":false,"at":[18860,15670],"poly":[[20568,14873],[19280,16704],[16673,17472],[16449,16071],[17916,14860],[20366,14738]],"owner":"split","income":22,"pop":20,"prod":18,"def":"중","st":["강릉","강하","공안"],"rt":["장강 대항로","이릉협도"],"note":"**장강 대항로 통제**"},{"id":"RGN-03","name":"남부권","sys":"SYS-13","seat":false,"at":[19487,17800],"poly":[[16063,20501],[15978,20256],[16673,17472],[19280,16704],[20798,18016],[21239,20259]],"owner":"shu","income":11,"pop":15,"prod":12,"def":"중","st":["장사","무릉","계양","영릉"],"rt":["오령회랑","영거운하","기저(회남)"],"note":"4군. 개발 여지 최대"},{"id":"RGN-04","name":"태양계권","sys":"SYS-13","seat":false,"at":[20394,16750],"poly":[[21744,15467],[20798,18016],[19280,16704],[20568,14873],[21221,14917]],"owner":"war","income":2,"pop":2,"prod":3,"def":"하","st":["구지(지구)","형혹","태음"],"rt":["장강항로 지선"],"note":"**국력 최소, 명분 최대.** 개발이 아니라 **복구** 대상"},{"id":"RGN-05","name":"성도권","sys":"SYS-11","seat":true,"at":[11931,15330],"poly":[[4826,13220],[5469,12678],[6706,12472],[11148,13658],[13151,15567],[12235,17303]],"owner":"zhang","income":26,"pop":32,"prod":30,"def":"중","st":["성도","건위"],"rt":["남중산도","기저(한중)"],"note":null},{"id":"RGN-06","name":"재동권","sys":"SYS-11","seat":false,"at":[12856,14360],"poly":[[13432,13405],[14627,14730],[13151,15567],[11148,13658]],"owner":"zhang","income":11,"pop":16,"prod":13,"def":"상","st":["재동","강유"],"rt":["검각회랑","기저(한중)"],"note":null},{"id":"RGN-07","name":"파군권","sys":"SYS-11","seat":false,"at":[14034,16440],"poly":[[12733,18392],[12235,17303],[13151,15567],[14627,14730],[15433,14824],[16449,16071],[16673,17472],[15978,20256]],"owner":"zhang","income":16,"pop":17,"prod":15,"def":"상","st":["파군","강주"],"rt":["장강항로","이릉협도"],"note":null},{"id":"RGN-08","name":"남정권","sys":"SYS-12","seat":true,"at":[14441,12930],"poly":[[13625,12367],[14210,11937],[15487,12656],[15908,13229],[15433,14824],[14627,14730],[13432,13405]],"owner":"lu","income":6,"pop":8,"prod":7,"def":"극상","st":["남정","면양","양평관"],"rt":["검각회랑","진령삼도","기산도"],"note":null},{"id":"RGN-09","name":"상용권","sys":"SYS-12","seat":false,"at":[17299,13780],"poly":[[16449,16071],[15433,14824],[15908,13229],[17368,12343],[17785,12417],[18004,12929],[18092,13418],[17916,14860]],"owner":"lu","income":3,"pop":4,"prod":3,"def":"중","st":["상용","방릉","무도"],"rt":["기저(남양)"],"note":null},{"id":"RGN-10","name":"익주군권","sys":"SYS-19","seat":true,"at":[11702,20500],"poly":[[15771,21491],[0,27624],[0,25276],[12733,18392],[15978,20256],[16063,20501]],"owner":"none","income":5,"pop":7,"prod":4,"def":"중","st":["익주군","건녕"],"rt":["기저(교주)"],"note":null},{"id":"RGN-11","name":"월수권","sys":"SYS-19","seat":false,"at":[10405,18100],"poly":[[0,25276],[0,15765],[4826,13220],[12235,17303],[12733,18392]],"owner":"none","income":4,"pop":6,"prod":3,"def":"중","st":["월수","장가"],"rt":["남중산도"],"note":null},{"id":"RGN-12","name":"허권","sys":"SYS-02","seat":true,"at":[20225,11960],"poly":[[19381,12182],[19838,11247],[21348,12100],[19873,12707]],"owner":"wei","income":38,"pop":42,"prod":40,"def":"중","st":["허","영천"],"rt":["호뢰관문","기저(연주)"],"note":null},{"id":"RGN-13","name":"여남권","sys":"SYS-02","seat":false,"at":[20649,12990],"poly":[[21919,12100],[21397,14555],[21221,14917],[20568,14873],[20366,14738],[20083,14192],[19884,13506],[19873,12707],[21348,12100]],"owner":"wei","income":27,"pop":33,"prod":30,"def":"하","st":["여남","진국","초"],"rt":["회수항로","기저(서주 · 남양)"],"note":null},{"id":"RGN-14","name":"업권","sys":"SYS-06","seat":true,"at":[20878,9720],"poly":[[21896,10639],[19739,10308],[19455,9993],[21951,9184]],"owner":"wei","income":30,"pop":34,"prod":33,"def":"중","st":["업","위군"],"rt":["관도관문"],"note":null},{"id":"RGN-15","name":"한단권","sys":"SYS-06","seat":false,"at":[20768,9380],"poly":[[20601,7892],[21020,7667],[22016,8843],[21951,9184],[19455,9993],[19183,9758]],"owner":"wei","income":17,"pop":22,"prod":20,"def":"상","st":["한단","중산"],"rt":["정형회랑"],"note":null},{"id":"RGN-16","name":"발해권","sys":"SYS-06","seat":false,"at":[22752,7700],"poly":[[24667,7287],[24628,7384],[23028,8732],[22016,8843],[21020,7667],[21122,7230],[22951,6813]],"owner":"wei","income":15,"pop":16,"prod":14,"def":"하","st":["발해","하간"],"rt":["기저(유주 · 청주)"],"note":null},{"id":"RGN-17","name":"낙양권","sys":"SYS-01","seat":true,"at":[19038,11380],"poly":[[18067,12237],[18890,9750],[19183,9758],[19455,9993],[19739,10308],[19838,11247],[19381,12182]],"owner":"wei","income":20,"pop":18,"prod":16,"def":"중","st":["낙양","하남"],"rt":["황하항로","호뢰관문","관도관문"],"note":null},{"id":"RGN-18","name":"장안권","sys":"SYS-01","seat":false,"at":[16061,11740],"poly":[[15962,9169],[17368,12343],[15908,13229],[15487,12656]],"owner":"wei","income":12,"pop":13,"prod":11,"def":"상","st":["장안","경조"],"rt":["황하항로","함곡회랑"],"note":null},{"id":"RGN-19","name":"하동권","sys":"SYS-01","seat":false,"at":[17800,10970],"poly":[[18890,9750],[18067,12237],[17785,12417],[17368,12343],[15962,9169],[15742,8284]],"owner":"wei","income":5,"pop":7,"prod":6,"def":"중","st":["하동","홍농"],"rt":["기저(병주 · 남양)"],"note":null},{"id":"RGN-20","name":"건업권","sys":"SYS-15","seat":true,"at":[24405,13940],"poly":[[24090,12810],[25096,14465],[24164,16338],[23635,13441],[23799,12900]],"owner":"wu","income":20,"pop":20,"prod":18,"def":"중","st":["건업","단양"],"rt":["장강 대항로","합비회랑"],"note":null},{"id":"RGN-21","name":"오회권","sys":"SYS-15","seat":false,"at":[25932,14700],"poly":[[28635,23197],[24160,16360],[24164,16338],[25096,14465],[28115,11741],[29639,11700],[37312,16058],[37312,29789]],"owner":"wu","income":17,"pop":18,"prod":16,"def":"하","st":["오","회계","오정"],"rt":["기저(교주)"],"note":null},{"id":"RGN-22","name":"예장권","sys":"SYS-15","seat":false,"at":[21929,17320],"poly":[[21239,20259],[20798,18016],[21744,15467],[24160,16360],[28635,23197]],"owner":"wu","income":10,"pop":14,"prod":11,"def":"중","st":["예장"],"rt":["기저(형주 · 회남)"],"note":null},{"id":"RGN-23","name":"수춘권","sys":"SYS-16","seat":true,"at":[22718,13430],"poly":[[23799,12900],[23635,13441],[21397,14555],[21919,12100],[22104,11928]],"owner":"wei","income":9,"pop":12,"prod":10,"def":"하","st":["수춘","구강","종리"],"rt":["회수항로","기저(형주 · 오회)"],"note":null},{"id":"RGN-24","name":"합비권","sys":"SYS-16","seat":false,"at":[23091,14180],"poly":[[23635,13441],[24164,16338],[24160,16360],[21744,15467],[21221,14917],[21397,14555]],"owner":"wei","income":6,"pop":8,"prod":6,"def":"극상","st":["합비","여강"],"rt":["합비회랑"],"note":null},{"id":"RGN-25","name":"완권","sys":"SYS-14","seat":true,"at":[19105,13010],"poly":[[18067,12237],[19381,12182],[19873,12707],[19884,13506],[18004,12929],[17785,12417]],"owner":"wei","income":17,"pop":19,"prod":18,"def":"중","st":["완","섭"],"rt":["무관회랑","기저(사예 · 예주 · 한중)"],"note":null},{"id":"RGN-26","name":"신야권","sys":"SYS-14","seat":false,"at":[18961,13480],"poly":[[19884,13506],[20083,14192],[18092,13418],[18004,12929]],"owner":"wei","income":8,"pop":11,"prod":9,"def":"상","st":["신야","육양","박망"],"rt":["한수항로","양번관문"],"note":null},{"id":"RGN-27","name":"장안서부권","sys":"SYS-09","seat":true,"at":[15179,11620],"poly":[[14670,7682],[14926,7361],[15742,8284],[15962,9169],[15487,12656],[14210,11937]],"owner":"ma","income":6,"pop":8,"prod":7,"def":"상","st":["부풍","안정"],"rt":["황하항로","함곡회랑","진령삼도","무관회랑"],"note":null},{"id":"RGN-28","name":"천수권","sys":"SYS-09","seat":false,"at":[13331,11420],"poly":[[14670,7682],[14210,11937],[13625,12367],[10753,10737]],"owner":"ma","income":4,"pop":6,"prod":5,"def":"중","st":["천수"],"rt":["기저(양주)"],"note":null},{"id":"RGN-29","name":"무도권","sys":"SYS-09","seat":false,"at":[12661,12600],"poly":[[10753,10737],[13625,12367],[13432,13405],[11148,13658],[6706,12472]],"owner":"ma","income":3,"pop":4,"prod":3,"def":"상","st":["무도"],"rt":["기저(병주 · 한중)"],"note":null},{"id":"RGN-30","name":"계권","sys":"SYS-07","seat":true,"at":[22387,6100],"poly":[[22951,6813],[21122,7230],[19077,0],[21745,0]],"owner":"wei","income":9,"pop":11,"prod":9,"def":"하","st":["계","탁군"],"rt":["기저(기주 · 병주)"],"note":null},{"id":"RGN-31","name":"어양권","sys":"SYS-07","seat":false,"at":[23235,5950],"poly":[[25902,6222],[24667,7287],[22951,6813],[21745,0],[24350,0]],"owner":"wei","income":6,"pop":7,"prod":6,"def":"상","st":["어양","우북평"],"rt":["노룡회랑"],"note":null},{"id":"RGN-32","name":"양평권","sys":"SYS-18","seat":true,"at":[28128,4730],"poly":[[27765,7272],[25902,6222],[24350,0],[35243,0]],"owner":"kang","income":5,"pop":4,"prod":4,"def":"극상","st":["양평","현도"],"rt":["노룡회랑"],"note":null},{"id":"RGN-33","name":"대방권","sys":"SYS-18","seat":false,"at":[30316,6980],"poly":[[29639,11700],[27765,7272],[35243,0],[37312,0],[37312,16058]],"owner":"kang","income":4,"pop":3,"prod":2,"def":"중","st":["낙랑","대방","요서"],"rt":["동이권 접점"],"note":null},{"id":"RGN-34","name":"진류권","sys":"SYS-03","seat":true,"at":[20649,11210],"poly":[[19739,10308],[21896,10639],[22223,11181],[22104,11928],[21919,12100],[21348,12100],[19838,11247]],"owner":"wei","income":24,"pop":28,"prod":25,"def":"상","st":["진류","동군","복양"],"rt":["호뢰관문","관도관문","기저(예주)"],"note":null},{"id":"RGN-35","name":"태산권","sys":"SYS-03","seat":false,"at":[22981,9800],"poly":[[24084,10466],[22223,11181],[21896,10639],[21951,9184],[22016,8843],[23028,8732]],"owner":"wei","income":16,"pop":21,"prod":17,"def":"중","st":["태산","제음"],"rt":["황하항로","기저(서주)"],"note":null},{"id":"RGN-36","name":"임치권","sys":"SYS-04","seat":true,"at":[23998,9180],"poly":[[25132,10586],[24084,10466],[23028,8732],[24628,7384]],"owner":"wei","income":24,"pop":26,"prod":22,"def":"하","st":["임치","제남","평원"],"rt":["황하항로","기저(기주 · 서주)"],"note":null},{"id":"RGN-37","name":"동래권","sys":"SYS-04","seat":false,"at":[25779,8900],"poly":[[27765,7272],[29639,11700],[28115,11741],[26248,11411],[25132,10586],[24628,7384],[24667,7287],[25902,6222]],"owner":"wei","income":17,"pop":19,"prod":15,"def":"중","st":["동래","북해"],"rt":[],"note":null},{"id":"RGN-38","name":"하비권","sys":"SYS-05","seat":true,"at":[23710,11700],"poly":[[24084,10466],[25132,10586],[26248,11411],[24090,12810],[23799,12900],[22104,11928],[22223,11181]],"owner":"wei","income":17,"pop":20,"prod":17,"def":"하","st":["하비","팽성","동해"],"rt":["기저(연주 · 청주 · 예주)"],"note":null},{"id":"RGN-39","name":"광릉권","sys":"SYS-05","seat":false,"at":[24948,13610],"poly":[[26248,11411],[28115,11741],[25096,14465],[24090,12810]],"owner":"wei","income":13,"pop":14,"prod":11,"def":"중","st":["광릉","낭야"],"rt":["회수항로"],"note":null},{"id":"RGN-40","name":"진양권","sys":"SYS-08","seat":true,"at":[19122,8130],"poly":[[14933,6330],[20601,7892],[19183,9758],[18890,9750],[15742,8284],[14926,7361]],"owner":"wei","income":4,"pop":5,"prod":5,"def":"상","st":["진양","상당"],"rt":["정형회랑","기저(사예 · 옹주)"],"note":null},{"id":"RGN-41","name":"안문권","sys":"SYS-08","seat":false,"at":[19453,6930],"poly":[[21122,7230],[21020,7667],[20601,7892],[14933,6330],[14107,0],[19077,0]],"owner":"wei","income":2,"pop":3,"prod":3,"def":"중","st":["안문","서하","오원"],"rt":["기저(유주)"],"note":null},{"id":"RGN-42","name":"무위권","sys":"SYS-10","seat":true,"at":[10719,8070],"poly":[[14933,6330],[14926,7361],[14670,7682],[10753,10737],[6706,12472],[5469,12678],[9610,0],[14107,0]],"owner":"ma","income":4,"pop":3,"prod":2,"def":"중","st":["무위","금성"],"rt":["황하항로"],"note":null},{"id":"RGN-43","name":"돈황권","sys":"SYS-10","seat":false,"at":[3952,5860],"poly":[[5469,12678],[4826,13220],[0,15765],[0,0],[9610,0]],"owner":"ma","income":3,"pop":2,"prod":1,"def":"상","st":["돈황","주천"],"rt":["하서회랑"],"note":null},{"id":"RGN-44","name":"교지권","sys":"SYS-17","seat":true,"at":[13441,24970],"poly":[[0,27624],[15771,21491],[18615,30000],[0,30000]],"owner":"xie","income":9,"pop":8,"prod":6,"def":"하","st":["교지","구진","일남"],"rt":["기저(남중)"],"note":null},{"id":"RGN-45","name":"남해권","sys":"SYS-17","seat":false,"at":[19724,22870],"poly":[[15771,21491],[16063,20501],[21239,20259],[28635,23197],[37312,29789],[37312,30000],[18615,30000]],"owner":"xie","income":6,"pop":5,"prod":4,"def":"상","st":["남해","창오"],"rt":["오령회랑","기저(오회)"],"note":null}],"cities":[{"name":"양양","at":[18775,13960],"kind":"terran","rgn":"RGN-01","owner":"wei"},{"name":"번성","at":[18923,13954],"kind":"colony","rgn":"RGN-01","owner":"wei"},{"name":"강릉","at":[18860,15670],"kind":"terran","rgn":"RGN-02","owner":"wei"},{"name":"강하","at":[19000,15551],"kind":"colony","rgn":"RGN-02","owner":"shu"},{"name":"공안","at":[18588,15748],"kind":"colony","rgn":"RGN-02","owner":"wei"},{"name":"장사","at":[19487,17800],"kind":"colony","rgn":"RGN-03","owner":"shu"},{"name":"무릉","at":[19480,17729],"kind":"colony","rgn":"RGN-03","owner":"shu"},{"name":"계양","at":[19759,17706],"kind":"colony","rgn":"RGN-03","owner":"shu"},{"name":"영릉","at":[19696,17838],"kind":"colony","rgn":"RGN-03","owner":"shu"},{"name":"구지","at":[20394,16750],"kind":"terran","rgn":"RGN-04","owner":"war"},{"name":"형혹","at":[20489,16802],"kind":"planet","rgn":"RGN-04","owner":"war"},{"name":"태음","at":[20429,16758],"kind":"moon","rgn":"RGN-04","owner":"war"},{"name":"성도","at":[11931,15330],"kind":"terran","rgn":"RGN-05","owner":"zhang"},{"name":"건위","at":[11898,15398],"kind":"colony","rgn":"RGN-05","owner":"zhang"},{"name":"재동","at":[12856,14360],"kind":"colony","rgn":"RGN-06","owner":"zhang"},{"name":"강유","at":[12712,14135],"kind":"colony","rgn":"RGN-06","owner":"zhang"},{"name":"파군","at":[14034,16440],"kind":"colony","rgn":"RGN-07","owner":"zhang"},{"name":"강주","at":[13825,16377],"kind":"colony","rgn":"RGN-07","owner":"zhang"},{"name":"남정","at":[14441,12930],"kind":"terran","rgn":"RGN-08","owner":"lu"},{"name":"면양","at":[14346,12888],"kind":"colony","rgn":"RGN-08","owner":"lu"},{"name":"양평관","at":[14546,12776],"kind":"station","rgn":"RGN-08","owner":"lu"},{"name":"상용","at":[17299,13780],"kind":"colony","rgn":"RGN-09","owner":"lu"},{"name":"방릉","at":[17336,13843],"kind":"colony","rgn":"RGN-09","owner":"lu"},{"name":"무도","at":[17101,13710],"kind":"colony","rgn":"RGN-09","owner":"lu"},{"name":"익주군","at":[11702,20500],"kind":"colony","rgn":"RGN-10","owner":"none"},{"name":"건녕","at":[11911,20468],"kind":"colony","rgn":"RGN-10","owner":"none"},{"name":"월수","at":[10405,18100],"kind":"colony","rgn":"RGN-11","owner":"none"},{"name":"장가","at":[10586,18280],"kind":"colony","rgn":"RGN-11","owner":"none"},{"name":"허","at":[20225,11960],"kind":"terran","rgn":"RGN-12","owner":"wei"},{"name":"영천","at":[19979,11893],"kind":"colony","rgn":"RGN-12","owner":"wei"},{"name":"여남","at":[20649,12990],"kind":"colony","rgn":"RGN-13","owner":"wei"},{"name":"진국","at":[20601,13021],"kind":"colony","rgn":"RGN-13","owner":"wei"},{"name":"초","at":[20385,13130],"kind":"colony","rgn":"RGN-13","owner":"wei"},{"name":"업","at":[20878,9720],"kind":"terran","rgn":"RGN-14","owner":"wei"},{"name":"위군","at":[20958,9625],"kind":"colony","rgn":"RGN-14","owner":"wei"},{"name":"한단","at":[20768,9380],"kind":"colony","rgn":"RGN-15","owner":"wei"},{"name":"중산","at":[20858,9506],"kind":"colony","rgn":"RGN-15","owner":"wei"},{"name":"발해","at":[22752,7700],"kind":"colony","rgn":"RGN-16","owner":"wei"},{"name":"하간","at":[22903,7594],"kind":"colony","rgn":"RGN-16","owner":"wei"},{"name":"낙양","at":[19038,11380],"kind":"terran","rgn":"RGN-17","owner":"wei"},{"name":"하남","at":[18899,11376],"kind":"colony","rgn":"RGN-17","owner":"wei"},{"name":"장안","at":[16061,11740],"kind":"terran","rgn":"RGN-18","owner":"wei"},{"name":"경조","at":[16014,11654],"kind":"colony","rgn":"RGN-18","owner":"wei"},{"name":"하동","at":[17800,10970],"kind":"colony","rgn":"RGN-19","owner":"wei"},{"name":"홍농","at":[17678,11191],"kind":"colony","rgn":"RGN-19","owner":"wei"},{"name":"건업","at":[24405,13940],"kind":"terran","rgn":"RGN-20","owner":"wu"},{"name":"단양","at":[24515,13772],"kind":"colony","rgn":"RGN-20","owner":"wu"},{"name":"오","at":[25932,14700],"kind":"terran","rgn":"RGN-21","owner":"wu"},{"name":"회계","at":[25905,14524],"kind":"colony","rgn":"RGN-21","owner":"wu"},{"name":"오정","at":[25732,14633],"kind":"colony","rgn":"RGN-21","owner":"wu"},{"name":"예장","at":[21929,17320],"kind":"colony","rgn":"RGN-22","owner":"wu"},{"name":"수춘","at":[22718,13430],"kind":"terran","rgn":"RGN-23","owner":"wei"},{"name":"구강","at":[22902,13346],"kind":"colony","rgn":"RGN-23","owner":"wei"},{"name":"종리","at":[22711,13371],"kind":"colony","rgn":"RGN-23","owner":"wei"},{"name":"합비","at":[23091,14180],"kind":"colony","rgn":"RGN-24","owner":"wei"},{"name":"여강","at":[22932,14036],"kind":"colony","rgn":"RGN-24","owner":"wei"},{"name":"완","at":[19105,13010],"kind":"terran","rgn":"RGN-25","owner":"wei"},{"name":"섭","at":[19256,13102],"kind":"colony","rgn":"RGN-25","owner":"wei"},{"name":"신야","at":[18961,13480],"kind":"colony","rgn":"RGN-26","owner":"wei"},{"name":"육양","at":[18990,13529],"kind":"colony","rgn":"RGN-26","owner":"wei"},{"name":"박망","at":[18920,13652],"kind":"colony","rgn":"RGN-26","owner":"wei"},{"name":"부풍","at":[15179,11620],"kind":"colony","rgn":"RGN-27","owner":"ma"},{"name":"안정","at":[15310,11486],"kind":"colony","rgn":"RGN-27","owner":"ma"},{"name":"장안 서부","at":[14952,11661],"kind":"terran","rgn":"RGN-27","owner":"ma"},{"name":"천수","at":[13331,11420],"kind":"colony","rgn":"RGN-28","owner":"ma"},{"name":"무도","at":[12661,12600],"kind":"colony","rgn":"RGN-29","owner":"ma"},{"name":"계","at":[22387,6100],"kind":"terran","rgn":"RGN-30","owner":"wei"},{"name":"탁군","at":[22630,6210],"kind":"colony","rgn":"RGN-30","owner":"wei"},{"name":"어양","at":[23235,5950],"kind":"colony","rgn":"RGN-31","owner":"wei"},{"name":"우북평","at":[23314,5968],"kind":"colony","rgn":"RGN-31","owner":"wei"},{"name":"양평","at":[28128,4730],"kind":"terran","rgn":"RGN-32","owner":"kang"},{"name":"현도","at":[28397,4620],"kind":"colony","rgn":"RGN-32","owner":"kang"},{"name":"낙랑","at":[30316,6980],"kind":"colony","rgn":"RGN-33","owner":"kang"},{"name":"대방","at":[30063,7116],"kind":"colony","rgn":"RGN-33","owner":"kang"},{"name":"요서","at":[30376,6970],"kind":"colony","rgn":"RGN-33","owner":"kang"},{"name":"진류","at":[20649,11210],"kind":"terran","rgn":"RGN-34","owner":"wei"},{"name":"동군","at":[20427,11195],"kind":"colony","rgn":"RGN-34","owner":"wei"},{"name":"복양","at":[20765,11385],"kind":"colony","rgn":"RGN-34","owner":"wei"},{"name":"태산","at":[22981,9800],"kind":"colony","rgn":"RGN-35","owner":"wei"},{"name":"제음","at":[22805,10037],"kind":"colony","rgn":"RGN-35","owner":"wei"},{"name":"임치","at":[23998,9180],"kind":"terran","rgn":"RGN-36","owner":"wei"},{"name":"제남","at":[24088,9001],"kind":"colony","rgn":"RGN-36","owner":"wei"},{"name":"평원","at":[24182,8985],"kind":"colony","rgn":"RGN-36","owner":"wei"},{"name":"동래","at":[25779,8900],"kind":"colony","rgn":"RGN-37","owner":"wei"},{"name":"북해","at":[25789,8947],"kind":"colony","rgn":"RGN-37","owner":"wei"},{"name":"하비","at":[23710,11700],"kind":"terran","rgn":"RGN-38","owner":"wei"},{"name":"팽성","at":[23988,11614],"kind":"colony","rgn":"RGN-38","owner":"wei"},{"name":"동해","at":[23868,11790],"kind":"colony","rgn":"RGN-38","owner":"wei"},{"name":"광릉","at":[24948,13610],"kind":"colony","rgn":"RGN-39","owner":"wei"},{"name":"낭야","at":[24913,13568],"kind":"colony","rgn":"RGN-39","owner":"wei"},{"name":"진양","at":[19122,8130],"kind":"terran","rgn":"RGN-40","owner":"wei"},{"name":"상당","at":[19295,7998],"kind":"colony","rgn":"RGN-40","owner":"wei"},{"name":"안문","at":[19453,6930],"kind":"colony","rgn":"RGN-41","owner":"wei"},{"name":"서하","at":[19407,7018],"kind":"colony","rgn":"RGN-41","owner":"wei"},{"name":"오원","at":[19602,7018],"kind":"colony","rgn":"RGN-41","owner":"wei"},{"name":"무위","at":[10719,8070],"kind":"terran","rgn":"RGN-42","owner":"ma"},{"name":"금성","at":[10830,7801],"kind":"colony","rgn":"RGN-42","owner":"ma"},{"name":"돈황","at":[3952,5860],"kind":"colony","rgn":"RGN-43","owner":"ma"},{"name":"주천","at":[3882,5718],"kind":"colony","rgn":"RGN-43","owner":"ma"},{"name":"교지","at":[13441,24970],"kind":"terran","rgn":"RGN-44","owner":"xie"},{"name":"구진","at":[13431,25038],"kind":"colony","rgn":"RGN-44","owner":"xie"},{"name":"일남","at":[13501,24999],"kind":"colony","rgn":"RGN-44","owner":"xie"},{"name":"남해","at":[19724,22870],"kind":"colony","rgn":"RGN-45","owner":"xie"},{"name":"창오","at":[19654,22825],"kind":"colony","rgn":"RGN-45","owner":"xie"}],"routes":[{"id":"RTE-001","kind":"회랑","connects":["EXT:서역","SYS-10"],"corridor":"COR-14","line":[[848,5700],[1087,5658],[1327,5622],[1566,5590],[1805,5564],[2044,5544],[2283,5529],[2522,5519],[2761,5514],[3000,5515],[3239,5521],[3478,5532],[3717,5548],[3956,5570],[4195,5598],[4434,5630],[4672,5668],[4911,5711],[5120,5758],[5341,5815],[5573,5881],[5805,5948],[6035,6018],[6265,6090],[6493,6165],[6721,6242],[6947,6321],[7173,6403],[7397,6487],[7621,6573],[7844,6662],[8065,6753],[8286,6846],[8506,6942],[8724,7040],[8942,7141],[9159,7244],[9375,7349],[9590,7456],[9803,7566],[10016,7679],[10228,7793],[10439,7910],[10649,8030],[10719,8070]]},{"id":"RTE-002","kind":"고속항로+관문","connects":["SYS-01","SYS-02"],"corridor":"COR-08","line":[[19038,11380],[19247,11279],[19471,11220],[19681,11196],[19812,11327],[19919,11527],[20041,11718],[20177,11901],[20225,11960]]},{"id":"RTE-003","kind":"고속항로+관문","connects":["SYS-01","SYS-03"],"corridor":"COR-08","line":[[19038,11380],[19247,11279],[19471,11220],[19681,11196],[19898,11164],[20124,11148],[20349,11158],[20574,11193],[20649,11210]]},{"id":"RTE-004","kind":"고속항로+관문","connects":["SYS-01","SYS-06"],"corridor":"COR-09","line":[[19038,11380],[19244,11261],[19456,11159],[19674,11073],[19897,11004],[20127,10952],[20363,10917],[20511,10783],[20623,10584],[20716,10378],[20789,10165],[20843,9946],[20878,9720]]},{"id":"RTE-005","kind":"기저항로","connects":["SYS-01","SYS-08"],"corridor":null,"line":[[19038,11380],[19012,11141],[18992,10903],[18976,10664],[18966,10426],[18960,10188],[18960,9950],[18964,9712],[18974,9475],[18988,9237],[19008,9000],[19032,8762],[19062,8525],[19097,8288],[19122,8130]]},{"id":"RTE-006","kind":"회랑","connects":["SYS-01","SYS-09"],"corridor":"COR-01","line":[[19038,11380],[18803,11335],[18568,11305],[18333,11290],[18098,11289],[17864,11302],[17629,11331],[17395,11373],[17172,11400],[16949,11407],[16715,11407],[16482,11416],[16250,11432],[16019,11457],[15788,11491],[15559,11532],[15331,11582],[15179,11620]]},{"id":"RTE-007","kind":"기저항로","connects":["SYS-01","SYS-14"],"corridor":null,"line":[[19038,11380],[19002,11615],[18981,11849],[18976,12082],[18985,12315],[19010,12547],[19050,12779],[19105,13010]]},{"id":"RTE-008","kind":"기저항로","connects":["SYS-02","SYS-03"],"corridor":null,"line":[[20225,11960],[20307,11736],[20414,11527],[20546,11332],[20649,11210]]},{"id":"RTE-009","kind":"기저항로","connects":["SYS-02","SYS-05"],"corridor":null,"line":[[20225,11960],[20465,11974],[20704,11984],[20944,11988],[21183,11989],[21421,11984],[21660,11975],[21898,11961],[22135,11943],[22372,11919],[22609,11892],[22846,11859],[23082,11822],[23318,11780],[23553,11734],[23710,11700]]},{"id":"RTE-010","kind":"기저항로","connects":["SYS-02","SYS-14"],"corridor":null,"line":[[20225,11960],[20038,12097],[19857,12241],[19684,12393],[19517,12551],[19357,12717],[19204,12890],[19105,13010]]},{"id":"RTE-011","kind":"고속항로","connects":["SYS-02","SYS-16"],"corridor":null,"line":[[20225,11960],[20353,12147],[20499,12317],[20661,12471],[20840,12608],[21056,12694],[21278,12778],[21488,12881],[21689,13005],[21878,13150],[22100,13184],[22314,13242],[22520,13324],[22718,13430]]},{"id":"RTE-012","kind":"고속항로","connects":["SYS-03","SYS-04"],"corridor":null,"line":[[20649,11210],[20827,11047],[21016,10900],[21215,10769],[21423,10655],[21642,10556],[21854,10448],[22044,10303],[22242,10176],[22451,10066],[22668,9974],[22896,9900],[23067,9736],[23248,9588],[23439,9456],[23640,9340],[23852,9239],[23998,9180]]},{"id":"RTE-013","kind":"기저항로","connects":["SYS-03","SYS-05"],"corridor":null,"line":[[20649,11210],[20892,11198],[21134,11195],[21375,11199],[21615,11212],[21853,11233],[22089,11263],[22325,11300],[22559,11346],[22792,11401],[23023,11463],[23254,11534],[23483,11613],[23710,11700]]},{"id":"RTE-014","kind":"회랑","connects":["SYS-03","SYS-06"],"corridor":"COR-09","line":[[20649,11210],[20522,11047],[20363,10917],[20511,10783],[20623,10584],[20716,10378],[20789,10165],[20843,9946],[20878,9720]]},{"id":"RTE-015","kind":"기저항로","connects":["SYS-04","SYS-05"],"corridor":null,"line":[[23998,9180],[23923,9411],[23857,9642],[23801,9875],[23756,10110],[23720,10345],[23695,10581],[23680,10819],[23674,11058],[23679,11298],[23694,11539],[23710,11700]]},{"id":"RTE-016","kind":"기저항로","connects":["SYS-04","SYS-06"],"corridor":null,"line":[[23998,9180],[23773,9270],[23546,9352],[23318,9426],[23088,9491],[22857,9549],[22625,9599],[22391,9641],[22156,9675],[21919,9701],[21681,9718],[21442,9728],[21201,9730],[20959,9724],[20878,9720]]},{"id":"RTE-017","kind":"고속항로","connects":["SYS-05","SYS-16"],"corridor":null,"line":[[23710,11700],[23602,11905],[23508,12115],[23426,12330],[23358,12550],[23257,12750],[23082,12913],[22928,13092],[22795,13289],[22718,13430]]},{"id":"RTE-018","kind":"기저항로","connects":["SYS-06","SYS-07"],"corridor":null,"line":[[20878,9720],[20927,9485],[20981,9253],[21041,9023],[21106,8795],[21176,8570],[21251,8346],[21332,8125],[21418,7906],[21510,7689],[21607,7474],[21709,7262],[21816,7052],[21929,6844],[22047,6638],[22170,6434],[22299,6233],[22387,6100]]},{"id":"RTE-019","kind":"회랑","connects":["SYS-06","SYS-08"],"corridor":"COR-07","line":[[20878,9720],[20820,9484],[20746,9255],[20657,9034],[20553,8820],[20432,8612],[20296,8412],[20140,8250],[19956,8167],[19728,8191],[19500,8190],[19273,8163],[19122,8130]]},{"id":"RTE-020","kind":"기저항로","connects":["SYS-07","SYS-08"],"corridor":null,"line":[[22387,6100],[22163,6185],[21942,6276],[21724,6371],[21510,6472],[21298,6577],[21090,6688],[20885,6804],[20683,6925],[20484,7051],[20288,7182],[20096,7318],[19906,7459],[19720,7606],[19537,7757],[19357,7913],[19181,8075],[19122,8130]]},{"id":"RTE-021","kind":"회랑","connects":["SYS-07","SYS-18"],"corridor":"COR-12","line":[[22387,6100],[22626,6076],[22862,6042],[23095,5998],[23324,5944],[23551,5880],[23774,5807],[23995,5723],[24212,5630],[24426,5526],[24637,5413],[24836,5342],[25059,5319],[25294,5304],[25529,5285],[25763,5260],[25996,5231],[26228,5197],[26459,5159],[26690,5115],[26919,5067],[27148,5014],[27375,4956],[27602,4894],[27828,4827],[28053,4755],[28128,4730]]},{"id":"RTE-022","kind":"기저항로","connects":["SYS-08","SYS-09"],"corridor":null,"line":[[19122,8130],[18920,8263],[18720,8398],[18522,8536],[18327,8676],[18133,8818],[17942,8963],[17753,9111],[17566,9261],[17381,9413],[17199,9568],[17019,9726],[16840,9885],[16664,10048],[16491,10213],[16319,10380],[16150,10550],[15982,10722],[15817,10897],[15655,11074],[15494,11253],[15335,11435],[15179,11620]]},{"id":"RTE-023","kind":"고속항로","connects":["SYS-09","SYS-10"],"corridor":null,"line":[[15179,11620],[14983,11486],[14781,11362],[14573,11249],[14360,11147],[14141,11055],[13918,10971],[13699,10880],[13484,10781],[13273,10676],[13066,10564],[12862,10445],[12662,10320],[12466,10187],[12274,10048],[12141,9855],[12030,9643],[11910,9437],[11782,9237],[11646,9044],[11502,8857],[11349,8677],[11188,8503],[11019,8335],[10842,8174],[10719,8070]]},{"id":"RTE-024","kind":"회랑","connects":["SYS-09","SYS-12"],"corridor":"COR-03","line":[[15179,11620],[15339,11774],[15511,11912],[15695,12036],[15688,12200],[15555,12377],[15365,12517],[15166,12640],[14959,12746],[14743,12836],[14518,12909],[14441,12930]]},{"id":"RTE-025","kind":"회랑","connects":["SYS-09","SYS-12"],"corridor":"COR-11","line":[[15179,11620],[14942,11635],[14707,11661],[14476,11698],[14247,11747],[14022,11807],[13799,11879],[13580,11962],[13364,12057],[13151,12163],[13053,12337],[13254,12473],[13462,12593],[13677,12697],[13898,12785],[14127,12858],[14362,12915],[14441,12930]]},{"id":"RTE-026","kind":"회랑","connects":["SYS-09","SYS-14"],"corridor":"COR-10","line":[[15179,11620],[15418,11649],[15654,11688],[15886,11737],[16115,11796],[16341,11866],[16563,11946],[16781,12036],[16997,12136],[17208,12246],[17417,12367],[17605,12433],[17804,12558],[18007,12668],[18216,12764],[18430,12847],[18650,12915],[18875,12970],[19105,13010]]},{"id":"RTE-027","kind":"회랑","connects":["SYS-11","SYS-12"],"corridor":"COR-02","line":[[11931,15330],[12045,15118],[12170,14914],[12305,14720],[12452,14534],[12609,14358],[12777,14190],[12956,14031],[13134,13880],[13291,13730],[13458,13560],[13634,13405],[13821,13264],[14018,13138],[14224,13027],[14441,12930]]},{"id":"RTE-028","kind":"회랑","connects":["SYS-11","SYS-13"],"corridor":"COR-04","line":[[11931,15330],[12172,15356],[12412,15378],[12653,15397],[12893,15413],[13133,15425],[13373,15434],[13613,15439],[13852,15441],[14092,15440],[14331,15435],[14571,15427],[14810,15415],[15049,15400],[15288,15382],[15526,15360],[15765,15335],[16003,15307],[16242,15275],[16480,15239],[16718,15201],[16956,15158],[17186,15114],[17399,15072],[17550,14891],[17709,14721],[17877,14562],[18054,14413],[18239,14275],[18433,14148],[18635,14032],[18775,13960]]},{"id":"RTE-029","kind":"회랑","connects":["SYS-11","SYS-19"],"corridor":"COR-15","line":[[11931,15330],[11900,15571],[11859,15808],[11808,16043],[11749,16274],[11680,16501],[11602,16726],[11514,16947],[11417,17165],[11311,17380],[11196,17592],[11071,17800],[11062,18000],[11167,18215],[11263,18433],[11350,18653],[11427,18875],[11494,19100],[11553,19327],[11601,19557],[11641,19789],[11671,20024],[11691,20261],[11702,20500]]},{"id":"RTE-030","kind":"기저항로","connects":["SYS-12","SYS-14"],"corridor":null,"line":[[14441,12930],[14678,12973],[14914,13011],[15151,13045],[15388,13076],[15625,13102],[15861,13124],[16098,13141],[16335,13155],[16572,13165],[16810,13170],[17047,13171],[17284,13169],[17521,13162],[17759,13151],[17996,13135],[18234,13116],[18471,13093],[18709,13065],[18947,13033],[19105,13010]]},{"id":"RTE-031","kind":"고속항로+관문","connects":["SYS-13","SYS-14"],"corridor":"COR-06","line":[[18775,13960],[18710,14037],[18782,13832],[18844,13620],[18915,13410],[19002,13207],[19105,13010]]},{"id":"RTE-032","kind":"고속항로","connects":["SYS-13","SYS-15"],"corridor":null,"line":[[18775,13960],[18740,14195],[18721,14430],[18715,14664],[18724,14898],[18748,15130],[18786,15362],[18839,15593],[19007,15619],[19231,15554],[19456,15503],[19682,15465],[19911,15441],[20141,15431],[20373,15434],[20606,15450],[20785,15607],[20971,15750],[21166,15878],[21370,15991],[21582,16090],[21803,16175],[22021,16125],[22226,16000],[22419,15862],[22601,15710],[22771,15543],[22930,15363],[23072,15167],[23216,14976],[23369,14794],[23531,14622],[23702,14458],[23882,14305],[24071,14160],[24269,14025],[24405,13940]]},{"id":"RTE-033","kind":"기저항로","connects":["SYS-13","SYS-16"],"corridor":null,"line":[[18775,13960],[19005,13884],[19237,13813],[19469,13748],[19702,13689],[19935,13635],[20170,13587],[20405,13545],[20641,13508],[20878,13477],[21115,13452],[21353,13433],[21592,13419],[21832,13411],[22073,13408],[22314,13412],[22556,13421],[22718,13430]]},{"id":"RTE-034","kind":"회랑","connects":["SYS-13","SYS-17"],"corridor":"COR-13","line":[[18775,13960],[18825,14194],[18874,14429],[18920,14664],[18964,14899],[19006,15134],[19046,15369],[19084,15605],[19119,15841],[19152,16077],[19183,16313],[19212,16549],[19239,16786],[19264,17023],[19286,17260],[19306,17497],[19324,17735],[19340,17972],[19353,18210],[19365,18448],[19374,18686],[19381,18925],[19386,19164],[19389,19402],[19389,19641],[19388,19881],[19384,20120],[19378,20360],[19291,20540],[19115,20705],[18939,20868],[18761,21030],[18582,21190],[18403,21349],[18222,21507],[18040,21663],[17858,21818],[17674,21972],[17489,22124],[17303,22275],[17116,22425],[16929,22573],[16740,22720],[16550,22866],[16359,23010],[16167,23153],[15974,23294],[15780,23435],[15585,23573],[15389,23711],[15192,23847],[14994,23982],[14794,24115],[14594,24247],[14393,24378],[14191,24507],[13988,24635],[13783,24762],[13578,24887],[13441,24970]]},{"id":"RTE-035","kind":"회랑","connects":["SYS-15","SYS-16"],"corridor":"COR-05","line":[[24405,13940],[24187,14016],[23982,14118],[23791,14244],[23601,14321],[23393,14258],[23217,14107],[23058,13941],[22916,13761],[22791,13567],[22718,13430]]},{"id":"RTE-036","kind":"기저항로","connects":["SYS-15","SYS-17"],"corridor":null,"line":[[24405,13940],[24228,14101],[24051,14263],[23874,14424],[23698,14586],[23522,14749],[23346,14911],[23170,15074],[22995,15237],[22820,15400],[22645,15564],[22470,15728],[22296,15892],[22122,16056],[21948,16221],[21775,16386],[21601,16551],[21428,16716],[21256,16882],[21083,17048],[20911,17214],[20739,17380],[20568,17547],[20396,17714],[20225,17882],[20054,18049],[19884,18217],[19713,18385],[19543,18553],[19374,18722],[19204,18891],[19035,19060],[18866,19230],[18697,19399],[18529,19569],[18361,19739],[18193,19910],[18025,20081],[17858,20252],[17691,20423],[17524,20595],[17357,20766],[17191,20938],[17025,21111],[16859,21283],[16694,21456],[16529,21629],[16364,21803],[16199,21977],[16035,22151],[15871,22325],[15707,22499],[15543,22674],[15380,22849],[15217,23024],[15054,23200],[14891,23376],[14729,23552],[14567,23728],[14406,23905],[14244,24082],[14083,24259],[13922,24436],[13761,24614],[13601,24792],[13441,24970]]},{"id":"RTE-037","kind":"기저항로","connects":["SYS-17","SYS-19"],"corridor":null,"line":[[13441,24970],[13376,24738],[13309,24507],[13240,24276],[13168,24047],[13094,23818],[13018,23591],[12939,23364],[12858,23138],[12775,22913],[12689,22689],[12601,22466],[12510,22244],[12418,22023],[12323,21803],[12225,21583],[12125,21365],[12023,21147],[11919,20931],[11812,20715],[11702,20500]]}],"corridors":[{"id":"COR-01","name":"함곡회랑","at":[17172,11400],"barrier":[[17246,12598],[17098,10202]],"w":220,"scale":"대회랑"},{"id":"COR-02","name":"검각회랑","at":[13186,13830],"barrier":[[14016,14697],[12357,12963]],"w":220,"scale":"대회랑"},{"id":"COR-03","name":"진령삼도","at":[15688,12200],"barrier":[[16734,12789],[14642,11611]],"w":220,"scale":"대회랑"},{"id":"COR-04","name":"이릉협도","at":[17257,15100],"barrier":[[17021,13923],[17492,16277]],"w":220,"scale":"대회랑"},{"id":"COR-05","name":"합비회랑","at":[23532,14300],"barrier":[[23185,15449],[23879,13151]],"w":220,"scale":"대회랑"},{"id":"COR-06","name":"양번관문","at":[18758,13900],"barrier":[[17624,13505],[19891,14295]],"w":220,"scale":"대회랑"},{"id":"COR-07","name":"정형회랑","at":[20140,8250],"barrier":[[19334,9139],[20946,7361]],"w":220,"scale":"대회랑"},{"id":"COR-08","name":"호뢰관문","at":[19648,11200],"barrier":[[19554,10305],[19743,12095]],"w":220,"scale":"중회랑"},{"id":"COR-09","name":"관도관문","at":[20437,10850],"barrier":[[19834,10182],[21040,11518]],"w":220,"scale":"중회랑"},{"id":"COR-10","name":"무관회랑","at":[17511,12400],"barrier":[[17812,11552],[17211,13248]],"w":220,"scale":"중회랑"},{"id":"COR-11","name":"기산도","at":[13102,12250],"barrier":[[13886,12692],[12317,11808]],"w":220,"scale":"중회랑"},{"id":"COR-12","name":"노룡회랑","at":[24804,5350],"barrier":[[24595,4475],[25013,6225]],"w":220,"scale":"중회랑"},{"id":"COR-13","name":"오령회랑","at":[19334,20450],"barrier":[[20144,20842],[18524,20058]],"w":220,"scale":"중회랑"},{"id":"COR-14","name":"하서회랑","at":[5088,5750],"barrier":[[4878,6625],[5298,4875]],"w":220,"scale":"중회랑"},{"id":"COR-15","name":"남중산도","at":[11066,17900],"barrier":[[11966,17940],[10167,17860]],"w":220,"scale":"중회랑"}],"terrain":[{"name":"진령 소행성대","kind":"Range/mtn","density":224,"gas":130,"polys":[[[[19497,11272],[19836,11883],[19853,11954],[19836,11989],[19787,12019],[19765,12055],[19764,12096],[19780,12142],[20011,12516],[20495,13058],[20516,13104],[20526,13146],[20524,13185],[20513,13223],[20342,13449],[20321,13467],[20298,13475],[20273,13472],[20242,13456],[19304,12487],[19148,12395],[19101,12381],[19007,12384],[19008,12446],[19024,12503],[19068,12606],[19079,12651],[19073,12692],[19040,12728],[18973,12761],[18908,12779],[18849,12784],[18795,12778],[18536,12665],[18537,12713],[18548,12755],[18604,12861],[18617,12899],[18620,12942],[18608,12992],[18599,13011],[18519,13098],[18509,13114],[18496,13150],[18480,13227],[18474,13244],[18466,13257],[18389,13318],[18289,13338],[17617,13151],[17374,13185],[16905,13347],[16785,13366],[16054,13299],[15977,13270],[15752,13111],[14923,12728],[13474,12802],[13222,12766],[13113,12720],[13022,12647],[12926,12518],[12844,12361],[12783,12191],[12747,12024],[12743,11965],[12747,11913],[12757,11866],[12795,11784],[12967,11559],[13061,11480],[13161,11423],[13374,11358],[13785,11341],[14286,11444],[14712,11461],[15135,11642],[16293,11653],[17927,11199],[18153,11208],[18720,11328],[18845,11321],[19096,11216],[19256,11149],[19342,11143],[19355,11148],[19422,11179],[19497,11272]]]]},{"name":"태행 소행성대","kind":"Range/mtn","density":218,"gas":100,"polys":[[[[20236,10523],[19717,10644],[19635,10640],[19585,10612],[19560,10562],[19555,10493],[19649,9929],[19586,9242],[19494,8925],[19475,8785],[19487,8675],[19554,8411],[19558,8338],[19549,8275],[19427,8000],[19410,7935],[19399,7791],[19418,7665],[19460,7552],[19710,7135],[19756,7015],[19780,6883],[19793,5043],[19724,4777],[19724,4726],[19736,4676],[19762,4628],[19794,4591],[19832,4564],[19919,4533],[20100,4512],[20141,4496],[20319,4366],[20364,4347],[20421,4334],[20542,4338],[20779,4418],[20893,4484],[20994,4577],[21034,4631],[21066,4692],[21090,4758],[21113,4911],[21110,5020],[21064,5214],[20913,5570],[20869,5734],[20864,5880],[20934,6272],[20932,6290],[20925,6299],[20902,6308],[20893,6317],[20889,6335],[20896,6408],[20889,6447],[20825,6600],[20815,6640],[20812,6806],[20806,6843],[20722,7029],[20686,7163],[20693,8092],[20700,8973],[20702,9243],[20707,9765],[20684,9862],[20646,9961],[20352,10426],[20295,10483],[20236,10523]]]]},{"name":"여량 파편대","kind":"Range/mtn","density":182,"gas":100,"polys":[[[[19096,11216],[18840,11282],[18759,11266],[18585,11168],[18526,11154],[18490,11153],[18456,11140],[18374,11131],[18298,11087],[18229,11016],[18120,10823],[18055,10615],[18035,10009],[18032,9905],[17992,8641],[18061,8260],[18061,8123],[17931,7623],[17924,7514],[17948,7298],[18278,6121],[18300,5916],[18290,5636],[18307,5550],[18339,5479],[18377,5429],[18599,5244],[18776,5034],[18822,4996],[18835,4989],[18938,5281],[19159,6632],[19251,6856],[19277,6983],[19359,8235],[19470,8666],[19533,10494],[19491,10828],[19433,11048],[19410,11093],[19383,11127],[19355,11148],[19352,11150],[19096,11216]]]]},{"name":"기련 소행성대","kind":"Range/mtn","density":235,"gas":135,"polys":[[[[10987,8549],[10568,9560],[10433,9781],[10316,9923],[10230,9953],[10198,9929],[10125,9836],[10104,9821],[10074,9812],[9417,9844],[9150,9796],[8373,9441],[8027,9160],[7836,9071],[7626,9037],[7093,9080],[6965,9053],[6854,8979],[6462,8540],[6347,8475],[5659,8456],[5478,8393],[5388,8340],[5370,8278],[5323,8232],[4911,8106],[4491,7889],[4315,7727],[3886,7542],[3822,7479],[3796,7403],[3821,7311],[3874,7251],[3948,7215],[4482,7193],[4556,7167],[4597,7138],[4612,7105],[4602,7070],[4572,7032],[4404,6915],[3810,6754],[3725,6692],[3685,6602],[3703,6479],[3777,6328],[3875,6203],[3993,6102],[4262,5963],[4779,5859],[4797,5862],[5316,5932],[6306,6066],[7036,6164],[7233,6232],[7994,6494],[8079,6523],[8179,6557],[8223,6598],[8235,6609],[9208,7517],[9339,7607],[9424,7645],[10188,7735],[10378,7757],[10494,7808],[10598,7877],[10775,8061],[10909,8291],[10990,8430],[10987,8549]]]]},{"name":"남령 소행성대","kind":"Range/mtn","density":202,"gas":150,"polys":[[[[19579,22347],[19385,22396],[18912,22704],[18811,22737],[18536,22737],[18414,22710],[18293,22642],[18082,22457],[17975,22395],[17918,22377],[17858,22368],[17794,22371],[17626,22279],[16966,22147],[16940,22132],[16905,22101],[16875,22065],[16828,21978],[16799,21882],[16785,21787],[16791,21613],[16787,21586],[16779,21564],[16758,21533],[16732,21511],[16576,21458],[16551,21443],[16500,21383],[16475,21313],[16470,21236],[16484,21157],[16510,21078],[16587,20941],[16697,20815],[16710,20795],[16718,20773],[16747,20628],[16809,20450],[16813,20417],[16811,20386],[17055,20184],[17140,20145],[17220,20130],[18280,20131],[18369,20153],[18451,20198],[18595,20352],[18624,20372],[18690,20398],[19940,20604],[20146,20681],[20275,20757],[20345,20821],[20406,20900],[20430,20945],[20446,20991],[20454,21039],[20453,21093],[20443,21132],[20425,21159],[20401,21178],[20265,21233],[20202,21286],[20159,21354],[20066,21699],[20032,21781],[19981,21854],[19822,22000],[19777,22061],[19667,22274],[19641,22304],[19610,22330],[19579,22347]]]]},{"name":"대별 파편대","kind":"Range/mtn","density":170,"gas":115,"polys":[[[[23067,14793],[23047,14841],[22067,15921],[22015,15952],[21961,15968],[21906,15970],[21852,15955],[21801,15921],[21755,15867],[21722,15804],[21666,15565],[21641,15513],[21601,15465],[21538,15423],[21363,15346],[21327,15320],[21295,15288],[21268,15246],[21249,15191],[21240,15130],[21239,15097],[21235,15085],[21227,15074],[21185,15040],[21142,15017],[20834,14976],[20689,14910],[20223,14880],[20021,14816],[19874,14822],[19827,14815],[19714,14761],[19603,14675],[19505,14569],[19434,14456],[19386,14323],[19356,13714],[19368,13637],[19390,13571],[19426,13517],[19478,13475],[19550,13445],[19777,13416],[19966,13422],[20005,13434],[20036,13449],[20294,13698],[20409,13769],[20524,13802],[21308,13823],[21740,13909],[22475,14263],[22979,14623],[23024,14668],[23055,14709],[23069,14750],[23067,14793]]]]},{"name":"무이 파편대","kind":"Range/mtn","density":180,"gas":150,"polys":[[[[22820,20632],[22779,20645],[22725,20637],[22308,20446],[22183,20354],[22055,20224],[21960,20090],[21861,19786],[21855,19738],[21855,19692],[21975,19082],[22160,18559],[22348,18204],[22372,18173],[23030,17602],[23103,17565],[23289,17535],[23385,17539],[23950,17714],[23981,17737],[24020,17808],[24027,17906],[23767,19360],[23772,19488],[23632,20176],[23527,20370],[23462,20443],[23389,20492],[22820,20632]]]]},{"name":"대루 파편대","kind":"Range/mtn","density":205,"gas":140,"polys":[[[[15132,16758],[15167,16774],[15179,16771],[15295,16649],[15307,16644],[15332,16661],[15391,16759],[15497,17049],[15550,17417],[15547,17446],[15535,17491],[15523,17520],[15512,17537],[15475,17571],[15461,17594],[15446,17631],[15382,18083],[15356,18147],[15327,18192],[15246,18266],[15058,18384],[14801,18619],[14747,18649],[14694,18663],[14416,18623],[14133,18658],[14073,18685],[14049,18705],[14017,18730],[13782,19038],[13676,19132],[13643,19185],[13632,19237],[13648,19385],[13640,19432],[13610,19479],[13537,19546],[13473,19586],[13414,19605],[13098,19591],[13064,19571],[13040,19537],[12986,19410],[12958,19376],[12628,19252],[12573,19248],[12540,19238],[12523,19223],[12504,19178],[12488,19151],[12458,19121],[12333,19046],[12207,18928],[11877,18390],[11797,18187],[11747,17948],[11746,17904],[11755,17862],[11775,17821],[11809,17779],[11971,17630],[12020,17564],[12057,17480],[12073,17425],[12088,17391],[12111,17371],[12111,17371],[12141,17361],[12300,17355],[12450,17316],[12798,17319],[12882,17300],[12971,17255],[13011,17221],[13069,17172],[13107,17151],[13157,17147],[13371,17186],[13403,17191],[13458,17190],[13505,17172],[13710,16977],[14173,16534],[14345,16463],[14382,16447],[14393,16445],[14500,16426],[14632,16361],[14655,16356],[14679,16359],[14708,16372],[14747,16402],[14890,16620],[14925,16651],[15047,16701],[15132,16758]]]]},{"name":"운귀 혼합지대","kind":"Plateau","density":145,"gas":170,"polys":[[[[13774,21309],[13753,22112],[13727,22184],[13667,22274],[13588,22351],[13390,22468],[12622,22660],[12256,22666],[12061,22601],[10929,21949],[10610,22053],[10520,22076],[10310,22072],[9680,21881],[8991,21379],[8530,21276],[8495,21268],[8291,21176],[8195,21101],[8005,20865],[7721,20330],[7654,20255],[7176,19904],[7045,19753],[6981,19654],[6892,19465],[6860,19304],[6876,19178],[6878,19165],[6936,19043],[7028,18933],[7580,18518],[7618,18490],[7782,18415],[9987,17404],[10136,17277],[10195,17227],[10250,17195],[10366,17172],[10518,17143],[10633,17081],[11081,16732],[11195,16688],[11310,16690],[11406,16721],[11473,16758],[11484,16764],[11541,16819],[11846,17113],[11892,17228],[11989,17319],[12111,17371],[12281,17445],[12851,17584],[13107,17726],[14049,18705],[14194,18855],[14487,19341],[14563,19599],[14572,19867],[14500,20145],[14333,20435],[13875,21026],[13815,21158],[13774,21309]]]]},{"name":"황토 먼지지대","kind":"Plateau","density":105,"gas":190,"polys":[[[[12089,8228],[14552,8544],[14768,8518],[14873,8481],[14898,8472],[14902,8472],[16357,8411],[16651,8399],[16719,8414],[16844,8476],[17132,8753],[17220,8837],[17336,9013],[17463,9307],[17508,9377],[17543,9414],[17770,9537],[17893,9665],[18007,9833],[18030,9890],[18032,9905],[18039,9946],[18037,10002],[18035,10009],[18023,10062],[17933,10266],[17924,10322],[17930,10370],[18021,10565],[18041,10631],[18047,10713],[18031,10783],[17997,10842],[17950,10892],[17252,11315],[17076,11354],[16282,11311],[15887,11365],[15633,11437],[14676,11372],[13769,11116],[13160,11099],[13068,11064],[12988,11012],[12566,10599],[12513,10574],[12173,10538],[12118,10520],[11992,10439],[11875,10322],[11776,10184],[11740,10116],[11700,10042],[11611,9768],[11574,9336],[11534,8865],[11554,8674],[11611,8520],[11699,8400],[11811,8313],[11943,8256],[12089,8228]]]]},{"name":"서부 고밀도 지대","kind":"Plateau","density":215,"gas":170,"polys":[[[[11574,9336],[11662,9756],[11740,10116],[11864,10691],[11829,11638],[11967,12891],[11909,14137],[11773,14624],[11754,14662],[11384,15021],[11093,15559],[11216,15938],[11127,16300],[10947,16669],[10611,17058],[10366,17172],[10146,17275],[10136,17277],[9733,17349],[7940,18334],[7782,18415],[7580,18518],[7425,18598],[5328,18044],[4795,17716],[4703,17659],[4503,17825],[4503,17825],[4517,17856],[4163,18198],[3686,18657],[3248,18876],[1427,19140],[0,19105],[0,6774],[4779,5859],[4795,5861],[5460,5926],[5473,5927],[5611,5941],[5783,5972],[6306,6066],[7233,6232],[7578,6294],[7606,6299],[7675,6311],[7945,6453],[8079,6523],[8223,6598],[8345,6662],[8858,7127],[9291,7520],[9324,7527],[9959,7666],[10378,7757],[10417,7790],[10682,8011],[10909,8291],[11133,8569],[11512,9036],[11574,9336]]]]},{"name":"북방 먼지지대","kind":"Desert","density":92,"gas":150,"polys":[[[[23339,1491],[23185,1921],[23151,2085],[23107,2777],[23059,2982],[22986,3163],[22888,3318],[22761,3445],[22605,3543],[22418,3611],[20094,3696],[19568,3853],[19083,4137],[18404,4765],[18344,4821],[18272,4888],[18176,4939],[17922,5076],[17550,5142],[14771,4658],[14713,4660],[14651,4662],[14556,4703],[14492,4796],[14415,5186],[14292,5353],[14117,5469],[13491,5709],[13317,5815],[13195,5966],[13063,6440],[13038,6528],[13001,6609],[12938,6708],[12840,6859],[12559,7520],[12437,7680],[12259,7825],[12042,7950],[11583,8113],[11555,8123],[11104,8163],[10657,7903],[10494,7808],[10417,7790],[10188,7735],[9833,7650],[9325,7528],[9291,7520],[9032,7314],[8858,7127],[8793,7057],[8416,6654],[8183,6507],[7945,6453],[7876,6437],[7840,6429],[7719,6362],[7606,6299],[7496,6238],[7377,6197],[6889,6128],[5783,5972],[5470,5927],[5460,5926],[5027,5865],[4765,5755],[4548,5664],[4332,5507],[4140,5310],[3980,5069],[3859,4784],[3805,4567],[3784,4361],[3794,4167],[3832,3983],[3895,3808],[4476,2981],[4521,2882],[4547,2778],[4557,2658],[4528,2079],[4560,1914],[4669,1355],[5267,1143],[8221,1546],[8405,1526],[9117,1446],[10410,1302],[12114,670],[15713,567],[16225,400],[16891,0],[23443,0],[23339,1491]]]]},{"name":"북서 먼지지대","kind":"Desert","density":115,"gas":180,"polys":[[[[15232,5085],[17619,5657],[17847,5808],[17977,5939],[18004,5983],[18022,6029],[18034,6076],[18039,6126],[18031,6231],[17926,6668],[17896,6731],[17857,6790],[17757,6893],[17673,7018],[17608,7168],[17564,7329],[17544,7530],[17625,8016],[17625,8123],[17615,8178],[17595,8231],[17180,8743],[17158,8755],[17132,8753],[17125,8752],[17086,8735],[16846,8543],[16667,8452],[16357,8411],[15749,8330],[15190,8381],[14902,8472],[14874,8481],[14873,8481],[14672,8439],[14664,8441],[14606,8477],[13276,8374],[13128,8333],[13068,8300],[13025,8256],[13003,8213],[12989,8162],[12961,7814],[12836,7209],[12842,7070],[12912,6762],[12938,6708],[13063,6440],[13194,6160],[13387,5889],[13567,5710],[13652,5662],[14151,5529],[14185,5527],[14212,5540],[14234,5562],[14273,5618],[14295,5642],[14322,5656],[14356,5656],[14395,5641],[15044,5113],[15097,5094],[15232,5085]]]]},{"name":"대흥안 소행성대","kind":"Range/mtn","density":205,"gas":120,"polys":[[[[24907,2556],[24884,2703],[23743,2695],[23445,2775],[23325,2829],[23280,2837],[23247,2823],[23227,2778],[23221,2695],[23637,0],[27864,0],[27796,92],[27370,668],[27071,1072],[26630,1462],[26416,1650],[25093,2357],[24980,2444],[24907,2556]]]]},{"name":"음산 파편대","kind":"Range/mtn","density":190,"gas":125,"polys":[[[[18280,4318],[18404,4765],[18407,4777],[18344,4821],[18176,4939],[17981,5077],[17652,5165],[14713,4660],[14571,4636],[14421,4812],[14032,4953],[13703,4777],[13314,4459],[13584,3859],[14046,3674],[14995,3596],[17891,4036],[18280,4318]]]]},{"name":"동북 파편대","kind":"Range/mtn","density":184,"gas":95,"polys":[[[[33651,4411],[33652,4453],[33652,4453],[33651,4506],[33694,4574],[33710,4616],[33715,4660],[33713,4715],[33701,4752],[33622,4895],[33605,4941],[33604,4982],[33626,5012],[33678,5030],[33672,5069],[33655,5106],[33629,5140],[33583,5180],[33361,5274],[33280,5339],[33253,5379],[33027,5572],[33026,5572],[32939,5642],[32819,5682],[32742,5802],[32658,5870],[32557,5911],[32482,5964],[32314,5967],[32196,6004],[32111,6104],[31858,6218],[31823,6304],[31840,6437],[31841,6515],[31806,6536],[31529,6422],[31481,6389],[31444,6347],[31424,6292],[31420,6246],[31424,6210],[31445,6130],[31445,6102],[31434,6069],[31390,5998],[31043,5602],[31002,5527],[30979,5440],[30970,5016],[30969,4962],[30975,4935],[30982,4918],[30990,4906],[31038,4866],[31054,4846],[31095,4812],[31101,4805],[31107,4793],[31109,4779],[31107,4724],[31109,4711],[31114,4700],[31138,4672],[31166,4650],[31433,4565],[31485,4529],[31606,4394],[31631,4381],[31655,4378],[31768,4397],[32022,4339],[32061,4317],[32097,4288],[32129,4249],[32170,4176],[32313,3760],[32354,3690],[32409,3633],[33007,3322],[33947,3115],[34004,3123],[34057,3143],[34103,3177],[34158,3253],[34292,3342],[34314,3363],[34393,3524],[34402,3557],[34403,3589],[34397,3620],[34380,3652],[34355,3679],[34318,3699],[34308,3698],[34274,3723],[34131,3799],[34002,3941],[33978,3954],[33926,4009],[33877,4078],[33789,4174],[33729,4274],[33713,4288],[33680,4353],[33656,4393],[33651,4411]]]]},{"name":"익주 분지공간","kind":"Basin","density":0,"gas":32,"polys":[[[[12915,14166],[13005,14171],[13463,14063],[13511,14065],[13557,14076],[13603,14098],[13816,14285],[13856,14309],[14340,14418],[14419,14464],[14480,14529],[14516,14616],[14500,14641],[14490,14678],[14498,15009],[14422,15352],[14365,15503],[14338,15553],[14342,15611],[14409,15674],[14920,15959],[15008,16031],[15040,16101],[15036,16142],[15029,16175],[15017,16200],[15000,16219],[14977,16234],[14393,16445],[14345,16463],[14102,16551],[13710,16977],[13563,17136],[13505,17172],[13371,17186],[13011,17221],[12154,17305],[12098,17289],[12007,17237],[11541,16819],[11473,16758],[11346,16644],[11293,16562],[11258,16455],[11251,15482],[11307,15304],[11397,15149],[11452,15084],[11576,14976],[11991,14402],[12336,14057],[12475,13977],[12537,13956],[12595,13948],[12649,13951],[12699,13967],[12744,13994],[12764,14012],[12836,14122],[12854,14140],[12876,14154],[12915,14166]]]]},{"name":"중원 개방공간","kind":"Plain","density":0,"gas":15,"polys":[[[[23426,6594],[23355,6947],[23343,7095],[23371,7293],[23366,7309],[23369,7375],[23388,7422],[23406,7549],[23424,7587],[23453,7615],[23507,7641],[23546,7688],[23667,7762],[23698,7799],[23772,7827],[23851,7835],[24198,7904],[24197,7940],[24223,7936],[24385,7873],[24422,7873],[24471,7908],[24547,7980],[24569,8009],[24615,8096],[24622,8191],[24625,8223],[24652,8251],[24654,8260],[24602,8349],[24584,8359],[24577,8391],[24543,8451],[24527,8504],[24523,8562],[24531,8632],[24585,8834],[24714,11079],[24736,11136],[24732,11151],[24762,11252],[24864,11251],[24993,11325],[25086,11418],[25245,11504],[25368,11540],[25544,11641],[25633,11713],[25670,11760],[25703,11817],[25756,11976],[25801,12134],[25828,12199],[25865,12312],[25868,12362],[25954,12498],[25966,12521],[26063,12763],[26176,12979],[26179,12990],[26181,13000],[26187,13186],[26163,13236],[26164,13339],[26279,13433],[26537,13543],[26578,13575],[26606,13605],[26615,13621],[26625,13652],[26629,13677],[26631,13794],[26670,13847],[26687,13863],[26695,13873],[26712,13886],[26730,13891],[26732,13892],[26860,13949],[26925,14007],[26945,14034],[27016,14297],[26936,14300],[26865,14288],[26586,14141],[26514,14137],[26412,14158],[26266,14131],[26111,13968],[26000,13919],[25881,13894],[25596,14034],[25524,14024],[25503,14040],[25470,14064],[25602,14094],[25735,14048],[25862,13980],[26047,14016],[26078,14077],[26108,14180],[26235,14250],[26335,14281],[26462,14372],[26586,14515],[26848,14680],[26934,14808],[26976,15112],[26940,15130],[26861,15136],[26735,15159],[26673,15193],[26660,15194],[26624,15209],[26605,15227],[26597,15249],[26596,15257],[26551,15300],[26286,15442],[26262,15485],[26224,15532],[26176,15622],[26141,15643],[26092,15630],[26072,15631],[25974,15609],[25821,15612],[25648,15716],[25638,15727],[25615,15726],[25563,15700],[25520,15637],[25505,15565],[25517,15327],[25503,15252],[25462,15184],[25382,15128],[24914,14956],[23727,15046],[23527,15152],[23500,15159],[23473,15159],[23443,15148],[23408,15127],[22775,14357],[22571,14182],[22503,14144],[22121,14075],[22059,14042],[21951,13930],[21863,13884],[21228,13706],[20893,13484],[20756,13342],[19964,12066],[19586,11035],[19583,10944],[19656,10869],[20412,10570],[20492,10491],[20792,9609],[20799,9505],[20793,9451],[20770,9368],[20702,9243],[20695,9230],[20687,9200],[20682,9163],[20682,9126],[20700,8973],[20730,8729],[20693,8092],[20656,7447],[20688,7146],[20722,7029],[20737,7002],[20854,6862],[20868,6828],[20889,6737],[20903,6486],[20918,6417],[20950,6361],[21006,6319],[21096,6294],[21244,6295],[21771,6500],[21828,6498],[21876,6480],[21918,6445],[21956,6392],[22172,5940],[22313,5764],[22395,5701],[22483,5664],[22577,5659],[22643,5680],[22706,5723],[23051,6127],[23310,6300],[23361,6350],[23401,6412],[23423,6492],[23426,6594]]],[[[27013,14510],[26950,14536],[26729,14450],[26573,14356],[26480,14242],[26467,14195],[26575,14203],[26682,14244],[26705,14306],[26748,14326],[26777,14363],[26973,14448],[27003,14474],[27017,14503],[27013,14510]]]]},{"name":"요동 개방공간","kind":"Plain","density":0,"gas":18,"polys":[[[[29789,2674],[29754,2681],[29730,2678],[29713,2669],[29666,2626],[29641,2615],[29605,2611],[29511,2618],[29426,2640],[29348,2676],[29208,2786],[28635,3647],[28569,3825],[28549,3991],[28553,4317],[28542,4407],[28520,4488],[28488,4552],[28446,4601],[28396,4637],[28000,4749],[27944,4781],[27896,4822],[27596,5209],[27456,5279],[27302,5299],[27211,5283],[27016,5158],[26996,5026],[26974,5031],[26937,5124],[26918,5143],[26866,5102],[26763,4967],[26699,4806],[26695,4695],[26728,4575],[27092,4017],[27229,3704],[27224,3593],[27199,3514],[27158,3458],[26897,3297],[26674,3087],[26569,3025],[26297,2938],[25210,2874],[25114,2842],[25042,2797],[25002,2737],[25007,2599],[25085,2465],[25215,2337],[25864,1987],[26193,1889],[26279,1838],[26630,1462],[27370,668],[27674,342],[27721,269],[27796,92],[27825,23],[27848,0],[31625,0],[31687,318],[31683,374],[31669,431],[31211,1138],[31029,1741],[31006,2001],[30992,2047],[30966,2094],[30879,2180],[30569,2365],[30148,2475],[29789,2674]]]]},{"name":"하서 개방축","kind":"Geoarea","density":15,"gas":65,"polys":[[[[8560,5223],[11347,7316],[11477,7483],[11595,7707],[11630,7828],[11641,7947],[11617,8059],[11583,8113],[11554,8160],[11476,8226],[11394,8264],[11311,8279],[11227,8273],[11146,8251],[10997,8171],[10657,7903],[10574,7837],[10334,7713],[9959,7666],[9833,7650],[9510,7609],[9359,7558],[9325,7528],[9324,7527],[8793,7057],[8345,6662],[8235,6609],[7994,6494],[7876,6437],[7719,6362],[7578,6294],[7508,6260],[6889,6128],[6583,6063],[5813,5918],[5473,5927],[5470,5927],[5316,5932],[5004,5941],[4885,5911],[4797,5862],[4795,5861],[4792,5859],[4765,5804],[4765,5755],[4765,5718],[4942,4935],[4985,4854],[5048,4795],[5125,4755],[7673,4814],[8560,5223]]]]},{"name":"삼협 협착지대","kind":"Gorge","density":180,"gas":160,"polys":[[[[18514,15673],[18452,15758],[18337,15875],[18215,15958],[18087,16009],[17954,16033],[17675,16016],[16762,15803],[16508,15836],[16433,15819],[16139,15735],[15313,15765],[15268,15757],[15206,15728],[15078,15628],[14859,15363],[14792,15244],[14774,15181],[14766,15117],[14768,15052],[14798,14916],[14862,14777],[14967,14616],[15080,14507],[15145,14468],[15296,14420],[17822,14295],[18127,14359],[18482,14534],[18520,14577],[18548,14625],[18566,14678],[18603,15386],[18586,15497],[18558,15590],[18514,15673]]]]},{"name":"한중 분지공간","kind":"Basin","density":0,"gas":0,"polys":[[[[14034,12700],[15010,12650],[15349,12900],[14840,13250],[14077,13150]]]]},{"name":"남양 분지공간","kind":"Basin","density":0,"gas":0,"polys":[[[[18571,12450],[19589,12450],[19801,13300],[19080,14250],[18317,13500]]]]},{"name":"강한 평원공간","kind":"Plain","density":0,"gas":0,"polys":[[[[18402,15150],[19758,14800],[20861,15300],[20691,16350],[18656,16550]]]]}],"external":[{"name":"서역","at":[848,5700]}],"bodies":[{"id":"BODY-RGN-01-01","name":"양양","kind":"terran","role":null,"at":[18774.7,13960.0],"r":20,"rgn":"RGN-01","eco":true,"seed":552,"parent":"BODY-RGN-01-01-STAR","owner":"wei"},{"id":"BODY-RGN-01-02","name":"번성","kind":"colony","role":null,"at":[18922.6,13954.1],"r":13,"rgn":"RGN-01","eco":true,"seed":995,"parent":null,"owner":"wei"},{"id":"BODY-RGN-02-01","name":"강릉","kind":"terran","role":null,"at":[18859.5,15670.0],"r":20,"rgn":"RGN-02","eco":true,"seed":402,"parent":"BODY-RGN-02-01-STAR","owner":"wei"},{"id":"BODY-RGN-02-02","name":"강하","kind":"colony","role":null,"at":[19000.2,15551.4],"r":13,"rgn":"RGN-02","eco":true,"seed":248,"parent":null,"owner":"shu"},{"id":"BODY-RGN-02-03","name":"공안","kind":"colony","role":null,"at":[18587.5,15748.1],"r":13,"rgn":"RGN-02","eco":true,"seed":857,"parent":null,"owner":"wei"},{"id":"BODY-RGN-03-01","name":"장사","kind":"colony","role":null,"at":[19487.0,17800.0],"r":13,"rgn":"RGN-03","eco":true,"seed":920,"parent":null,"owner":"shu"},{"id":"BODY-RGN-03-02","name":"무릉","kind":"colony","role":null,"at":[19479.9,17729.4],"r":13,"rgn":"RGN-03","eco":true,"seed":809,"parent":null,"owner":"shu"},{"id":"BODY-RGN-03-03","name":"계양","kind":"colony","role":null,"at":[19759.3,17706.2],"r":13,"rgn":"RGN-03","eco":true,"seed":928,"parent":null,"owner":"shu"},{"id":"BODY-RGN-03-04","name":"영릉","kind":"colony","role":null,"at":[19695.6,17838.0],"r":13,"rgn":"RGN-03","eco":true,"seed":240,"parent":null,"owner":"shu"},{"id":"BODY-RGN-04-01","name":"구지","kind":"terran","role":null,"at":[20394.4,16750.0],"r":20,"rgn":"RGN-04","eco":true,"seed":512,"parent":"BODY-RGN-04-01-STAR","owner":"war"},{"id":"BODY-RGN-04-02","name":"형혹","kind":"planet","role":null,"at":[20489.4,16802.0],"r":9,"rgn":"RGN-04","eco":true,"seed":61,"parent":"BODY-RGN-04-01-STAR","owner":"war"},{"id":"BODY-RGN-04-03","name":"태음","kind":"moon","role":null,"at":[20429.4,16758.0],"r":5,"rgn":"RGN-04","eco":true,"seed":821,"parent":"BODY-RGN-04-01","owner":"war"},{"id":"BODY-RGN-05-01","name":"성도","kind":"terran","role":null,"at":[11931.4,15330.0],"r":20,"rgn":"RGN-05","eco":true,"seed":725,"parent":"BODY-RGN-05-01-STAR","owner":"zhang"},{"id":"BODY-RGN-05-02","name":"건위","kind":"colony","role":null,"at":[11898.3,15398.4],"r":13,"rgn":"RGN-05","eco":true,"seed":724,"parent":null,"owner":"zhang"},{"id":"BODY-RGN-06-01","name":"재동","kind":"colony","role":null,"at":[12855.7,14360.0],"r":13,"rgn":"RGN-06","eco":true,"seed":407,"parent":null,"owner":"zhang"},{"id":"BODY-RGN-06-02","name":"강유","kind":"colony","role":null,"at":[12712.3,14134.8],"r":13,"rgn":"RGN-06","eco":true,"seed":459,"parent":null,"owner":"zhang"},{"id":"BODY-RGN-07-01","name":"파군","kind":"colony","role":null,"at":[14034.4,16440.0],"r":13,"rgn":"RGN-07","eco":true,"seed":552,"parent":null,"owner":"zhang"},{"id":"BODY-RGN-07-02","name":"강주","kind":"colony","role":null,"at":[13824.5,16377.4],"r":13,"rgn":"RGN-07","eco":true,"seed":375,"parent":null,"owner":"zhang"},{"id":"BODY-RGN-08-01","name":"남정","kind":"terran","role":null,"at":[14441.4,12930.0],"r":20,"rgn":"RGN-08","eco":true,"seed":638,"parent":"BODY-RGN-08-01-STAR","owner":"lu"},{"id":"BODY-RGN-08-02","name":"면양","kind":"colony","role":null,"at":[14346.4,12887.9],"r":13,"rgn":"RGN-08","eco":true,"seed":131,"parent":null,"owner":"lu"},{"id":"BODY-RGN-08-03","name":"양평관","kind":"station","role":null,"at":[14545.7,12776.0],"r":13,"rgn":"RGN-08","eco":true,"seed":597,"parent":null,"owner":"lu"},{"id":"BODY-RGN-09-01","name":"상용","kind":"colony","role":null,"at":[17299.2,13780.0],"r":13,"rgn":"RGN-09","eco":true,"seed":926,"parent":null,"owner":"lu"},{"id":"BODY-RGN-09-02","name":"방릉","kind":"colony","role":null,"at":[17336.5,13842.8],"r":13,"rgn":"RGN-09","eco":true,"seed":892,"parent":null,"owner":"lu"},{"id":"BODY-RGN-09-03","name":"무도","kind":"colony","role":null,"at":[17101.1,13710.3],"r":13,"rgn":"RGN-09","eco":true,"seed":781,"parent":null,"owner":"lu"},{"id":"BODY-RGN-10-01","name":"익주군","kind":"colony","role":null,"at":[11702.4,20500.0],"r":13,"rgn":"RGN-10","eco":true,"seed":295,"parent":null,"owner":"none"},{"id":"BODY-RGN-10-02","name":"건녕","kind":"colony","role":null,"at":[11911.0,20468.1],"r":13,"rgn":"RGN-10","eco":true,"seed":93,"parent":null,"owner":"none"},{"id":"BODY-RGN-11-01","name":"월수","kind":"colony","role":null,"at":[10405.0,18100.0],"r":13,"rgn":"RGN-11","eco":true,"seed":441,"parent":null,"owner":"none"},{"id":"BODY-RGN-11-02","name":"장가","kind":"colony","role":null,"at":[10585.9,18279.7],"r":13,"rgn":"RGN-11","eco":true,"seed":160,"parent":null,"owner":"none"},{"id":"BODY-RGN-12-01","name":"허","kind":"terran","role":null,"at":[20224.8,11960.0],"r":20,"rgn":"RGN-12","eco":true,"seed":958,"parent":"BODY-RGN-12-01-STAR","owner":"wei"},{"id":"BODY-RGN-12-02","name":"영천","kind":"colony","role":null,"at":[19978.8,11892.8],"r":13,"rgn":"RGN-12","eco":true,"seed":853,"parent":null,"owner":"wei"},{"id":"BODY-RGN-13-01","name":"여남","kind":"colony","role":null,"at":[20648.8,12990.0],"r":13,"rgn":"RGN-13","eco":true,"seed":808,"parent":null,"owner":"wei"},{"id":"BODY-RGN-13-02","name":"진국","kind":"colony","role":null,"at":[20601.1,13021.2],"r":13,"rgn":"RGN-13","eco":true,"seed":21,"parent":null,"owner":"wei"},{"id":"BODY-RGN-13-03","name":"초","kind":"colony","role":null,"at":[20384.5,13129.9],"r":13,"rgn":"RGN-13","eco":true,"seed":537,"parent":null,"owner":"wei"},{"id":"BODY-RGN-14-01","name":"업","kind":"terran","role":null,"at":[20877.8,9720.0],"r":20,"rgn":"RGN-14","eco":true,"seed":128,"parent":"BODY-RGN-14-01-STAR","owner":"wei"},{"id":"BODY-RGN-14-02","name":"위군","kind":"colony","role":null,"at":[20958.5,9624.5],"r":13,"rgn":"RGN-14","eco":true,"seed":942,"parent":null,"owner":"wei"},{"id":"BODY-RGN-15-01","name":"한단","kind":"colony","role":null,"at":[20767.5,9380.0],"r":13,"rgn":"RGN-15","eco":true,"seed":751,"parent":null,"owner":"wei"},{"id":"BODY-RGN-15-02","name":"중산","kind":"colony","role":null,"at":[20858.3,9505.6],"r":13,"rgn":"RGN-15","eco":true,"seed":385,"parent":null,"owner":"wei"},{"id":"BODY-RGN-16-01","name":"발해","kind":"colony","role":null,"at":[22751.8,7700.0],"r":13,"rgn":"RGN-16","eco":true,"seed":707,"parent":null,"owner":"wei"},{"id":"BODY-RGN-16-02","name":"하간","kind":"colony","role":null,"at":[22903.3,7593.8],"r":13,"rgn":"RGN-16","eco":true,"seed":77,"parent":null,"owner":"wei"},{"id":"BODY-RGN-17-01","name":"낙양","kind":"terran","role":null,"at":[19037.6,11380.0],"r":20,"rgn":"RGN-17","eco":true,"seed":841,"parent":"BODY-RGN-17-01-STAR","owner":"wei"},{"id":"BODY-RGN-17-02","name":"하남","kind":"colony","role":null,"at":[18898.7,11376.1],"r":13,"rgn":"RGN-17","eco":true,"seed":376,"parent":null,"owner":"wei"},{"id":"BODY-RGN-18-01","name":"장안","kind":"terran","role":null,"at":[16061.1,11740.0],"r":20,"rgn":"RGN-18","eco":true,"seed":81,"parent":"BODY-RGN-18-01-STAR","owner":"wei"},{"id":"BODY-RGN-18-02","name":"경조","kind":"colony","role":null,"at":[16013.8,11654.2],"r":13,"rgn":"RGN-18","eco":true,"seed":379,"parent":null,"owner":"wei"},{"id":"BODY-RGN-19-01","name":"하동","kind":"colony","role":null,"at":[17799.5,10970.0],"r":13,"rgn":"RGN-19","eco":true,"seed":806,"parent":null,"owner":"wei"},{"id":"BODY-RGN-19-02","name":"홍농","kind":"colony","role":null,"at":[17678.5,11191.0],"r":13,"rgn":"RGN-19","eco":true,"seed":354,"parent":null,"owner":"wei"},{"id":"BODY-RGN-20-01","name":"건업","kind":"terran","role":null,"at":[24405.4,13940.0],"r":20,"rgn":"RGN-20","eco":true,"seed":570,"parent":"BODY-RGN-20-01-STAR","owner":"wu"},{"id":"BODY-RGN-20-02","name":"단양","kind":"colony","role":null,"at":[24515.5,13771.8],"r":13,"rgn":"RGN-20","eco":true,"seed":644,"parent":null,"owner":"wu"},{"id":"BODY-RGN-21-01","name":"오","kind":"terran","role":null,"at":[25931.8,14700.0],"r":20,"rgn":"RGN-21","eco":true,"seed":256,"parent":"BODY-RGN-21-01-STAR","owner":"wu"},{"id":"BODY-RGN-21-02","name":"회계","kind":"colony","role":null,"at":[25904.7,14524.1],"r":13,"rgn":"RGN-21","eco":true,"seed":639,"parent":null,"owner":"wu"},{"id":"BODY-RGN-21-03","name":"오정","kind":"colony","role":null,"at":[25731.6,14633.4],"r":13,"rgn":"RGN-21","eco":true,"seed":211,"parent":null,"owner":"wu"},{"id":"BODY-RGN-22-01","name":"예장","kind":"colony","role":null,"at":[21929.3,17320.0],"r":13,"rgn":"RGN-22","eco":true,"seed":225,"parent":null,"owner":"wu"},{"id":"BODY-RGN-23-01","name":"수춘","kind":"terran","role":null,"at":[22717.9,13430.0],"r":20,"rgn":"RGN-23","eco":true,"seed":526,"parent":"BODY-RGN-23-01-STAR","owner":"wei"},{"id":"BODY-RGN-23-02","name":"구강","kind":"colony","role":null,"at":[22901.7,13346.3],"r":13,"rgn":"RGN-23","eco":true,"seed":805,"parent":null,"owner":"wei"},{"id":"BODY-RGN-23-03","name":"종리","kind":"colony","role":null,"at":[22711.2,13371.4],"r":13,"rgn":"RGN-23","eco":true,"seed":145,"parent":null,"owner":"wei"},{"id":"BODY-RGN-24-01","name":"합비","kind":"colony","role":null,"at":[23091.0,14180.0],"r":13,"rgn":"RGN-24","eco":true,"seed":174,"parent":null,"owner":"wei"},{"id":"BODY-RGN-24-02","name":"여강","kind":"colony","role":null,"at":[22931.6,14035.7],"r":13,"rgn":"RGN-24","eco":true,"seed":873,"parent":null,"owner":"wei"},{"id":"BODY-RGN-25-01","name":"완","kind":"terran","role":null,"at":[19105.4,13010.0],"r":20,"rgn":"RGN-25","eco":true,"seed":585,"parent":"BODY-RGN-25-01-STAR","owner":"wei"},{"id":"BODY-RGN-25-02","name":"섭","kind":"colony","role":null,"at":[19255.6,13101.9],"r":13,"rgn":"RGN-25","eco":true,"seed":882,"parent":null,"owner":"wei"},{"id":"BODY-RGN-26-01","name":"신야","kind":"colony","role":null,"at":[18961.3,13480.0],"r":13,"rgn":"RGN-26","eco":true,"seed":172,"parent":null,"owner":"wei"},{"id":"BODY-RGN-26-02","name":"육양","kind":"colony","role":null,"at":[18990.2,13529.1],"r":13,"rgn":"RGN-26","eco":true,"seed":405,"parent":null,"owner":"wei"},{"id":"BODY-RGN-26-03","name":"박망","kind":"colony","role":null,"at":[18919.7,13652.0],"r":13,"rgn":"RGN-26","eco":true,"seed":11,"parent":null,"owner":"wei"},{"id":"BODY-RGN-27-01","name":"부풍","kind":"colony","role":null,"at":[15179.2,11620.0],"r":13,"rgn":"RGN-27","eco":true,"seed":516,"parent":null,"owner":"ma"},{"id":"BODY-RGN-27-02","name":"안정","kind":"colony","role":null,"at":[15309.5,11485.9],"r":13,"rgn":"RGN-27","eco":true,"seed":55,"parent":null,"owner":"ma"},{"id":"BODY-RGN-27-03","name":"장안 서부","kind":"terran","role":null,"at":[14952.0,11661.4],"r":20,"rgn":"RGN-27","eco":true,"seed":130,"parent":"BODY-RGN-27-03-STAR","owner":"ma"},{"id":"BODY-RGN-28-01","name":"천수","kind":"colony","role":null,"at":[13330.6,11420.0],"r":13,"rgn":"RGN-28","eco":true,"seed":451,"parent":null,"owner":"ma"},{"id":"BODY-RGN-29-01","name":"무도","kind":"colony","role":null,"at":[12660.6,12600.0],"r":13,"rgn":"RGN-29","eco":true,"seed":549,"parent":null,"owner":"ma"},{"id":"BODY-RGN-30-01","name":"계","kind":"terran","role":null,"at":[22387.2,6100.0],"r":20,"rgn":"RGN-30","eco":true,"seed":618,"parent":"BODY-RGN-30-01-STAR","owner":"wei"},{"id":"BODY-RGN-30-02","name":"탁군","kind":"colony","role":null,"at":[22629.5,6209.7],"r":13,"rgn":"RGN-30","eco":true,"seed":383,"parent":null,"owner":"wei"},{"id":"BODY-RGN-31-01","name":"어양","kind":"colony","role":null,"at":[23235.2,5950.0],"r":13,"rgn":"RGN-31","eco":true,"seed":866,"parent":null,"owner":"wei"},{"id":"BODY-RGN-31-02","name":"우북평","kind":"colony","role":null,"at":[23314.2,5967.9],"r":13,"rgn":"RGN-31","eco":true,"seed":485,"parent":null,"owner":"wei"},{"id":"BODY-RGN-32-01","name":"양평","kind":"terran","role":null,"at":[28128.2,4730.0],"r":20,"rgn":"RGN-32","eco":true,"seed":339,"parent":"BODY-RGN-32-01-STAR","owner":"kang"},{"id":"BODY-RGN-32-02","name":"현도","kind":"colony","role":null,"at":[28396.6,4620.3],"r":13,"rgn":"RGN-32","eco":true,"seed":261,"parent":null,"owner":"kang"},{"id":"BODY-RGN-33-01","name":"낙랑","kind":"colony","role":null,"at":[30316.0,6980.0],"r":13,"rgn":"RGN-33","eco":true,"seed":959,"parent":null,"owner":"kang"},{"id":"BODY-RGN-33-02","name":"대방","kind":"colony","role":null,"at":[30063.4,7116.3],"r":13,"rgn":"RGN-33","eco":true,"seed":164,"parent":null,"owner":"kang"},{"id":"BODY-RGN-33-03","name":"요서","kind":"colony","role":null,"at":[30376.2,6970.3],"r":13,"rgn":"RGN-33","eco":true,"seed":823,"parent":null,"owner":"kang"},{"id":"BODY-RGN-34-01","name":"진류","kind":"terran","role":null,"at":[20648.8,11210.0],"r":20,"rgn":"RGN-34","eco":true,"seed":462,"parent":"BODY-RGN-34-01-STAR","owner":"wei"},{"id":"BODY-RGN-34-02","name":"동군","kind":"colony","role":null,"at":[20427.3,11195.1],"r":13,"rgn":"RGN-34","eco":true,"seed":873,"parent":null,"owner":"wei"},{"id":"BODY-RGN-34-03","name":"복양","kind":"colony","role":null,"at":[20765.3,11384.7],"r":13,"rgn":"RGN-34","eco":true,"seed":520,"parent":null,"owner":"wei"},{"id":"BODY-RGN-35-01","name":"태산","kind":"colony","role":null,"at":[22980.8,9800.0],"r":13,"rgn":"RGN-35","eco":true,"seed":348,"parent":null,"owner":"wei"},{"id":"BODY-RGN-35-02","name":"제음","kind":"colony","role":null,"at":[22805.0,10036.9],"r":13,"rgn":"RGN-35","eco":true,"seed":692,"parent":null,"owner":"wei"},{"id":"BODY-RGN-36-01","name":"임치","kind":"terran","role":null,"at":[23998.4,9180.0],"r":20,"rgn":"RGN-36","eco":true,"seed":466,"parent":"BODY-RGN-36-01-STAR","owner":"wei"},{"id":"BODY-RGN-36-02","name":"제남","kind":"colony","role":null,"at":[24087.9,9001.1],"r":13,"rgn":"RGN-36","eco":true,"seed":739,"parent":null,"owner":"wei"},{"id":"BODY-RGN-36-03","name":"평원","kind":"colony","role":null,"at":[24181.9,8984.7],"r":13,"rgn":"RGN-36","eco":true,"seed":624,"parent":null,"owner":"wei"},{"id":"BODY-RGN-37-01","name":"동래","kind":"colony","role":null,"at":[25779.2,8900.0],"r":13,"rgn":"RGN-37","eco":true,"seed":653,"parent":null,"owner":"wei"},{"id":"BODY-RGN-37-02","name":"북해","kind":"colony","role":null,"at":[25789.4,8946.9],"r":13,"rgn":"RGN-37","eco":true,"seed":739,"parent":null,"owner":"wei"},{"id":"BODY-RGN-38-01","name":"하비","kind":"terran","role":null,"at":[23710.1,11700.0],"r":20,"rgn":"RGN-38","eco":true,"seed":145,"parent":"BODY-RGN-38-01-STAR","owner":"wei"},{"id":"BODY-RGN-38-02","name":"팽성","kind":"colony","role":null,"at":[23988.2,11614.2],"r":13,"rgn":"RGN-38","eco":true,"seed":664,"parent":null,"owner":"wei"},{"id":"BODY-RGN-38-03","name":"동해","kind":"colony","role":null,"at":[23868.2,11790.1],"r":13,"rgn":"RGN-38","eco":true,"seed":985,"parent":null,"owner":"wei"},{"id":"BODY-RGN-39-01","name":"광릉","kind":"colony","role":null,"at":[24948.2,13610.0],"r":13,"rgn":"RGN-39","eco":true,"seed":243,"parent":null,"owner":"wei"},{"id":"BODY-RGN-39-02","name":"낭야","kind":"colony","role":null,"at":[24913.0,13567.7],"r":13,"rgn":"RGN-39","eco":true,"seed":193,"parent":null,"owner":"wei"},{"id":"BODY-RGN-40-01","name":"진양","kind":"terran","role":null,"at":[19122.4,8130.0],"r":20,"rgn":"RGN-40","eco":true,"seed":878,"parent":"BODY-RGN-40-01-STAR","owner":"wei"},{"id":"BODY-RGN-40-02","name":"상당","kind":"colony","role":null,"at":[19294.5,7997.8],"r":13,"rgn":"RGN-40","eco":true,"seed":983,"parent":null,"owner":"wei"},{"id":"BODY-RGN-41-01","name":"안문","kind":"colony","role":null,"at":[19453.1,6930.0],"r":13,"rgn":"RGN-41","eco":true,"seed":169,"parent":null,"owner":"wei"},{"id":"BODY-RGN-41-02","name":"서하","kind":"colony","role":null,"at":[19407.4,7017.8],"r":13,"rgn":"RGN-41","eco":true,"seed":390,"parent":null,"owner":"wei"},{"id":"BODY-RGN-41-03","name":"오원","kind":"colony","role":null,"at":[19602.2,7017.8],"r":13,"rgn":"RGN-41","eco":true,"seed":891,"parent":null,"owner":"wei"},{"id":"BODY-RGN-42-01","name":"무위","kind":"terran","role":null,"at":[10718.7,8070.0],"r":20,"rgn":"RGN-42","eco":true,"seed":872,"parent":"BODY-RGN-42-01-STAR","owner":"ma"},{"id":"BODY-RGN-42-02","name":"금성","kind":"colony","role":null,"at":[10830.1,7801.2],"r":13,"rgn":"RGN-42","eco":true,"seed":648,"parent":null,"owner":"ma"},{"id":"BODY-RGN-43-01","name":"돈황","kind":"colony","role":null,"at":[3951.7,5860.0],"r":13,"rgn":"RGN-43","eco":true,"seed":601,"parent":null,"owner":"ma"},{"id":"BODY-RGN-43-02","name":"주천","kind":"colony","role":null,"at":[3882.0,5718.2],"r":13,"rgn":"RGN-43","eco":true,"seed":368,"parent":null,"owner":"ma"},{"id":"BODY-RGN-44-01","name":"교지","kind":"terran","role":null,"at":[13440.8,24970.0],"r":20,"rgn":"RGN-44","eco":true,"seed":92,"parent":"BODY-RGN-44-01-STAR","owner":"xie"},{"id":"BODY-RGN-44-02","name":"구진","kind":"colony","role":null,"at":[13431.2,25038.3],"r":13,"rgn":"RGN-44","eco":true,"seed":320,"parent":null,"owner":"xie"},{"id":"BODY-RGN-44-03","name":"일남","kind":"colony","role":null,"at":[13501.2,24998.9],"r":13,"rgn":"RGN-44","eco":true,"seed":455,"parent":null,"owner":"xie"},{"id":"BODY-RGN-45-01","name":"남해","kind":"colony","role":null,"at":[19724.5,22870.0],"r":13,"rgn":"RGN-45","eco":true,"seed":971,"parent":null,"owner":"xie"},{"id":"BODY-RGN-45-02","name":"창오","kind":"colony","role":null,"at":[19653.5,22825.0],"r":13,"rgn":"RGN-45","eco":true,"seed":264,"parent":null,"owner":"xie"},{"id":"BODY-RGN-01-01-STAR","name":"양양 항성","kind":"star","role":"STAR","at":[18654.7,13935.0],"r":43,"rgn":"RGN-01","eco":false,"seed":239,"parent":null,"owner":"wei"},{"id":"BODY-RGN-01-01-INNER","name":"양양 내행성","kind":"planet","role":"INNER","at":[18688.7,13935.0],"r":5,"rgn":"RGN-01","eco":false,"seed":68,"parent":"BODY-RGN-01-01-STAR","owner":"wei"},{"id":"BODY-RGN-01-01-VENUS","name":"양양 금성형 행성","kind":"planet","role":"VENUS","at":[18717.7,13972.0],"r":11,"rgn":"RGN-01","eco":false,"seed":114,"parent":"BODY-RGN-01-01-STAR","owner":"wei"},{"id":"BODY-RGN-01-01-MOON","name":"양양 위성","kind":"moon","role":"MOON","at":[18809.7,13968.0],"r":5,"rgn":"RGN-01","eco":false,"seed":706,"parent":"BODY-RGN-01-01","owner":"wei"},{"id":"BODY-RGN-01-01-OUTER-1","name":"양양 외행성 1","kind":"planet","role":"OUTER-1","at":[18874.7,13928.0],"r":13,"rgn":"RGN-01","eco":false,"seed":941,"parent":"BODY-RGN-01-01-STAR","owner":"wei"},{"id":"BODY-RGN-01-01-OUTER-2","name":"양양 외행성 2","kind":"planet","role":"OUTER-2","at":[18898.7,13927.0],"r":10,"rgn":"RGN-01","eco":false,"seed":559,"parent":"BODY-RGN-01-01-STAR","owner":"wei"},{"id":"BODY-RGN-01-01-OUTER-3","name":"양양 외행성 3","kind":"planet","role":"OUTER-3","at":[18923.7,14004.0],"r":16,"rgn":"RGN-01","eco":false,"seed":456,"parent":"BODY-RGN-01-01-STAR","owner":"wei"},{"id":"BODY-RGN-01-01-OUTER-4","name":"양양 외행성 4","kind":"planet","role":"OUTER-4","at":[18944.7,14015.0],"r":10,"rgn":"RGN-01","eco":false,"seed":623,"parent":"BODY-RGN-01-01-STAR","owner":"wei"},{"id":"BODY-RGN-02-01-STAR","name":"강릉 항성","kind":"star","role":"STAR","at":[18739.5,15645.0],"r":43,"rgn":"RGN-02","eco":false,"seed":697,"parent":null,"owner":"wei"},{"id":"BODY-RGN-02-01-INNER","name":"강릉 내행성","kind":"planet","role":"INNER","at":[18773.5,15645.0],"r":5,"rgn":"RGN-02","eco":false,"seed":666,"parent":"BODY-RGN-02-01-STAR","owner":"wei"},{"id":"BODY-RGN-02-01-VENUS","name":"강릉 금성형 행성","kind":"planet","role":"VENUS","at":[18802.5,15682.0],"r":11,"rgn":"RGN-02","eco":false,"seed":381,"parent":"BODY-RGN-02-01-STAR","owner":"wei"},{"id":"BODY-RGN-02-01-MOON","name":"강릉 위성","kind":"moon","role":"MOON","at":[18894.5,15678.0],"r":5,"rgn":"RGN-02","eco":false,"seed":163,"parent":"BODY-RGN-02-01","owner":"wei"},{"id":"BODY-RGN-02-01-OUTER-1","name":"강릉 외행성 1","kind":"planet","role":"OUTER-1","at":[18964.5,15624.0],"r":12,"rgn":"RGN-02","eco":false,"seed":811,"parent":"BODY-RGN-02-01-STAR","owner":"wei"},{"id":"BODY-RGN-04-01-STAR","name":"태양","kind":"star","role":"STAR","at":[20274.4,16725.0],"r":43,"rgn":"RGN-04","eco":false,"seed":682,"parent":null,"owner":"war"},{"id":"BODY-RGN-04-01-INNER","name":"수성","kind":"planet","role":"INNER","at":[20308.4,16725.0],"r":5,"rgn":"RGN-04","eco":false,"seed":773,"parent":"BODY-RGN-04-01-STAR","owner":"war"},{"id":"BODY-RGN-04-01-VENUS","name":"금성","kind":"planet","role":"VENUS","at":[20337.4,16762.0],"r":11,"rgn":"RGN-04","eco":false,"seed":257,"parent":"BODY-RGN-04-01-STAR","owner":"war"},{"id":"BODY-RGN-04-01-JUPITER","name":"목성","kind":"planet","role":"JUPITER","at":[20554.4,16716.0],"r":18,"rgn":"RGN-04","eco":false,"seed":216,"parent":"BODY-RGN-04-01-STAR","owner":"war"},{"id":"BODY-RGN-05-01-STAR","name":"성도 항성","kind":"star","role":"STAR","at":[11811.4,15305.0],"r":43,"rgn":"RGN-05","eco":false,"seed":881,"parent":null,"owner":"zhang"},{"id":"BODY-RGN-05-01-INNER","name":"성도 내행성","kind":"planet","role":"INNER","at":[11845.4,15305.0],"r":5,"rgn":"RGN-05","eco":false,"seed":975,"parent":"BODY-RGN-05-01-STAR","owner":"zhang"},{"id":"BODY-RGN-05-01-VENUS","name":"성도 금성형 행성","kind":"planet","role":"VENUS","at":[11874.4,15342.0],"r":11,"rgn":"RGN-05","eco":false,"seed":465,"parent":"BODY-RGN-05-01-STAR","owner":"zhang"},{"id":"BODY-RGN-05-01-MOON","name":"성도 위성","kind":"moon","role":"MOON","at":[11966.4,15338.0],"r":5,"rgn":"RGN-05","eco":false,"seed":898,"parent":"BODY-RGN-05-01","owner":"zhang"},{"id":"BODY-RGN-05-01-OUTER-1","name":"성도 외행성 1","kind":"planet","role":"OUTER-1","at":[12031.4,15283.0],"r":14,"rgn":"RGN-05","eco":false,"seed":282,"parent":"BODY-RGN-05-01-STAR","owner":"zhang"},{"id":"BODY-RGN-08-01-STAR","name":"남정 항성","kind":"star","role":"STAR","at":[14321.4,12905.0],"r":43,"rgn":"RGN-08","eco":false,"seed":737,"parent":null,"owner":"lu"},{"id":"BODY-RGN-08-01-INNER","name":"남정 내행성","kind":"planet","role":"INNER","at":[14355.4,12905.0],"r":5,"rgn":"RGN-08","eco":false,"seed":764,"parent":"BODY-RGN-08-01-STAR","owner":"lu"},{"id":"BODY-RGN-08-01-VENUS","name":"남정 금성형 행성","kind":"planet","role":"VENUS","at":[14384.4,12942.0],"r":11,"rgn":"RGN-08","eco":false,"seed":568,"parent":"BODY-RGN-08-01-STAR","owner":"lu"},{"id":"BODY-RGN-08-01-MOON","name":"남정 위성","kind":"moon","role":"MOON","at":[14476.4,12938.0],"r":5,"rgn":"RGN-08","eco":false,"seed":9,"parent":"BODY-RGN-08-01","owner":"lu"},{"id":"BODY-RGN-08-01-OUTER-1","name":"남정 외행성 1","kind":"planet","role":"OUTER-1","at":[14543.4,12890.0],"r":13,"rgn":"RGN-08","eco":false,"seed":309,"parent":"BODY-RGN-08-01-STAR","owner":"lu"},{"id":"BODY-RGN-12-01-STAR","name":"허 항성","kind":"star","role":"STAR","at":[20104.8,11935.0],"r":43,"rgn":"RGN-12","eco":false,"seed":261,"parent":null,"owner":"wei"},{"id":"BODY-RGN-12-01-INNER","name":"허 내행성","kind":"planet","role":"INNER","at":[20138.8,11935.0],"r":5,"rgn":"RGN-12","eco":false,"seed":785,"parent":"BODY-RGN-12-01-STAR","owner":"wei"},{"id":"BODY-RGN-12-01-VENUS","name":"허 금성형 행성","kind":"planet","role":"VENUS","at":[20167.8,11972.0],"r":11,"rgn":"RGN-12","eco":false,"seed":14,"parent":"BODY-RGN-12-01-STAR","owner":"wei"},{"id":"BODY-RGN-12-01-MOON","name":"허 위성","kind":"moon","role":"MOON","at":[20259.8,11968.0],"r":5,"rgn":"RGN-12","eco":false,"seed":624,"parent":"BODY-RGN-12-01","owner":"wei"},{"id":"BODY-RGN-12-01-OUTER-1","name":"허 외행성 1","kind":"planet","role":"OUTER-1","at":[20334.8,12002.0],"r":15,"rgn":"RGN-12","eco":false,"seed":755,"parent":"BODY-RGN-12-01-STAR","owner":"wei"},{"id":"BODY-RGN-14-01-STAR","name":"업 항성","kind":"star","role":"STAR","at":[20757.8,9695.0],"r":43,"rgn":"RGN-14","eco":false,"seed":326,"parent":null,"owner":"wei"},{"id":"BODY-RGN-14-01-INNER","name":"업 내행성","kind":"planet","role":"INNER","at":[20791.8,9695.0],"r":5,"rgn":"RGN-14","eco":false,"seed":330,"parent":"BODY-RGN-14-01-STAR","owner":"wei"},{"id":"BODY-RGN-14-01-VENUS","name":"업 금성형 행성","kind":"planet","role":"VENUS","at":[20820.8,9732.0],"r":11,"rgn":"RGN-14","eco":false,"seed":973,"parent":"BODY-RGN-14-01-STAR","owner":"wei"},{"id":"BODY-RGN-14-01-MOON","name":"업 위성","kind":"moon","role":"MOON","at":[20912.8,9728.0],"r":5,"rgn":"RGN-14","eco":false,"seed":745,"parent":"BODY-RGN-14-01","owner":"wei"},{"id":"BODY-RGN-14-01-OUTER-1","name":"업 외행성 1","kind":"planet","role":"OUTER-1","at":[20976.8,9690.0],"r":10,"rgn":"RGN-14","eco":false,"seed":5,"parent":"BODY-RGN-14-01-STAR","owner":"wei"},{"id":"BODY-RGN-14-01-OUTER-2","name":"업 외행성 2","kind":"planet","role":"OUTER-2","at":[21000.8,9692.0],"r":13,"rgn":"RGN-14","eco":false,"seed":908,"parent":"BODY-RGN-14-01-STAR","owner":"wei"},{"id":"BODY-RGN-14-01-OUTER-3","name":"업 외행성 3","kind":"planet","role":"OUTER-3","at":[21030.8,9675.0],"r":11,"rgn":"RGN-14","eco":false,"seed":312,"parent":"BODY-RGN-14-01-STAR","owner":"wei"},{"id":"BODY-RGN-17-01-STAR","name":"낙양 항성","kind":"star","role":"STAR","at":[18917.6,11355.0],"r":43,"rgn":"RGN-17","eco":false,"seed":287,"parent":null,"owner":"wei"},{"id":"BODY-RGN-17-01-INNER","name":"낙양 내행성","kind":"planet","role":"INNER","at":[18951.6,11355.0],"r":5,"rgn":"RGN-17","eco":false,"seed":909,"parent":"BODY-RGN-17-01-STAR","owner":"wei"},{"id":"BODY-RGN-17-01-VENUS","name":"낙양 금성형 행성","kind":"planet","role":"VENUS","at":[18980.6,11392.0],"r":11,"rgn":"RGN-17","eco":false,"seed":909,"parent":"BODY-RGN-17-01-STAR","owner":"wei"},{"id":"BODY-RGN-17-01-MOON","name":"낙양 위성","kind":"moon","role":"MOON","at":[19072.6,11388.0],"r":5,"rgn":"RGN-17","eco":false,"seed":194,"parent":"BODY-RGN-17-01","owner":"wei"},{"id":"BODY-RGN-17-01-OUTER-1","name":"낙양 외행성 1","kind":"planet","role":"OUTER-1","at":[19138.6,11433.0],"r":9,"rgn":"RGN-17","eco":false,"seed":215,"parent":"BODY-RGN-17-01-STAR","owner":"wei"},{"id":"BODY-RGN-18-01-STAR","name":"장안 항성","kind":"star","role":"STAR","at":[15941.1,11715.0],"r":43,"rgn":"RGN-18","eco":false,"seed":339,"parent":null,"owner":"wei"},{"id":"BODY-RGN-18-01-INNER","name":"장안 내행성","kind":"planet","role":"INNER","at":[15975.1,11715.0],"r":5,"rgn":"RGN-18","eco":false,"seed":65,"parent":"BODY-RGN-18-01-STAR","owner":"wei"},{"id":"BODY-RGN-18-01-VENUS","name":"장안 금성형 행성","kind":"planet","role":"VENUS","at":[16004.1,11752.0],"r":11,"rgn":"RGN-18","eco":false,"seed":814,"parent":"BODY-RGN-18-01-STAR","owner":"wei"},{"id":"BODY-RGN-18-01-MOON","name":"장안 위성","kind":"moon","role":"MOON","at":[16096.1,11748.0],"r":5,"rgn":"RGN-18","eco":false,"seed":413,"parent":"BODY-RGN-18-01","owner":"wei"},{"id":"BODY-RGN-18-01-OUTER-1","name":"장안 외행성 1","kind":"planet","role":"OUTER-1","at":[16169.1,11701.0],"r":11,"rgn":"RGN-18","eco":false,"seed":977,"parent":"BODY-RGN-18-01-STAR","owner":"wei"},{"id":"BODY-RGN-18-01-OUTER-2","name":"장안 외행성 2","kind":"planet","role":"OUTER-2","at":[16182.1,11690.0],"r":16,"rgn":"RGN-18","eco":false,"seed":962,"parent":"BODY-RGN-18-01-STAR","owner":"wei"},{"id":"BODY-RGN-18-01-OUTER-3","name":"장안 외행성 3","kind":"planet","role":"OUTER-3","at":[16208.1,11761.0],"r":14,"rgn":"RGN-18","eco":false,"seed":528,"parent":"BODY-RGN-18-01-STAR","owner":"wei"},{"id":"BODY-RGN-18-01-OUTER-4","name":"장안 외행성 4","kind":"planet","role":"OUTER-4","at":[16234.1,11720.0],"r":16,"rgn":"RGN-18","eco":false,"seed":873,"parent":"BODY-RGN-18-01-STAR","owner":"wei"},{"id":"BODY-RGN-20-01-STAR","name":"건업 항성","kind":"star","role":"STAR","at":[24285.4,13915.0],"r":43,"rgn":"RGN-20","eco":false,"seed":940,"parent":null,"owner":"wu"},{"id":"BODY-RGN-20-01-INNER","name":"건업 내행성","kind":"planet","role":"INNER","at":[24319.4,13915.0],"r":5,"rgn":"RGN-20","eco":false,"seed":610,"parent":"BODY-RGN-20-01-STAR","owner":"wu"},{"id":"BODY-RGN-20-01-VENUS","name":"건업 금성형 행성","kind":"planet","role":"VENUS","at":[24348.4,13952.0],"r":11,"rgn":"RGN-20","eco":false,"seed":156,"parent":"BODY-RGN-20-01-STAR","owner":"wu"},{"id":"BODY-RGN-20-01-MOON","name":"건업 위성","kind":"moon","role":"MOON","at":[24440.4,13948.0],"r":5,"rgn":"RGN-20","eco":false,"seed":698,"parent":"BODY-RGN-20-01","owner":"wu"},{"id":"BODY-RGN-20-01-OUTER-1","name":"건업 외행성 1","kind":"planet","role":"OUTER-1","at":[24506.4,13971.0],"r":12,"rgn":"RGN-20","eco":false,"seed":924,"parent":"BODY-RGN-20-01-STAR","owner":"wu"},{"id":"BODY-RGN-20-01-OUTER-2","name":"건업 외행성 2","kind":"planet","role":"OUTER-2","at":[24527.4,13890.0],"r":10,"rgn":"RGN-20","eco":false,"seed":900,"parent":"BODY-RGN-20-01-STAR","owner":"wu"},{"id":"BODY-RGN-20-01-OUTER-3","name":"건업 외행성 3","kind":"planet","role":"OUTER-3","at":[24556.4,13992.0],"r":16,"rgn":"RGN-20","eco":false,"seed":268,"parent":"BODY-RGN-20-01-STAR","owner":"wu"},{"id":"BODY-RGN-20-01-OUTER-4","name":"건업 외행성 4","kind":"planet","role":"OUTER-4","at":[24572.4,13981.0],"r":15,"rgn":"RGN-20","eco":false,"seed":948,"parent":"BODY-RGN-20-01-STAR","owner":"wu"},{"id":"BODY-RGN-21-01-STAR","name":"오 항성","kind":"star","role":"STAR","at":[25811.8,14675.0],"r":43,"rgn":"RGN-21","eco":false,"seed":38,"parent":null,"owner":"wu"},{"id":"BODY-RGN-21-01-INNER","name":"오 내행성","kind":"planet","role":"INNER","at":[25845.8,14675.0],"r":5,"rgn":"RGN-21","eco":false,"seed":705,"parent":"BODY-RGN-21-01-STAR","owner":"wu"},{"id":"BODY-RGN-21-01-VENUS","name":"오 금성형 행성","kind":"planet","role":"VENUS","at":[25874.8,14712.0],"r":11,"rgn":"RGN-21","eco":false,"seed":524,"parent":"BODY-RGN-21-01-STAR","owner":"wu"},{"id":"BODY-RGN-21-01-MOON","name":"오 위성","kind":"moon","role":"MOON","at":[25966.8,14708.0],"r":5,"rgn":"RGN-21","eco":false,"seed":166,"parent":"BODY-RGN-21-01","owner":"wu"},{"id":"BODY-RGN-21-01-OUTER-1","name":"오 외행성 1","kind":"planet","role":"OUTER-1","at":[26041.8,14754.0],"r":16,"rgn":"RGN-21","eco":false,"seed":73,"parent":"BODY-RGN-21-01-STAR","owner":"wu"},{"id":"BODY-RGN-21-01-OUTER-2","name":"오 외행성 2","kind":"planet","role":"OUTER-2","at":[26056.8,14651.0],"r":11,"rgn":"RGN-21","eco":false,"seed":918,"parent":"BODY-RGN-21-01-STAR","owner":"wu"},{"id":"BODY-RGN-21-01-OUTER-3","name":"오 외행성 3","kind":"planet","role":"OUTER-3","at":[26082.8,14653.0],"r":9,"rgn":"RGN-21","eco":false,"seed":727,"parent":"BODY-RGN-21-01-STAR","owner":"wu"},{"id":"BODY-RGN-21-01-OUTER-4","name":"오 외행성 4","kind":"planet","role":"OUTER-4","at":[26105.8,14731.0],"r":14,"rgn":"RGN-21","eco":false,"seed":190,"parent":"BODY-RGN-21-01-STAR","owner":"wu"},{"id":"BODY-RGN-23-01-STAR","name":"수춘 항성","kind":"star","role":"STAR","at":[22597.9,13405.0],"r":43,"rgn":"RGN-23","eco":false,"seed":957,"parent":null,"owner":"wei"},{"id":"BODY-RGN-23-01-INNER","name":"수춘 내행성","kind":"planet","role":"INNER","at":[22631.9,13405.0],"r":5,"rgn":"RGN-23","eco":false,"seed":598,"parent":"BODY-RGN-23-01-STAR","owner":"wei"},{"id":"BODY-RGN-23-01-VENUS","name":"수춘 금성형 행성","kind":"planet","role":"VENUS","at":[22660.9,13442.0],"r":11,"rgn":"RGN-23","eco":false,"seed":624,"parent":"BODY-RGN-23-01-STAR","owner":"wei"},{"id":"BODY-RGN-23-01-MOON","name":"수춘 위성","kind":"moon","role":"MOON","at":[22752.9,13438.0],"r":5,"rgn":"RGN-23","eco":false,"seed":36,"parent":"BODY-RGN-23-01","owner":"wei"},{"id":"BODY-RGN-23-01-OUTER-1","name":"수춘 외행성 1","kind":"planet","role":"OUTER-1","at":[22825.9,13395.0],"r":14,"rgn":"RGN-23","eco":false,"seed":851,"parent":"BODY-RGN-23-01-STAR","owner":"wei"},{"id":"BODY-RGN-23-01-OUTER-2","name":"수춘 외행성 2","kind":"planet","role":"OUTER-2","at":[22840.9,13472.0],"r":13,"rgn":"RGN-23","eco":false,"seed":883,"parent":"BODY-RGN-23-01-STAR","owner":"wei"},{"id":"BODY-RGN-25-01-STAR","name":"완 항성","kind":"star","role":"STAR","at":[18985.4,12985.0],"r":43,"rgn":"RGN-25","eco":false,"seed":710,"parent":null,"owner":"wei"},{"id":"BODY-RGN-25-01-INNER","name":"완 내행성","kind":"planet","role":"INNER","at":[19019.4,12985.0],"r":5,"rgn":"RGN-25","eco":false,"seed":639,"parent":"BODY-RGN-25-01-STAR","owner":"wei"},{"id":"BODY-RGN-25-01-VENUS","name":"완 금성형 행성","kind":"planet","role":"VENUS","at":[19048.4,13022.0],"r":11,"rgn":"RGN-25","eco":false,"seed":559,"parent":"BODY-RGN-25-01-STAR","owner":"wei"},{"id":"BODY-RGN-25-01-MOON","name":"완 위성","kind":"moon","role":"MOON","at":[19140.4,13018.0],"r":5,"rgn":"RGN-25","eco":false,"seed":540,"parent":"BODY-RGN-25-01","owner":"wei"},{"id":"BODY-RGN-25-01-OUTER-1","name":"완 외행성 1","kind":"planet","role":"OUTER-1","at":[19211.4,12969.0],"r":9,"rgn":"RGN-25","eco":false,"seed":203,"parent":"BODY-RGN-25-01-STAR","owner":"wei"},{"id":"BODY-RGN-25-01-OUTER-2","name":"완 외행성 2","kind":"planet","role":"OUTER-2","at":[19225.4,13039.0],"r":12,"rgn":"RGN-25","eco":false,"seed":804,"parent":"BODY-RGN-25-01-STAR","owner":"wei"},{"id":"BODY-RGN-27-03-STAR","name":"장안 서부 항성","kind":"star","role":"STAR","at":[14832.0,11636.4],"r":43,"rgn":"RGN-27","eco":false,"seed":246,"parent":null,"owner":"ma"},{"id":"BODY-RGN-27-03-INNER","name":"장안 서부 내행성","kind":"planet","role":"INNER","at":[14866.0,11636.4],"r":5,"rgn":"RGN-27","eco":false,"seed":307,"parent":"BODY-RGN-27-03-STAR","owner":"ma"},{"id":"BODY-RGN-27-03-VENUS","name":"장안 서부 금성형 행성","kind":"planet","role":"VENUS","at":[14895.0,11673.4],"r":11,"rgn":"RGN-27","eco":false,"seed":673,"parent":"BODY-RGN-27-03-STAR","owner":"ma"},{"id":"BODY-RGN-27-03-MOON","name":"장안 서부 위성","kind":"moon","role":"MOON","at":[14987.0,11669.4],"r":5,"rgn":"RGN-27","eco":false,"seed":527,"parent":"BODY-RGN-27-03","owner":"ma"},{"id":"BODY-RGN-27-03-OUTER-1","name":"장안 서부 외행성 1","kind":"planet","role":"OUTER-1","at":[15052.0,11690.4],"r":16,"rgn":"RGN-27","eco":false,"seed":767,"parent":"BODY-RGN-27-03-STAR","owner":"ma"},{"id":"BODY-RGN-27-03-OUTER-2","name":"장안 서부 외행성 2","kind":"planet","role":"OUTER-2","at":[15084.0,11694.4],"r":16,"rgn":"RGN-27","eco":false,"seed":371,"parent":"BODY-RGN-27-03-STAR","owner":"ma"},{"id":"BODY-RGN-30-01-STAR","name":"계 항성","kind":"star","role":"STAR","at":[22267.2,6075.0],"r":43,"rgn":"RGN-30","eco":false,"seed":294,"parent":null,"owner":"wei"},{"id":"BODY-RGN-30-01-INNER","name":"계 내행성","kind":"planet","role":"INNER","at":[22301.2,6075.0],"r":5,"rgn":"RGN-30","eco":false,"seed":60,"parent":"BODY-RGN-30-01-STAR","owner":"wei"},{"id":"BODY-RGN-30-01-VENUS","name":"계 금성형 행성","kind":"planet","role":"VENUS","at":[22330.2,6112.0],"r":11,"rgn":"RGN-30","eco":false,"seed":996,"parent":"BODY-RGN-30-01-STAR","owner":"wei"},{"id":"BODY-RGN-30-01-MOON","name":"계 위성","kind":"moon","role":"MOON","at":[22422.2,6108.0],"r":5,"rgn":"RGN-30","eco":false,"seed":929,"parent":"BODY-RGN-30-01","owner":"wei"},{"id":"BODY-RGN-30-01-OUTER-1","name":"계 외행성 1","kind":"planet","role":"OUTER-1","at":[22495.2,6068.0],"r":10,"rgn":"RGN-30","eco":false,"seed":136,"parent":"BODY-RGN-30-01-STAR","owner":"wei"},{"id":"BODY-RGN-30-01-OUTER-2","name":"계 외행성 2","kind":"planet","role":"OUTER-2","at":[22514.2,6138.0],"r":15,"rgn":"RGN-30","eco":false,"seed":875,"parent":"BODY-RGN-30-01-STAR","owner":"wei"},{"id":"BODY-RGN-30-01-OUTER-3","name":"계 외행성 3","kind":"planet","role":"OUTER-3","at":[22541.2,6143.0],"r":10,"rgn":"RGN-30","eco":false,"seed":619,"parent":"BODY-RGN-30-01-STAR","owner":"wei"},{"id":"BODY-RGN-32-01-STAR","name":"양평 항성","kind":"star","role":"STAR","at":[28008.2,4705.0],"r":43,"rgn":"RGN-32","eco":false,"seed":829,"parent":null,"owner":"kang"},{"id":"BODY-RGN-32-01-INNER","name":"양평 내행성","kind":"planet","role":"INNER","at":[28042.2,4705.0],"r":5,"rgn":"RGN-32","eco":false,"seed":319,"parent":"BODY-RGN-32-01-STAR","owner":"kang"},{"id":"BODY-RGN-32-01-VENUS","name":"양평 금성형 행성","kind":"planet","role":"VENUS","at":[28071.2,4742.0],"r":11,"rgn":"RGN-32","eco":false,"seed":522,"parent":"BODY-RGN-32-01-STAR","owner":"kang"},{"id":"BODY-RGN-32-01-MOON","name":"양평 위성","kind":"moon","role":"MOON","at":[28163.2,4738.0],"r":5,"rgn":"RGN-32","eco":false,"seed":731,"parent":"BODY-RGN-32-01","owner":"kang"},{"id":"BODY-RGN-32-01-OUTER-1","name":"양평 외행성 1","kind":"planet","role":"OUTER-1","at":[28226.2,4782.0],"r":14,"rgn":"RGN-32","eco":false,"seed":531,"parent":"BODY-RGN-32-01-STAR","owner":"kang"},{"id":"BODY-RGN-32-01-OUTER-2","name":"양평 외행성 2","kind":"planet","role":"OUTER-2","at":[28255.2,4759.0],"r":10,"rgn":"RGN-32","eco":false,"seed":483,"parent":"BODY-RGN-32-01-STAR","owner":"kang"},{"id":"BODY-RGN-32-01-OUTER-3","name":"양평 외행성 3","kind":"planet","role":"OUTER-3","at":[28275.2,4675.0],"r":11,"rgn":"RGN-32","eco":false,"seed":104,"parent":"BODY-RGN-32-01-STAR","owner":"kang"},{"id":"BODY-RGN-34-01-STAR","name":"진류 항성","kind":"star","role":"STAR","at":[20528.8,11185.0],"r":43,"rgn":"RGN-34","eco":false,"seed":416,"parent":null,"owner":"wei"},{"id":"BODY-RGN-34-01-INNER","name":"진류 내행성","kind":"planet","role":"INNER","at":[20562.8,11185.0],"r":5,"rgn":"RGN-34","eco":false,"seed":588,"parent":"BODY-RGN-34-01-STAR","owner":"wei"},{"id":"BODY-RGN-34-01-VENUS","name":"진류 금성형 행성","kind":"planet","role":"VENUS","at":[20591.8,11222.0],"r":11,"rgn":"RGN-34","eco":false,"seed":361,"parent":"BODY-RGN-34-01-STAR","owner":"wei"},{"id":"BODY-RGN-34-01-MOON","name":"진류 위성","kind":"moon","role":"MOON","at":[20683.8,11218.0],"r":5,"rgn":"RGN-34","eco":false,"seed":18,"parent":"BODY-RGN-34-01","owner":"wei"},{"id":"BODY-RGN-34-01-OUTER-1","name":"진류 외행성 1","kind":"planet","role":"OUTER-1","at":[20752.8,11243.0],"r":9,"rgn":"RGN-34","eco":false,"seed":199,"parent":"BODY-RGN-34-01-STAR","owner":"wei"},{"id":"BODY-RGN-34-01-OUTER-2","name":"진류 외행성 2","kind":"planet","role":"OUTER-2","at":[20780.8,11234.0],"r":10,"rgn":"RGN-34","eco":false,"seed":158,"parent":"BODY-RGN-34-01-STAR","owner":"wei"},{"id":"BODY-RGN-36-01-STAR","name":"임치 항성","kind":"star","role":"STAR","at":[23878.4,9155.0],"r":43,"rgn":"RGN-36","eco":false,"seed":512,"parent":null,"owner":"wei"},{"id":"BODY-RGN-36-01-INNER","name":"임치 내행성","kind":"planet","role":"INNER","at":[23912.4,9155.0],"r":5,"rgn":"RGN-36","eco":false,"seed":881,"parent":"BODY-RGN-36-01-STAR","owner":"wei"},{"id":"BODY-RGN-36-01-VENUS","name":"임치 금성형 행성","kind":"planet","role":"VENUS","at":[23941.4,9192.0],"r":11,"rgn":"RGN-36","eco":false,"seed":298,"parent":"BODY-RGN-36-01-STAR","owner":"wei"},{"id":"BODY-RGN-36-01-MOON","name":"임치 위성","kind":"moon","role":"MOON","at":[24033.4,9188.0],"r":5,"rgn":"RGN-36","eco":false,"seed":914,"parent":"BODY-RGN-36-01","owner":"wei"},{"id":"BODY-RGN-36-01-OUTER-1","name":"임치 외행성 1","kind":"planet","role":"OUTER-1","at":[24106.4,9148.0],"r":16,"rgn":"RGN-36","eco":false,"seed":869,"parent":"BODY-RGN-36-01-STAR","owner":"wei"},{"id":"BODY-RGN-38-01-STAR","name":"하비 항성","kind":"star","role":"STAR","at":[23590.1,11675.0],"r":43,"rgn":"RGN-38","eco":false,"seed":189,"parent":null,"owner":"wei"},{"id":"BODY-RGN-38-01-INNER","name":"하비 내행성","kind":"planet","role":"INNER","at":[23624.1,11675.0],"r":5,"rgn":"RGN-38","eco":false,"seed":182,"parent":"BODY-RGN-38-01-STAR","owner":"wei"},{"id":"BODY-RGN-38-01-VENUS","name":"하비 금성형 행성","kind":"planet","role":"VENUS","at":[23653.1,11712.0],"r":11,"rgn":"RGN-38","eco":false,"seed":5,"parent":"BODY-RGN-38-01-STAR","owner":"wei"},{"id":"BODY-RGN-38-01-MOON","name":"하비 위성","kind":"moon","role":"MOON","at":[23745.1,11708.0],"r":5,"rgn":"RGN-38","eco":false,"seed":372,"parent":"BODY-RGN-38-01","owner":"wei"},{"id":"BODY-RGN-38-01-OUTER-1","name":"하비 외행성 1","kind":"planet","role":"OUTER-1","at":[23817.1,11743.0],"r":9,"rgn":"RGN-38","eco":false,"seed":1,"parent":"BODY-RGN-38-01-STAR","owner":"wei"},{"id":"BODY-RGN-38-01-OUTER-2","name":"하비 외행성 2","kind":"planet","role":"OUTER-2","at":[23840.1,11677.0],"r":15,"rgn":"RGN-38","eco":false,"seed":788,"parent":"BODY-RGN-38-01-STAR","owner":"wei"},{"id":"BODY-RGN-38-01-OUTER-3","name":"하비 외행성 3","kind":"planet","role":"OUTER-3","at":[23856.1,11734.0],"r":16,"rgn":"RGN-38","eco":false,"seed":652,"parent":"BODY-RGN-38-01-STAR","owner":"wei"},{"id":"BODY-RGN-38-01-OUTER-4","name":"하비 외행성 4","kind":"planet","role":"OUTER-4","at":[23882.1,11675.0],"r":9,"rgn":"RGN-38","eco":false,"seed":257,"parent":"BODY-RGN-38-01-STAR","owner":"wei"},{"id":"BODY-RGN-40-01-STAR","name":"진양 항성","kind":"star","role":"STAR","at":[19002.4,8105.0],"r":43,"rgn":"RGN-40","eco":false,"seed":809,"parent":null,"owner":"wei"},{"id":"BODY-RGN-40-01-INNER","name":"진양 내행성","kind":"planet","role":"INNER","at":[19036.4,8105.0],"r":5,"rgn":"RGN-40","eco":false,"seed":280,"parent":"BODY-RGN-40-01-STAR","owner":"wei"},{"id":"BODY-RGN-40-01-VENUS","name":"진양 금성형 행성","kind":"planet","role":"VENUS","at":[19065.4,8142.0],"r":11,"rgn":"RGN-40","eco":false,"seed":400,"parent":"BODY-RGN-40-01-STAR","owner":"wei"},{"id":"BODY-RGN-40-01-MOON","name":"진양 위성","kind":"moon","role":"MOON","at":[19157.4,8138.0],"r":5,"rgn":"RGN-40","eco":false,"seed":850,"parent":"BODY-RGN-40-01","owner":"wei"},{"id":"BODY-RGN-40-01-OUTER-1","name":"진양 외행성 1","kind":"planet","role":"OUTER-1","at":[19221.4,8093.0],"r":12,"rgn":"RGN-40","eco":false,"seed":216,"parent":"BODY-RGN-40-01-STAR","owner":"wei"},{"id":"BODY-RGN-40-01-OUTER-2","name":"진양 외행성 2","kind":"planet","role":"OUTER-2","at":[19247.4,8151.0],"r":11,"rgn":"RGN-40","eco":false,"seed":268,"parent":"BODY-RGN-40-01-STAR","owner":"wei"},{"id":"BODY-RGN-40-01-OUTER-3","name":"진양 외행성 3","kind":"planet","role":"OUTER-3","at":[19269.4,8161.0],"r":16,"rgn":"RGN-40","eco":false,"seed":163,"parent":"BODY-RGN-40-01-STAR","owner":"wei"},{"id":"BODY-RGN-42-01-STAR","name":"무위 항성","kind":"star","role":"STAR","at":[10598.7,8045.0],"r":43,"rgn":"RGN-42","eco":false,"seed":368,"parent":null,"owner":"ma"},{"id":"BODY-RGN-42-01-INNER","name":"무위 내행성","kind":"planet","role":"INNER","at":[10632.7,8045.0],"r":5,"rgn":"RGN-42","eco":false,"seed":791,"parent":"BODY-RGN-42-01-STAR","owner":"ma"},{"id":"BODY-RGN-42-01-VENUS","name":"무위 금성형 행성","kind":"planet","role":"VENUS","at":[10661.7,8082.0],"r":11,"rgn":"RGN-42","eco":false,"seed":829,"parent":"BODY-RGN-42-01-STAR","owner":"ma"},{"id":"BODY-RGN-42-01-MOON","name":"무위 위성","kind":"moon","role":"MOON","at":[10753.7,8078.0],"r":5,"rgn":"RGN-42","eco":false,"seed":921,"parent":"BODY-RGN-42-01","owner":"ma"},{"id":"BODY-RGN-42-01-OUTER-1","name":"무위 외행성 1","kind":"planet","role":"OUTER-1","at":[10817.7,8035.0],"r":16,"rgn":"RGN-42","eco":false,"seed":448,"parent":"BODY-RGN-42-01-STAR","owner":"ma"},{"id":"BODY-RGN-42-01-OUTER-2","name":"무위 외행성 2","kind":"planet","role":"OUTER-2","at":[10838.7,8102.0],"r":14,"rgn":"RGN-42","eco":false,"seed":563,"parent":"BODY-RGN-42-01-STAR","owner":"ma"},{"id":"BODY-RGN-42-01-OUTER-3","name":"무위 외행성 3","kind":"planet","role":"OUTER-3","at":[10871.7,8021.0],"r":15,"rgn":"RGN-42","eco":false,"seed":803,"parent":"BODY-RGN-42-01-STAR","owner":"ma"},{"id":"BODY-RGN-44-01-STAR","name":"교지 항성","kind":"star","role":"STAR","at":[13320.8,24945.0],"r":43,"rgn":"RGN-44","eco":false,"seed":878,"parent":null,"owner":"xie"},{"id":"BODY-RGN-44-01-INNER","name":"교지 내행성","kind":"planet","role":"INNER","at":[13354.8,24945.0],"r":5,"rgn":"RGN-44","eco":false,"seed":188,"parent":"BODY-RGN-44-01-STAR","owner":"xie"},{"id":"BODY-RGN-44-01-VENUS","name":"교지 금성형 행성","kind":"planet","role":"VENUS","at":[13383.8,24982.0],"r":11,"rgn":"RGN-44","eco":false,"seed":692,"parent":"BODY-RGN-44-01-STAR","owner":"xie"},{"id":"BODY-RGN-44-01-MOON","name":"교지 위성","kind":"moon","role":"MOON","at":[13475.8,24978.0],"r":5,"rgn":"RGN-44","eco":false,"seed":393,"parent":"BODY-RGN-44-01","owner":"xie"},{"id":"BODY-RGN-44-01-OUTER-1","name":"교지 외행성 1","kind":"planet","role":"OUTER-1","at":[13542.8,25003.0],"r":11,"rgn":"RGN-44","eco":false,"seed":64,"parent":"BODY-RGN-44-01-STAR","owner":"xie"},{"id":"BODY-RGN-44-01-OUTER-2","name":"교지 외행성 2","kind":"planet","role":"OUTER-2","at":[13570.8,24995.0],"r":9,"rgn":"RGN-44","eco":false,"seed":247,"parent":"BODY-RGN-44-01-STAR","owner":"xie"},{"id":"BODY-RGN-44-01-OUTER-3","name":"교지 외행성 3","kind":"planet","role":"OUTER-3","at":[13590.8,24997.0],"r":15,"rgn":"RGN-44","eco":false,"seed":427,"parent":"BODY-RGN-44-01-STAR","owner":"xie"},{"id":"BODY-RGN-44-01-OUTER-4","name":"교지 외행성 4","kind":"planet","role":"OUTER-4","at":[13608.8,24919.0],"r":12,"rgn":"RGN-44","eco":false,"seed":934,"parent":"BODY-RGN-44-01-STAR","owner":"xie"}],"families":[{"id":"FAM-BODY-RGN-01-01","host":"BODY-RGN-01-01","star":"BODY-RGN-01-01-STAR","at":[18655,13935],"center":[18775,13960],"radius":230,"name":"양양"},{"id":"FAM-BODY-RGN-02-01","host":"BODY-RGN-02-01","star":"BODY-RGN-02-01-STAR","at":[18740,15645],"center":[18860,15670],"radius":230,"name":"강릉"},{"id":"FAM-BODY-RGN-04-01","host":"BODY-RGN-04-01","star":"BODY-RGN-04-01-STAR","at":[20274,16725],"center":[20394,16750],"radius":230,"name":"구지"},{"id":"FAM-BODY-RGN-05-01","host":"BODY-RGN-05-01","star":"BODY-RGN-05-01-STAR","at":[11811,15305],"center":[11931,15330],"radius":230,"name":"성도"},{"id":"FAM-BODY-RGN-08-01","host":"BODY-RGN-08-01","star":"BODY-RGN-08-01-STAR","at":[14321,12905],"center":[14441,12930],"radius":230,"name":"남정"},{"id":"FAM-BODY-RGN-12-01","host":"BODY-RGN-12-01","star":"BODY-RGN-12-01-STAR","at":[20105,11935],"center":[20225,11960],"radius":230,"name":"허"},{"id":"FAM-BODY-RGN-14-01","host":"BODY-RGN-14-01","star":"BODY-RGN-14-01-STAR","at":[20758,9695],"center":[20878,9720],"radius":230,"name":"업"},{"id":"FAM-BODY-RGN-17-01","host":"BODY-RGN-17-01","star":"BODY-RGN-17-01-STAR","at":[18918,11355],"center":[19038,11380],"radius":230,"name":"낙양"},{"id":"FAM-BODY-RGN-18-01","host":"BODY-RGN-18-01","star":"BODY-RGN-18-01-STAR","at":[15941,11715],"center":[16061,11740],"radius":230,"name":"장안"},{"id":"FAM-BODY-RGN-20-01","host":"BODY-RGN-20-01","star":"BODY-RGN-20-01-STAR","at":[24285,13915],"center":[24405,13940],"radius":230,"name":"건업"},{"id":"FAM-BODY-RGN-21-01","host":"BODY-RGN-21-01","star":"BODY-RGN-21-01-STAR","at":[25812,14675],"center":[25932,14700],"radius":230,"name":"오"},{"id":"FAM-BODY-RGN-23-01","host":"BODY-RGN-23-01","star":"BODY-RGN-23-01-STAR","at":[22598,13405],"center":[22718,13430],"radius":230,"name":"수춘"},{"id":"FAM-BODY-RGN-25-01","host":"BODY-RGN-25-01","star":"BODY-RGN-25-01-STAR","at":[18985,12985],"center":[19105,13010],"radius":230,"name":"완"},{"id":"FAM-BODY-RGN-27-03","host":"BODY-RGN-27-03","star":"BODY-RGN-27-03-STAR","at":[14832,11636],"center":[14952,11661],"radius":230,"name":"장안 서부"},{"id":"FAM-BODY-RGN-30-01","host":"BODY-RGN-30-01","star":"BODY-RGN-30-01-STAR","at":[22267,6075],"center":[22387,6100],"radius":230,"name":"계"},{"id":"FAM-BODY-RGN-32-01","host":"BODY-RGN-32-01","star":"BODY-RGN-32-01-STAR","at":[28008,4705],"center":[28128,4730],"radius":230,"name":"양평"},{"id":"FAM-BODY-RGN-34-01","host":"BODY-RGN-34-01","star":"BODY-RGN-34-01-STAR","at":[20529,11185],"center":[20649,11210],"radius":230,"name":"진류"},{"id":"FAM-BODY-RGN-36-01","host":"BODY-RGN-36-01","star":"BODY-RGN-36-01-STAR","at":[23878,9155],"center":[23998,9180],"radius":230,"name":"임치"},{"id":"FAM-BODY-RGN-38-01","host":"BODY-RGN-38-01","star":"BODY-RGN-38-01-STAR","at":[23590,11675],"center":[23710,11700],"radius":230,"name":"하비"},{"id":"FAM-BODY-RGN-40-01","host":"BODY-RGN-40-01","star":"BODY-RGN-40-01-STAR","at":[19002,8105],"center":[19122,8130],"radius":230,"name":"진양"},{"id":"FAM-BODY-RGN-42-01","host":"BODY-RGN-42-01","star":"BODY-RGN-42-01-STAR","at":[10599,8045],"center":[10719,8070],"radius":230,"name":"무위"},{"id":"FAM-BODY-RGN-44-01","host":"BODY-RGN-44-01","star":"BODY-RGN-44-01-STAR","at":[13321,24945],"center":[13441,24970],"radius":230,"name":"교지"}],"squadrons":[{"id":"RC-LIU-SQ-01","f":"shu","name":"유비 본대","cmd":"유비","vice":"장비","staff":["제갈량"],"pos":[310,620],"flag":true,"frm":"FRM-03","frm_name":"방원진","delay":0,"comp":[["SHP-04",4],["SHP-05",1],["SHP-07",2]]},{"id":"RC-LIU-SQ-02","f":"shu","name":"관우 수군","cmd":"관우","vice":null,"staff":[],"pos":[430,600],"flag":false,"frm":"FRM-01","frm_name":"어린진","delay":0,"comp":[["SHP-03",2],["SHP-04",3],["SHP-07",2]]},{"id":"RC-LIU-SQ-03","f":"shu","name":"유기 강하군","cmd":"유기","vice":null,"staff":[],"pos":[230,700],"flag":false,"frm":"FRM-03","frm_name":"방원진","delay":0,"comp":[["SHP-03",1],["SHP-04",3],["SHP-05",1]]},{"id":"RC-LIU-FC-01","f":"shu","name":"조운 정찰 고속정대","cmd":"조운","vice":null,"staff":[],"pos":[260,770],"flag":false,"frm":"FRM-06","frm_name":"장사진","delay":0,"comp":[["SHP-08",6]]},{"id":"RC-SUN-SQ-01","f":"wu","name":"주유 중군","cmd":"주유","vice":"감녕","staff":["노숙"],"pos":[420,470],"flag":true,"frm":"FRM-02","frm_name":"학익진","delay":0,"comp":[["SHP-01",1],["SHP-03",3],["SHP-04",5],["SHP-06",2],["SHP-07",3]]},{"id":"RC-SUN-SQ-02","f":"wu","name":"정보 우군","cmd":"정보","vice":"주태","staff":["여몽"],"pos":[470,370],"flag":false,"frm":"FRM-01","frm_name":"어린진","delay":0,"comp":[["SHP-03",2],["SHP-04",4],["SHP-05",1],["SHP-07",2]]},{"id":"RC-SUN-SQ-03","f":"wu","name":"황개 화공대","cmd":"황개","vice":"한당","staff":["능통"],"pos":[380,330],"flag":false,"frm":"FRM-05","frm_name":"봉시진","delay":0,"comp":[["SHP-04",2],["SHP-07",1],["SHP-08",8]]},{"id":"RC-CAO-SQ-01","f":"wei","name":"조조 중군","cmd":"조조","vice":"허저","staff":["정욱","가후"],"pos":[1460,330],"flag":true,"frm":"FRM-04","frm_name":"안행진","delay":180,"comp":[["SHP-01",2],["SHP-03",4],["SHP-04",8],["SHP-05",2],["SHP-06",2],["SHP-07",2],["SHP-08",6]]},{"id":"RC-CAO-SQ-02","f":"wei","name":"조인 선봉","cmd":"조인","vice":null,"staff":[],"pos":[1330,420],"flag":false,"frm":"FRM-01","frm_name":"어린진","delay":0,"comp":[["SHP-01",1],["SHP-03",4],["SHP-04",10],["SHP-07",3]]},{"id":"RC-CAO-SQ-03","f":"wei","name":"서황 전대","cmd":"서황","vice":"만총","staff":[],"pos":[1530,470],"flag":false,"frm":"FRM-03","frm_name":"방원진","delay":180,"comp":[["SHP-02",2],["SHP-03",5],["SHP-04",9],["SHP-05",1]]},{"id":"RC-CAO-SQ-04","f":"wei","name":"형주 수군 갑","cmd":"문빙","vice":null,"staff":[],"pos":[1250,150],"flag":false,"frm":"FRM-04","frm_name":"안행진","delay":0,"comp":[["SHP-03",4],["SHP-04",8],["SHP-05",1],["SHP-07",2]]},{"id":"RC-CAO-SQ-05","f":"wei","name":"형주 수군 을","cmd":"채모","vice":"장윤","staff":[],"pos":[1330,190],"flag":false,"frm":"FRM-03","frm_name":"방원진","delay":180,"comp":[["SHP-03",3],["SHP-04",6],["SHP-05",1]]},{"id":"RC-CAO-SQ-06","f":"wei","name":"조순 호표 고속대","cmd":"조순","vice":null,"staff":[],"pos":[1400,560],"flag":false,"frm":"FRM-05","frm_name":"봉시진","delay":360,"comp":[["SHP-07",6],["SHP-08",10]]},{"id":"RC-CAO-SQ-07","f":"wei","name":"조홍 후군","cmd":"조홍","vice":null,"staff":[],"pos":[1580,250],"flag":false,"frm":"FRM-03","frm_name":"방원진","delay":360,"comp":[["SHP-03",3],["SHP-04",6],["SHP-07",2]]}]}/*END*/;
+const F = {
+  shu:{name:'유비',glyph:'蜀',shape:'square',col:'#5fe0cf',deep:'#0e3d39'},
+  wei:{name:'조조',glyph:'魏',shape:'diamond',col:'#ff7550',deep:'#4d140b'},
+  wu: {name:'손권',glyph:'吳',shape:'circle',col:'#b9a2ff',deep:'#2a1d4a'},
+  war:{name:'전장',glyph:'⚔',shape:'war',col:'#f2b84b',deep:'#3a2a08'},
+  // 적벽 밖 군웅: 전투 3진영과 섞이지 않게 회청 육각 하나로 묶고 인장 한자만 바꾼다
+  zhang:{name:'유장',glyph:'璋',shape:'hex',col:'#9fb3c6',deep:'#18222c'},
+  lu:   {name:'장로',glyph:'魯',shape:'hex',col:'#9fb3c6',deep:'#18222c'},
+  ma:   {name:'마등·한수',glyph:'馬',shape:'hex',col:'#9fb3c6',deep:'#18222c'},
+  xie:  {name:'사섭',glyph:'燮',shape:'hex',col:'#9fb3c6',deep:'#18222c'},
+  kang: {name:'공손강',glyph:'康',shape:'hex',col:'#9fb3c6',deep:'#18222c'},
+  none: {name:'미개척',glyph:'·',shape:'hex',col:'#56616d',deep:'#0d1218'},
+};
+const SYS = Object.fromEntries(DATA.systems.map(s=>[s.id,s]));
+const RGN = Object.fromEntries(DATA.regions.map(r=>[r.id,r]));
+const SYS_DESC = {
+  'SYS-14':'조조가 남하의 전진 기지로 삼은 성역. 양번관문을 지나야 형주로 들어간다.',
+  'SYS-13':'장강 대항로를 쥔 성역. 유종의 항복으로 북부가 조조에게 넘어갔고, 강하에는 유기와 유비가 버틴다. 태양계권 구지 궤도가 적벽의 전장이다.',
+  'SYS-15':'손권의 본거. 장강 대항로의 동쪽 끝이며, 주유의 수군이 여기서 서쪽으로 거슬러 올라왔다.',
+  'SYS-16':'합비회랑의 성역. 손권은 적벽과 합비, 두 전선을 동시에 막아야 한다.',
+  'SYS-01':'낙양과 장안을 품은 중앙성역. 조조가 천자를 끼고 있다.',
+  'SYS-12':'장로가 다스리는 분지 성역. 검각·진령삼도·기산도의 열쇠다.',
+  'SYS-11':'유장의 익주. 이릉협도와 검각 너머의 큰 분지다.',
+};
+// 시스템 이름표 위치: 형주 전역 4곳은 v1과 같게 권역 사이에 둔다
+const SYS_LABEL_AT = {'SYS-13':[19300,16150],'SYS-14':[19000,13180],'SYS-15':[24900,14300],'SYS-16':[22850,13700]};
+const BODIES = [ // 태양계권(RGN-04): name, x, y, visual_radius, kind, desc
+  ['태양',20274,16725,43,'star','태양계권의 항성.'],
+  ['수성',20308,16725,5,'rock','내행성.'],
+  ['금성',20337,16762,11,'venus','금성형 행성. 두꺼운 대기.'],
+  ['구지',20394,16750,20,'earth','옛 지구, 고향별. 전화로 황폐해졌고 소유권이 끊임없이 바뀐다. 이 궤도에서 적벽대전이 벌어진다.'],
+  ['태음',20429,16758,5,'moon','달. 고대 조선소가 있다. 손상과 복구를 되풀이했다.'],
+  ['형혹',20489,16802,9,'mars','화성. 테라포밍 식민지.'],
+  ['목성',20554,16716,18,'gas','외행성 거대 가스 행성.'],
+];
+const BF = {cx:20394,cy:16750,k:0.1875,w:1600,h:900};
+const BF_TERRAIN = [
+  {name:'적운 성운',x:600,y:50,w:120,h:120,col:'200,90,70',fx:'이동 ×1.33 · 센서 −20%'},
+  {name:'파쇄 잔해대',x:680,y:100,w:140,h:120,col:'150,150,140',fx:'이동 ×1.54 · 사거리 ×0.9'},
+  {name:'행성 그림자',x:1250,y:300,w:180,h:180,col:'90,110,170',fx:'은폐 +12 · 사거리 ×0.8'},
+];
+const BF_ESCAPE = [{f:'wei',x:1600,y:300,lb:'조조 탈출'},{f:'shu',x:0,y:650,lb:'연합 탈출'}];
+// 축척 단계: 화면 크기에 비례한 절대 축척(단위 U). 성역·권역·행성계 버튼은 화면 가운데의 대상으로 들어간다.
+const LV = {t:.075,s:.2,o:1.6};
+const MODES=['g','t','s','o','f'];
+
+// ===================================================================== 상태·카메라
+const cv = document.getElementById('map'), cx = cv.getContext('2d');
+let W=0,H=0,DPR=1;
+const cam = {x:15000,y:15000,s:.03}; let anim=null;
+const layers = {faction:true,route:true,terrain:true,battle:true,base:false};
+let sel=null, mode='g';
+const TOP=60;
+function panelOpen(){return document.body.classList.contains('panel-open')}
+function reserve(){return panelOpen() && W>900 ? 392 : 0}
+function center(){return [(W-reserve())/2 + (W>900?34:0), TOP+(H-TOP)/2 - (W>900?10:(panelOpen()?H*.28:0))]}
+function w2s(x,y){const [ox,oy]=center();return [(x-cam.x)*cam.s+ox,(y-cam.y)*cam.s+oy]}
+function s2w(px,py){const [ox,oy]=center();return [(px-ox)/cam.s+cam.x,(py-oy)/cam.s+cam.y]}
+function fit(b){
+  const availW=W-reserve()-(W>900?150:40), availH=(H-TOP)-(W>900?150:(panelOpen()?H*.6:170));
+  const s=Math.min(availW/(b[2]-b[0]),availH/(b[3]-b[1]));
+  return {x:(b[0]+b[2])/2,y:(b[1]+b[3])/2,s};
+}
+const WORLD_B=[400,3600,30000,26200];
+function U(){return Math.max(.45,Math.min(W-reserve(),H-TOP)/650)}
+function bfBox(){const m=14;return [BF.cx-BF.w/2*BF.k-m,BF.cy-BF.h/2*BF.k-m,BF.cx+BF.w/2*BF.k+m,BF.cy+BF.h/2*BF.k+m]}
+function lvScale(k){return k==='g'?fit(WORLD_B).s:k==='f'?Math.max(fit(bfBox()).s,LV.o*U()*1.5):LV[k]*U()}
+function sMin(){return lvScale('g')*.8}
+function sMax(){return lvScale('f')*3}
+function goTo(t,ms=650){t.s=Math.min(sMax(),Math.max(sMin(),t.s));anim={from:{...cam},to:t,t0:performance.now(),ms}}
+function computeMode(){
+  // 이웃 단계 축척의 기하 평균을 경계로 쓴다
+  const g=lvScale('g'),t=lvScale('t'),s=lvScale('s'),o=lvScale('o');
+  if(cam.s<Math.sqrt(g*t))return 'g';
+  if(cam.s<Math.sqrt(t*s))return 't';
+  if(cam.s<Math.sqrt(s*o)*.75)return 's';
+  const f=lvScale('f');
+  if(cam.s<Math.sqrt(o*f))return 'o';
+  return 'f';
+}
+function pip(pt,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const [xi,yi]=poly[i],[xj,yj]=poly[j];if(((yi>pt[1])!==(yj>pt[1]))&&(pt[0]<(xj-xi)*(pt[1]-yi)/(yj-yi)+xi))c=!c}return c}
+function regionAt(x,y){return DATA.regions.find(r=>pip([x,y],r.poly))||DATA.regions.reduce((a,r)=>Math.hypot(r.at[0]-x,r.at[1]-y)<Math.hypot(a.at[0]-x,a.at[1]-y)?r:a)}
+function familyNear(x,y,lim=1e9){let best=null,bd=lim;for(const f of DATA.families){const d=Math.hypot(f.center[0]-x,f.center[1]-y);if(d<bd){bd=d;best=f}}return best}
+function famView(f){const R=f.radius*1.2;return fit([f.center[0]-R,f.center[1]-R*.72,f.center[0]+R,f.center[1]+R*.72])}
+function goFam(f){if(f)goTo(famView(f),800)}
+function goLevel(k){
+  if(k==='g')return goTo(fit(WORLD_B),850);
+  const r=regionAt(cam.x,cam.y);
+  if(k==='t'){const at=SYS[r.sys].labelAt;return goTo({x:at[0],y:at[1],s:lvScale('t')})}
+  if(k==='s')return goTo({x:r.at[0],y:r.at[1],s:lvScale('s')});
+  if(k==='f')return goTo(fit(bfBox()),800); // 함대가 있는 곳: 지금은 적벽 전장 하나
+  goFam(familyNear(cam.x,cam.y));
+}
+function resize(){
+  DPR=Math.min(2,window.devicePixelRatio||1);W=innerWidth;H=innerHeight;
+  cv.width=W*DPR;cv.height=H*DPR;cx.setTransform(DPR,0,0,DPR,0,0);
+}
+function hexA(h,a){const n=parseInt(h.slice(1),16);return `rgba(${n>>16},${n>>8&255},${n&255},${a})`}
+
+// ===================================================================== 지형: 한 번만 오프스크린에 굽는다
+// 본편 §4: 녹색 농도 = 소행성 장애 밀도, 갈색·보라 = 먼지·가스. 개방 공간(분지·평원)은 검게 둔다.
+const TER_K = 2400/DATA.world[0];
+const terOff = document.createElement('canvas');
+terOff.width = Math.round(DATA.world[0]*TER_K); terOff.height = Math.round(DATA.world[1]*TER_K);
+(function bakeTerrain(){
+  const c=terOff.getContext('2d');
+  const rnd=(()=>{let a=987654;return()=>{a^=a<<13;a^=a>>>17;a^=a<<5;return((a>>>0)%100000)/100000}})();
+  const path=(poly)=>{c.beginPath();for(const ring of poly){ring.forEach(([x,y],i)=>i?c.lineTo(x*TER_K,y*TER_K):c.moveTo(x*TER_K,y*TER_K));c.closePath()}};
+  c.filter='blur(5px)';
+  for(const t of DATA.terrain){
+    let col=null,a=0;
+    if(t.kind==='Range/mtn'||t.kind==='Gorge'){col='70,150,100';a=t.density/255*.42}
+    else if(t.kind==='Plateau'||t.kind==='Desert'){col=t.gas>160?'120,95,140':'150,112,72';a=(t.density+t.gas)/510*.30}
+    else if(t.kind==='Geoarea'){col='110,130,95';a=.10}
+    if(!col)continue;
+    for(const poly of t.polys){path(poly);c.fillStyle=`rgba(${col},${a})`;c.fill('evenodd')}
+  }
+  c.filter='none';
+  // 소행성 알갱이: 밀도에 비례
+  for(const t of DATA.terrain){
+    if(!(t.density>100))continue;
+    for(const poly of t.polys){
+      const xs=poly[0].map(p=>p[0]*TER_K),ys=poly[0].map(p=>p[1]*TER_K);
+      const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+      c.save();path(poly);c.clip('evenodd');
+      const n=Math.min(1600,(x1-x0)*(y1-y0)*t.density/255*.03);
+      for(let i=0;i<n;i++){const r=rnd();c.fillStyle=`rgba(${r<.5?'150,200,160':'200,190,170'},${.08+r*.25})`;c.fillRect(x0+rnd()*(x1-x0),y0+rnd()*(y1-y0),r<.9?1:2,r<.9?1:2)}
+      c.restore();
+    }
+  }
+})();
+
+// ===================================================================== 그리기
+function shapePath(c,shape,x,y,r){
+  c.beginPath();
+  if(shape==='square'){c.rect(x-r*.8,y-r*.8,r*1.6,r*1.6)}
+  else if(shape==='diamond'){c.moveTo(x,y-r);c.lineTo(x+r,y);c.lineTo(x,y+r);c.lineTo(x-r,y);c.closePath()}
+  else if(shape==='circle'){c.arc(x,y,r*.9,0,7)}
+  else if(shape==='hex'){for(let i=0;i<6;i++){const a=i*Math.PI/3+Math.PI/6;c.lineTo(x+Math.cos(a)*r,y+Math.sin(a)*r)}c.closePath()}
+  else{for(let i=0;i<8;i++){const a=i*Math.PI/4+Math.PI/8;c.lineTo(x+Math.cos(a)*r,y+Math.sin(a)*r)}c.closePath()}
+}
+function linePath(pts){cx.beginPath();pts.forEach((p,i)=>{const [x,y]=w2s(p[0],p[1]);i?cx.lineTo(x,y):cx.moveTo(x,y)})}
+const rnd=(()=>{let a=1234567;return()=>{a^=a<<13;a^=a>>>17;a^=a<<5;return((a>>>0)%100000)/100000}})();
+const STARS=[...Array(560)].map(()=>({x:rnd(),y:rnd(),r:rnd()**3*1.6+.25,p:rnd()*6.28,d:rnd()*.6+.2,c:rnd()<.15?'255,220,190':(rnd()<.2?'180,210,255':'230,236,245')}));
+function drawBackground(t){
+  const g=cx.createRadialGradient(W*.55,H*.5,0,W*.55,H*.5,Math.max(W,H)*.8);
+  g.addColorStop(0,'#0a1018');g.addColorStop(1,'#03050a');cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  for(const s of STARS){
+    const px=((s.x*W*1.6 - cam.x*cam.s*.04*s.d)%(W*1.6)+W*1.6)%(W*1.6)-W*.3;
+    const py=((s.y*H*1.6 - cam.y*cam.s*.04*s.d)%(H*1.6)+H*1.6)%(H*1.6)-H*.3;
+    const a=.35+.35*Math.sin(t*.0012+s.p);cx.fillStyle=`rgba(${s.c},${a*s.d+.1})`;cx.fillRect(px,py,s.r,s.r);
+  }
+}
+// ===================================================================== 외부 세력(제어 불가, 위치만)
+// 근거: 본편 design-overview.md §2.3, diplomacy.md §2~§3, star-map.md §2.3·§3, region-power.md(안문권·양주·병주).
+// 이역 권역의 성계 외곽 배치는 본편에서도 미작성(star-map.md §8)이라, 아래 좌표는 방위·접근 경로에 맞춘 시안용 개략 배치다.
+const EXT_GROUP={
+  north:{name:'북적',col:'190,170,130'},west:{name:'서융',col:'190,150,100'},far:{name:'서방',col:'160,140,190'},
+  east:{name:'동이 연합',col:'130,160,200'},south:{name:'남만',col:'130,170,140'}};
+const EXT=[
+  {id:'X-XIONGNU',name:'흉노',g:'north',at:[17400,4300],r:2300,from:[19122,8130],sub:'이민족 · 변경 압력',
+   desc:'병주 북방의 이민족. 안문권은 흉노 접경이라 조세보다 방비가 더 든다. 병주 전화 계수(0.50)의 원인이 이민족 침입이다.',via:'병주 북방 변경',src:'design-overview §2.3 · region-power(안문권·병주)'},
+  {id:'X-XIANBEI',name:'선비',g:'north',at:[21300,2100],r:2700,from:[22387,6100],sub:'이민족 · 변경 압력',
+   desc:'북방 초원의 이민족. 상시 변경 압력이며 회유·이간·용병 고용의 대상이다.',via:'유주·병주 북방 변경',src:'design-overview §2.3'},
+  {id:'X-WUHUAN',name:'오환',g:'north',at:[25200,2900],r:1700,from:[22387,6100],sub:'이민족 · 변경 압력',
+   desc:'유주 동북의 이민족. 회유·이간·용병 고용의 대상이다.',via:'유주 동북 변경',src:'design-overview §2.3'},
+  {id:'X-QIANG',name:'강족',g:'west',at:[7600,12600],r:2500,from:[10719,8070],sub:'이민족 · 반란',
+   desc:'양주·옹주 서남 변경의 이민족. 양주 전화 계수(0.60)의 원인이 강족 반란이다. 마초는 이민족 병력을 끌어들인다.',via:'양주 남서 변경',src:'design-overview §2.3 · region-power(양주) · world-state'},
+  {id:'X-XIYU',name:'서역',g:'far',at:[-1400,5900],r:1900,from:[848,5700],sub:'소국들 · 교역로',
+   desc:'하서회랑 너머의 소국들. 서역 항로 통행세와 사치재가 오가고, 이탈·약탈 사건이 일어난다.',via:'하서회랑(양주 돈황권)',src:'diplomacy §3.3~3.4 · star-map §3'},
+  {id:'X-KUSHAN',name:'대월지',g:'far',at:[-6600,6900],r:2600,from:[-1400,5900],sub:'쿠샨 · 책봉 대상',
+   desc:'서역 너머의 교역 대국. 위가 「친위대월지왕」으로 책봉할 수 있는 원거리 동맹이다. 배신하지 않지만 사산조에 스스로 무너진다.',via:'하서회랑 → 서역',src:'diplomacy §3'},
+  {id:'X-SASAN',name:'사산조',g:'far',at:[-12200,8100],r:2600,from:[-6600,6900],sub:'교섭 불가 · 서방의 위협',
+   desc:'대월지를 잠식하며 서서히 다가오는 서방의 위협. 동맹 대상이 아니다.',via:'대월지 너머',src:'diplomacy §1 · §3.5~3.6'},
+  {id:'X-ROME',name:'로마',g:'far',at:[-17800,9200],r:3100,from:[-12200,8100],sub:'교섭 불가 대국',
+   desc:'배경 압력이자 교역 상대. 끌어들이면 매국으로 간주되어 천명이 크게 깎인다. 하서회랑이 서방 접촉의 유일 관문이다.',via:'하서회랑 → 서역 → … ',src:'design-overview §2.3 · star-map §3(하서회랑)'},
+  {id:'X-BUYEO',name:'부여',g:'east',at:[30600,1400],r:1700,from:[28128,4730],sub:'동이 연합 · 혼인 동맹',
+   desc:'요동 공손씨와 혼인 동맹(위구태는 공손도의 사위). 부여 궁기를 용병으로 낸다.',via:'노룡회랑 → 요동',src:'diplomacy §2'},
+  {id:'X-GOGURYEO',name:'고구려',g:'east',at:[31900,4300],r:1900,from:[28128,4730],sub:'동이 연합 · 최대 군사력',
+   desc:'동이 연합의 최대 군사력. 개마무사를 용병으로 낸다. 위·고구려 전쟁(244)은 연합 결속도에 따라 발동한다.',via:'노룡회랑 → 요동',src:'diplomacy §2'},
+  {id:'X-SAMHAN',name:'삼한·예·옥저',g:'east',at:[33600,8200],r:1700,from:[28128,4730],sub:'동이 연합 · 소세력',
+   desc:'동이 연합 주변의 소세력들.',via:'요동 동남',src:'diplomacy §2.1'},
+  {id:'X-WA',name:'왜',g:'east',at:[35000,13600],r:1800,from:[23998,9180],sub:'동이 연합 · 해상 세력',sea:true,
+   desc:'해상 세력. 왜를 거치는 우회 항행으로 노룡회랑이 막혀도 동이와 접촉을 이어 간다. 왜 수군을 용병으로 낸다.',via:'해상 경로(동해 변경)',src:'diplomacy §2.1·§2.3'},
+  {id:'X-NANMAN',name:'남만',g:'south',at:[10600,25800],r:2500,from:[11702,20500],sub:'이역 · 남방',
+   desc:'남중 너머의 남방 이역. 남중은 아직 미개척 성계이고 남중산도로만 이어진다.',via:'남중산도 → 남중',src:'star-map §2.3·§8(이역 권역)'},
+];
+function extFade(){ // 천하·성역 단계에서만, 확대할수록 옅어진다
+  if(mode!=='g'&&mode!=='t')return 0;return mode==='g'?1:.6;
+}
+function drawExternal(t){
+  const k=extFade();if(k<=0)return;
+  cx.save();cx.globalAlpha=k;
+  // 접근 경로(점선): 제어할 수 없는 길이라 회색
+  for(const e of EXT){
+    const [ax,ay]=w2s(...e.from),[bx,by]=w2s(...e.at),col=EXT_GROUP[e.g].col;
+    cx.strokeStyle=`rgba(${col},.28)`;cx.lineWidth=1;cx.setLineDash(e.sea?[1,5]:[5,7]);cx.lineDashOffset=-t*.01;
+    cx.beginPath();cx.moveTo(ax,ay);cx.lineTo(bx,by);cx.stroke();cx.setLineDash([]);
+  }
+  // 세력 영역: 흐릿한 안개 + 점선 테두리
+  for(const e of EXT){
+    const [x,y]=w2s(...e.at),R=e.r*cam.s,col=EXT_GROUP[e.g].col;if(!onScreen(x,y,R))continue;
+    const g=cx.createRadialGradient(x,y,0,x,y,R);g.addColorStop(0,`rgba(${col},.13)`);g.addColorStop(.7,`rgba(${col},.05)`);g.addColorStop(1,`rgba(${col},0)`);
+    cx.fillStyle=g;cx.beginPath();cx.arc(x,y,R,0,7);cx.fill();
+    cx.strokeStyle=`rgba(${col},.22)`;cx.setLineDash([2,6]);cx.beginPath();cx.arc(x,y,R*.72,0,7);cx.stroke();cx.setLineDash([]);
+  }
+  // 화면 밖 무리 방향 표시(가장자리 화살표)
+  const groups={};for(const e of EXT){(groups[e.g]=groups[e.g]||[]).push(e)}
+  cx.font='11px sans-serif';
+  for(const [gk,list] of Object.entries(groups)){
+    const c=[list.reduce((a,e)=>a+e.at[0],0)/list.length,list.reduce((a,e)=>a+e.at[1],0)/list.length];
+    const [x,y]=w2s(...c);if(onScreen(x,y,-40))continue;
+    // 화면 가운데에서 그 무리 쪽으로 쏜 선이 보이는 사각형 가장자리와 만나는 곳
+    const [ox,oy]=center(),a=Math.atan2(y-oy,x-ox),dx=Math.cos(a),dy=Math.sin(a);
+    const L=96,R=W-reserve()-28,T=TOP+40,B=H-104;
+    const tt=Math.min(dx>0?(R-ox)/dx:dx<0?(L-ox)/dx:1e9,dy>0?(B-oy)/dy:dy<0?(T-oy)/dy:1e9);
+    const ex=ox+dx*tt,ey=oy+dy*tt;
+    const col=EXT_GROUP[gk].col;cx.fillStyle=`rgba(${col},.75)`;cx.save();cx.translate(ex,ey);cx.rotate(a);cx.beginPath();cx.moveTo(8,0);cx.lineTo(-4,-6);cx.lineTo(-4,6);cx.fill();cx.restore();
+    cx.textAlign=Math.cos(a)>.3?'right':Math.cos(a)<-.3?'left':'center';cx.fillText(EXT_GROUP[gk].name,ex-Math.cos(a)*16,ey-Math.sin(a)*16+4);
+  }
+  cx.restore();
+}
+function drawTerrain(){
+  if(!layers.terrain)return;
+  const [x0,y0]=w2s(0,0);
+  cx.save();cx.globalAlpha=(mode==='o'||mode==='f')?.25:1;cx.imageSmoothingQuality='high';
+  cx.drawImage(terOff,x0,y0,DATA.world[0]*cam.s,DATA.world[1]*cam.s);cx.restore();
+  // 회랑 차단대(밀도 70%+): 회랑 밖으로 우회할 수 없다
+  for(const c of DATA.corridors){
+    const [ax,ay]=w2s(...c.barrier[0]),[bx,by]=w2s(...c.barrier[1]),w=Math.max(3,c.w*2*cam.s);
+    cx.save();cx.lineCap='round';cx.strokeStyle='rgba(70,130,90,.30)';cx.lineWidth=w;cx.beginPath();cx.moveTo(ax,ay);cx.lineTo(bx,by);cx.stroke();
+    cx.strokeStyle='rgba(120,180,140,.18)';cx.setLineDash([2,6]);cx.lineWidth=w*.85;cx.stroke();cx.restore();
+  }
+}
+function polyPath(poly){cx.beginPath();poly.forEach((p,i)=>{const [x,y]=w2s(p[0],p[1]);i?cx.lineTo(x,y):cx.moveTo(x,y)});cx.closePath()}
+function drawTerritory(){
+  if(!layers.faction||(mode==='o'||mode==='f'))return;
+  // 본편 권역 경계는 보로노이라 바깥 권역이 지도 끝까지 늘어난다. 거점에서 멀어질수록 옅게 그린다(FADE 단위).
+  const FADE=4200*cam.s;
+  for(const r of DATA.regions){
+    const [ax,ay]=w2s(...r.at);
+    const col=r.owner==='split'?null:r.owner==='war'?'#f2b84b':F[r.owner].col;
+    const a=r.owner==='none'?0:(r.owner==='war'?.13:(F[r.owner]&&F[r.owner].shape==='hex'?.07:.11));
+    const g=cx.createRadialGradient(ax,ay,0,ax,ay,FADE);
+    if(col){g.addColorStop(0,hexA(col,a));g.addColorStop(1,hexA(col,0))}
+    else{g.addColorStop(0,'rgba(255,117,80,.07)');g.addColorStop(.45,'rgba(95,224,207,.08)');g.addColorStop(1,'rgba(95,224,207,0)')}
+    polyPath(r.poly);cx.fillStyle=g;cx.fill();
+    const gs=cx.createRadialGradient(ax,ay,0,ax,ay,FADE*1.1);gs.addColorStop(0,'rgba(201,164,92,.34)');gs.addColorStop(.7,'rgba(201,164,92,.12)');gs.addColorStop(1,'rgba(201,164,92,0)');
+    cx.strokeStyle=gs;cx.lineWidth=1;cx.setLineDash(r.owner==='none'?[4,4]:[]);cx.stroke();cx.setLineDash([]);
+  }
+  if(sel&&(sel.type==='sys'||sel.type==='rgn')){
+    cx.save();cx.strokeStyle='rgba(243,221,164,.85)';cx.lineWidth=2;cx.shadowColor='rgba(243,221,164,.6)';cx.shadowBlur=10;
+    for(const r of DATA.regions){if((sel.type==='sys'&&r.sys===sel.id)||(sel.type==='rgn'&&r.id===sel.id)){polyPath(r.poly);cx.stroke()}}
+    cx.restore();
+  }
+}
+function drawRoutes(t){
+  if(!layers.route)return;
+  for(const r of DATA.routes){
+    cx.save();
+    if(r.kind==='기저항로'){
+      if(!layers.base){cx.restore();continue}
+      linePath(r.line);cx.setLineDash([2,5]);cx.strokeStyle='rgba(185,196,205,.35)';cx.lineWidth=1;cx.stroke();
+    }else if(r.kind.startsWith('고속항로')){
+      linePath(r.line);cx.strokeStyle='rgba(95,224,207,.10)';cx.lineWidth=9;cx.stroke();
+      linePath(r.line);cx.strokeStyle='rgba(95,224,207,.5)';cx.lineWidth=1.8;cx.stroke();
+      linePath(r.line);cx.setLineDash([3,22]);cx.lineDashOffset=-t*.03;cx.strokeStyle='rgba(196,248,240,.9)';cx.lineWidth=2.2;cx.lineCap='round';cx.stroke();
+    }else{ // 회랑: 적갈색 이중선
+      for(const off of [-2.2,2.2]){cx.save();cx.translate(0,off);linePath(r.line);cx.strokeStyle='rgba(214,120,72,.7)';cx.lineWidth=1.2;cx.stroke();cx.restore()}
+    }
+    cx.restore();
+  }
+  // 관문 기호와 회랑 이름
+  const showName=(mode!=='o'&&mode!=='f')&&cam.s>.045;
+  cx.font='500 11px sans-serif';cx.textAlign='center';
+  for(const c of DATA.corridors){
+    const [gx,gy]=w2s(...c.at);
+    cx.save();cx.translate(gx,gy);cx.rotate(Math.PI/4);cx.fillStyle='#1a0f0a';cx.strokeStyle='#e08a5c';cx.lineWidth=1.3;const z=mode==='g'?3.5:5;cx.fillRect(-z,-z,z*2,z*2);cx.strokeRect(-z,-z,z*2,z*2);cx.restore();
+    if(showName){const w=cx.measureText(c.name).width+12;cx.fillStyle='rgba(5,8,13,.75)';cx.fillRect(gx-w/2,gy+9,w,17);cx.fillStyle='#f0b190';cx.fillText(c.name,gx,gy+22)}
+  }
+  if(showName){const [x,y]=w2s(21878,16200);const n='장강 대항로',w=cx.measureText(n).width+12;cx.fillStyle='rgba(5,8,13,.75)';cx.fillRect(x-w/2,y-9,w,18);cx.fillStyle='#8ff0e3';cx.fillText(n,x,y+4)}
+}
+function drawCityDots(){
+  if((mode==='o'||mode==='f'))return;
+  cx.save();cx.font='11px sans-serif';cx.textAlign='left';
+  const regionHeads=new Set(DATA.regions.map(r=>r.st[0]));
+  for(const c of DATA.cities){
+    if(c.owner==='war')continue;
+    const big=c.kind==='terran';if(mode==='g'&&!big)continue;
+    const [sx,sy]=w2s(...c.at);if(sx<-20||sx>W+20||sy<-20||sy>H+20)continue;
+    const o=F[c.owner];cx.fillStyle=o.col;cx.shadowColor=o.col;cx.shadowBlur=big?8:5;cx.beginPath();cx.arc(sx,sy,big?(mode==='g'?2.4:3.2):2,0,7);cx.fill();cx.shadowBlur=0;
+    if(mode==='s'&&cam.s>.16&&!regionHeads.has(c.name)){cx.fillStyle='rgba(185,196,205,.75)';cx.fillText(c.name,sx+6,sy+4)}
+  }
+  cx.restore();
+}
+function drawBeacon(t){
+  if(!layers.battle||(mode==='o'||mode==='f'))return;
+  const [sx,sy]=w2s(BF.cx,BF.cy);
+  for(let i=0;i<3;i++){const ph=((t*.0005)+i/3)%1;cx.strokeStyle=`rgba(255,117,80,${(1-ph)*.6})`;cx.lineWidth=1.5;cx.beginPath();cx.arc(sx,sy,8+ph*38,0,7);cx.stroke()}
+  cx.save();cx.translate(sx,sy);cx.rotate(t*.0004);cx.strokeStyle='rgba(242,184,75,.8)';cx.lineWidth=1.2;
+  for(let i=0;i<4;i++){cx.rotate(Math.PI/2);cx.beginPath();cx.arc(0,0,16,-.5,.5);cx.stroke()}
+  cx.restore();
+}
+const PAL={star:['#fff4d6','#ffb347','#a8501a'],starW:['#ffffff','#bcd6ff','#3d5a9e'],starR:['#ffe0c8','#ff8a4a','#7a2410'],
+  rock:['#c8c2b8','#7d766d','#2a2724'],venus:['#fff0c8','#d9a85e','#5e3e18'],earth:['#a8e6ff','#2f7fb8','#0b2238'],
+  terran:['#c8f4ff','#2f8fb0','#0a2a3a'],colony:['#dfe6d6','#7a8f80','#1d2a26'],moon:['#e6e6ea','#8d8f99','#2c2d33'],
+  mars:['#ffb08a','#c0532f','#3d140a'],gas:['#f6dfc0','#c49464','#4a3020'],gas2:['#e0e6ff','#8a93c8','#2a2f55'],ice:['#eefaff','#8cc2dc','#1f3c52'],
+  station:['#e8edf2','#8e9aa6','#2a333d']};
+function vkind(b){
+  if(b.name==='구지')return 'earth';if(b.name==='형혹')return 'mars';
+  if(b.kind==='star')return b.name==='태양'?'star':['star','starW','starR'][b.seed%3];
+  if(b.kind==='moon')return 'moon';if(b.kind==='terran')return 'terran';if(b.kind==='colony')return 'colony';if(b.kind==='station')return 'station';
+  if(b.role==='INNER')return 'rock';if(b.role==='VENUS')return 'venus';if(b.role==='JUPITER')return 'gas';
+  return ['gas','ice','rock','gas2'][b.seed%4];
+}
+function sphere(x,y,r,kind,t,light,seed=0){
+  const pal=PAL[kind];
+  if(kind.startsWith('star')){const halo=cx.createRadialGradient(x,y,r*.6,x,y,r*3.2);halo.addColorStop(0,hexA(pal[1],.45));halo.addColorStop(1,hexA(pal[1],0));cx.fillStyle=halo;cx.beginPath();cx.arc(x,y,r*3.2,0,7);cx.fill()}
+  if(kind==='station'){cx.save();cx.translate(x,y);cx.rotate(t*.0006);cx.strokeStyle='#c9d4de';cx.lineWidth=1.4;cx.strokeRect(-r*.7,-r*.7,r*1.4,r*1.4);cx.rotate(Math.PI/4);cx.strokeStyle='rgba(201,164,92,.9)';cx.strokeRect(-r*.45,-r*.45,r*.9,r*.9);cx.restore();return}
+  const g=cx.createRadialGradient(x-r*.35,y-r*.35,r*.1,x,y,r);g.addColorStop(0,pal[0]);g.addColorStop(.55,pal[1]);g.addColorStop(1,pal[2]);
+  cx.fillStyle=g;cx.beginPath();cx.arc(x,y,r,0,7);cx.fill();
+  if(r>4&&(kind==='earth'||kind==='terran')){cx.save();cx.beginPath();cx.arc(x,y,r,0,7);cx.clip();cx.fillStyle=kind==='earth'?'rgba(120,95,60,.75)':'rgba(70,140,80,.6)';
+    const o=seed%7*.1;for(const [dx,dy,rr] of [[-.3+o,-.1,.35],[.25,.2-o,.28],[.1,-.45+o,.2]]){cx.beginPath();cx.ellipse(x+dx*r,y+dy*r,rr*r,rr*r*.6,.6,0,7);cx.fill()}
+    cx.strokeStyle='rgba(255,255,255,.28)';cx.lineWidth=r*.08;cx.beginPath();cx.arc(x,y,r*.75,-2.5+t*.0001+o,-1.2+t*.0001+o);cx.stroke();cx.restore()}
+  if(r>4&&(kind==='gas'||kind==='gas2')){cx.save();cx.beginPath();cx.arc(x,y,r,0,7);cx.clip();cx.fillStyle=kind==='gas'?'rgba(120,70,40,.3)':'rgba(60,60,120,.3)';for(let i=-2;i<=2;i++)cx.fillRect(x-r,y+i*r*.32,r*2,r*.12);cx.restore()}
+  if(kind==='colony'&&r>3){cx.fillStyle='rgba(255,214,140,.9)';for(let i=0;i<4;i++){const a=seed*.7+i*1.7;cx.fillRect(x+Math.cos(a)*r*.45,y+Math.sin(a)*r*.45,1.2,1.2)}}
+  if(!kind.startsWith('star')){
+    const dir=light?Math.atan2(y-light[1],x-light[0]):.8;
+    const sh=cx.createLinearGradient(x-Math.cos(dir)*r,y-Math.sin(dir)*r,x+Math.cos(dir)*r,y+Math.sin(dir)*r);sh.addColorStop(0,'rgba(0,0,0,0)');sh.addColorStop(.55,'rgba(0,0,0,.15)');sh.addColorStop(1,'rgba(0,0,0,.75)');
+    cx.fillStyle=sh;cx.beginPath();cx.arc(x,y,r,0,7);cx.fill();
+    cx.strokeStyle=kind==='earth'||kind==='terran'?'rgba(140,210,255,.55)':'rgba(255,255,255,.12)';cx.lineWidth=kind==='earth'||kind==='terran'?1.6:1;cx.beginPath();cx.arc(x,y,r+.5,0,7);cx.stroke()}
+}
+const BODY=Object.fromEntries(DATA.bodies.map(b=>[b.id,b]));
+function sysFade(){const a=Math.log(lvScale('s')*1.4),b=Math.log(lvScale('o')*.45);return Math.min(1,Math.max(0,(Math.log(cam.s)-a)/(b-a)))}
+function onScreen(x,y,m){return x>-m&&x<W+m&&y>-m&&y<H+m}
+function drawSystems(t){
+  const k=sysFade();if(k<=0)return;
+  cx.save();cx.globalAlpha=k;
+  // 궤도선: 항성 둘레(행성), 주행성 둘레(위성)
+  for(const f of DATA.families){
+    const [sx,sy]=w2s(...f.at);if(!onScreen(sx,sy,f.radius*1.6*cam.s))continue;
+    for(const b of DATA.bodies){
+      if(b.parent!==f.star&&b.parent!==f.host)continue;if(b.id===f.star)continue;
+      const p=BODY[b.parent];const [px,py]=w2s(...p.at);const d=Math.hypot(b.at[0]-p.at[0],b.at[1]-p.at[1])*cam.s;
+      cx.strokeStyle=b.kind==='moon'?'rgba(185,196,205,.2)':'rgba(185,196,205,.12)';cx.lineWidth=1;cx.setLineDash(b.kind==='moon'?[2,4]:[]);cx.beginPath();cx.arc(px,py,d,0,7);cx.stroke();cx.setLineDash([]);
+    }
+    // 행성계 테두리(본편 planetary_families.radius)
+    const [cx0,cy0]=w2s(...f.center);cx.strokeStyle='rgba(201,164,92,.10)';cx.setLineDash([1,6]);cx.beginPath();cx.arc(cx0,cy0,f.radius*cam.s,0,7);cx.stroke();cx.setLineDash([]);
+  }
+  if(layers.battle)drawBattlefield(t);
+  for(const b of DATA.bodies){
+    const [x,y]=w2s(...b.at);const r=Math.max(b.kind==='star'?4:2.2,b.r*cam.s*.62);if(!onScreen(x,y,r*3.5))continue;
+    let light=null;const ps=b.kind==='moon'?BODY[b.parent]&&BODY[BODY[b.parent].parent]:BODY[b.parent];
+    if(ps&&ps.kind==='star')light=w2s(...ps.at);else{const f=familyNear(b.at[0],b.at[1],900);if(f)light=w2s(...f.at)}
+    sphere(x,y,r,vkind(b),t,light,b.seed);
+    // 소유 고리: 거주 주행성·식민지·정거장
+    if(b.eco&&b.kind!=='planet'&&b.kind!=='moon'&&layers.faction){const o=b.owner==='war'?F.war:F[b.owner];cx.strokeStyle=hexA(o.col,.7);cx.lineWidth=1.2;cx.beginPath();cx.arc(x,y,r+4,0,7);cx.stroke()}
+  }
+  if(layers.battle)drawBattleFleets();
+  cx.restore();
+}
+function bf2s(x,y){return w2s(BF.cx+(x-BF.w/2)*BF.k,BF.cy+(y-BF.h/2)*BF.k)}
+function drawBattlefield(t){
+  const [x0,y0]=bf2s(0,0),[x1,y1]=bf2s(BF.w,BF.h);
+  cx.save();cx.fillStyle='rgba(8,14,22,.35)';cx.fillRect(x0,y0,x1-x0,y1-y0);
+  cx.strokeStyle='rgba(95,224,207,.07)';cx.lineWidth=1;
+  for(let gx=100;gx<BF.w;gx+=100){const [a]=bf2s(gx,0);cx.beginPath();cx.moveTo(a,y0);cx.lineTo(a,y1);cx.stroke()}
+  for(let gy=100;gy<BF.h;gy+=100){const [,b]=bf2s(0,gy);cx.beginPath();cx.moveTo(x0,b);cx.lineTo(x1,b);cx.stroke()}
+  cx.strokeStyle='rgba(201,164,92,.85)';cx.lineWidth=2;const L=18;
+  for(const [px,py,dx,dy] of [[x0,y0,1,1],[x1,y0,-1,1],[x0,y1,1,-1],[x1,y1,-1,-1]]){cx.beginPath();cx.moveTo(px+dx*L,py);cx.lineTo(px,py);cx.lineTo(px,py+dy*L);cx.stroke()}
+  const sc=x0+((t*.06)%(x1-x0));const sg=cx.createLinearGradient(sc-60,0,sc,0);sg.addColorStop(0,'rgba(95,224,207,0)');sg.addColorStop(1,'rgba(95,224,207,.12)');cx.fillStyle=sg;cx.fillRect(sc-60,y0,60,y1-y0);
+  cx.font='600 11px sans-serif';cx.fillStyle='rgba(243,221,164,.9)';cx.textAlign='left';cx.fillText('적벽 전장 · 1600 × 900',x0+8,y0-8);
+  for(const z of BF_TERRAIN){
+    const [a,b]=bf2s(z.x,z.y),[c,d]=bf2s(z.x+z.w,z.y+z.h);
+    const g=cx.createRadialGradient((a+c)/2,(b+d)/2,0,(a+c)/2,(b+d)/2,(c-a)*.75);g.addColorStop(0,`rgba(${z.col},.35)`);g.addColorStop(1,`rgba(${z.col},.04)`);
+    cx.fillStyle=g;cx.fillRect(a,b,c-a,d-b);cx.strokeStyle=`rgba(${z.col},.6)`;cx.setLineDash([4,4]);cx.strokeRect(a,b,c-a,d-b);cx.setLineDash([]);
+    cx.fillStyle=`rgba(${z.col},1)`;cx.font='11px sans-serif';cx.fillText(z.name,a+4,z.name==='적운 성운'?b-6:d+14);
+  }
+  for(const e of BF_ESCAPE){const [a,b]=bf2s(e.x,e.y);const col=F[e.f].col;cx.strokeStyle=col;cx.lineWidth=1.5;cx.setLineDash([3,3]);cx.beginPath();cx.arc(a,b,60*BF.k*cam.s,-Math.PI/2,Math.PI/2,e.x===0);cx.stroke();cx.setLineDash([]);
+    cx.fillStyle=col;cx.font='11px sans-serif';cx.textAlign=e.x===0?'left':'right';cx.fillText((e.x===0?'◂ ':'')+e.lb+(e.x===0?'':' ▸'),a+(e.x===0?6:-6),b+60*BF.k*cam.s+16);cx.textAlign='left'}
+  cx.restore();
+}
+function drawBattleFleets(){
+  const k=1-fleetDetail();if(k<=0)return;
+  cx.save();cx.globalAlpha*=k;
+  for(const q of SQ){
+    if(q.alive===0)continue;const [x,y]=bf2s(...q.cur),o=F[q.f];
+    cx.strokeStyle=hexA(o.col,.5);cx.lineWidth=1;cx.beginPath();cx.moveTo(x,y);cx.lineTo(x+Math.cos(q.head)*22,y+Math.sin(q.head)*22);cx.stroke();
+    cx.fillStyle=o.deep;cx.strokeStyle=q.flag?'#f3dda4':o.col;cx.lineWidth=1.4;shapePath(cx,o.shape,x,y,q.flag?8:6.5);cx.fill();cx.stroke();
+    if(cam.s>lvScale('o')*1.25){cx.font='10px sans-serif';cx.textAlign='center';cx.fillStyle='rgba(238,242,244,.85)';cx.fillText(q.cmd,x,y-11)}
+  }
+  cx.restore();
+}
+function drawVignette(){
+  const g=cx.createRadialGradient(W/2,H/2,Math.min(W,H)*.35,W/2,H/2,Math.max(W,H)*.75);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.55)');
+  cx.fillStyle=g;cx.fillRect(0,0,W,H);
+}
+
+// ===================================================================== 함대: 전투 화면 수준 표현
+// 함종 → 실루엣: 강습모함 cv, 공성함·포격함 bb, 전열함·전자전함 cr, 보급함 sup, 요격함 es, 고속정 fc, 기함 fl
+const SHIP_CLS={'SHP-01':'cv','SHP-02':'bb','SHP-03':'bb','SHP-04':'cr','SHP-05':'sup','SHP-06':'cr','SHP-07':'es','SHP-08':'fc'};
+const SHIP_NAME={'SHP-01':'강습모함','SHP-02':'공성함','SHP-03':'포격함','SHP-04':'전열함','SHP-05':'보급함','SHP-06':'전자전함','SHP-07':'요격함','SHP-08':'고속정'};
+const CLS={bb:{L:28,W:6.8},cr:{L:22,W:5},cv:{L:25,W:8.6},es:{L:13,W:3.6},fl:{L:44,W:10.5},sup:{L:20,W:7},fc:{L:8,W:2.4}};
+const SHIP_PAL={
+  shu:{a:'#e4ecf0',b:'#93a3ad',c:'#4a5862',d:'#141b21',ac:'#58e0cf',lt:'#bff8ff',eng:'150,240,255',side:0},
+  wu: {a:'#e6e2f0',b:'#9a93b0',c:'#4d4766',d:'#15131f',ac:'#b9a2ff',lt:'#e6dcff',eng:'200,180,255',side:0},
+  wei:{a:'#c9b2a6',b:'#7b625a',c:'#3e2e2a',d:'#140c0b',ac:'#ff6a3d',lt:'#ffc27a',eng:'255,150,80',side:1}};
+const SC=4;
+function hull(c,cls,side,L,Wd){
+  const h=Wd/2;c.beginPath();
+  if(cls==='fc'){c.moveTo(L*.5,0);c.lineTo(-L*.5,-h);c.lineTo(-L*.3,0);c.lineTo(-L*.5,h);c.closePath();return}
+  if(side===0){
+    if(cls==='cv'||cls==='sup'){c.moveTo(L*.5,-h*.5);c.lineTo(L*.5,h*.5);c.lineTo(L*.2,h);c.lineTo(-L*.5,h);c.lineTo(-L*.5,-h);c.lineTo(L*.2,-h)}
+    else{c.moveTo(L*.5,0);c.quadraticCurveTo(L*.38,-h*.9,L*.1,-h);c.lineTo(-L*.32,-h);c.lineTo(-L*.36,-h*1.18);c.lineTo(-L*.5,-h*1.12);c.lineTo(-L*.5,h*1.12);c.lineTo(-L*.36,h*1.18);c.lineTo(-L*.32,h);c.lineTo(L*.1,h);c.quadraticCurveTo(L*.38,h*.9,L*.5,0)}
+  }else{
+    if(cls==='cv'||cls==='sup'){c.moveTo(L*.5,0);c.lineTo(L*.3,-h);c.lineTo(-L*.5,-h*.9);c.lineTo(-L*.42,0);c.lineTo(-L*.5,h*.9);c.lineTo(L*.3,h)}
+    else{c.moveTo(L*.5,0);c.lineTo(L*.22,-h*.55);c.lineTo(L*.16,-h*1.05);c.lineTo(-L*.18,-h*.85);c.lineTo(-L*.3,-h*1.3);c.lineTo(-L*.5,-h*.9);c.lineTo(-L*.44,0);c.lineTo(-L*.5,h*.9);c.lineTo(-L*.3,h*1.3);c.lineTo(-L*.18,h*.85);c.lineTo(L*.16,h*1.05);c.lineTo(L*.22,h*.55)}
+  }
+  c.closePath();
+}
+function shipSprite(cls,fk){
+  const{L,W:Wd}=CLS[cls],pal=SHIP_PAL[fk],side=pal.side;const cw=Math.ceil((L+4)*SC),ch=Math.ceil((Wd*1.4+4)*SC);
+  const cvs=document.createElement('canvas');cvs.width=cw;cvs.height=ch;const c=cvs.getContext('2d');c.translate(cw/2,ch/2);c.scale(SC,SC);
+  hull(c,cls,side,L,Wd);c.fillStyle=pal.d;c.fill();
+  c.save();c.scale(.92,.86);hull(c,cls,side,L,Wd);const gr=c.createLinearGradient(0,-Wd/2,0,Wd/2);gr.addColorStop(0,pal.a);gr.addColorStop(.38,pal.b);gr.addColorStop(.75,pal.c);gr.addColorStop(1,pal.d);c.fillStyle=gr;c.fill();c.restore();
+  c.save();hull(c,cls,side,L,Wd);c.clip();
+  c.strokeStyle='rgba(0,0,0,.35)';c.lineWidth=.18;for(let i=-0.4;i<0.45;i+=0.11){c.beginPath();c.moveTo(L*i,-Wd);c.lineTo(L*i,Wd);c.stroke()}
+  c.strokeStyle='rgba(255,255,255,.35)';c.lineWidth=.25;c.beginPath();c.moveTo(-L*.45,-Wd*.08);c.lineTo(L*.42,-Wd*.04);c.stroke();
+  if(cls==='cv'){c.fillStyle='rgba(20,26,32,.85)';c.fillRect(-L*.42,-Wd*.22,L*.8,Wd*.44);c.strokeStyle=hexA(pal.ac,.8);c.lineWidth=.22;c.setLineDash([.9,.9]);c.beginPath();c.moveTo(-L*.4,0);c.lineTo(L*.36,0);c.stroke();c.setLineDash([])}
+  if(cls==='sup'){c.fillStyle=pal.c;for(let i=0;i<3;i++)c.fillRect(-L*.36+i*L*.22,-Wd*.32,L*.16,Wd*.64)}
+  c.fillStyle=pal.ac;c.globalAlpha=.85;c.fillRect(L*.12,-Wd*.5,L*.05,Wd);c.globalAlpha=1;
+  c.restore();
+  if(cls==='bb'||cls==='fl'||cls==='cr'){
+    const tx=cls==='cr'?-L*.06:-L*.1;const tw=L*(cls==='fl'?.2:.16),th=Wd*.42;
+    c.fillStyle=pal.c;c.fillRect(tx-tw/2-.3,-th/2-.3,tw+.6,th+.6);
+    const g2=c.createLinearGradient(0,-th/2,0,th/2);g2.addColorStop(0,pal.a);g2.addColorStop(1,pal.c);c.fillStyle=g2;c.fillRect(tx-tw/2,-th/2,tw,th);
+    c.fillStyle=pal.lt;for(let i=0;i<4;i++)c.fillRect(tx-tw/2+tw*(.15+i*.2),-th*.1,tw*.08,th*.18);
+    c.fillStyle=pal.c;const n=cls==='fl'?4:(cls==='bb'?3:2);for(let i=0;i<n;i++){c.beginPath();c.arc(L*(.3-i*.1)-(cls==='fl'?0:L*.02),0,Wd*.11,0,6.28);c.fill()}
+  }
+  c.fillStyle=pal.d;c.fillRect(-L*.5,-Wd*.42,L*.07,Wd*.84);
+  c.fillStyle=`rgba(${pal.eng},.95)`;const ne=cls==='es'||cls==='fc'?1:(cls==='fl'?4:3);for(let i=0;i<ne;i++){c.beginPath();c.arc(-L*.495,(i-(ne-1)/2)*Wd*.26,Wd*.08,0,6.28);c.fill()}
+  return{cv:cvs,L,Wd,cw,ch};
+}
+const SPR={};for(const fk in SHIP_PAL){SPR[fk]={};for(const k in CLS)SPR[fk][k]=shipSprite(k,fk)}
+// 진형 슬롯(전장 단위, x = 전방, y = 측면). 큰 함선을 가운데, 고속정·요격함을 바깥에 둔다.
+function formationSlots(frm,n){
+  const d=17,out=[];
+  if(frm==='FRM-03'){out.push([0,0]);let ring=1;while(out.length<n){const m=ring*6;for(let i=0;i<m&&out.length<n;i++){const a=i/m*Math.PI*2;out.push([Math.cos(a)*d*ring,Math.sin(a)*d*ring])}ring++}}
+  else if(frm==='FRM-06'){for(let i=0;i<n;i++)out.push([-(i>>1)*d*1.1,(i&1?1:-1)*d*.45])}
+  else{
+    // 어린진(쐐기)·학익진(날개를 앞으로)·안행진(V)·봉시진(좁은 화살)
+    const per=frm==='FRM-05'?2:frm==='FRM-02'?5:3;let row=0;
+    while(out.length<n){const w=frm==='FRM-01'?row+1:frm==='FRM-05'?Math.min(per,row+1):per;
+      for(let i=0;i<w&&out.length<n;i++){const lat=(i-(w-1)/2)*d;
+        let x=-row*d*.95;if(frm==='FRM-02')x=Math.abs(lat)*.55-row*d*.8;if(frm==='FRM-04')x=-Math.abs(lat)*.7-row*d*.8;
+        out.push([x,lat+(frm==='FRM-04'&&row%2?d*.3:0)])}
+      row++}
+  }
+  return out.sort((a,b)=>Math.hypot(...a)-Math.hypot(...b));
+}
+const ORDER={fl:0,cv:1,bb:2,sup:3,cr:4,es:5,fc:6};
+const SQ=DATA.squadrons.map(q=>{
+  let ships=q.comp.flatMap(([t,c])=>Array(c).fill(SHIP_CLS[t]));
+  if(q.flag){const i=ships.findIndex(c=>c==='cv'||c==='bb');if(i>=0)ships[i]='fl'}
+  ships.sort((a,b)=>ORDER[a]-ORDER[b]);
+  const slots=formationSlots(q.frm,ships.length),head=q.f==='wei'?Math.PI:0;
+  return {...q,head,head0:head,cur:[...q.pos],total:ships.length,alive:ships.length,period:1.6+((q.pos[0]*7+q.pos[1]*3)%80)/100,next:1+(q.pos[1]%30)/10,
+    ships:ships.map((cls,i)=>({cls,fx:slots[i][0],fy:slots[i][1],ph:i*1.37+q.pos[0]*.01,alive:true}))};
+});
+// 교전 연출: 화면용 근사다. 승패·피해 수치는 전투 코어(M4~)가 정하고, 이 시안은 그 모습만 보인다.
+const RANGE={fl:260,bb:250,cv:300,cr:220,es:150,fc:110,sup:0};
+const SPEED={fc:34,es:22};
+const BEAM_COL={shu:'120,240,230',wu:'205,185,255',wei:'255,140,90'};
+const SHIELD_COL={shu:'140,240,255',wu:'215,195,255',wei:'255,185,125'};
+const CBT={on:true,t:0,spd:1,fx:[],debris:[],shots:[],end:0};
+const ALLY=f=>f==='wei'?1:0;
+function shipBF(q,s,t){
+  const ch=Math.cos(q.head),sh=Math.sin(q.head);
+  const lx=s.fx+Math.sin(t*.0011+s.ph)*.5,ly=s.fy+Math.cos(t*.0009+s.ph)*.8;
+  return [q.cur[0]+lx*ch-ly*sh,q.cur[1]+lx*sh+ly*ch];
+}
+function cbtReset(){
+  for(const q of SQ){q.cur=[...q.pos];q.head=q.head0;q.alive=q.total;q.target=null;q.next=1+(q.pos[1]%30)/10;for(const s of q.ships)s.alive=true}
+  CBT.t=0;CBT.fx.length=0;CBT.debris.length=0;CBT.shots.length=0;CBT.end=0;
+}
+function nearestFoe(q){let b=null,bd=1e9;for(const o of SQ){if(ALLY(o.f)===ALLY(q.f)||o.alive===0)continue;const d=Math.hypot(o.cur[0]-q.cur[0],o.cur[1]-q.cur[1]);if(d<bd){bd=d;b=o}}return [b,bd]}
+function aliveIn(q){return q.ships.filter(s=>s.alive)}
+function cbtStep(dt,tm){
+  CBT.t+=dt;
+  for(const q of SQ){
+    if(q.alive===0)continue;
+    const [foe,d]=nearestFoe(q);q.target=foe;if(!foe)continue;
+    // 사거리(전대 주력 기준)까지 접근, 들어오면 정지
+    const lead=aliveIn(q).reduce((m,s)=>Math.max(m,RANGE[s.cls]||0),0)||200;
+    const want=Math.atan2(foe.cur[1]-q.cur[1],foe.cur[0]-q.cur[0]);
+    let da=((want-q.head+Math.PI*3)%(Math.PI*2))-Math.PI;q.head+=da*Math.min(1,dt*1.2);
+    if(d>lead*.85){const v=(SPEED[q.ships[0].cls]||14)*dt;q.cur[0]+=Math.cos(q.head)*v;q.cur[1]+=Math.sin(q.head)*v*.9;
+      q.cur[0]=Math.max(20,Math.min(BF.w-20,q.cur[0]));q.cur[1]=Math.max(20,Math.min(BF.h-20,q.cur[1]))}
+    // 일제 사격: 앞줄부터 물결처럼(전투 화면과 같은 1.6~2.4초 주기)
+    q.next-=dt;
+    if(q.next<=0&&d<lead*1.15){
+      q.next=q.period;
+      const own=aliveIn(q).filter(s=>RANGE[s.cls]>0&&RANGE[s.cls]>=d*.8);const tg=aliveIn(foe);if(!own.length||!tg.length)continue;
+      const fmax=Math.max(...own.map(s=>s.fx));
+      for(const s of own){if(Math.random()<.35)continue;
+        const ts=tg[Math.floor(Math.random()*tg.length)];
+        CBT.shots.push({at:CBT.t+(fmax-s.fx)*.012+Math.random()*.15,q,s,foe,ts,kind:s.cls==='cv'?'msl':s.cls==='fc'?'bolt':'beam'})}
+    }
+  }
+  // 발사 예약 → 연출
+  for(let i=CBT.shots.length-1;i>=0;i--){const sh=CBT.shots[i];if(sh.at>CBT.t)continue;CBT.shots.splice(i,1);
+    if(!sh.s.alive||!sh.ts.alive)continue;
+    const life=sh.kind==='msl'?1.3:sh.kind==='bolt'?.45:.32;
+    CBT.fx.push({k:sh.kind,t0:CBT.t,life,q:sh.q,s:sh.s,foe:sh.foe,ts:sh.ts,from:shipBF(sh.q,sh.s,tm),bend:(Math.random()-.5)*120,hit:false})}
+  // 명중 처리
+  for(const f of CBT.fx){
+    if(f.hit||!(f.k==='beam'||f.k==='msl'||f.k==='bolt'))continue;
+    const u=(CBT.t-f.t0)/f.life;if(u<(f.k==='beam'?.25:1))continue;f.hit=true;
+    if(!f.ts.alive)continue;const p=shipBF(f.foe,f.ts,tm);
+    const ratio=f.foe.alive/f.foe.total;
+    if(Math.random()<(f.k==='msl'?.08:.035)&&ratio>.42){ // 격침
+      f.ts.alive=false;f.foe.alive--;
+      CBT.fx.push({k:'boom',t0:CBT.t,life:1.1,x:p[0],y:p[1],sz:CLS[f.ts.cls].L});
+      CBT.fx.push({k:'wave',t0:CBT.t,life:.8,x:p[0],y:p[1],sz:CLS[f.ts.cls].L*2.2});
+      for(let i=0;i<9;i++){const a=Math.random()*6.28,v=8+Math.random()*26;CBT.fx.push({k:'ember',t0:CBT.t,life:.9+Math.random()*.8,x:p[0],y:p[1],vx:Math.cos(a)*v,vy:Math.sin(a)*v})}
+      CBT.debris.push({x:p[0],y:p[1],vx:(Math.random()-.5)*4,vy:(Math.random()-.5)*4,rot:Math.random()*6,vr:(Math.random()-.5)*.6,cls:f.ts.cls,f:f.foe.f,t0:CBT.t});
+    }else if(Math.random()<.68)CBT.fx.push({k:'shield',t0:CBT.t,life:.38,x:p[0],y:p[1],f:f.foe.f,sz:CLS[f.ts.cls].L*.8,a:Math.atan2(f.from[1]-p[1],f.from[0]-p[0])});
+    else CBT.fx.push({k:'spark',t0:CBT.t,life:.3,x:p[0],y:p[1],sz:CLS[f.ts.cls].L*.4});
+  }
+  for(let i=CBT.fx.length-1;i>=0;i--)if(CBT.t-CBT.fx[i].t0>CBT.fx[i].life)CBT.fx.splice(i,1);
+  for(const d of CBT.debris){d.x+=d.vx*dt;d.y+=d.vy*dt;d.rot+=d.vr*dt}
+  if(CBT.debris.length>80)CBT.debris.splice(0,CBT.debris.length-80);
+  // 한쪽 전력이 크게 줄면 잠시 뒤 처음부터(시안 반복 재생)
+  const side=[0,1].map(sd=>SQ.filter(q=>ALLY(q.f)===sd).reduce((a,q)=>a+q.alive,0)/SQ.filter(q=>ALLY(q.f)===sd).reduce((a,q)=>a+q.total,0));
+  if(!CBT.end&&(Math.min(...side)<.5||CBT.t>240))CBT.end=CBT.t;
+  if(CBT.end&&CBT.t-CBT.end>6)cbtReset();
+}
+function drawCombat(unit,tm){
+  cx.save();cx.globalCompositeOperation='lighter';
+  for(const f of CBT.fx){
+    const u=(CBT.t-f.t0)/f.life;
+    if(f.k==='beam'||f.k==='bolt'){
+      if(!f.ts.alive&&u>.3)continue;
+      const a=f.s.alive?shipBF(f.q,f.s,tm):f.from,b=shipBF(f.foe,f.ts,tm);
+      const [ax,ay]=bf2s(...a),[bx,by]=bf2s(...b),col=BEAM_COL[f.q.f];
+      if(f.k==='bolt'){const p=Math.min(1,u*1.4),x=ax+(bx-ax)*p,y=ay+(by-ay)*p,x0=ax+(bx-ax)*Math.max(0,p-.18),y0=ay+(by-ay)*Math.max(0,p-.18);
+        cx.strokeStyle=`rgba(${col},.9)`;cx.lineWidth=Math.max(1,unit*1.2);cx.beginPath();cx.moveTo(x0,y0);cx.lineTo(x,y);cx.stroke();continue}
+      const al=u<.15?u/.15:1-(u-.15)/.85;
+      cx.strokeStyle=`rgba(${col},${.25*al})`;cx.lineWidth=Math.max(3,unit*4);cx.beginPath();cx.moveTo(ax,ay);cx.lineTo(bx,by);cx.stroke();
+      cx.strokeStyle=`rgba(255,255,255,${.85*al})`;cx.lineWidth=Math.max(.8,unit*.9);cx.stroke();
+      const mg=Math.max(3,unit*5)*al;const g=cx.createRadialGradient(ax,ay,0,ax,ay,mg);g.addColorStop(0,`rgba(${col},.9)`);g.addColorStop(1,`rgba(${col},0)`);cx.fillStyle=g;cx.fillRect(ax-mg,ay-mg,mg*2,mg*2);
+    }else if(f.k==='msl'){
+      const b=shipBF(f.foe,f.ts,tm),a=f.from,p=Math.min(1,u);
+      const mx=(a[0]+b[0])/2-(b[1]-a[1])*f.bend/600,my=(a[1]+b[1])/2+(b[0]-a[0])*f.bend/600;
+      const pt=q=>[(1-q)*(1-q)*a[0]+2*(1-q)*q*mx+q*q*b[0],(1-q)*(1-q)*a[1]+2*(1-q)*q*my+q*q*b[1]];
+      cx.strokeStyle='rgba(255,210,150,.55)';cx.lineWidth=Math.max(.8,unit*.7);cx.beginPath();
+      for(let i=0;i<=8;i++){const q=Math.max(0,p-.25)+(p-Math.max(0,p-.25))*i/8;const [x,y]=bf2s(...pt(q));i?cx.lineTo(x,y):cx.moveTo(x,y)}cx.stroke();
+      const [hx,hy]=bf2s(...pt(p));cx.fillStyle='rgba(255,240,200,.95)';cx.beginPath();cx.arc(hx,hy,Math.max(1.4,unit*1.2),0,7);cx.fill();
+    }else if(f.k==='shield'){ // 육각 무늬 방어막 섬광
+      const [x,y]=bf2s(f.x,f.y),r=f.sz*unit*(1+u*.3),col=SHIELD_COL[f.f],al=(1-u)*.8;
+      cx.strokeStyle=`rgba(${col},${al})`;cx.lineWidth=Math.max(1,unit*.8);
+      cx.beginPath();cx.arc(x,y,r,f.a-1.1,f.a+1.1);cx.stroke();
+      cx.lineWidth=Math.max(.6,unit*.35);for(let i=-2;i<=2;i++){const a=f.a+i*.38,hx=x+Math.cos(a)*r*.86,hy=y+Math.sin(a)*r*.86;cx.beginPath();for(let k=0;k<6;k++){const b=k*Math.PI/3;cx.lineTo(hx+Math.cos(b)*r*.14,hy+Math.sin(b)*r*.14)}cx.closePath();cx.stroke()}
+    }else if(f.k==='spark'){
+      const [x,y]=bf2s(f.x,f.y),r=Math.max(2,f.sz*unit)*(1-u*.5);const g=cx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(255,240,200,${1-u})`);g.addColorStop(1,'rgba(255,120,40,0)');cx.fillStyle=g;cx.fillRect(x-r,y-r,r*2,r*2);
+    }else if(f.k==='boom'){
+      const [x,y]=bf2s(f.x,f.y),r=Math.max(4,f.sz*unit)*(.4+u*1.1);const g=cx.createRadialGradient(x,y,0,x,y,r);
+      g.addColorStop(0,`rgba(255,250,220,${1-u})`);g.addColorStop(.35,`rgba(255,170,60,${(1-u)*.9})`);g.addColorStop(1,'rgba(160,40,10,0)');cx.fillStyle=g;cx.fillRect(x-r,y-r,r*2,r*2);
+    }else if(f.k==='wave'){
+      const [x,y]=bf2s(f.x,f.y);cx.strokeStyle=`rgba(255,200,140,${(1-u)*.6})`;cx.lineWidth=Math.max(1,unit*1.2*(1-u));cx.beginPath();cx.arc(x,y,Math.max(3,f.sz*unit*u),0,7);cx.stroke();
+    }else if(f.k==='ember'){
+      const dt=CBT.t-f.t0,[x,y]=bf2s(f.x+f.vx*dt,f.y+f.vy*dt);cx.fillStyle=`rgba(255,${150+Math.floor(80*(1-u))},80,${1-u})`;cx.fillRect(x,y,Math.max(1,unit*.6),Math.max(1,unit*.6));
+    }
+  }
+  cx.restore();
+}
+function drawDebris(unit){
+  for(const d of CBT.debris){
+    const [x,y]=bf2s(d.x,d.y),sp=SPR[d.f][d.cls],age=CBT.t-d.t0;
+    cx.save();cx.globalAlpha*=.55;cx.translate(x,y);cx.rotate(d.rot);const sc=unit/SC;cx.filter='grayscale(.7) brightness(.45)';
+    cx.drawImage(sp.cv,-sp.cw/2*sc,-sp.ch/2*sc,sp.cw*sc*.55,sp.ch*sc);cx.drawImage(sp.cv,sp.cw*.1*sc,-sp.ch/2*sc,sp.cw*sc*.4,sp.ch*sc);cx.filter='none';cx.restore();
+    if(age<14){const r=Math.max(2,CLS[d.cls].L*unit*.3)*(1+.25*Math.sin(age*9+d.rot));const g=cx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(255,140,50,${.5*(1-age/14)})`);g.addColorStop(1,'rgba(255,80,20,0)');cx.fillStyle=g;cx.fillRect(x-r,y-r,r*2,r*2)}
+  }
+}
+function fleetDetail(){const o=lvScale('o'),f=lvScale('f');return Math.min(1,Math.max(0,(Math.log(cam.s)-Math.log(Math.sqrt(o*f)*.8))/(Math.log(f)-Math.log(Math.sqrt(o*f)*.8))))}
+function drawShips(t){
+  const k=fleetDetail();if(k<=0||!layers.battle)return;
+  const unit=BF.k*cam.s; // 전장 1단위의 화면 픽셀
+  cx.save();cx.globalAlpha=k;
+  drawDebris(unit);
+  for(const q of SQ){
+    const [qx,qy]=bf2s(...q.cur);if(!onScreen(qx,qy,180*unit)||q.alive===0)continue;
+    cx.strokeStyle=hexA(F[q.f].col,.18);cx.setLineDash([3,5]);cx.beginPath();cx.arc(qx,qy,(Math.max(...q.ships.map(s=>Math.hypot(s.fx,s.fy)))+20)*unit,0,7);cx.stroke();cx.setLineDash([]);
+    const ch=Math.cos(q.head),sh=Math.sin(q.head);
+    for(const s of q.ships){
+      if(!s.alive)continue;
+      const [x,y]=bf2s(...shipBF(q,s,t));
+      const sp=SPR[q.f][s.cls],len=sp.L*unit;
+      const moving=q.target&&Math.hypot(q.target.cur[0]-q.cur[0],q.target.cur[1]-q.cur[1])>(RANGE.cr*.9);
+      const ex=x-ch*len*.55,ey=y-sh*len*.55,gl=Math.max(2,len*(moving?.55:.32))*(1+.15*Math.sin(t*.02+s.ph));
+      const g=cx.createRadialGradient(ex,ey,0,ex,ey,gl);g.addColorStop(0,`rgba(${SHIP_PAL[q.f].eng},.7)`);g.addColorStop(1,`rgba(${SHIP_PAL[q.f].eng},0)`);cx.fillStyle=g;cx.fillRect(ex-gl,ey-gl,gl*2,gl*2);
+      cx.save();cx.translate(x,y);cx.rotate(q.head);const sc=unit/SC;cx.drawImage(sp.cv,-sp.cw/2*sc,-sp.ch/2*sc,sp.cw*sc,sp.ch*sc);cx.restore();
+      if(s.cls==='fl'){cx.strokeStyle='rgba(243,221,164,.8)';cx.lineWidth=1;cx.beginPath();cx.arc(x,y,len*.7,0,7);cx.stroke()}
+    }
+  }
+  drawCombat(unit,t);
+  cx.restore();
+}
+// ===================================================================== 노드(HTML)
+const nodesEl=document.getElementById('nodes'); const NODES=[];
+function shapeSVG(o,x,y,r){
+  const st=`fill="${o.deep}" stroke="${o.col}" stroke-width="1.3"`;
+  if(o.shape==='square')return `<rect x="${x-r*.8}" y="${y-r*.8}" width="${r*1.6}" height="${r*1.6}" ${st}/>`;
+  if(o.shape==='diamond')return `<path d="M${x} ${y-r}L${x+r} ${y}L${x} ${y+r}L${x-r} ${y}Z" ${st}/>`;
+  if(o.shape==='circle')return `<circle cx="${x}" cy="${y}" r="${r*.9}" ${st}/>`;
+  if(o.shape==='hex'){const p=[...Array(6)].map((_,i)=>{const a=i*Math.PI/3+Math.PI/6;return `${x+Math.cos(a)*r},${y+Math.sin(a)*r}`}).join(' ');return `<polygon points="${p}" ${st}/>`}
+  return `<path d="M${x} ${y-r}L${x+r*.7} ${y-r*.7}L${x+r} ${y}L${x+r*.7} ${y+r*.7}L${x} ${y+r}L${x-r*.7} ${y+r*.7}L${x-r} ${y}L${x-r*.7} ${y-r*.7}Z" ${st}/>`;
+}
+function glyphSVG(fkey,size=18){
+  if(fkey==='split')return `<svg width="${size+8}" height="${size}" viewBox="0 0 26 18">${shapeSVG(F.wei,9,9,7)}<g transform="translate(8,0)">${shapeSVG(F.shu,9,9,7)}</g></svg>`;
+  const o=F[fkey];return `<svg width="${size}" height="${size}" viewBox="0 0 18 18">${shapeSVG(o,9,9,7.5)}<text x="9" y="12.4" text-anchor="middle" font-size="8.5" font-family="Noto Serif KR,serif" fill="${o.col}">${o.glyph}</text></svg>`;
+}
+function addNode(o){
+  const el=document.createElement('button');el.className='n '+o.cls;el.innerHTML=o.html;el.setAttribute('aria-label',o.aria||'');
+  el.addEventListener('pointerdown',e=>e.stopPropagation());
+  el.addEventListener('click',e=>{e.stopPropagation();o.tap()});
+  nodesEl.appendChild(el);o.el=el;NODES.push(o);
+}
+function sysOwners(s){return [...new Set(s.regions.map(id=>RGN[id].owner).flatMap(o=>o==='split'?['wei','shu']:[o]).filter(o=>o!=='war'))]}
+for(const e of EXT){
+  addNode({id:e.id,cls:'ext',modes:['g','t'],at:e.at,aria:e.name+' (외부 세력)',
+    html:`<div class="plate"><b>${e.name}</b><small>${e.sub}</small><i>${EXT_GROUP[e.g].name} · 제어 불가</i></div><span class="hit"></span>`,
+    tap:()=>select({type:'ext',id:e.id})});
+}
+for(const s of DATA.systems){
+  // 이름표 위치: 형주 전역 4곳은 고정, 나머지는 권역 경계 꼭짓점의 평균(성역 덩어리 가운데)
+  let at=SYS_LABEL_AT[s.id];
+  if(!at){const v=s.regions.flatMap(id=>RGN[id].poly);at=[v.reduce((a,p)=>a+p[0],0)/v.length,v.reduce((a,p)=>a+p[1],0)/v.length]}
+  s.labelAt=at;
+  const ow=sysOwners(s).map(k=>glyphSVG(k,16)).join('');
+  addNode({id:s.id,cls:'sys',modes:['g','t'],at,aria:s.full,
+    html:`<div class="plate"><div class="nm">${s.name}</div><div class="meta">${ow}<span class="grade">${s.grade}</span><span class="lbl">성역</span></div></div><span class="hit" style="width:96px;left:-48px;height:60px;top:-30px"></span>`,
+    tap:()=>select({type:'sys',id:s.id})});
+}
+for(const r of DATA.regions){
+  if(r.id==='RGN-04')continue;
+  const s=SYS[r.sys];const left=r.at[0]<s.labelAt[0]-200;
+  addNode({id:r.id,cls:'pt'+(left?' left':''),modes:['s'],at:r.at,aria:r.name,
+    html:`<span class="ring"></span><span class="mk">${glyphSVG(r.owner,18)}</span><span class="lb">${r.seat?'★ ':''}${r.name}<small>${r.st.slice(0,3).join(' · ')}</small></span><span class="hit"></span>`,
+    tap:()=>select({type:'rgn',id:r.id})});
+}
+addNode({id:'battle',cls:'pt beacon',modes:['g','t','s'],at:[BF.cx,BF.cy],aria:'적벽 전장',
+  html:`<span class="lb">적벽<small>교전 임박 · 구지 궤도</small></span><span class="hit" style="width:64px;height:64px;left:-32px;top:-32px"></span>`,
+  tap:()=>select({type:'battle'}),layer:'battle'});
+const DESC=Object.fromEntries(BODIES.map(b=>[b[0],b[5]]));
+for(const b of DATA.bodies){
+  const star=b.kind==='star',comp=!b.eco&&!star;
+  const top=b.name==='태음'?10:b.name==='수성'?14:star?-(b.r*1.6+16):-10;
+  const left=b.name==='수성'?-6:star?-14:Math.max(14,b.r*1.05+6);
+  addNode({id:b.id,cls:'pt'+(comp?' comp':''),modes:['o','f'],at:b.at,aria:b.name,
+    html:`<span class="ring"></span><span class="lb" style="top:${top}px;left:${left}px">${b.name}${b.name==='구지'?'<small>옛 지구</small>':b.kind==='terran'?'<small>'+RGN[b.rgn].name+'</small>':''}</span><span class="hit" style="${comp?'width:36px;height:36px;left:-18px;top:-18px':''}"></span>`,
+    tap:()=>select({type:'body',id:b.id})});
+}
+for(const q of SQ){
+  const o=F[q.f];
+  addNode({id:q.id,cls:'sqd',modes:['f'],at:[0,0],atFn:()=>[BF.cx+(q.cur[0]-BF.w/2)*BF.k,BF.cy+(q.cur[1]-BF.h/2)*BF.k],sq:q,aria:q.name,layer:'battle',
+    html:`<div class="plate" style="--c:${o.col}"><b>${glyphSVG(q.f,14)}${q.name}</b><small>${q.cmd}${q.vice?' · '+q.vice:''} · ${q.frm_name}</small><div class="bar"><i style="width:100%"></i></div><em>${q.total}</em><span class="mini">${glyphSVG(q.f,12)}${q.cmd}<i>${q.total}</i></span></div><span class="hit"></span>`,
+    tap:()=>select({type:'sqd',id:q.id})});
+}
+function placeNodes(){
+  document.body.dataset.mode=mode;
+  document.body.dataset.plate=cam.s<lvScale('f')*1.6?'mini':'full';
+  for(const n of NODES){
+    if(n.atFn)n.at=n.atFn();
+    const [x,y]=w2s(...n.at);
+    if(n.sq&&n.shown!==n.sq.alive){n.shown=n.sq.alive;n.el.querySelector('em').textContent=n.sq.alive;n.el.querySelector('.mini i').textContent=n.sq.alive;n.el.querySelector('.bar i').style.width=(n.sq.alive/n.sq.total*100)+'%';n.el.style.opacity=n.sq.alive?'':'0.35'}
+    const vis=n.modes.includes(mode)&&(!n.layer||layers[n.layer])&&x>-120&&x<W+120&&y>-80&&y<H+80;
+    n.el.classList.toggle('hide',!vis);
+    n.el.style.transform=`translate(${x}px,${y}px)`;
+    const isSel=sel&&((sel.type==='ext'&&n.id===sel.id)||(sel.type==='sqd'&&n.id===sel.id)||(sel.type==='sys'&&n.id===sel.id)||(sel.type==='rgn'&&n.id===sel.id)||(sel.type==='body'&&n.id===sel.id));
+    n.el.classList.toggle('sel',!!isSel);
+  }
+}
+
+// ===================================================================== 패널
+const $=id=>document.getElementById(id);
+function fac(k){if(k==='war')return '<span style="color:var(--warn)">⚔ 전장</span>';if(k==='split')return `${fac('wei')} · ${fac('shu')}`;return `<span style="color:${F[k].col}">${F[k].glyph} ${F[k].name}</span>`}
+function regionRow(id){
+  const r=RGN[id];
+  return `<div class="row" data-rgn="${id}">${glyphSVG(r.owner,22)}<div class="t">${r.seat?'★ ':''}${r.name}<small>${r.st.join(' · ')}</small></div><div class="v">${fac(r.owner)}<br><span style="color:var(--ink-3)">세입 ${r.income}</span></div></div>`;
+}
+const tagCls=n=>/회랑|관문|협도|산도|삼도|기산도|검각/.test(n)?'cor':/대항로|지선|항로/.test(n)&&!/기저/.test(n)?'hwy':'';
+function select(s){
+  sel=s;document.body.classList.add('panel-open');
+  let eye='',title='',sub='',body='',foot='';
+  const battleBtn=`<button class="btn primary" data-act="sortie">출진 · 브리핑</button>`;
+  if(s.type==='sys'){
+    const d=SYS[s.id];const lords=sysOwners(d).map(k=>F[k].name).join(' · ');
+    eye='성역 · SECTOR';title=d.full;sub=`${d.grade} · 권역 ${d.regions.length} · 치소 ${d.capitals.join('·')}`;
+    body=`<p class="p-desc">${SYS_DESC[s.id]||`${lords} 세력의 ${d.grade} 성역이다. 적벽의 전장과 떨어져 있어 이번 시나리오에서는 정보만 본다.`}</p><div class="sec">권역</div>${d.regions.map(regionRow).join('')}`;
+    const routes=[...new Set(d.regions.flatMap(r=>RGN[r].rt))];
+    body+=`<div class="sec">경유 항로</div><div class="tags">${routes.map(n=>`<span class="tag ${tagCls(n)}">${n}</span>`).join('')||'<span class="tag">없음</span>'}</div>`;
+    const fam=DATA.families.find(f=>d.regions.includes(BODY[f.host].rgn)&&RGN[BODY[f.host].rgn].seat)||DATA.families.find(f=>d.regions.includes(BODY[f.host].rgn));
+    foot=`<button class="btn" data-act="focus">여기로</button>`+(fam?`<button class="btn" data-act="fam" data-fam="${fam.id}">행성계 보기</button>`:'')+(s.id==='SYS-13'?battleBtn:'');
+  }else if(s.type==='rgn'){
+    const r=RGN[s.id];eye=`권역 · ${SYS[r.sys].full}`;title=r.name;sub=`${r.seat?'★ 주권역 · ':''}인구 ${r.pop} · 생산 ${r.prod} · 세입 ${r.income} · 방어 ${r.def}`;
+    body=(r.note?`<p class="p-desc">${r.note.replace(/\*\*/g,'')}</p>`:'')+`<div class="sec">소유</div>${regionRow(s.id)}<div class="sec">거점</div>`+
+      r.st.map(n=>{const c=DATA.cities.find(c=>c.name===n.replace(/\(.*\)/,''));return `<div class="row">${glyphSVG(c?c.owner:(r.owner==='split'?'wei':r.owner),18)}<div class="t">${n}<small>${c?({terran:'거주 주행성',colony:'식민지',planet:'행성',moon:'위성',station:'관문 정거장'}[c.kind]||c.kind):'거점'}</small></div></div>`}).join('')+
+      `<div class="sec">경유 항로</div><div class="tags">${r.rt.map(n=>`<span class="tag ${tagCls(n)}">${n}</span>`).join('')||'<span class="tag">기저 항로만</span>'}</div>`;
+    const fam=DATA.families.find(f=>BODY[f.host].rgn===r.id);
+    foot=`<button class="btn" data-act="sysup">성역 정보</button>`+(fam?`<button class="btn" data-act="fam" data-fam="${fam.id}">행성계 보기</button>`:'')+(r.sys==='SYS-13'&&!fam?battleBtn:'');
+  }else if(s.type==='body'){
+    const b=BODY[s.id],r=RGN[b.rgn],d=SYS[r.sys],f=DATA.families.find(f=>f.host===b.id||f.star===b.id||f.host===b.parent||f.star===b.parent||(BODY[b.parent]&&f.host===BODY[b.parent].id));
+    eye=`${d.full} · ${r.name}`;title=b.name;
+    const KL={star:'항성',terran:'거주 주행성',colony:'식민지·거점',moon:'위성',station:'관문 정거장',planet:({INNER:'내행성',VENUS:'금성형 행성',JUPITER:'가스 행성'})[b.role]||(b.role?'외행성':'행성')};
+    sub=KL[b.kind]+(f?` · ${f.name} 행성계`:'');
+    const gen={star:`${f?f.name:''} 행성계의 항성.`,terran:`${r.name}의 거주 주행성.`+(d.capitals.includes(b.name)?` ${d.full}의 치소다.`:''),colony:'독립 궤도의 식민지·거점.',moon:'주행성을 도는 위성.',station:'항로를 지키는 관문 정거장.',planet:b.role==='INNER'?'항성 가까이 도는 암석 행성.':b.role==='VENUS'?'두꺼운 대기에 덮인 금성형 행성.':'바깥 궤도의 행성.'}[b.kind];
+    body=`<p class="p-desc">${DESC[b.name]||gen}</p><div class="sec">소유</div><div class="row" data-rgn="${r.id}">${glyphSVG(b.owner,22)}<div class="t">${fac(b.owner)}<small>${r.name} · 세입 ${r.income}</small></div><div class="v">›</div></div>`+
+      (b.name==='구지'?`<div class="sec">이 궤도의 전투</div><div class="row" data-act="battle"><svg width="22" height="22" viewBox="0 0 18 18">${shapeSVG(F.war,9,9,7.5)}</svg><div class="t">적벽대전<small>건안 13년 겨울 · 교전 임박</small></div><div class="v" style="color:var(--warn)">›</div></div>`:'');
+    foot=(f?`<button class="btn" data-act="fam" data-fam="${f.id}">행성계 보기</button>`:'')+(r.id==='RGN-04'?battleBtn:`<button class="btn" data-act="sysup2" data-sys="${r.sys}">성역 정보</button>`);
+  }else if(s.type==='ext'){
+    const e=EXT.find(e=>e.id===s.id),gr=EXT_GROUP[e.g];
+    eye=`외부 세력 · ${gr.name}`;title=e.name;sub=`${e.sub} · 제어 불가`;
+    body=`<p class="p-desc">${e.desc}</p><div class="sec">접근 경로</div><div class="row"><div class="t">${e.via}</div></div>
+      <div class="sec">같은 무리</div><div class="tags">${EXT.filter(x=>x.g===e.g).map(x=>`<span class="tag" data-ext="${x.id}" style="cursor:pointer">${x.name}</span>`).join('')}</div>
+      <p class="note">외부 세력은 지휘·명령 대상이 아니며 위치만 표시한다. 이역 권역의 외곽 배치는 본편에서도 미작성(star-map.md §8)이라 시안용 개략 위치다. 근거: ${e.src}.</p>`;
+    foot=`<button class="btn" data-act="extfocus">여기로</button>`;
+  }else if(s.type==='sqd'){
+    const q=SQ.find(q=>q.id===s.id),o=F[q.f];
+    eye=`전대 · ${{shu:'유비군',wu:'손권군',wei:'조조군'}[q.f]}`;title=q.name;sub=`${q.frm_name} · ${q.alive}/${q.total}척${q.flag?' · 기함 전대':''}${q.delay?` · 출발 대기 ${q.delay}초`:''}`;
+    body=`<div class="sec">지휘</div><div class="row">${glyphSVG(q.f,22)}<div class="t">${q.cmd}<small>${[q.vice&&('부장 '+q.vice),q.staff.length&&('참모 '+q.staff.join('·'))].filter(Boolean).join(' · ')||'단독 지휘'}</small></div></div>
+      <div class="sec">편성</div>`+q.comp.map(([t,c])=>`<div class="row"><div class="t">${SHIP_NAME[t]}<small>${t}</small></div><div class="v" style="color:${o.col}">${c}척</div></div>`).join('')+
+      `<p class="note">배치 좌표·진형·편성은 시나리오 정본(data/scenarios/red_cliffs_208_realtime.json)이다. 난이도 규모 계수는 반영하지 않았다.</p>`;
+    foot=`<button class="btn" data-act="battle">전투 정보</button>${battleBtn}`;
+  }else{
+    eye='전장 · BATTLE';title='적벽대전';sub='건안 13년 겨울 · 형주성역 태양계권 · 구지 궤도';
+    body=`<p class="p-desc">조조의 대군이 장강을 따라 내려와 구지 궤도에 집결했다. 유비와 손권의 연합 수군이 이를 맞는다.</p>
+    <div class="sec">양군</div>
+    <div class="vs"><div class="side"><h4 style="color:var(--ally)">${glyphSVG('shu',14)} 연합 · 7전대</h4>
+      <div class="f" style="border-color:var(--ally)">유비 연합 전단<small>유비 · 관우 · 조운 — 직접 지휘</small></div>
+      <div class="f" style="border-color:var(--ally)">강하군<small>유기</small></div>
+      <div class="f" style="border-color:var(--wu)">주유 수군<small>주유 · 정보 · 황개 — 위임</small></div></div>
+      <div class="x">對</div>
+      <div class="side"><h4 style="color:var(--foe)">${glyphSVG('wei',14)} 조조군 · 7전대</h4>
+      <div class="f" style="border-color:var(--foe)">조조 중군<small>조조 · 조인 · 서황 · 조순 · 조홍</small></div>
+      <div class="f" style="border-color:var(--foe)">형주 항복 수군<small>문빙 · 채모</small></div></div></div>
+    <div class="sec">전장 지형</div><div class="terr">${BF_TERRAIN.map(z=>`<div><b>${z.name}</b>${z.fx}</div>`).join('')}</div>
+    <p class="note">난이도(입문·표준·상급·극한)는 브리핑에서 고른다. 전대 배치·진형·편성은 시나리오 정본이다.</p>`;
+    foot=`<button class="btn" data-act="bf">전장 확대</button>${battleBtn}`;
+  }
+  $('pEye').textContent=eye;$('pTitle').textContent=title;$('pSub').textContent=sub;$('pBody').innerHTML=body;$('pFoot').innerHTML=foot;$('pBody').scrollTop=0;
+  if(s.type==='battle'&&(mode!=='o'&&mode!=='f'))goTo({x:BF.cx,y:BF.cy,s:cam.s},450);
+  else if(s.type==='rgn'&&(mode!=='o'&&mode!=='f'))goTo({x:RGN[s.id].at[0],y:RGN[s.id].at[1],s:cam.s},450);
+  else if(s.type==='sqd'||s.type==='ext'){}
+  else if(s.type==='body')goTo({x:BODY[s.id].at[0],y:BODY[s.id].at[1],s:cam.s},400);
+  else if(s.type==='sys'&&(mode!=='o'&&mode!=='f'))goTo({x:SYS[s.id].labelAt[0],y:SYS[s.id].labelAt[1],s:cam.s},450);
+}
+function closePanel(){sel=null;document.body.classList.remove('panel-open')}
+$('pClose').onclick=closePanel;
+$('panel').addEventListener('pointerdown',e=>e.stopPropagation());
+$('panel').addEventListener('click',e=>{
+  const xe=e.target.closest('[data-ext]');if(xe){select({type:'ext',id:xe.dataset.ext});return}
+  const a=e.target.closest('[data-act]'),r=e.target.closest('[data-rgn]');
+  if(r){const R=RGN[r.dataset.rgn];select({type:'rgn',id:R.id});if(mode==='g'||mode==='t')goTo({x:R.at[0],y:R.at[1],s:lvScale('s')});return}
+  if(!a)return;const act=a.dataset.act;
+  if(act==='sortie'){const t=$('toast');t.classList.add('on');setTimeout(()=>t.classList.remove('on'),1800)}
+  if(act==='fam')goFam(DATA.families.find(f=>f.id===a.dataset.fam));
+  if(act==='bf')goLevel('f');
+  if(act==='extfocus'&&sel&&sel.type==='ext'){const x=EXT.find(x=>x.id===sel.id);goTo({x:x.at[0],y:x.at[1],s:Math.min(cam.s,lvScale('t')*.9)})}
+  if(act==='orbit')goFam(DATA.families.find(f=>f.name==='구지'));
+  if(act==='sysup2')select({type:'sys',id:a.dataset.sys});
+  if(act==='battle')select({type:'battle'});
+  if(act==='sysup'&&sel&&sel.type==='rgn')select({type:'sys',id:RGN[sel.id].sys});
+  if(act==='focus'&&sel&&sel.type==='sys'){const at=SYS[sel.id].labelAt;goTo({x:at[0],y:at[1],s:Math.max(cam.s,lvScale('t'))})}
+});
+
+// ===================================================================== 입력: 드래그 이동, 휠·두 손가락 확대(손가락 중심 기준)
+const ptrs=new Map();let pinch0=null,moved=false;
+// 바깥으로 갈수록 끌림이 약해지고, 손을 떼면 안쪽으로 돌아온다
+function rubber(v,lo,hi,d){const out=(v<lo&&d>0)||(v>hi&&d<0);if(!out)return 1;const over=v<lo?lo-v:v-hi;return 1/(1+over/1500)}
+function settle(){const x=Math.max(-21000,Math.min(39500,cam.x)),y=Math.max(-1500,Math.min(30000,cam.y));if(x!==cam.x||y!==cam.y)goTo({x,y,s:cam.s},400)}
+function zoomAt(px,py,f){
+  const s1=Math.min(sMax(),Math.max(sMin(),cam.s*f));
+  const [wx,wy]=s2w(px,py);cam.s=s1;const [nx,ny]=s2w(px,py);cam.x+=wx-nx;cam.y+=wy-ny;anim=null;
+}
+function zoomAnim(f){const t={x:cam.x,y:cam.y,s:cam.s*f};goTo(t,320)}
+let lastTap={t:0,x:0,y:0};
+cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=false;anim=null;
+  if(ptrs.size===2){const [a,b]=[...ptrs.values()];pinch0={d:Math.hypot(a.x-b.x,a.y-b.y),s:cam.s}}});
+cv.addEventListener('pointermove',e=>{
+  if(!ptrs.has(e.pointerId))return;const p=ptrs.get(e.pointerId);const dx=e.clientX-p.x,dy=e.clientY-p.y;
+  if(ptrs.size===1){if(Math.abs(dx)+Math.abs(dy)>2)moved=true;cam.x-=dx/cam.s*rubber(cam.x,-21000,39500,dx);cam.y-=dy/cam.s*rubber(cam.y,-1500,30000,dy);}
+  ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(ptrs.size===2&&pinch0){moved=true;const [a,b]=[...ptrs.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);zoomAt((a.x+b.x)/2,(a.y+b.y)/2,(pinch0.s*d/pinch0.d)/cam.s)}
+});
+const up=e=>{ptrs.delete(e.pointerId);if(ptrs.size<2)pinch0=null;if(moved&&ptrs.size===0)settle();
+  if(!moved&&ptrs.size===0&&e.type==='pointerup'){
+    // 두 번 탭: 그 지점을 기준으로 2배 확대
+    const now=performance.now();
+    if(now-lastTap.t<320&&Math.hypot(e.clientX-lastTap.x,e.clientY-lastTap.y)<30){lastTap.t=0;const [wx,wy]=s2w(e.clientX,e.clientY);const s2=Math.min(sMax(),cam.s*2);const [ox,oy]=center();goTo({x:wx-(e.clientX-ox)/s2,y:wy-(e.clientY-oy)/s2,s:s2},300);return}
+    lastTap={t:now,x:e.clientX,y:e.clientY};
+    if((mode==='o'||mode==='f')&&layers.battle){const [x0,y0]=bf2s(0,0),[x1,y1]=bf2s(BF.w,BF.h);if(e.clientX>x0&&e.clientX<x1&&e.clientY>y0&&e.clientY<y1){select({type:'battle'});return}}
+    closePanel()}};
+cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+// 휠은 창 전체에서 받는다(지도 위 이름표 위에서도 확대). 패널 안 스크롤은 그대로 둔다.
+addEventListener('wheel',e=>{if(e.target.closest&&e.target.closest('.panel'))return;e.preventDefault();zoomAt(e.clientX,e.clientY,Math.exp(-e.deltaY*.0015))},{passive:false});
+document.querySelectorAll('[data-lv]').forEach(b=>b.onclick=()=>goLevel(b.dataset.lv));
+document.querySelectorAll('[data-z]').forEach(b=>b.onclick=()=>zoomAnim(b.dataset.z>0?1.8:1/1.8));
+$('crumb').addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(!b)return;const g=b.dataset.go,v=b.dataset.v;
+  if(g==='g')goLevel('g');else if(g==='sys'){const at=SYS[v].labelAt;goTo({x:at[0],y:at[1],s:lvScale('t')})}else if(g==='rgn'){const r=RGN[v];goTo({x:r.at[0],y:r.at[1],s:lvScale('s')})}else if(g==='bf')goLevel('f');else goFam(DATA.families.find(f=>f.id===v))});
+$('ticker').onclick=()=>select({type:'battle'});
+document.querySelectorAll('#rail button').forEach(b=>{b.classList.toggle('on',!!layers[b.dataset.layer]);b.onclick=()=>{const k=b.dataset.layer;layers[k]=!layers[k];b.classList.toggle('on',layers[k])}});
+addEventListener('keydown',e=>{const i='12345'.indexOf(e.key);if(i>=0)goLevel(MODES[i]);if(e.key==='+'||e.key==='=')zoomAnim(1.8);if(e.key==='-')zoomAnim(1/1.8);if(e.key==='Escape')closePanel()});
+
+// ===================================================================== 경로 표시: 화면 가운데의 성역 › 권역 › 행성계
+let crumbKey='';
+function updateCrumb(){
+  const r=regionAt(cam.x,cam.y),d=SYS[r.sys];
+  const f=mode==='s'||mode==='o'||mode==='f'?familyNear(cam.x,cam.y,mode==='s'?420:700):null;
+  const key=[mode,r.id,f&&f.id].join('|');if(key===crumbKey)return;crumbKey=key;
+  const on=(m)=>m===mode?' class="on"':'';
+  let h=`<button data-go="g"${on('g')}>천하</button>`;
+  if(mode!=='g')h+=`<i>›</i><button data-go="sys" data-v="${d.id}"${on('t')}>${d.full}</button>`;
+  if(mode==='s'||mode==='o'||mode==='f')h+=`<i>›</i><button data-go="rgn" data-v="${r.id}"${on('s')}>${r.name}</button>`;
+  if(f)h+=`<i>›</i><button data-go="fam" data-v="${f.id}"${on('o')}>${f.name} 행성계</button>`;
+  if(mode==='f')h+=`<i>›</i><button data-go="bf" class="on">적벽 전장</button>`;
+  $('crumb').innerHTML=h;
+}
+// ===================================================================== 루프
+function ease(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
+let lastT=0,hudT=0;
+function frame(t){
+  const dt=Math.min(.05,(t-lastT)/1000||0);lastT=t;
+  if(anim){const k=Math.min(1,(t-anim.t0)/anim.ms),e=ease(k);
+    cam.s=Math.exp(Math.log(anim.from.s)+(Math.log(anim.to.s)-Math.log(anim.from.s))*e);
+    cam.x=anim.from.x+(anim.to.x-anim.from.x)*e;cam.y=anim.from.y+(anim.to.y-anim.from.y)*e;if(k>=1)anim=null}
+  mode=computeMode();
+  document.querySelectorAll('[data-lv]').forEach(b=>b.classList.toggle('on',b.dataset.lv===mode));
+  updateCrumb();
+  if(CBT.on&&layers.battle&&(mode==='o'||mode==='f'))cbtStep(dt*CBT.spd,t);
+  if(t-hudT>250){hudT=t;const tt=Math.floor(CBT.t);$('cbtT').textContent=String(Math.floor(tt/60)).padStart(2,'0')+':'+String(tt%60).padStart(2,'0');
+    $('cbtA').textContent=SQ.filter(q=>q.f!=='wei').reduce((a,q)=>a+q.alive,0)+'/'+SQ.filter(q=>q.f!=='wei').reduce((a,q)=>a+q.total,0);
+    $('cbtW').textContent=SQ.filter(q=>q.f==='wei').reduce((a,q)=>a+q.alive,0)+'/'+SQ.filter(q=>q.f==='wei').reduce((a,q)=>a+q.total,0)}
+  drawBackground(t);drawTerritory();drawTerrain();drawExternal(t);drawRoutes(t);drawCityDots();drawBeacon(t);drawSystems(t);drawShips(t);drawVignette();
+  placeNodes();
+  requestAnimationFrame(frame);
+}
+addEventListener('resize',resize);
+$('cbtPlay').onclick=()=>{CBT.on=!CBT.on;$('cbtPlay').textContent=CBT.on?'❚❚':'▶';$('cbtPlay').classList.toggle('on',CBT.on)};
+$('cbtSpd').onclick=()=>{CBT.spd=CBT.spd===1?2:CBT.spd===2?4:1;$('cbtSpd').textContent='×'+CBT.spd};
+$('cbtReset').onclick=()=>cbtReset();
+resize();Object.assign(cam,fit(WORLD_B));
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

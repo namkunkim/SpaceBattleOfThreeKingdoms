@@ -1,0 +1,653 @@
+<!doctype html>
+<!-- 적벽 작전 지도(은하맵 홈) 시안 v1 — 2026-10-04. 설계 메모: docs/ui/GALAXY-MAP-REDESIGN.md
+     좌표는 본편 data/maps/galaxy-map.json(route-first-curves-v3) bodies·routes·corridors 원본을 그대로 쓴다.
+     색·글꼴·세력 기호는 전투 HUD(hud/ui_kit/ui_theme.gd, factions.gd)와 같다. -->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>적벽 작전 지도</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600;700&display=swap">
+<style>
+:root{
+  --bg:#05080d; --bg-top:rgba(21,28,40,.94); --bg-bot:rgba(8,11,18,.96);
+  --gold:#c9a45c; --gold-hi:#f3dda4; --gold-lo:#6d5631; --gold-line:rgba(201,164,92,.38);
+  --ink:#eef2f4; --ink-2:#b9c4cd; --ink-3:#7f8b97; --ink-4:#56616d;
+  --ally:#5fe0cf; --foe:#ff7550; --wu:#b9a2ff; --warn:#f2b84b; --cp:#86aaff; --life:#86e39a;
+  --line:#2a3649; --slot:#141c27;
+  --serif:'Noto Serif KR',serif; --sans:'Pretendard','Noto Sans KR',system-ui,sans-serif;
+  --top:60px; --panel:380px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans);overflow:hidden;user-select:none;touch-action:none}
+canvas#map{position:fixed;inset:0;width:100%;height:100%;display:block}
+#nodes{position:fixed;inset:0;pointer-events:none}
+button{font-family:inherit;color:inherit}
+
+/* ---------- 상단 띠 ---------- */
+.top{position:fixed;left:0;right:0;top:0;height:var(--top);display:flex;align-items:center;gap:16px;padding:0 16px;
+  background:linear-gradient(180deg,rgba(5,8,13,.92),rgba(5,8,13,.55) 70%,transparent);z-index:5}
+.top::after{content:"";position:absolute;left:16px;right:16px;bottom:8px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-line) 15%,var(--gold-line) 85%,transparent)}
+.seal{width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--gold);color:var(--gold-hi);font-family:var(--serif);font-size:15px;letter-spacing:-1px;
+  background:radial-gradient(circle at 50% 30%,rgba(201,164,92,.25),transparent 70%);clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}
+.ttl b{display:block;font-family:var(--serif);font-size:17px;letter-spacing:2px}
+.ttl span{font-size:11px;color:var(--ink-3);letter-spacing:3px}
+.crumb{flex:1;display:flex;justify-content:center;gap:6px;font-size:13px;color:var(--ink-3)}
+.crumb button{background:none;border:0;padding:10px 6px;min-height:44px;color:var(--ink-3);cursor:pointer;letter-spacing:1px}
+.crumb button.on{color:var(--gold-hi)}
+.crumb i{font-style:normal;align-self:center;color:var(--ink-4)}
+.intel{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--ink-2)}
+.chip{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border:1px solid var(--line);background:rgba(20,28,39,.7)}
+.chip .dot{width:6px;height:6px;border-radius:50%;background:var(--warn);box-shadow:0 0 8px var(--warn)}
+.icon-btn{width:48px;height:48px;border:1px solid var(--line);background:rgba(20,28,39,.7);display:grid;place-items:center;cursor:pointer}
+
+/* ---------- 왼쪽 레이어 레일 ---------- */
+.rail{position:fixed;left:12px;top:calc(var(--top) + 16px);display:flex;flex-direction:column;gap:6px;z-index:4}
+.rail button{width:56px;height:56px;border:1px solid var(--line);background:rgba(10,15,22,.78);backdrop-filter:blur(6px);cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10px;color:var(--ink-3);letter-spacing:1px}
+.rail button svg{width:20px;height:20px}
+.rail button.on{border-color:var(--gold-line);color:var(--gold-hi);background:linear-gradient(180deg,rgba(201,164,92,.14),rgba(10,15,22,.8))}
+
+/* ---------- 왼쪽 아래 축척 단계 ---------- */
+.zoom{position:fixed;left:12px;bottom:16px;display:flex;align-items:stretch;z-index:4;border:1px solid var(--gold-line);background:rgba(8,12,18,.85);backdrop-filter:blur(8px)}
+.zoom button{min-width:76px;height:56px;border:0;border-right:1px solid var(--line);background:none;cursor:pointer;font-size:13px;color:var(--ink-3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.zoom button small{font-size:9px;letter-spacing:2px;color:var(--ink-4)}
+.zoom button:last-child{border-right:0}
+.zoom button.on{color:var(--gold-hi);background:linear-gradient(0deg,rgba(201,164,92,.18),transparent)}
+.zoom button.on small{color:var(--gold)}
+
+/* ---------- 아래 가운데 상황 띠 ---------- */
+.ticker{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:4;display:flex;align-items:center;gap:12px;height:56px;padding:0 20px 0 14px;cursor:pointer;
+  border:1px solid rgba(255,117,80,.45);background:linear-gradient(90deg,rgba(77,20,11,.85),rgba(8,12,18,.85));backdrop-filter:blur(8px);font-size:13px}
+.ticker .pulse{width:12px;height:12px;border-radius:50%;background:var(--foe);box-shadow:0 0 0 0 rgba(255,117,80,.7);animation:pl 1.8s infinite}
+@keyframes pl{70%{box-shadow:0 0 0 12px rgba(255,117,80,0)}100%{box-shadow:0 0 0 0 rgba(255,117,80,0)}}
+.ticker b{font-family:var(--serif);letter-spacing:2px}
+.ticker span{color:var(--ink-2)}
+body.panel-open .ticker{left:calc((100% - var(--panel)) / 2)}
+
+/* ---------- 지도 위 노드(HTML, 48dp 터치) ---------- */
+.n{position:absolute;left:0;top:0;pointer-events:auto;cursor:pointer;background:none;border:0;padding:0;transition:opacity .25s}
+.n.hide{opacity:0;pointer-events:none}
+.n .hit{position:absolute;left:-26px;top:-26px;width:52px;height:52px}
+/* 성역 배지 */
+.sys .plate{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:4px;white-space:nowrap}
+.sys .nm{font-family:var(--serif);font-size:22px;letter-spacing:6px;color:var(--ink);text-shadow:0 0 18px rgba(0,0,0,.9),0 0 2px #000;padding-left:6px}
+.sys .meta{display:flex;gap:6px;align-items:center;font-size:10px;letter-spacing:2px;color:var(--ink-3)}
+.sys .grade{border:1px solid var(--gold-lo);color:var(--gold);padding:1px 6px}
+.sys.sel .nm{color:var(--gold-hi)}
+/* 권역·행성 노드 */
+.pt .mk{position:absolute;transform:translate(-50%,-50%)}
+.pt .lb{position:absolute;left:16px;top:-10px;white-space:nowrap;font-size:13px;font-weight:500;color:var(--ink);text-shadow:0 0 6px #000,0 0 2px #000}
+.pt .lb small{display:block;font-size:10px;font-weight:400;color:var(--ink-3);letter-spacing:1px}
+.pt.left .lb{left:auto;right:16px;text-align:right}
+.pt.sel .lb{color:var(--gold-hi)}
+.pt .ring{position:absolute;left:-17px;top:-17px;width:34px;height:34px;border:1px solid var(--gold);opacity:0;transform:rotate(45deg) scale(.6);transition:.25s}
+.pt.sel .ring{opacity:1;transform:rotate(45deg) scale(1)}
+/* 전장 표지 */
+.beacon .lb{left:22px;top:-14px;font-family:var(--serif);font-size:15px;letter-spacing:3px;color:var(--foe-hi,#ffd3bd)}
+.beacon .lb small{font-family:var(--sans);color:var(--foe);letter-spacing:2px}
+
+/* ---------- 오른쪽 선택 패널(태블릿) / 하프 시트(좁은 화면) ---------- */
+.panel{position:fixed;top:calc(var(--top) + 8px);right:12px;bottom:16px;width:var(--panel);z-index:6;display:flex;flex-direction:column;
+  background:linear-gradient(180deg,var(--bg-top),var(--bg-bot));border:1px solid var(--gold-line);backdrop-filter:blur(10px);
+  transform:translateX(calc(100% + 24px));transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+body.panel-open .panel{transform:none}
+.panel::before,.panel::after{content:"";position:absolute;width:14px;height:14px;border:2px solid var(--gold);pointer-events:none}
+.panel::before{left:-1px;top:-1px;border-right:0;border-bottom:0}
+.panel::after{right:-1px;bottom:-1px;border-left:0;border-top:0}
+.p-head{padding:18px 20px 14px;border-bottom:1px solid rgba(201,164,92,.18);position:relative}
+.p-eye{font-size:10px;letter-spacing:4px;color:var(--gold)}
+.p-title{font-family:var(--serif);font-size:26px;letter-spacing:4px;margin:4px 0 2px}
+.p-sub{font-size:12px;color:var(--ink-3)}
+.p-close{position:absolute;right:8px;top:8px;width:48px;height:48px;border:0;background:none;cursor:pointer;color:var(--ink-3);font-size:22px}
+.p-body{flex:1;overflow:auto;padding:14px 20px;touch-action:pan-y}
+.p-desc{font-size:13px;line-height:1.65;color:var(--ink-2);margin:0 0 14px}
+.sec{font-size:10px;letter-spacing:3px;color:var(--gold);margin:16px 0 8px;display:flex;align-items:center;gap:8px}
+.sec::after{content:"";flex:1;height:1px;background:rgba(201,164,92,.2)}
+.row{display:flex;align-items:center;gap:10px;min-height:48px;padding:6px 10px;border:1px solid var(--line);background:rgba(20,28,39,.55);margin-bottom:6px;cursor:pointer}
+.row:hover{border-color:var(--gold-line)}
+.row .t{flex:1;font-size:14px}
+.row .t small{display:block;font-size:11px;color:var(--ink-3);margin-top:2px}
+.row .v{font-size:12px;color:var(--ink-2);text-align:right}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:11px;padding:4px 8px;border:1px solid var(--line);color:var(--ink-2);background:rgba(20,28,39,.6)}
+.tag.cor{border-color:rgba(214,120,72,.5);color:#f0b190}
+.tag.hwy{border-color:rgba(95,224,207,.4);color:var(--ally)}
+.vs{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:start}
+.vs .x{font-family:var(--serif);color:var(--gold);padding-top:22px}
+.side h4{margin:0 0 6px;font-size:12px;letter-spacing:2px;font-weight:500}
+.side .f{font-size:12px;color:var(--ink-2);padding:6px 8px;border-left:2px solid;margin-bottom:4px;background:rgba(20,28,39,.55)}
+.side .f small{display:block;color:var(--ink-3);font-size:10px}
+.terr{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.terr div{border:1px solid var(--line);padding:8px;font-size:11px;color:var(--ink-3);background:rgba(20,28,39,.55)}
+.terr b{display:block;font-size:12px;color:var(--ink);font-weight:500;margin-bottom:4px}
+.p-foot{padding:14px 20px 18px;border-top:1px solid rgba(201,164,92,.18);display:flex;gap:8px}
+.btn{flex:1;min-height:56px;border:1px solid var(--line);background:rgba(20,28,39,.8);cursor:pointer;font-size:14px;letter-spacing:2px}
+.btn.primary{flex:1.6;border-color:var(--gold);color:#1a1206;font-weight:700;background:linear-gradient(180deg,var(--gold-hi),var(--gold));font-family:var(--serif);font-size:16px;letter-spacing:4px;
+  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
+.btn.primary:active{filter:brightness(.9)}
+.note{font-size:10px;color:var(--ink-4);margin-top:10px;line-height:1.5}
+
+/* 브리핑 이동 확인(시안용) */
+.toast{position:fixed;left:50%;top:84px;transform:translate(-50%,-10px);opacity:0;z-index:9;padding:12px 18px;border:1px solid var(--gold);background:rgba(8,12,18,.95);font-size:13px;transition:.3s;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* 좁은 화면(폰·세로 태블릿): 패널은 하프 시트 */
+@media (max-width:900px){
+  :root{--panel:100%}
+  .panel{left:0;right:0;top:auto;bottom:0;width:auto;height:58%;transform:translateY(calc(100% + 24px));border-left:0;border-right:0}
+  body.panel-open .ticker{left:50%;opacity:0;pointer-events:none}
+  .crumb{display:none}
+  .intel .chip:first-child{display:none}
+  .zoom button{min-width:64px}
+  .ticker{bottom:84px}
+}
+@media (max-width:560px){ .ttl span{display:none} .intel{display:none} }
+</style>
+</head>
+<body>
+<canvas id="map"></canvas>
+<div id="nodes"></div>
+
+<header class="top">
+  <div class="seal">赤壁</div>
+  <div class="ttl"><b>적벽 작전 지도</b><span>建安 13年 · 겨울</span></div>
+  <nav class="crumb" id="crumb">
+    <button data-stop="t">형주 전역</button><i>›</i>
+    <button data-stop="s">형주성역</button><i>›</i>
+    <button data-stop="o">구지 궤도</button>
+  </nav>
+  <div class="intel">
+    <span class="chip"><span class="dot"></span>조조군 남하 · 오림 집결</span>
+    <button class="icon-btn" title="설정" aria-label="설정"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b9c4cd" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></button>
+  </div>
+</header>
+
+<div class="rail" id="rail">
+  <button data-layer="faction" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="7" height="7"/><path d="M17.5 3.5l4 4-4 4-4-4z"/><circle cx="7.5" cy="17" r="3.5"/></svg>세력</button>
+  <button data-layer="route" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 18c5 0 5-12 10-12s4 6 8 6"/><circle cx="3" cy="18" r="1.6"/><circle cx="21" cy="12" r="1.6"/></svg>항로</button>
+  <button data-layer="terrain" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 15c3-4 5 1 8-3s6 1 10-2"/><path d="M3 20c4-3 7 1 10-2s5 0 8-2" opacity=".6"/></svg>지형</button>
+  <button data-layer="battle" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>전장</button>
+</div>
+
+<div class="zoom" id="zoom">
+  <button data-stop="t">전역<small>THEATER</small></button>
+  <button data-stop="s">성역<small>SECTOR</small></button>
+  <button data-stop="o">궤도<small>ORBIT</small></button>
+</div>
+
+<div class="ticker" id="ticker"><span class="pulse"></span><b>적벽</b><span>교전 임박 — 구지 궤도 · 연합 7전대 대 조조 7전대</span></div>
+
+<aside class="panel" id="panel">
+  <div class="p-head"><div class="p-eye" id="pEye"></div><div class="p-title" id="pTitle"></div><div class="p-sub" id="pSub"></div>
+    <button class="p-close" id="pClose" aria-label="닫기">×</button></div>
+  <div class="p-body" id="pBody"></div>
+  <div class="p-foot" id="pFoot"></div>
+</aside>
+<div class="toast" id="toast">브리핑 화면으로 이동합니다 (시안)</div>
+
+<script>
+// ===================================================================== 데이터
+// 좌표: 본편 galaxy-map.json 원본 단위. 소유: star-map.md §6.1(208 적벽 전야). 강릉=위는 컨셉 추정.
+const F = {
+  shu:{name:'유비군',glyph:'蜀',shape:'square',col:'#5fe0cf',deep:'#0e3d39'},
+  wei:{name:'조조군',glyph:'魏',shape:'diamond',col:'#ff7550',deep:'#4d140b'},
+  wu: {name:'손권군',glyph:'吳',shape:'circle',col:'#b9a2ff',deep:'#2a1d4a'},
+  war:{name:'전장',glyph:'⚔',shape:'war',col:'#f2b84b',deep:'#3a2a08'},
+};
+const CITIES = [ // name, x, y, owner, kind(terran=거주 주행성/colony), region
+  ['완',19105,13010,'wei','terran','RGN-25'],['섭',19256,13102,'wei','colony','RGN-25'],
+  ['신야',18961,13480,'wei','colony','RGN-26'],['육양',18990,13529,'wei','colony','RGN-26'],['박망',18920,13652,'wei','colony','RGN-26'],
+  ['양양',18775,13960,'wei','terran','RGN-01'],['번성',18923,13954,'wei','colony','RGN-01'],
+  ['강릉',18860,15670,'wei','terran','RGN-02'],['강하',19000,15551,'shu','colony','RGN-02'],['공안',18588,15748,'wei','colony','RGN-02'],
+  ['장사',19487,17800,'shu','colony','RGN-03'],['무릉',19480,17729,'shu','colony','RGN-03'],['계양',19759,17706,'shu','colony','RGN-03'],['영릉',19696,17838,'shu','colony','RGN-03'],
+  ['구지',20394,16750,'war','terran','RGN-04'],
+  ['건업',24405,13940,'wu','terran','RGN-20'],['단양',24515,13772,'wu','colony','RGN-20'],
+  ['오',25932,14700,'wu','terran','RGN-21'],['회계',25905,14524,'wu','colony','RGN-21'],['오정',25732,14633,'wu','colony','RGN-21'],
+  ['예장',21929,17320,'wu','colony','RGN-22'],
+  ['수춘',22718,13430,'wei','terran','RGN-23'],['합비',23091,14180,'wei','colony','RGN-24'],
+];
+const SYSTEMS = {
+  'SYS-14':{name:'남양',full:'남양성역',grade:'1급',at:[19000,13180],owners:['wei'],regions:['RGN-25','RGN-26'],
+    desc:'조조가 남하의 전진 기지로 삼은 성역. 양번관문을 지나야 형주로 들어간다.'},
+  'SYS-13':{name:'형주',full:'형주성역',grade:'특급',at:[19300,16150],owners:['wei','shu','war'],regions:['RGN-01','RGN-02','RGN-03','RGN-04'],
+    desc:'장강 대항로를 쥔 성역. 유종의 항복으로 북부가 조조에게 넘어갔고, 강하에는 유기와 유비가 버틴다. 태양계권 구지 궤도가 적벽의 전장이다.'},
+  'SYS-15':{name:'오회',full:'오회성역',grade:'특급',at:[24900,14300],owners:['wu'],regions:['RGN-20','RGN-21','RGN-22'],
+    desc:'손권의 본거. 장강 대항로의 동쪽 끝이며, 주유의 수군이 여기서 서쪽으로 거슬러 올라왔다.'},
+  'SYS-16':{name:'회남',full:'회남성역',grade:'1급',at:[22850,13700],owners:['wei'],regions:['RGN-23','RGN-24'],
+    desc:'합비회랑의 성역. 손권은 적벽과 합비, 두 전선을 동시에 막아야 한다. 손권이 일부를 쥐고 있다(star-map §6.1).'},
+};
+const REGIONS = { // 본편 regions.json 요약
+  'RGN-01':{name:'북부권',sys:'SYS-13',seat:1,owner:'wei',at:[18800,13960],pow:14,def:'상',st:['양양','번성'],rt:['한수항로','양번관문']},
+  'RGN-02':{name:'중부권',sys:'SYS-13',owner:'war2',at:[18830,15660],pow:22,def:'중',st:['강릉','강하','공안'],rt:['장강 대항로','이릉협도'],split:['wei','shu']},
+  'RGN-03':{name:'남부권',sys:'SYS-13',owner:'shu',at:[19610,17770],pow:11,def:'중',st:['장사','무릉','계양','영릉'],rt:['오령회랑','영거운하'],note:'유비 임시 점유'},
+  'RGN-04':{name:'태양계권',sys:'SYS-13',owner:'war',at:[20394,16750],pow:2,def:'하',st:['구지(지구)','형혹','태음'],rt:['장강항로 지선'],note:'국력 최소, 명분 최대'},
+  'RGN-25':{name:'완권',sys:'SYS-14',seat:1,owner:'wei',at:[19105,13010],pow:17,def:'중',st:['완','섭'],rt:['무관회랑']},
+  'RGN-26':{name:'신야권',sys:'SYS-14',owner:'wei',at:[18961,13530],pow:8,def:'상',st:['신야','육양','박망'],rt:['한수항로','양번관문']},
+  'RGN-20':{name:'건업권',sys:'SYS-15',seat:1,owner:'wu',at:[24405,13940],pow:20,def:'중',st:['건업','단양'],rt:['장강 대항로','합비회랑']},
+  'RGN-21':{name:'오회권',sys:'SYS-15',owner:'wu',at:[25900,14620],pow:17,def:'하',st:['오','회계','오정'],rt:[]},
+  'RGN-22':{name:'예장권',sys:'SYS-15',owner:'wu',at:[21929,17320],pow:10,def:'중',st:['예장'],rt:[]},
+  'RGN-23':{name:'수춘권',sys:'SYS-16',seat:1,owner:'wei',at:[22718,13430],pow:9,def:'하',st:['수춘','구강','종리'],rt:['회수항로']},
+  'RGN-24':{name:'합비권',sys:'SYS-16',owner:'wei',at:[23091,14180],pow:6,def:'극상',st:['합비','여강'],rt:['합비회랑']},
+};
+const BODIES = [ // 태양계권(RGN-04): name, x, y, visual_radius, kind, desc
+  ['태양',20274,16725,43,'star','태양계권의 항성.'],
+  ['수성',20308,16725,5,'rock','내행성.'],
+  ['금성',20337,16762,11,'venus','금성형 행성. 두꺼운 대기.'],
+  ['구지',20394,16750,20,'earth','옛 지구, 고향별. 전화로 황폐해졌고 소유권이 끊임없이 바뀐다. 이 궤도에서 적벽대전이 벌어진다.'],
+  ['태음',20429,16758,5,'moon','달. 고대 조선소가 있다. 손상과 복구를 되풀이했다.'],
+  ['형혹',20489,16802,9,'mars','화성. 테라포밍 식민지.'],
+  ['목성',20554,16716,18,'gas','외행성 거대 가스 행성.'],
+];
+// 항로: 상시 표시 대상(회랑·고속항로)만. 기저 항로는 이동 명령 때만 보이므로 지도에 없다.
+const ROUTES = [
+  {name:'장강 대항로',type:'hwy',pts:[[18775,13960],[18860,15670],[20606,15450],[21878,16200],[22981,15300],[24405,13940]]},
+  {name:'장강항로 지선',type:'hwy2',pts:[[20606,15450],[20480,16100],[20394,16750]]},
+  {name:'양번관문',type:'cor',pts:[[18775,13960],[18758,13900],[18805,13763],[19105,13010]],gate:[18757,13900]},
+  {name:'합비회랑',type:'cor',pts:[[24405,13940],[23671,14342],[23393,14258],[22718,13430]],gate:[23532,14300]},
+];
+const EXITS = [ // 지도 밖 성역으로 나가는 상시 연결
+  {name:'이릉협도',to:'익주',from:[18860,15670],dir:[-1,-.05]},
+  {name:'오령회랑',to:'교주',from:[19487,17800],dir:[-.05,1]},
+  {name:'무관회랑',to:'옹주',from:[19105,13010],dir:[-1,-.3]},
+];
+const BARRIERS = [ // 회랑 차단대(밀도 70%+): barrier_axis, half_width 220
+  {a:[17624,13505],b:[19891,14295],w:220},{a:[23185,15449],b:[23879,13151],w:220},
+];
+const NEBULAE = [ // 지형 요약층: 낮은 대비의 먼지·가스(시안용 배치)
+  [17900,15000,1500,'60,110,95'],[20900,14200,1700,'120,90,60'],[21700,17900,1500,'80,70,120'],
+  [23600,16400,1600,'60,100,110'],[25600,13200,1300,'110,80,70'],[19900,12500,1200,'80,90,110'],[20300,16750,700,'140,90,60'],
+];
+// 전장: 시나리오 battlefield_bounds 0..1600×0..900, 지형은 red-cliffs-terrain-rules.json.
+// 구지 궤도에 겹쳐 그린다(전장 1단위 = 지도 0.1875). 배치는 시안용 표시다.
+const BF = {cx:20394,cy:16750,k:0.1875,w:1600,h:900};
+const BF_TERRAIN = [
+  {name:'적운 성운',x:600,y:50,w:120,h:120,col:'200,90,70',fx:'이동 ×1.33 · 센서 −20%'},
+  {name:'파쇄 잔해대',x:680,y:100,w:140,h:120,col:'150,150,140',fx:'이동 ×1.54 · 사거리 ×0.9'},
+  {name:'행성 그림자',x:1250,y:300,w:180,h:180,col:'90,110,170',fx:'은폐 +12 · 사거리 ×0.8'},
+];
+const BF_FLEETS = [
+  {f:'wei',name:'조조 중군',x:1240,y:200,h:Math.PI},{f:'wei',name:'형주 항복 수군',x:1180,y:600,h:Math.PI},
+  {f:'wu',name:'주유 수군',x:420,y:520,h:0},{f:'shu',name:'유비 연합 전단',x:300,y:560,h:0},{f:'shu',name:'강하군',x:500,y:760,h:-.3},
+];
+const BF_ESCAPE = [{f:'wei',x:1600,y:300,lb:'조조 탈출'},{f:'shu',x:0,y:650,lb:'연합 탈출'}];
+
+const STOPS = {
+  t:{b:[18250,12750,26300,18300],label:'형주 전역'},
+  s:{b:[18250,13550,20750,18150],label:'형주성역'},
+  o:{b:[20190,16630,20600,16880],label:'구지 궤도'},
+};
+
+// ===================================================================== 상태·카메라
+const cv = document.getElementById('map'), cx = cv.getContext('2d');
+let W=0,H=0,DPR=1;
+const cam = {x:22000,y:15500,s:.1}; let anim=null;
+const layers = {faction:true,route:true,terrain:true,battle:true};
+let sel=null, mode='t';
+const TOP=60;
+function reserve(){return document.body.classList.contains('panel-open') && W>900 ? 392 : 0}
+function center(){return [(W-reserve())/2 + (W>900?34:0), TOP+(H-TOP)/2 - (W>900?10:(document.body.classList.contains('panel-open')?H*.28:0))]}
+function w2s(x,y){const [ox,oy]=center();return [(x-cam.x)*cam.s+ox,(y-cam.y)*cam.s+oy]}
+function s2w(px,py){const [ox,oy]=center();return [(px-ox)/cam.s+cam.x,(py-oy)/cam.s+cam.y]}
+function fit(b){
+  const availW=W-reserve()-(W>900?150:40), availH=(H-TOP)-(W>900?150:(document.body.classList.contains('panel-open')?H*.6:170));
+  const s=Math.min(availW/(b[2]-b[0]),availH/(b[3]-b[1]));
+  return {x:(b[0]+b[2])/2,y:(b[1]+b[3])/2,s};
+}
+function stopScale(k){return fit(STOPS[k].b).s}
+function goTo(t,ms=650){anim={from:{...cam},to:t,t0:performance.now(),ms}}
+function goStop(k){goTo(fit(STOPS[k].b))}
+function computeMode(){
+  const ls=Math.log(cam.s);let best='t',bd=1e9;
+  for(const k of ['t','s','o']){const d=Math.abs(ls-Math.log(stopScale(k)));if(d<bd){bd=d;best=k}}
+  return best;
+}
+function resize(){
+  DPR=Math.min(2,window.devicePixelRatio||1);W=innerWidth;H=innerHeight;
+  cv.width=W*DPR;cv.height=H*DPR;cx.setTransform(DPR,0,0,DPR,0,0);
+}
+
+// ===================================================================== 그리기 유틸
+function shapePath(c,shape,x,y,r){
+  c.beginPath();
+  if(shape==='square'){c.rect(x-r*.8,y-r*.8,r*1.6,r*1.6)}
+  else if(shape==='diamond'){c.moveTo(x,y-r);c.lineTo(x+r,y);c.lineTo(x,y+r);c.lineTo(x-r,y);c.closePath()}
+  else if(shape==='circle'){c.arc(x,y,r*.9,0,7)}
+  else{for(let i=0;i<8;i++){const a=i*Math.PI/4+Math.PI/8;c.lineTo(x+Math.cos(a)*r,y+Math.sin(a)*r)}c.closePath()}
+}
+function smoothPath(c,pts){ // 본편: 앵커를 지나는 2차 곡선
+  const s=pts.map(p=>w2s(p[0],p[1]));c.beginPath();c.moveTo(s[0][0],s[0][1]);
+  for(let i=1;i<s.length-1;i++){const mx=(s[i][0]+s[i+1][0])/2,my=(s[i][1]+s[i+1][1])/2;c.quadraticCurveTo(s[i][0],s[i][1],mx,my)}
+  c.lineTo(s[s.length-1][0],s[s.length-1][1]);
+}
+const rnd=(()=>{let a=1234567;return()=>{a^=a<<13;a^=a>>>17;a^=a<<5;return((a>>>0)%100000)/100000}})();
+const STARS=[...Array(520)].map(()=>({x:rnd(),y:rnd(),r:rnd()**3*1.6+.25,p:rnd()*6.28,d:rnd()*.6+.2,c:rnd()<.15?'255,220,190':(rnd()<.2?'180,210,255':'230,236,245')}));
+
+function drawBackground(t){
+  const g=cx.createRadialGradient(W*.55,H*.5,0,W*.55,H*.5,Math.max(W,H)*.8);
+  g.addColorStop(0,'#0a1018');g.addColorStop(1,'#03050a');cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  // 시차가 있는 별빛(카메라 이동의 깊이감)
+  for(const s of STARS){
+    const px=((s.x*W*1.6 - cam.x*cam.s*.04*s.d)%(W*1.6)+W*1.6)%(W*1.6)-W*.3;
+    const py=((s.y*H*1.6 - cam.y*cam.s*.04*s.d)%(H*1.6)+H*1.6)%(H*1.6)-H*.3;
+    const a=.35+.35*Math.sin(t*.0012+s.p);cx.fillStyle=`rgba(${s.c},${a*s.d+.1})`;
+    cx.fillRect(px,py,s.r,s.r);
+  }
+}
+function drawTerrain(){
+  if(!layers.terrain)return;
+  cx.save();cx.globalCompositeOperation='screen';
+  for(const [x,y,r,col] of NEBULAE){
+    const [sx,sy]=w2s(x,y),R=r*cam.s; if(sx<-R||sx>W+R||sy<-R||sy>H+R)continue;
+    const g=cx.createRadialGradient(sx,sy,0,sx,sy,R);g.addColorStop(0,`rgba(${col},.16)`);g.addColorStop(.6,`rgba(${col},.06)`);g.addColorStop(1,`rgba(${col},0)`);
+    cx.fillStyle=g;cx.beginPath();cx.arc(sx,sy,R,0,7);cx.fill();
+  }
+  cx.restore();
+  // 회랑 차단대: 녹색 농도 + 사선 해칭. 회랑 밖으로는 우회할 수 없다.
+  for(const b of BARRIERS){
+    const [ax,ay]=w2s(...b.a),[bx,by]=w2s(...b.b),w=b.w*2*cam.s;
+    cx.save();cx.lineCap='round';cx.strokeStyle='rgba(70,120,90,.22)';cx.lineWidth=w;cx.beginPath();cx.moveTo(ax,ay);cx.lineTo(bx,by);cx.stroke();
+    cx.strokeStyle='rgba(110,170,130,.18)';cx.lineWidth=1;cx.setLineDash([2,6]);cx.lineWidth=w*.9;cx.beginPath();cx.moveTo(ax,ay);cx.lineTo(bx,by);cx.stroke();cx.restore();
+  }
+}
+function drawTerritory(){
+  if(!layers.faction)return;
+  cx.save();cx.globalCompositeOperation='screen';
+  for(const c of CITIES){
+    const o=c[3]==='war'?null:F[c[3]];if(!o)continue;
+    const [sx,sy]=w2s(c[1],c[2]),R=(c[4]==='terran'?620:380)*cam.s;
+    const g=cx.createRadialGradient(sx,sy,0,sx,sy,R);g.addColorStop(0,hexA(o.col,.17));g.addColorStop(1,hexA(o.col,0));
+    cx.fillStyle=g;cx.beginPath();cx.arc(sx,sy,R,0,7);cx.fill();
+  }
+  cx.restore();
+}
+function hexA(h,a){const n=parseInt(h.slice(1),16);return `rgba(${n>>16},${n>>8&255},${n&255},${a})`}
+function drawRoutes(t){
+  if(!layers.route)return;
+  for(const r of ROUTES){
+    cx.save();
+    if(r.type.startsWith('hwy')){
+      smoothPath(cx,r.pts);cx.strokeStyle='rgba(95,224,207,.10)';cx.lineWidth=10;cx.stroke();
+      smoothPath(cx,r.pts);cx.strokeStyle=r.type==='hwy'?'rgba(95,224,207,.55)':'rgba(95,224,207,.35)';cx.lineWidth=r.type==='hwy'?2:1.4;cx.stroke();
+      smoothPath(cx,r.pts);cx.setLineDash([3,22]);cx.lineDashOffset=-t*.03;cx.strokeStyle='rgba(196,248,240,.9)';cx.lineWidth=2.4;cx.lineCap='round';cx.stroke();
+    }else{ // 회랑: 적갈색 이중선 + 관문 기호
+      for(const off of [-2.5,2.5]){cx.save();cx.translate(0,off);smoothPath(cx,r.pts);cx.strokeStyle='rgba(214,120,72,.75)';cx.lineWidth=1.3;cx.stroke();cx.restore()}
+      const [gx,gy]=w2s(...r.gate);cx.translate(gx,gy);cx.rotate(Math.PI/4);cx.fillStyle='#1a0f0a';cx.strokeStyle='#e08a5c';cx.lineWidth=1.4;cx.fillRect(-5,-5,10,10);cx.strokeRect(-5,-5,10,10);
+    }
+    cx.restore();
+  }
+  // 이름표(항로 위)
+  if(mode!=='o'){
+    cx.font='500 11px '+getComputedStyle(document.body).fontFamily;cx.textAlign='center';
+    const lab=(n,x,y,col)=>{const [sx,sy]=w2s(x,y);cx.fillStyle='rgba(5,8,13,.75)';const w=cx.measureText(n).width+12;cx.fillRect(sx-w/2,sy-9,w,18);cx.fillStyle=col;cx.fillText(n,sx,sy+4)};
+    lab('장강 대항로',21878,16200,'#8ff0e3');lab('양번관문',19330,13780,'#f0b190');lab('합비회랑',23700,14600,'#f0b190');
+  }
+  // 지도 밖 출구
+  for(const e of EXITS){
+    const [sx,sy]=w2s(...e.from),L=Math.max(70,900*cam.s),ex=sx+e.dir[0]*L,ey=sy+e.dir[1]*L;
+    cx.save();cx.setLineDash([6,5]);cx.strokeStyle='rgba(214,120,72,.6)';cx.lineWidth=1.3;cx.beginPath();cx.moveTo(sx,sy);cx.lineTo(ex,ey);cx.stroke();cx.setLineDash([]);
+    const a=Math.atan2(e.dir[1],e.dir[0]);cx.translate(ex,ey);cx.rotate(a);cx.fillStyle='rgba(224,138,92,.9)';cx.beginPath();cx.moveTo(6,0);cx.lineTo(-4,-5);cx.lineTo(-4,5);cx.fill();cx.restore();
+    cx.save();cx.font='11px sans-serif';cx.fillStyle='#d79a78';cx.textAlign=e.dir[0]<-.5?'right':'center';
+    cx.fillText(`${e.name} ▸ ${e.to}`,ex+(e.dir[0]<-.5?-10:0),ey+(e.dir[1]>.5?20:-10));cx.restore();
+  }
+}
+function drawCityDots(){
+  if(mode==='o')return;
+  cx.save();cx.font='11px sans-serif';
+  for(const c of CITIES){
+    if(c[0]==='구지')continue;
+    const [sx,sy]=w2s(c[1],c[2]);const o=F[c[3]];const r=c[4]==='terran'?3.2:2;
+    cx.fillStyle=o.col;cx.shadowColor=o.col;cx.shadowBlur=8;cx.beginPath();cx.arc(sx,sy,r,0,7);cx.fill();cx.shadowBlur=0;
+    if(mode==='s'&&cam.s>.16&&!['양양','강릉','장사','완','신야'].includes(c[0])){cx.fillStyle='rgba(185,196,205,.75)';cx.fillText(c[0],sx+6,sy+4)}
+  }
+  cx.restore();
+}
+function drawBeacon(t){
+  if(!layers.battle||mode==='o')return;
+  const [sx,sy]=w2s(BF.cx,BF.cy);
+  for(let i=0;i<3;i++){const ph=((t*.0005)+i/3)%1;cx.strokeStyle=`rgba(255,117,80,${(1-ph)*.6})`;cx.lineWidth=1.5;cx.beginPath();cx.arc(sx,sy,8+ph*38,0,7);cx.stroke()}
+  cx.save();cx.translate(sx,sy);cx.rotate(t*.0004);cx.strokeStyle='rgba(242,184,75,.8)';cx.lineWidth=1.2;
+  for(let i=0;i<4;i++){cx.rotate(Math.PI/2);cx.beginPath();cx.arc(0,0,16,-.5,.5);cx.stroke()}
+  cx.restore();
+}
+function sphere(x,y,r,kind,t){
+  const pal={star:['#fff4d6','#ffb347','#a8501a'],rock:['#c8c2b8','#7d766d','#2a2724'],venus:['#fff0c8','#d9a85e','#5e3e18'],
+    earth:['#a8e6ff','#2f7fb8','#0b2238'],moon:['#e6e6ea','#8d8f99','#2c2d33'],mars:['#ffb08a','#c0532f','#3d140a'],gas:['#f6dfc0','#c49464','#4a3020']}[kind];
+  if(kind==='star'){
+    const halo=cx.createRadialGradient(x,y,r*.6,x,y,r*3.2);halo.addColorStop(0,'rgba(255,190,90,.45)');halo.addColorStop(1,'rgba(255,150,60,0)');
+    cx.fillStyle=halo;cx.beginPath();cx.arc(x,y,r*3.2,0,7);cx.fill();
+  }
+  const g=cx.createRadialGradient(x-r*.35,y-r*.35,r*.1,x,y,r);g.addColorStop(0,pal[0]);g.addColorStop(.55,pal[1]);g.addColorStop(1,pal[2]);
+  cx.fillStyle=g;cx.beginPath();cx.arc(x,y,r,0,7);cx.fill();
+  if(kind==='earth'){ // 황폐한 지구: 갈색 대륙 + 흐린 구름
+    cx.save();cx.beginPath();cx.arc(x,y,r,0,7);cx.clip();cx.fillStyle='rgba(120,95,60,.75)';
+    for(const [dx,dy,rr] of [[-.3,-.1,.35],[.25,.2,.28],[.1,-.45,.2]]){cx.beginPath();cx.ellipse(x+dx*r,y+dy*r,rr*r,rr*r*.6,.6,0,7);cx.fill()}
+    cx.strokeStyle='rgba(255,255,255,.25)';cx.lineWidth=r*.08;cx.beginPath();cx.arc(x,y,r*.75,-2.5+t*.0001,-1.2+t*.0001);cx.stroke();cx.restore();
+  }
+  if(kind==='gas'){cx.save();cx.beginPath();cx.arc(x,y,r,0,7);cx.clip();cx.fillStyle='rgba(120,70,40,.3)';for(let i=-2;i<=2;i++)cx.fillRect(x-r,y+i*r*.32,r*2,r*.12);cx.restore()}
+  if(kind!=='star'){ // 명암 경계(태양 쪽이 밝음)
+    const [sx]=w2s(20274,16725);const dir=x>sx?1:-1;
+    const sh=cx.createLinearGradient(x-dir*r,y,x+dir*r,y);sh.addColorStop(0,'rgba(0,0,0,0)');sh.addColorStop(.55,'rgba(0,0,0,.15)');sh.addColorStop(1,'rgba(0,0,0,.75)');
+    cx.fillStyle=sh;cx.beginPath();cx.arc(x,y,r,0,7);cx.fill();
+    cx.strokeStyle=kind==='earth'?'rgba(140,210,255,.55)':'rgba(255,255,255,.12)';cx.lineWidth=kind==='earth'?2:1;cx.beginPath();cx.arc(x,y,r+.5,0,7);cx.stroke();
+  }
+}
+function drawOrbit(t){
+  // 궤도 단계에서 서서히 드러난다(축척 간 같은 장소)
+  const k=Math.min(1,Math.max(0,(Math.log(cam.s)-Math.log(stopScale('s')))/(Math.log(stopScale('o'))-Math.log(stopScale('s')))*1.6-.5));
+  if(k<=0)return;
+  cx.save();cx.globalAlpha=k;
+  const [sx,sy]=w2s(20274,16725);
+  for(const b of BODIES.slice(1)){ if(b[0]==='태음')continue;
+    const d=Math.hypot(b[1]-20274,b[2]-16725)*cam.s;cx.strokeStyle='rgba(185,196,205,.13)';cx.lineWidth=1;cx.beginPath();cx.arc(sx,sy,d,0,7);cx.stroke()}
+  const [ex,ey]=w2s(20394,16750);cx.strokeStyle='rgba(185,196,205,.18)';cx.setLineDash([2,4]);cx.beginPath();cx.arc(ex,ey,Math.hypot(35,8)*cam.s,0,7);cx.stroke();cx.setLineDash([]);
+  if(layers.battle)drawBattlefield(t);
+  for(const b of BODIES){const [x,y]=w2s(b[1],b[2]);sphere(x,y,Math.max(3,b[3]*cam.s*.62),b[4],t)}
+  if(layers.battle)drawBattleFleets(t);
+  cx.restore();
+}
+function bf2s(x,y){return w2s(BF.cx+(x-BF.w/2)*BF.k,BF.cy+(y-BF.h/2)*BF.k)}
+function drawBattlefield(t){
+  const [x0,y0]=bf2s(0,0),[x1,y1]=bf2s(BF.w,BF.h);
+  cx.save();
+  cx.fillStyle='rgba(8,14,22,.35)';cx.fillRect(x0,y0,x1-x0,y1-y0);
+  // 전투 레이더와 같은 격자(100 단위)
+  cx.strokeStyle='rgba(95,224,207,.07)';cx.lineWidth=1;
+  for(let gx=100;gx<BF.w;gx+=100){const [a]=bf2s(gx,0);cx.beginPath();cx.moveTo(a,y0);cx.lineTo(a,y1);cx.stroke()}
+  for(let gy=100;gy<BF.h;gy+=100){const [,b]=bf2s(0,gy);cx.beginPath();cx.moveTo(x0,b);cx.lineTo(x1,b);cx.stroke()}
+  // 모서리 괄호(금장)
+  cx.strokeStyle='rgba(201,164,92,.85)';cx.lineWidth=2;const L=18;
+  for(const [px,py,dx,dy] of [[x0,y0,1,1],[x1,y0,-1,1],[x0,y1,1,-1],[x1,y1,-1,-1]]){cx.beginPath();cx.moveTo(px+dx*L,py);cx.lineTo(px,py);cx.lineTo(px,py+dy*L);cx.stroke()}
+  // 훑는 스캔선
+  const sc=x0+((t*.06)%(x1-x0));const sg=cx.createLinearGradient(sc-60,0,sc,0);sg.addColorStop(0,'rgba(95,224,207,0)');sg.addColorStop(1,'rgba(95,224,207,.12)');cx.fillStyle=sg;cx.fillRect(sc-60,y0,60,y1-y0);
+  cx.font='600 11px sans-serif';cx.fillStyle='rgba(243,221,164,.9)';cx.fillText('적벽 전장 · 1600 × 900',x0+8,y0-8);
+  // 전장 지형
+  for(const z of BF_TERRAIN){
+    const [a,b]=bf2s(z.x,z.y),[c,d]=bf2s(z.x+z.w,z.y+z.h);
+    const g=cx.createRadialGradient((a+c)/2,(b+d)/2,0,(a+c)/2,(b+d)/2,(c-a)*.75);g.addColorStop(0,`rgba(${z.col},.35)`);g.addColorStop(1,`rgba(${z.col},.04)`);
+    cx.fillStyle=g;cx.fillRect(a,b,c-a,d-b);cx.strokeStyle=`rgba(${z.col},.6)`;cx.setLineDash([4,4]);cx.strokeRect(a,b,c-a,d-b);cx.setLineDash([]);
+    cx.fillStyle=`rgba(${z.col},1)`;cx.font='11px sans-serif';cx.fillText(z.name,a+4,z.name==='적운 성운'?b-6:d+14);
+  }
+  // 탈출 지점
+  for(const e of BF_ESCAPE){const [a,b]=bf2s(e.x,e.y);const col=F[e.f].col;cx.strokeStyle=col;cx.lineWidth=1.5;cx.setLineDash([3,3]);cx.beginPath();cx.arc(a,b,60*BF.k*cam.s,-Math.PI/2,Math.PI/2,e.x===0);cx.stroke();cx.setLineDash([]);
+    cx.fillStyle=col;cx.font='11px sans-serif';cx.textAlign=e.x===0?'left':'right';cx.fillText((e.x===0?'◂ ':'')+e.lb+(e.x===0?'':' ▸'),a+(e.x===0?6:-6),b+60*BF.k*cam.s+16);cx.textAlign='left'}
+  cx.restore();
+}
+function drawBattleFleets(t){
+  cx.save();
+  for(const fl of BF_FLEETS){
+    const [x,y]=bf2s(fl.x,fl.y),o=F[fl.f];
+    cx.strokeStyle=hexA(o.col,.5);cx.lineWidth=1;cx.beginPath();cx.moveTo(x,y);cx.lineTo(x+Math.cos(fl.h)*34,y+Math.sin(fl.h)*34);cx.stroke();
+    cx.fillStyle=o.deep;cx.strokeStyle=o.col;cx.lineWidth=1.6;shapePath(cx,o.shape,x,y,9);cx.fill();cx.stroke();
+    cx.fillStyle=o.col;cx.font='bold 10px serif';cx.textAlign='center';cx.fillText(o.glyph,x,y+3.5);
+    cx.font='11px sans-serif';cx.textAlign=fl.f==='wei'?'left':'right';cx.fillStyle='rgba(238,242,244,.9)';cx.fillText(fl.name,x+(fl.f==='wei'?14:-14),y-10);
+  }
+  cx.restore();
+}
+function drawVignette(){
+  const g=cx.createRadialGradient(W/2,H/2,Math.min(W,H)*.35,W/2,H/2,Math.max(W,H)*.75);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.55)');
+  cx.fillStyle=g;cx.fillRect(0,0,W,H);
+}
+
+// ===================================================================== 노드(HTML)
+const nodesEl=document.getElementById('nodes'); const NODES=[];
+function glyphSVG(fkey,size=18,dual){
+  if(dual){const a=F[dual[0]],b=F[dual[1]];return `<svg width="${size+8}" height="${size}" viewBox="0 0 26 18"><g transform="translate(0,0)">${shapeSVG(a,9,9,7)}</g><g transform="translate(8,0)">${shapeSVG(b,9,9,7)}</g></svg>`}
+  const o=F[fkey];return `<svg width="${size}" height="${size}" viewBox="0 0 18 18">${shapeSVG(o,9,9,7.5)}<text x="9" y="12.4" text-anchor="middle" font-size="8.5" font-family="Noto Serif KR,serif" fill="${o.col}">${o.glyph}</text></svg>`;
+}
+function shapeSVG(o,x,y,r){
+  const st=`fill="${o.deep}" stroke="${o.col}" stroke-width="1.3"`;
+  if(o.shape==='square')return `<rect x="${x-r*.8}" y="${y-r*.8}" width="${r*1.6}" height="${r*1.6}" ${st}/>`;
+  if(o.shape==='diamond')return `<path d="M${x} ${y-r}L${x+r} ${y}L${x} ${y+r}L${x-r} ${y}Z" ${st}/>`;
+  if(o.shape==='circle')return `<circle cx="${x}" cy="${y}" r="${r*.9}" ${st}/>`;
+  return `<path d="M${x} ${y-r}L${x+r*.7} ${y-r*.7}L${x+r} ${y}L${x+r*.7} ${y+r*.7}L${x} ${y+r}L${x-r*.7} ${y+r*.7}L${x-r} ${y}L${x-r*.7} ${y-r*.7}Z" ${st}/>`;
+}
+function addNode(o){
+  const el=document.createElement('button');el.className='n '+o.cls;el.innerHTML=o.html;el.setAttribute('aria-label',o.aria||'');
+  el.addEventListener('pointerdown',e=>e.stopPropagation());
+  el.addEventListener('click',e=>{e.stopPropagation();o.tap()});
+  nodesEl.appendChild(el);o.el=el;NODES.push(o);
+}
+for(const [id,s] of Object.entries(SYSTEMS)){
+  const ow=s.owners.filter(k=>k!=='war').map(k=>glyphSVG(k,16)).join('');
+  addNode({id,cls:'sys',modes:['t'],at:s.at,aria:s.full,
+    html:`<div class="plate"><div class="nm">${s.name}</div><div class="meta">${ow}<span class="grade">${s.grade}</span>성역</div></div><span class="hit" style="width:120px;left:-60px;height:70px;top:-35px"></span>`,
+    tap:()=>select({type:'sys',id})});
+}
+for(const [id,r] of Object.entries(REGIONS)){
+  if(id==='RGN-04')continue;
+  const g=r.split?glyphSVG(null,18,r.split):glyphSVG(r.owner,18);
+  const left=['RGN-02','RGN-01','RGN-26'].includes(id);
+  addNode({id,cls:'pt'+(left?' left':''),modes:['s'],at:r.at,aria:r.name,
+    html:`<span class="ring"></span><span class="mk">${g}</span><span class="lb">${r.seat?'★ ':''}${r.name}<small>${r.st.slice(0,3).join(' · ')}</small></span><span class="hit"></span>`,
+    tap:()=>select({type:'rgn',id})});
+}
+addNode({id:'battle',cls:'pt beacon',modes:['t','s'],at:[BF.cx,BF.cy],aria:'적벽 전장',
+  html:`<span class="lb">적벽<small>교전 임박 · 구지 궤도</small></span><span class="hit" style="width:64px;height:64px;left:-32px;top:-32px"></span>`,
+  tap:()=>select({type:'battle'}),layer:'battle'});
+for(const b of BODIES){
+  addNode({id:'b-'+b[0],cls:'pt',modes:['o'],at:[b[1],b[2]],aria:b[0],
+    html:`<span class="ring"></span><span class="lb" style="top:${b[0]==='태음'?10:b[0]==='태양'?-86:b[0]==='수성'?14:-10}px;left:${b[0]==='태양'?-14:b[0]==='수성'?-6:Math.max(16,b[3]*1.1+6)}px">${b[0]}${b[0]==='구지'?'<small>옛 지구</small>':''}</span><span class="hit"></span>`,
+    tap:()=>select({type:'body',id:b[0]})});
+}
+function placeNodes(){
+  for(const n of NODES){
+    const [x,y]=w2s(...n.at);
+    const vis=n.modes.includes(mode)&&(!n.layer||layers[n.layer]);
+    n.el.classList.toggle('hide',!vis);
+    n.el.style.transform=`translate(${x}px,${y}px)`;
+    const isSel=sel&&((sel.type==='sys'&&n.id===sel.id)||(sel.type==='rgn'&&n.id===sel.id)||(sel.type==='body'&&n.id==='b-'+sel.id));
+    n.el.classList.toggle('sel',!!isSel);
+  }
+}
+
+// ===================================================================== 패널
+const $=id=>document.getElementById(id);
+function fac(k){return F[k]?`<span style="color:${F[k].col}">${F[k].glyph} ${F[k].name}</span>`:''}
+function regionRow(id){
+  const r=REGIONS[id]; const own=r.owner==='war'?'<span style="color:var(--warn)">⚔ 전장</span>':r.split?`${fac(r.split[0])} · ${fac(r.split[1])}`:fac(r.owner);
+  return `<div class="row" data-rgn="${id}">${r.split?glyphSVG(null,22,r.split):glyphSVG(r.owner==='war'?'war':r.owner,22)}<div class="t">${r.seat?'★ ':''}${r.name}<small>${r.st.join(' · ')}</small></div><div class="v">${own}<br><span style="color:var(--ink-3)">국력 ${r.pow}</span></div></div>`;
+}
+function select(s){
+  sel=s;document.body.classList.add('panel-open');
+  let eye='',title='',sub='',body='',foot='';
+  const battleBtn=`<button class="btn primary" data-act="sortie">출진 · 브리핑</button>`;
+  if(s.type==='sys'){
+    const d=SYSTEMS[s.id];eye='성역 · SECTOR';title=d.full;sub=`${d.grade} · 권역 ${d.regions.length}`;
+    body=`<p class="p-desc">${d.desc}</p><div class="sec">권역</div>${d.regions.map(regionRow).join('')}`;
+    const routes=[...new Set(d.regions.flatMap(r=>REGIONS[r].rt))];
+    body+=`<div class="sec">상시 연결</div><div class="tags">${routes.map(n=>`<span class="tag ${/회랑|관문|협도/.test(n)?'cor':/대항로|지선/.test(n)?'hwy':''}">${n}</span>`).join('')}</div>`;
+    foot=s.id==='SYS-13'?`<button class="btn" data-act="zoomS">성역 보기</button>${battleBtn}`:`<button class="btn" data-act="focus">여기로</button>`;
+  }else if(s.type==='rgn'){
+    const r=REGIONS[s.id];eye=`권역 · ${SYSTEMS[r.sys].full}`;title=r.name;sub=`${r.seat?'★ 주권역 · ':''}국력 ${r.pow} · 방어 ${r.def}${r.note?' · '+r.note:''}`;
+    body=`<div class="sec">소유</div>${regionRow(s.id)}<div class="sec">거점</div>`+
+      r.st.map(n=>{const c=CITIES.find(c=>c[0]===n);return `<div class="row">${glyphSVG(c?c[3]:(r.split?r.split[0]:r.owner),18)}<div class="t">${n}<small>${c&&c[4]==='terran'?'거주 주행성':'식민지·거점'}</small></div></div>`}).join('')+
+      `<div class="sec">경유 항로</div><div class="tags">${r.rt.map(n=>`<span class="tag ${/회랑|관문|협도/.test(n)?'cor':/대항로/.test(n)?'hwy':''}">${n}</span>`).join('')||'<span class="tag">기저 항로만</span>'}</div>`;
+    foot=`<button class="btn" data-act="up">성역으로</button>`+(r.sys==='SYS-13'?battleBtn:'');
+  }else if(s.type==='body'){
+    const b=BODIES.find(b=>b[0]===s.id);eye='태양계권 · 천체';title=b[0];sub={star:'항성',rock:'내행성',venus:'금성형',earth:'거주 주행성 · 전장',moon:'위성 · 조선소',mars:'식민 행성',gas:'가스 행성'}[b[4]];
+    body=`<p class="p-desc">${b[5]}</p>`+(b[0]==='구지'?`<div class="sec">이 궤도의 전투</div><div class="row" data-act="battle"><svg width="22" height="22" viewBox="0 0 18 18">${shapeSVG(F.war,9,9,7.5)}</svg><div class="t">적벽대전<small>건안 13년 겨울 · 교전 임박</small></div><div class="v" style="color:var(--warn)">›</div></div>`:'');
+    foot=`<button class="btn" data-act="zoomS">성역으로</button>${battleBtn}`;
+  }else{
+    eye='전장 · BATTLE';title='적벽대전';sub='건안 13년 겨울 · 형주성역 태양계권 · 구지 궤도';
+    body=`<p class="p-desc">조조의 대군이 장강을 따라 내려와 구지 궤도에 집결했다. 유비와 손권의 연합 수군이 이를 맞는다.</p>
+    <div class="sec">양군</div>
+    <div class="vs"><div class="side"><h4 style="color:var(--ally)">${glyphSVG('shu',14)} 연합 · 7전대</h4>
+      <div class="f" style="border-color:var(--ally)">유비 연합 전단<small>유비 · 관우 · 조운 — 직접 지휘</small></div>
+      <div class="f" style="border-color:var(--ally)">강하군<small>유기</small></div>
+      <div class="f" style="border-color:var(--wu)">주유 수군<small>주유 · 정보 · 황개 — 위임</small></div></div>
+      <div class="x">對</div>
+      <div class="side"><h4 style="color:var(--foe)">${glyphSVG('wei',14)} 조조군 · 7전대</h4>
+      <div class="f" style="border-color:var(--foe)">조조 중군<small>조조 · 조인 · 서황 · 조순 · 조홍</small></div>
+      <div class="f" style="border-color:var(--foe)">형주 항복 수군<small>문빙 · 채모</small></div></div></div>
+    <div class="sec">전장 지형</div><div class="terr">${BF_TERRAIN.map(z=>`<div><b>${z.name}</b>${z.fx}</div>`).join('')}</div>
+    <p class="note">난이도(입문·표준·상급·극한)와 상세 편성은 브리핑에서 고른다. 궤도 화면의 함대 위치는 시안용 표시다.</p>`;
+    foot=`<button class="btn" data-act="orbit">궤도 보기</button>${battleBtn}`;
+  }
+  $('pEye').textContent=eye;$('pTitle').textContent=title;$('pSub').textContent=sub;$('pBody').innerHTML=body;$('pFoot').innerHTML=foot;$('pBody').scrollTop=0;
+  // 선택한 대상이 패널에 가리지 않게 카메라를 옮긴다
+  if(s.type==='battle'&&mode!=='o'){goTo({x:BF.cx,y:BF.cy,s:cam.s},450)}
+  else if(s.type==='rgn'){goTo({x:REGIONS[s.id].at[0],y:REGIONS[s.id].at[1],s:cam.s},450)}
+}
+function closePanel(){sel=null;document.body.classList.remove('panel-open')}
+$('pClose').onclick=closePanel;
+$('panel').addEventListener('pointerdown',e=>e.stopPropagation());
+$('panel').addEventListener('click',e=>{
+  const a=e.target.closest('[data-act]'),r=e.target.closest('[data-rgn]');
+  if(r){select({type:'rgn',id:r.dataset.rgn});if(mode==='t')goTo({...fit(STOPS.s.b),x:REGIONS[r.dataset.rgn].at[0],y:REGIONS[r.dataset.rgn].at[1]});return}
+  if(!a)return;const act=a.dataset.act;
+  if(act==='sortie'){const t=$('toast');t.classList.add('on');setTimeout(()=>t.classList.remove('on'),1800)}
+  if(act==='zoomS'||act==='up')goStop('s');
+  if(act==='orbit'){goStop('o')}
+  if(act==='battle'){select({type:'battle'})}
+  if(act==='focus'&&sel&&sel.type==='sys'){const at=SYSTEMS[sel.id].at;goTo({x:at[0],y:at[1],s:cam.s*1.6})}
+});
+
+// ===================================================================== 입력: 드래그 이동, 휠·두 손가락 확대(손가락 중심 기준)
+const ptrs=new Map();let pinch0=null,moved=false;
+function zoomAt(px,py,f){
+  const s1=Math.min(stopScale('o')*1.6,Math.max(stopScale('t')*.7,cam.s*f));
+  const [wx,wy]=s2w(px,py);cam.s=s1;const [nx,ny]=s2w(px,py);cam.x+=wx-nx;cam.y+=wy-ny;anim=null;
+}
+cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=false;anim=null;
+  if(ptrs.size===2){const [a,b]=[...ptrs.values()];pinch0={d:Math.hypot(a.x-b.x,a.y-b.y),s:cam.s}}});
+cv.addEventListener('pointermove',e=>{
+  if(!ptrs.has(e.pointerId))return;const p=ptrs.get(e.pointerId);const dx=e.clientX-p.x,dy=e.clientY-p.y;
+  if(ptrs.size===1){if(Math.abs(dx)+Math.abs(dy)>2)moved=true;cam.x-=dx/cam.s;cam.y-=dy/cam.s}
+  ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(ptrs.size===2&&pinch0){moved=true;const [a,b]=[...ptrs.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
+    zoomAt(mx,my,(pinch0.s*d/pinch0.d)/cam.s)}
+});
+const up=e=>{ptrs.delete(e.pointerId);if(ptrs.size<2)pinch0=null;
+  if(!moved&&ptrs.size===0&&e.type==='pointerup'){ // 빈 공간 탭: 궤도 단계의 전장 안이면 전장 선택, 아니면 선택 해제
+    if(mode==='o'&&layers.battle){const [x0,y0]=bf2s(0,0),[x1,y1]=bf2s(BF.w,BF.h);if(e.clientX>x0&&e.clientX<x1&&e.clientY>y0&&e.clientY<y1){select({type:'battle'});return}}
+    closePanel()}};
+cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+cv.addEventListener('wheel',e=>{e.preventDefault();zoomAt(e.clientX,e.clientY,Math.exp(-e.deltaY*.0015))},{passive:false});
+cv.addEventListener('dblclick',e=>zoomAt(e.clientX,e.clientY,1.8));
+
+document.querySelectorAll('[data-stop]').forEach(b=>b.onclick=()=>goStop(b.dataset.stop));
+$('ticker').onclick=()=>{select({type:'battle'});};
+document.querySelectorAll('#rail button').forEach(b=>b.onclick=()=>{const k=b.dataset.layer;layers[k]=!layers[k];b.classList.toggle('on',layers[k])});
+addEventListener('keydown',e=>{if(e.key==='1')goStop('t');if(e.key==='2')goStop('s');if(e.key==='3')goStop('o');if(e.key==='Escape')closePanel()});
+
+// ===================================================================== 루프
+function ease(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
+function frame(t){
+  if(anim){const k=Math.min(1,(t-anim.t0)/anim.ms),e=ease(k);
+    const ls=Math.log(anim.from.s)+(Math.log(anim.to.s)-Math.log(anim.from.s))*e;cam.s=Math.exp(ls);
+    cam.x=anim.from.x+(anim.to.x-anim.from.x)*e;cam.y=anim.from.y+(anim.to.y-anim.from.y)*e;if(k>=1)anim=null}
+  mode=computeMode();
+  document.querySelectorAll('[data-stop]').forEach(b=>b.classList.toggle('on',b.dataset.stop===mode));
+  drawBackground(t);drawTerrain();drawTerritory();drawRoutes(t);drawCityDots();drawBeacon(t);drawOrbit(t);drawVignette();
+  placeNodes();
+  requestAnimationFrame(frame);
+}
+addEventListener('resize',()=>{resize()});
+resize();Object.assign(cam,fit(STOPS.t.b));
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
