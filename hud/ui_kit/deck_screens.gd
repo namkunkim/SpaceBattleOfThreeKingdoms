@@ -284,6 +284,7 @@ class BriefScreen extends Control:
 # ------------------------------------------------------------ 일시정지
 class PauseScreen extends Control:
 	var deck: Control
+	var title_btn: Button
 	func _init(d: Control) -> void:
 		deck = d
 		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -300,6 +301,8 @@ class PauseScreen extends Control:
 			b.custom_minimum_size = Vector2(300, 56 if i == 0 else 52)
 			b.pressed.connect(specs[i][1])
 			col.add_child(b)
+			if specs[i][0] == "타이틀로":
+				title_btn = b
 			if i == 0:
 				var sp := Control.new()
 				sp.custom_minimum_size = Vector2(0, 8)
@@ -333,6 +336,8 @@ class PauseScreen extends Control:
 			UiDraw.diamond(c, Vector2(x + 5, c.size.y - 49), 4.0, UiTheme.GOLD)
 			UiDraw.text(c, Vector2(x + 18, c.size.y - 44), "자리를 비워 자동으로 멈췄습니다. 전황은 그대로입니다.", "regular", 13, UiTheme.INK_2)
 	func on_show() -> void:
+		if title_btn:
+			title_btn.text = deck.title_label()
 		queue_redraw()
 
 # ------------------------------------------------------------ 설정
@@ -544,6 +549,7 @@ class SettingsScreen extends Control:
 class ResultScreen extends Control:
 	var deck: Control
 	var t := 0.0
+	var title_btn: Button
 	func _init(d: Control) -> void:
 		deck = d
 		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -563,6 +569,7 @@ class ResultScreen extends Control:
 		title.focus_mode = Control.FOCUS_NONE
 		title.pressed.connect(func(): deck.to_title())
 		hb.add_child(title)
+		title_btn = title
 		var again := ScreenKit.menu_button("다시 출격", true)
 		again.custom_minimum_size = Vector2(240, 54)
 		again.pressed.connect(func(): deck.restart())
@@ -573,6 +580,7 @@ class ResultScreen extends Control:
 		queue_redraw()
 	func on_show() -> void:
 		t = 0.0
+		title_btn.text = deck.title_label()
 	func _draw() -> void:
 		var b: Node = deck.battle
 		var vs := size

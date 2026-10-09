@@ -161,7 +161,14 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 	battle.battle_event.connect(_on_event)
 	GameSettings.apply(get_window())
 	get_window().title = "성한지 — 적벽"
-	show_screen("title")
+	# 천하 지도에서 출격했으면 타이틀을 건너뛴다(WORLD-MAP-LINK §2). 서막(첫 진입 한 번, 브리핑 전)이 있으면 그것부터
+	if battle.has_method("routed") and battle.routed():
+		if has_method("open_prologue_or_brief"):
+			call("open_prologue_or_brief")
+		else:
+			show_screen("brief")
+	else:
+		show_screen("title")
 
 # 되돌리기·빠른 알림은 선택 패널(접힘 L1 / 펼침 L2) 또는 결정 카드 바로 위에 뜬다.
 func _layout_floaters() -> void:
@@ -212,7 +219,14 @@ func restart() -> void:
 	battle._restart()
 	show_screen("")
 
+# 천하 지도에서 들어온 전투는 "타이틀로" 대신 "천하로"
+func title_label() -> String:
+	return "천하로" if battle.has_method("routed") and battle.routed() else "타이틀로"
+
 func to_title() -> void:
+	if battle.has_method("routed") and battle.routed():
+		battle.back_to_world()
+		return
 	battle.init_game()
 	_clear_log()
 	show_screen("title")
