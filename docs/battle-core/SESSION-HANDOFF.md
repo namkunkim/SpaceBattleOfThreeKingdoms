@@ -233,6 +233,15 @@
 - 테스트 `tests/fog_ui.gd`(FOG_UI_PASS), 기존 전 테스트 통과.
 - **병합 주의:** POC 정리 세션과 겹칠 수 있는 파일은 `battle_source.gd`(위 함수들 + `_sq`에 `contact`)·`FleetBattle3D.gd`(G.slow 3줄). POC 잔재 영역은 건드리지 않았다. 진형 탭 실투영은 `formation_ui`·`roster` 통과로 확인(호스트 `combat` 연결됨).
 
+## 태블릿 터치 컨트롤 시험 → main 병합 (2026-10-09, 구현 세션 "터치 컨트롤 시험", main `8e02aeb`)
+
+- 브랜치 `feature/touch-test-one-fleet` → `feature/touch-test-two`를 main에 병합했다. `TOUCH_TEST := false`(시험 모드 해제). 정본 문서는 `docs/ui/TOUCH-CONTROLS.md` §3.3~3.6.
+- 코어 변경: 새 명령 `face`, `move`의 `args.strafe`·`facing_deg`, `movement.face_turn_deg_per_s`, **그룹 이동 최저 속도 `FleetState.speed_cap`**(결정 Q60), `sim.endless`.
+- 화면 변경: 함대 조작(끌기 이동·방향 원·링 핸들·이동 방식 알약), 그룹 제자리 방향 메뉴, 이동 목적지 대형 보정(`_fit_to_field`), 배경판을 전장 크기에 맞춤(`build_backdrop`), 함대별 탐지 범위 원(`_detect_rings`).
+- 시험 모드(켜면): 아군 2·적 1, 전장 6800×4600, 일시정지 고정 버튼, 정지 중에만 명령, 감속 제거, logcat 로그 `[ORDER]`·`[TOUCH]`.
+- 검증: 헤드리스 `battle_flow`·`core_rules`·`formation_rules`·`detection_rules`·`commander_ai` 통과. `tests/boundary.gd`는 main에 이미 있던 `battle_source.gd:163`(`BattleRules`) 위반으로 실패(이번 변경 무관, 별도 수정 필요).
+- 미해결·후속: 미리보기선을 전장 경계 안으로 맞추기, 일반 전투(시험 모드 꺼짐) 전장 크기·배경판 크기 결정(시나리오 1600×900 그대로면 판도 그 크기), 탐지 반경 표시 배율, PC 마우스 대응, `TouchController`의 `battle.TOUCH_TEST` 의존 정리.
+
 ## 남은 일 (컨셉 세션이 할 수 있는 것)
 
 | 우선 | 일 | 메모 |
