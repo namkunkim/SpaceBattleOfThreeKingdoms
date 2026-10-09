@@ -97,6 +97,7 @@ static func contact(sim: BattleSim, c: Dictionary) -> Dictionary:
 		d.portrait = t.portrait
 		d.commander_id = t.name
 		d.faction_id = t.faction
+		d.pos = t.pos   # 확인 접촉은 실제 위치(§4.9). 평가 시점(1초 주기) 위치를 쓰면 적이 1초마다 멈췄다 점프한다
 		d.heading = t.heading
 		d.strength_band = sim.detect.strength_band(t)
 		if sim.chain:

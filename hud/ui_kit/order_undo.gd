@@ -41,6 +41,9 @@ func _process(delta: float) -> void:
 	if not _last.is_empty() and not charged:
 		var prev := {}
 		for id in now:
+			var vf = deck.battle.by_id(id)
+			if vf and vf.control == "delegate":
+				continue   # 위임 함대의 AI 이동·표적은 플레이어 명령이 아니다(되돌리기 대상 아님)
 			if _last.has(id) and _is_new_order(_last[id], now[id]):
 				prev[id] = _last[id]
 		if not prev.is_empty():

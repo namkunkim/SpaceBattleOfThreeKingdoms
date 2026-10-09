@@ -23,6 +23,9 @@ func _run() -> void:
 	GameSettings.auto_fast = true
 	GameSettings.slow_mode = GameSettings.SLOW_OFF
 	deck.begin_battle()
+	for f in battle.sim.st.fleets:
+		if f.side == 1:
+			f.wait = 1 << 30   # 적 AI 투입 대기: 적이 전속으로 오면 2초 안에 교전 거리라 시작 조용한 구간(자동 ×4)을 볼 수 없다
 	await create_timer(1.3).timeout
 	await _frames()
 	if not TestCheck.ok(self, pacing.mode == pacing.Mode.AUTO, "auto x4 before incoming"): return
@@ -82,6 +85,8 @@ func _run() -> void:
 	if not TestCheck.ok(self, picked[0] == 1, "quick alert choice"): return
 	# C-2
 	var shooter = null
+	for f in battle.sim.st.fleets:
+		f.wait = 0   # 적 AI 투입
 	TestPoke.foe_beside(battle, battle.flag(0))   # 안개 시작이라 적을 곁으로 옮겨 교전을 만든다
 	for i in 600:
 		for f in battle.alive(0):

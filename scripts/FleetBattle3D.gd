@@ -283,9 +283,10 @@ func _process(delta: float) -> void:
 			if i > 0 and i == n - 1:
 				_sync()   # 한 프레임에 여러 틱이면 마지막 틱 직전 상태를 보간 시작점(ppos)으로 둔다. 안 하면 2틱 구간을 1틱 alpha로 보간해 배속에서 표시가 앞뒤로 튄다
 			sim.step()
-		vm.alpha = clock.alpha()
+		var a := 1.0 if sim.st.over else clock.alpha()   # 전투가 끝나면 틱이 멈춘다: 보간을 마지막 위치에 고정(안 하면 결과 화면까지 직전 틱과 사이를 반복 재생해 흔들린다)
+		vm.alpha = a
 		_pump()
-		vm.interpolate(clock.alpha())
+		vm.interpolate(a)
 		_tick_view(dt * G.speed * G.slow)
 		G.panel_t -= dt
 		if G.panel_t <= 0.0:
