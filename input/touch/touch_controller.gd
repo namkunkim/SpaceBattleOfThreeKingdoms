@@ -50,6 +50,12 @@ func handle_fleet():
 	var s: Array = battle.my_sel()
 	return s[0] if (s.size() == 1 and not battle.multi) else null
 
+# 제자리 방향 메뉴를 여는 함대인가: 일시정지 중, 다중 모드가 아니고, 선택된 아군 함대(선택이 몇 개든)
+func _face_hold_fleet(f) -> bool:
+	if f == null or f.side != 0 or battle.multi or not battle.selected.has(f):
+		return false
+	return not battle.TOUCH_TEST or battle.G.hold
+
 # 함대 명령(이동·평행 이동·방향 메뉴·공격)은 일시정지 중에만 낸다(시험 모드). 막히면 안내한다.
 var _hint_t := -10.0
 
@@ -179,8 +185,8 @@ func _process(delta: float) -> void:
 			_open_menu()
 	if mode == "pending" and touches.size() == 1:
 		press_t += delta
-		if origin_fleet != null and origin_fleet == handle_fleet():
-			# 선택된 함대 1개를 가만히 누르면 제자리 방향 메뉴(선택 추가/해제 길게 누르기보다 우선)
+		if _face_hold_fleet(origin_fleet):
+			# 선택된 함대(그룹이면 그중 하나)를 가만히 누르면 제자리 방향 메뉴. 방향은 선택 전체에 적용(선택 추가/해제 길게 누르기보다 우선)
 			if press_t >= FACE_HOLD_T:
 				_open_menu(true)
 		elif press_t >= LONG_PRESS and origin_fleet and origin_fleet.side == 0:
@@ -362,6 +368,8 @@ func _menu_press(e: InputEventScreenTouch) -> void:
 		menu.a = (e.position - menu.c).angle()
 		menu.set = true
 	else:   # 바깥 탭: 취소
+		if battle.TOUCH_TEST:
+			print("[TOUCH] menu cancelled by outside tap d=", snappedf(d, 1.0))
 		menu = {}
 		mode = ""
 		origin_fleet = null
@@ -388,6 +396,8 @@ func _finish_order(p: Vector2) -> void:
 	order = {}
 	order_preview_changed.emit()
 	if o.is_empty() or o.cancel:
+		if battle.TOUCH_TEST:
+			print("[TOUCH] order dropped empty=", o.is_empty(), " cancel=", o.get("cancel"))
 		return
 	if o.target:
 		battle.order_attack(o.target)

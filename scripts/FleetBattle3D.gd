@@ -145,6 +145,14 @@ func init_game() -> void:
 	if TOUCH_TEST and not profile.is_empty():
 		profile.ally = profile.ally.slice(0, 2)
 		profile.foe = []   # 적 함대 없음(터치 조작 시험)
+		# 전장을 배경판의 가로·세로 2배(6800×4600)로 키우고 아군을 가운데로 옮긴다. 미니맵은 이 전장을 비례 축소해 보여 준다
+		var big := CameraRig.WORLD * 2.0
+		profile.rules.world_w = big.x
+		profile.rules.world_h = big.y
+		var shift := big * 0.5 - Vector2(profile.ally[0].x, profile.ally[0].y)
+		for d in profile.ally:
+			d.x += shift.x
+			d.y += shift.y
 		rig.margin = 0.4   # 시작 배율에서도 두 손가락으로 화면을 옮길 수 있게
 		GameSettings.slow_mode = GameSettings.SLOW_OFF   # 선택 감속 끔(저장 설정은 건드리지 않는다)
 		# 이동 ×150: 화면 한 폭(1600)을 약 10초에 건넌다. 선회율도 ×15로 올린다: 선회 반경(속도÷선회율)이
@@ -172,6 +180,8 @@ func init_game() -> void:
 	view3d.build_backdrop()
 	rig.cam_pos = _field_center()
 	rig.cam_z = clampf(vsize.x / (sim.rs.world.x + 100.0), 0.45, 1.0)   # 전장 폭이 화면에 들어오게
+	if TOUCH_TEST:
+		rig.cam_z = 0.9   # 전장이 커서 전체를 담으면 함대가 작다. 시작은 함대가 읽히는 배율, 확대·축소는 두 손가락
 	hud.reset()
 	refresh_panel()
 

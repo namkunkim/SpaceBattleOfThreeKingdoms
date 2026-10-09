@@ -354,6 +354,7 @@ func _clear_path(f: FleetState) -> void:
 	f.route.clear()
 	f.strafe = false
 	f.face_set = false
+	f.speed_cap = 0.0
 
 func _reject(lead: FleetState, reason: String, side: int) -> void:
 	emit("rejected", lead.id if lead else -1, side, Vector2.ZERO, reason)
@@ -606,6 +607,12 @@ func apply(c: Dictionary) -> void:
 			if salvo and pts.size() > int(salvo.C.movement.max_waypoints):
 				_reject(L, "too_many_waypoints", side)
 				return
+			# 그룹 이동 규칙: 함께 이동하는 함대는 그중 가장 느린 속도로 가서 대형을 유지한 채 같이 도착한다
+			var cap := 0.0
+			if s.size() > 1:
+				cap = 1e9
+				for f in s:
+					cap = minf(cap, f.speed)
 			var cen := Vector2.ZERO
 			for f in s:
 				cen += f.pos
@@ -615,6 +622,7 @@ func apply(c: Dictionary) -> void:
 				f.target_id = -1
 				f.has_move = true
 				_clear_path(f)
+				f.speed_cap = cap
 				for i in pts.size():
 					var w: Vector2 = pts[i]
 					var p := BattleRules.quant_v(Vector2(clampf(w.x + o.x, e, W.x - e), clampf(w.y + o.y, e, W.y - e)))
@@ -852,6 +860,7 @@ func _fleet_phase(timers: bool) -> void:
 				if f.route.is_empty():
 					f.has_move = false
 					f.strafe = false
+					f.speed_cap = 0.0
 				else:
 					f.move_to = f.route.pop_front()   # 다음 경유점
 			if f.has_move:
@@ -860,6 +869,8 @@ func _fleet_phase(timers: bool) -> void:
 		var spd := rs.move_speed(f.spd, f.defense, f.charge > 0)
 		if salvo:
 			spd = f.speed * (R.charge_speed_mul if f.charge > 0 else 1.0)
+			if f.speed_cap > 0.0 and f.charge <= 0:
+				spd = minf(spd, f.speed_cap)
 			if terrain:
 				spd *= float(BattleRules.BP) / float(terrain.move_cost_bp(f.pos))   # 성운·잔해·그림자는 느리다(§4.10)
 			if cmd:
