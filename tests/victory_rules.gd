@@ -319,7 +319,7 @@ func _run() -> void:
 	_sec(s, 4)
 	if not TestCheck.ok(self, not s.st.over, "20분 전에는 계속"): return
 	_sec(s, 2)
-	if not _ended(s, true, "time_limit", "20분: 조조군 손실이 더 큼 → 연합 승리"): return
+	if not _ended(s, false, "time_limit", "20분: 조조군 손실이 더 커도 시간 초과는 패배"): return
 	s = _sim()
 	_wreck(s, _f(s, "zhuge"), 3000)
 	s.st.clock_ms = lim * BattleRules.MILLI

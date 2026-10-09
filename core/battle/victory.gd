@@ -7,7 +7,7 @@ extends RefCounted
 # 연합 패배: 유비 기함 선체 0·항복 / 유비군 코스트 손실 70% / 연합 결합 코스트 손실 70% / 유비군 전 전대 소멸 / 연합 군 사기 붕괴
 # 연합 승리: 조조 기함 선체 0·항복 / 조조 기함이 조조군 탈출 지점 도달 / 조조군 코스트 손실 70% / 전 전대 소멸 / 조조군 군 사기 붕괴
 # 제한적 승리: 유비 기함과 함대 전체가 연합 탈출 지점에 도달
-# 20분 시계: 시작 대비 잔존 코스트 비율이 높은 쪽. 같은 시점에 양쪽이 성립하거나 동률이면 조조군.
+# 20분 시계: 시간 안에 승패가 안 나면 연합 패배(코스트 비교 없음). 같은 시점에 양쪽이 성립하면 조조군.
 
 const REASONS := ["liu_flagship_lost", "cao_flagship_lost", "cao_escaped", "alliance_escaped", "liu_cost_loss", "alliance_cost_loss",
 	"cao_cost_loss", "liu_eliminated", "cao_eliminated", "alliance_morale_collapse", "cao_morale_collapse", "time_limit", "simultaneous"]
@@ -135,12 +135,7 @@ func check() -> void:
 	elif cond.limited:
 		_finish(true, "alliance_escaped", true, cond)
 	elif st.clock_ms >= int(V.time_limit_s) * BattleRules.MILLI:
-		var a := cost_of("alliance")
-		var c := cost_of("foe")
-		var win := int(a.remaining) * int(c.original) > int(c.remaining) * int(a.original)
-		if not win and int(V.tie_winner_side) == 0:
-			win = true
-		_finish(win, "time_limit", false, cond)
+		_finish(false, "time_limit", false, cond)   # 시간 초과는 코스트와 무관하게 패배
 
 # ============================================================ 결산
 func _finish(win: bool, reason: String, limited: bool, cond: Dictionary) -> void:
