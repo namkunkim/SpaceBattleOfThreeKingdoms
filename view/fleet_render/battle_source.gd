@@ -271,3 +271,43 @@ func order_snapshot() -> Dictionary:
 # 스냅숏의 명령 상태로 되돌린다. 코어에서는 "직전 상태로 돌아가는 새 명령"(restore)으로 발행되고 명령 기록에 남는다(U2).
 func restore_orders(snap: Dictionary) -> void:
 	battle.restore_orders(snap)
+
+# ------------------------------------------------------------ 전대 세부 정보(선택 패널 펼침)
+# 자기 진영 전대만 준다. 적 접촉은 안개 규칙(이름·역할·전력 구간만)이라, POC 규칙은 값이 없어 빈 사전이다.
+const AMMO_LABEL := {"artillery": "포격", "line_fire": "직사", "intercept": "요격", "torpedo": "뇌격"}
+func detail(id: int) -> Dictionary:
+	var v = battle.by_id(id)
+	if v == null or v.side != 0 or v.contact != "" or battle.sim.salvo == null:
+		return {}
+	var f = battle.sim.st.by_id(id)
+	if f == null:
+		return {}
+	var d: Dictionary = {}
+	for a in battle.ALLY_DEF:
+		if a.get("squadron_id", "") == f.sq_id:
+			d = a
+	var grp := ""
+	for g in ScenarioRoster.load_scenario().get("fleet_groups", []):
+		if g.id == f.group_id:
+			grp = g.name
+	var n0 := 0
+	for t in f.comp0:
+		n0 += int(f.comp0[t])
+	var r: Dictionary = combat.resources
+	var vice = d.get("vice_commander", {})
+	var hz := float(battle.sim.st.hz)
+	return {
+		"group": grp,
+		"vice": vice.get("name", "") if vice is Dictionary else "",
+		"staff": d.get("staff", []).map(func(p): return str(p.name)),
+		"stats": f.stats,
+		"morale_bp": f.morale_bp, "mstate": f.mstate,
+		"hull": f.hull, "max_hull": f.max_hull, "stages": f.stages,
+		"ammo": f.ammo,
+		"energy": f.energy_m / 1000.0, "energy_max": float(r.energy_base) + float(r.energy_per_ship) * n0,
+		"heat": f.heat_m / 1000.0, "heat_max": float(r.heat_base) + float(r.heat_per_ship) * n0,
+		"speed": f.speed, "range": f.range_r,
+		"formation": combat.formations.get(f.formation_id, {}).get("name", f.formation_id),
+		"form_to": combat.formations.get(f.form_to, {}).get("name", "") if f.form_to != "" else "",
+		"form_left_s": f.form_left / hz,
+	}

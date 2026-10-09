@@ -30,7 +30,7 @@ const CMD_INFO := {
 # 탭 3개(Q22). 진형 탭은 코어 진형(M5·M10)이 붙기 전까지 방어진형 하나뿐이다.
 const TABS := [["태세", ["stop", "charge", "rally", "retreat", "all"]], ["진형", ["def"]], ["무장", ["missile", "fighter"]]]
 const INFO_L1 := 88.0
-const INFO_L2 := 158.0
+const INFO_L2 := 262.0   # 펼침: 함종 구성·상태 칩 + 전대 세부 정보 5줄
 
 var battle: Node
 var src: BattleSource
@@ -165,7 +165,7 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 
 # 되돌리기·빠른 알림은 선택 패널(접힘 L1 / 펼침 L2) 또는 결정 카드 바로 위에 뜬다.
 func _layout_floaters() -> void:
-	undo_bar.offset_top = -(decision_card.size.y + 14 + 10 + 60) if decision_card.visible else -(info.size.y + 14 + 8 + 60)
+	undo_bar.offset_top = -(decision_card.size.y + 14 + 10 + 60) if decision_card.visible else -((INFO_L2 if info_open else INFO_L1) + 14 + 8 + 60)   # info.size는 다음 프레임에 갱신된다
 	undo_bar.offset_bottom = undo_bar.offset_top + 60
 	quick_alert.offset_top = undo_bar.offset_top - 2
 	quick_alert.offset_bottom = quick_alert.offset_top + 64
@@ -689,6 +689,43 @@ func _info_single(c: Control, f) -> void:
 		c.draw_rect(r, Color(ch[1], 0.45), false, 1.0)
 		UiDraw.text(c, r.position + Vector2(8, 14), ch[0], "medium", 11, ch[1])
 		chx += tw + 6.0
+	_info_detail(c, x, chy + 42.0, src.detail(f.id))
+
+# 전대 세부 정보(자기 진영만): 장수·능력치 / 사기·선체 / 손상 단계 / 탄약·에너지·열 / 속도·사거리·진형
+const MSTATE_LABEL := {"stable": "안정", "shaken": "동요", "retreat": "퇴각"}
+const STAGE_LABEL := ["무손상", "경파", "중파", "대파", "격침"]
+func _info_detail(c: Control, x: float, y: float, d: Dictionary) -> void:
+	if d.is_empty():
+		return
+	var people := "함대 %s" % (d.group if d.group != "" else "—")
+	people += "  ·  부지휘관 %s" % (d.vice if d.vice != "" else "—")
+	people += "  ·  참모 %s" % (", ".join(PackedStringArray(d.staff)) if not d.staff.is_empty() else "—")
+	var st: Dictionary = d.stats
+	var stats := "통솔 %d · 무력 %d · 지력 %d" % [int(st.get("command", 0)), int(st.get("might", 0)), int(st.get("intellect", 0))]
+	var hp := "사기 %d%% %s  ·  선체 %d / %d" % [int(d.morale_bp) / 100, MSTATE_LABEL.get(d.mstate, d.mstate), int(d.hull), int(d.max_hull)]
+	var stage := [0, 0, 0, 0, 0]
+	for t in d.stages:
+		for i in 5:
+			stage[i] += int(d.stages[t][i])
+	var dmg := PackedStringArray()
+	for i in 5:
+		dmg.append("%s %d" % [STAGE_LABEL[i], stage[i]])
+	var res := PackedStringArray()
+	for cat in d.ammo:
+		res.append("%s %d" % [src.AMMO_LABEL.get(cat, cat), int(d.ammo[cat])])
+	var form: String = d.formation
+	if d.form_to != "":
+		form += " → %s %d초" % [d.form_to, ceili(d.form_left_s)]
+	var lines := [
+		people,
+		stats + "      " + hp,
+		"손상  " + " · ".join(dmg),
+		"탄약  " + (" · ".join(res) if not res.is_empty() else "—") + "      에너지 %d / %d · 열 %d / %d" % [int(d.energy), int(d.energy_max), int(d.heat), int(d.heat_max)],
+		"속도 %.1f · 사거리 %d · 진형 %s" % [d.speed, int(d.range), form],
+	]
+	c.draw_line(Vector2(x, y - 16), Vector2(c.size.x - 14, y - 16), UiTheme.LINE, 1.0)
+	for i in lines.size():
+		UiDraw.text(c, Vector2(x, y + i * 20.0), lines[i], "regular", 12, UiTheme.INK_2 if i != 0 else UiTheme.INK)
 
 # 접기·펼치기 표시(패널을 탭하면 바뀐다)
 func _chevron(c: Control) -> void:
