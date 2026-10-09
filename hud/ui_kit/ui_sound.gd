@@ -44,6 +44,11 @@ const EVENTS := {
 # 루프 3종: 원샷 훅이 아니라 종류마다 재생기 하나(동시에 최대 3개). set_loop("engine_loop", 0.6)으로 켜고, 0이면 끈다.
 const LOOPS := ["beam_loop", "engine_loop", "fire_loop"]
 
+# 배경음악: 퍼블릭 도메인 고전 2곡을 순서대로 반복한다(출처는 assets/audio/music/README.md).
+const MUSIC := ["mars", "overture_1812"]
+var _music: AudioStreamPlayer
+var _music_i := 0
+
 static var history: Array = []   # 최근 사건(테스트·디버그용)
 # 음높이 흔들기 전용 난수(리뷰 W-4). 전역 난수를 쓰면 POC 규칙 난수열이 밀려 결정론이 깨진다.
 var _rng := RandomNumberGenerator.new()
@@ -71,7 +76,7 @@ func set_loop(name: String, level: float) -> void:
 		lp.play()
 
 func _ready() -> void:
-	for b in ["Sfx", "Ui"]:
+	for b in ["Sfx", "Ui", "Music"]:
 		if AudioServer.get_bus_index(b) < 0:
 			AudioServer.add_bus()
 			var i := AudioServer.bus_count - 1
@@ -91,9 +96,23 @@ func _ready() -> void:
 		add_child(lp)
 		_loops[l] = lp
 	apply_volume()
+	_music = AudioStreamPlayer.new()
+	_music.bus = "Music"
+	_music.finished.connect(_next_music)
+	add_child(_music)
+	_next_music()
+
+func _next_music() -> void:
+	for n in MUSIC.size():
+		var path: String = AUDIO_DIR + "music/" + MUSIC[_music_i % MUSIC.size()] + ".ogg"
+		_music_i += 1
+		if ResourceLoader.exists(path):
+			_music.stream = load(path)
+			_music.play()
+			return
 
 static func apply_volume() -> void:
-	for it in [["Master", GameSettings.vol_master], ["Sfx", GameSettings.vol_sfx], ["Ui", GameSettings.vol_ui]]:
+	for it in [["Master", GameSettings.vol_master], ["Sfx", GameSettings.vol_sfx], ["Ui", GameSettings.vol_ui], ["Music", GameSettings.vol_music]]:
 		var i := AudioServer.get_bus_index(it[0])
 		if i < 0:
 			continue
