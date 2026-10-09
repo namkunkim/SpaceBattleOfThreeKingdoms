@@ -22,7 +22,7 @@ const PORTRAIT_SHEET := "res://assets/portraits/commanders_sheet_v1.png"
 var profile_def := "res://data/profiles/red_cliffs_rt.json"   # 적벽 시나리오 프로필. ""이면 POC 프로필(규칙 문구 대조 테스트 전용)
 var difficulty := "표준"
 const FIELD_SIZE := CameraRig.WORLD * 0.5   # 전투 전장 크기: 배경판(3400×2300)의 가로·세로 1/2 = 1700×1150 (이전 6800×4600의 1/4)
-const TOUCH_TEST := false  # 태블릿 터치 시험용: 유비군 함대 2개, 조조군 첫 즉시 투입 전대 1개만 둔다. 시험 끝나면 false
+var TOUCH_TEST := OS.has_feature("android")   # 터치 플레이(안드로이드)는 시험 모드: 유비군 함대 2개, 조조군 첫 즉시 투입 전대 1개, 정지 중 명령. PC·헤드리스 테스트는 false
 var ALLY_DEF: Array = []   # 브리핑·결산 편성표: 시나리오 프로필의 아군(유비군+손권군) 전대
 var FOE_DEF: Array = []    # 브리핑 적 정보: 처음부터 배치되는 적 전대만(증원 전대는 안개 속, 규모를 미리 알리지 않는다)
 const CMDS := [
