@@ -199,12 +199,26 @@ func _pick(sim: BattleSim, f: FleetState, tg: Array[Dictionary], lvl: Dictionary
 
 func _no_contact(sim: BattleSim, f: FleetState, side: int, F: Dictionary) -> void:
 	_do(sim, f, "ai_target", -1)
-	if str(F.no_contact) == "advance" and sim.morale:
-		# 정찰 전진을 방침으로 바꿨다: 접촉이 없으면 적 진영의 탈출 지점(공개 시나리오 데이터) 쪽으로 간다
-		var goal := sim.morale.exit_point(1 - side)
-		_do(sim, f, "ai_move", -1, f.pos + (goal - f.pos).normalized() * float(F.pursuit_step))
-	else:
+	if str(F.no_contact) != "advance" or sim.detect == null:
 		_hold(sim, f)
+		return
+	# 정찰 전진. 탐지가 기록한 가장 가까운 접촉(놓친 것 포함)의 마지막 위치로 곧장 간다(적 탈출 지점으로 달려 모서리에 닿던 것을 고쳤다).
+	# 목적지를 한 걸음(pursuit_step) 앞에 두면 도착 → 정지 → 다음 AI 주기 때까지 대기가 반복돼 움직였다 멈췄다 한다. 그래서 끝 지점을 준다.
+	# 기록이 없으면 본편 규칙대로 정찰 방향(no_contact_patrol.offset)으로 전장 끝까지 간다
+	var goal := Vector2.INF
+	var best := INF
+	for r in sim.detect.contacts[side].values():
+		var d := f.pos.distance_squared_to(r.pos)
+		if d < best:
+			best = d
+			goal = r.pos
+	if goal == Vector2.INF:
+		var off: Array = sim.detect.D.no_contact_patrol.offset
+		goal = (f.pos + Vector2(float(off[0]), float(off[1])).normalized() * sim.rs.world.length()).clamp(Vector2.ZERO, sim.rs.world)
+	if f.pos.distance_to(goal) < 1.0:
+		_hold(sim, f)
+		return
+	_do(sim, f, "ai_move", -1, goal)
 
 func _hold(sim: BattleSim, f: FleetState) -> void:
 	_do(sim, f, "ai_target", -1)

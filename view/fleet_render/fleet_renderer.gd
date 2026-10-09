@@ -42,9 +42,9 @@ const LAYER_H := 0.34
 const LOD_NEAR_ZOOM := 1.05
 const WORLD_AABB := AABB(Vector3(-120, -6, -120), Vector3(240, 12, 240))   # 함선이 월드 좌표로 움직이므로 컬링 상자를 전장 전체로 둔다
 # 대형 추종(뷰 전용 연출). 함선마다 자기 슬롯 목표를 지연 추종한다. 코어 상태·전역 난수와 무관하다(리뷰 REVIEW-FLEET-VISUAL).
-const SIM_STEP := 1.0 / 30.0     # 추종 갱신 주기(태블릿 예산: 정지한 전대는 갱신하지 않는다)
-const TAU_MIN := 0.25            # 함선별 추종 시간 상수(초). 슬롯마다 TAU_MIN~TAU_MAX
-const TAU_MAX := 0.95
+const SIM_STEP := 0.0     # 추종 갱신 주기: 매 프레임(30Hz로 묶으면 75Hz 화면에서 함선이 2프레임 멈췄다 점프한다). 정지한 전대는 갱신하지 않는다
+const TAU_MIN := 0.3             # 함선별 추종 시간 상수(초). 모든 함선이 같다: 다르면 지연이 짧은 함선부터 차례로 출발해 보인다
+const TAU_MAX := 0.3
 const SWAY := 0.22               # 이동 중 개체 흔들림 진폭(3D 단위)
 const MOVE_EPS := 0.3            # 이 속도(3D 단위/초) 이상이면 속도 방향을 보고, 아니면 전대 방향을 본다
 const REFORM_MIN := 0.6          # 진형 전환 때 함선이 슬롯을 향해 수렴하는 최소 tau 배율
@@ -318,6 +318,7 @@ func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 	var fpos := src.to3(sq.pos)
 	var frot := -float(sq.heading) - PI * 0.5
 	var moved := fpos.distance_squared_to(v.last_pos) > 1e-8 or absf(frot - v.last_rot) > 1e-5
+	var fvel := (fpos - v.last_pos) / step if v.last_pos.x < 1e8 else Vector3.ZERO   # 전대 속도: 지수 추종의 정상 지연(속도×tau)을 목표에 미리 더해 상쇄한다
 	v.last_pos = fpos
 	v.last_rot = frot
 	if not moved and v.rest >= 3:
@@ -340,7 +341,7 @@ func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 		gi += 1
 		if not s.alive:
 			continue
-		var t := fpos + fb * s.home
+		var t := fpos + fb * s.home + fvel * s.tau
 		if sw > 0.0:
 			t.x += sw * (sa * s.cph + ca * s.sph)
 			t.z += sw * (cb * s.cph2 - sb * s.sph2)

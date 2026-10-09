@@ -283,9 +283,10 @@ func _process(delta: float) -> void:
 			if sim.st.over:
 				break
 			sim.step()
-		vm.alpha = clock.alpha()
+		var a := 1.0 if sim.st.over else clock.alpha()   # 전투가 끝나면 틱이 멈춘다: 보간을 마지막 위치에 고정(안 하면 결과 화면까지 직전 틱과 사이를 반복 재생해 흔들린다)
+		vm.alpha = a
 		_pump()
-		vm.interpolate(clock.alpha())
+		vm.interpolate(a)
 		_tick_view(dt * G.speed * G.slow * run)
 		G.panel_t -= dt
 		if G.panel_t <= 0.0:

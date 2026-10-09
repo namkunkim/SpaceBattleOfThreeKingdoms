@@ -373,7 +373,10 @@ func sight_target(f: FleetState) -> FleetState:
 func known_pos(f: FleetState, t: FleetState) -> Vector2:
 	if detect == null:
 		return t.pos
-	return detect.rec(f.side, t.id).get("pos", t.pos)
+	var r: Dictionary = detect.rec(f.side, t.id)
+	if r.get("state", "") == "confirmed":
+		return t.pos   # 확인 접촉은 실제 위치(§4.9). 평가 시점(1초 주기) 위치를 쓰면 사격 거리 판정·추격이 1초씩 어긋난다
+	return r.get("pos", t.pos)
 
 func sight_foe(f: FleetState, max_r: float) -> FleetState:
 	if detect == null:
