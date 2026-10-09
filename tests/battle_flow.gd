@@ -97,7 +97,10 @@ func _run() -> void:
 		if battle.sim.st.over:
 			break
 	var log: Array = battle.sim.command_log
-	var rp := BattleSim.replay(battle.battle_seed, 10, log, battle.sim.st.tick, ScenarioProfile.load_profile(battle.profile_def, battle.difficulty))
+	var rprof := ScenarioProfile.load_profile(battle.profile_def, battle.difficulty)
+	if battle.profile_def != "":
+		ScenarioProfile.enlarge_field(rprof, battle.FIELD_SIZE)   # 호스트와 같은 전장
+	var rp := BattleSim.replay(battle.battle_seed, 10, log, battle.sim.st.tick, rprof)
 	if not TestCheck.ok(self, rp.fingerprint() == battle.sim.fingerprint(), "live game replays to the same fingerprint"): return
 	battle.queue_free()
 	await process_frame

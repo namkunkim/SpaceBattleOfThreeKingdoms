@@ -21,6 +21,7 @@ const FIGHTER_R := 380.0
 const PORTRAIT_SHEET := "res://assets/portraits/commanders_sheet_v1.png"
 var profile_def := "res://data/profiles/red_cliffs_rt.json"   # 적벽 시나리오 프로필. ""이면 POC 프로필(규칙 문구 대조 테스트 전용)
 var difficulty := "표준"
+const FIELD_SIZE := CameraRig.WORLD * 2.0   # 전투 전장 크기: 배경판(3400×2300)의 가로·세로 2배 = 6800×4600
 const TOUCH_TEST := false  # 태블릿 터치 시험용: 유비군 함대 2개, 조조군 첫 즉시 투입 전대 1개만 둔다. 시험 끝나면 false
 var ALLY_DEF: Array = []   # 브리핑·결산 편성표: 시나리오 프로필의 아군(유비군+손권군) 전대
 var FOE_DEF: Array = []    # 브리핑 적 정보: 처음부터 배치되는 적 전대만(증원 전대는 안개 속, 규모를 미리 알리지 않는다)
@@ -142,17 +143,11 @@ func init_game() -> void:
 	fx.clear()
 	battle_seed = randi()
 	var profile := ScenarioProfile.load_profile(profile_def, difficulty) if profile_def != "" else PocSetup.profile()
+	if profile_def != "" and not profile.is_empty():
+		ScenarioProfile.enlarge_field(profile, FIELD_SIZE)   # 전장을 6800×4600으로 키우고 배치를 비율대로 늘린다(일반 전투·시험 모드 공통). 미니맵은 이 전장을 비례 축소해 보여 준다
 	if TOUCH_TEST and not profile.is_empty():
 		profile.ally = profile.ally.slice(0, 2)
 		profile.foe = profile.foe.filter(func(d): return int(d.wait) == 0).slice(0, 1)   # 적 함대 1개만(즉시 투입 중 첫 번째)
-		# 전장을 배경판의 가로·세로 2배(6800×4600)로 키우고 아군을 가운데로 옮긴다. 미니맵은 이 전장을 비례 축소해 보여 준다
-		var big := CameraRig.WORLD * 2.0
-		profile.rules.world_w = big.x
-		profile.rules.world_h = big.y
-		var shift := big * 0.5 - Vector2(profile.ally[0].x, profile.ally[0].y)
-		for d in profile.ally + profile.foe:   # 아군·적 같은 이동량: 원래 간격을 지킨다
-			d.x += shift.x
-			d.y += shift.y
 		rig.margin = 0.4   # 시작 배율에서도 두 손가락으로 화면을 옮길 수 있게
 		GameSettings.slow_mode = GameSettings.SLOW_OFF   # 선택 감속 끔(저장 설정은 건드리지 않는다)
 		# 이동 ×150: 화면 한 폭(1600)을 약 10초에 건넌다. 선회율도 ×15로 올린다: 선회 반경(속도÷선회율)이
@@ -179,8 +174,16 @@ func init_game() -> void:
 	rig.limit = sim.rs.world
 	view3d.build_backdrop()
 	rig.cam_pos = _field_center()
+	_brief_x = rig.cam_pos.x
+	var mine := alive(0)
+	if profile_def != "" and not mine.is_empty():   # 시작 화면은 아군(서쪽 끝) 쪽. 전장 밖으로는 clamp_cam이 막는다
+		var c := Vector2.ZERO
+		for f in mine:
+			c += f.pos
+		rig.cam_pos = c / mine.size()
+		_brief_x = rig.cam_pos.x
 	rig.cam_z = clampf(vsize.x / (sim.rs.world.x + 100.0), 0.45, 1.0)   # 전장 폭이 화면에 들어오게
-	if TOUCH_TEST:
+	if profile_def != "":
 		rig.cam_z = 0.9   # 전장이 커서 전체를 담으면 함대가 작다. 시작은 함대가 읽히는 배율, 확대·축소는 두 손가락
 	hud.reset()
 	refresh_panel()
@@ -188,6 +191,8 @@ func init_game() -> void:
 # 프로필 전장 크기와 중심. 시나리오 좌표는 (0,0)에서 시작한다.
 func field() -> Vector2:
 	return rig.limit
+
+var _brief_x := 0.0   # 브리핑 배경 카메라가 흔들리는 중심 x(시작 화면 위치)
 
 func _field_center() -> Vector2:
 	return rig.limit * 0.5
@@ -299,7 +304,7 @@ func _process(delta: float) -> void:
 				_show_end()
 	elif G.state == "brief" and not GameSettings.reduce_motion:
 		# 타이틀·서막·브리핑 뒤 전장이 천천히 흐른다. 동작 줄이기면 멈춘다.
-		rig.cam_pos.x = _field_center().x + sin(now_t / 5.0) * 120.0
+		rig.cam_pos.x = _brief_x + sin(now_t / 5.0) * 120.0
 	rig.update()
 	view3d.sync(fleets)
 	hud.paint_cmds()
