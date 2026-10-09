@@ -413,7 +413,7 @@ class SettingsScreen extends Control:
 		vib_chk = _check(pages[1], "진동 (경보·결정·아군 손실·길게 누르기)")
 		motion_chk = _check(pages[1], "동작 줄이기 (타이틀·서막·브리핑 뒤 카메라 멈춤)")
 		# 소리
-		for it in [["master", "전체 음량"], ["sfx", "전투 효과음"], ["ui", "UI·알림음"]]:
+		for it in [["master", "전체 음량"], ["sfx", "전투 효과음"], ["ui", "UI·알림음"], ["music", "배경음악"]]:
 			var r := _row(pages[2], it[1])
 			var sl := HSlider.new()
 			sl.min_value = 0.0
@@ -483,11 +483,13 @@ class SettingsScreen extends Control:
 		match key:
 			"master": return GameSettings.vol_master
 			"sfx": return GameSettings.vol_sfx
+			"music": return GameSettings.vol_music
 		return GameSettings.vol_ui
 	static func _set_vol(key: String, v: float) -> void:
 		match key:
 			"master": GameSettings.vol_master = v
 			"sfx": GameSettings.vol_sfx = v
+			"music": GameSettings.vol_music = v
 			_: GameSettings.vol_ui = v
 	func _sync() -> void:
 		for it in scale_btns:
