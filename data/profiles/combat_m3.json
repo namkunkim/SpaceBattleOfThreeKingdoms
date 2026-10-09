@@ -555,8 +555,8 @@
    "note": "전대 속도 = 편성에서 가장 느린 함종의 턴당 속도 / 60 (px/초) × (100 + 진형 기동%) / 100 (§4.2). 경유점은 최대 max_waypoints(경유 + 목적지)"
   },
   "formation_rules": {
-   "transition_s": 30,
-   "untrained_transition_s": 60,
+   "transition_s": 5,
+   "untrained_transition_s": 5,
    "transition_damage_mul": 0.8,
    "defense_id": "FRM-03",
    "defense_note": "POC 방어진형 버튼은 삭제했다(§9 POC 처분). 같은 역할은 방원진이 맡고, 적 AI가 선체가 줄면 이 진형으로 바꾼다",
@@ -564,7 +564,7 @@
    "master_min_command": 90,
    "master_trait": "신기묘산",
    "master_transition_div": 2,
-   "status": "Q24 전환 30초·통솔 미달 60초·전환 중 ×0.8. 팔진 전환 절반은 proposed(§4.7)",
+   "status": "전환 5초(통솔 미달도 5초)·전환 중 ×0.8. 팔진 전환 절반은 proposed(§4.7)",
    "affinity": {
     "FRM-02": "FRM-01",
     "FRM-01": "FRM-03",

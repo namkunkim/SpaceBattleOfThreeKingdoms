@@ -29,6 +29,7 @@ func _run() -> void:
 	var deck = battle.presentation.hud
 	GameSettings.auto_fast = false
 	deck.begin_battle()
+	deck.battle.G.hold = false   # 전투는 일시정지로 시작하므로 시간을 흘린다
 	await _frames()
 	battle.selected.clear()
 	for f in battle.alive(0):

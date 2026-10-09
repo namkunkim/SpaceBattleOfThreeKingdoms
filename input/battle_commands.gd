@@ -64,11 +64,11 @@ func order_move(w: Vector2, strafe := false, facing_deg = null) -> void:
 	if facing_deg != null:
 		args.facing_deg = facing_deg
 	host.issue(make("move", _ids(s), -1, w, args))
-	if host.TOUCH_TEST:   # 시험 로그(logcat): 요청 지점과 코어가 실제로 받은 목적지(전장 경계에서 잘림)
-		var dest := []
-		for f in s:
-			dest.append("f%d pos=%s to=%s" % [f.id, f.pos.round(), f.move_to.round()])
-		print("[ORDER] move w=", w.round(), " field=", host.field(), " args=", args, " ", dest)
+	# 로그(logcat): 요청 지점과 코어가 실제로 받은 목적지(전장 경계에서 잘림)
+	var dest := []
+	for f in s:
+		dest.append("f%d pos=%s to=%s" % [f.id, f.pos.round(), f.move_to.round()])
+	print("[ORDER] move w=", w.round(), " field=", host.field(), " args=", args, " ", dest)
 	host.marker = {"pos": w, "t": 1.2, "foe": false}
 
 # 목적지를 전장 안으로 당긴다. 코어는 함대마다 따로 경계에 자르므로 그대로 두면 경계 밖 지점에서 대형이 한 줄로 뭉친다.
@@ -93,8 +93,7 @@ func order_face(rad: float) -> void:
 	if s.is_empty():
 		return
 	host.issue(make("face", _ids(s), -1, Vector2.ZERO, {"facing_deg": rad_to_deg(rad)}))
-	if host.TOUCH_TEST:
-		print("[ORDER] face deg=", snappedf(rad_to_deg(rad), 0.1), " n=", s.size())
+	print("[ORDER] face deg=", snappedf(rad_to_deg(rad), 0.1), " n=", s.size())
 
 func order_attack(t) -> void:
 	var s: Array = host.my_sel()

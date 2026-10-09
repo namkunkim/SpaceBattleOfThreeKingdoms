@@ -1,6 +1,6 @@
 extends SceneTree
 
-# M5 완료 기준(제안서 §9): 진형 % 보정, 상성 순환, 전환(30초·통솔 미달 60초·전환 중 ×0.8), 지형 제한, 노출표 전체,
+# M5 완료 기준(제안서 §9): 진형 % 보정, 상성 순환, 전환(5초·전환 중 ×0.8), 지형 제한, 노출표 전체,
 # 선회·평행 이동·경유점·도착 방향, 방향 배분 60/40 장기 비율, 지휘 한도 초과 없음, 방어진형 삭제. 헤드리스, 실패하면 종료 코드 1.
 
 const FRM := ["FRM-01", "FRM-02", "FRM-03", "FRM-04", "FRM-05", "FRM-06", "FRM-07"]
@@ -65,43 +65,43 @@ func _run() -> void:
 			continue
 		if not TestCheck.ok(self, not s.salvo.affinity_wins("FRM-07", id) and not s.salvo.affinity_wins(id, "FRM-07"), "팔진 상성 무효 " + id): return
 
-	# --- 3. 전환: 30초, 전환 중 피해 ×0.8, 방어%·노출은 이전 진형, 완료하면 바뀐다 ---
+	# --- 3. 전환: 5초, 전환 중 피해 ×0.8, 방어%·노출은 이전 진형, 완료하면 바뀐다 ---
 	s = _pair("FRM-01", "FRM-01")
 	a = s.st.fleets[0]
 	b = s.st.fleets[1]
 	var dmg0 := s.salvo.formation_mul(a, b, "engagement")
-	if not TestCheck.ok(self, _cmd(s, a, "formation", {"id": "FRM-03"}).is_empty() and a.form_to == "FRM-03" and a.form_left == 300, "전환 시작 30초: %d" % a.form_left): return
+	if not TestCheck.ok(self, _cmd(s, a, "formation", {"id": "FRM-03"}).is_empty() and a.form_to == "FRM-03" and a.form_left == 50, "전환 시작 5초: %d" % a.form_left): return
 	if not TestCheck.ok(self, is_equal_approx(s.salvo.formation_mul(a, b, "engagement"), dmg0 * 0.8), "전환 중 피해 ×0.8"): return
 	if not TestCheck.ok(self, a.formation_id == "FRM-01" and s.salvo._form_id(a) == "FRM-01", "전환 중 진형·방어%는 이전 값"): return
 	# 같은 사격이 전환 중에는 이전 진형(어린진 방어 −5%)으로 명중률을 낸다
 	var hit_old := s.salvo.hit_bp(b, a, "line_fire")
 	var shape_old := a.shape
-	_sec(s, 29.0)
-	if not TestCheck.ok(self, a.formation_id == "FRM-01" and a.form_left > 0, "29초에는 아직 전환 중"): return
+	_sec(s, 4.0)
+	if not TestCheck.ok(self, a.formation_id == "FRM-01" and a.form_left > 0, "4초에는 아직 전환 중"): return
 	_sec(s, 1.5)
-	if not TestCheck.ok(self, a.formation_id == "FRM-03" and a.form_to == "" and a.form_left == 0, "30초 뒤 완료"): return
+	if not TestCheck.ok(self, a.formation_id == "FRM-03" and a.form_to == "" and a.form_left == 0, "5초 뒤 완료"): return
 	if not TestCheck.ok(self, s.salvo.hit_bp(b, a, "line_fire") < hit_old and a.shape != shape_old, "완료 뒤 방원진 방어 +15%·배치도 변경"): return
 	if not TestCheck.ok(self, is_equal_approx(s.salvo.formation_mul(a, b, "engagement"), 1.0), "완료 뒤 전환 감소 없음(방원 대 어린은 상성 열세라 1.0)"): return
 	# 현재 진형으로 되돌리면 취소
 	_cmd(s, a, "formation", {"id": "FRM-05"})
-	_sec(s, 5.0)
+	_sec(s, 2.0)
 	_cmd(s, a, "formation", {"id": "FRM-03"})
 	if not TestCheck.ok(self, a.form_left == 0 and a.form_to == "", "현재 진형 지정은 전환 취소"): return
-	# 통솔이 요구치에 못 미치면 60초: 학익진(75)에 통솔 70
+	# 통솔이 요구치에 못 미쳐도 5초: 학익진(75)에 통솔 70
 	s = _pair("FRM-01", "FRM-01", 70)
 	a = s.st.fleets[0]
 	_cmd(s, a, "formation", {"id": "FRM-02"})
-	if not TestCheck.ok(self, a.form_left == 600, "통솔 미달 60초: %d" % a.form_left): return
+	if not TestCheck.ok(self, a.form_left == 50, "통솔 미달도 5초: %d" % a.form_left): return
 	s = _pair("FRM-01", "FRM-01", 80)
 	a = s.st.fleets[0]
 	_cmd(s, a, "formation", {"id": "FRM-02"})
-	if not TestCheck.ok(self, a.form_left == 300, "통솔 충족 30초: %d" % a.form_left): return
-	# 팔진: 통솔 90 + 신기묘산만. 조건 충족자는 전환 절반(15초)
+	if not TestCheck.ok(self, a.form_left == 50, "통솔 충족 5초: %d" % a.form_left): return
+	# 팔진: 통솔 90 + 신기묘산만. 조건 충족자는 전환 절반(2.5초)
 	s = _pair("FRM-01", "FRM-01", 95)
 	a = s.st.fleets[0]
 	if not TestCheck.ok(self, _cmd(s, a, "formation", {"id": "FRM-07"}) == ["formation_master"], "특성 없는 통솔 95는 팔진 불가"): return
 	a.traits = ["신기묘산"]
-	if not TestCheck.ok(self, _cmd(s, a, "formation", {"id": "FRM-07"}).is_empty() and a.form_left == 150, "팔진 조건 충족자 전환 15초: %d" % a.form_left): return
+	if not TestCheck.ok(self, _cmd(s, a, "formation", {"id": "FRM-07"}).is_empty() and a.form_left == 25, "팔진 조건 충족자 전환 2.5초: %d" % a.form_left): return
 	s = _pair("FRM-01", "FRM-01", 80)
 	a = s.st.fleets[0]
 	a.traits = ["신기묘산"]
@@ -214,7 +214,7 @@ func _run() -> void:
 	s = _pair("FRM-01", "FRM-01", 80)
 	_cmd(s, s.st.fleets[0], "formation", {"id": "FRM-02"})
 	pj = s.projection(0).squadrons[0]
-	if not TestCheck.ok(self, pj.form_to == "FRM-02" and is_equal_approx(pj.form_left_s, 30.0), "투영 전환 남은 시간"): return
+	if not TestCheck.ok(self, pj.form_to == "FRM-02" and is_equal_approx(pj.form_left_s, 5.0), "투영 전환 남은 시간"): return
 
 	# --- 8. 결정론: 진형·경유점·평행 명령을 섞은 같은 입력은 같은 지문 ---
 	var fps := []

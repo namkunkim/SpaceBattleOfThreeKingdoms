@@ -669,7 +669,7 @@ func _info_single(c: Control, f) -> void:
 		chips.append(["기함", UiTheme.GOLD_HI])
 	if not foe:
 		chips.append(["지휘 범위 안" if f.in_cmd else "지휘 범위 밖 · %s" % RuleText.out_of_cmd(src.rules()), UiTheme.ALLY_HI if f.in_cmd else UiTheme.WARN])
-		if src.has_command("missile"):
+		if src.has_command("missile") and src.rules().set == "poc":
 			chips.append(["미사일 준비" if f.missile_cd <= 0.0 else "미사일 %d초" % ceili(f.missile_cd), UiTheme.CP if f.missile_cd <= 0.0 else UiTheme.INK_2])
 			chips.append(["함재기 준비" if f.fighter_cd <= 0.0 else "함재기 %d초" % ceili(f.fighter_cd), UiTheme.CP if f.fighter_cd <= 0.0 else UiTheme.INK_2])
 	if f.charge_t > 0.0:

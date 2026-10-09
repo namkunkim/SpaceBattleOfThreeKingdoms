@@ -23,6 +23,7 @@ func _run() -> void:
 	GameSettings.auto_fast = true
 	GameSettings.slow_mode = GameSettings.SLOW_OFF
 	deck.begin_battle()
+	deck.battle.G.hold = false   # 전투는 일시정지로 시작하므로 시간을 흘린다
 	await create_timer(1.3).timeout
 	await _frames()
 	if not TestCheck.ok(self, pacing.mode == pacing.Mode.AUTO, "auto x4 before incoming"): return
@@ -64,7 +65,7 @@ func _run() -> void:
 	UiSound.history.clear()
 	deck.quick_alert.open_alert({"text": "견본", "options": [{"label": "가", "rec": true}, {"label": "나"}], "time": 5.0})
 	await _frames()
-	if not TestCheck.ok(self, pacing.slow and is_equal_approx(battle.G.slow, 0.2) and UiSound.history.has("warn_branch"), "quick alert slows to x0.2 + sound"): return
+	if not TestCheck.ok(self, not pacing.slow and is_equal_approx(battle.G.slow, 1.0) and UiSound.history.has("warn_branch"), "quick alert does not slow time + sound"): return
 	deck.quick_alert.close_alert()
 	await _frames()
 	if not TestCheck.ok(self, not pacing.slow and is_equal_approx(battle.G.slow, 1.0), "closing alert restores speed"): return

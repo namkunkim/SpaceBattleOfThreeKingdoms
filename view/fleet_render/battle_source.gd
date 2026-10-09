@@ -171,10 +171,10 @@ func _salvo_rules() -> Dictionary:
 		"cmd_range": battle.CMD_R,
 	}
 
-# 지금 규칙에 있는 명령(진형·태세 탭 구성). salvo 규칙에는 방어진형·미사일·함재기가 없다.
+# 지금 규칙에 있는 명령(진형·태세 탭 구성). salvo 규칙에는 방어진형이 없다(미사일·함재기는 일제사격 당기기).
 func has_command(id: String) -> bool:
 	if battle.sim.salvo:
-		return not id in ["def", "missile", "fighter"]
+		return id != "def"
 	return true
 
 # ------------------------------------------------------------ 진형 탭(M5 진형, docs/ui/FORMATION-TAB-SPEC.md)

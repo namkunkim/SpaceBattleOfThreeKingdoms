@@ -1,7 +1,7 @@
 extends SceneTree
 
 # 전투 시간 진행 검증(헤드리스): Q52 조용한 구간 자동 ×4·건너뛰기, Q53 포커스를 잃으면 즉시 일시정지,
-# Q31·Q55 선택 감속(×0.2)과 5초 유휴 해제, 명령 확정 시 해제.
+# 배속·조용한 구간 자동 ×4·건너뛰기. 선택 감속은 폐지(어떤 설정에서도 느려지지 않음).
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -12,6 +12,8 @@ func _frames(n := 6) -> void:
 
 func _run() -> void:
 	var battle := (load("res://scenes/FleetBattle3D.tscn") as PackedScene).instantiate()
+	battle.move_mul = 1.0   # 조용한 구간을 시험하므로 플레이용 이동 배율을 끈다
+	battle.turn_mul = 1.0
 	root.add_child(battle)
 	await _frames()
 	var deck = battle.presentation.hud
@@ -20,6 +22,7 @@ func _run() -> void:
 	GameSettings.auto_fast = true
 	GameSettings.slow_mode = GameSettings.SLOW_OFF
 	deck.begin_battle()
+	deck.battle.G.hold = false   # 전투는 일시정지로 시작하므로 시간을 흘린다
 	await _frames(2)
 	if not TestCheck.ok(self, battle.G.state == "play" and battle.G.speed == 1, "battle starts at x1"): return
 	if not TestCheck.ok(self, src.quiet(), "opening is quiet (fleets out of engagement range)"): return
@@ -58,44 +61,17 @@ func _run() -> void:
 	if not TestCheck.ok(self, not src.quiet(), "skip reaches engagement (game clock %.0fs)" % battle.G.t): return
 	if not TestCheck.ok(self, pacing.mode == pacing.Mode.USER and battle.G.speed == 1, "engagement returns to x1"): return
 	if not TestCheck.ok(self, not pacing.can_skip(), "skip unavailable during engagement"): return
-	# Q31·Q55: 선택하면 ×0.2, 5초(실제 시간) 입력이 없으면 해제, 다시 만지면 감속
-	GameSettings.slow_mode = GameSettings.SLOW_ON_SELECT
-	battle.selected.clear()
-	battle.selected.append(battle.fleets[1])
-	var k := InputEventKey.new()
-	k.keycode = KEY_SHIFT
-	k.pressed = true
-	root.push_input(k, true)
-	await _frames(3)
-	if not TestCheck.ok(self, pacing.slow and is_equal_approx(battle.G.slow, 0.2), "select -> x0.2"): return
-	await create_timer(5.4, true, false, true).timeout
-	await _frames(2)
-	if not TestCheck.ok(self, not pacing.slow and is_equal_approx(battle.G.slow, 1.0) and battle.selected.size() == 1, "idle 5s -> x1, selection kept"): return
-	root.push_input(k, true)
-	await _frames(3)
-	if not TestCheck.ok(self, pacing.slow, "touch again -> slow again"): return
-	# 명령 확정(정지 명령)이면 해제
-	TestPoke.fleet(battle, battle.fleets[1], {"has_move": true, "move_to": battle.fleets[1].pos + Vector2(200, 0)})
-	await _frames(3)
-	if not TestCheck.ok(self, not pacing.slow and is_equal_approx(battle.G.slow, 1.0), "order confirmed -> x1"): return
-	# W-7: 조작 중에만 감속 / 끔
-	GameSettings.slow_mode = GameSettings.SLOW_WHILE_HANDLING
-	battle.selected.clear()
-	battle.selected.append(battle.fleets[1])
-	await _frames(3)
-	if not TestCheck.ok(self, not pacing.slow, "while-handling: no slow when idle"): return
-	var hm := InputEventMouseButton.new()
-	hm.button_index = MOUSE_BUTTON_LEFT
-	hm.pressed = true
-	hm.position = Vector2(5, 5)
-	root.push_input(hm, true)
-	await _frames(3)
-	if not TestCheck.ok(self, pacing.slow, "while-handling: slow while pressed"): return
-	hm = hm.duplicate()
-	hm.pressed = false
-	root.push_input(hm, true)
-	await _frames(3)
-	if not TestCheck.ok(self, not pacing.slow, "while-handling: release -> x1"): return
+	# 선택 감속은 폐지: 설정이 "선택하면 감속"·"조작 중 감속"이어도 시간이 느려지지 않는다(정지는 일시정지 버튼뿐)
+	for mode in [GameSettings.SLOW_ON_SELECT, GameSettings.SLOW_WHILE_HANDLING]:
+		GameSettings.slow_mode = mode
+		battle.selected.clear()
+		battle.selected.append(battle.fleets[1])
+		var k := InputEventKey.new()
+		k.keycode = KEY_SHIFT
+		k.pressed = true
+		root.push_input(k, true)
+		await _frames(3)
+		if not TestCheck.ok(self, not pacing.slow and is_equal_approx(battle.G.slow, 1.0), "no selection slow (mode %d)" % mode): return
 	GameSettings.slow_mode = GameSettings.SLOW_OFF
 	battle.selected.clear()
 	await _frames(2)

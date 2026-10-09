@@ -21,8 +21,9 @@ const FIGHTER_R := 380.0
 const PORTRAIT_SHEET := "res://assets/portraits/commanders_sheet_v1.png"
 var profile_def := "res://data/profiles/red_cliffs_rt.json"   # 적벽 시나리오 프로필. ""이면 POC 프로필(규칙 문구 대조 테스트 전용)
 var difficulty := "표준"
+var move_mul := 150.0   # 이동 배율: 화면 한 폭(1600)을 약 10초에 건넌다. 헤드리스 테스트는 1로 둔다
+var turn_mul := 15.0    # 선회율 배율: 선회 반경(속도÷선회율)이 도착 판정(settle 0.7×속도) 안에 들어야 목적지를 돌지 않는다. 조건은 선회율 > 82°/초(속도와 무관)
 const FIELD_SIZE := CameraRig.WORLD * 0.5   # 전투 전장 크기: 배경판(3400×2300)의 가로·세로 1/2 = 1700×1150 (이전 6800×4600의 1/4)
-var TOUCH_TEST := OS.has_feature("android")   # 터치 플레이(안드로이드)는 시험 모드: 유비군 함대 2개, 조조군 첫 즉시 투입 전대 1개, 정지 중 명령. PC·헤드리스 테스트는 false
 var ALLY_DEF: Array = []   # 브리핑·결산 편성표: 시나리오 프로필의 아군(유비군+손권군) 전대
 var FOE_DEF: Array = []    # 브리핑 적 정보: 처음부터 배치되는 적 전대만(증원 전대는 안개 속, 규모를 미리 알리지 않는다)
 const CMDS := [
@@ -144,20 +145,12 @@ func init_game() -> void:
 	battle_seed = randi()
 	var profile := ScenarioProfile.load_profile(profile_def, difficulty) if profile_def != "" else PocSetup.profile()
 	if profile_def != "" and not profile.is_empty():
-		ScenarioProfile.enlarge_field(profile, FIELD_SIZE)   # 전장을 FIELD_SIZE로 맞추고 배치를 비율대로 늘린다(일반 전투·시험 모드 공통). 미니맵은 이 전장을 비례 축소해 보여 준다
-	if TOUCH_TEST and not profile.is_empty():
-		profile.ally = profile.ally.slice(0, 2)
-		profile.foe = profile.foe.filter(func(d): return int(d.wait) == 0).slice(0, 1)   # 적 함대 1개만(즉시 투입 중 첫 번째)
+		ScenarioProfile.enlarge_field(profile, FIELD_SIZE)   # 전장을 FIELD_SIZE로 맞추고 배치를 비율대로 늘린다. 미니맵은 이 전장을 비례 축소해 보여 준다
+	if profile_def != "" and not profile.is_empty():
 		rig.margin = 0.4   # 시작 배율에서도 두 손가락으로 화면을 옮길 수 있게
 		GameSettings.slow_mode = GameSettings.SLOW_OFF   # 선택 감속 끔(저장 설정은 건드리지 않는다)
-		# 이동 ×150: 화면 한 폭(1600)을 약 10초에 건넌다. 선회율도 ×15로 올린다: 선회 반경(속도÷선회율)이
-		# 도착 판정(settle 0.7×속도) 안에 들어야 목적지를 돌지 않는다. 조건은 선회율 > 82°/초(속도와 무관)
-		for t in profile.combat.ship_types.values():
-			t.speed_per_turn *= 150
-		profile.combat.movement.face_turn_deg_per_s = profile.combat.movement.turn_deg_per_s * 4   # 제자리 회전은 완만하게(영상에서 너무 빨랐다)
-		profile.combat.movement.turn_deg_per_s *= 15
+		ScenarioProfile.tune_for_play(profile, move_mul, turn_mul)
 	sim = BattleSim.new(battle_seed, BattleRules.TICK_HZ, profile)
-	sim.endless = TOUCH_TEST
 	ALLY_DEF = profile.ally.map(_with_portrait)
 	FOE_DEF = profile.foe.filter(func(d): return int(d.wait) == 0).map(_with_portrait)
 	clock = TickClock.new()
@@ -220,7 +213,7 @@ func _start() -> void:
 	hud.end_ov.visible = false
 	hud.menu_ov.visible = false
 	G.state = "play"
-	G.hold = TOUCH_TEST   # 전투에 들어가면 일시정지 상태로 시작(시험 모드): 이동·방향을 정한 뒤 재개한다
+	G.hold = true   # 전투에 들어가면 일시정지 상태로 시작: 이동·방향을 정한 뒤 재개한다
 	selected.assign([flag(0)])
 	refresh_panel()
 	add_log("전 함대, 전투 배치 완료.", "", fleets[0])
@@ -283,7 +276,7 @@ func _process(delta: float) -> void:
 	var dt := minf(0.05, delta)
 	if G.state == "play":
 		input_node.poll_camera(dt)
-		var run := 0.0 if G.hold else 1.0   # 터치 중 정지(TOUCH_TEST): 재개 버튼을 누를 때까지
+		var run := 0.0 if G.hold else 1.0   # 정지(hold): 재개 버튼을 누를 때까지
 		clock.set_speed(float(G.speed) * G.slow * run)
 		var n := clock.advance(delta)
 		for i in n:

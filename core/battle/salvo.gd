@@ -125,7 +125,7 @@ func form_block(f: FleetState, fid: String) -> String:
 		return "formation_master"
 	return ""
 
-# 전환 시간(틱): 기본 30초, 통솔이 요구치에 못 미치면 60초, 팔진 조건 충족자는 절반
+# 전환 시간(틱): 기본·통솔 미달 모두 5초(combat_m3.json), 팔진 조건 충족자는 절반
 func transition_ticks(f: FleetState, fid: String) -> int:
 	var fr: Dictionary = C.formation_rules
 	var s := float(fr.untrained_transition_s) if f.cmd_stat < int(C.formations[fid].required_command) else float(fr.transition_s)
@@ -442,9 +442,12 @@ func _consume(f: FleetState, cat: String, uses_sortie: bool) -> void:
 	if uses_sortie:
 		f.sorties_m -= int(C.carrier.sorties_per_shot) * BattleRules.MILLI
 
-# 일제사격 지금: 모든 범주의 다음 주기를 현재 틱으로 당긴다
-func pull(f: FleetState) -> void:
+# 일제사격 지금: 다음 주기를 현재 틱으로 당긴다. kind "missile" = 함재기 범주를 뺀 포격류, "fighter" = 함재기 범주, 그 밖 = 전부
+func pull(f: FleetState, kind := "volley") -> void:
 	for cat in C.categories:
+		var is_fighter: bool = cat == C.carrier.category
+		if (kind == "missile" and is_fighter) or (kind == "fighter" and not is_fighter):
+			continue
 		f.next_fire[cat] = mini(f.next_fire[cat], sim.st.tick)
 
 # 돌격 조건(Q28·Q42): 사기 안정, 열 여유. 사유 코드 또는 "".

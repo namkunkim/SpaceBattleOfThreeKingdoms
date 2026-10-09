@@ -68,9 +68,13 @@ static func cmd(r: Dictionary, id: String) -> Dictionary:
 		"retreat":
 			return {"desc": "가장 가까운 적의 반대쪽으로 전선을 물립니다.", "foot": "길게 눌러 확정"}
 		"missile":
+			if r.set != "poc":
+				return {"desc": "포격·선 사격 같은 무기의 다음 일제사격을 지금 바로 합니다. 탄약·열·에너지가 모자라거나 사거리에 적이 없으면 쏘지 못합니다."}
 			var m: Dictionary = r.missile
 			return {"desc": "사거리 안의 적에게 유도 미사일 %d발을 일제 발사합니다." % m.n, "fx": [["사거리", str(int(m.range)), true]], "foot": "재장전 %d초" % int(m.cd)}
 		"fighter":
+			if r.set != "poc":
+				return {"desc": "함재기 편대의 출격을 지금 바로 합니다. 함재기가 돌아오지 않았거나 사거리에 적이 없으면 출격하지 못합니다."}
 			var f: Dictionary = r.fighter
 			return {"desc": "함재기 편대를 발진시켜 %d초 동안 적을 근접 공격합니다." % int(f.dur), "fx": [["작전 반경", str(int(f.range)), true]], "foot": "정비 %d초" % int(f.cd)}
 	return {}

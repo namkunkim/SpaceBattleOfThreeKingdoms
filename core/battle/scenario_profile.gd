@@ -127,6 +127,14 @@ static func build(def: Dictionary, scn: Dictionary, base: Dictionary, difficulty
 # 전장을 big 크기로 키운다. 시나리오의 절대 좌표를 전장 비율대로 늘려(전대 초기 위치, 지형 구역, 보급 거점, 탈출 지점) 원래 배치 모양을 지킨다:
 # 아군은 서쪽 끝, 적은 동쪽 끝에서 시작하고 탈출 지점도 전장 가장자리에 남는다. 거리가 늘어난 만큼 접적까지 오래 걸린다.
 # 호스트와 재생(replay)이 같은 프로필을 만들도록 여기 둔다.
+# 플레이용 이동·선회 배율. 제자리 회전은 기본 선회율의 4배(배율 전 값)로 따로 둔다(영상에서 너무 빨랐다).
+static func tune_for_play(profile: Dictionary, move_mul: float, turn_mul: float) -> void:
+	for t in profile.combat.ship_types.values():
+		t.speed_per_turn *= move_mul
+	var mv: Dictionary = profile.combat.movement
+	mv.face_turn_deg_per_s = mv.turn_deg_per_s * 4
+	mv.turn_deg_per_s *= turn_mul
+
 static func enlarge_field(profile: Dictionary, big: Vector2) -> void:
 	var k := Vector2(big.x / float(profile.rules.world_w), big.y / float(profile.rules.world_h))
 	profile.rules.world_w = big.x

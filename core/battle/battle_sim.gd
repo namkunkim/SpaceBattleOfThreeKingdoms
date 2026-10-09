@@ -511,8 +511,8 @@ func apply(c: Dictionary) -> void:
 		"missile", "fighter", "volley":
 			if salvo:
 				for f in s:
-					salvo.pull(f)   # 일제사격 지금: 다음 주기를 당긴다(§4.3). 비용은 자원 규칙이 받는다
-				emit("say", L.id, -1, L.pos, "missile" if side == 0 else "ai_missile")
+					salvo.pull(f, kind)   # 미사일 = 포격류, 함재기 = 함재기 범주, 일제사격 = 전부: 다음 주기를 당긴다(§4.3). 비용은 자원 규칙이 받는다
+				emit("say", L.id, -1, L.pos, "fighter" if kind == "fighter" else ("missile" if side == 0 else "ai_missile"))
 			elif kind == "volley":
 				_reject(L, "unknown_command", side)
 			else:
@@ -921,23 +921,8 @@ func _fleet_phase(timers: bool) -> void:
 				emit("flank", f.id, ft.id, ft.pos, fm)
 
 func _separate() -> void:
-	var k := BattleRules.lerp_k(R.separate_k_ref * BattleRules.REF_DT, dt)
+	# 함대끼리 겹쳐도 밀어내지 않는다(튕김 방지). 전장 경계 안으로만 가둔다.
 	var fl := st.fleets
-	for i in fl.size():
-		var a: FleetState = fl[i]
-		if a.dead:
-			continue
-		for j in range(i + 1, fl.size()):
-			var b: FleetState = fl[j]
-			if b.dead:
-				continue
-			var dv := b.pos - a.pos
-			var d := maxf(dv.length(), 0.001)
-			var mn: float = R.ally_gap if a.side == b.side else R.foe_gap
-			if d < mn:
-				var p := (mn - d) * 0.5 * k
-				a.pos -= dv / d * p
-				b.pos += dv / d * p
 	var W := rs.world
 	var e: float = R.edge
 	for f in fl:

@@ -23,6 +23,7 @@ func _run() -> void:
 	battle.battle_event.connect(func(kind, text, id): events.append([kind, text, id]))
 	seed(77)
 	battle._restart()
+	battle.G.hold = false   # 전투는 일시정지로 시작하므로 시간을 흘린다
 	if not TestCheck.ok(self, battle.G.state == "play", "start -> play"): return
 	# --- 선택 ---
 	if not TestCheck.ok(self, battle.my_sel().size() == 1 and battle.my_sel()[0].is_flag, "initial selection = flagship"): return
@@ -87,6 +88,7 @@ func _run() -> void:
 	if not TestCheck.ok(self, battle.G.state == "end" and battle.hud.end_ov.visible, "end screen shown"): return
 	var seed0: int = battle.battle_seed
 	battle._restart()
+	battle.G.hold = false   # 전투는 일시정지로 시작하므로 시간을 흘린다
 	if not TestCheck.ok(self, battle.G.state == "play" and not battle.G.over and battle.sim.st.tick == 0 and battle.fleets.size() == 7, "restart resets"): return
 	if not TestCheck.ok(self, battle.battle_seed != seed0 and not battle.hud.end_ov.visible, "restart new seed / overlay hidden"): return
 	# --- 실제 한 판: 아군에 공격 명령 → 명령 기록으로 재생해도 같은 결과 ---
@@ -100,6 +102,7 @@ func _run() -> void:
 	var rprof := ScenarioProfile.load_profile(battle.profile_def, battle.difficulty)
 	if battle.profile_def != "":
 		ScenarioProfile.enlarge_field(rprof, battle.FIELD_SIZE)   # 호스트와 같은 전장
+		ScenarioProfile.tune_for_play(rprof, battle.move_mul, battle.turn_mul)   # 호스트와 같은 이동 배율
 	var rp := BattleSim.replay(battle.battle_seed, 10, log, battle.sim.st.tick, rprof)
 	if not TestCheck.ok(self, rp.fingerprint() == battle.sim.fingerprint(), "live game replays to the same fingerprint"): return
 	battle.queue_free()
