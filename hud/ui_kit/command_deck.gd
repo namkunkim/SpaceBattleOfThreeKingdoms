@@ -44,6 +44,7 @@ var t := 0.0
 var top_bar: Control
 var cp_bar: Control
 var sys_bar: HBoxContainer
+const SPEEDS := [1, 2, 4]
 var speed_btns: Array = []
 var pause_btn: Control
 var skip_btn: Control
@@ -251,7 +252,7 @@ func _process(delta: float) -> void:
 			for c in [top_bar, cp_bar, objectives, info, toast]:
 				c.queue_redraw()
 			for i in speed_btns.size():
-				speed_btns[i].active = pacing.user_speed == i + 1 and pacing.mode == pacing.Mode.USER
+				speed_btns[i].active = pacing.user_speed == SPEEDS[i] and pacing.mode == pacing.Mode.USER
 				speed_btns[i].queue_redraw()
 			skip_btn.disabled = not pacing.can_skip()
 			skip_btn.tooltip_text = "다음 교전·경보까지 건너뛰기" + (" · " + pacing.next_stop_hint() if pacing.quiet else " (조용한 구간에서만)")
@@ -376,14 +377,14 @@ func _build_sys() -> void:
 	st.set_content_margin_all(6)
 	holder.add_theme_stylebox_override("panel", st)
 	hud.add_child(holder)
-	_anchor(holder, Control.PRESET_TOP_RIGHT, Vector2(288, 64), Vector2(-16, 16))
+	_anchor(holder, Control.PRESET_TOP_RIGHT, Vector2(340, 64), Vector2(-16, 16))
 	sys_bar = HBoxContainer.new()
 	sys_bar.add_theme_constant_override("separation", 4)
 	holder.add_child(sys_bar)
-	for i in 2:
-		var b := W.IconButton.new("", "×%d" % (i + 1))
-		b.tooltip_text = "배속 ×%d" % (i + 1)
-		b.pressed.connect(func(): pacing.set_user_speed(i + 1))
+	for i in SPEEDS.size():
+		var b := W.IconButton.new("", "×%d" % SPEEDS[i])
+		b.tooltip_text = "배속 ×%d" % SPEEDS[i]
+		b.pressed.connect(func(): pacing.set_user_speed(SPEEDS[i]))
 		sys_bar.add_child(b)
 		speed_btns.append(b)
 	# Q52: 조용한 구간에서만 누를 수 있다. 교전·경보가 생기거나 전장을 만지면 멈춘다.

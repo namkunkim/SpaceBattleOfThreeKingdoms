@@ -39,8 +39,7 @@ var _consumed_index := -1
 
 func setup(b: Node) -> void:
 	battle = b
-	if b.TOUCH_TEST:
-		_build_resume()
+	_build_resume()
 	Input.emulate_mouse_from_touch = true
 
 # 회전 핸들: 단일 선택 함대의 선두 방향, 링 위. 선택이 1개가 아니면 없다.
@@ -152,12 +151,10 @@ func _free_center(want: Vector2, rad: float) -> Vector2:
 		y += 20.0
 	return best
 
-# 재개 버튼 자리: 사용자 지정(명령 패널 왼쪽 빈 곳)
+# 재개 버튼 자리: 좌상단 빈 곳, 고정 크기(다른 HUD 배치에 영향 없음)
 func _place_resume() -> void:
-	var vs: Vector2 = battle.get_viewport().get_visible_rect().size
-	# 사용자 지정 자리: 명령 패널 왼쪽, 함대 카드 오른쪽의 빈 곳. 화면 비율로 고정한다(HUD 판정으로 옮기지 않는다)
-	_resume.size = Vector2(vs.x * 0.12, vs.y * 0.2)
-	_resume.position = Vector2(vs.x * 0.64, vs.y * 0.70)
+	_resume.size = Vector2(150, 56)
+	_resume.position = Vector2(16, 16)
 
 func _build_resume() -> void:
 	var layer := CanvasLayer.new()
@@ -165,7 +162,7 @@ func _build_resume() -> void:
 	add_child(layer)
 	_resume = Button.new()
 	_resume.text = "⏸ 일시정지"
-	_resume.add_theme_font_size_override("font_size", 38)
+	_resume.add_theme_font_size_override("font_size", 22)
 	_resume.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	_resume.visible = false
 	_resume.focus_mode = Control.FOCUS_NONE
