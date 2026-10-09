@@ -370,6 +370,7 @@ func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 		if not s.alive:
 			continue
 		var t := fpos + fb * s.home
+		var hv := (t - s.pos) * (inv * step / (s.tau + step))   # 흔들림을 뺀 추종 속도: 선체 방향은 이것만 본다
 		if sw > 0.0:
 			t.x += sw * (sa * s.cph + ca * s.sph)
 			t.z += sw * (cb * s.cph2 - sb * s.sph2)
@@ -378,10 +379,11 @@ func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 		s.vel = d * inv
 		var e2 := (t - s.pos).length_squared()
 		maxerr = maxf(maxerr, e2)
-		var sp2 := s.vel.length_squared()
+		# 흔들림이 섞인 속도로 방향을 정하면 느린 전대(특히 배속)에서 흔들림 방향을 따라 선체가 제자리에서 돈다
+		var sp2 := hv.length_squared()
 		var want := h_fleet
 		if sp2 > eps2:
-			want = -atan2(s.vel.z, s.vel.x) - PI
+			want = -atan2(hv.z, hv.x) - PI
 		s.yaw = lerp_angle(s.yaw, want, yk)
 		var c := cos(s.yaw)
 		var sn := sin(s.yaw)
