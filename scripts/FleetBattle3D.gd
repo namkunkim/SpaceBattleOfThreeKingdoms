@@ -21,7 +21,7 @@ const FIGHTER_R := 380.0
 const PORTRAIT_SHEET := "res://assets/portraits/commanders_sheet_v1.png"
 var profile_def := "res://data/profiles/red_cliffs_rt.json"   # 적벽 시나리오 프로필. ""이면 POC 프로필(규칙 문구 대조 테스트 전용)
 var difficulty := "표준"
-const TOUCH_TEST := true   # 태블릿 터치 시험용: 유비군 함대 2개, 조조군 첫 즉시 투입 전대 1개만 둔다. 시험 끝나면 false
+const TOUCH_TEST := false  # 태블릿 터치 시험용: 유비군 함대 2개, 조조군 첫 즉시 투입 전대 1개만 둔다. 시험 끝나면 false
 var ALLY_DEF: Array = []   # 브리핑·결산 편성표: 시나리오 프로필의 아군(유비군+손권군) 전대
 var FOE_DEF: Array = []    # 브리핑 적 정보: 처음부터 배치되는 적 전대만(증원 전대는 안개 속, 규모를 미리 알리지 않는다)
 const CMDS := [
@@ -144,13 +144,13 @@ func init_game() -> void:
 	var profile := ScenarioProfile.load_profile(profile_def, difficulty) if profile_def != "" else PocSetup.profile()
 	if TOUCH_TEST and not profile.is_empty():
 		profile.ally = profile.ally.slice(0, 2)
-		profile.foe = []   # 적 함대 없음(터치 조작 시험)
+		profile.foe = profile.foe.filter(func(d): return int(d.wait) == 0).slice(0, 1)   # 적 함대 1개만(즉시 투입 중 첫 번째)
 		# 전장을 배경판의 가로·세로 2배(6800×4600)로 키우고 아군을 가운데로 옮긴다. 미니맵은 이 전장을 비례 축소해 보여 준다
 		var big := CameraRig.WORLD * 2.0
 		profile.rules.world_w = big.x
 		profile.rules.world_h = big.y
 		var shift := big * 0.5 - Vector2(profile.ally[0].x, profile.ally[0].y)
-		for d in profile.ally:
+		for d in profile.ally + profile.foe:   # 아군·적 같은 이동량: 원래 간격을 지킨다
 			d.x += shift.x
 			d.y += shift.y
 		rig.margin = 0.4   # 시작 배율에서도 두 손가락으로 화면을 옮길 수 있게

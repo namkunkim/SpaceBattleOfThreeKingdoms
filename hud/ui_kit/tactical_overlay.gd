@@ -44,6 +44,7 @@ func _draw() -> void:
 			ticks.append(battle.w2s(pf.pos + Vector2(cos(a), sin(a)) * r0))
 			ticks.append(battle.w2s(pf.pos + Vector2(cos(a), sin(a)) * r1))
 		draw_multiline(ticks, Color(UiTheme.ALLY, 0.34), 1.0)
+	_detect_rings()
 	var sel: Array = battle.my_sel()
 	if sel.size() == 1:
 		_weapon_arcs(sel[0])
@@ -88,6 +89,26 @@ func _draw() -> void:
 		var r := Rect2(battle.drag.s, Vector2.ZERO).expand(battle.drag.c)
 		draw_rect(r, Color(UiTheme.GOLD_HI, 0.06))
 		draw_rect(r, Color(UiTheme.GOLD_HI, 0.85), false, 1.0)
+
+# 함대별 적 탐지 범위: 센서 점수에서 "확인"·"추정" 기준 점수를 뺀 만큼의 거리(적 전자전·지형 은폐가 없을 때). 안쪽 실선 = 확인, 바깥 점선 = 추정.
+# 적에게 전자전이나 은폐가 있으면 실제 범위는 이보다 줄어든다.
+func _detect_rings() -> void:
+	var det = battle.sim.detect
+	if det == null:
+		return
+	var upp := float(det.D.distance_units_per_point)
+	for f in battle.alive(0):
+		var sf = battle.sim.st.by_id(f.id)
+		if sf == null:
+			continue
+		var sc: int = det.sensor_of(sf)
+		var r_conf := maxf(0.0, float(sc - int(det.D.confirmed)) * upp)
+		var r_est := maxf(0.0, float(sc - int(det.D.estimated)) * upp)
+		var col := Color(UiTheme.ALLY_HI, 0.75 if battle.selected.has(f) else 0.45)   # 선택 여부와 관계없이 항상 보인다
+		if r_est > 0.0:
+			UiDraw.dashed_poly(self, _ground_ring(f.pos, r_est, 96), col, 1.6, 5.0, 6.0)
+		if r_conf > 0.0:
+			draw_polyline(_ground_ring(f.pos, r_conf, 72), col, 2.0, true)
 
 func _weapon_arcs(f) -> void:
 	# 광선 사거리 부채꼴(정면 ±60°)과 미사일 사거리 파선 원
