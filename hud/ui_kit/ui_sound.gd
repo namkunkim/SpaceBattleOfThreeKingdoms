@@ -44,8 +44,8 @@ const EVENTS := {
 # 루프 3종: 원샷 훅이 아니라 종류마다 재생기 하나(동시에 최대 3개). set_loop("engine_loop", 0.6)으로 켜고, 0이면 끈다.
 const LOOPS := ["beam_loop", "engine_loop", "fire_loop"]
 
-# 배경음악: 퍼블릭 도메인 고전을 순서대로 반복한다(출처는 assets/audio/music/README.md).
-const MUSIC := ["stars_stripes", "mars", "overture_1812"]
+# 배경음악: 퍼블릭 도메인 고전을 반복 반복한다(출처는 assets/audio/music/README.md).
+const MUSIC := ["stars_stripes"]
 var _music: AudioStreamPlayer
 var _music_i := 0
 # 교전 중에는 〈산왕의 동굴에서〉를 반복한다. 교전 사건이 COMBAT_HOLD초 동안 없으면 평시 곡으로 돌아간다.
