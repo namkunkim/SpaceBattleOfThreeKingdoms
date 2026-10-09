@@ -242,6 +242,12 @@
 - 검증: 헤드리스 `battle_flow`·`core_rules`·`formation_rules`·`detection_rules`·`commander_ai` 통과. `tests/boundary.gd`는 main에 이미 있던 `battle_source.gd:163`(`BattleRules`) 위반으로 실패(이번 변경 무관, 별도 수정 필요).
 - 미해결·후속: 미리보기선을 전장 경계 안으로 맞추기, 일반 전투(시험 모드 꺼짐) 전장 크기·배경판 크기 결정(시나리오 1600×900 그대로면 판도 그 크기), 탐지 반경 표시 배율, PC 마우스 대응, `TouchController`의 `battle.TOUCH_TEST` 의존 정리.
 
+## 서막(첫 진입 배경 서사) (2026-10-05, 클라우드 컨셉 세션 "게임 초입 배경 서사")
+
+- 설계·문안: `NARRATIVE-RED-CLIFFS.md` §11. 타이틀 "출격 준비" → 서막 8장(시대 가·나 + 적벽 1~6, 첫 회만) → 브리핑. 타이틀·브리핑의 POC 문구(성간 삼국·촉한·위·적벽 회랑·유비 제독) 교체 목록 §11.3.
+- 구현: 클라우드 UI 세션 "(CLOUD_ING) 서막(첫 진입 배경 서사) UI 구현"이 브랜치 `claude/prologue-ui`에 마쳤다(문서 브랜치 `claude/loving-noether-atbnid` 포함, 헤드리스 UI 테스트 13종 통과). 문안은 `hud/ui_kit/prologue_text.gd` 한 곳.
+- 남은 것(로컬): ① `claude/prologue-ui`를 main에 병합. 천하 지도 브랜치 `claude/sharp-hopper-roo4tn`과 `command_deck.gd`·`deck_screens.gd`·`FleetBattle3D.gd`가 겹친다(CHECKLIST-OPEN "서막 후속") ② 본편 `prologue.md`·`star-map.md`와 문안 대조(특히 시대 장 가·나) ③ 화면 확인 ④ 인장 글자 蜀·魏·吳 유지 여부는 컨셉 결정 대기.
+
 ## 남은 일 (컨셉 세션이 할 수 있는 것)
 
 | 우선 | 일 | 메모 |
