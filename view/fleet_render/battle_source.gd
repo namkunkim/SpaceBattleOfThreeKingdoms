@@ -27,7 +27,7 @@ func squadron(id: int) -> Dictionary:
 func _sq(f) -> Dictionary:
 	return {
 		"id": f.id, "side": f.side, "faction": faction(f.id), "name": f.fname, "role": f.role, "portrait": f.portrait,
-		"pos": f.pos, "heading": f.heading, "ships": f.ships, "max_ships": f.max_ships,
+		"pos": f.pos, "heading": f.heading, "ships": f.ships, "max_ships": f.max_ships, "counts": f.counts,
 		"flagship": f.is_flag, "dead": f.dead,
 		"target_id": f.target.id if f.target else -1,
 		"firing_at": f.fire_t.id if (f.fire_t and not f.fire_t.dead) else -1,

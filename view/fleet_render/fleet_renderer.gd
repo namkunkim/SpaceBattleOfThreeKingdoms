@@ -263,6 +263,35 @@ func _pattern(kind: int, m: int) -> Array:
 		out.append(Vector2(f, l))
 	return out
 
+# 편성이 있는 전대(시나리오 salvo 규칙)는 화면 함선 = 실제 척 수, 함종도 편성대로다. 안개 속 적 접촉·POC는 편성이 없어 아래 _assign_class를 쓴다.
+# 순서는 앞줄부터: 전열 → 공성 → 화력 → 전자전 → 항모 → 보급, 호위(요격함·고속정)는 맨 뒤
+const REAL_ORDER := [LINE, SIEGE, FIRE, EW, CARRIER, SUPPLY, ESCORT]
+func _real_classes(counts: Dictionary) -> Array:
+	var out := []
+	for c in REAL_ORDER:
+		for t in counts:
+			var model: String = ScenarioRoster.SHIP_TYPES.get(t, {}).get("model", "")
+			var k := CLASS_NAMES.find(model) if model != "" else ESCORT   # 고속정은 모델이 없어 호위함 선체로 그린다
+			if k == c:
+				for i in (counts[t] as Array).reduce(func(a, b): return a + b, 0):
+					out.append(c)
+	return out
+
+func _assign_real(pts: Array, types: Array, flag: bool) -> Array:
+	var idx := range(pts.size())
+	idx.sort_custom(func(a, b): return pts[a].x > pts[b].x)   # 앞(+x)부터
+	var out := []
+	out.resize(pts.size())
+	for i in idx.size():
+		out[idx[i]] = {"cls": types[i], "rank": float(i) / maxf(1.0, idx.size() - 1)}
+	if flag:
+		var best := 0
+		for i in pts.size():
+			if Vector2(pts[i].x, pts[i].z).length() < Vector2(pts[best].x, pts[best].z).length():
+				best = i
+		out[best]["flag"] = true
+	return out
+
 func _assign_class(pts: Array, flag: bool, seed_v: int) -> Array:
 	var r := RandomNumberGenerator.new()
 	r.seed = seed_v
@@ -414,9 +443,10 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 	v.mmis = []
 	v.slots = []
 	v.formation = sq.formation
-	var n := maxi(12, roundi(sq.max_ships * vis_ratio()))
+	var types := _real_classes(sq.get("counts", {}))
+	var n := types.size() if not types.is_empty() else maxi(12, roundi(sq.max_ships * vis_ratio()))
 	var pts := formation_points(sq.formation, n)
-	var cls := _assign_class(pts, sq.flagship, sq.id * 7919)
+	var cls := _assign_real(pts, types, sq.flagship) if not types.is_empty() else _assign_class(pts, sq.flagship, sq.id * 7919)
 	var S := src.unit_scale()
 	var per_class := []
 	per_class.resize(CLASS_NAMES.size())

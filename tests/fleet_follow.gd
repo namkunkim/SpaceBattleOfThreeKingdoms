@@ -27,6 +27,15 @@ func _run() -> void:
 	for i in 5:
 		await process_frame
 	var r: FleetRenderer = battle.presentation.renderer
+	# 0. 편성이 보이는 전대는 화면 함선 수 = 실제 척 수(함종별 합)
+	var n_real := 0
+	for sid in r.vis:
+		var d: Dictionary = r.src.squadron(sid)
+		if d.get("counts", {}).is_empty():
+			continue
+		n_real += 1
+		_check(r.vis[sid].slots.size() == roundi(d.max_ships), "%s 화면 %d척 = 실제 %d척" % [d.name, r.vis[sid].slots.size(), roundi(d.max_ships)])
+	_check(n_real > 0, "편성 있는 전대 존재")
 	var id: int = r.vis.keys()[0]
 	var v: FleetRenderer.FleetVis = r.vis[id]
 	var sq := {"id": id, "pos": Vector2(1500, 1000), "heading": 0.0, "formation": v.formation}
