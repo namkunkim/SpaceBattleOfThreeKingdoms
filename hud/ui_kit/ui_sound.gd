@@ -48,6 +48,12 @@ const LOOPS := ["beam_loop", "engine_loop", "fire_loop"]
 const MUSIC := ["mars", "overture_1812"]
 var _music: AudioStreamPlayer
 var _music_i := 0
+# 교전 중에는 〈산왕의 동굴에서〉를 반복한다. 교전 사건이 COMBAT_HOLD초 동안 없으면 평시 곡으로 돌아간다.
+const COMBAT_TRACK := "mountain_king"
+const COMBAT_HOLD := 10.0
+const COMBAT_EVENTS := ["salvo", "volley", "laser_light", "laser_heavy", "missile_hit", "fighter_guns", "shield_hit", "armor_hit", "ship_kill"]
+var _combat_until := 0.0
+var _in_combat := false
 
 static var history: Array = []   # 최근 사건(테스트·디버그용)
 # 음높이 흔들기 전용 난수(리뷰 W-4). 전역 난수를 쓰면 POC 규칙 난수열이 밀려 결정론이 깨진다.
@@ -102,6 +108,20 @@ func _ready() -> void:
 	add_child(_music)
 	_next_music()
 
+func _process(_dt: float) -> void:
+	var c := Time.get_ticks_msec() / 1000.0 < _combat_until
+	if c == _in_combat or _music == null:
+		return
+	_in_combat = c
+	var path: String = AUDIO_DIR + "music/" + COMBAT_TRACK + ".ogg"
+	if c and ResourceLoader.exists(path):
+		var s: AudioStreamOggVorbis = load(path)
+		s.loop = true
+		_music.stream = s
+		_music.play()
+	elif not c:
+		_next_music()
+
 func _next_music() -> void:
 	for n in MUSIC.size():
 		var path: String = AUDIO_DIR + "music/" + MUSIC[_music_i % MUSIC.size()] + ".ogg"
@@ -129,6 +149,8 @@ func play(ev: String) -> void:
 	if now - float(_last.get(ev, -99.0)) < float(spec.get("gap", 0.05)):
 		return
 	_last[ev] = now
+	if ev in COMBAT_EVENTS:
+		_combat_until = now + COMBAT_HOLD
 	history.append(ev)
 	if history.size() > 64:
 		history.pop_front()
