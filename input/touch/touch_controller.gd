@@ -151,9 +151,12 @@ func _free_center(want: Vector2, rad: float) -> Vector2:
 		y += 20.0
 	return best
 
-# 재개 버튼 자리: 좌상단 빈 곳, 고정 크기(다른 HUD 배치에 영향 없음)
+# 재개 버튼 자리: 좌상단 빈 곳, 눈에 띄는 큰 크기(다른 HUD 배치에 영향 없음)
+const RESUME_SIZE := Vector2(300, 110)
+var _btn_touch := -1   # 버튼 위에서 시작한 손가락 번호(떼기·끌기까지 소비)
+
 func _place_resume() -> void:
-	_resume.size = Vector2(150, 56)
+	_resume.size = RESUME_SIZE
 	_resume.position = Vector2(16, 16)
 
 func _build_resume() -> void:
@@ -162,18 +165,48 @@ func _build_resume() -> void:
 	add_child(layer)
 	_resume = Button.new()
 	_resume.text = "⏸ 일시정지"
-	_resume.add_theme_font_size_override("font_size", 22)
+	_resume.add_theme_font_size_override("font_size", 42)
 	_resume.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	_resume.visible = false
 	_resume.focus_mode = Control.FOCUS_NONE
-	_resume.pressed.connect(func(): battle.G.hold = not battle.G.hold)
+	_resume.mouse_filter = Control.MOUSE_FILTER_IGNORE   # 입력은 아래 _input이 직접 받는다(다른 손가락이 전장을 누르는 중에도 눌리게)
 	layer.add_child(_resume)
+
+# 일시정지/재개 버튼 입력. 터치는 손가락마다, 마우스는 왼쪽 클릭으로 받고 전장·HUD로 넘기지 않는다.
+func _input(e: InputEvent) -> void:
+	if _resume == null or not _resume.visible:
+		return
+	var r := Rect2(_resume.position, _resume.size)
+	if e is InputEventScreenTouch:
+		if e.pressed and r.has_point(e.position):
+			_btn_touch = e.index
+			battle.G.hold = not battle.G.hold
+			UiSound.vibrate(30)
+			get_viewport().set_input_as_handled()
+		elif not e.pressed and e.index == _btn_touch:
+			_btn_touch = -1
+			get_viewport().set_input_as_handled()
+	elif e is InputEventScreenDrag and e.index == _btn_touch:
+		get_viewport().set_input_as_handled()
+	elif e is InputEventMouseButton or e is InputEventMouseMotion:
+		var emu: bool = e.device == InputEvent.DEVICE_ID_EMULATION
+		if emu and r.has_point(e.position):
+			get_viewport().set_input_as_handled()   # 터치에서 만든 마우스 흉내는 위에서 이미 처리했다
+		elif not emu and e is InputEventMouseButton and e.button_index == MOUSE_BUTTON_LEFT and e.pressed and r.has_point(e.position):
+			battle.G.hold = not battle.G.hold
+			get_viewport().set_input_as_handled()
 
 func _process(delta: float) -> void:
 	if _resume:
 		# 고정 버튼(자리 A): 플레이 중 "⏸ 일시정지", 정지 중 "▶ 재개". 이동 방식 토글은 정지 중에만 위에 보인다.
 		_resume.visible = battle.G.state == "play"
 		_resume.text = "▶ 재개" if battle.G.hold else "⏸ 일시정지"
+		# 정지 중에는 호박색으로 채워 눈에 띄게 한다
+		var hold: bool = battle.G.hold
+		var st := UiTheme.flat(Color(UiTheme.GOLD_HI, 0.92) if hold else Color(0.03, 0.05, 0.08, 0.88), UiTheme.GOLD_HI, 3, 12)
+		for k in ["normal", "hover", "pressed", "disabled"]:
+			_resume.add_theme_stylebox_override(k, st)
+		_resume.add_theme_color_override("font_color", Color(0.05, 0.06, 0.08) if hold else UiTheme.GOLD_HI)
 		_place_resume()
 	delta = UiDraw.real_dt(delta)
 	if mode == "order" and touches.size() == 1 and not order.is_empty() and not order.cancel and order.target == null:
