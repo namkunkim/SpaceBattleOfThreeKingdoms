@@ -21,6 +21,7 @@ const FIGHTER_R := 380.0
 const PORTRAIT_SHEET := "res://assets/portraits/commanders_sheet_v1.png"
 var profile_def := "res://data/profiles/red_cliffs_rt.json"   # 적벽 시나리오 프로필. ""이면 POC 프로필(규칙 문구 대조 테스트 전용)
 var difficulty := "표준"
+const MAP_SCALE := 0.25   # 맵 크기 1/4(가로·세로 각각). 전장 크기·시작 위치·탈출점·지형을 함께 줄인다. 사거리·속도는 그대로
 const TOUCH_TEST := true   # 태블릿 터치 시험용: 유비군 기함 1개, 조조군 첫 즉시 투입 전대 1개만 둔다. 시험 끝나면 false
 var ALLY_DEF: Array = []   # 브리핑·결산 편성표: 시나리오 프로필의 아군(유비군+손권군) 전대
 var FOE_DEF: Array = []    # 브리핑 적 정보: 처음부터 배치되는 적 전대만(증원 전대는 안개 속, 규모를 미리 알리지 않는다)
@@ -135,6 +136,18 @@ func _build_canvas() -> void:
 	hud.build(self, ui, vsize, radar)
 
 # ============================================================ 시작·종료 흐름
+func _scale_map(profile: Dictionary) -> void:
+	var k := MAP_SCALE
+	profile.rules.world_w *= k
+	profile.rules.world_h *= k
+	for d in profile.ally + profile.foe:
+		d.x *= k
+		d.y *= k
+	for e in profile.scenario.escape_points.values():
+		e.position = [e.position[0] * k, e.position[1] * k]
+	for z in profile.combat.get("terrain", {}).get("zones", []):
+		z.rect = z.rect.map(func(v): return v * k)
+
 func init_game() -> void:
 	for f in fleets:
 		view3d.free_fleet(f)
@@ -142,6 +155,8 @@ func init_game() -> void:
 	fx.clear()
 	battle_seed = randi()
 	var profile := ScenarioProfile.load_profile(profile_def, difficulty) if profile_def != "" else PocSetup.profile()
+	if profile.has("scenario"):   # 적벽 프로필만(POC 폴백은 그대로)
+		_scale_map(profile)
 	if TOUCH_TEST and not profile.is_empty():
 		profile.ally = profile.ally.slice(0, 1)
 		profile.foe = []   # 적 함대 없음(터치 조작 시험)
