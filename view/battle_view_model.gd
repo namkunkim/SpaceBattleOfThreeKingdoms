@@ -24,6 +24,8 @@ class FleetView:
 	var heading := 0.0
 	var tpos := Vector2.ZERO         # 이번 틱 위치
 	var ppos := Vector2.ZERO         # 직전 틱 위치
+	var cgoal := Vector2.INF         # 접촉 위치(탐지 평가 주기마다 바뀜). 표시 위치는 여기로 일정 속도로 미끄러진다
+	var cstep := 0.0                 # 틱당 미끄러질 거리
 	var theading := 0.0
 	var pheading := 0.0
 	var target: FleetView = null
@@ -211,6 +213,7 @@ func apply(proj: Dictionary) -> Array[FleetView]:
 # 정확한 척 수·진형·표적은 공개되지 않으므로 전력 구간을 고정 척 수에 비례해 보여 주고(표시 전용), 상실 접촉은 마지막 위치에 남긴다.
 # 오차 반경·신뢰도·상실 표시는 TacticalOverlay._contact가 그린다.
 const CONTACT_SHIPS := 10.0
+const CONTACT_GLIDE_S := 1.0   # combat.detection.eval_period_s와 같게
 func _apply_contact(s: Dictionary, advanced: bool, fresh: Array[FleetView]) -> void:
 	var f: FleetView = by_id.get(s.id)
 	if f == null:
@@ -231,8 +234,14 @@ func _apply_contact(s: Dictionary, advanced: bool, fresh: Array[FleetView]) -> v
 	elif advanced:
 		f.ppos = f.tpos
 		f.pheading = f.theading
+	# 접촉 위치는 탐지 평가 주기(combat.detection.eval_period_s, 1초)마다만 바뀐다. 그대로 쓰면 1초마다 한 틱 만에 점프해
+	# 움직이는 적 함대가 덜컥거린다(배속에서 더 심하다). 새 위치가 오면 한 주기 동안 일정 속도로 따라간다(표시 전용, 1주기 지연).
+	if f.cgoal != s.pos:
+		f.cgoal = s.pos
+		f.cstep = f.tpos.distance_to(s.pos) / maxf(1.0, hz * CONTACT_GLIDE_S)
+	if advanced:
+		f.tpos = f.tpos.move_toward(f.cgoal, f.cstep)
 	f.faction = s.faction
-	f.tpos = s.pos
 	f.contact = s.contact
 	f.err_r = s.err_r
 	f.conf = s.conf_bp / 10000.0
