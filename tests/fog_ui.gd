@@ -54,5 +54,10 @@ func _run() -> void:
 		worst = maxf(worst, absf(angle_difference(h0, ally.theading)))
 		h0 = ally.theading
 	print("HEADING_STEP_MAX_DEG ", rad_to_deg(worst))
+	# 투영에서 빠진 접촉(탈출·격침)은 화면 모델에서 치운다. 남으면 보간이 틱마다 되감겨 덜컥거린다(2026-10-09 조인 탈출).
+	battle.sim.st.by_id(foe.id).dead = true
+	battle.sim.step()
+	battle._sync()
+	if not TestCheck.ok(self, not battle.fleets.has(foe) and foe.dead and battle.vm.fleet(foe.id) == null, "vanished contact removed from view model"): return
 	print("FOG_UI_PASS")
 	quit()

@@ -114,9 +114,11 @@ func apply(proj: Dictionary) -> Array[FleetView]:
 	killed = proj.killed_milli / 1000.0
 	lost = proj.lost_milli / 1000.0
 	outcome = proj.outcome
+	var shown_contacts := {}
 	for s in proj.squadrons:
 		if s.has("contact"):
 			_apply_contact(s, advanced, fresh)
+			shown_contacts[s.id] = true
 			continue
 		var f: FleetView = by_id.get(s.id)
 		if f == null:
@@ -163,6 +165,19 @@ func apply(proj: Dictionary) -> Array[FleetView]:
 		f.form_left_s = s.get("form_left_s", 0.0)
 		f.form_info = s.get("form_info", {})
 		f.counts = s.get("counts", {})
+	# 투영에서 빠진 접촉(탈출·격침·기억 만료)은 치운다. 남겨 두면 ppos≠tpos인 채 굳어 보간이 틱마다 되감겨 제자리에서 덜컥거린다.
+	# 남은 참조(선택·표적)를 위해 dead로 표시하고, 목록에서 빼서 렌더러가 폭발 없이 지운다(이유를 모르므로 격침 연출은 하지 않는다).
+	for i in range(fleets.size() - 1, -1, -1):
+		var f := fleets[i]
+		if f.contact != "" and not shown_contacts.has(f.id):
+			f.dead = true
+			f.ppos = f.pos
+			f.tpos = f.pos
+			if f.root:
+				f.root.queue_free()
+				f.root = null
+			by_id.erase(f.id)
+			fleets.remove_at(i)
 	# 참조는 모두 생긴 뒤에 잇는다
 	for s in proj.squadrons:
 		if s.has("contact"):
