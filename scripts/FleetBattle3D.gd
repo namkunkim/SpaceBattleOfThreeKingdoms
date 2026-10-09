@@ -280,6 +280,8 @@ func _process(delta: float) -> void:
 		for i in n:
 			if sim.st.over:
 				break
+			if i > 0 and i == n - 1:
+				_sync()   # 한 프레임에 여러 틱이면 마지막 틱 직전 상태를 보간 시작점(ppos)으로 둔다. 안 하면 2틱 구간을 1틱 alpha로 보간해 배속에서 표시가 앞뒤로 튄다
 			sim.step()
 		vm.alpha = clock.alpha()
 		_pump()
