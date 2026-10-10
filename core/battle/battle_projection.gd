@@ -21,6 +21,8 @@ static func build(sim: BattleSim, side: int) -> Dictionary:
 				for fid in sim.salvo.formation_ids():
 					fi[fid] = {"block": sim.salvo.form_block(f, fid), "secs": float(sim.salvo.transition_ticks(f, fid)) / st.hz}
 				q.form_info = fi
+			if f.side == side:
+				q.ranges = f.ranges.duplicate()   # 아군 전용: 범주별 사거리(적 접촉에는 넣지 않는다)
 			if sim.cmd and f.side == side:
 				# M9: 지휘관 상태·이은 사람·혼선 남은 초(지휘 공백이면 -1)·불이익 단계
 				q.commander_state = f.cmdr_state

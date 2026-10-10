@@ -250,9 +250,12 @@ func platforms(f: FleetState, cat: String) -> Array:
 
 func refresh_range(f: FleetState) -> void:
 	var r := 0.0
+	f.ranges = {}
 	for cat in C.categories:
-		for p in platforms(f, cat):
-			r = maxf(r, p.range)
+		var rc := _max_range(f, cat, 0.0)
+		if rc > 0.0:
+			f.ranges[cat] = rc
+		r = maxf(r, rc)
 	f.range_r = r if r > 0.0 else float(C.bands.assault_r)
 
 func _max_range(f: FleetState, cat: String, fallback: float) -> float:

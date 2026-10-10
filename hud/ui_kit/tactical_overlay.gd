@@ -101,21 +101,33 @@ func _detect_rings() -> void:
 		if r_conf > 0.0:
 			draw_polyline(_ground_ring(f.pos, r_conf, 72), col, 2.0, true)
 
+# 무기 범주별 사거리 고리(데이터에서 온 f.ranges). 미사일 사거리 = 포격(artillery) 범주. 색약 대응으로 선 모양도 다르다.
+# 지형 사거리 배율은 사격선마다 달라 원이 아니라서 여기엔 반영하지 않는다(개활 기준 원).
+# 범주: [이름, 색, 파선 길이, 틈(0이면 실선)]
+const RANGE_STYLE := {
+	"artillery": ["미사일", UiTheme.CP, 12.0, 7.0],
+	"line_fire": ["광선", UiTheme.ALLY_HI, 0.0, 0.0],
+	"intercept": ["요격", UiTheme.WARN, 3.0, 5.0],
+	"torpedo": ["뇌격", UiTheme.LIFE, 8.0, 12.0],
+}
+
 func _weapon_arcs(f) -> void:
-	# 광선 사거리 부채꼴(정면 ±60°)과 미사일 사거리 파선 원
-	var half := PI / 3.0
-	var arc := _ground_ring(f.pos, f.range_r, 40, f.heading - half, f.heading + half)
-	var fan := PackedVector2Array([battle.w2s(f.pos)])
-	fan.append_array(arc)
-	var cols := PackedColorArray()
-	cols.append(Color(UiTheme.ALLY, 0.0))
-	for i in arc.size():
-		cols.append(Color(UiTheme.ALLY, 0.11))
-	draw_polygon(fan, cols)
-	draw_polyline(arc, Color(UiTheme.ALLY_HI, 0.6), 1.4, true)
-	UiDraw.dashed_poly(self, _ground_ring(f.pos, battle.MISSILE_R, 96), Color(UiTheme.CP, 0.4), 1.2, 10.0, 7.0)
-	var lp: Vector2 = arc[arc.size() - 1]
-	UiDraw.text(self, lp + Vector2(8, 14), "광선 사거리", "medium", 11, Color(UiTheme.ALLY_HI, 0.8), HORIZONTAL_ALIGNMENT_LEFT, -1, 3)
+	var ranges: Dictionary = f.ranges
+	if ranges.is_empty():   # 범주 사거리가 없는 규칙(POC): 최대 사거리 하나만
+		ranges = {"": f.range_r}
+	var i := 0
+	for cat in ranges:
+		var st: Array = RANGE_STYLE.get(cat, ["사거리", UiTheme.ALLY, 6.0, 6.0])
+		var r: float = ranges[cat]
+		var col: Color = Color(st[1], 0.7)
+		var ring := _ground_ring(f.pos, r, 96)
+		if st[3] > 0.0:
+			UiDraw.dashed_poly(self, ring, col, 1.4, st[2], st[3])
+		else:
+			draw_polyline(ring, col, 1.4, true)
+		var lp: Vector2 = ring[(12 + 24 * i) % 96]   # 고리마다 다른 각도에 이름을 붙여 겹치지 않게 한다
+		UiDraw.text(self, lp + Vector2(6, 4), "%s %d" % [st[0], int(r)], "medium", 11, Color(st[1], 0.9), HORIZONTAL_ALIGNMENT_LEFT, -1, 3)
+		i += 1
 
 func _orders(f) -> void:
 	var a: Vector2 = battle.w2s(f.pos)

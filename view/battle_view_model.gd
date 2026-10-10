@@ -40,6 +40,7 @@ class FleetView:
 	var is_flag := false
 	var dead := false
 	var range_r := 300.0
+	var ranges := {}                  # 무기 범주별 최대 사거리(salvo 규칙의 아군만 값이 있다)
 	var control := ""
 	var formation_id := ""            # 진형 탭용(salvo 규칙에서만 값이 있다)
 	var form_to := ""
@@ -183,6 +184,7 @@ func apply(proj: Dictionary) -> Array[FleetView]:
 		if s.has("contact"):
 			continue
 		var f: FleetView = by_id[s.id]
+		f.ranges = s.get("ranges", {})
 		f.target = by_id.get(s.target_id) if s.target_id >= 0 else null
 		f.fire_t = by_id.get(s.firing_at) if s.firing_at >= 0 else null
 	# 미사일: 식별자로 꼬리(trail)를 이어 간다
