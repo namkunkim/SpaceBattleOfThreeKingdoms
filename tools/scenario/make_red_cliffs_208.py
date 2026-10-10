@@ -26,7 +26,7 @@ def P(cid):
     c = CHAR[cid]
     st = c["stats"]
     traits = [t[t.index("「") + 1:t.index("」")] for t in c.get("traits", []) if "「" in t]
-    return {"id": cid, "name": c["name"], "command": st["통솔"], "might": st["무력"], "intellect": st["지력"], "charm": st["매력"], "traits": traits}
+    return {"id": cid, "name": c["name"], "command": st["통솔"], "might": st["무력"], "intellect": st["지력"], "politics": st["정치"], "charm": st["매력"], "traits": traits}
 
 
 def sq(id, fac, name, cmd, vice, staff, flag, pos, frm, comp, basis, **kw):
@@ -90,6 +90,28 @@ SQUADRONS = [
        "조홍의 적벽 종군은 기록이 분명하지 않다. 상급 이상에서만 배치하는 후군이다.",
        morale_group="northern", deploy_min_difficulty="상급", deploy_delay_s=360),
 ]
+
+
+# 편성 화면용 세력별 가용 장수(Q73~Q77): 본편 assignments.json SCN-03(적벽 전야) "소속" + 이 시나리오 전대 지휘부, 불참(not_deployed) 제외.
+# 시나리오에 나오는 인물은 시나리오 세력이 이긴다(예: 유기는 본편 유표 진영이지만 유비군).
+UPSTREAM_FACTION = {"촉": "liu_bei", "오": "sun_quan", "위": "cao_cao"}
+ASSIGN = json.load(open(r"C:\WorkSpace\Seonghanji\data\assignments.json", encoding="utf-8"))
+
+
+def available_officers(squadrons, not_deployed):
+    side = {}
+    for a in ASSIGN:
+        if a["scenario"] == "SCN-03" and a["status"] == "소속" and a["faction"] in UPSTREAM_FACTION:
+            side[a["character"]] = UPSTREAM_FACTION[a["faction"]]
+    for s in squadrons:
+        for o in [s["commander"], s.get("vice_commander")] + s.get("staff", []):
+            if o:
+                side[o["id"]] = s["faction_id"]
+    out = {}
+    for cid in sorted(side):
+        if cid not in not_deployed:
+            out.setdefault(side[cid], []).append(P(cid))
+    return out
 
 
 def cost(comp):
@@ -286,6 +308,10 @@ if __name__ == "__main__":
             "통솔 값: 본편 demo_roster가 characters.json과 달랐다(제갈량 96/92, 주유 97/96, 노숙 85/82, 손권 81/76, 조인 90/89, 하후돈 89/88). 본편이 characters.json을 정본으로 확정하고 데모를 맞췄다(본편 V-73, 2026-10-04). 이 시나리오는 characters.json을 쓴다.",
             "난이도로 조조군 규모를 바꾸는 것은 ai-design.md §9(자원 보너스 없음)와 충돌한다. 시나리오 모드 전용 예외로 둔다(세션 Q44)."],
     }
+    nd = {x["id"] for f in scenario["factions"] for x in f["not_deployed"]}
+    pool = available_officers(SQUADRONS, nd)
+    for f in scenario["factions"]:
+        f["available_officers"] = pool.get(f["id"], [])
     # 이 파일 기준 경로로 쓴다(worktree에서 돌려도 그 worktree의 파일을 고친다)
     path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "data", "scenarios", "red_cliffs_208_realtime.json")
     json.dump(scenario, open(path, "w", encoding="utf-8"), ensure_ascii=False, indent=1)

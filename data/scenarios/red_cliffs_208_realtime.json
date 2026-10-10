@@ -135,7 +135,687 @@
    "name": "유비군",
    "control": "player",
    "supreme_commander": "유비",
-   "not_deployed": []
+   "not_deployed": [],
+   "available_officers": [
+    {
+     "id": "CHR-0104",
+     "name": "간옹",
+     "command": 25,
+     "might": 15,
+     "intellect": 74,
+     "politics": 70,
+     "charm": 78,
+     "traits": [
+      "오만"
+     ]
+    },
+    {
+     "id": "CHR-0105",
+     "name": "감부인",
+     "command": 10,
+     "might": 8,
+     "intellect": 50,
+     "politics": 60,
+     "charm": 80,
+     "traits": [
+      "인고"
+     ]
+    },
+    {
+     "id": "CHR-0107",
+     "name": "관우",
+     "command": 95,
+     "might": 97,
+     "intellect": 75,
+     "politics": 62,
+     "charm": 93,
+     "traits": [
+      "만인지적"
+     ]
+    },
+    {
+     "id": "CHR-0108",
+     "name": "관흥",
+     "command": 82,
+     "might": 88,
+     "intellect": 62,
+     "politics": 58,
+     "charm": 72,
+     "traits": [
+      "부풍"
+     ]
+    },
+    {
+     "id": "CHR-0111",
+     "name": "마대",
+     "command": 80,
+     "might": 82,
+     "intellect": 66,
+     "politics": 60,
+     "charm": 62,
+     "traits": [
+      "집행"
+     ]
+    },
+    {
+     "id": "CHR-0112",
+     "name": "마량",
+     "command": 62,
+     "might": 30,
+     "intellect": 88,
+     "politics": 90,
+     "charm": 86,
+     "traits": [
+      "백미"
+     ]
+    },
+    {
+     "id": "CHR-0113",
+     "name": "마속",
+     "command": 60,
+     "might": 45,
+     "intellect": 85,
+     "politics": 72,
+     "charm": 68,
+     "traits": [
+      "담병"
+     ]
+    },
+    {
+     "id": "CHR-0114",
+     "name": "마초",
+     "command": 92,
+     "might": 97,
+     "intellect": 44,
+     "politics": 25,
+     "charm": 78,
+     "traits": [
+      "금마초"
+     ]
+    },
+    {
+     "id": "CHR-0115",
+     "name": "미방",
+     "command": 45,
+     "might": 40,
+     "intellect": 50,
+     "politics": 55,
+     "charm": 40,
+     "traits": [
+      "불안"
+     ]
+    },
+    {
+     "id": "CHR-0116",
+     "name": "미부인",
+     "command": 10,
+     "might": 8,
+     "intellect": 48,
+     "politics": 58,
+     "charm": 78,
+     "traits": [
+      "장판"
+     ]
+    },
+    {
+     "id": "CHR-0117",
+     "name": "미축",
+     "command": 25,
+     "might": 20,
+     "intellect": 72,
+     "politics": 78,
+     "charm": 82,
+     "traits": [
+      "거상"
+     ]
+    },
+    {
+     "id": "CHR-0118",
+     "name": "방통",
+     "command": 78,
+     "might": 30,
+     "intellect": 97,
+     "politics": 80,
+     "charm": 72,
+     "traits": [
+      "봉추"
+     ]
+    },
+    {
+     "id": "CHR-0119",
+     "name": "법정",
+     "command": 72,
+     "might": 40,
+     "intellect": 95,
+     "politics": 76,
+     "charm": 50,
+     "traits": [
+      "기모"
+     ]
+    },
+    {
+     "id": "CHR-0121",
+     "name": "비의",
+     "command": 62,
+     "might": 30,
+     "intellect": 85,
+     "politics": 90,
+     "charm": 88,
+     "traits": [
+      "조정"
+     ]
+    },
+    {
+     "id": "CHR-0122",
+     "name": "서서",
+     "command": 70,
+     "might": 45,
+     "intellect": 91,
+     "politics": 80,
+     "charm": 76,
+     "traits": [
+      "효심"
+     ]
+    },
+    {
+     "id": "CHR-0123",
+     "name": "손건",
+     "command": 30,
+     "might": 20,
+     "intellect": 72,
+     "politics": 76,
+     "charm": 80,
+     "traits": [
+      "변설"
+     ]
+    },
+    {
+     "id": "CHR-0124",
+     "name": "왕평",
+     "command": 88,
+     "might": 76,
+     "intellect": 72,
+     "politics": 62,
+     "charm": 68,
+     "traits": [
+      "무당비군"
+     ]
+    },
+    {
+     "id": "CHR-0125",
+     "name": "요화",
+     "command": 76,
+     "might": 70,
+     "intellect": 62,
+     "politics": 60,
+     "charm": 62,
+     "traits": [
+      "노익장"
+     ]
+    },
+    {
+     "id": "CHR-0126",
+     "name": "위연",
+     "command": 85,
+     "might": 90,
+     "intellect": 70,
+     "politics": 40,
+     "charm": 45,
+     "traits": [
+      "반골"
+     ]
+    },
+    {
+     "id": "CHR-0127",
+     "name": "유봉",
+     "command": 70,
+     "might": 80,
+     "intellect": 50,
+     "politics": 45,
+     "charm": 50,
+     "traits": [
+      "양자"
+     ]
+    },
+    {
+     "id": "CHR-0128",
+     "name": "유비",
+     "command": 82,
+     "might": 73,
+     "intellect": 76,
+     "politics": 80,
+     "charm": 99,
+     "traits": [
+      "인덕"
+     ]
+    },
+    {
+     "id": "CHR-0129",
+     "name": "이엄",
+     "command": 78,
+     "might": 72,
+     "intellect": 78,
+     "politics": 72,
+     "charm": 50,
+     "traits": [
+      "탁고"
+     ]
+    },
+    {
+     "id": "CHR-0130",
+     "name": "장비",
+     "command": 88,
+     "might": 98,
+     "intellect": 45,
+     "politics": 22,
+     "charm": 45,
+     "traits": [
+      "연인"
+     ]
+    },
+    {
+     "id": "CHR-0132",
+     "name": "장완",
+     "command": 68,
+     "might": 25,
+     "intellect": 80,
+     "politics": 92,
+     "charm": 85,
+     "traits": [
+      "사직지기"
+     ]
+    },
+    {
+     "id": "CHR-0134",
+     "name": "제갈량",
+     "command": 92,
+     "might": 38,
+     "intellect": 100,
+     "politics": 95,
+     "charm": 92,
+     "traits": [
+      "신기묘산"
+     ]
+    },
+    {
+     "id": "CHR-0136",
+     "name": "조운",
+     "command": 91,
+     "might": 96,
+     "intellect": 76,
+     "politics": 65,
+     "charm": 88,
+     "traits": [
+      "일신시담"
+     ]
+    },
+    {
+     "id": "CHR-0137",
+     "name": "황월영",
+     "command": 15,
+     "might": 10,
+     "intellect": 92,
+     "politics": 72,
+     "charm": 70,
+     "traits": [
+      "목우유마"
+     ]
+    },
+    {
+     "id": "CHR-0138",
+     "name": "황충",
+     "command": 89,
+     "might": 93,
+     "intellect": 64,
+     "politics": 56,
+     "charm": 72,
+     "traits": [
+      "강궁"
+     ]
+    },
+    {
+     "id": "CHR-0140",
+     "name": "곽준",
+     "command": 83,
+     "might": 39,
+     "intellect": 17,
+     "politics": 29,
+     "charm": 24,
+     "traits": [
+      "고수"
+     ]
+    },
+    {
+     "id": "CHR-0141",
+     "name": "관평",
+     "command": 78,
+     "might": 81,
+     "intellect": 20,
+     "politics": 38,
+     "charm": 29,
+     "traits": [
+      "부자"
+     ]
+    },
+    {
+     "id": "CHR-0142",
+     "name": "관흥의 형제 관색",
+     "command": 40,
+     "might": 72,
+     "intellect": 22,
+     "politics": 23,
+     "charm": 26,
+     "traits": []
+    },
+    {
+     "id": "CHR-0147",
+     "name": "맹달",
+     "command": 50,
+     "might": 38,
+     "intellect": 24,
+     "politics": 81,
+     "charm": 16,
+     "traits": [
+      "이반"
+     ]
+    },
+    {
+     "id": "CHR-0149",
+     "name": "부동",
+     "command": 32,
+     "might": 76,
+     "intellect": 29,
+     "politics": 27,
+     "charm": 16,
+     "traits": [
+      "순절"
+     ]
+    },
+    {
+     "id": "CHR-0150",
+     "name": "비시",
+     "command": 30,
+     "might": 24,
+     "intellect": 37,
+     "politics": 70,
+     "charm": 33,
+     "traits": [
+      "직언"
+     ]
+    },
+    {
+     "id": "CHR-0151",
+     "name": "상랑",
+     "command": 27,
+     "might": 29,
+     "intellect": 28,
+     "politics": 66,
+     "charm": 38,
+     "traits": []
+    },
+    {
+     "id": "CHR-0152",
+     "name": "상총",
+     "command": 88,
+     "might": 45,
+     "intellect": 16,
+     "politics": 42,
+     "charm": 15,
+     "traits": [
+      "숙련"
+     ]
+    },
+    {
+     "id": "CHR-0153",
+     "name": "양의",
+     "command": 19,
+     "might": 23,
+     "intellect": 76,
+     "politics": 75,
+     "charm": 32,
+     "traits": [
+      "보급"
+     ]
+    },
+    {
+     "id": "CHR-0155",
+     "name": "엄안",
+     "command": 82,
+     "might": 32,
+     "intellect": 14,
+     "politics": 33,
+     "charm": 15,
+     "traits": [
+      "노장"
+     ]
+    },
+    {
+     "id": "CHR-0156",
+     "name": "여개",
+     "command": 17,
+     "might": 20,
+     "intellect": 41,
+     "politics": 77,
+     "charm": 33,
+     "traits": [
+      "고절"
+     ]
+    },
+    {
+     "id": "CHR-0158",
+     "name": "오반",
+     "command": 60,
+     "might": 37,
+     "intellect": 15,
+     "politics": 37,
+     "charm": 25,
+     "traits": []
+    },
+    {
+     "id": "CHR-0159",
+     "name": "오의",
+     "command": 59,
+     "might": 31,
+     "intellect": 40,
+     "politics": 79,
+     "charm": 37,
+     "traits": []
+    },
+    {
+     "id": "CHR-0160",
+     "name": "왕항",
+     "command": 15,
+     "might": 28,
+     "intellect": 35,
+     "politics": 73,
+     "charm": 26,
+     "traits": []
+    },
+    {
+     "id": "CHR-0161",
+     "name": "요립",
+     "command": 18,
+     "might": 14,
+     "intellect": 69,
+     "politics": 39,
+     "charm": 15,
+     "traits": [
+      "원망"
+     ]
+    },
+    {
+     "id": "CHR-0162",
+     "name": "유봉의 부장 맹달 계열",
+     "command": 79,
+     "might": 27,
+     "intellect": 22,
+     "politics": 36,
+     "charm": 28,
+     "traits": []
+    },
+    {
+     "id": "CHR-0164",
+     "name": "유염",
+     "command": 21,
+     "might": 28,
+     "intellect": 37,
+     "politics": 71,
+     "charm": 37,
+     "traits": [
+      "방자"
+     ]
+    },
+    {
+     "id": "CHR-0165",
+     "name": "유파",
+     "command": 14,
+     "might": 28,
+     "intellect": 80,
+     "politics": 81,
+     "charm": 39,
+     "traits": [
+      "직백전"
+     ]
+    },
+    {
+     "id": "CHR-0167",
+     "name": "이적",
+     "command": 24,
+     "might": 20,
+     "intellect": 70,
+     "politics": 70,
+     "charm": 34,
+     "traits": [
+      "변설"
+     ]
+    },
+    {
+     "id": "CHR-0169",
+     "name": "이회",
+     "command": 56,
+     "might": 35,
+     "intellect": 31,
+     "politics": 80,
+     "charm": 24,
+     "traits": [
+      "남중 회유"
+     ]
+    },
+    {
+     "id": "CHR-0170",
+     "name": "장남",
+     "command": 74,
+     "might": 41,
+     "intellect": 23,
+     "politics": 38,
+     "charm": 14,
+     "traits": []
+    },
+    {
+     "id": "CHR-0171",
+     "name": "장송",
+     "command": 20,
+     "might": 28,
+     "intellect": 28,
+     "politics": 77,
+     "charm": 30,
+     "traits": [
+      "내응"
+     ]
+    },
+    {
+     "id": "CHR-0173",
+     "name": "장포",
+     "command": 37,
+     "might": 76,
+     "intellect": 25,
+     "politics": 17,
+     "charm": 18,
+     "traits": [
+      "부풍"
+     ]
+    },
+    {
+     "id": "CHR-0176",
+     "name": "주창",
+     "command": 34,
+     "might": 73,
+     "intellect": 23,
+     "politics": 14,
+     "charm": 14,
+     "traits": [
+      "종자"
+     ]
+    },
+    {
+     "id": "CHR-0177",
+     "name": "진도",
+     "command": 72,
+     "might": 78,
+     "intellect": 26,
+     "politics": 39,
+     "charm": 15,
+     "traits": [
+      "백모병"
+     ]
+    },
+    {
+     "id": "CHR-0178",
+     "name": "진식",
+     "command": 59,
+     "might": 31,
+     "intellect": 25,
+     "politics": 36,
+     "charm": 27,
+     "traits": []
+    },
+    {
+     "id": "CHR-0181",
+     "name": "팽양",
+     "command": 29,
+     "might": 21,
+     "intellect": 74,
+     "politics": 28,
+     "charm": 27,
+     "traits": [
+      "오만"
+     ]
+    },
+    {
+     "id": "CHR-0182",
+     "name": "풍습",
+     "command": 67,
+     "might": 26,
+     "intellect": 18,
+     "politics": 30,
+     "charm": 15,
+     "traits": []
+    },
+    {
+     "id": "CHR-0183",
+     "name": "황권",
+     "command": 75,
+     "might": 28,
+     "intellect": 79,
+     "politics": 55,
+     "charm": 18,
+     "traits": [
+      "선견"
+     ]
+    },
+    {
+     "id": "CHR-0325",
+     "name": "유기",
+     "command": 48,
+     "might": 38,
+     "intellect": 30,
+     "politics": 71,
+     "charm": 38,
+     "traits": [
+      "장자"
+     ]
+    }
+   ]
   },
   {
    "id": "sun_quan",
@@ -152,6 +832,546 @@
      "id": "CHR-0214",
      "name": "태사자",
      "reason": "건창에서 유반을 막았다"
+    }
+   ],
+   "available_officers": [
+    {
+     "id": "CHR-0185",
+     "name": "감녕",
+     "command": 82,
+     "might": 96,
+     "intellect": 70,
+     "politics": 40,
+     "charm": 62,
+     "traits": [
+      "금범적"
+     ]
+    },
+    {
+     "id": "CHR-0186",
+     "name": "노숙",
+     "command": 82,
+     "might": 40,
+     "intellect": 92,
+     "politics": 88,
+     "charm": 86,
+     "traits": [
+      "천하이분"
+     ]
+    },
+    {
+     "id": "CHR-0187",
+     "name": "능통",
+     "command": 84,
+     "might": 88,
+     "intellect": 64,
+     "politics": 58,
+     "charm": 72,
+     "traits": [
+      "원한"
+     ]
+    },
+    {
+     "id": "CHR-0188",
+     "name": "대교",
+     "command": 10,
+     "might": 8,
+     "intellect": 50,
+     "politics": 55,
+     "charm": 85,
+     "traits": [
+      "강동이교"
+     ]
+    },
+    {
+     "id": "CHR-0189",
+     "name": "반장",
+     "command": 74,
+     "might": 78,
+     "intellect": 56,
+     "politics": 50,
+     "charm": 40,
+     "traits": [
+      "포박"
+     ]
+    },
+    {
+     "id": "CHR-0190",
+     "name": "보즐",
+     "command": 70,
+     "might": 45,
+     "intellect": 80,
+     "politics": 85,
+     "charm": 74,
+     "traits": [
+      "교주"
+     ]
+    },
+    {
+     "id": "CHR-0191",
+     "name": "서성",
+     "command": 82,
+     "might": 74,
+     "intellect": 76,
+     "politics": 68,
+     "charm": 68,
+     "traits": [
+      "의성"
+     ]
+    },
+    {
+     "id": "CHR-0192",
+     "name": "소교",
+     "command": 10,
+     "might": 8,
+     "intellect": 58,
+     "politics": 56,
+     "charm": 86,
+     "traits": [
+      "강동이교"
+     ]
+    },
+    {
+     "id": "CHR-0193",
+     "name": "손견",
+     "command": 92,
+     "might": 90,
+     "intellect": 72,
+     "politics": 68,
+     "charm": 85,
+     "traits": [
+      "강동지호"
+     ]
+    },
+    {
+     "id": "CHR-0196",
+     "name": "손상향",
+     "command": 62,
+     "might": 82,
+     "intellect": 55,
+     "politics": 50,
+     "charm": 80,
+     "traits": [
+      "궁요희"
+     ]
+    },
+    {
+     "id": "CHR-0198",
+     "name": "손책",
+     "command": 94,
+     "might": 94,
+     "intellect": 70,
+     "politics": 62,
+     "charm": 92,
+     "traits": [
+      "소패왕"
+     ]
+    },
+    {
+     "id": "CHR-0199",
+     "name": "여몽",
+     "command": 92,
+     "might": 80,
+     "intellect": 94,
+     "politics": 80,
+     "charm": 72,
+     "traits": [
+      "백의도강"
+     ]
+    },
+    {
+     "id": "CHR-0200",
+     "name": "여범",
+     "command": 70,
+     "might": 50,
+     "intellect": 76,
+     "politics": 82,
+     "charm": 74,
+     "traits": [
+      "군기"
+     ]
+    },
+    {
+     "id": "CHR-0201",
+     "name": "오국태",
+     "command": 15,
+     "might": 10,
+     "intellect": 72,
+     "politics": 80,
+     "charm": 88,
+     "traits": [
+      "국태"
+     ]
+    },
+    {
+     "id": "CHR-0204",
+     "name": "장소",
+     "command": 50,
+     "might": 25,
+     "intellect": 85,
+     "politics": 95,
+     "charm": 82,
+     "traits": [
+      "중신"
+     ]
+    },
+    {
+     "id": "CHR-0205",
+     "name": "장흠",
+     "command": 78,
+     "might": 76,
+     "intellect": 62,
+     "politics": 60,
+     "charm": 66,
+     "traits": [
+      "청렴"
+     ]
+    },
+    {
+     "id": "CHR-0207",
+     "name": "정보",
+     "command": 84,
+     "might": 82,
+     "intellect": 70,
+     "politics": 72,
+     "charm": 76,
+     "traits": [
+      "노장"
+     ]
+    },
+    {
+     "id": "CHR-0211",
+     "name": "주유",
+     "command": 96,
+     "might": 72,
+     "intellect": 95,
+     "politics": 85,
+     "charm": 94,
+     "traits": [
+      "미주랑"
+     ]
+    },
+    {
+     "id": "CHR-0212",
+     "name": "주태",
+     "command": 78,
+     "might": 90,
+     "intellect": 56,
+     "politics": 50,
+     "charm": 66,
+     "traits": [
+      "만신창이"
+     ]
+    },
+    {
+     "id": "CHR-0215",
+     "name": "하제",
+     "command": 88,
+     "might": 78,
+     "intellect": 80,
+     "politics": 72,
+     "charm": 68,
+     "traits": [
+      "산월토벌"
+     ]
+    },
+    {
+     "id": "CHR-0216",
+     "name": "한당",
+     "command": 80,
+     "might": 80,
+     "intellect": 62,
+     "politics": 58,
+     "charm": 66,
+     "traits": [
+      "역전"
+     ]
+    },
+    {
+     "id": "CHR-0217",
+     "name": "황개",
+     "command": 82,
+     "might": 85,
+     "intellect": 68,
+     "politics": 65,
+     "charm": 72,
+     "traits": [
+      "고육계"
+     ]
+    },
+    {
+     "id": "CHR-0218",
+     "name": "감택",
+     "command": 15,
+     "might": 27,
+     "intellect": 70,
+     "politics": 75,
+     "charm": 28,
+     "traits": [
+      "밀서"
+     ]
+    },
+    {
+     "id": "CHR-0220",
+     "name": "능조",
+     "command": 70,
+     "might": 70,
+     "intellect": 15,
+     "politics": 14,
+     "charm": 20,
+     "traits": []
+    },
+    {
+     "id": "CHR-0221",
+     "name": "동습",
+     "command": 74,
+     "might": 80,
+     "intellect": 22,
+     "politics": 38,
+     "charm": 16,
+     "traits": [
+      "순직"
+     ]
+    },
+    {
+     "id": "CHR-0223",
+     "name": "마충(오)",
+     "command": 29,
+     "might": 70,
+     "intellect": 23,
+     "politics": 30,
+     "charm": 30,
+     "traits": [
+      "포박"
+     ]
+    },
+    {
+     "id": "CHR-0225",
+     "name": "반준",
+     "command": 58,
+     "might": 33,
+     "intellect": 37,
+     "politics": 77,
+     "charm": 34,
+     "traits": [
+      "무릉 평정"
+     ]
+    },
+    {
+     "id": "CHR-0227",
+     "name": "설종",
+     "command": 26,
+     "might": 29,
+     "intellect": 29,
+     "politics": 73,
+     "charm": 35,
+     "traits": [
+      "남방 경략"
+     ]
+    },
+    {
+     "id": "CHR-0228",
+     "name": "손교",
+     "command": 77,
+     "might": 36,
+     "intellect": 28,
+     "politics": 30,
+     "charm": 15,
+     "traits": [
+      "선봉"
+     ]
+    },
+    {
+     "id": "CHR-0230",
+     "name": "손소",
+     "command": 74,
+     "might": 41,
+     "intellect": 18,
+     "politics": 35,
+     "charm": 24,
+     "traits": [
+      "변경"
+     ]
+    },
+    {
+     "id": "CHR-0231",
+     "name": "손유",
+     "command": 62,
+     "might": 31,
+     "intellect": 25,
+     "politics": 37,
+     "charm": 28,
+     "traits": []
+    },
+    {
+     "id": "CHR-0232",
+     "name": "손정",
+     "command": 51,
+     "might": 29,
+     "intellect": 24,
+     "politics": 77,
+     "charm": 38,
+     "traits": []
+    },
+    {
+     "id": "CHR-0235",
+     "name": "손하",
+     "command": 62,
+     "might": 32,
+     "intellect": 14,
+     "politics": 30,
+     "charm": 29,
+     "traits": []
+    },
+    {
+     "id": "CHR-0238",
+     "name": "손환",
+     "command": 81,
+     "might": 30,
+     "intellect": 17,
+     "politics": 28,
+     "charm": 23,
+     "traits": [
+      "이릉 분전"
+     ]
+    },
+    {
+     "id": "CHR-0240",
+     "name": "시적",
+     "command": 20,
+     "might": 15,
+     "intellect": 41,
+     "politics": 83,
+     "charm": 49,
+     "traits": [
+      "청렴"
+     ]
+    },
+    {
+     "id": "CHR-0241",
+     "name": "엄준",
+     "command": 27,
+     "might": 15,
+     "intellect": 38,
+     "politics": 58,
+     "charm": 35,
+     "traits": []
+    },
+    {
+     "id": "CHR-0243",
+     "name": "여대",
+     "command": 48,
+     "might": 25,
+     "intellect": 35,
+     "politics": 74,
+     "charm": 33,
+     "traits": [
+      "교주 경략"
+     ]
+    },
+    {
+     "id": "CHR-0246",
+     "name": "우번",
+     "command": 16,
+     "might": 29,
+     "intellect": 75,
+     "politics": 75,
+     "charm": 27,
+     "traits": [
+      "직언"
+     ]
+    },
+    {
+     "id": "CHR-0251",
+     "name": "장굉",
+     "command": 17,
+     "might": 15,
+     "intellect": 74,
+     "politics": 74,
+     "charm": 26,
+     "traits": [
+      "이장"
+     ]
+    },
+    {
+     "id": "CHR-0254",
+     "name": "정병",
+     "command": 23,
+     "might": 18,
+     "intellect": 35,
+     "politics": 58,
+     "charm": 29,
+     "traits": []
+    },
+    {
+     "id": "CHR-0255",
+     "name": "제갈근",
+     "command": 14,
+     "might": 21,
+     "intellect": 83,
+     "politics": 79,
+     "charm": 33,
+     "traits": [
+      "화평"
+     ]
+    },
+    {
+     "id": "CHR-0256",
+     "name": "조자",
+     "command": 27,
+     "might": 28,
+     "intellect": 30,
+     "politics": 74,
+     "charm": 33,
+     "traits": [
+      "사위"
+     ]
+    },
+    {
+     "id": "CHR-0260",
+     "name": "주치",
+     "command": 50,
+     "might": 36,
+     "intellect": 40,
+     "politics": 83,
+     "charm": 36,
+     "traits": [
+      "원로"
+     ]
+    },
+    {
+     "id": "CHR-0261",
+     "name": "주환의 부장",
+     "command": 58,
+     "might": 29,
+     "intellect": 14,
+     "politics": 26,
+     "charm": 14,
+     "traits": []
+    },
+    {
+     "id": "CHR-0262",
+     "name": "진무",
+     "command": 33,
+     "might": 78,
+     "intellect": 18,
+     "politics": 23,
+     "charm": 28,
+     "traits": [
+      "여강 정예"
+     ]
+    },
+    {
+     "id": "CHR-0264",
+     "name": "호종",
+     "command": 20,
+     "might": 23,
+     "intellect": 78,
+     "politics": 77,
+     "charm": 27,
+     "traits": [
+      "사령"
+     ]
     }
    ]
   },
@@ -175,6 +1395,838 @@
      "id": "CHR-0023",
      "name": "우금",
      "reason": "208년 적벽 종군 기록이 없다"
+    }
+   ],
+   "available_officers": [
+    {
+     "id": "CHR-0001",
+     "name": "가후",
+     "command": 70,
+     "might": 32,
+     "intellect": 97,
+     "politics": 85,
+     "charm": 50,
+     "traits": [
+      "독사"
+     ]
+    },
+    {
+     "id": "CHR-0002",
+     "name": "견희",
+     "command": 15,
+     "might": 10,
+     "intellect": 68,
+     "politics": 70,
+     "charm": 94,
+     "traits": [
+      "낙신"
+     ]
+    },
+    {
+     "id": "CHR-0003",
+     "name": "곽가",
+     "command": 60,
+     "might": 15,
+     "intellect": 96,
+     "politics": 80,
+     "charm": 78,
+     "traits": [
+      "귀모"
+     ]
+    },
+    {
+     "id": "CHR-0004",
+     "name": "곽여왕",
+     "command": 25,
+     "might": 10,
+     "intellect": 85,
+     "politics": 86,
+     "charm": 70,
+     "traits": [
+      "모주"
+     ]
+    },
+    {
+     "id": "CHR-0009",
+     "name": "만총",
+     "command": 78,
+     "might": 60,
+     "intellect": 85,
+     "politics": 80,
+     "charm": 50,
+     "traits": [
+      "혹리"
+     ]
+    },
+    {
+     "id": "CHR-0010",
+     "name": "문빙",
+     "command": 82,
+     "might": 70,
+     "intellect": 68,
+     "politics": 62,
+     "charm": 65,
+     "traits": [
+      "수비"
+     ]
+    },
+    {
+     "id": "CHR-0012",
+     "name": "방덕",
+     "command": 84,
+     "might": 92,
+     "intellect": 62,
+     "politics": 45,
+     "charm": 60,
+     "traits": [
+      "대관출전"
+     ]
+    },
+    {
+     "id": "CHR-0013",
+     "name": "변씨",
+     "command": 20,
+     "might": 10,
+     "intellect": 70,
+     "politics": 82,
+     "charm": 85,
+     "traits": [
+      "내조"
+     ]
+    },
+    {
+     "id": "CHR-0016",
+     "name": "사마의",
+     "command": 96,
+     "might": 60,
+     "intellect": 97,
+     "politics": 93,
+     "charm": 72,
+     "traits": [
+      "낭고"
+     ]
+    },
+    {
+     "id": "CHR-0017",
+     "name": "서황",
+     "command": 90,
+     "might": 89,
+     "intellect": 72,
+     "politics": 58,
+     "charm": 68,
+     "traits": [
+      "주아부의 풍"
+     ]
+    },
+    {
+     "id": "CHR-0018",
+     "name": "순욱",
+     "command": 68,
+     "might": 24,
+     "intellect": 95,
+     "politics": 98,
+     "charm": 92,
+     "traits": [
+      "왕좌지재"
+     ]
+    },
+    {
+     "id": "CHR-0019",
+     "name": "순유",
+     "command": 65,
+     "might": 30,
+     "intellect": 94,
+     "politics": 88,
+     "charm": 80,
+     "traits": [
+      "십이기책"
+     ]
+    },
+    {
+     "id": "CHR-0024",
+     "name": "유엽",
+     "command": 65,
+     "might": 40,
+     "intellect": 92,
+     "politics": 78,
+     "charm": 70,
+     "traits": [
+      "종실지신"
+     ]
+    },
+    {
+     "id": "CHR-0025",
+     "name": "이전",
+     "command": 80,
+     "might": 76,
+     "intellect": 78,
+     "politics": 70,
+     "charm": 72,
+     "traits": [
+      "사군자"
+     ]
+    },
+    {
+     "id": "CHR-0027",
+     "name": "장춘화",
+     "command": 30,
+     "might": 25,
+     "intellect": 82,
+     "politics": 78,
+     "charm": 65,
+     "traits": [
+      "인단"
+     ]
+    },
+    {
+     "id": "CHR-0028",
+     "name": "장합",
+     "command": 89,
+     "might": 86,
+     "intellect": 80,
+     "politics": 55,
+     "charm": 65,
+     "traits": [
+      "교변"
+     ]
+    },
+    {
+     "id": "CHR-0029",
+     "name": "전예",
+     "command": 86,
+     "might": 76,
+     "intellect": 82,
+     "politics": 78,
+     "charm": 72,
+     "traits": [
+      "호이"
+     ]
+    },
+    {
+     "id": "CHR-0030",
+     "name": "전위",
+     "command": 60,
+     "might": 97,
+     "intellect": 28,
+     "politics": 24,
+     "charm": 45,
+     "traits": [
+      "악래"
+     ]
+    },
+    {
+     "id": "CHR-0031",
+     "name": "정욱",
+     "command": 78,
+     "might": 45,
+     "intellect": 89,
+     "politics": 85,
+     "charm": 70,
+     "traits": [
+      "강직"
+     ]
+    },
+    {
+     "id": "CHR-0032",
+     "name": "조비",
+     "command": 72,
+     "might": 64,
+     "intellect": 85,
+     "politics": 88,
+     "charm": 72,
+     "traits": [
+      "선양"
+     ]
+    },
+    {
+     "id": "CHR-0033",
+     "name": "조인",
+     "command": 89,
+     "might": 80,
+     "intellect": 70,
+     "politics": 72,
+     "charm": 68,
+     "traits": [
+      "철벽"
+     ]
+    },
+    {
+     "id": "CHR-0034",
+     "name": "조조",
+     "command": 96,
+     "might": 72,
+     "intellect": 91,
+     "politics": 94,
+     "charm": 96,
+     "traits": [
+      "유재시거"
+     ]
+    },
+    {
+     "id": "CHR-0035",
+     "name": "조진",
+     "command": 85,
+     "might": 78,
+     "intellect": 72,
+     "politics": 68,
+     "charm": 70,
+     "traits": [
+      "대장군"
+     ]
+    },
+    {
+     "id": "CHR-0036",
+     "name": "조홍",
+     "command": 76,
+     "might": 79,
+     "intellect": 45,
+     "politics": 50,
+     "charm": 55,
+     "traits": [
+      "가재"
+     ]
+    },
+    {
+     "id": "CHR-0037",
+     "name": "조휴",
+     "command": 80,
+     "might": 76,
+     "intellect": 65,
+     "politics": 60,
+     "charm": 62,
+     "traits": [
+      "천리구"
+     ]
+    },
+    {
+     "id": "CHR-0038",
+     "name": "종요",
+     "command": 62,
+     "might": 40,
+     "intellect": 85,
+     "politics": 93,
+     "charm": 80,
+     "traits": [
+      "관중경영"
+     ]
+    },
+    {
+     "id": "CHR-0040",
+     "name": "진군",
+     "command": 60,
+     "might": 30,
+     "intellect": 85,
+     "politics": 95,
+     "charm": 78,
+     "traits": [
+      "구품관인법"
+     ]
+    },
+    {
+     "id": "CHR-0042",
+     "name": "채염",
+     "command": 15,
+     "might": 8,
+     "intellect": 80,
+     "politics": 72,
+     "charm": 88,
+     "traits": [
+      "호가십팔박"
+     ]
+    },
+    {
+     "id": "CHR-0043",
+     "name": "하후돈",
+     "command": 88,
+     "might": 90,
+     "intellect": 62,
+     "politics": 70,
+     "charm": 78,
+     "traits": [
+      "독안"
+     ]
+    },
+    {
+     "id": "CHR-0044",
+     "name": "하후연",
+     "command": 91,
+     "might": 91,
+     "intellect": 65,
+     "politics": 55,
+     "charm": 70,
+     "traits": [
+      "신속"
+     ]
+    },
+    {
+     "id": "CHR-0046",
+     "name": "학소",
+     "command": 82,
+     "might": 72,
+     "intellect": 80,
+     "politics": 62,
+     "charm": 58,
+     "traits": [
+      "진창"
+     ]
+    },
+    {
+     "id": "CHR-0047",
+     "name": "허저",
+     "command": 70,
+     "might": 96,
+     "intellect": 32,
+     "politics": 28,
+     "charm": 50,
+     "traits": [
+      "호치"
+     ]
+    },
+    {
+     "id": "CHR-0049",
+     "name": "견초",
+     "command": 59,
+     "might": 24,
+     "intellect": 29,
+     "politics": 80,
+     "charm": 35,
+     "traits": [
+      "이간"
+     ]
+    },
+    {
+     "id": "CHR-0050",
+     "name": "관녕",
+     "command": 12,
+     "might": 15,
+     "intellect": 50,
+     "politics": 76,
+     "charm": 36,
+     "traits": [
+      "은일"
+     ]
+    },
+    {
+     "id": "CHR-0051",
+     "name": "국연",
+     "command": 19,
+     "might": 30,
+     "intellect": 36,
+     "politics": 82,
+     "charm": 35,
+     "traits": [
+      "경제"
+     ]
+    },
+    {
+     "id": "CHR-0053",
+     "name": "노초",
+     "command": 59,
+     "might": 40,
+     "intellect": 15,
+     "politics": 26,
+     "charm": 24,
+     "traits": []
+    },
+    {
+     "id": "CHR-0055",
+     "name": "두기",
+     "command": 19,
+     "might": 30,
+     "intellect": 31,
+     "politics": 81,
+     "charm": 42,
+     "traits": [
+      "하동 경영"
+     ]
+    },
+    {
+     "id": "CHR-0056",
+     "name": "두습",
+     "command": 15,
+     "might": 29,
+     "intellect": 79,
+     "politics": 78,
+     "charm": 32,
+     "traits": [
+      "진무"
+     ]
+    },
+    {
+     "id": "CHR-0058",
+     "name": "모개",
+     "command": 17,
+     "might": 27,
+     "intellect": 71,
+     "politics": 70,
+     "charm": 38,
+     "traits": [
+      "봉천자"
+     ]
+    },
+    {
+     "id": "CHR-0061",
+     "name": "병원",
+     "command": 20,
+     "might": 16,
+     "intellect": 32,
+     "politics": 85,
+     "charm": 33,
+     "traits": [
+      "명사"
+     ]
+    },
+    {
+     "id": "CHR-0062",
+     "name": "사마랑",
+     "command": 27,
+     "might": 27,
+     "intellect": 38,
+     "politics": 74,
+     "charm": 36,
+     "traits": [
+      "장형"
+     ]
+    },
+    {
+     "id": "CHR-0065",
+     "name": "사환",
+     "command": 79,
+     "might": 41,
+     "intellect": 19,
+     "politics": 42,
+     "charm": 23,
+     "traits": []
+    },
+    {
+     "id": "CHR-0066",
+     "name": "서선",
+     "command": 29,
+     "might": 23,
+     "intellect": 35,
+     "politics": 58,
+     "charm": 39,
+     "traits": []
+    },
+    {
+     "id": "CHR-0068",
+     "name": "소칙",
+     "command": 43,
+     "might": 27,
+     "intellect": 32,
+     "politics": 73,
+     "charm": 25,
+     "traits": [
+      "하서"
+     ]
+    },
+    {
+     "id": "CHR-0070",
+     "name": "신비",
+     "command": 26,
+     "might": 20,
+     "intellect": 81,
+     "politics": 83,
+     "charm": 29,
+     "traits": [
+      "지절"
+     ]
+    },
+    {
+     "id": "CHR-0071",
+     "name": "양습",
+     "command": 29,
+     "might": 27,
+     "intellect": 25,
+     "politics": 72,
+     "charm": 38,
+     "traits": [
+      "병주 안무"
+     ]
+    },
+    {
+     "id": "CHR-0073",
+     "name": "여건",
+     "command": 52,
+     "might": 33,
+     "intellect": 39,
+     "politics": 69,
+     "charm": 28,
+     "traits": [
+      "청주 진무"
+     ]
+    },
+    {
+     "id": "CHR-0074",
+     "name": "왕랑",
+     "command": 17,
+     "might": 14,
+     "intellect": 81,
+     "politics": 80,
+     "charm": 25,
+     "traits": [
+      "경학"
+     ]
+    },
+    {
+     "id": "CHR-0077",
+     "name": "왕충",
+     "command": 64,
+     "might": 31,
+     "intellect": 23,
+     "politics": 39,
+     "charm": 14,
+     "traits": []
+    },
+    {
+     "id": "CHR-0079",
+     "name": "위기",
+     "command": 18,
+     "might": 29,
+     "intellect": 43,
+     "politics": 72,
+     "charm": 38,
+     "traits": [
+      "염철"
+     ]
+    },
+    {
+     "id": "CHR-0080",
+     "name": "유대",
+     "command": 65,
+     "might": 31,
+     "intellect": 28,
+     "politics": 32,
+     "charm": 20,
+     "traits": []
+    },
+    {
+     "id": "CHR-0082",
+     "name": "임준",
+     "command": 30,
+     "might": 25,
+     "intellect": 29,
+     "politics": 77,
+     "charm": 42,
+     "traits": [
+      "둔전 운영"
+     ]
+    },
+    {
+     "id": "CHR-0084",
+     "name": "조순",
+     "command": 72,
+     "might": 56,
+     "intellect": 16,
+     "politics": 23,
+     "charm": 30,
+     "traits": [
+      "호표기"
+     ]
+    },
+    {
+     "id": "CHR-0085",
+     "name": "조식",
+     "command": 29,
+     "might": 21,
+     "intellect": 70,
+     "politics": 70,
+     "charm": 37,
+     "traits": [
+      "칠보"
+     ]
+    },
+    {
+     "id": "CHR-0086",
+     "name": "조안민",
+     "command": 39,
+     "might": 77,
+     "intellect": 20,
+     "politics": 27,
+     "charm": 22,
+     "traits": []
+    },
+    {
+     "id": "CHR-0087",
+     "name": "조앙",
+     "command": 69,
+     "might": 46,
+     "intellect": 23,
+     "politics": 34,
+     "charm": 17,
+     "traits": [
+      "장자"
+     ]
+    },
+    {
+     "id": "CHR-0088",
+     "name": "조엄",
+     "command": 16,
+     "might": 16,
+     "intellect": 68,
+     "politics": 69,
+     "charm": 32,
+     "traits": [
+      "조율"
+     ]
+    },
+    {
+     "id": "CHR-0089",
+     "name": "조웅",
+     "command": 12,
+     "might": 12,
+     "intellect": 34,
+     "politics": 80,
+     "charm": 40,
+     "traits": []
+    },
+    {
+     "id": "CHR-0090",
+     "name": "조지",
+     "command": 15,
+     "might": 17,
+     "intellect": 38,
+     "politics": 72,
+     "charm": 33,
+     "traits": [
+      "둔전 창시"
+     ]
+    },
+    {
+     "id": "CHR-0091",
+     "name": "조창",
+     "command": 37,
+     "might": 72,
+     "intellect": 25,
+     "politics": 26,
+     "charm": 29,
+     "traits": [
+      "황수아"
+     ]
+    },
+    {
+     "id": "CHR-0092",
+     "name": "주령",
+     "command": 74,
+     "might": 33,
+     "intellect": 30,
+     "politics": 46,
+     "charm": 13,
+     "traits": [
+      "강직"
+     ]
+    },
+    {
+     "id": "CHR-0093",
+     "name": "진교",
+     "command": 15,
+     "might": 22,
+     "intellect": 36,
+     "politics": 60,
+     "charm": 34,
+     "traits": []
+    },
+    {
+     "id": "CHR-0094",
+     "name": "창자",
+     "command": 26,
+     "might": 25,
+     "intellect": 28,
+     "politics": 71,
+     "charm": 38,
+     "traits": [
+      "돈황"
+     ]
+    },
+    {
+     "id": "CHR-0095",
+     "name": "최염",
+     "command": 23,
+     "might": 20,
+     "intellect": 38,
+     "politics": 80,
+     "charm": 33,
+     "traits": [
+      "강직"
+     ]
+    },
+    {
+     "id": "CHR-0096",
+     "name": "하후덕",
+     "command": 73,
+     "might": 35,
+     "intellect": 29,
+     "politics": 27,
+     "charm": 17,
+     "traits": []
+    },
+    {
+     "id": "CHR-0098",
+     "name": "하후상",
+     "command": 76,
+     "might": 29,
+     "intellect": 19,
+     "politics": 29,
+     "charm": 20,
+     "traits": [
+      "종군"
+     ]
+    },
+    {
+     "id": "CHR-0099",
+     "name": "하후은",
+     "command": 42,
+     "might": 71,
+     "intellect": 14,
+     "politics": 22,
+     "charm": 29,
+     "traits": []
+    },
+    {
+     "id": "CHR-0100",
+     "name": "한호",
+     "command": 45,
+     "might": 39,
+     "intellect": 31,
+     "politics": 80,
+     "charm": 27,
+     "traits": [
+      "둔전 호위"
+     ]
+    },
+    {
+     "id": "CHR-0103",
+     "name": "화흠",
+     "command": 18,
+     "might": 30,
+     "intellect": 29,
+     "politics": 78,
+     "charm": 44,
+     "traits": [
+      "청류"
+     ]
+    },
+    {
+     "id": "CHR-0329",
+     "name": "장윤",
+     "command": 77,
+     "might": 39,
+     "intellect": 17,
+     "politics": 28,
+     "charm": 16,
+     "traits": []
+    },
+    {
+     "id": "CHR-0330",
+     "name": "채모",
+     "command": 53,
+     "might": 28,
+     "intellect": 25,
+     "politics": 82,
+     "charm": 26,
+     "traits": [
+      "수군"
+     ]
     }
    ]
   }
@@ -256,6 +2308,7 @@
     "command": 82,
     "might": 73,
     "intellect": 76,
+    "politics": 80,
     "charm": 99,
     "traits": [
      "인덕"
@@ -267,6 +2320,7 @@
     "command": 88,
     "might": 98,
     "intellect": 45,
+    "politics": 22,
     "charm": 45,
     "traits": [
      "연인"
@@ -279,6 +2333,7 @@
      "command": 92,
      "might": 38,
      "intellect": 100,
+     "politics": 95,
      "charm": 92,
      "traits": [
       "신기묘산"
@@ -319,6 +2374,7 @@
     "command": 95,
     "might": 97,
     "intellect": 75,
+    "politics": 62,
     "charm": 93,
     "traits": [
      "만인지적"
@@ -360,6 +2416,7 @@
     "command": 48,
     "might": 38,
     "intellect": 30,
+    "politics": 71,
     "charm": 38,
     "traits": [
      "장자"
@@ -401,6 +2458,7 @@
     "command": 91,
     "might": 96,
     "intellect": 76,
+    "politics": 65,
     "charm": 88,
     "traits": [
      "일신시담"
@@ -439,6 +2497,7 @@
     "command": 96,
     "might": 72,
     "intellect": 95,
+    "politics": 85,
     "charm": 94,
     "traits": [
      "미주랑"
@@ -450,6 +2509,7 @@
     "command": 82,
     "might": 96,
     "intellect": 70,
+    "politics": 40,
     "charm": 62,
     "traits": [
      "금범적"
@@ -462,6 +2522,7 @@
      "command": 82,
      "might": 40,
      "intellect": 92,
+     "politics": 88,
      "charm": 86,
      "traits": [
       "천하이분"
@@ -510,6 +2571,7 @@
     "command": 84,
     "might": 82,
     "intellect": 70,
+    "politics": 72,
     "charm": 76,
     "traits": [
      "노장"
@@ -521,6 +2583,7 @@
     "command": 78,
     "might": 90,
     "intellect": 56,
+    "politics": 50,
     "charm": 66,
     "traits": [
      "만신창이"
@@ -533,6 +2596,7 @@
      "command": 92,
      "might": 80,
      "intellect": 94,
+     "politics": 80,
      "charm": 72,
      "traits": [
       "백의도강"
@@ -577,6 +2641,7 @@
     "command": 82,
     "might": 85,
     "intellect": 68,
+    "politics": 65,
     "charm": 72,
     "traits": [
      "고육계"
@@ -588,6 +2653,7 @@
     "command": 80,
     "might": 80,
     "intellect": 62,
+    "politics": 58,
     "charm": 66,
     "traits": [
      "역전"
@@ -600,6 +2666,7 @@
      "command": 84,
      "might": 88,
      "intellect": 64,
+     "politics": 58,
      "charm": 72,
      "traits": [
       "원한"
@@ -641,6 +2708,7 @@
     "command": 96,
     "might": 72,
     "intellect": 91,
+    "politics": 94,
     "charm": 96,
     "traits": [
      "유재시거"
@@ -652,6 +2720,7 @@
     "command": 70,
     "might": 96,
     "intellect": 32,
+    "politics": 28,
     "charm": 50,
     "traits": [
      "호치"
@@ -664,6 +2733,7 @@
      "command": 78,
      "might": 45,
      "intellect": 89,
+     "politics": 85,
      "charm": 70,
      "traits": [
       "강직"
@@ -675,6 +2745,7 @@
      "command": 70,
      "might": 32,
      "intellect": 97,
+     "politics": 85,
      "charm": 50,
      "traits": [
       "독사"
@@ -735,6 +2806,7 @@
     "command": 89,
     "might": 80,
     "intellect": 70,
+    "politics": 72,
     "charm": 68,
     "traits": [
      "철벽"
@@ -783,6 +2855,7 @@
     "command": 90,
     "might": 89,
     "intellect": 72,
+    "politics": 58,
     "charm": 68,
     "traits": [
      "주아부의 풍"
@@ -794,6 +2867,7 @@
     "command": 78,
     "might": 60,
     "intellect": 85,
+    "politics": 80,
     "charm": 50,
     "traits": [
      "혹리"
@@ -841,6 +2915,7 @@
     "command": 82,
     "might": 70,
     "intellect": 68,
+    "politics": 62,
     "charm": 65,
     "traits": [
      "수비"
@@ -889,6 +2964,7 @@
     "command": 53,
     "might": 28,
     "intellect": 25,
+    "politics": 82,
     "charm": 26,
     "traits": [
      "수군"
@@ -900,6 +2976,7 @@
     "command": 77,
     "might": 39,
     "intellect": 17,
+    "politics": 28,
     "charm": 16,
     "traits": []
    },
@@ -941,6 +3018,7 @@
     "command": 72,
     "might": 56,
     "intellect": 16,
+    "politics": 23,
     "charm": 30,
     "traits": [
      "호표기"
@@ -982,6 +3060,7 @@
     "command": 76,
     "might": 79,
     "intellect": 45,
+    "politics": 50,
     "charm": 55,
     "traits": [
      "가재"
