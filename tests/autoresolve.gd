@@ -269,6 +269,10 @@ func play_rc(seed_id: int, pol: String, diff: String) -> Dictionary:
 		for fid in ["liu_bei", "sun_quan", "cao_cao"]:
 			org = Organization.auto_fill(org, fid, scn, p)
 		p = Organization.apply(p, org, scn)
+		if p.has("errors"):   # REVIEW-O1b #1: 검증 실패면 사본 대신 errors가 온다
+			push_error("org auto rejected: %s" % [p.errors])
+			quit(1)
+			return {}
 	_tune(p.combat)
 	# M9 비교: --no-chain 1(화공 끔), --no-m9 1(화공·승계·강습 모두 끔 = M8 코드와 같은 판), --wind "540,600"(기류 창 시작 범위)
 	if _arg("--no-chain", "0") == "1" or _arg("--no-m9", "0") == "1":
