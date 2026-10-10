@@ -39,7 +39,6 @@ var sq_id := ""           # 시나리오 전대 ID (POC 프로필은 빈 문자�
 var morale_group := ""
 var start_morale_bp := 0  # 시작 사기
 var faction := ""         # 시나리오 세력 ID (liu_bei, sun_quan, cao_cao)
-var group_id := ""        # 시나리오 함대 ID (RC-LIU-FLT-01 …)
 var commander_id := ""
 
 # --- M3 사격·피해 상태(전투 규칙이 salvo일 때만 쓴다. max_hull == 0이면 POC 규칙이다) ---

@@ -201,17 +201,17 @@ func _with_portrait(d: Dictionary) -> Dictionary:
 	e.p = maxi(0, int(Commanders.PORTRAIT.get(d.get("commander_id", ""), d.get("p", 0))))
 	return e
 
-# 기본 그룹 1~n: 아군 시나리오 함대(fleet_groups) 하나가 번호 하나다(등장 순서). 코어 상태가 아닌 UI 편성이다.
+# 기본 그룹 1~n: 아군 세력 하나가 번호 하나다(등장 순서, 1 유비군 · 2 손권군). 코어 상태가 아닌 UI 편성이다(Q73: 상위 묶음 없음).
 func _assign_default_groups() -> void:
 	groups = {}
 	var num := {}
 	for f in fleets:
 		if f.side != 0:
 			continue
-		if not num.has(f.group_id):
-			num[f.group_id] = num.size() + 1
-			groups[num[f.group_id]] = []
-		groups[num[f.group_id]].append(f.id)
+		if not num.has(f.faction):
+			num[f.faction] = num.size() + 1
+			groups[num[f.faction]] = []
+		groups[num[f.faction]].append(f.id)
 
 func _start() -> void:
 	hud.brief_ov.visible = false

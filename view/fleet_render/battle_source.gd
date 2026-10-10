@@ -299,10 +299,6 @@ func detail(id: int) -> Dictionary:
 	for a in battle.ALLY_DEF:
 		if a.get("squadron_id", "") == f.sq_id:
 			d = a
-	var grp := ""
-	for g in ScenarioRoster.load_scenario().get("fleet_groups", []):
-		if g.id == f.group_id:
-			grp = g.name
 	var n0 := 0
 	for t in f.comp0:
 		n0 += int(f.comp0[t])
@@ -311,7 +307,6 @@ func detail(id: int) -> Dictionary:
 	var hz := float(battle.sim.st.hz)
 	return {
 		"commander": v.fname,
-		"group": grp,
 		"vice": vice.get("name", "") if vice is Dictionary else "",
 		"staff": d.get("staff", []).map(func(p): return str(p.name)),
 		"stats": f.stats,

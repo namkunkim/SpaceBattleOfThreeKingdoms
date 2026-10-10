@@ -64,31 +64,31 @@ SQUADRONS = [
     sq("RC-CAO-SQ-01", "cao_cao", "조조 중군", "CHR-0034", "CHR-0047", ["CHR-0031", "CHR-0001"], True, [1460, 330], "FRM-04",
        [C("SHP-01", 2), C("SHP-03", 4), C("SHP-04", 8), C("SHP-05", 2), C("SHP-06", 2), C("SHP-07", 2), C("SHP-08", 6, "FAST-EQ-INTERCEPT")],
        "허저는 늘 조조를 호위했다. 정욱은 손권이 유비를 도울 것을 예견했고(정욱전), 가후는 동쪽 원정을 말렸다(가후전).",
-       morale_group="northern", deploy_min_difficulty="입문", deploy_delay_s=180),
+       morale_group="northern", deploy_delay_s=180),
     sq("RC-CAO-SQ-02", "cao_cao", "조인 선봉", "CHR-0033", None, [], False, [1330, 420], "FRM-01",
        [C("SHP-01", 1), C("SHP-03", 4), C("SHP-04", 10), C("SHP-07", 3)],
        "조인은 형주 평정에 종군하고 전투 뒤 강릉을 지켰다(조인전).",
-       morale_group="northern", deploy_min_difficulty="입문", deploy_delay_s=0),
+       morale_group="northern", deploy_delay_s=0),
     sq("RC-CAO-SQ-03", "cao_cao", "서황 별군", "CHR-0017", "CHR-0009", [], False, [1530, 470], "FRM-03",
        [C("SHP-02", 2), C("SHP-03", 5), C("SHP-04", 9), C("SHP-05", 1)],
        "서황은 형주 정벌에 종군하고 뒤에 조인과 함께 강릉에서 주유를 막았다(서황전). 만총도 형주 정벌에 종군했다(만총전).",
-       morale_group="northern", deploy_min_difficulty="입문", deploy_delay_s=180),
+       morale_group="northern", deploy_delay_s=180),
     sq("RC-CAO-SQ-04", "cao_cao", "형주 수군 갑", "CHR-0010", None, [], False, [1250, 150], "FRM-04",
        [C("SHP-03", 4), C("SHP-04", 8), C("SHP-05", 1), C("SHP-07", 2)],
        "문빙은 유종과 함께 항복해 중용되었다(문빙전). 주유는 형주 항복군 7~8만이 '아직 의심을 품고 있다'고 보았다(『강표전』).",
-       morale_group="jing_navy", deploy_min_difficulty="입문", deploy_delay_s=0),
+       morale_group="jing_navy", deploy_delay_s=0),
     sq("RC-CAO-SQ-05", "cao_cao", "형주 수군 을", "CHR-0330", "CHR-0329", [], False, [1330, 190], "FRM-03",
        [C("SHP-03", 3), C("SHP-04", 6), C("SHP-05", 1)],
        "채모는 유종의 항복을 이끌었고 정사에서는 처형되지 않았다. 채모·장윤의 처형은 『삼국지연의』의 장간 이야기다.",
-       morale_group="jing_navy", deploy_min_difficulty="표준", deploy_delay_s=180),
+       morale_group="jing_navy", deploy_delay_s=180),
     sq("RC-CAO-SQ-06", "cao_cao", "조순 호표 고속대", "CHR-0084", None, [], False, [1400, 560], "FRM-05",
        [C("SHP-07", 6), C("SHP-08", 10, "FAST-EQ-INTERCEPT")],
        "조순은 호표기를 이끌고 장판에서 유비를 추격했다(조순전). 그 정예 기동 부대를 고속 요격 전대로 옮긴다.",
-       morale_group="northern", deploy_min_difficulty="상급", deploy_delay_s=360),
+       morale_group="northern", deploy_delay_s=360),
     sq("RC-CAO-SQ-07", "cao_cao", "조홍 후군", "CHR-0036", None, [], False, [1580, 250], "FRM-03",
        [C("SHP-03", 3), C("SHP-04", 6), C("SHP-07", 2)],
        "조홍의 적벽 종군은 기록이 분명하지 않다. 상급 이상에서만 배치하는 후군이다.",
-       morale_group="northern", deploy_min_difficulty="상급", deploy_delay_s=360),
+       morale_group="northern", deploy_delay_s=360),
 ]
 
 
@@ -118,28 +118,20 @@ def cost(comp):
     return sum(c["count"] * (COST[c["ship_type_id"]] + EQ.get(c.get("mission_equipment_id", ""), 0)) for c in comp)
 
 
-# 화면 틀이 "%s 함대"라 이름이 "함대"로 끝나면 "○○ 함대 함대"가 된다(REVIEW-O5 #1)
-assert not any(s["name"].endswith("함대") for s in SQUADRONS)
-
-for s in SQUADRONS:
-    s["declared_total_cost"] = cost(s["composition"])
-    lim = (40 + 2 * s["commander"]["command"]) * LIMIT_SCALE
-    s["command_limit"] = lim
-
 DIFF = {
-    "입문": {"count_factor": 0.70, "target_cost_ratio": 1.09,
+    "입문": {"target_cost_ratio": 1.07,
            "start_morale_bp": {"northern": 8000, "jing_navy": 6000},
            "ai": {"think_depth": 1, "mistake_bp": 2500, "reaction_s": 120, "chain_risk_response": False, "chain_detect_mean_s": None, "suspicion_per_s": 0.4},
            "note": "역병과 원정 피로가 크고 형주 수군이 훈련되지 않았다. 조조는 밀집(연환)을 풀지 않는다."},
-    "표준": {"count_factor": 0.90, "target_cost_ratio": 1.65,
+    "표준": {"target_cost_ratio": 1.59,
            "start_morale_bp": {"northern": 8000, "jing_navy": 6500},
            "ai": {"think_depth": 2, "mistake_bp": 1000, "reaction_s": 60, "chain_risk_response": True, "chain_detect_mean_s": 60, "suspicion_per_s": 0.8},
            "note": "본편 데모의 보통 난이도에 해당한다."},
-    "상급": {"count_factor": 1.00, "target_cost_ratio": 2.14,
+    "상급": {"target_cost_ratio": 2.14,
            "start_morale_bp": {"northern": 9500, "jing_navy": 7500},
            "ai": {"think_depth": 3, "mistake_bp": 300, "reaction_s": 0, "chain_risk_response": True, "chain_detect_mean_s": 20, "suspicion_per_s": 1.5},
            "note": "본편 정본의 동원비 2.20배."},
-    "극한": {"count_factor": 1.00, "target_cost_ratio": 2.14,
+    "극한": {"target_cost_ratio": 2.14,
            "start_morale_bp": {"northern": 10000, "jing_navy": 9000},
            "ai": {"think_depth": 3, "mistake_bp": 0, "reaction_s": 0, "chain_risk_response": True, "chain_detect_mean_s": 10, "suspicion_per_s": 2.0},
            "note": "역병 없음, 형주 수군 정상 훈련. 규모는 상급과 같고 정보 이점은 없다."},
@@ -147,24 +139,81 @@ DIFF = {
 ORDER = ["입문", "표준", "상급", "극한"]
 
 
+NOT_DEPLOYED = {"sun_quan": [{"id": "CHR-0194", "name": "손권", "reason": "시상(柴桑)에 머물렀다"},
+                             {"id": "CHR-0214", "name": "태사자", "reason": "건창에서 유반을 막았다"}],
+                "cao_cao": [{"id": "CHR-0021", "name": "악진", "reason": "양양에 주둔"},
+                            {"id": "CHR-0026", "name": "장료", "reason": "장사(長社)에 주둔"},
+                            {"id": "CHR-0023", "name": "우금", "reason": "208년 적벽 종군 기록이 없다"}]}
+POOL = available_officers(SQUADRONS, {x["id"] for v in NOT_DEPLOYED.values() for x in v})
+
+
+def limit(cmd):
+    return (40 + 2 * cmd) * LIMIT_SCALE
+
+
+# Q80·Q81 자동 편성(Organization.auto_fill)과 같은 제독: 기함은 고정, 나머지 함대는 남은 가용 장수 중 통솔 순(같으면 ID 순).
+# 함대 순서대로 한도가 내려간다. 모든 함대가 한도까지 찬다고 보고(Q80) 세력 비용 합 = 한도 합이다.
+def auto_limits(fid, n):
+    flag = next(s["commander"] for s in SQUADRONS if s["faction_id"] == fid and s["flagship"])
+    rest = sorted((o for o in POOL[fid] if o["id"] != flag["id"]), key=lambda o: (-o["command"], o["id"]))
+    return [limit(flag["command"])] + [limit(o["command"]) for o in rest[:n - 1]]
+
+
+ALLY_LIMIT = sum(sum(auto_limits(f, sum(1 for s in SQUADRONS if s["faction_id"] == f))) for f in ("liu_bei", "sun_quan"))
+
+# Q82: 조조의 수적 우위 = 함대 수. 난이도마다 조조 함대 앞에서부터 cao_fleets개를 배치하고, 마지막 함대만 한도 × cao_last_fill_bp까지 채워
+# 조조 비용 합 / 연합 비용 합을 target_cost_ratio에 맞춘다(함대 하나가 비율을 약 0.13씩 바꿔 함대 수만으로는 ±0.05를 못 맞춘다, 2026-10-10 사용자 결정).
+CAO_LIMITS = auto_limits("cao_cao", len(POOL["cao_cao"]))
+for d in DIFF.values():
+    want = d["target_cost_ratio"] * ALLY_LIMIT
+    acc = 0
+    for i, lim in enumerate(CAO_LIMITS):
+        if acc + lim >= want:
+            d["cao_fleets"] = i + 1
+            d["cao_last_fill_bp"] = round((want - acc) * 10000 / lim)
+            break
+        acc += lim
+    d["cao_cost_at_limits"] = round(acc + lim * d["cao_last_fill_bp"] / 10000)
+
+# 조조 추가 함대 슬롯(정사 7함대 뒤). 제독 = 시나리오 함대에 없는 조조 가용 장수 중 통솔 순(같으면 ID 순). 자동 편성은 제독을 다시 고른다.
+# 위치: 기존 조조 함대 근처 격자에서 모든 함대와 90 이상 떨어지고 전장 가장자리·조조 탈출 지점에서 떨어진 칸, 조조 중군에 가까운 순
+BOUNDS = [0, 0, 1600, 900]   # 격자(x 1240~1560, y 80~820)는 이 안이다
+CAO_SQ = [s for s in SQUADRONS if s["faction_id"] == "cao_cao"]
+used = {o["id"] for s in SQUADRONS for o in [s["commander"], s.get("vice_commander")] + s.get("staff", []) if o}
+spare = sorted((o for o in POOL["cao_cao"] if o["id"] not in used), key=lambda o: (-o["command"], o["id"]))
+assert len(POOL["cao_cao"]) >= 2 * max(d["cao_fleets"] for d in DIFF.values()), "조조 가용 장수 < 함대 수 × 2(제독·부제독)"
+taken = [s["initial_position"] for s in SQUADRONS]
+cells = sorted(([x, y] for x in range(1240, 1561, 80) for y in range(80, 821, 80)),
+               key=lambda q: (math.dist(q, CAO_SQ[0]["initial_position"]), q))
+for i in range(max(d["cao_fleets"] for d in DIFF.values()) - len(CAO_SQ)):
+    pos = next(q for q in cells if all(math.dist(q, t) >= 90 for t in taken) and math.dist(q, [1600, 300]) >= 150)
+    taken.append(pos)
+    o = spare[i]
+    SQUADRONS.append(sq("RC-CAO-SQ-%02d" % (len(CAO_SQ) + i + 1), "cao_cao", "%s 증원군" % o["name"], o["id"], None, [], False, pos, "FRM-03",
+                        [C("SHP-03", 3), C("SHP-04", 6), C("SHP-07", 2)],
+                        "Q82 추가 함대: 조조의 수적 우위를 함대 수로 맞춘다(게임 수치). 편성은 조홍 후군과 같은 틀이다.",
+                        morale_group="northern", deploy_delay_s=360, historical=False))
+
+# 화면 틀이 "%s 함대"라 이름이 "함대"로 끝나면 "○○ 함대 함대"가 된다(REVIEW-O5 #1)
+assert not any(s["name"].endswith("함대") for s in SQUADRONS)
+
+for s in SQUADRONS:
+    s["declared_total_cost"] = cost(s["composition"])
+    s["command_limit"] = limit(s["commander"]["command"])
+
+
 def apply_difficulty(squadrons, diff):
-    """조조군 전대에 난이도를 적용한 편성을 돌려준다 (difficulty_policy.cao_scale_rule)."""
+    """난이도의 배치(difficulty_policy.cao_scale_rule): 조조 함대는 앞에서부터 cao_fleets개. 연합은 그대로."""
     p = DIFF[diff]
     out = []
+    n = 0
     for s in squadrons:
         if s["faction_id"] != "cao_cao":
             out.append(dict(s, start_morale_bp=10000))
             continue
-        if ORDER.index(diff) < ORDER.index(s["deploy_min_difficulty"]):
-            continue
-        comp = []
-        for c in s["composition"]:
-            n = int(math.floor(c["count"] * p["count_factor"] + 0.5))
-            if c["count"] >= 1:
-                n = max(1, n)
-            comp.append(dict(c, count=n))
-        out.append(dict(s, composition=comp, declared_total_cost=cost(comp),
-                        start_morale_bp=p["start_morale_bp"][s["morale_group"]]))
+        n += 1
+        if n <= p["cao_fleets"]:
+            out.append(dict(s, start_morale_bp=p["start_morale_bp"][s["morale_group"]]))
     return out
 
 
@@ -175,7 +224,7 @@ if __name__ == "__main__":
         "title": "적벽대전 (실시간 전투 코어 시나리오)",
         "statement": "정사 기록과 본편 정본(combat.md §4.3.3·§5.7, region-power.md §3.4)을 근거로 한 실시간 코어용 편성이다. 함선 수와 위치는 게임 수치이며 역사적 사실이 아니다. 본편 데모 setup(RED-CLIFFS-208-DIRECT)과 같은 스키마에 난이도 프로필과 지휘관 구성(부지휘관, 참모)을 더했다.",
         "based_on": {"setup_id": "RED-CLIFFS-208-DIRECT", "balance_profile": "normal-demo-v1"},
-        "battlefield_bounds": [0, 0, 1600, 900],
+        "battlefield_bounds": BOUNDS,
         "escape_points": {"cao_cao": {"position": [1600, 300], "arrival_radius": 60},
                           "liu_sun_alliance": {"position": [0, 650], "arrival_radius": 60}},
         "historical_scale": {
@@ -187,7 +236,7 @@ if __name__ == "__main__":
             "ratio_note": "인원 기준 조조:연합은 약 4.4~4.8배, 본편 정본의 동원 국력 기준은 2.20배(101 대 46). 상급 난이도를 정본 2.20배에 맞춘다. 연합 안의 손권:유비는 인원 기준 3:2를 따른다(정본 동원 국력은 31:15)."},
         "difficulty_policy": {
             "scope": "시나리오 모드 전용. 캠페인 전투는 ai-design.md §9(자원 보너스 없음)를 따른다.",
-            "cao_scale_rule": "조조군 전대마다 함종별 척 수 × count_factor를 half-up 반올림하고, 원래 1척 이상이면 최소 1척. 난이도가 deploy_min_difficulty보다 낮으면 그 전대를 배치하지 않는다.",
+            "cao_scale_rule": "조조군 함대는 squadrons 순서대로 앞에서부터 difficulty_profiles.*.cao_fleets개를 배치한다(Q82). 자동 편성(Q80·Q81)은 마지막 배치 함대만 지휘 한도 × cao_last_fill_bp까지 채운다. cao_cost_at_limits = 그때의 조조 비용 합(target_cost_ratio × 연합 한도 합).",
             "alliance_rule": "연합 편성은 모든 난이도에서 같다.",
             "morale_rule": "조조군 전대의 시작 사기는 morale_group(northern, jing_navy)별 값을 쓴다. 연합은 10000bp.",
             "ai_rule": "AI 수준은 ai-design.md §9 표의 사고 깊이·실수율·반응 지연을 따른다. 정보는 모든 난이도에서 같은 안개다. 극한의 완전 정보는 쓰지 않는다."},
@@ -195,24 +244,8 @@ if __name__ == "__main__":
         "difficulty_profiles": DIFF,
         "factions": [
             {"id": "liu_bei", "name": "유비군", "control": "player", "supreme_commander": "유비", "not_deployed": []},
-            {"id": "sun_quan", "name": "손권군", "control": "ai_delegate", "supreme_commander": "주유",
-             "not_deployed": [{"id": "CHR-0194", "name": "손권", "reason": "시상(柴桑)에 머물렀다"},
-                              {"id": "CHR-0214", "name": "태사자", "reason": "건창에서 유반을 막았다"}]},
-            {"id": "cao_cao", "name": "조조군", "control": "ai", "supreme_commander": "조조",
-             "not_deployed": [{"id": "CHR-0021", "name": "악진", "reason": "양양에 주둔"},
-                              {"id": "CHR-0026", "name": "장료", "reason": "장사(長社)에 주둔"},
-                              {"id": "CHR-0023", "name": "우금", "reason": "208년 적벽 종군 기록이 없다"}]}],
-        "fleet_groups": [
-            {"id": "RC-LIU-FLT-01", "faction_id": "liu_bei", "name": "유비 연합 전단", "admiral": "CHR-0128", "vice_admiral": "CHR-0134",
-             "squadron_ids": ["RC-LIU-SQ-01", "RC-LIU-SQ-02", "RC-LIU-FC-01"], "flagship_squadron_id": "RC-LIU-SQ-01"},
-            {"id": "RC-LIU-FLT-02", "faction_id": "liu_bei", "name": "강하군", "admiral": "CHR-0325", "vice_admiral": None,
-             "squadron_ids": ["RC-LIU-SQ-03"], "flagship_squadron_id": "RC-LIU-SQ-03"},
-            {"id": "RC-SUN-FLT-01", "faction_id": "sun_quan", "name": "주유 수군", "admiral": "CHR-0211", "vice_admiral": "CHR-0207",
-             "squadron_ids": ["RC-SUN-SQ-01", "RC-SUN-SQ-02", "RC-SUN-SQ-03"], "flagship_squadron_id": "RC-SUN-SQ-01"},
-            {"id": "RC-CAO-FLT-01", "faction_id": "cao_cao", "name": "조조 중군", "admiral": "CHR-0034", "vice_admiral": "CHR-0033",
-             "squadron_ids": ["RC-CAO-SQ-01", "RC-CAO-SQ-02", "RC-CAO-SQ-03", "RC-CAO-SQ-06", "RC-CAO-SQ-07"], "flagship_squadron_id": "RC-CAO-SQ-01"},
-            {"id": "RC-CAO-FLT-02", "faction_id": "cao_cao", "name": "형주 항복 수군", "admiral": "CHR-0010", "vice_admiral": "CHR-0330",
-             "squadron_ids": ["RC-CAO-SQ-04", "RC-CAO-SQ-05"], "flagship_squadron_id": "RC-CAO-SQ-04"}],
+            {"id": "sun_quan", "name": "손권군", "control": "ai_delegate", "supreme_commander": "주유", "not_deployed": NOT_DEPLOYED["sun_quan"]},
+            {"id": "cao_cao", "name": "조조군", "control": "ai", "supreme_commander": "조조", "not_deployed": NOT_DEPLOYED["cao_cao"]}],
         "squadrons": SQUADRONS,
         "realtime_rules": {
             "source": "EXPERIENCE-DESIGN.md §1~§4, §8 세트 RX (밸런스 2차, 2026-10-03)",
@@ -260,11 +293,11 @@ if __name__ == "__main__":
                 "status": "proposed"},
             # G8-04 (본편 V-74 잠정값, 제안서 §4.14, UPSTREAM-ISSUES §E). 포획 반경·혼선은 M9에서 측정한다
             "commander_succession": {
-                "order": ["vice_admiral", "fleet_squadron_commander_by_level_then_command_then_id"],
+                "order": ["vice_commander", "staff_assault_siege_supply"], "note": "Q73·Q74: 편제 한 단계. 함대 제독이 지휘 불능이면 같은 함대의 부제독 → 참모(강습 → 공성 → 보급)가 잇고 그 함대가 60초 혼선. 이을 사람이 없으면 끝까지 혼선",
                 "confusion": {"duration_s": 60, "penalty_stage_equivalent": 2, "max_stage": 4,
                               "effect_per_stage": {"move_pct": -5, "hit_pct": -4, "formation_change_pct": -8},
                               "no_candidate": "until_battle_end", "random_order_failure": False},
-                "recompute_command_limit": True, "vice_admiral_shares_flagship_fate": True, "vice_admiral_hull_injury": False,
+                "recompute_command_limit": True,
                 "status": "proposed", "source": "제안서 §4.14, UPSTREAM-ISSUES §E (본편 V-74)"},
             "commander_casualties": {
                 "capture_radius": 120, "rescue_radius": 120, "evaluated_at": "event_tick",
@@ -311,10 +344,8 @@ if __name__ == "__main__":
             "통솔 값: 본편 demo_roster가 characters.json과 달랐다(제갈량 96/92, 주유 97/96, 노숙 85/82, 손권 81/76, 조인 90/89, 하후돈 89/88). 본편이 characters.json을 정본으로 확정하고 데모를 맞췄다(본편 V-73, 2026-10-04). 이 시나리오는 characters.json을 쓴다.",
             "난이도로 조조군 규모를 바꾸는 것은 ai-design.md §9(자원 보너스 없음)와 충돌한다. 시나리오 모드 전용 예외로 둔다(세션 Q44)."],
     }
-    nd = {x["id"] for f in scenario["factions"] for x in f["not_deployed"]}
-    pool = available_officers(SQUADRONS, nd)
     for f in scenario["factions"]:
-        f["available_officers"] = pool.get(f["id"], [])
+        f["available_officers"] = POOL.get(f["id"], [])
     # 이 파일 기준 경로로 쓴다(worktree에서 돌려도 그 worktree의 파일을 고친다)
     path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "data", "scenarios", "red_cliffs_208_realtime.json")
     json.dump(scenario, open(path, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
@@ -329,3 +360,5 @@ if __name__ == "__main__":
         ships = sum(c["count"] for s in sqs for c in s["composition"])
         cao_ships = sum(c["count"] for s in sqs if s["faction_id"] == "cao_cao" for c in s["composition"])
         print(d, "cao cost", cao, "ratio %.2f" % (cao / ally), "cao squadrons", sum(1 for s in sqs if s["faction_id"] == "cao_cao"), "cao ships", cao_ships, "total ships", ships)
+        p = DIFF[d]
+        print("   Q82 at limits: ally", ALLY_LIMIT, "cao", p["cao_cost_at_limits"], "ratio %.3f" % (p["cao_cost_at_limits"] / ALLY_LIMIT), "fleets", p["cao_fleets"], "last fill bp", p["cao_last_fill_bp"])

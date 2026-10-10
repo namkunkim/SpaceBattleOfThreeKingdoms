@@ -727,7 +727,7 @@ func _info_detail(c: Control, x: float, y: float, d: Dictionary, f) -> void:
 	for cat in f.ranges:
 		rg.append("%s %d" % [src.AMMO_LABEL.get(cat, cat), int(f.ranges[cat])])
 	var range_txt := " · ".join(rg) if not rg.is_empty() else str(int(d.range))
-	var people := "지휘관 %s  ·  함대 %s" % [d.commander, d.group if d.group != "" else "—"]
+	var people := "지휘관 %s" % d.commander
 	people += "  ·  부지휘관 %s" % (d.vice if d.vice != "" else "—")
 	people += "  ·  참모 %s" % (", ".join(PackedStringArray(d.staff)) if not d.staff.is_empty() else "—")
 	var st: Dictionary = d.stats

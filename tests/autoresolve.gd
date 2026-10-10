@@ -260,8 +260,8 @@ func _run_rc(runs: int, out_path: String, pols: Array) -> void:
 
 func play_rc(seed_id: int, pol: String, diff: String) -> Dictionary:
 	var ov := {}
-	if _arg("--count-factor", "") != "":
-		ov.count_factor = float(_arg("--count-factor", ""))   # M7 레버 측정: 난이도의 조조군 규모
+	if _arg("--cao-fleets", "") != "":
+		ov.cao_fleets = int(_arg("--cao-fleets", ""))   # 레버 측정(Q82): 난이도의 조조 함대 수
 	var p := ScenarioProfile.load_profile("res://data/profiles/red_cliffs_rt.json", diff, ov)
 	if _arg("--org", "") == "auto":   # O1·Q81: 세 세력 자동 편성(O3 기준선)
 		var scn := ProfileLoader.read_json(ProfileLoader.read_json("res://data/profiles/red_cliffs_rt.json").scenario_path)
@@ -269,6 +269,10 @@ func play_rc(seed_id: int, pol: String, diff: String) -> Dictionary:
 		for fid in ["liu_bei", "sun_quan", "cao_cao"]:
 			org = Organization.auto_fill(org, fid, scn, p)
 		p = Organization.apply(p, org, scn)
+		if p.has("errors"):   # REVIEW-O1b #1: 검증 실패면 사본 대신 errors가 온다
+			push_error("org auto rejected: %s" % [p.errors])
+			quit(1)
+			return {}
 	_tune(p.combat)
 	# M9 비교: --no-chain 1(화공 끔), --no-m9 1(화공·승계·강습 모두 끔 = M8 코드와 같은 판), --wind "540,600"(기류 창 시작 범위)
 	if _arg("--no-chain", "0") == "1" or _arg("--no-m9", "0") == "1":
