@@ -28,6 +28,8 @@ const NO_SHIPS := "no_ships"
 const BAD_STAFF := "bad_staff"              # 참모 4명 이상, 보직 중복·모름
 const BAD_SHIP := "bad_ship"                # 모르는 함종, 음수 척 수
 const UNKNOWN_FLEET := "unknown_fleet"      # 프로필에 없는 전대, 같은 전대 두 번
+const MISSING_FLEET := "missing_fleet"      # 프로필에 있는데 편성에 없는 전대
+const BAD_FLEET := "bad_fleet"              # 형식 오류(키 없음·타입 다름). 재생 헤더 같은 외부 입력 방어
 
 # 지금 프로필의 편성(시나리오 정사 편성, 조조군은 count_factor 적용 뒤). apply(profile, default_org(profile))는 결과를 바꾸지 않는다.
 static func default_org(profile: Dictionary) -> Dictionary:
@@ -41,7 +43,8 @@ static func default_org(profile: Dictionary) -> Dictionary:
 			"vice": str(d.vice_commander.get("id", "")), "staff": staff, "composition": d.composition.duplicate(true)})
 	return {"fleets": fleets}
 
-# 기존 데이터의 참모에는 보직이 없다: 순서대로 남은 보직 중 그 장수 능력치가 가장 높은 것(같으면 POST_ORDER 순)
+# 기존 데이터의 참모에는 보직이 없다: 순서대로 남은 보직 중 그 장수 능력치가 가장 높은 것(같으면 POST_ORDER 순).
+# 적벽 데이터에서는 결과가 이미 강습 → 공성 → 보급 순이라 apply의 정렬이 승계 순서를 바꾸지 않는다(organization_rules 확인)
 static func _default_posts(staff: Array, people: Array) -> void:
 	var free := POST_ORDER.duplicate()
 	for i in staff.size():
@@ -56,11 +59,14 @@ static func _default_posts(staff: Array, people: Array) -> void:
 # [{squadron_id, faction_id, code}] — 빈 배열이면 확정 가능. 끈 함대는 보지 않는다(장수·함선은 대기 풀).
 static func validate(org: Dictionary, scn: Dictionary, profile: Dictionary) -> Array:
 	var out := []
+	if typeof(org.get("fleets")) != TYPE_ARRAY:
+		return [{"squadron_id": "", "faction_id": "", "code": BAD_FLEET}]
 	var known := {}
 	for d in profile.ally + profile.foe:
 		known[d.squadron_id] = d.faction_id
 	var flags := _flags(scn)
 	var ship_types: Dictionary = profile.combat.ship_types
+	var equips: Dictionary = profile.combat.get("detection", {}).get("equip_sensor", {})
 	var used := {}
 	var seen := {}
 	var on_count := {}
@@ -68,6 +74,9 @@ static func validate(org: Dictionary, scn: Dictionary, profile: Dictionary) -> A
 		if known.values().has(f.id):
 			on_count[f.id] = 0
 	for fl in org.fleets:
+		if not _fleet_shape(fl):
+			out.append({"squadron_id": "", "faction_id": "", "code": BAD_FLEET})
+			continue
 		var sq: String = fl.squadron_id
 		var bad := func(code): out.append({"squadron_id": sq, "faction_id": fl.faction_id, "code": code})
 		if not known.has(sq) or known[sq] != fl.faction_id or seen.has(sq):
@@ -98,16 +107,43 @@ static func validate(org: Dictionary, scn: Dictionary, profile: Dictionary) -> A
 				bad.call(DUP_OFFICER)
 			used[id] = true
 		var ships := 0
+		var types := {}
 		for c in fl.composition:
-			if not ship_types.has(c.ship_type_id) or int(c.count) < 0:
+			if not ship_types.has(c.ship_type_id) or types.has(c.ship_type_id) or int(c.count) < 0 					or (c.has("mission_equipment_id") and not equips.has(c.mission_equipment_id)):
 				bad.call(BAD_SHIP)
+			types[c.ship_type_id] = true
 			ships += maxi(0, int(c.count))
 		if ships == 0:
 			bad.call(NO_SHIPS)
+	for sq in known:
+		if not seen.has(sq):
+			out.append({"squadron_id": sq, "faction_id": known[sq], "code": MISSING_FLEET})
 	for fid in on_count:
 		if on_count[fid] == 0:
 			out.append({"squadron_id": "", "faction_id": fid, "code": NO_FLEET})
 	return out
+
+static func _fleet_shape(fl: Variant) -> bool:
+	if typeof(fl) != TYPE_DICTIONARY:
+		return false
+	for k in ["squadron_id", "faction_id", "admiral", "vice"]:
+		if typeof(fl.get(k)) != TYPE_STRING:
+			return false
+	if typeof(fl.get("on")) != TYPE_BOOL or typeof(fl.get("staff")) != TYPE_ARRAY or typeof(fl.get("composition")) != TYPE_ARRAY:
+		return false
+	for s in fl.staff:
+		if typeof(s) != TYPE_DICTIONARY or typeof(s.get("post")) != TYPE_STRING or typeof(s.get("id")) != TYPE_STRING:
+			return false
+	for c in fl.composition:
+		if typeof(c) != TYPE_DICTIONARY or typeof(c.get("ship_type_id")) != TYPE_STRING or not _is_int(c.get("count")):
+			return false
+		if c.has("mission_equipment_id") and typeof(c.mission_equipment_id) != TYPE_STRING:
+			return false
+	return true
+
+# JSON으로 읽은 재생 헤더는 정수가 float로 온다. 소수부가 없으면 정수로 본다
+static func _is_int(v: Variant) -> bool:
+	return typeof(v) == TYPE_INT or (typeof(v) == TYPE_FLOAT and v == floorf(v))
 
 static func _people(fl: Dictionary) -> Array:
 	var ids := [fl.admiral, fl.vice]
@@ -172,8 +208,8 @@ static func auto_fill(org: Dictionary, faction_id: String, scn: Dictionary, prof
 	for t in profile.combat.ship_types:
 		costs[t] = int(profile.combat.ship_types[t].cost)
 	for fl in on:
-		if fl.admiral == "":
-			continue
+		if not pool.has(fl.admiral):
+			continue   # 제독 없음·기함 제독이 가용 장수 밖: validate가 거부한다
 		var cap := int(K.limit_base) + int(K.limit_per_command) * int(pool[fl.admiral].command)
 		var n := {}
 		var spent := 0
@@ -212,8 +248,13 @@ static func limit_of(fl: Dictionary, scn: Dictionary, profile: Dictionary) -> in
 	return 0 if o.is_empty() else int(profile.combat.command.limit_base) + int(profile.combat.command.limit_per_command) * int(o.command)
 
 # ============================================================ 프로필 덮어쓰기
-# validate가 빈 배열인 편성만 넣는다. 끈 함대는 빠지고, 출전 함대의 직책·composition이 바뀐 프로필 사본.
+# 끈 함대는 빠지고, 출전 함대의 직책·composition이 바뀐 프로필 사본.
+# validate를 먼저 돌려 사유가 있으면 적용하지 않고 {"errors": [...]}를 돌려준다(편성 화면·재생 헤더 입력 방어).
+# 참모 배열 순서 = 승계 순서(CommandCore._substitute의 staff[0]) = 보직 순서 강습 → 공성 → 보급.
 static func apply(profile: Dictionary, org: Dictionary, scn: Dictionary) -> Dictionary:
+	var errs := validate(org, scn, profile)
+	if not errs.is_empty():
+		return {"errors": errs}
 	var p := profile.duplicate(true)
 	var by_sq := {}
 	for fl in org.fleets:
@@ -236,17 +277,20 @@ static func apply(profile: Dictionary, org: Dictionary, scn: Dictionary) -> Dict
 			d.command = int(a.get("command", 0))
 			d.might = int(a.get("might", 0))
 			d.intellect = int(a.get("intellect", 0))
-			d.traits = a.get("traits", [])
+			d.traits = a.get("traits", []).duplicate()
 			d.vice_commander = pool[fl.vice].duplicate(true) if fl.vice != "" else {}
 			d.staff = []
-			for s in fl.staff:
+			var staff: Array = fl.staff.duplicate()
+			staff.sort_custom(func(x, y): return POST_ORDER.find(x.post) < POST_ORDER.find(y.post))
+			for s in staff:
 				var o: Dictionary = pool[s.id].duplicate(true)
 				o.post = s.post
 				d.staff.append(o)
 			d.composition = fl.composition.duplicate(true)
 			d.ships = 0
 			for c in d.composition:
-				d.ships += int(c.count)
+				c.count = int(c.count)
+				d.ships += c.count
 			keep.append(d)
 		p[side] = keep
 	p.organization = org.duplicate(true)
