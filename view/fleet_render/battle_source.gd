@@ -36,7 +36,7 @@ func _sq(f) -> Dictionary:
 		"defense": f.defense, "charge_t": f.charge_t, "in_cmd": f.in_cmd,
 		"missile_cd": f.missile_cd, "fighter_cd": f.fighter_cd,
 		"speech": f.speech, "speech_t": f.speech_t,
-		"has_move": f.has_move, "move_to": f.move_to, "lv": f.lv, "range": f.range_r,
+		"has_move": f.has_move, "move_to": f.move_to, "lv": f.lv, "range": f.range_r, "ranges": f.ranges,
 			"contact": f.contact,
 	}
 

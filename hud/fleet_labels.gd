@@ -6,7 +6,6 @@ extends Control
 # 이 컨트롤이 POC HUD 위젯(BattleHud)의 부모(`ui`)다.
 
 const CMD_R := 560.0
-const MISSILE_R := 480.0
 
 var b: Node
 
@@ -52,7 +51,6 @@ func _draw() -> void:
 	if b.selected.size() == 1:
 		var f = b.selected[0]
 		draw_polyline(_circle(f.pos, f.range_r, 64), Color(0.37, 0.88, 0.81, 0.28), 1.0)
-		draw_polyline(_circle(f.pos, MISSILE_R, 64), Color(0.56, 0.71, 1.0, 0.22), 1.0)
 	for f in b.selected:
 		var pulse := 1.0 + sin(b.now_t * 3.8) * 0.04
 		draw_polyline(_circle(f.pos, 62.0 * pulse, 40), Color(0.37, 0.88, 0.81, 0.95), 2.4)
