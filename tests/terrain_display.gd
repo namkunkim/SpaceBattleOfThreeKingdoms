@@ -34,5 +34,9 @@ func _run() -> void:
 		var ex := [s.x * kx, s.y * ky, s.width * kx, s.height * ky]
 		for i in 4:
 			if not TestCheck.ok(self, absf(z.rect[i] - ex[i]) < 0.5, "%s 확대 좌표 %s vs %s" % [z.id, z.rect, ex]): return
+	# 화공 임시 구역을 주입해도 그려지지 않는다
+	battle.sim.terrain.zones.append({"id": "TRN-ZFIRE-999", "type": "chain_hazard", "name": "x", "rect": [100.0, 100.0, 50.0, 50.0],
+		"move_cost_bp": 15000, "sensor_bp": 0, "conceal": 0, "range_bp": 10000, "arc_deg": 0})
+	if not TestCheck.ok(self, ov.terrain_zones().size() == 3, "화공 임시 구역은 그리지 않는다"): return
 	print("TERRAIN_DISPLAY_PASS")
 	quit(0)

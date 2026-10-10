@@ -91,6 +91,8 @@ const TERRAIN_STYLE := {
 	"planet_shadow": [Color(0.45, 0.6, 0.95), 0.0, 0.0, 55.0, -1],
 }
 
+const BP_ONE := 10000   # 코어 BattleRules.BP와 같은 값(화면 계층은 코어 클래스를 참조하지 않는다)
+
 # 표시할 구역 목록(검증용 순수 함수): 이동 비용이 있는 구역만. [{id, type, name, rect, mul}]
 func terrain_zones() -> Array:
 	var out := []
@@ -98,14 +100,15 @@ func terrain_zones() -> Array:
 	if tr == null:
 		return out
 	for z in tr.zones:
-		if z.has("rect") and int(z.get("move_cost_bp", BattleRules.BP)) > BattleRules.BP:
+		# 정본 3구역(TERRAIN_STYLE의 type)만. 화공 임시 구역(chain_hazard 등)은 미탐지 전대의 점화 위치를 드러내므로 그리지 않는다.
+		if TERRAIN_STYLE.has(z.get("type", "")) and z.has("rect") and int(z.get("move_cost_bp", BP_ONE)) > BP_ONE:
 			out.append({"id": z.id, "type": z.get("type", ""), "name": z.get("name", ""), "rect": z.rect,
-				"mul": float(z.move_cost_bp) / float(BattleRules.BP)})
+				"mul": float(z.move_cost_bp) / float(BP_ONE)})
 	return out
 
 func _terrain() -> void:
 	for z in terrain_zones():
-		var st: Array = TERRAIN_STYLE.get(z.type, [Color(0.7, 0.7, 0.7), 8.0, 6.0, 50.0, 1])
+		var st: Array = TERRAIN_STYLE[z.type]
 		var col: Color = st[0]
 		var r: Array = z.rect
 		var quad := PackedVector2Array()
