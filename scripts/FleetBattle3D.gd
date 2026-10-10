@@ -47,6 +47,8 @@ const REJECT := {
 	"cp_charge": "커맨드 포인트가 부족합니다 (필요 3)", "cp_missile": "커맨드 포인트가 부족합니다 (필요 2)", "cp_fighter": "커맨드 포인트가 부족합니다 (필요 3)",
 	"missile_no_target": "미사일 사정거리 안에 적이 없습니다", "missile_reload": "미사일 재장전 중",
 	"fighter_no_target": "함재기 작전 반경 안에 적이 없습니다", "fighter_reload": "함재기 정비 중",
+	"missile_charges": "미사일 남은 횟수가 없습니다. 보급함 영역에서 정지해 보급하세요", "fighter_charges": "함재기 남은 횟수가 없습니다. 보급함 영역에서 정지해 보급하세요",
+	"missile_none": "미사일을 쏠 포격함이 없습니다", "fighter_none": "강습모함이 없어 함재기를 쓸 수 없습니다",
 	"no_selection": "먼저 아군 함대를 선택하세요",
 }
 const END_TEXT := {
@@ -208,17 +210,17 @@ func _with_portrait(d: Dictionary) -> Dictionary:
 	e.p = maxi(0, int(Commanders.PORTRAIT.get(d.get("commander_id", ""), d.get("p", 0))))
 	return e
 
-# 기본 그룹 1~n: 아군 시나리오 함대(fleet_groups) 하나가 번호 하나다(등장 순서). 코어 상태가 아닌 UI 편성이다.
+# 기본 그룹 1~n: 아군 세력 하나가 번호 하나다(등장 순서, 1 유비군 · 2 손권군). 코어 상태가 아닌 UI 편성이다(Q73: 상위 묶음 없음).
 func _assign_default_groups() -> void:
 	groups = {}
 	var num := {}
 	for f in fleets:
 		if f.side != 0:
 			continue
-		if not num.has(f.group_id):
-			num[f.group_id] = num.size() + 1
-			groups[num[f.group_id]] = []
-		groups[num[f.group_id]].append(f.id)
+		if not num.has(f.faction):
+			num[f.faction] = num.size() + 1
+			groups[num[f.faction]] = []
+		groups[num[f.faction]].append(f.id)
 
 func _start() -> void:
 	hud.brief_ov.visible = false
@@ -309,7 +311,8 @@ func _process(delta: float) -> void:
 			sim.step()
 		var a := 1.0 if sim.st.over else clock.alpha()   # 전투가 끝나면 틱이 멈춘다: 보간을 마지막 위치에 고정(안 하면 결과 화면까지 직전 틱과 사이를 반복 재생해 흔들린다)
 		vm.alpha = a
-		_pump()
+		if n > 0:   # 틱이 없으면 투영·사건이 그대로다(명령·디버그 경로는 직접 _pump한다). 매 프레임 투영을 다시 만들면 1,500척에서 약 3ms
+			_pump()
 		vm.interpolate(a)
 		_tick_view(dt * G.speed * G.slow)
 		G.panel_t -= dt
@@ -324,7 +327,8 @@ func _process(delta: float) -> void:
 		# 타이틀·서막·브리핑 뒤 전장이 천천히 흐른다. 동작 줄이기면 멈춘다.
 		rig.cam_pos.x = _brief_x + sin(now_t / 5.0) * 120.0
 	rig.update()
-	view3d.sync(fleets)
+	if presentation == null:   # 표현 계층이 있으면 POC 함대 노드는 숨겨져 있다(위치 갱신 생략, 1,500척 약 1ms)
+		view3d.sync(fleets)
 	hud.paint_cmds()
 	fx.queue_redraw()
 	ui.queue_redraw()

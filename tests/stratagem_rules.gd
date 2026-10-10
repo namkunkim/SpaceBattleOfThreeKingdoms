@@ -338,7 +338,7 @@ func _run() -> void:
 	zhou.pos = Vector2(780, 300)
 	if not TestCheck.ok(self, A.block(zhou, cao, "unit") == "assault_range", "거리 80 밖 불가"): return
 	zhou.pos = Vector2(800, 300)
-	if not TestCheck.ok(self, A.block(zhou, cao, "unit") == "" and A.fleet_flag(_f(s, "wen")) and not A.fleet_flag(_f(s, "cao3")), "거리 80 안 가능, 기함 진입 표적은 함대 기함 전대(형주 수군은 문빙)"): return
+	if not TestCheck.ok(self, A.block(zhou, cao, "unit") == "" and A.fleet_flag(cao) and not A.fleet_flag(_f(s, "wen")), "거리 80 안 가능, 기함 진입 표적은 승패 기함(조조)뿐(Q73)"): return
 	if not TestCheck.ok(self, A._need_hits(_f(s, "guan")) == 1 and A._need_hits(zhou) == 2 and A._need_hits(_f(s, "liuqi")) == 3, "붕괴 요건: 특급 1, 강습형 2, 그 밖 3"): return
 	if not TestCheck.ok(self, not A.is_open(zhou, cao), "열리지 않음"): return
 	cao.fr_hits.assign([s.st.tick - 10, s.st.tick - 5])
@@ -371,8 +371,7 @@ func _run() -> void:
 	s.issue(BattleSim.command(0, [zhou.id], "assault", cao.id, Vector2.ZERO, {"type": "flagship"}))
 	_ticks(s, 1)
 	if not TestCheck.ok(self, cao.boarded and m0 - cao.morale_bp >= 4000 and cao.cmdr_state == "severe" and s.salvo.commander_mul(cao, "assault") == 1.0, "기함 진입 성공: 사기 −4000, 지휘관 중상, 보정 소멸"): return
-	var g1: Dictionary = s.cmd.groups.filter(func(q): return q.id == "RC-CAO-FLT-01")[0]
-	if not TestCheck.ok(self, g1.flag_sq == SQ.cao2 and g1.leader == "CHR-0033" and not s.st.over, "조조 중상 → 조인(부함장) 승계, 전투 계속"): return
+	if not TestCheck.ok(self, cao.cmdr_sub == "CHR-0047" and not s.st.over, "조조 중상 → 허저(부제독) 승계, 전투 계속"): return
 	A.A.min_bp = 0
 	A.A.max_bp = 0
 	zhou.assault_cd = 0

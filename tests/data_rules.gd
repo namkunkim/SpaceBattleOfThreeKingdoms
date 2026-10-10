@@ -109,15 +109,28 @@ func _run() -> void:
 		var p := ScenarioProfile.load_profile("res://data/profiles/red_cliffs_rt.json", diff)
 		if not TestCheck.ok(self, not p.is_empty() and p.difficulty == diff, "profile " + diff): return
 		foes[diff] = p
-	if not TestCheck.ok(self, foes["입문"].foe.size() == 4 and foes["표준"].foe.size() == 5 and foes["상급"].foe.size() == 7 and foes["극한"].foe.size() == 7, "cao squadron count by difficulty"): return
+	# Q82: 조조 함대 수 = 난이도의 cao_fleets(입문 8 · 표준 12 · 상급/극한 16), 척 수 배율 없음, 마지막 함대만 fill_bp
+	if not TestCheck.ok(self, foes["입문"].foe.size() == 8 and foes["표준"].foe.size() == 12 and foes["상급"].foe.size() == 16 and foes["극한"].foe.size() == 16, "cao fleet count by difficulty"): return
 	for diff in foes:
 		if not TestCheck.ok(self, foes[diff].ally.size() == 7, "alliance fixed %s" % diff): return
-	var cao1_easy := _def(foes["입문"].foe, "RC-CAO-SQ-01")
-	var cao1_hard := _def(foes["상급"].foe, "RC-CAO-SQ-01")
-	# 중군 6,12,24,6,6,6,18척(3배) × 0.7 half-up(최소 1) = 4,8,17,4,4,4,13 = 54 / 상급은 원래대로 78
-	if not TestCheck.ok(self, cao1_easy.ships == 54 and cao1_hard.ships == 78, "count_factor: %d %d" % [cao1_easy.ships, cao1_hard.ships]): return
-	if not TestCheck.ok(self, _def(foes["입문"].foe, "RC-CAO-SQ-05").is_empty() and not _def(foes["표준"].foe, "RC-CAO-SQ-05").is_empty(), "deploy_min_difficulty"): return
-	var by_delay := {"RC-CAO-SQ-02": 0, "RC-CAO-SQ-04": 0, "RC-CAO-SQ-01": 180, "RC-CAO-SQ-03": 180, "RC-CAO-SQ-05": 180, "RC-CAO-SQ-06": 360, "RC-CAO-SQ-07": 360}
+		var fills: Array = foes[diff].foe.filter(func(d): return d.has("fill_bp"))
+		if not TestCheck.ok(self, fills.size() == 1 and fills[0] == foes[diff].foe[-1] and int(fills[0].fill_bp) == int(foes[diff].scenario.difficulty_profile.cao_last_fill_bp), "fill_bp는 마지막 조조 함대만 %s" % diff): return
+	if not TestCheck.ok(self, _def(foes["입문"].foe, "RC-CAO-SQ-01").ships == 78 and _def(foes["입문"].foe, "RC-CAO-SQ-09").is_empty() and not _def(foes["표준"].foe, "RC-CAO-SQ-09").is_empty(), "배율 없음, 앞에서부터 배치"): return
+	# Q82 비율: 세 세력 자동 편성(Q81) 뒤 조조 비용 합 / 연합 비용 합이 난이도 목표 ±0.05
+	var scn := ProfileLoader.read_json(ProfileLoader.read_json("res://data/profiles/red_cliffs_rt.json").scenario_path)
+	for diff in foes:
+		var p: Dictionary = foes[diff]
+		var org := Organization.default_org(p)
+		for fid in ["liu_bei", "sun_quan", "cao_cao"]:
+			org = Organization.auto_fill(org, fid, scn, p)
+		var sum := {"ally": 0, "cao": 0}
+		for fl in org.fleets:
+			sum["cao" if fl.faction_id == "cao_cao" else "ally"] += Organization.cost_of(fl, p)
+		var ratio := float(sum.cao) / float(sum.ally)
+		var want := float(p.scenario.difficulty_profile.target_cost_ratio)
+		if not TestCheck.ok(self, absf(ratio - want) <= 0.05, "Q82 %s 비율 %.3f (목표 %.2f, 조조 %d / 연합 %d)" % [diff, ratio, want, sum.cao, sum.ally]): return
+		print("Q82 %s 함대 %d 비율 %.3f" % [diff, p.foe.size(), ratio])
+	var by_delay := {"RC-CAO-SQ-02": 0, "RC-CAO-SQ-04": 0, "RC-CAO-SQ-01": 180, "RC-CAO-SQ-03": 180, "RC-CAO-SQ-05": 180, "RC-CAO-SQ-06": 360, "RC-CAO-SQ-07": 360, "RC-CAO-SQ-16": 360}
 	for id in by_delay:
 		var d := _def(foes["극한"].foe, id)
 		if not TestCheck.ok(self, int(d.wait) == by_delay[id], "deploy_delay_s %s = %s" % [id, str(d.get("wait"))]): return
@@ -141,7 +154,7 @@ func _run() -> void:
 	if not TestCheck.ok(self, rs.difficulty_ai().think_depth == 2 and rs.scenario.difficulty_policy.has("cao_scale_rule"), "difficulty policy data"): return
 	# --- 6. 적벽 시나리오를 코어가 돌린다 ---
 	var sim := BattleSim.new(5, 10, foes["표준"])
-	if not TestCheck.ok(self, sim.st.alive(0).size() == 7 and sim.st.alive(1).size() == 5 and sim.rs.world == Vector2(1600, 900), "scenario spawn"): return
+	if not TestCheck.ok(self, sim.st.alive(0).size() == 7 and sim.st.alive(1).size() == 12 and sim.rs.world == Vector2(1600, 900), "scenario spawn"): return
 	var cao3 := _fleet(sim, "RC-CAO-SQ-03")
 	var start := cao3.pos
 	if not TestCheck.ok(self, cao3.wait == 1800 and cao3.start_morale_bp == 8000, "wait ticks / morale %d %d" % [cao3.wait, cao3.start_morale_bp]): return

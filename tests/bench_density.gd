@@ -98,7 +98,6 @@ func _big_preset(p: Dictionary) -> void:
 		k += 1
 		c.squadron_id = "%s-B%d" % [c.squadron_id, k]
 		c.flag = false
-		c.group_id = ""
 		c.y = float(c.y) + (40.0 if k % 2 else -40.0) * (1 + k / base.size())
 		p.foe.append(c)
 		foe_n += int(c.ships)

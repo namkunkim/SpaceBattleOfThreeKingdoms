@@ -53,7 +53,6 @@ func init_fleet(f: FleetState, d: Dictionary) -> void:
 	f.shown = f.ships
 	var res: Dictionary = C.resources
 	f.energy_m = _energy_cap_m(f)
-	f.sorties_m = _sorties_cap_m(f)
 	var period := BattleRules.ticks(float(C.period_s), sim.st.hz)
 	var i := 0
 	for cat in C.categories:
@@ -66,6 +65,9 @@ func init_fleet(f: FleetState, d: Dictionary) -> void:
 				n_plat += f.comp0.get(C.fast_craft.ship_type_id, 0)
 		var per: int = int(w.ammo_per_platform) if int(w.shot.ammo) > 0 else int(w.special_per_platform)
 		f.ammo[cat] = n_plat * per
+		if is_charge_cat(cat):
+			f.wmax[cat] = charge_cap(f, cat)
+			f.wch[cat] = f.wmax[cat]
 		f.next_fire[cat] = sim.rng.u32(0, f.id, i + 1) % maxi(1, period)
 		f.supp[cat] = ""
 		i += 1
@@ -249,6 +251,9 @@ func platforms(f: FleetState, cat: String) -> Array:
 	return out
 
 func refresh_range(f: FleetState) -> void:
+	for cat in f.wch:   # 플랫폼이 전멸하면 최대·남은 횟수도 0(버튼 0/0)
+		f.wmax[cat] = charge_cap(f, cat)
+		f.wch[cat] = mini(int(f.wch[cat]), int(f.wmax[cat]))
 	var r := 0.0
 	f.ranges = {}
 	for cat in C.categories:
@@ -268,7 +273,9 @@ func _max_range(f: FleetState, cat: String, fallback: float) -> float:
 func band(f: FleetState, dist: float) -> String:
 	if dist <= float(C.bands.assault_r):
 		return "assault"
-	if dist <= _max_range(f, "line_fire", float(C.bands.line_fire_default_r)):
+	# 교전 = 전열 사거리, 강습모함이 있으면 함재기 사거리까지(Q69로 함재기가 전열에서 분리돼도 거리대는 그대로)
+	var er := maxf(_max_range(f, "line_fire", 0.0), _max_range(f, "fighter", 0.0))
+	if dist <= (er if er > 0.0 else float(C.bands.line_fire_default_r)):
 		return "engagement"
 	if dist <= _max_range(f, "artillery", float(C.bands.artillery_default_r)):
 		return "barrage"
@@ -398,9 +405,16 @@ func _heat_cap_m(f: FleetState) -> int:
 	var r: Dictionary = C.resources
 	return (int(r.heat_base) + int(r.heat_per_ship) * total0(f)) * BattleRules.MILLI
 
-func _sorties_cap_m(f: FleetState) -> int:
-	var cr: Dictionary = C.carrier
-	return int(f.comp0.get(cr.ship_type_id, 0)) * int(cr.sorties_per_ship) * BattleRules.MILLI
+# Q69: 사용 횟수로 세는 범주(미사일·함재기). 쏠 플랫폼이 남아 있으면 base회, 없으면 0
+func is_charge_cat(cat: String) -> bool:
+	return C.charges.categories.has(cat)
+
+func charge_cap(f: FleetState, cat: String) -> int:
+	return int(C.charges.base) if not platforms(f, cat).is_empty() else 0
+
+# 보급 한 주기의 보충 횟수: round(base × 처리량 bp / 10000)
+func charge_refill(rate_bp: int) -> int:
+	return maxi(1, (int(C.charges.base) * rate_bp + BattleRules.BP / 2) / BattleRules.BP)
 
 # 틱마다 연속 회복(§4.8): 에너지와 함재기는 용량의 20%·25%, 열은 30 + 척 수 × 2를 recovery_period_s마다
 func _recover(f: FleetState) -> void:
@@ -410,11 +424,6 @@ func _recover(f: FleetState) -> void:
 	f.energy_rem += cap_e * int(r.energy_recover_bp)
 	f.energy_m = mini(cap_e, f.energy_m + f.energy_rem / (BattleRules.BP * pt))
 	f.energy_rem %= BattleRules.BP * pt
-	var cap_s := _sorties_cap_m(f)
-	if cap_s > 0:
-		f.sorties_rem += cap_s * int(r.carrier_recover_bp)
-		f.sorties_m = mini(cap_s, f.sorties_m + f.sorties_rem / (BattleRules.BP * pt))
-		f.sorties_rem %= BattleRules.BP * pt
 	f.heat_rem += (int(r.heat_cool_base) + int(r.heat_cool_per_ship) * present_ships(f)) * BattleRules.MILLI
 	f.heat_m = maxi(0, f.heat_m - f.heat_rem / pt)
 	f.heat_rem %= pt
@@ -423,7 +432,9 @@ func heat_ratio_bp(f: FleetState) -> int:
 	return f.heat_m * BattleRules.BP / maxi(1, _heat_cap_m(f))
 
 # 사격 한 번의 자원 사유. 가능하면 "".
-func _shortage(f: FleetState, cat: String, uses_sortie: bool) -> String:
+func _shortage(f: FleetState, cat: String) -> String:
+	if is_charge_cat(cat):
+		return "charges" if int(f.wch[cat]) < 1 else ""
 	var w: Dictionary = C.weapons[cat]
 	var shot: Dictionary = w.shot
 	var unit: int = int(shot.ammo) if int(shot.ammo) > 0 else int(shot.special)
@@ -433,25 +444,33 @@ func _shortage(f: FleetState, cat: String, uses_sortie: bool) -> String:
 		return "energy"
 	if f.heat_m + int(shot.heat) * BattleRules.MILLI > _heat_cap_m(f):
 		return "overheat"
-	if uses_sortie and f.sorties_m < int(C.carrier.sorties_per_shot) * BattleRules.MILLI:
-		return "carrier_not_returned"
 	return ""
 
-func _consume(f: FleetState, cat: String, uses_sortie: bool) -> void:
+func _consume(f: FleetState, cat: String) -> void:
+	if is_charge_cat(cat):
+		f.wch[cat] -= 1
+		return
 	var shot: Dictionary = C.weapons[cat].shot
 	f.ammo[cat] -= int(shot.ammo) if int(shot.ammo) > 0 else int(shot.special)
 	f.energy_m -= int(shot.energy) * BattleRules.MILLI
 	f.heat_m += int(shot.heat) * BattleRules.MILLI
-	if uses_sortie:
-		f.sorties_m -= int(C.carrier.sorties_per_shot) * BattleRules.MILLI
 
-# 일제사격 지금: 다음 주기를 현재 틱으로 당긴다. kind "missile" = 함재기 범주를 뺀 포격류, "fighter" = 함재기 범주, 그 밖 = 전부
-func pull(f: FleetState, kind := "volley") -> void:
-	for cat in C.categories:
-		var is_fighter: bool = cat == C.carrier.category
-		if (kind == "missile" and is_fighter) or (kind == "fighter" and not is_fighter):
-			continue
-		f.next_fire[cat] = mini(f.next_fire[cat], sim.st.tick)
+# 일제사격 지금: 다음 주기를 현재 틱으로 당긴다. kind "missile" = 포격 범주, "fighter" = 함재기 범주(강습모함 플랫폼만), "volley" = 전부.
+# 미사일·함재기는 거부 사유 접미사를 돌려준다: "none"(쏠 플랫폼 없음), "charges"(횟수 0), "no_target"(사거리·사격각·시야 밖). 당겼으면 "".
+func pull(f: FleetState, kind := "volley") -> String:
+	if kind == "volley":
+		for cat in C.categories:
+			f.next_fire[cat] = mini(f.next_fire[cat], sim.st.tick)
+		return ""
+	var cat: String = C.charges.commands[kind]
+	if platforms(f, cat).is_empty():
+		return "none"
+	if int(f.wch[cat]) < 1:
+		return "charges"
+	if _pick_target(f, cat).tgt == null:
+		return "no_target"
+	f.next_fire[cat] = mini(f.next_fire[cat], sim.st.tick)
+	return ""
 
 # 돌격 조건(Q28·Q42): 사기 안정, 열 여유. 사유 코드 또는 "".
 func charge_block(f: FleetState) -> String:
@@ -485,25 +504,12 @@ func step() -> void:
 				_set_supp(f, cat, "")
 				continue
 			var q: Array = pick.q
-			var uses_sortie := false
-			var carrier: String = C.carrier.ship_type_id
-			if cat == C.carrier.category and not q.is_empty():
-				for p in q:
-					if p.type == carrier:
-						uses_sortie = true
-				if uses_sortie and f.sorties_m < int(C.carrier.sorties_per_shot) * BattleRules.MILLI:
-					# 함재기가 돌아오지 않았다: 강습모함을 빼고 쏜다. 남는 플랫폼이 없으면 보류
-					q = q.filter(func(p): return p.type != carrier)
-					uses_sortie = false
-					if q.is_empty():
-						_set_supp(f, cat, "carrier_not_returned")
-						continue
-			var why := _shortage(f, cat, uses_sortie)
+			var why := _shortage(f, cat)
 			if why != "":
 				_set_supp(f, cat, why)
 				continue
 			_set_supp(f, cat, "")
-			_consume(f, cat, uses_sortie)
+			_consume(f, cat)
 			f.next_fire[cat] = st.tick + BattleRules.ticks(float(C.period_s), st.hz) + _stagger(f, cat)
 			shots.append(_plan_shot(f, cat, pick.tgt, q))
 	# 같은 틱의 피해는 위에서 모두 피해 전 스냅숏으로 계산했다. 이제 표적별로 적용한다.

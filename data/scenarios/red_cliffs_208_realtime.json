@@ -48,7 +48,7 @@
  },
  "difficulty_policy": {
   "scope": "시나리오 모드 전용. 캠페인 전투는 ai-design.md §9(자원 보너스 없음)를 따른다.",
-  "cao_scale_rule": "조조군 전대마다 함종별 척 수 × count_factor를 half-up 반올림하고, 원래 1척 이상이면 최소 1척. 난이도가 deploy_min_difficulty보다 낮으면 그 전대를 배치하지 않는다.",
+  "cao_scale_rule": "조조군 함대는 squadrons 순서대로 앞에서부터 difficulty_profiles.*.cao_fleets개를 배치한다(Q82). 자동 편성(Q80·Q81)은 마지막 배치 함대만 지휘 한도 × cao_last_fill_bp까지 채운다. cao_cost_at_limits = 그때의 조조 비용 합(target_cost_ratio × 연합 한도 합).",
   "alliance_rule": "연합 편성은 모든 난이도에서 같다.",
   "morale_rule": "조조군 전대의 시작 사기는 morale_group(northern, jing_navy)별 값을 쓴다. 연합은 10000bp.",
   "ai_rule": "AI 수준은 ai-design.md §9 표의 사고 깊이·실수율·반응 지연을 따른다. 정보는 모든 난이도에서 같은 안개다. 극한의 완전 정보는 쓰지 않는다."
@@ -61,8 +61,7 @@
  ],
  "difficulty_profiles": {
   "입문": {
-   "count_factor": 0.7,
-   "target_cost_ratio": 1.09,
+   "target_cost_ratio": 1.07,
    "start_morale_bp": {
     "northern": 8000,
     "jing_navy": 6000
@@ -75,11 +74,13 @@
     "chain_detect_mean_s": null,
     "suspicion_per_s": 0.4
    },
-   "note": "역병과 원정 피로가 크고 형주 수군이 훈련되지 않았다. 조조는 밀집(연환)을 풀지 않는다."
+   "note": "역병과 원정 피로가 크고 형주 수군이 훈련되지 않았다. 조조는 밀집(연환)을 풀지 않는다.",
+   "cao_fleets": 8,
+   "cao_last_fill_bp": 5548,
+   "cao_cost_at_limits": 5027
   },
   "표준": {
-   "count_factor": 0.9,
-   "target_cost_ratio": 1.65,
+   "target_cost_ratio": 1.59,
    "start_morale_bp": {
     "northern": 8000,
     "jing_navy": 6500
@@ -92,10 +93,12 @@
     "chain_detect_mean_s": 60,
     "suspicion_per_s": 0.8
    },
-   "note": "본편 데모의 보통 난이도에 해당한다."
+   "note": "본편 데모의 보통 난이도에 해당한다.",
+   "cao_fleets": 12,
+   "cao_last_fill_bp": 4801,
+   "cao_cost_at_limits": 7470
   },
   "상급": {
-   "count_factor": 1.0,
    "target_cost_ratio": 2.14,
    "start_morale_bp": {
     "northern": 9500,
@@ -109,10 +112,12 @@
     "chain_detect_mean_s": 20,
     "suspicion_per_s": 1.5
    },
-   "note": "본편 정본의 동원비 2.20배."
+   "note": "본편 정본의 동원비 2.20배.",
+   "cao_fleets": 16,
+   "cao_last_fill_bp": 8022,
+   "cao_cost_at_limits": 10054
   },
   "극한": {
-   "count_factor": 1.0,
    "target_cost_ratio": 2.14,
    "start_morale_bp": {
     "northern": 10000,
@@ -126,7 +131,10 @@
     "chain_detect_mean_s": 10,
     "suspicion_per_s": 2.0
    },
-   "note": "역병 없음, 형주 수군 정상 훈련. 규모는 상급과 같고 정보 이점은 없다."
+   "note": "역병 없음, 형주 수군 정상 훈련. 규모는 상급과 같고 정보 이점은 없다.",
+   "cao_fleets": 16,
+   "cao_last_fill_bp": 8022,
+   "cao_cost_at_limits": 10054
   }
  },
  "factions": [
@@ -2231,72 +2239,6 @@
    ]
   }
  ],
- "fleet_groups": [
-  {
-   "id": "RC-LIU-FLT-01",
-   "faction_id": "liu_bei",
-   "name": "유비 연합 전단",
-   "admiral": "CHR-0128",
-   "vice_admiral": "CHR-0134",
-   "squadron_ids": [
-    "RC-LIU-SQ-01",
-    "RC-LIU-SQ-02",
-    "RC-LIU-FC-01"
-   ],
-   "flagship_squadron_id": "RC-LIU-SQ-01"
-  },
-  {
-   "id": "RC-LIU-FLT-02",
-   "faction_id": "liu_bei",
-   "name": "강하군",
-   "admiral": "CHR-0325",
-   "vice_admiral": null,
-   "squadron_ids": [
-    "RC-LIU-SQ-03"
-   ],
-   "flagship_squadron_id": "RC-LIU-SQ-03"
-  },
-  {
-   "id": "RC-SUN-FLT-01",
-   "faction_id": "sun_quan",
-   "name": "주유 수군",
-   "admiral": "CHR-0211",
-   "vice_admiral": "CHR-0207",
-   "squadron_ids": [
-    "RC-SUN-SQ-01",
-    "RC-SUN-SQ-02",
-    "RC-SUN-SQ-03"
-   ],
-   "flagship_squadron_id": "RC-SUN-SQ-01"
-  },
-  {
-   "id": "RC-CAO-FLT-01",
-   "faction_id": "cao_cao",
-   "name": "조조 중군",
-   "admiral": "CHR-0034",
-   "vice_admiral": "CHR-0033",
-   "squadron_ids": [
-    "RC-CAO-SQ-01",
-    "RC-CAO-SQ-02",
-    "RC-CAO-SQ-03",
-    "RC-CAO-SQ-06",
-    "RC-CAO-SQ-07"
-   ],
-   "flagship_squadron_id": "RC-CAO-SQ-01"
-  },
-  {
-   "id": "RC-CAO-FLT-02",
-   "faction_id": "cao_cao",
-   "name": "형주 항복 수군",
-   "admiral": "CHR-0010",
-   "vice_admiral": "CHR-0330",
-   "squadron_ids": [
-    "RC-CAO-SQ-04",
-    "RC-CAO-SQ-05"
-   ],
-   "flagship_squadron_id": "RC-CAO-SQ-04"
-  }
- ],
  "squadrons": [
   {
    "id": "RC-LIU-SQ-01",
@@ -2790,7 +2732,6 @@
     }
    ],
    "morale_group": "northern",
-   "deploy_min_difficulty": "입문",
    "deploy_delay_s": 180,
    "historical_basis": "허저는 늘 조조를 호위했다. 정욱은 손권이 유비를 도울 것을 예견했고(정욱전), 가후는 동쪽 원정을 말렸다(가후전).",
    "declared_total_cost": 690,
@@ -2839,7 +2780,6 @@
     }
    ],
    "morale_group": "northern",
-   "deploy_min_difficulty": "입문",
    "deploy_delay_s": 0,
    "historical_basis": "조인은 형주 평정에 종군하고 전투 뒤 강릉을 지켰다(조인전).",
    "declared_total_cost": 561,
@@ -2899,7 +2839,6 @@
     }
    ],
    "morale_group": "northern",
-   "deploy_min_difficulty": "입문",
    "deploy_delay_s": 180,
    "historical_basis": "서황은 형주 정벌에 종군하고 뒤에 조인과 함께 강릉에서 주유를 막았다(서황전). 만총도 형주 정벌에 종군했다(만총전).",
    "declared_total_cost": 558,
@@ -2948,7 +2887,6 @@
     }
    ],
    "morale_group": "jing_navy",
-   "deploy_min_difficulty": "입문",
    "deploy_delay_s": 0,
    "historical_basis": "문빙은 유종과 함께 항복해 중용되었다(문빙전). 주유는 형주 항복군 7~8만이 '아직 의심을 품고 있다'고 보았다(『강표전』).",
    "declared_total_cost": 450,
@@ -3002,7 +2940,6 @@
     }
    ],
    "morale_group": "jing_navy",
-   "deploy_min_difficulty": "표준",
    "deploy_delay_s": 180,
    "historical_basis": "채모는 유종의 항복을 이끌었고 정사에서는 처형되지 않았다. 채모·장윤의 처형은 『삼국지연의』의 장간 이야기다.",
    "declared_total_cost": 312,
@@ -3044,7 +2981,6 @@
     }
    ],
    "morale_group": "northern",
-   "deploy_min_difficulty": "상급",
    "deploy_delay_s": 360,
    "historical_basis": "조순은 호표기를 이끌고 장판에서 유비를 추격했다(조순전). 그 정예 기동 부대를 고속 요격 전대로 옮긴다.",
    "declared_total_cost": 216,
@@ -3089,11 +3025,415 @@
     }
    ],
    "morale_group": "northern",
-   "deploy_min_difficulty": "상급",
    "deploy_delay_s": 360,
    "historical_basis": "조홍의 적벽 종군은 기록이 분명하지 않다. 상급 이상에서만 배치하는 후군이다.",
    "declared_total_cost": 330,
    "command_limit": 576
+  },
+  {
+   "id": "RC-CAO-SQ-08",
+   "faction_id": "cao_cao",
+   "name": "사마의 증원군",
+   "commander": {
+    "id": "CHR-0016",
+    "name": "사마의",
+    "command": 96,
+    "might": 60,
+    "intellect": 97,
+    "politics": 93,
+    "charm": 72,
+    "traits": [
+     "낭고"
+    ]
+   },
+   "vice_commander": null,
+   "staff": [],
+   "flagship": false,
+   "initial_position": [
+    1320,
+    320
+   ],
+   "formation_id": "FRM-03",
+   "composition": [
+    {
+     "ship_type_id": "SHP-03",
+     "count": 9
+    },
+    {
+     "ship_type_id": "SHP-04",
+     "count": 18
+    },
+    {
+     "ship_type_id": "SHP-07",
+     "count": 6
+    }
+   ],
+   "morale_group": "northern",
+   "deploy_delay_s": 360,
+   "historical": false,
+   "historical_basis": "Q82 추가 함대: 조조의 수적 우위를 함대 수로 맞춘다(게임 수치). 편성은 조홍 후군과 같은 틀이다.",
+   "declared_total_cost": 330,
+   "command_limit": 696
+  },
+  {
+   "id": "RC-CAO-SQ-09",
+   "faction_id": "cao_cao",
+   "name": "하후연 증원군",
+   "commander": {
+    "id": "CHR-0044",
+    "name": "하후연",
+    "command": 91,
+    "might": 91,
+    "intellect": 65,
+    "politics": 55,
+    "charm": 70,
+    "traits": [
+     "신속"
+    ]
+   },
+   "vice_commander": null,
+   "staff": [],
+   "flagship": false,
+   "initial_position": [
+    1480,
+    160
+   ],
+   "formation_id": "FRM-03",
+   "composition": [
+    {
+     "ship_type_id": "SHP-03",
+     "count": 9
+    },
+    {
+     "ship_type_id": "SHP-04",
+     "count": 18
+    },
+    {
+     "ship_type_id": "SHP-07",
+     "count": 6
+    }
+   ],
+   "morale_group": "northern",
+   "deploy_delay_s": 360,
+   "historical": false,
+   "historical_basis": "Q82 추가 함대: 조조의 수적 우위를 함대 수로 맞춘다(게임 수치). 편성은 조홍 후군과 같은 틀이다.",
+   "declared_total_cost": 330,
+   "command_limit": 666
+  },
+  {
+   "id": "RC-CAO-SQ-10",
+   "faction_id": "cao_cao",
+   "name": "장합 증원군",
+   "commander": {
+    "id": "CHR-0028",
+    "name": "장합",
+    "command": 89,
+    "might": 86,
+    "intellect": 80,
+    "politics": 55,
+    "charm": 65,
+    "traits": [
+     "교변"
+    ]
+   },
+   "vice_commander": null,
+   "staff": [],
+   "flagship": false,
+   "initial_position": [
+    1240,
+    400
+   ],
+   "formation_id": "FRM-03",
+   "composition": [
+    {
+     "ship_type_id": "SHP-03",
+     "count": 9
+    },
+    {
+     "ship_type_id": "SHP-04",
+     "count": 18
+    },
+    {
+     "ship_type_id": "SHP-07",
+     "count": 6
+    }
+   ],
+   "morale_group": "northern",
+   "deploy_delay_s": 360,
+   "historical": false,
+   "historical_basis": "Q82 추가 함대: 조조의 수적 우위를 함대 수로 맞춘다(게임 수치). 편성은 조홍 후군과 같은 틀이다.",
+   "declared_total_cost": 330,
+   "command_limit": 654
+  },
+  {
+   "id": "RC-CAO-SQ-11",
+   "faction_id": "cao_cao",
+   "name": "하후돈 증원군",
+   "commander": {
+    "id": "CHR-0043",
+    "name": "하후돈",
+    "command": 88,
+    "might": 90,
+    "intellect": 62,
+    "politics": 70,
+    "charm": 78,
+    "traits": [
+     "독안"
+    ]
+   },
+   "vice_commander": null,
+   "staff": [],
+   "flagship": false,
+   "initial_position": [
+    1240,
+    240
+   ],
+   "formation_id": "FRM-03",
+   "composition": [
+    {
+     "ship_type_id": "SHP-03",
+     "count": 9
+    },
+    {
+     "ship_type_id": "SHP-04",
+     "count": 18
+    },
+    {
+     "ship_type_id": "SHP-07",
+     "count": 6
+    }
+   ],
+   "morale_group": "northern",
+   "deploy_delay_s": 360,
+   "historical": false,
+   "historical_basis": "Q82 추가 함대: 조조의 수적 우위를 함대 수로 맞춘다(게임 수치). 편성은 조홍 후군과 같은 틀이다.",
+   "declared_total_cost": 330,
+   "command_limit": 648
+  },
+  {
+   "id": "RC-CAO-SQ-12",
+   "faction_id": "cao_cao",
+   "name": "전예 증원군",
+   "commander": {
+    "id": "CHR-0029",
+    "name": "전예",
+    "command": 86,
+    "might": 76,
+    "intellect": 82,
+    "politics": 78,
+    "charm": 72,
+    "traits": [
+     "호이"
+    ]
+   },
+   "vice_commander": null,
+   "staff": [],
+   "flagship": false,
+   "initial_position": [
+    1560,
+    560
+   ],
+   "formation_id": "FRM-03",
+   "composition": [
+    {
+     "ship_type_id": "SHP-03",
+     "count": 9
+    },
+    {
+     "ship_type_id": "SHP-04",
+     "count": 18
+    },
+    {
+     "ship_type_id": "SHP-07",
+     "count": 6
+    }
+   ],
+   "morale_group": "northern",
+   "deploy_delay_s": 360,
+   "historical": false,
+   "historical_basis": "Q82 추가 함대: 조조의 수적 우위를 함대 수로 맞춘다(게임 수치). 편성은 조홍 후군과 같은 틀이다.",
+   "declared_total_cost": 330,
+   "command_limit": 636
+  },
+  {
+   "id": "RC-CAO-SQ-13",
+   "faction_id": "cao_cao",
+   "name": "조진 증원군",
+   "commander": {
+    "id": "CHR-0035",
+    "name": "조진",
+    "command": 85,
+    "might": 78,
+    "intellect": 72,
+    "politics": 68,
+    "charm": 70,
+    "traits": [
+     "대장군"
+    ]
+   },
+   "vice_commander": null,
+   "staff": [],
+   "flagship": false,
+   "initial_position": [
+    1400,
+    80
+   ],
+   "formation_id": "FRM-03",
+   "composition": [
+    {
+     "ship_type_id": "SHP-03",
+     "count": 9
+    },
+    {
+     "ship_type_id": "SHP-04",
+     "count": 18
+    },
+    {
+     "ship_type_id": "SHP-07",
+     "count": 6
+    }
+   ],
+   "morale_group": "northern",
+   "deploy_delay_s": 360,
+   "historical": false,
+   "historical_basis": "Q82 추가 함대: 조조의 수적 우위를 함대 수로 맞춘다(게임 수치). 편성은 조홍 후군과 같은 틀이다.",
+   "declared_total_cost": 330,
+   "command_limit": 630
+  },
+  {
+   "id": "RC-CAO-SQ-14",
+   "faction_id": "cao_cao",
+   "name": "방덕 증원군",
+   "commander": {
+    "id": "CHR-0012",
+    "name": "방덕",
+    "command": 84,
+    "might": 92,
+    "intellect": 62,
+    "politics": 45,
+    "charm": 60,
+    "traits": [
+     "대관출전"
+    ]
+   },
+   "vice_commander": null,
+   "staff": [],
+   "flagship": false,
+   "initial_position": [
+    1560,
+    80
+   ],
+   "formation_id": "FRM-03",
+   "composition": [
+    {
+     "ship_type_id": "SHP-03",
+     "count": 9
+    },
+    {
+     "ship_type_id": "SHP-04",
+     "count": 18
+    },
+    {
+     "ship_type_id": "SHP-07",
+     "count": 6
+    }
+   ],
+   "morale_group": "northern",
+   "deploy_delay_s": 360,
+   "historical": false,
+   "historical_basis": "Q82 추가 함대: 조조의 수적 우위를 함대 수로 맞춘다(게임 수치). 편성은 조홍 후군과 같은 틀이다.",
+   "declared_total_cost": 330,
+   "command_limit": 624
+  },
+  {
+   "id": "RC-CAO-SQ-15",
+   "faction_id": "cao_cao",
+   "name": "학소 증원군",
+   "commander": {
+    "id": "CHR-0046",
+    "name": "학소",
+    "command": 82,
+    "might": 72,
+    "intellect": 80,
+    "politics": 62,
+    "charm": 58,
+    "traits": [
+     "진창"
+    ]
+   },
+   "vice_commander": null,
+   "staff": [],
+   "flagship": false,
+   "initial_position": [
+    1480,
+    640
+   ],
+   "formation_id": "FRM-03",
+   "composition": [
+    {
+     "ship_type_id": "SHP-03",
+     "count": 9
+    },
+    {
+     "ship_type_id": "SHP-04",
+     "count": 18
+    },
+    {
+     "ship_type_id": "SHP-07",
+     "count": 6
+    }
+   ],
+   "morale_group": "northern",
+   "deploy_delay_s": 360,
+   "historical": false,
+   "historical_basis": "Q82 추가 함대: 조조의 수적 우위를 함대 수로 맞춘다(게임 수치). 편성은 조홍 후군과 같은 틀이다.",
+   "declared_total_cost": 330,
+   "command_limit": 612
+  },
+  {
+   "id": "RC-CAO-SQ-16",
+   "faction_id": "cao_cao",
+   "name": "이전 증원군",
+   "commander": {
+    "id": "CHR-0025",
+    "name": "이전",
+    "command": 80,
+    "might": 76,
+    "intellect": 78,
+    "politics": 70,
+    "charm": 72,
+    "traits": [
+     "사군자"
+    ]
+   },
+   "vice_commander": null,
+   "staff": [],
+   "flagship": false,
+   "initial_position": [
+    1240,
+    560
+   ],
+   "formation_id": "FRM-03",
+   "composition": [
+    {
+     "ship_type_id": "SHP-03",
+     "count": 9
+    },
+    {
+     "ship_type_id": "SHP-04",
+     "count": 18
+    },
+    {
+     "ship_type_id": "SHP-07",
+     "count": 6
+    }
+   ],
+   "morale_group": "northern",
+   "deploy_delay_s": 360,
+   "historical": false,
+   "historical_basis": "Q82 추가 함대: 조조의 수적 우위를 함대 수로 맞춘다(게임 수치). 편성은 조홍 후군과 같은 틀이다.",
+   "declared_total_cost": 330,
+   "command_limit": 600
   }
  ],
  "realtime_rules": {
@@ -3284,9 +3624,10 @@
   },
   "commander_succession": {
    "order": [
-    "vice_admiral",
-    "fleet_squadron_commander_by_level_then_command_then_id"
+    "vice_commander",
+    "staff_assault_siege_supply"
    ],
+   "note": "Q73·Q74: 편제 한 단계. 함대 제독이 지휘 불능이면 같은 함대의 부제독 → 참모(강습 → 공성 → 보급)가 잇고 그 함대가 60초 혼선. 이을 사람이 없으면 끝까지 혼선",
    "confusion": {
     "duration_s": 60,
     "penalty_stage_equivalent": 2,
@@ -3300,8 +3641,6 @@
     "random_order_failure": false
    },
    "recompute_command_limit": true,
-   "vice_admiral_shares_flagship_fate": true,
-   "vice_admiral_hull_injury": false,
    "status": "proposed",
    "source": "제안서 §4.14, UPSTREAM-ISSUES §E (본편 V-74)"
   },

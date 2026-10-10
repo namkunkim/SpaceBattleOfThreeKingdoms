@@ -9,7 +9,6 @@ class FleetView:
 	var id := 0
 	var side := 0
 	var faction := ""
-	var group_id := ""               # 시나리오 함대 ID(RC-LIU-FLT-01 …). POC는 빈 문자열
 	var fname := ""
 	var role := ""
 	var portrait := 0
@@ -43,6 +42,8 @@ class FleetView:
 	var is_flag := false
 	var dead := false
 	var range_r := 300.0
+	var charges := {}                 # 미사일·함재기 남은 횟수(salvo 규칙의 아군만). charges_max가 0이면 그 무기가 없다
+	var charges_max := {}
 	var ranges := {}                  # 무기 범주별 최대 사거리(salvo 규칙의 아군만 값이 있다)
 	var control := ""
 	var formation_id := ""            # 진형 탭용(salvo 규칙에서만 값이 있다)
@@ -130,7 +131,6 @@ func apply(proj: Dictionary) -> Array[FleetView]:
 			f.id = s.id
 			f.side = s.side
 			f.faction = s.faction
-			f.group_id = s.group_id
 			f.fname = s.name
 			f.role = s.role
 			f.portrait = s.portrait
@@ -190,6 +190,8 @@ func apply(proj: Dictionary) -> Array[FleetView]:
 			continue
 		var f: FleetView = by_id[s.id]
 		f.ranges = s.get("ranges", {})
+		f.charges = s.get("charges", {})
+		f.charges_max = s.get("charges_max", {})
 		f.target = by_id.get(s.target_id) if s.target_id >= 0 else null
 		f.fire_t = by_id.get(s.firing_at) if s.firing_at >= 0 else null
 	# 미사일: 식별자로 꼬리(trail)를 이어 간다
@@ -274,7 +276,6 @@ func _apply_contact(s: Dictionary, advanced: bool, fresh: Array[FleetView]) -> v
 		f.fname = s.name
 		f.role = s.role
 		f.portrait = s.portrait
-		f.group_id = ""
 		f.theading = s.heading
 		f.band = s.strength_band
 		f.max_band = s.max_strength_band

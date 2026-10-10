@@ -46,11 +46,8 @@ func is_open(src: FleetState, t: FleetState) -> bool:
 	var since := sim.st.tick - BattleRules.ticks(float(A.open_window_s), sim.st.hz)
 	return t.fr_hits.filter(func(k): return k > since).size() >= _need_hits(src)
 
+# 기함 진입 표적 = 승패 기함(유비·조조가 탄 함대). 상위 묶음(fleet_groups)의 기함은 Q73으로 없어졌다
 func fleet_flag(t: FleetState) -> bool:
-	if sim.cmd:
-		for g in sim.cmd.groups:
-			if g.flag_sq == t.sq_id:
-				return true
 	return t.is_flag
 
 func block(src: FleetState, t: FleetState, kind: String) -> String:

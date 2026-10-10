@@ -4,7 +4,7 @@ extends Control
 # - 연합(유비군·손권군): 세력 → 전단 → 전대(지휘관·참모·기함·함종 카운터)를 전부 보인다. 모든 난이도에서 같다.
 # - 조조군(리뷰 W-3): 전투 전에는 기록상 규모, 총사령, 지휘관 명단, 불참 인물만 보인다.
 #   전대 수·구성·척 수·투입 시각은 숨긴다(안개와 파도의 긴장). reveal = true(결산·재생)일 때만 고른 난이도의
-#   실제 배치(deploy_min_difficulty, count_factor 적용, 리뷰 W-2)를 보인다.
+#   실제 배치(난이도의 조조 함대 수 cao_fleets, Q82, 리뷰 W-2)를 보인다.
 # 지금 POC 전투(적벽 회랑)는 이 편성이 아니다. 코어가 시나리오를 읽게 되면 같은 자료로 전투가 열린다.
 
 const COL_W := 352.0
@@ -95,26 +95,16 @@ func _head(c: Control, o: Vector2, fac: Dictionary, sub: String) -> void:
 
 func _faction(c: Control, o: Vector2, fac: Dictionary) -> void:
 	var key: String = ScenarioRoster.FACTION_KEY.get(fac.id, "shu")
-	var fi := Factions.of(key)
 	var sqs := ScenarioRoster.deployed(data, fac.id, difficulty)
-	var ids := {}
 	var total := 0
 	for s in sqs:
-		ids[s.id] = s
 		total += ScenarioRoster.ship_count(s)
 	_head(c, o, fac, "%s · %d개 함대 · %d척" % [ScenarioRoster.CONTROL_LABEL.get(fac.get("control", ""), ""), sqs.size(), total])
-	var y := o.y + 50.0
-	for g in ScenarioRoster.groups_of(data, fac.id):
-		var shown: Array = g.squadron_ids.filter(func(sid): return ids.has(sid))
-		if shown.is_empty():
-			continue
-		UiDraw.text(c, Vector2(o.x, y + 12), str(g.name), "semibold", 12, fi.color)
-		y += 20.0
-		for sid in shown:
-			_card(c, Rect2(o.x, y, COL_W, CARD_H), ids[sid], key, sid == g.flagship_squadron_id)
-			y += CARD_H + 4.0
-		y += 4.0
-	_not_deployed(c, Vector2(o.x, y), fac)
+	var y := o.y + 54.0
+	for s in sqs:   # 편제 한 단계(Q73): 함대를 순서대로
+		_card(c, Rect2(o.x, y, COL_W, CARD_H), s, key, bool(s.get("flagship", false)))
+		y += CARD_H + 4.0
+	_not_deployed(c, Vector2(o.x, y + 4.0), fac)
 
 # 조조군(전투 전): 기록상 규모, 총사령, 기록상 종군 장수, 불참 인물만
 # 장수 명단은 지휘관·부지휘관·참모를 합쳐 중복 없이 보인다. 전대 지휘관만 모으면 이름 수가 곧 전대 수가 된다(리뷰 X-1).

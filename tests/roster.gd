@@ -1,8 +1,8 @@
 extends SceneTree
 
-# 정본 편성 검증(헤드리스): 시나리오 JSON을 읽어 세력 3·전대 14, 함종 카운터 합, 브리핑에서 화면 열기.
+# 정본 편성 검증(헤드리스): 시나리오 JSON을 읽어 세력 3·함대 23(정사 14 + Q82 조조 추가 9), 함종 카운터 합, 브리핑에서 화면 열기.
 # 정보 패널의 함종 숫자는 코어 카운터만 쓴다(POC는 카운터가 없어 비어 있다, 리뷰 C-1).
-# 리뷰 W-1 인물 ID(CHR-xxxx), W-2 난이도별 조조군 배치·배율, W-3 브리핑에서는 조조군 숨김.
+# 리뷰 W-1 인물 ID(CHR-xxxx), W-2 난이도별 조조군 배치(Q82 함대 수), W-3 브리핑에서는 조조군 숨김. Q78 가용 장수(불참 제외).
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -22,7 +22,7 @@ func _find_button(n: Node, text: String) -> Button:
 
 func _run() -> void:
 	var d := ScenarioRoster.load_scenario()
-	if not TestCheck.ok(self, d.get("factions", []).size() == 3 and d.get("squadrons", []).size() == 14, "scenario loaded"): return
+	if not TestCheck.ok(self, d.get("factions", []).size() == 3 and d.get("squadrons", []).size() == 23, "scenario loaded"): return
 	var s := ScenarioRoster.squadron(d, "RC-LIU-SQ-01")
 	if not TestCheck.ok(self, ScenarioRoster.ship_count(s) == 21 and ScenarioRoster.composition_text(s) == "전열 12 · 보급 3 · 요격 6", "composition %s" % ScenarioRoster.composition_text(s)): return
 	for sq in d.squadrons:
@@ -34,18 +34,32 @@ func _run() -> void:
 	var p := Commanders.person("CHR-0207")
 	if not TestCheck.ok(self, p.get("name", "") == "정보" and p.get("faction", "") == "wu" and p.get("portrait", 0) == -1, "person CHR-0207 %s" % p): return
 	if not TestCheck.ok(self, Commanders.person("CHR-0134").get("portrait", -1) == 2 and Commanders.person("liu_bei").is_empty(), "portrait by CHR id"): return
-	# W-2: 입문 4 · 표준 5 · 상급 7개 전대. 입문 0.7 배율 half-up(표준은 M7에서 0.9로 올렸다), 원래 1척 이상이면 최소 1척
+	# W-2(Q82): 조조 함대 앞에서부터 입문 8 · 표준 12 · 상급/극한 16개, 척 수 배율 없음
 	var n := {}
 	for diff in ["입문", "표준", "상급", "극한"]:
 		n[diff] = ScenarioRoster.deployed(d, "cao_cao", diff).size()
-	if not TestCheck.ok(self, n.입문 == 4 and n.표준 == 5 and n.상급 == 7 and n.극한 == 7, "deploy by difficulty %s" % n): return
+	if not TestCheck.ok(self, n.입문 == 8 and n.표준 == 12 and n.상급 == 16 and n.극한 == 16, "deploy by difficulty %s" % n): return
 	var cao1: Dictionary = ScenarioRoster.deployed(d, "cao_cao", "입문")[0]
-	var want := {"SHP-01": 4, "SHP-03": 8, "SHP-04": 17}   # 3배 편성(6·12·24) × 0.7 half-up
+	var want := {"SHP-01": 6, "SHP-03": 12, "SHP-04": 24}   # 3배 편성 그대로
 	for c in cao1.composition:
 		if want.has(c.ship_type_id) and int(c.count) != want[c.ship_type_id]:
 			TestCheck.ok(self, false, "scaled %s = %d" % [c.ship_type_id, c.count])
 			return
 	if not TestCheck.ok(self, ScenarioRoster.deployed(d, "liu_bei", "입문").size() == 4, "alliance same in all difficulties"): return
+	# Q78: 가용 장수 = 유비 58 · 손권 46 · 조조 71, 불참 제외, 모든 함대의 직책 장수가 자기 세력 가용 장수 안
+	var avail := {}
+	for f in d.factions:
+		avail[f.id] = {}
+		for o in f.available_officers:
+			avail[f.id][o.id] = true
+		for x in f.not_deployed:
+			if not TestCheck.ok(self, not avail[f.id].has(x.id), "불참 %s가 가용 장수에 있다" % x.id): return
+	if not TestCheck.ok(self, avail.liu_bei.size() == 58 and avail.sun_quan.size() == 46 and avail.cao_cao.size() == 71, "가용 장수 수 %d %d %d" % [avail.liu_bei.size(), avail.sun_quan.size(), avail.cao_cao.size()]): return
+	for sq in d.squadrons:
+		var ppl: Array = [sq.commander, sq.vice_commander]
+		ppl.append_array(sq.staff)
+		for o in ppl:
+			if o != null and not TestCheck.ok(self, avail[sq.faction_id].has(o.id), "%s의 %s가 가용 장수 밖" % [sq.id, o.id]): return
 	# X-1: 기록상 종군 장수(지휘관·부지휘관·참모, 중복 없이)
 	var off := ", ".join(ScenarioRoster.officers(d, "cao_cao"))
 	if not TestCheck.ok(self, off == "조조, 허저, 정욱, 가후, 조인, 서황, 만총, 문빙, 채모, 장윤, 조순, 조홍", "officers %s" % off): return

@@ -5,7 +5,7 @@ extends RefCounted
 #
 # 편성(org): {"fleets": [{squadron_id, faction_id, on, admiral, vice, staff: [{post, id}], composition: [{ship_type_id, count, mission_equipment_id?}]}]}
 #   장수는 ID만 둔다(능력치는 시나리오 factions[].available_officers). 참모 보직 post = assault(무력) | siege(지력) | supply(정치).
-#   함대 목록 = 이 난이도에 배치된 전대(프로필 ally + foe). 배치되지 않은 조조 함대 추가는 O2(Q82).
+#   함대 목록 = 이 난이도에 배치된 함대(프로필 ally + foe). 조조 함대 수는 난이도별 cao_fleets(Q82, ScenarioProfile).
 # 흐름: ScenarioProfile.load_profile → default_org → (편성 화면·auto_fill) → validate → apply → BattleSim.new.
 # apply는 편성 사본을 profile.organization에 남긴다(재생 헤더. 틱 명령이 아니다). 같은 편성·시드면 같은 결과.
 # 지휘 한도는 상한이 아니라 불이익 기준(CommandCore.limit_tier)이고 제독 통솔(d.command)로 다시 계산된다.
@@ -15,7 +15,7 @@ const POST_ORDER := ["assault", "siege", "supply"]
 # Q79 기본 비율 전열4·포격2·요격2·보급1·강습모함1·전자전1(목업 autoFill 순환 순서). 남는 점수는 고속정
 const MIX := ["SHP-04", "SHP-04", "SHP-03", "SHP-07", "SHP-04", "SHP-03", "SHP-07", "SHP-05", "SHP-01", "SHP-04", "SHP-06"]
 const FILLER := "SHP-08"
-const FILLER_EQUIP := "FAST-EQ-RECON"   # ponytail: 고속정 장비는 정찰 고정(목업). 장비 선택은 열린 항목(T-1)
+const FILLER_EQUIP := "FAST-EQ-RECON"   # 고속정 장비: 함대의 기존 고속정 장비를 유지하고, 없으면 정찰(목업)
 
 # 사유 코드
 const DUP_OFFICER := "dup_officer"          # 한 장수가 두 칸 이상
@@ -31,7 +31,7 @@ const UNKNOWN_FLEET := "unknown_fleet"      # 프로필에 없는 전대, 같은
 const MISSING_FLEET := "missing_fleet"      # 프로필에 있는데 편성에 없는 전대
 const BAD_FLEET := "bad_fleet"              # 형식 오류(키 없음·타입 다름). 재생 헤더 같은 외부 입력 방어
 
-# 지금 프로필의 편성(시나리오 정사 편성, 조조군은 count_factor 적용 뒤). apply(profile, default_org(profile))는 결과를 바꾸지 않는다.
+# 지금 프로필의 편성(시나리오 정사 편성, 조조군은 난이도의 함대 수만큼). apply(profile, default_org(profile))는 결과를 바꾸지 않는다.
 static func default_org(profile: Dictionary) -> Dictionary:
 	var fleets := []
 	for d in profile.ally + profile.foe:
@@ -109,7 +109,7 @@ static func validate(org: Dictionary, scn: Dictionary, profile: Dictionary) -> A
 		var ships := 0
 		var types := {}
 		for c in fl.composition:
-			if not ship_types.has(c.ship_type_id) or types.has(c.ship_type_id) or int(c.count) < 0 					or (c.has("mission_equipment_id") and not equips.has(c.mission_equipment_id)):
+			if not ship_types.has(c.ship_type_id) or types.has(c.ship_type_id) or int(c.count) < 0 					or (c.has("mission_equipment_id") and c.mission_equipment_id != "" and not equips.has(c.mission_equipment_id)):
 				bad.call(BAD_SHIP)
 			types[c.ship_type_id] = true
 			ships += maxi(0, int(c.count))
@@ -171,13 +171,21 @@ static func _officers(scn: Dictionary, faction_id: String) -> Dictionary:
 # faction_id의 출전 함대를 꽉 채운 사본. 다른 세력·끈 함대는 그대로. 손권·조조 AI도 같은 함수(Q81).
 # 장수: 제독(기함은 고정) → 부제독 → 함대마다 참모 강습·공성·보급, 각각 남은 장수 중 통솔·통솔·무력·지력·정치 최고(같으면 ID 순).
 # 함선: 지휘 한도 (limit_base + limit_per_command × 제독 통솔)까지 MIX 순환 탐욕, 남는 점수는 고속정.
+#   프로필 함대에 fill_bp가 있으면(조조 마지막 함대, Q82) 한도 × fill_bp까지.
 static func auto_fill(org: Dictionary, faction_id: String, scn: Dictionary, profile: Dictionary) -> Dictionary:
 	var res := org.duplicate(true)
 	var flags := _flags(scn)
 	var pool := _officers(scn, faction_id)
 	var on: Array = res.fleets.filter(func(fl): return fl.faction_id == faction_id and fl.on)
 	var used := {}
+	var fill := {}
+	var equip := {}
+	for d in profile.ally + profile.foe:
+		fill[d.squadron_id] = int(d.get("fill_bp", BattleRules.BP))
 	for fl in on:
+		for c in fl.composition:
+			if c.ship_type_id == FILLER and c.has("mission_equipment_id"):
+				equip[fl.squadron_id] = c.mission_equipment_id
 		fl.admiral = flags.get(fl.squadron_id, "")
 		fl.vice = ""
 		fl.staff = []
@@ -210,7 +218,7 @@ static func auto_fill(org: Dictionary, faction_id: String, scn: Dictionary, prof
 	for fl in on:
 		if not pool.has(fl.admiral):
 			continue   # 제독 없음·기함 제독이 가용 장수 밖: validate가 거부한다
-		var cap := int(K.limit_base) + int(K.limit_per_command) * int(pool[fl.admiral].command)
+		var cap := (int(K.limit_base) + int(K.limit_per_command) * int(pool[fl.admiral].command)) * int(fill.get(fl.squadron_id, BattleRules.BP)) / BattleRules.BP
 		var n := {}
 		var spent := 0
 		var i := 0
@@ -232,7 +240,7 @@ static func auto_fill(org: Dictionary, faction_id: String, scn: Dictionary, prof
 		for t in keys:
 			var c := {"ship_type_id": t, "count": n[t]}
 			if t == FILLER:
-				c.mission_equipment_id = FILLER_EQUIP
+				c.mission_equipment_id = equip.get(fl.squadron_id, FILLER_EQUIP)
 			fl.composition.append(c)
 	return res
 
