@@ -216,7 +216,6 @@ func _spawn(d: Dictionary, side: int) -> FleetState:
 	f.sq_id = d.get("squadron_id", "")
 	f.morale_group = d.get("morale_group", "")
 	f.faction = d.get("faction_id", "")
-	f.group_id = d.get("group_id", "")
 	f.commander_id = d.get("commander_id", "")
 	f.start_morale_bp = int(d.get("start_morale_bp", 0))
 	f.range_r = R.range_r

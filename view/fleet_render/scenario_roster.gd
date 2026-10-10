@@ -37,9 +37,6 @@ static func load_scenario(path := DEFAULT_PATH) -> Dictionary:
 static func squadrons_of(d: Dictionary, faction_id: String) -> Array:
 	return d.get("squadrons", []).filter(func(s): return s.faction_id == faction_id)
 
-static func groups_of(d: Dictionary, faction_id: String) -> Array:
-	return d.get("fleet_groups", []).filter(func(g): return g.faction_id == faction_id)
-
 static func squadron(d: Dictionary, id: String) -> Dictionary:
 	for s in d.get("squadrons", []):
 		if s.id == id:
@@ -63,7 +60,7 @@ static func person(d: Dictionary, id: String) -> Dictionary:
 # 세력의 종군 장수 이름(지휘관 → 부지휘관 → 참모, 전대 순, 중복 없이). 난이도와 무관한 기록상 명단(리뷰 X-1).
 static func officers(d: Dictionary, faction_id: String) -> PackedStringArray:
 	var names := PackedStringArray()
-	for s in squadrons_of(d, faction_id):
+	for s in squadrons_of(d, faction_id).filter(func(s): return s.get("historical", true)):   # Q82 추가 함대(게임 수치)는 기록이 아니다
 		var ppl: Array = [s.get("commander", {}), s.get("vice_commander", {})]
 		ppl.append_array(s.get("staff", []))
 		for p in ppl:
@@ -72,28 +69,12 @@ static func officers(d: Dictionary, faction_id: String) -> PackedStringArray:
 	return names
 
 # ---------------------------------------------------------------- 난이도(리뷰 W-2)
-# cao_scale_rule: 조조군 전대마다 함종별 척 수 × count_factor를 half-up 반올림, 원래 1척 이상이면 최소 1척.
-# 난이도가 deploy_min_difficulty보다 낮으면 그 전대는 배치하지 않는다. 연합 편성은 모든 난이도에서 같다.
+# cao_scale_rule(Q82): 조조군 함대는 앞에서부터 난이도의 cao_fleets개. 연합 편성은 모든 난이도에서 같다(ScenarioProfile과 같은 규칙).
 static func deployed(d: Dictionary, faction_id: String, difficulty: String) -> Array:
-	var order: Array = d.get("difficulty_order", [])
-	var lv := order.find(difficulty)
-	var factor: float = float(d.get("difficulty_profiles", {}).get(difficulty, {}).get("count_factor", 1.0))
-	var out := []
-	for s in squadrons_of(d, faction_id):
-		var need := order.find(s.get("deploy_min_difficulty", order[0] if not order.is_empty() else ""))
-		if faction_id == "cao_cao" and need > lv:
-			continue
-		if faction_id != "cao_cao":
-			out.append(s)
-			continue
-		var t: Dictionary = s.duplicate(true)
-		for c in t.composition:
-			var n := int(c.count)
-			# half-up을 정수로 센다(부동소수 오차로 3.5가 3.4999…가 되지 않게)
-			var milli := roundi(factor * 1000.0)
-			c.count = maxi(1 if n >= 1 else 0, (n * milli + 500) / 1000)
-		out.append(t)
-	return out
+	var sqs := squadrons_of(d, faction_id)
+	if faction_id != "cao_cao":
+		return sqs
+	return sqs.slice(0, int(d.get("difficulty_profiles", {}).get(difficulty, {}).get("cao_fleets", sqs.size())))
 
 static func ship_count(s: Dictionary) -> int:
 	var n := 0

@@ -95,8 +95,12 @@ func _run() -> void:
 	var min_cost := 1 << 30
 	for t in prof.combat.ship_types.values():
 		min_cost = mini(min_cost, int(t.cost))
+	var fill := {}
+	for d in prof.ally + prof.foe:
+		fill[d.squadron_id] = int(d.get("fill_bp", BattleRules.BP))
+	if not TestCheck.ok(self, fill.values().filter(func(b): return b < BattleRules.BP).size() == 1, "fill_bp는 조조 마지막 함대 하나(Q82)"): return
 	for fl in auto.fleets:
-		var lim := Organization.limit_of(fl, scn, prof)
+		var lim: int = Organization.limit_of(fl, scn, prof) * fill[fl.squadron_id] / BattleRules.BP
 		var c := Organization.cost_of(fl, prof)
 		if not TestCheck.ok(self, c <= lim and c > lim - min_cost, "%s cost %d limit %d" % [fl.squadron_id, c, lim]): return
 		if not TestCheck.ok(self, fl.vice != "" and fl.staff.map(func(s): return s.post) == Organization.POST_ORDER, "%s posts filled" % fl.squadron_id): return

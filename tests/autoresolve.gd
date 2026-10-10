@@ -260,8 +260,8 @@ func _run_rc(runs: int, out_path: String, pols: Array) -> void:
 
 func play_rc(seed_id: int, pol: String, diff: String) -> Dictionary:
 	var ov := {}
-	if _arg("--count-factor", "") != "":
-		ov.count_factor = float(_arg("--count-factor", ""))   # M7 레버 측정: 난이도의 조조군 규모
+	if _arg("--cao-fleets", "") != "":
+		ov.cao_fleets = int(_arg("--cao-fleets", ""))   # 레버 측정(Q82): 난이도의 조조 함대 수
 	var p := ScenarioProfile.load_profile("res://data/profiles/red_cliffs_rt.json", diff, ov)
 	if _arg("--org", "") == "auto":   # O1·Q81: 세 세력 자동 편성(O3 기준선)
 		var scn := ProfileLoader.read_json(ProfileLoader.read_json("res://data/profiles/red_cliffs_rt.json").scenario_path)

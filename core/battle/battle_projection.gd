@@ -77,8 +77,6 @@ static func build(sim: BattleSim, side: int) -> Dictionary:
 		d.time_limit_s = int(sim.salvo.C.victory.time_limit_s)
 	if sim.chain:
 		d.chain_op = sim.chain.view(side)   # M9 화공: 상태·의심·기류 창(공개), 운용 진영에는 자산·불붙은 전대
-	if sim.cmd:
-		d.fleet_groups = sim.cmd.group_view(side)   # M9 함대 지휘(현재 제독·기함 전대·지휘 공백). 자기 진영만
 	return d
 
 # 적 접촉의 공개 형태. 확인: 이름·역할·초상·방향과 전력 구간. 추정·상실: 위치(마지막으로 안 곳)와 오차 반경, 신뢰도뿐이다.
@@ -128,7 +126,7 @@ static func squadron(st: BattleState, f: FleetState) -> Dictionary:
 		"form": f.form,
 		"control": f.control, "posture": f.posture,   # 직접·위임(Q20), 전투 방침(§5.2). posture "delegated"는 인물 위임
 		"morale_bp": f.morale_bp, "mstate": f.mstate, "out": f.out, "retreat_order": f.retreat_order,
-		"faction_id": f.faction, "group_id": f.group_id,
+		"faction_id": f.faction,
 		"counts": f.stages.duplicate(true),   # 함종 × 손상 단계 [무손상, 경파, 중파, 대파, 격침]. POC 규칙이면 빈 사전
 		"hull": f.hull, "max_hull": f.max_hull,
 		"energy_milli": f.energy_m, "heat_milli": f.heat_m, "ammo": f.ammo.duplicate(), "suppressed": f.supp.duplicate(),
