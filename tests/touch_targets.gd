@@ -1,7 +1,7 @@
 extends SceneTree
 
 # 터치 목표 크기 점검(헤드리스, 제안서 §7.2 48dp). 1차 목표: 안드로이드 태블릿 + 윈도우 PC.
-# 모든 화면(전투 HUD, 결정 카드, 타이틀, 브리핑, 일시정지, 설정 3쪽, 결과)의 누를 수 있는 컨트롤을 모아
+# 모든 화면(전투 HUD, 결정 카드, 타이틀, 브리핑, 편성, 일시정지, 설정 3쪽, 결과)의 누를 수 있는 컨트롤을 모아
 # 기준 기기별 dp(짧은 변)를 계산해 out/touch-targets.md에 남긴다. 태블릿(UI 100%)에서 모두 48dp 이상이어야 한다.
 
 func _initialize() -> void:
@@ -48,6 +48,13 @@ func _run() -> void:
 	deck.show_screen("brief")
 	await _frames()
 	_collect(deck.screens["brief"], "브리핑")
+	deck.screens["org"].open_org()
+	await _frames()
+	deck.screens["org"].press(-1, "", deck.screens["org"].officers.keys()[0])   # "대기 풀로" 버튼까지 보이게 칸 하나를 고른다
+	deck.screens["org"].press(deck.screens["org"].sel, "vice")
+	deck.screens["org"].press(deck.screens["org"].sel, "vice")
+	await _frames()
+	_collect(deck.screens["org"], "편성")
 	deck.begin_battle()
 	await _frames()
 	_collect(deck.hud, "전투")

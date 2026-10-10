@@ -21,6 +21,7 @@ const FIGHTER_R := 380.0
 const PORTRAIT_SHEET := "res://assets/portraits/commanders_sheet_v1.png"
 var profile_def := "res://data/profiles/red_cliffs_rt.json"   # 적벽 시나리오 프로필. ""이면 POC 프로필(규칙 문구 대조 테스트 전용)
 var difficulty := "표준"
+var org := {}   # 전투 전 편성 사본(O4, Organization). 비어 있으면 정사 편성. 다시 시작해도 유지된다
 var profile_patch := Callable()   # 측정 전용(bench_density 1,500척 프리셋): 프로필을 받아 고친다. 게임 흐름에서는 비어 있다
 var move_mul := 150.0   # 이동 배율: 화면 한 폭(1600)을 약 10초에 건넌다. 헤드리스 테스트는 1로 둔다
 var turn_mul := 15.0    # 선회율 배율: 선회 반경(속도÷선회율)이 도착 판정(settle 0.7×속도) 안에 들어야 목적지를 돌지 않는다. 조건은 선회율 > 82°/초(속도와 무관)
@@ -147,6 +148,12 @@ func init_game() -> void:
 	var link := get_node_or_null("/root/WorldLink")
 	battle_seed = link.brief.seed if link and link.routed() else randi()
 	var profile := ScenarioProfile.load_profile(profile_def, difficulty) if profile_def != "" else PocSetup.profile()
+	if not org.is_empty() and not profile.is_empty():
+		var applied := Organization.apply(profile, org, ProfileLoader.read_json(ProfileLoader.read_json(profile_def).scenario_path))
+		if applied.has("errors"):
+			push_warning("편성 거부, 정사 편성으로 시작: %s" % [applied.errors])
+		else:
+			profile = applied
 	if profile_def != "" and not profile.is_empty():
 		ScenarioProfile.enlarge_field(profile, FIELD_SIZE)   # 전장을 FIELD_SIZE로 맞추고 배치를 비율대로 늘린다. 미니맵은 이 전장을 비례 축소해 보여 준다
 	if profile_def != "" and not profile.is_empty():

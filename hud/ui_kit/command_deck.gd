@@ -206,8 +206,12 @@ func open_prologue_or_brief() -> void:
 func open_prologue() -> void:
 	show_screen("prologue")
 
-func begin_battle() -> void:
-	if battle.G.state != "brief":
+# org: 편성 화면의 사본(O4). {}는 정사 편성, null은 지금 걸린 편성 그대로. 편성이 바뀌면 전장을 그 편성으로 다시 만든다
+func begin_battle(org: Variant = null) -> void:
+	if org != null and org != battle.org:
+		battle.org = org
+		battle.init_game()
+	elif battle.G.state != "brief":
 		battle.init_game()
 	_clear_log()
 	battle._start()

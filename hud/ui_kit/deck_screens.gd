@@ -15,6 +15,7 @@ static func build_all(deck: Control) -> Dictionary:
 		"settings_pause": SettingsScreen.new(deck, "pause"),
 		"result": ResultScreen.new(deck),
 		"roster": preload("res://hud/ui_kit/roster_screen.gd").new(deck),
+		"org": preload("res://hud/ui_kit/org_screen.gd").new(deck),
 	}
 	for k in out:
 		deck.add_child(out[k])
@@ -195,8 +196,8 @@ class BriefScreen extends Control:
 		var hb := HBoxContainer.new()
 		hb.add_theme_constant_override("separation", 12)
 		panel.add_child(hb)
-		hb.position = Vector2(1180 - 24 - 580, 680 - 24 - 54)
-		hb.size = Vector2(580, 54)
+		hb.position = Vector2(1180 - 24 - 800, 680 - 24 - 54)
+		hb.size = Vector2(800, 54)
 		hb.alignment = BoxContainer.ALIGNMENT_END
 		var roster := Button.new()
 		roster.text = "정본 편성"
@@ -210,9 +211,16 @@ class BriefScreen extends Control:
 		back.focus_mode = Control.FOCUS_NONE
 		back.pressed.connect(func(): deck.show_screen("title"))
 		hb.add_child(back)
-		var go := ScreenKit.menu_button("출  격", true)
-		go.custom_minimum_size = Vector2(220, 54)
-		go.pressed.connect(func(): deck.begin_battle())
+		# O4: 브리핑 → 편성 → 전투. 건너뛰기는 정사 편성 그대로(편성 사본 없음)
+		var skip := Button.new()
+		skip.text = "정사 편성으로 시작"
+		skip.custom_minimum_size = Vector2(200, 54)
+		skip.focus_mode = Control.FOCUS_NONE
+		skip.pressed.connect(func(): deck.begin_battle({}))
+		hb.add_child(skip)
+		var go := ScreenKit.menu_button("편  성", true)
+		go.custom_minimum_size = Vector2(200, 54)
+		go.pressed.connect(func(): deck.screens["org"].open_org())
 		hb.add_child(go)
 	func _draw() -> void:
 		draw_rect(Rect2(Vector2.ZERO, size), Color(0.01, 0.015, 0.03, 0.78))

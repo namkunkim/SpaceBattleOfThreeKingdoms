@@ -3,7 +3,7 @@ extends SceneTree
 # 상품화 표현 계층 캡처. 화면이 있는 실행에서만 의미가 있다.
 # godot --path . --script tests/capture_ui.gd -- <장면> <출력 png> [UI 크기]
 # 폰 130% 배치 확인: --resolution 1600x720 ... -- battle res://out/ui-phone.png 1.3
-# 장면: fog(안개 접촉) | title | prologue [장 0~7] | brief | quiet | battle | select | hold | undo | decision | wu | pause | suspend | result | settings | incoming | salvo | roster | roster_full | nohud(F1 HUD 숨김) | terrain(지형 3구역, 축소)
+# 장면: fog(안개 접촉) | title | prologue [장 0~7] | brief | org(편성, O4) | quiet | battle | select | hold | undo | decision | wu | pause | suspend | result | settings | incoming | salvo | roster | roster_full | nohud(F1 HUD 숨김) | terrain(지형 3구역, 축소)
 const SEED := 20261003
 
 func _initialize() -> void:
@@ -45,6 +45,12 @@ func _run() -> void:
 		deck.open_prologue()
 		deck.screens["prologue"].open_at(int(args[2]) if args.size() > 2 else 0)
 		for i in 60:
+			await process_frame
+	elif mode == "org":
+		deck.screens["org"].open_org()
+		var o = deck.screens["org"]
+		o.press(o.mine()[0], "vice")   # 고른 칸 강조와 "대기 풀로" 버튼까지 보이게
+		for i in 30:
 			await process_frame
 	elif mode == "brief":
 		if deck:

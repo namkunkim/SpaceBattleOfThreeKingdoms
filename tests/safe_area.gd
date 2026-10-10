@@ -47,8 +47,17 @@ func _run() -> void:
 		_check(is_equal_approx(deck.hud.offset_left, w * 0.035 / ppu), "HUD 왼쪽이 안전 영역만큼 들어간다 %s" % deck.hud.offset_left)
 		_check(is_equal_approx(deck.hud.offset_bottom, -h * 0.03 / ppu), "HUD 아래가 안전 영역만큼 올라간다 %s" % deck.hud.offset_bottom)
 		_check(deck.hud.offset_left > 0.0 and deck.hud.offset_bottom < 0.0, "오프셋이 실제로 0이 아니다")
+		# 편성 화면(O4)도 같은 보정을 받는다
+		var org_fit: SafeArea = deck.screens["org"].get_node_or_null("SafeArea")
+		_check(org_fit != null, "편성 화면에 SafeArea가 붙어 있다")
+		if org_fit:
+			org_fit.refresh()
+			_check(org_fit.target.offset_left > 0.0 and org_fit.target.offset_bottom < 0.0, "편성 화면도 안전 영역만큼 들어간다")
 		SafeArea.override_px = null
 		fitter.refresh()
 		_check(deck.hud.offset_left == 0.0, "보정을 풀면 원위치")
+		if org_fit:
+			org_fit.refresh()
+			_check(org_fit.target.offset_left == 0.0, "편성 화면 보정도 원위치")
 	print("SAFE_AREA_PASS" if fails == 0 else "SAFE_AREA_FAIL %d" % fails)
 	quit(0 if fails == 0 else 1)
