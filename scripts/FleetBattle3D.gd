@@ -302,7 +302,8 @@ func _process(delta: float) -> void:
 			sim.step()
 		var a := 1.0 if sim.st.over else clock.alpha()   # 전투가 끝나면 틱이 멈춘다: 보간을 마지막 위치에 고정(안 하면 결과 화면까지 직전 틱과 사이를 반복 재생해 흔들린다)
 		vm.alpha = a
-		_pump()
+		if n > 0:   # 틱이 없으면 투영·사건이 그대로다(명령·디버그 경로는 직접 _pump한다). 매 프레임 투영을 다시 만들면 1,500척에서 약 3ms
+			_pump()
 		vm.interpolate(a)
 		_tick_view(dt * G.speed * G.slow)
 		G.panel_t -= dt
@@ -317,7 +318,8 @@ func _process(delta: float) -> void:
 		# 타이틀·서막·브리핑 뒤 전장이 천천히 흐른다. 동작 줄이기면 멈춘다.
 		rig.cam_pos.x = _brief_x + sin(now_t / 5.0) * 120.0
 	rig.update()
-	view3d.sync(fleets)
+	if presentation == null:   # 표현 계층이 있으면 POC 함대 노드는 숨겨져 있다(위치 갱신 생략, 1,500척 약 1ms)
+		view3d.sync(fleets)
 	hud.paint_cmds()
 	fx.queue_redraw()
 	ui.queue_redraw()
