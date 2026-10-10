@@ -635,7 +635,7 @@ func _draw_info(c: Control) -> void:
 
 # 현재 속도(px/초): 직전 틱 이동량 x 틱 빈도. 일시정지 중에는 0
 func _cur_speed(f) -> float:
-	return 0.0 if battle.G.get("hold", false) else f.tpos.distance_to(f.ppos) * battle.vm.hz
+	return 0.0 if src.state() != "play" or battle.sim.st.over else f.tpos.distance_to(f.ppos) * battle.vm.hz
 
 const CONTACT_LABEL := {"confirmed": "확인", "estimated": "추정", "lost": "상실"}
 func _info_single(c: Control, f) -> void:
@@ -660,7 +660,7 @@ func _info_single(c: Control, f) -> void:
 	_chevron(c)
 	# 함선 막대: 남은 수 + 방금 잃은 몫(연속 막대)
 	var known: bool = f.contact == "" or f.max_band > 0   # 추정·상실 접촉은 전력을 모른다
-	var frac: float = f.ships / f.max_ships if known else 0.0
+	var frac: float = BattleSource.strength_frac(f)
 	var bar := Rect2(x + 4, 52, c.size.x - x - 4 - 100, 9)
 	c.draw_rect(bar, Color(0.04, 0.06, 0.09))
 	c.draw_rect(Rect2(bar.position, Vector2(bar.size.x * frac, bar.size.y)), UiTheme.FOE if foe else UiTheme.LIFE)

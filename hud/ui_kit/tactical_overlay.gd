@@ -251,7 +251,7 @@ func _plate(f) -> void:
 		tcol = UiTheme.ALLY_HI
 	if tag != "":
 		UiDraw.icon(self, tag, Rect2(r.end.x - 18.0, r.position.y + 5.0, 14, 14), tcol, 1.3)
-	var frac: float = f.ships / f.max_ships
+	var frac: float = BattleSource.strength_frac(f)
 	var bar := Rect2(r.position + Vector2(6, 23), Vector2(86, 5))
 	draw_rect(bar, UiTheme.SLOT)
 	draw_rect(Rect2(bar.position, Vector2(bar.size.x * frac, bar.size.y)), UiTheme.FOE if foe else UiTheme.LIFE)
@@ -274,7 +274,7 @@ func _symbol(f) -> void:
 	UiDraw.text(self, s + Vector2(10, -24), f.fname, "serif_bold", 12, UiTheme.GOLD_HI if sel else UiTheme.INK_2, HORIZONTAL_ALIGNMENT_LEFT, -1, 3)
 	var rr := Rect2(s.x - 24.0, s.y - 18.0, 48.0, 4.0)
 	draw_rect(rr, UiTheme.SLOT)
-	draw_rect(Rect2(rr.position, Vector2(48.0 * f.ships / f.max_ships, 4.0)), UiTheme.FOE if f.side == 1 else UiTheme.LIFE)
+	draw_rect(Rect2(rr.position, Vector2(48.0 * BattleSource.strength_frac(f), 4.0)), UiTheme.FOE if f.side == 1 else UiTheme.LIFE)
 
 func _speech(f) -> void:
 	var s: Vector2 = battle.w2s(f.pos)

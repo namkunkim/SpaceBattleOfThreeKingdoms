@@ -54,6 +54,9 @@ func _run() -> void:
 		if foe.contact != "confirmed":
 			break
 	if not TestCheck.ok(self, foe.contact != "confirmed" and BattleSource.contact_strength_text(foe) == "전력 ?", "추정/상실: 전력 ? (%s)" % foe.contact): return
+	if not TestCheck.ok(self, BattleSource.strength_frac(foe) == 0.0 and BattleSource.strength_frac(ally) > 0.0, "막대 비율: 추정 0, 아군 > 0"): return
+	battle.G.state = "pause"
+	if not TestCheck.ok(self, deck._cur_speed(ally) == 0.0, "비진행 중 현재 속도 0"): return
 	deck.info.queue_redraw()
 	await process_frame
 	print("OK info_panel")

@@ -46,6 +46,10 @@ func form_name(f) -> String:
 		return ""   # 적 진형은 비공개
 	return combat.formations.get(f.formation_id, {}).get("name", "")
 
+# 막대 비율. 추정·상실 접촉은 전력을 모르므로 0(막대 없음)
+static func strength_frac(f) -> float:
+	return 0.0 if f.contact != "" and f.max_band <= 0 else f.ships / f.max_ships
+
 static func contact_strength_text(f) -> String:
 	return "전력 %d/%d" % [f.band, f.max_band] if f.max_band > 0 else "전력 ?"
 
