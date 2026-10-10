@@ -24,13 +24,16 @@ func _process(delta: float) -> void:
 # 프레임마다 한 번 만든 투영 행렬(_proj_begin)로 직접 계산한다. 결과는 Camera3D.unproject_position과 같다.
 var _pm: Projection
 var _vs := Vector2.ONE
+var _proj_frame := -1   # _proj_begin을 부른 프레임. 다른 프레임에서 _ground_ring을 쓰면 낡은 행렬이다
 
 func _proj_begin() -> void:
+	_proj_frame = Engine.get_process_frames()
 	var cam: Camera3D = battle.rig.camera
 	_pm = cam.get_camera_projection() * Projection(cam.get_camera_transform().affine_inverse())
 	_vs = cam.get_viewport().get_visible_rect().size
 
 func _ground_ring(c: Vector2, r: float, n := 72, a0 := 0.0, a1 := TAU) -> PackedVector2Array:
+	assert(_proj_frame == Engine.get_process_frames(), "_ground_ring: 이 프레임에 _proj_begin을 먼저 불러야 한다")
 	var pts := PackedVector2Array()
 	pts.resize(n + 1)
 	var k := CameraRig.S
@@ -78,24 +81,53 @@ func _draw() -> void:
 		draw_polyline(_ground_ring(battle.marker.pos, 22.0 + (1.0 - k) * 26.0, 40), col, 2.0, true)
 		UiDraw.diamond(self, battle.w2s(battle.marker.pos), 5.0, col)
 	var compact: bool = battle.cam_z < 0.55
+	# 일반 명패는 도형 → 글자 → 아이콘 순으로 모아 그린다. 도형은 삼각형 묶음 하나로 보낸다.
+	# 명패마다 선·원·다각형을 따로 그리면 묶음이 끊겨 명패 하나에 그리기 호출이 여럿 생긴다(1,500척 프리셋 약 5ms).
+	# 모아 그리면 겹친 명패의 앞뒤가 섞이므로, 겹친 명패는 하나씩 통째로, 추정·상실 접촉 함대(접촉 표식 → 명패)와 선택·조사 중인 명패는 맨 뒤에 그린다(REVIEW-PERF-1500 R1)
 	var plates := []
+	var fog := []
+	var sel_plates := []
 	for f in battle.fleets:
+		if f.contact != "" and f.contact != "confirmed":   # 확인 접촉은 표식이 없다(_contact)
+			fog.append(f)
+		elif not f.dead and f.contact != "lost":
+			if compact:
+				_symbol(f)
+			elif battle.selected.has(f) or battle.inspect == f:
+				sel_plates.append(f)
+			else:
+				plates.append(f)
+	# 다른 명패와 겹치는 명패도 하나씩 통째로(함대 순서대로) 그린다. 겹치지 않는 명패만 묶는다
+	var rects := []
+	for f in plates:
+		var p: Vector2 = battle.w2s(f.pos)
+		rects.append(Rect2(p.x - 25.0, p.y - 61.0, 104.0, 40.0))   # _plate의 명패 사각형 + 테두리 여유
+	var batch := []
+	var solo := []
+	for i in plates.size():
+		var hit := false
+		for j in plates.size():
+			if i != j and rects[i].intersects(rects[j]):
+				hit = true
+				break
+		(solo if hit else batch).append(plates[i])
+	_tri_begin()
+	for f in batch:
+		_plate(f, 0)
+	_tri_flush()
+	for ph in [1, 2]:
+		for f in batch:
+			_plate(f, ph)
+	for f in solo:
+		_plate_whole(f)
+	for f in fog + sel_plates:
 		if f.contact != "":
 			_contact(f)
 		if not f.dead and f.contact != "lost":
 			if compact:
 				_symbol(f)
 			else:
-				plates.append(f)
-	# 명패는 도형 → 글자 → 아이콘 순으로 모아 그린다. 도형은 삼각형 묶음 하나로 보낸다.
-	# 명패마다 선·원·다각형을 따로 그리면 묶음이 끊겨 명패 하나에 그리기 호출이 여럿 생긴다(1,500척 프리셋 약 5ms)
-	_tri_begin()
-	for f in plates:
-		_plate(f, 0)
-	_tri_flush()
-	for ph in [1, 2]:
-		for f in plates:
-			_plate(f, ph)
+				_plate_whole(f)
 	for f in battle.fleets:
 		if not f.dead and f.speech_t > 0.0 and f.speech != "":
 			_speech(f)
@@ -310,6 +342,13 @@ func _contact(f) -> void:
 	UiDraw.diamond(self, s, 4.0, Color(UiTheme.FOE, a + 0.15))
 	var txt := "상실 · 마지막 위치" if lost else "추정 %d%%" % roundi(f.conf * 100.0)
 	UiDraw.text(self, s + Vector2(8, -8), txt, "serif_bold", 12, Color(UiTheme.INK_2, 0.55 if lost else 0.9), HORIZONTAL_ALIGNMENT_LEFT, -1, 3)
+
+func _plate_whole(f) -> void:
+	_tri_begin()
+	_plate(f, 0)
+	_tri_flush()
+	_plate(f, 1)
+	_plate(f, 2)
 
 func _plate(f, ph: int) -> void:
 	# 명패(V-6): 소유 글리프 · 이름 · 연속 막대 · 지휘 상태 · 가장 급한 경고 하나. 초상·레벨 없음.
