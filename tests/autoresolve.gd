@@ -5,7 +5,7 @@ extends SceneTree
 #
 # 실행: godot --headless --path . -s tests/autoresolve.gd -- --runs 200 [--hz 10] [--out user://autoresolve.json]
 #        [--baseline res://tests/fixtures/m1_baseline.json] [--policies none,attack5,charge30]
-# M4 적벽 기준선: --profile red_cliffs [--difficulty 표준] [--policies none,attack] [--period 15] [--dmg-scale 0.25] [--stagger 15]
+# M4 적벽 기준선: --profile red_cliffs [--difficulty 표준] [--policies none,attack] [--period 15] [--dmg-scale 0.25] [--stagger 15] [--org auto]
 #   BALANCE-PLAN-M4 §3의 측정값(길이, 승률, 종료 경로, 첫 일제 동기화, 파도, 사기 곡선)을 판마다 한 줄로 낸다. 정책 attack은 5초마다 가까운 적 공격(일제사격 명령 없음)
 
 const MAX_S := 1800.0
@@ -241,7 +241,7 @@ func _tune(cb: Dictionary) -> void:
 func _run_rc(runs: int, out_path: String, pols: Array) -> void:
 	var diff := _arg("--difficulty", "표준")
 	var result := {"meta": {"runs": runs, "difficulty": diff, "period": _arg("--period", ""), "dmg_scale": _arg("--dmg-scale", "1.0"),
-		"stagger": _arg("--stagger", "")}, "policies": {}}
+		"stagger": _arg("--stagger", ""), "org": _arg("--org", "")}, "policies": {}}
 	var from := int(_arg("--from", "0"))
 	for pol in pols:
 		var rows := []
@@ -263,6 +263,12 @@ func play_rc(seed_id: int, pol: String, diff: String) -> Dictionary:
 	if _arg("--count-factor", "") != "":
 		ov.count_factor = float(_arg("--count-factor", ""))   # M7 레버 측정: 난이도의 조조군 규모
 	var p := ScenarioProfile.load_profile("res://data/profiles/red_cliffs_rt.json", diff, ov)
+	if _arg("--org", "") == "auto":   # O1·Q81: 세 세력 자동 편성(O3 기준선)
+		var scn := ProfileLoader.read_json(ProfileLoader.read_json("res://data/profiles/red_cliffs_rt.json").scenario_path)
+		var org := Organization.default_org(p)
+		for fid in ["liu_bei", "sun_quan", "cao_cao"]:
+			org = Organization.auto_fill(org, fid, scn, p)
+		p = Organization.apply(p, org, scn)
 	_tune(p.combat)
 	# M9 비교: --no-chain 1(화공 끔), --no-m9 1(화공·승계·강습 모두 끔 = M8 코드와 같은 판), --wind "540,600"(기류 창 시작 범위)
 	if _arg("--no-chain", "0") == "1" or _arg("--no-m9", "0") == "1":
