@@ -13,6 +13,7 @@ func setup(b: Node) -> void:
 	battle = b
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED   # 파선을 텍스처 띠로 그린다(UiDraw._dashed_tex). 이 층의 텍스처는 글자뿐이다
 
 func _process(delta: float) -> void:
 	delta = UiDraw.real_dt(delta)

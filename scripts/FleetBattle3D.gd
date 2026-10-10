@@ -302,7 +302,8 @@ func _process(delta: float) -> void:
 			sim.step()
 		var a := 1.0 if sim.st.over else clock.alpha()   # 전투가 끝나면 틱이 멈춘다: 보간을 마지막 위치에 고정(안 하면 결과 화면까지 직전 틱과 사이를 반복 재생해 흔들린다)
 		vm.alpha = a
-		_pump()
+		if n > 0:   # 틱이 없으면 투영·사건이 그대로다(명령·디버그 경로는 직접 _pump한다). 매 프레임 투영을 다시 만들면 1,500척에서 약 3ms
+			_pump()
 		vm.interpolate(a)
 		_tick_view(dt * G.speed * G.slow)
 		G.panel_t -= dt

@@ -122,6 +122,9 @@ static func text_w(s: String, font_name: String, size: int) -> float:
 const DASH_MAX_SEG := 3000.0   # 이보다 긴 한 구간은 파선으로 쪼개지 않는다
 
 static func dashed_poly(ci: CanvasItem, pts: PackedVector2Array, color: Color, width: float, dash: float, gap: float, offset := 0.0) -> void:
+	if ci.texture_repeat == CanvasItem.TEXTURE_REPEAT_ENABLED:
+		_dashed_tex(ci, pts, color, width, dash, gap, offset)
+		return
 	# 파선 조각을 모아 한 번에 그린다(선 하나씩 그리면 2D 명령이 수백 개가 된다).
 	var segs := PackedVector2Array()
 	var acc := -offset
@@ -150,6 +153,51 @@ static func dashed_poly(ci: CanvasItem, pts: PackedVector2Array, color: Color, w
 		acc += seg
 	if segs.size() >= 2:
 		ci.draw_multiline(segs, color, width)
+
+# 파선을 반복 무늬 텍스처를 입힌 띠(구간마다 사각형 하나)로 그린다. 조각을 스크립트로 쪼개지 않아 고리 수십 개를 매 프레임 그려도 싸다.
+# 무늬 반복이 필요하므로 그리는 CanvasItem의 texture_repeat가 ENABLED일 때만 dashed_poly가 이 길로 온다(글자 외 텍스처가 없는 층에서 켠다).
+static var _dash_tex := {}
+const DASH_TEXELS := 4.0   # 1px당 텍셀 수(파선 끝 위치 정밀도)
+
+static func _dashed_tex(ci: CanvasItem, pts: PackedVector2Array, color: Color, width: float, dash: float, gap: float, offset: float) -> void:
+	var period := dash + gap
+	var key := Vector2(dash, gap)
+	var tex: ImageTexture = _dash_tex.get(key)
+	if tex == null:
+		var w := maxi(2, roundi(period * DASH_TEXELS))
+		var img := Image.create(w, 1, false, Image.FORMAT_RGBA8)
+		for x in w:
+			img.set_pixel(x, 0, Color(1, 1, 1, 1.0 if x < roundi(dash * DASH_TEXELS) else 0.0))
+		tex = ImageTexture.create_from_image(img)
+		_dash_tex[key] = tex
+	var hw := width * 0.5
+	var verts := PackedVector2Array()
+	var uvs := PackedVector2Array()
+	var idx := PackedInt32Array()
+	var acc := -offset
+	for i in pts.size() - 1:
+		var a := pts[i]
+		var b := pts[i + 1]
+		var seg := a.distance_to(b)
+		if seg <= 0.0:
+			continue
+		if seg > DASH_MAX_SEG or is_nan(seg):   # 화면 밖으로 튄 구간(dashed_poly 참고)
+			acc += 0.0 if is_nan(seg) else seg
+			continue
+		var n := Vector2(a.y - b.y, b.x - a.x) * (hw / seg)
+		var u0 := acc / period
+		var u1 := (acc + seg) / period
+		var k := verts.size()
+		verts.append_array([a + n, a - n, b - n, b + n])
+		uvs.append_array([Vector2(u0, 0), Vector2(u0, 1), Vector2(u1, 1), Vector2(u1, 0)])
+		idx.append_array([k, k + 1, k + 2, k, k + 2, k + 3])
+		acc += seg
+	if idx.is_empty():
+		return
+	var cols := PackedColorArray()
+	cols.resize(verts.size())
+	cols.fill(color)
+	RenderingServer.canvas_item_add_triangle_array(ci.get_canvas_item(), idx, verts, cols, uvs, PackedInt32Array(), PackedFloat32Array(), tex.get_rid())
 
 # 칸 구분선만 그리는 가벼운 막대(명패처럼 매 프레임 많이 그리는 곳에 쓴다)
 static func cheap_bar(ci: CanvasItem, rect: Rect2, frac: float, n: int, on: Color, off := UiTheme.SLOT) -> void:
