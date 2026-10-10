@@ -122,7 +122,7 @@ func _run() -> void:
 			deck.decision_card.open_card({"speaker_id": "CHR-0217", "line": "바람 창이 열렸습니다. 지금 배에 불을 붙이겠습니까?", "queue": 1, "time": 30.0,
 				"options": [{"label": "화공 발동", "effects": [["표적 사기", "−3500"], ["적 군 사기", "−2500"]], "risk": {"level": "high", "why": "간파 위험: 의심 82"}, "rec": "제갈량"},
 					{"label": "한 번 더 기다린다", "effects": [["기류 창 남은 시간", "약 40초"]], "risk": {"level": "mid", "why": "기류가 바뀔 수 있음"}, "rec": ""},
-					{"label": "황개를 물린다", "effects": [["황개 전대", "후퇴"]], "risk": {"level": "low", "why": "기회 상실"}, "rec": ""}]})
+					{"label": "황개를 물린다", "effects": [["황개 함대", "후퇴"]], "risk": {"level": "low", "why": "기회 상실"}, "rec": ""}]})
 			deck.decision_card.time_left = 21.0
 			for i in 20:
 				await process_frame

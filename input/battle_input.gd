@@ -200,4 +200,4 @@ func assign_group(n: int) -> void:
 		host.toast("저장할 함대를 먼저 선택하세요")
 		return
 	host.groups[n] = SelectionSet.ids(s)
-	host.toast("편성 %d에 %d개 전대 저장" % [n, s.size()])
+	host.toast("편성 %d에 %d개 함대 저장" % [n, s.size()])

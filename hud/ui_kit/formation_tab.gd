@@ -85,7 +85,7 @@ static func options(combat: Dictionary, sel: Array) -> Array:
 		if hint != "":
 			foot.append(hint)
 		if reason != "":
-			foot.append("⚠ " + reason + ("" if n_block == n else " (%d개 전대 제외)" % n_block))
+			foot.append("⚠ " + reason + ("" if n_block == n else " (%d개 함대 제외)" % n_block))
 		out.append({"id": fid, "name": _name(combat, fid), "directive": DIRECTIVE.get(fid, ""), "shape": SHAPE.get(fid, "wedge"),
 			"state": state, "line": line, "warn": warn, "cancel": cancel, "reason": reason, "fx": fx, "foot": " · ".join(foot)})
 	return out

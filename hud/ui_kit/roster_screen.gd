@@ -102,7 +102,7 @@ func _faction(c: Control, o: Vector2, fac: Dictionary) -> void:
 	for s in sqs:
 		ids[s.id] = s
 		total += ScenarioRoster.ship_count(s)
-	_head(c, o, fac, "%s · %d개 전대 · %d척" % [ScenarioRoster.CONTROL_LABEL.get(fac.get("control", ""), ""), sqs.size(), total])
+	_head(c, o, fac, "%s · %d개 함대 · %d척" % [ScenarioRoster.CONTROL_LABEL.get(fac.get("control", ""), ""), sqs.size(), total])
 	var y := o.y + 50.0
 	for g in ScenarioRoster.groups_of(data, fac.id):
 		var shown: Array = g.squadron_ids.filter(func(sid): return ids.has(sid))
@@ -119,7 +119,7 @@ func _faction(c: Control, o: Vector2, fac: Dictionary) -> void:
 # 조조군(전투 전): 기록상 규모, 총사령, 기록상 종군 장수, 불참 인물만
 # 장수 명단은 지휘관·부지휘관·참모를 합쳐 중복 없이 보인다. 전대 지휘관만 모으면 이름 수가 곧 전대 수가 된다(리뷰 X-1).
 func _hidden_enemy(c: Control, o: Vector2, fac: Dictionary) -> void:
-	_head(c, o, fac, "적 · 정찰 전에는 전대 수·구성·척 수를 알 수 없음")
+	_head(c, o, fac, "적 · 정찰 전에는 함대 수·구성·척 수를 알 수 없음")
 	var hs: Dictionary = data.get("historical_scale", {}).get("cao_cao", {})
 	var y := o.y + 66.0
 	UiDraw.text(c, Vector2(o.x, y), "기 록 상 규 모", "eyebrow", 11, UiTheme.GOLD)
