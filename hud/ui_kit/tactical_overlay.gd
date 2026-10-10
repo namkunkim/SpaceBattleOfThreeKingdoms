@@ -81,7 +81,7 @@ func _draw() -> void:
 		draw_rect(r, Color(UiTheme.GOLD_HI, 0.06))
 		draw_rect(r, Color(UiTheme.GOLD_HI, 0.85), false, 1.0)
 
-# 함대별 적 탐지 범위: 센서 점수에서 "확인"·"추정" 기준 점수를 뺀 만큼의 거리(적 전자전·지형 은폐가 없을 때). 안쪽 실선 = 확인, 바깥 점선 = 추정.
+# 함대별 적 탐지 범위: 센서 점수에서 "확인"·"추정" 기준 점수를 뺀 만큼의 거리(적 전자전·지형 은폐가 없을 때). 안쪽 촘촘한 점선 = 확인, 바깥 성긴 점선 = 추정.
 # 적에게 전자전이나 은폐가 있으면 실제 범위는 이보다 줄어든다.
 func _detect_rings() -> void:
 	var det = battle.sim.detect
@@ -97,13 +97,17 @@ func _detect_rings() -> void:
 		var r_est := maxf(0.0, float(sc - int(det.D.estimated)) * upp)
 		# 무기 고리(색 있는 실선·파선)와 구분: 회백색 가는 점선만 쓴다. 확인 = 촘촘한 점, 추정 = 성긴 점. 이름표 "탐지".
 		var col := Color(UiTheme.INK_2, 0.75 if battle.selected.has(f) else 0.45)   # 선택 여부와 관계없이 항상 보인다
+		var lab := Vector2.ZERO   # 이름표 위치: 확인 고리가 있으면 그것, 없으면 추정 고리(아래쪽 90도)
 		if r_est > 0.0:
-			UiDraw.dashed_poly(self, _ground_ring(f.pos, r_est, 96), col, 1.2, 2.0, 9.0)
+			var ring_e := _ground_ring(f.pos, r_est, 96)
+			UiDraw.dashed_poly(self, ring_e, col, 1.2, 2.0, 9.0)
+			lab = ring_e[24]
 		if r_conf > 0.0:
 			var ring := _ground_ring(f.pos, r_conf, 72)
 			UiDraw.dashed_poly(self, ring, col, 1.6, 2.0, 4.0)
-			if battle.selected.has(f):
-				_ring_label(ring[54], "탐지 %d" % int(r_conf), UiTheme.INK_2)
+			lab = ring[18]
+		if lab != Vector2.ZERO and battle.selected.has(f):
+			_ring_label(lab, "탐지 %d" % int(r_conf if r_conf > 0.0 else r_est), UiTheme.INK_2)
 
 # 무기 범주별 사거리 고리(데이터에서 온 f.ranges). 미사일 사거리 = 포격(artillery) 범주. 색약 대응으로 선 모양도 다르다.
 # 지형 사거리 배율은 사격선마다 달라 원이 아니라서 여기엔 반영하지 않는다(개활 기준 원).
@@ -118,6 +122,7 @@ const RANGE_STYLE := {
 # 성운 위에서도 읽히도록 어두운 반투명 판을 깐다.
 func _ring_label(p: Vector2, text: String, color: Color) -> void:
 	var w := UiDraw.text_w(text, "medium", 12)
+	p = Vector2(clampf(p.x, 4.0, maxf(4.0, size.x - w - 16.0)), clampf(p.y, 12.0, maxf(12.0, size.y - 12.0)))   # 화면 밖 고리도 이름표는 안에
 	draw_rect(Rect2(p + Vector2(3, -9), Vector2(w + 8, 17)), Color(0.03, 0.05, 0.07, 0.7))
 	UiDraw.text(self, p + Vector2(7, 4), text, "medium", 12, Color(color, 0.95), HORIZONTAL_ALIGNMENT_LEFT, -1, 2)
 
