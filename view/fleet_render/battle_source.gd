@@ -306,6 +306,7 @@ func detail(id: int) -> Dictionary:
 	var vice = d.get("vice_commander", {})
 	var hz := float(battle.sim.st.hz)
 	return {
+		"commander": v.fname,
 		"group": grp,
 		"vice": vice.get("name", "") if vice is Dictionary else "",
 		"staff": d.get("staff", []).map(func(p): return str(p.name)),
