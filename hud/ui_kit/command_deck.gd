@@ -644,7 +644,7 @@ func _info_single(c: Control, f) -> void:
 	UiDraw.text(c, Vector2(x, 34), f.fname, "serif_bold", 20, UiTheme.INK)
 	var nw := UiDraw.text_w(f.fname, "serif_bold", 20)
 	UiDraw.text(c, Vector2(x + nw + 8, 33), f.role.get_slice(" · ", 0), "regular", 11, UiTheme.INK_3)
-	var meta: String = battle.FORM_NAMES[f.form_id % battle.FORM_NAMES.size()]
+	var meta: String = src.form_name(f)
 	if f.defense:
 		meta += " · 방어진형"
 	elif f.charge_t > 0.0:
@@ -660,8 +660,11 @@ func _info_single(c: Control, f) -> void:
 	if shown_frac > frac:
 		c.draw_rect(Rect2(bar.position + Vector2(bar.size.x * frac, 0), Vector2(bar.size.x * (shown_frac - frac), bar.size.y)), Color(UiTheme.FOE, 0.5))
 	c.draw_rect(bar.grow(0.5), UiTheme.LINE, false, 1.0)
-	UiDraw.text(c, Vector2(c.size.x - 18, 61), "%d" % ceili(f.ships), "bold", 15, UiTheme.INK, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
-	UiDraw.text(c, Vector2(c.size.x - 52, 61), "/ %d척" % int(f.max_ships), "regular", 11, UiTheme.INK_3, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
+	if f.contact != "":   # 적은 정확한 척 수를 모른다: 전력 구간만
+		UiDraw.text(c, Vector2(c.size.x - 18, 61), BattleSource.contact_strength_text(f), "bold", 13, UiTheme.INK, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
+	else:
+		UiDraw.text(c, Vector2(c.size.x - 18, 61), "%d" % ceili(f.ships), "bold", 15, UiTheme.INK, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
+		UiDraw.text(c, Vector2(c.size.x - 52, 61), "/ %d척" % int(f.max_ships), "regular", 11, UiTheme.INK_3, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
 	if not info_open:
 		return
 	# 함종 구성: 화면 숫자는 코어 카운터만(리뷰 C-1). 카운터가 없으면(POC) 보이는 함종 이름만 숫자 없이 쓴다.

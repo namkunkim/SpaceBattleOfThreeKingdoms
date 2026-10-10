@@ -14,6 +14,9 @@ class FleetView:
 	var role := ""
 	var portrait := 0
 	var form_id := 0
+	var shape := 0                   # 투영 formation(배치도 번호). 진형 전환마다 갱신된다
+	var band := 0                    # 적 확인 접촉의 전력 구간(0이면 비공개/아군)
+	var max_band := 0
 	var form: Array[Vector2] = []
 	var ships := 0.0
 	var max_ships := 0.0
@@ -160,6 +163,7 @@ func apply(proj: Dictionary) -> Array[FleetView]:
 		f.in_cmd = s.in_cmd
 		f.dead = s.dead
 		f.control = s.control
+		f.shape = s.get("formation", 0)
 		f.formation_id = s.get("formation_id", "")
 		f.form_to = s.get("form_to", "")
 		f.form_left_s = s.get("form_left_s", 0.0)
@@ -266,6 +270,8 @@ func _apply_contact(s: Dictionary, advanced: bool, fresh: Array[FleetView]) -> v
 		f.portrait = s.portrait
 		f.group_id = ""
 		f.theading = s.heading
+		f.band = s.strength_band
+		f.max_band = s.max_strength_band
 		f.ships = CONTACT_SHIPS * float(s.strength_band) / float(s.max_strength_band)
 		f.shown = f.ships
 

@@ -31,14 +31,23 @@ func _sq(f) -> Dictionary:
 		"flagship": f.is_flag, "dead": f.dead,
 		"target_id": f.target.id if f.target else -1,
 		"firing_at": f.fire_t.id if (f.fire_t and not f.fire_t.dead) else -1,
-		"formation": f.form_id % battle.FORM_NAMES.size(),
-		"formation_name": battle.FORM_NAMES[f.form_id % battle.FORM_NAMES.size()],
+		"formation": f.shape,
+		"formation_name": form_name(f),
 		"defense": f.defense, "charge_t": f.charge_t, "in_cmd": f.in_cmd,
 		"missile_cd": f.missile_cd, "fighter_cd": f.fighter_cd,
 		"speech": f.speech, "speech_t": f.speech_t,
 		"has_move": f.has_move, "move_to": f.move_to, "lv": f.lv, "range": f.range_r,
 			"contact": f.contact,
 	}
+
+# 진형 이름: 코어 규칙(7종)의 formation_id. 규칙이 없으면(POC) 빈 문자열.
+func form_name(f) -> String:
+	if f.contact != "":
+		return ""   # 적 진형은 비공개
+	return combat.formations.get(f.formation_id, {}).get("name", "")
+
+static func contact_strength_text(f) -> String:
+	return "전력 %d/%d" % [f.band, f.max_band] if f.max_band > 0 else "전력 ?"
 
 func missiles() -> Array:
 	var out := []
