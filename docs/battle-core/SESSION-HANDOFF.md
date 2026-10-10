@@ -258,7 +258,7 @@
 ## 전투 전 편성 화면 + 전대 폐지 (2026-10-10, 세션 "장수/전함 배치 설정 화면", main `21b30d4`)
 - 결정 Q73~Q82(`BATTLE_DECISIONS.md` §T): 전대 폐지·함대 한 단계, 직책 제독+부제독+참모3, 함종 자유, 함대 예산 = 지휘 한도, 가용 장수 전원, 자동 편성, 손권·조조 AI 자동 편성, 조조는 함대 수로 비율 유지.
 - 사양 `docs/ui/FLEET-ORGANIZATION-SCREEN.md`, 목업 `docs/ui/mockup-fleet-organization-v1.html`. 생성기에 `factions[].available_officers`·`politics` 추가(`bc8de1b`).
-- 구현 분해 O0~O5는 §T-1. **O5(UI 문구 전대→함대) 완료: 화면 문자열·표시 데이터(서황 함대 등)·조작법 문서 교체, 검사 `tests/ui_wording.gd`(hud·view·input·scripts·core 리터럴 + 표시 필드). 로컬 화면 확인은 대기. `tests/boundary.gd`는 O5와 무관하게 실패 중(`battle_source.gd:176` BattleRules 참조, 2026-10-07 코드). 다음: O0(약 1,500척 성능 측정) → O1.**
+- 구현 분해 O0~O5는 §T-1. **O5(UI 문구 전대→함대) 완료: 화면 문자열·표시 데이터(서황 함대 등)·조작법 문서 교체, 검사 `tests/ui_wording.gd`(hud·view·input·scripts·core 리터럴 + 표시 필드). 로컬 화면 확인은 대기. `tests/boundary.gd`는 O5와 무관하게 실패 중(`battle_source.gd:176` BattleRules 참조, 2026-10-07 코드). O0 PC 측정 끝(1,523척 31 FPS, 현재 409척 73 FPS, `out/bench-density.md`; 밀도 설정은 효과 없음). 태블릿 실측은 사용자가 PC 기준으로 갈음. 다음: O1.**
 
 ## 남은 일 (컨셉 세션이 할 수 있는 것)
 
