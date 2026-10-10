@@ -69,7 +69,7 @@ SQUADRONS = [
        [C("SHP-01", 1), C("SHP-03", 4), C("SHP-04", 10), C("SHP-07", 3)],
        "조인은 형주 평정에 종군하고 전투 뒤 강릉을 지켰다(조인전).",
        morale_group="northern", deploy_min_difficulty="입문", deploy_delay_s=0),
-    sq("RC-CAO-SQ-03", "cao_cao", "서황 함대", "CHR-0017", "CHR-0009", [], False, [1530, 470], "FRM-03",
+    sq("RC-CAO-SQ-03", "cao_cao", "서황 별군", "CHR-0017", "CHR-0009", [], False, [1530, 470], "FRM-03",
        [C("SHP-02", 2), C("SHP-03", 5), C("SHP-04", 9), C("SHP-05", 1)],
        "서황은 형주 정벌에 종군하고 뒤에 조인과 함께 강릉에서 주유를 막았다(서황전). 만총도 형주 정벌에 종군했다(만총전).",
        morale_group="northern", deploy_min_difficulty="입문", deploy_delay_s=180),
@@ -117,6 +117,9 @@ def available_officers(squadrons, not_deployed):
 def cost(comp):
     return sum(c["count"] * (COST[c["ship_type_id"]] + EQ.get(c.get("mission_equipment_id", ""), 0)) for c in comp)
 
+
+# 화면 틀이 "%s 함대"라 이름이 "함대"로 끝나면 "○○ 함대 함대"가 된다(REVIEW-O5 #1)
+assert not any(s["name"].endswith("함대") for s in SQUADRONS)
 
 for s in SQUADRONS:
     s["declared_total_cost"] = cost(s["composition"])
