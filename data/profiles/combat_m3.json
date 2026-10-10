@@ -9,8 +9,22 @@
    "artillery",
    "line_fire",
    "intercept",
-   "torpedo"
+   "torpedo",
+   "fighter"
   ],
+  "charges": {
+   "base": 3,
+   "categories": [
+    "artillery",
+    "fighter"
+   ],
+   "commands": {
+    "missile": "artillery",
+    "fighter": "fighter"
+   },
+   "refill_rounding": "round_half_up",
+   "status": "BATTLE_DECISIONS Q69 확정(2026-10-10): 3회가 탄약을 대체, 일제사격 1주기 = 1회. 보충 횟수 = round(base × 보급함 처리량 bp / 10000) → 3/2/1(기지는 3). 구체 횟수는 기본값(미결 세부)"
+  },
   "period_s": 60,
   "period_source": "제안서 §4.3 Q46. 10~15초 대안은 M3 측정에서 비교(P12)",
   "weapons": {
@@ -28,12 +42,12 @@
      }
     },
     "equipment": {},
-    "ammo_per_platform": 6,
+    "ammo_per_platform": 0,
     "special_per_platform": 0,
     "shot": {
-     "ammo": 1,
-     "energy": 5,
-     "heat": 25,
+     "ammo": 0,
+     "energy": 0,
+     "heat": 0,
      "carrier_sorties": 0,
      "special": 0
     }
@@ -42,10 +56,6 @@
     "base_accuracy_bp": 7000,
     "base_damage": 100,
     "platforms": {
-     "SHP-01": {
-      "range": 190,
-      "arc_deg": 120
-     },
      "SHP-04": {
       "range": 180,
       "arc_deg": 120
@@ -106,16 +116,32 @@
      "carrier_sorties": 0,
      "special": 1
     }
+   },
+   "fighter": {
+    "base_accuracy_bp": 7000,
+    "base_damage": 100,
+    "platforms": {
+     "SHP-01": {
+      "range": 190,
+      "arc_deg": 120
+     }
+    },
+    "equipment": {},
+    "ammo_per_platform": 0,
+    "special_per_platform": 0,
+    "shot": {
+     "ammo": 0,
+     "energy": 0,
+     "heat": 0,
+     "carrier_sorties": 0,
+     "special": 0
+    }
    }
   },
   "carrier": {
-   "platform_key": "line_fire@SHP-01",
+   "platform_key": "fighter@SHP-01",
    "ship_type_id": "SHP-01",
-   "category": "line_fire",
-   "sorties_per_ship": 4,
-   "sorties_per_shot": 1,
-   "range_loss_ship": "SHP-04",
-   "range_without_carrier_note": "강습모함 0척이면 전열 사격 사거리가 190에서 180으로 준다(제안서 §4.4). 플랫폼 표가 함종별 사거리라 자동으로 맞는다."
+   "category": "fighter"
   },
   "ship_types": {
    "SHP-01": {

@@ -46,6 +46,7 @@ class CmdButton extends Button:
 	var deck: Node
 	var cool := 0.0
 	var cool_text := ""
+	var count_text := ""   # 남은 사용 횟수 "3/3"(미사일·함재기, salvo 규칙)
 	var blocked := false
 	var pinned := false
 	var hold_k := 0.0   # 길게 눌러 확정 진행(0~1)
@@ -73,6 +74,8 @@ class CmdButton extends Button:
 		var cost: int = cmd.get("cost", 0)
 		for i in cost:
 			UiDraw.diamond(self, Vector2(9 + i * 8, 9), 3.0, UiTheme.CP if not blocked else Color(UiTheme.CP, 0.35))
+		if count_text != "":
+			UiDraw.text(self, Vector2(size.x - 6, 26), count_text, "bold", 12, UiTheme.INK_4 if blocked else UiTheme.CP, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
 		if hold_k > 0.0:
 			var cc := ir.get_center()
 			draw_arc(cc, 21.0, 0.0, TAU, 32, Color(UiTheme.GOLD, 0.25), 2.0, true)

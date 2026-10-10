@@ -77,6 +77,18 @@ def main():
             "shot": dict(res["shot_cost"][cat]),
         }
 
+    # Q69: 미사일(포격 범주)과 함재기(line_fire@SHP-01)는 탄약·에너지·열 대신 사용 횟수로 센다.
+    # 함재기는 전열 범주에서 SHP-01 플랫폼만 떼어 낸 별도 범주다(강습모함이 있는 함대만 쏜다). 피해·명중 기본값은 전열과 같다.
+    lf = weapons["line_fire"]
+    weapons["fighter"] = {
+        "base_accuracy_bp": lf["base_accuracy_bp"], "base_damage": lf["base_damage"],
+        "platforms": {"SHP-01": lf["platforms"].pop("SHP-01")}, "equipment": {},
+        "ammo_per_platform": 0, "special_per_platform": 0,
+        "shot": {"ammo": 0, "energy": 0, "heat": 0, "carrier_sorties": 0, "special": 0},
+    }
+    weapons["artillery"]["ammo_per_platform"] = 0
+    weapons["artillery"]["shot"].update({"ammo": 0, "energy": 0, "heat": 0})
+
     out = {
         "schema_version": 1,
         "profile_id": "combat-m3",
@@ -84,18 +96,21 @@ def main():
         "combat": {
             "damage_mode": "sqrt",
             "damage_mode_note": "fixed | sqrt | linear. 제안서 K1(Q45): 기본 sqrt. M3에서 세 방식을 같은 조건으로 비교한다(docs/core/M3-NOTES.md).",
-            "categories": ["artillery", "line_fire", "intercept", "torpedo"],
+            "categories": ["artillery", "line_fire", "intercept", "torpedo", "fighter"],
+            "charges": {
+                "base": 3,
+                "categories": ["artillery", "fighter"],
+                "commands": {"missile": "artillery", "fighter": "fighter"},
+                "refill_rounding": "round_half_up",
+                "status": "BATTLE_DECISIONS Q69 확정(2026-10-10): 3회가 탄약을 대체, 일제사격 1주기 = 1회. 보충 횟수 = round(base × 보급함 처리량 bp / 10000) → 3/2/1(기지는 3). 구체 횟수는 기본값(미결 세부)",
+            },
             "period_s": 60,
             "period_source": "제안서 §4.3 Q46. 10~15초 대안은 M3 측정에서 비교(P12)",
             "weapons": weapons,
             "carrier": {
-                "platform_key": "line_fire@SHP-01",
+                "platform_key": "fighter@SHP-01",
                 "ship_type_id": "SHP-01",
-                "category": "line_fire",
-                "sorties_per_ship": res["platform_overrides"]["line_fire@SHP-01"]["carrier_sorties_per_platform"],
-                "sorties_per_shot": res["carrier_platform_shot_cost"]["line_fire@SHP-01"],
-                "range_loss_ship": "SHP-04",
-                "range_without_carrier_note": "강습모함 0척이면 전열 사격 사거리가 190에서 180으로 준다(제안서 §4.4). 플랫폼 표가 함종별 사거리라 자동으로 맞는다.",
+                "category": "fighter",
             },
             "ship_types": types,
             "fast_craft": {
@@ -186,8 +201,8 @@ def main():
                 "note": "전대 속도 = 편성에서 가장 느린 함종의 턴당 속도 / 60 (px/초) × (100 + 진형 기동%) / 100 (§4.2). 경유점은 최대 max_waypoints(경유 + 목적지)",
             },
             "formation_rules": {
-                "transition_s": 30,
-                "untrained_transition_s": 60,
+                "transition_s": 5,
+                "untrained_transition_s": 5,
                 "transition_damage_mul": 0.8,
                 "defense_id": "FRM-03",
                 "defense_note": "POC 방어진형 버튼은 삭제했다(§9 POC 처분). 같은 역할은 방원진이 맡고, 적 AI가 선체가 줄면 이 진형으로 바꾼다",
@@ -195,7 +210,7 @@ def main():
                 "master_min_command": 90,
                 "master_trait": "신기묘산",
                 "master_transition_div": 2,
-                "status": "Q24 전환 30초·통솔 미달 60초·전환 중 ×0.8. 팔진 전환 절반은 proposed(§4.7)",
+                "status": "전환 5초(통솔 미달도 5초)·전환 중 ×0.8. 팔진 전환 절반은 proposed(§4.7)",
                 # 상성(정본 ship-specs §5.4): 키 진형이 값 진형에 우위. 교전 거리대만 ×affinity_mul. 팔진은 무효, 장사진은 formation_damage_mul
                 "affinity": {"FRM-02": "FRM-01", "FRM-01": "FRM-03", "FRM-03": "FRM-05", "FRM-05": "FRM-04", "FRM-04": "FRM-02"},
                 "affinity_mul": 1.2,

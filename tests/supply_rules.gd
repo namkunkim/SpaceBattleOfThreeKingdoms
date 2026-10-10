@@ -44,14 +44,14 @@ func _run() -> void:
 	if not TestCheck.ok(self, str(S.status).begins_with("proposed") and int(S.ship_radius) == 140 and int(S.base_radius) == 180 and int(S.stationary_s) == 60, "데이터: 반경 140·180, 60초, 제안값 표시"): return
 
 	# --- 1. 완료 기준: 보급 영역(반경 140) 안에 60초 정지하면 탄약 전량 보충. 재고에서 탄약 단위와 물자 1을 쓴다 ---
-	var s := _sim([_d("S", 800, 450, [["SHP-05", 2], ["SHP-04", 2]], "liu_bei", true), _d("A", 925, 450, [["SHP-03", 2]])])
+	var s := _sim([_d("S", 800, 450, [["SHP-05", 2], ["SHP-04", 2]], "liu_bei", true), _d("A", 925, 450, [["SHP-04", 2]])])
 	var sup := s.supply
 	var sf: FleetState = s.st.fleets[0]
 	var a: FleetState = s.st.fleets[1]
 	if not TestCheck.ok(self, sup != null and sf.sup_ammo == 24 and sf.sup_mat == 8, "보급함 2척 재고 탄약 24·물자 4×2: %d/%d" % [sf.sup_ammo, sf.sup_mat]): return
 	_empty(a)
 	var need := sup.deficit(a)
-	if not TestCheck.ok(self, need == 12, "포격함 2척 탄약 상한 12: %d" % need): return
+	if not TestCheck.ok(self, need == 20, "전열함 2척 탄약 상한 20: %d" % need): return
 	_ticks(s, 599)
 	if not TestCheck.ok(self, sup.deficit(a) == need and a.sup_src == "f%d" % sf.id, "59.9초: 아직 보충 전, 배정은 보급함 전대(%s)" % a.sup_src): return
 	s.drain_events()
@@ -65,26 +65,26 @@ func _run() -> void:
 	if not TestCheck.ok(self, a.sup_src == "", "받을 것이 없으면 배정이 풀린다"): return
 
 	# --- 2. 중간에 벗어나면 완료되지 않는다(진행 0) ---
-	s = _sim([_d("S", 800, 450, [["SHP-05", 2], ["SHP-04", 2]], "liu_bei", true), _d("A", 925, 450, [["SHP-03", 2]])])
+	s = _sim([_d("S", 800, 450, [["SHP-05", 2], ["SHP-04", 2]], "liu_bei", true), _d("A", 925, 450, [["SHP-04", 2]])])
 	a = s.st.fleets[1]
 	_empty(a)
 	_sec(s, 30)
 	if not TestCheck.ok(self, a.sup_prog > 0, "30초: 진행 중"): return
 	s.issue(BattleSim.command(0, [a.id], "move", -1, Vector2(1200, 450)))
 	_sec(s, 31)
-	if not TestCheck.ok(self, a.sup_prog == 0 and a.sup_src == "" and s.supply.deficit(a) == 12, "움직이면 진행 0, 보충 안 됨"): return
+	if not TestCheck.ok(self, a.sup_prog == 0 and a.sup_src == "" and s.supply.deficit(a) == 20, "움직이면 진행 0, 보충 안 됨"): return
 	# 영역 밖에 정지해 있으면 받지 않는다
 	_sec(s, 60)
-	if not TestCheck.ok(self, s.supply.deficit(a) == 12 and a.pos.distance_to(s.st.fleets[0].pos) > 140.0, "반경 밖 정지: 보충 안 됨"): return
+	if not TestCheck.ok(self, s.supply.deficit(a) == 20 and a.pos.distance_to(s.st.fleets[0].pos) > 140.0, "반경 밖 정지: 보충 안 됨"): return
 
 	# --- 3. 처리량: 보급함 1척 = 동시 1개 전대. 순서는 남은 탄약 비율이 낮은 전대부터 ---
-	s = _sim([_d("S", 800, 450, [["SHP-05", 1], ["SHP-04", 2]], "liu_bei", true), _d("B", 925, 450, [["SHP-03", 2]]), _d("C", 800, 575, [["SHP-03", 2]])])
+	s = _sim([_d("S", 800, 450, [["SHP-05", 1], ["SHP-04", 2]], "liu_bei", true), _d("B", 925, 450, [["SHP-04", 1]]), _d("C", 800, 575, [["SHP-04", 1]])])
 	sup = s.supply
 	sf = s.st.fleets[0]
 	var b: FleetState = s.st.fleets[1]
 	var c: FleetState = s.st.fleets[2]
-	b.ammo.artillery = 9    # 75%
-	c.ammo.artillery = 6    # 50% → 먼저
+	b.ammo.line_fire = 7    # 70%
+	c.ammo.line_fire = 4    # 40% → 먼저
 	_ticks(s, 600)
 	if not TestCheck.ok(self, _full(sup, c) and not _full(sup, b), "60초: 비율이 낮은 C만 끝남"): return
 	_ticks(s, 600)
@@ -93,10 +93,10 @@ func _run() -> void:
 	# 재고가 모자라면 시작하지 않는다(전량 보충만, 원자적)
 	_empty(b)
 	_sec(s, 70)
-	if not TestCheck.ok(self, sup.deficit(b) == 12 and b.sup_src == "" and sf.sup_ammo == 3, "재고 3 < 12: 보충 안 함"): return
+	if not TestCheck.ok(self, sup.deficit(b) == 10 and b.sup_src == "" and sf.sup_ammo == 3, "재고 3 < 10: 보충 안 함"): return
 
 	# --- 4. 보급함 전대의 선체 구간이 처리량을 줄인다: 50% → 120초 ---
-	s = _sim([_d("S", 800, 450, [["SHP-05", 2], ["SHP-04", 2]], "liu_bei", true), _d("A", 925, 450, [["SHP-03", 2]])])
+	s = _sim([_d("S", 800, 450, [["SHP-05", 2], ["SHP-04", 2]], "liu_bei", true), _d("A", 925, 450, [["SHP-04", 2]])])
 	sup = s.supply
 	sf = s.st.fleets[0]
 	a = s.st.fleets[1]
@@ -131,8 +131,8 @@ func _run() -> void:
 	var defs := []
 	for i in 5:
 		var ang := TAU * i / 5.0
-		defs.append(_d("L%d" % i, sun_base.x + 150.0 * cos(ang), sun_base.y + 150.0 * sin(ang), [["SHP-03", 2]], "liu_bei", i == 0))
-	s = _sim(defs, [_d("Y", 60, 850, [["SHP-03", 2]], "cao_cao")])
+		defs.append(_d("L%d" % i, sun_base.x + 150.0 * cos(ang), sun_base.y + 150.0 * sin(ang), [["SHP-04", 2]], "liu_bei", i == 0))
+	s = _sim(defs, [_d("Y", 60, 850, [["SHP-04", 2]], "cao_cao")])
 	sup = s.supply
 	for f in s.st.fleets:
 		_empty(f)
@@ -149,7 +149,7 @@ func _run() -> void:
 			done += 1
 	var y: FleetState = s.st.fleets[5]
 	if not TestCheck.ok(self, done == 5, "다섯째는 120초에"): return
-	if not TestCheck.ok(self, sup.deficit(y) == 12 and y.pos.distance_to(Vector2(120, 780)) < 180.0, "유비 기지 반경 안의 조조 전대는 받지 않는다"): return
+	if not TestCheck.ok(self, sup.deficit(y) == 20 and y.pos.distance_to(Vector2(120, 780)) < 180.0, "유비 기지 반경 안의 조조 전대는 받지 않는다"): return
 
 	# 같은 세력 기지에서만 보급함 재고를 다시 채운다
 	s = _sim([_d("Sx", 170, 780, [["SHP-05", 1]], "liu_bei", true), _d("Sy", 120, 655, [["SHP-05", 1]], "sun_quan")])
@@ -161,13 +161,13 @@ func _run() -> void:
 	if not TestCheck.ok(self, sx.sup_ammo == 12 and sx.sup_mat == 4 and sy.sup_ammo == 0, "유비 기지: 유비 보급함 재적재, 손권 보급함은 아님(%d, %d)" % [sx.sup_ammo, sy.sup_ammo]): return
 
 	# --- 7. 적 보급함은 보급하지 않는다 ---
-	s = _sim([_d("A", 800, 450, [["SHP-03", 2]], "liu_bei", true)], [_d("Q", 1300, 450, [["SHP-05", 2]], "cao_cao"), _d("P", 1300, 575, [["SHP-03", 2]], "cao_cao")])
+	s = _sim([_d("A", 800, 450, [["SHP-04", 2]], "liu_bei", true)], [_d("Q", 1300, 450, [["SHP-05", 2]], "cao_cao"), _d("P", 1300, 575, [["SHP-04", 2]], "cao_cao")])
 	a = s.st.fleets[0]
 	var p: FleetState = s.st.fleets[2]
 	_empty(a)
 	_empty(p)
 	_sec(s, 61)
-	if not TestCheck.ok(self, s.supply.deficit(a) == 12 and _full(s.supply, p), "조조 보급함은 조조 전대만"): return
+	if not TestCheck.ok(self, s.supply.deficit(a) == 20 and _full(s.supply, p), "조조 보급함은 조조 전대만"): return
 
 	# --- 8. 수리: 주기마다 물자 1로 중파 1척 → 경파. 경파는 마지막 피격 뒤 120초면 무손상 ---
 	s = _sim([_d("S", 800, 450, [["SHP-05", 1], ["SHP-04", 2]], "liu_bei", true), _d("R", 925, 450, [["SHP-04", 4]])])

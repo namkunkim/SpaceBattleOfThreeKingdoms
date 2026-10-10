@@ -287,7 +287,14 @@ func restore_orders(snap: Dictionary) -> void:
 
 # ------------------------------------------------------------ 전대 세부 정보(선택 패널 펼침)
 # 자기 진영 전대만 준다. 적 접촉은 안개 규칙(이름·역할·전력 구간만)이라, POC 규칙은 값이 없어 빈 사전이다.
-const AMMO_LABEL := {"artillery": "미사일(포격)", "line_fire": "광선(전열)", "intercept": "요격", "torpedo": "뇌격"}   # 지도 고리 이름표와 공용
+const AMMO_LABEL := {"artillery": "미사일(포격)", "line_fire": "광선(전열)", "fighter": "함재기", "intercept": "요격", "torpedo": "뇌격"}   # 지도 고리 이름표와 공용
+func _plain_ammo(f) -> Dictionary:
+	var out := {}
+	for cat in f.ammo:
+		if not f.wch.has(cat):
+			out[cat] = f.ammo[cat]
+	return out
+
 func detail(id: int) -> Dictionary:
 	var v = battle.by_id(id)
 	if v == null or v.side != 0 or v.contact != "" or battle.sim.salvo == null:
@@ -317,7 +324,8 @@ func detail(id: int) -> Dictionary:
 		"stats": f.stats,
 		"morale_bp": f.morale_bp, "mstate": f.mstate,
 		"hull": f.hull, "max_hull": f.max_hull, "stages": f.stages,
-		"ammo": f.ammo,
+		"ammo": _plain_ammo(f),   # 횟수로 세는 범주(Q69)는 탄약에서 뺀다
+		"charges": f.wch, "charges_max": f.wmax,
 		"energy": f.energy_m / 1000.0, "energy_max": float(r.energy_base) + float(r.energy_per_ship) * n0,
 		"heat": f.heat_m / 1000.0, "heat_max": float(r.heat_base) + float(r.heat_per_ship) * n0,
 		"speed": f.speed, "range": f.range_r,

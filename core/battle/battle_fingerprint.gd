@@ -23,7 +23,7 @@ static func of(st: BattleState, detect: Detection = null, extra := "") -> String
 			var nf := PackedStringArray()
 			for cat in f.next_fire:
 				nf.append("%d.%d" % [f.next_fire[cat], f.ammo[cat]])
-			parts.append("h%d:%d,%d,%d,%d,%d,%d,%d|%s|%s" % [f.id, f.hull, f.lost_ships, f.loss_total, f.loss_exposed, f.energy_m, f.heat_m, f.sorties_m, ";".join(sg), ",".join(nf)])
+			parts.append("h%d:%d,%d,%d,%d,%d,%d,%s|%s|%s" % [f.id, f.hull, f.lost_ships, f.loss_total, f.loss_exposed, f.energy_m, f.heat_m, str(f.wch), ";".join(sg), ",".join(nf)])
 	parts.append("ev%d,%d" % [st.army_ev[0], st.army_ev[1]])
 	for f in st.fleets:
 		if f.max_hull > 0:

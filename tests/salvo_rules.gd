@@ -55,7 +55,7 @@ func _run() -> void:
 		F.run(near, 900.0)
 		if _winner_side0(near):
 			near_wins += 1
-	if not TestCheck.ok(self, far_wins == runs, "포격함이 멀리서(230)는 항상 이긴다: %d/%d" % [far_wins, runs]): return
+	if not TestCheck.ok(self, far_wins > near_wins and far_wins >= runs * 2 / 3, "포격함이 멀리서(230)는 가까이서보다 훨씬 자주 이긴다(Q69: 미사일 3회라 항상은 아님): 멀리 %d 가까이 %d / %d" % [far_wins, near_wins, runs]): return
 	if not TestCheck.ok(self, near_wins <= runs / 3, "포격함이 가까이서(100)는 대부분 진다: 포격 승 %d/%d" % [near_wins, runs]): return
 	# 멀리서는 사거리 밖인 전열함이 한 발도 쏘지 못한다
 	var fs := F.sim([F.def("포격", 400, 450, [["SHP-03", 8]], true)], [F.def("전열", 630, 450, [["SHP-04", 8]])], 3)
@@ -114,10 +114,10 @@ func _run() -> void:
 	for i in range(1, vol.size()):
 		if not TestCheck.ok(self, vol[i] - vol[i - 1] == 600, "주기 60초(600틱): %s" % str(vol)): return
 	var pf: FleetState = pc.st.fleets[0]
-	# 포격 4척: 탄약 24, 1회 탄 1·에너지 5·열 25
-	if not TestCheck.ok(self, pf.ammo["artillery"] == 24 - vol.size(), "탄약 소모 %d" % pf.ammo["artillery"]): return
+	# 포격은 탄약이 아니라 사용 횟수 3회로 센다(Q69): 3번 쏘고 멈춘다. 탄약·에너지·열은 쓰지 않는다
+	if not TestCheck.ok(self, vol.size() == 3 and pf.wch["artillery"] == 0 and pf.ammo["artillery"] == 0 and pf.heat_m == 0, "횟수 소모 %d/%d" % [pf.wch["artillery"], vol.size()]): return
 	# 열이 모자라면 보류하고 사유를 낸다
-	var hs := F.sim([F.def("포격", 400, 450, [["SHP-03", 4]], true)], [F.def("표적", 640, 450, [["SHP-04", 40]])], 5)
+	var hs := F.sim([F.def("전열", 400, 450, [["SHP-04", 4]], true)], [F.def("표적", 540, 450, [["SHP-04", 40]])], 5)
 	hs.st.fleets[0].heat_m = 1 << 30
 	var supp := ""
 	for i in 1500:
@@ -126,18 +126,17 @@ func _run() -> void:
 			if e.kind == "suppressed" and e.sq == hs.st.fleets[0].id:
 				supp = e.value.reason
 	if not TestCheck.ok(self, supp == "overheat", "과열 보류 사유: '%s'" % supp): return
-	# 강습모함의 함재기 출격
+	# 강습모함의 함재기: 3회 쓰면 멈추고 사유는 charges (Q69)
 	var cr := F.sim([F.def("모함", 400, 450, [["SHP-01", 1]], true)], [F.def("표적", 550, 450, [["SHP-05", 10]])], 5)
 	var cf: FleetState = cr.st.fleets[0]
-	if not TestCheck.ok(self, cf.sorties_m == 4000, "강습모함 1척 = 출격 4회"): return
-	cf.sorties_m = 0
+	if not TestCheck.ok(self, cf.wch["fighter"] == 3, "강습모함 있으면 함재기 3회"): return
 	var sup2 := ""
-	for i in 300:
+	for i in 3000:
 		cr.step()
 		for e in cr.drain_events():
 			if e.kind == "suppressed" and e.sq == cf.id:
 				sup2 = e.value.reason
-	if not TestCheck.ok(self, sup2 == "carrier_not_returned", "함재기 미복귀 사유: '%s'" % sup2): return
+	if not TestCheck.ok(self, sup2 == "charges" and cf.wch["fighter"] == 0, "함재기 횟수 소진 사유: '%s'" % sup2): return
 
 	# --- 4. 손실 배분과 손상 단계 ---
 	var ds := F.sim([F.def("표적", 400, 450, [["SHP-04", 6], ["SHP-07", 4], ["SHP-03", 4], ["SHP-05", 3], ["SHP-01", 2]], true)], [F.def("적", 560, 450, [["SHP-04", 10]])], 1)

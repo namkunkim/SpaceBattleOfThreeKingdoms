@@ -743,6 +743,8 @@ func _info_detail(c: Control, x: float, y: float, d: Dictionary, f) -> void:
 	var res := PackedStringArray()
 	for cat in d.ammo:
 		res.append("%s %d" % [src.AMMO_LABEL.get(cat, cat), int(d.ammo[cat])])
+	for cat in d.charges:
+		res.append("%s %d/%d회" % [src.AMMO_LABEL.get(cat, cat), int(d.charges[cat]), int(d.charges_max[cat])])
 	var form: String = d.formation
 	if d.form_to != "":
 		form += " → %s %d초" % [d.form_to, ceili(d.form_left_s)]
@@ -1010,7 +1012,18 @@ func _refresh_cmds() -> void:
 		var blocked: bool = (id != "all" and s.is_empty()) or (cost > 0 and battle.G.cp < cost)
 		var cool := 0.0
 		var cd_max := 0.0
-		if not s.is_empty() and (id == "missile" or id == "fighter"):
+		b.count_text = ""
+		if not s.is_empty() and (id == "missile" or id == "fighter") and src.rules().set != "poc":
+			# Q69: 재사용 대기 대신 남은 횟수. 선택 함대의 합 / 최대. 최대 0 = 그 무기가 없는 함대(함재기)
+			var cat := "artillery" if id == "missile" else "fighter"
+			var have := 0
+			var mx := 0
+			for f in s:
+				have += int(f.charges.get(cat, 0))
+				mx += int(f.charges_max.get(cat, 0))
+			b.count_text = "%d/%d" % [have, mx]
+			blocked = blocked or have <= 0
+		elif not s.is_empty() and (id == "missile" or id == "fighter"):
 			var m := 999.0
 			for f in s:
 				m = minf(m, f.missile_cd if id == "missile" else f.fighter_cd)
