@@ -85,7 +85,7 @@ footer .msg.bad{color:var(--bad)}
   <section id="detail"></section>
   <section>
     <h2>대기 풀</h2>
-    <h3>미배치 장수</h3><div id="poolOff"></div>
+    <h3>미배치 장수</h3><input id="q" placeholder="이름·특성 검색" style="width:100%;min-height:36px;margin-bottom:8px;background:#0a1016;border:1px solid var(--line);color:var(--ink);border-radius:5px;padding:0 10px"><div id="poolOff"></div>
     <h3>세력 예산</h3><div id="poolShip"></div>
   </section>
 </main>
@@ -96,15 +96,13 @@ footer .msg.bad{color:var(--bad)}
 </footer>
 <script>
 const SHIPS={'SHP-01':['강습모함',18,'함재기·강습정'],'SHP-02':['공성함',14,'요새·방어망 관통'],'SHP-03':['포격함',12,'장거리 포화'],'SHP-04':['전열함',10,'정면 교전'],'SHP-05':['보급함',8,'수리·보급'],'SHP-06':['전자전함',9,'탐지·교란'],'SHP-07':['요격함',7,'고속 요격·호위'],'SHP-08':['고속정',3,'정찰(장비 포함)']};
-const O={ // 이름, 통, 무, 지, 매, 특성
-  liubei:['유비',82,73,76,99,'인덕'], zhangfei:['장비',88,98,45,45,'연인'], zhuge:['제갈량',92,38,100,92,'신기묘산'],
-  guanyu:['관우',95,97,75,93,'만인지적'], liuqi:['유기',48,38,30,38,'장자'], zhaoyun:['조운',91,96,76,88,'일신시담']};
+const O={"CHR-0104": ["간옹", 25, 15, 74, 70, 78, "오만"], "CHR-0105": ["감부인", 10, 8, 50, 60, 80, "인고"], "CHR-0107": ["관우", 95, 97, 75, 62, 93, "만인지적"], "CHR-0108": ["관흥", 82, 88, 62, 58, 72, "부풍"], "CHR-0111": ["마대", 80, 82, 66, 60, 62, "집행"], "CHR-0112": ["마량", 62, 30, 88, 90, 86, "백미"], "CHR-0113": ["마속", 60, 45, 85, 72, 68, "담병"], "CHR-0114": ["마초", 92, 97, 44, 25, 78, "금마초"], "CHR-0115": ["미방", 45, 40, 50, 55, 40, "불안"], "CHR-0116": ["미부인", 10, 8, 48, 58, 78, "장판"], "CHR-0117": ["미축", 25, 20, 72, 78, 82, "거상"], "CHR-0118": ["방통", 78, 30, 97, 80, 72, "봉추"], "CHR-0119": ["법정", 72, 40, 95, 76, 50, "기모"], "CHR-0121": ["비의", 62, 30, 85, 90, 88, "조정"], "CHR-0122": ["서서", 70, 45, 91, 80, 76, "효심"], "CHR-0123": ["손건", 30, 20, 72, 76, 80, "변설"], "CHR-0124": ["왕평", 88, 76, 72, 62, 68, "무당비군"], "CHR-0125": ["요화", 76, 70, 62, 60, 62, "노익장"], "CHR-0126": ["위연", 85, 90, 70, 40, 45, "반골"], "CHR-0127": ["유봉", 70, 80, 50, 45, 50, "양자"], "CHR-0128": ["유비", 82, 73, 76, 80, 99, "인덕"], "CHR-0129": ["이엄", 78, 72, 78, 72, 50, "탁고"], "CHR-0130": ["장비", 88, 98, 45, 22, 45, "연인"], "CHR-0132": ["장완", 68, 25, 80, 92, 85, "사직지기"], "CHR-0134": ["제갈량", 92, 38, 100, 95, 92, "신기묘산"], "CHR-0136": ["조운", 91, 96, 76, 65, 88, "일신시담"], "CHR-0137": ["황월영", 15, 10, 92, 72, 70, "목우유마"], "CHR-0138": ["황충", 89, 93, 64, 56, 72, "강궁"], "CHR-0140": ["곽준", 83, 39, 17, 29, 24, "고수"], "CHR-0141": ["관평", 78, 81, 20, 38, 29, "부자"], "CHR-0142": ["관흥의 형제 관색", 40, 72, 22, 23, 26, "—"], "CHR-0147": ["맹달", 50, 38, 24, 81, 16, "이반"], "CHR-0149": ["부동", 32, 76, 29, 27, 16, "순절"], "CHR-0150": ["비시", 30, 24, 37, 70, 33, "직언"], "CHR-0151": ["상랑", 27, 29, 28, 66, 38, "—"], "CHR-0152": ["상총", 88, 45, 16, 42, 15, "숙련"], "CHR-0153": ["양의", 19, 23, 76, 75, 32, "보급"], "CHR-0155": ["엄안", 82, 32, 14, 33, 15, "노장"], "CHR-0156": ["여개", 17, 20, 41, 77, 33, "고절"], "CHR-0158": ["오반", 60, 37, 15, 37, 25, "—"], "CHR-0159": ["오의", 59, 31, 40, 79, 37, "—"], "CHR-0160": ["왕항", 15, 28, 35, 73, 26, "—"], "CHR-0161": ["요립", 18, 14, 69, 39, 15, "원망"], "CHR-0162": ["유봉의 부장 맹달 계열", 79, 27, 22, 36, 28, "—"], "CHR-0164": ["유염", 21, 28, 37, 71, 37, "방자"], "CHR-0165": ["유파", 14, 28, 80, 81, 39, "직백전"], "CHR-0167": ["이적", 24, 20, 70, 70, 34, "변설"], "CHR-0169": ["이회", 56, 35, 31, 80, 24, "남중 회유"], "CHR-0170": ["장남", 74, 41, 23, 38, 14, "—"], "CHR-0171": ["장송", 20, 28, 28, 77, 30, "내응"], "CHR-0173": ["장포", 37, 76, 25, 17, 18, "부풍"], "CHR-0176": ["주창", 34, 73, 23, 14, 14, "종자"], "CHR-0177": ["진도", 72, 78, 26, 39, 15, "백모병"], "CHR-0178": ["진식", 59, 31, 25, 36, 27, "—"], "CHR-0181": ["팽양", 29, 21, 74, 28, 27, "오만"], "CHR-0182": ["풍습", 67, 26, 18, 30, 15, "—"], "CHR-0183": ["황권", 75, 28, 79, 55, 18, "선견"], "CHR-0325": ["유기", 48, 38, 30, 71, 38, "장자"]}; // 통 무 지 정 매 특성. 출처: red_cliffs_208_realtime.json liu_bei.available_officers
 const ROLES=[['admiral','제독'],['vice','부제독'],['assault','참모 · 강습'],['siege','참모 · 공성'],['supply','참모 · 보급']];
 const INIT=()=>[
-  {id:'RC-LIU-SQ-01',name:'유비 본대',flag:true,on:true,o:{admiral:'liubei',vice:'zhangfei',siege:'zhuge'},s:{'SHP-04':12,'SHP-05':3,'SHP-07':6}},
-  {id:'RC-LIU-SQ-02',name:'관우 수군',on:true,o:{admiral:'guanyu'},s:{'SHP-03':6,'SHP-04':9,'SHP-07':6}},
-  {id:'RC-LIU-SQ-03',name:'유기 강하군',on:true,o:{admiral:'liuqi'},s:{'SHP-03':3,'SHP-04':9,'SHP-05':3}},
-  {id:'RC-LIU-FC-01',name:'조운 정찰 고속정대',on:true,o:{admiral:'zhaoyun'},s:{'SHP-08':18}}];
+  {id:'RC-LIU-SQ-01',name:'유비 본대',flag:true,on:true,o:{admiral:'CHR-0128',vice:'CHR-0130',siege:'CHR-0134'},s:{'SHP-04':12,'SHP-05':3,'SHP-07':6}},
+  {id:'RC-LIU-SQ-02',name:'관우 수군',on:true,o:{admiral:'CHR-0107'},s:{'SHP-03':6,'SHP-04':9,'SHP-07':6}},
+  {id:'RC-LIU-SQ-03',name:'유기 강하군',on:true,o:{admiral:'CHR-0325'},s:{'SHP-03':3,'SHP-04':9,'SHP-05':3}},
+  {id:'RC-LIU-FC-01',name:'조운 정찰 고속정대',on:true,o:{admiral:'CHR-0136'},s:{'SHP-08':18}}];
 let F,sel,picked;
 const BUDGET=594; // 세력 예산 = 정사 편성 비용 합(186+204+150+54). ponytail: 고속정 장비는 정찰 고정, 장비 선택은 v2
 const left=()=>BUDGET-F.filter(f=>f.on).reduce((a,f)=>a+cost(f),0);
@@ -113,16 +111,19 @@ const cost=f=>Object.entries(f.s).reduce((a,[k,n])=>a+SHIPS[k][1]*n,0);
 const ships=f=>Object.values(f.s).reduce((a,n)=>a+n,0);
 const limit=f=>f.o.admiral?(40+O[f.o.admiral][1]*2)*3:0; // 시나리오: (40 + 통솔×2) × 3
 const assigned=()=>new Set(F.filter(f=>f.on).flatMap(f=>Object.values(f.o)));
-const poolO=()=>Object.keys(O).filter(k=>!assigned().has(k));
+const poolO=()=>{const q=($('q')||{}).value||'';return Object.keys(O).filter(k=>!assigned().has(k)&&(O[k][0]+O[k][6]).includes(q)).sort((a,b)=>O[b][1]-O[a][1])};
 function errs(f){const e=[];if(!f.on)return e;
   if(!f.o.admiral)e.push('제독 없음');
   if(ships(f)===0)e.push('함선 0척');
-  if(f.o.admiral&&cost(f)>limit(f))e.push(`지휘 한도 초과 ${cost(f)}/${limit(f)}`);return e}
+  return e}
+// 코어 command.gd limit_tier: 초과분 ÷ (한도×25%) 올림, 최대 4단계. 단계당 기동 −5%·명중 −4%·진형 전환 +8%
+const tier=f=>{const l=limit(f),c=cost(f);return !l||c<=l?0:Math.min(4,Math.ceil((c-l)/(l*0.25)))};
+const tierText=t=>`초과 ${t}단계: 기동 −${5*t}% · 명중 −${4*t}% · 진형 전환 +${8*t}%`;
 function toggle(i){const f=F[i];if(f.flag)return;f.on=!f.on;
   if(!f.on){f.s={};f.o={}}picked=null;render()}
-function officerCard(k){const[n,c,m,i,ch,t]=O[k];
+function officerCard(k){const[n,c,m,i,po,ch,t]=O[k];
   return `<div class="officer"><div class="portrait">${n[0]}</div><div class="n">${n}</div>
-  <div class="stats">통<b>${c}</b> 무<b>${m}</b> 지<b>${i}</b> 매<b>${ch}</b></div><div class="trait">${t}</div></div>`}
+  <div class="stats">통<b>${c}</b> 무<b>${m}</b> 지<b>${i}</b> 정<b>${po}</b> 매<b>${ch}</b></div><div class="trait">${t}</div></div>`}
 function clickSlot(role){const f=F[sel];if(f.flag&&role==='admiral')return;
   const cur=f.o[role];
   if(picked){ // 고른 장수를 이 칸으로(자리에 있던 장수와 맞바꿈)
@@ -136,7 +137,7 @@ function unassign(){if(!picked||picked.fleet==null)return;const f=F[picked.fleet
 function move(k,d){const f=F[sel];
   if(d>0){if(!canAdd(k))return;f.s[k]=(f.s[k]||0)+1}
   else{if(!(f.s[k]>0))return;f.s[k]--;if(!f.s[k])delete f.s[k]}render()}
-const canAdd=k=>{const f=F[sel],u=SHIPS[k][1];return u<=left()&&cost(f)+u<=limit(f)};
+const canAdd=k=>SHIPS[k][1]<=left();
 function render(){
   $('fleets').innerHTML=F.map((f,i)=>{const e=errs(f),l=limit(f),c=cost(f);
     return `<div class="fleet ${i===sel?'sel':''} ${f.on?'':'off'}" onclick="sel=${i};picked=null;render()">
@@ -144,7 +145,7 @@ function render(){
     <button class="tog ${f.on?'on':''}" ${f.flag?'disabled title="기함 함대는 끌 수 없음"':''} onclick="event.stopPropagation();toggle(${i})">${f.on?'출전':'대기'}</button></div>
     <div class="meta">${f.on?`제독 ${f.o.admiral?O[f.o.admiral][0]:'—'} · ${ships(f)}척 · 비용 ${c}/${l||'—'}`:'출전하지 않음 · 장수·함선은 대기 풀로'}</div>
     ${f.on?`<div class="bar"><i class="${c>l?'over':''}" style="width:${l?Math.min(100,c/l*100):0}%"></i></div>`:''}
-    ${e.map(x=>`<div class="err">⚠ ${x}</div>`).join('')}</div>`}).join('');
+    ${e.map(x=>`<div class="err">⚠ ${x}</div>`).join('')}${f.on&&tier(f)?`<div class="err" style="color:var(--warn)">△ ${tierText(tier(f))}</div>`:''}</div>`}).join('');
   const f=F[sel];
   if(!f.on){$('detail').innerHTML=`<h2>${f.name}</h2><p class="empty">대기 중인 함대입니다. 왼쪽에서 <b>출전</b>을 켜면 편성할 수 있습니다.</p>`}
   else{
@@ -154,7 +155,7 @@ function render(){
     const isPick=picked&&picked.fleet===sel&&picked.role===r;
     return `<div class="slot ${k?'filled':''} ${picked&&!isPick&&!lock?'target':''} ${lock?'locked':''} ${isPick?'picked':''}" onclick="clickSlot('${r}')" ${lock?'title="기함 제독은 바꿀 수 없음"':''}>
       <div class="role">${lab}${lock?' 🔒':''}</div>${k?officerCard(k):'<div class="hint">비어 있음</div>'}</div>`}).join('')}</div>
-  <h3>전함 — 함종 제한 없음 · 세력 예산과 함대 지휘 한도 안에서</h3>
+  <h3>전함 — 함종 제한 없음 · 세력 예산 안에서 (지휘 한도 초과는 불이익)</h3>
   <table>${Object.keys(SHIPS).map(k=>`<tr>
     <td><b>${SHIPS[k][0]}</b> <span class="role-s">${k} · ${SHIPS[k][2]}</span></td>
     <td style="width:44px"><button class="pm" ${f.s[k]?'':'disabled'} onclick="move('${k}',-1)">−</button></td>
@@ -162,11 +163,11 @@ function render(){
     <td style="width:44px"><button class="pm" ${canAdd(k)?'':'disabled'} onclick="move('${k}',1)">+</button></td>
     <td class="cost">${SHIPS[k][1]} × ${f.s[k]||0} = ${SHIPS[k][1]*(f.s[k]||0)}</td></tr>`).join('')}</table>
   <div class="summary"><span>총 <b>${ships(f)}</b>척</span><span>비용 <b>${cost(f)}</b> / 지휘 한도 <b>${limit(f)||'—'}</b></span>
-    <span class="role-s">한도 = (40 + 제독 통솔×2) × 3</span></div>`}
+    <span class="role-s">한도 = (40 + 제독 통솔×2) × 3 · 넘겨도 되지만 불이익</span></div>${tier(f)?`<div class="err" style="color:var(--warn)">△ ${tierText(tier(f))}</div>`:''}`}
   const po=poolO();
   $('poolOff').innerHTML=(picked&&picked.fleet!=null?`<div class="pool-off" style="justify-content:center;border-style:dashed" onclick="unassign()">↩ 선택한 장수를 대기 풀로</div>`:'')+
     (po.length?po.map(k=>`<div class="pool-off ${picked&&picked.k===k?'picked':''}" onclick="picked={k:'${k}',fleet:null};render()">
-    <div class="portrait">${O[k][0][0]}</div><div><b>${O[k][0]}</b><div class="stats">통${O[k][1]} 무${O[k][2]} 지${O[k][3]} · ${O[k][5]}</div></div></div>`).join(''):'<div class="empty">모든 장수가 배치됐습니다. 함대를 대기로 돌리면 그 장수가 여기로 옵니다.</div>');
+    <div class="portrait">${O[k][0][0]}</div><div><b>${O[k][0]}</b><div class="stats">통${O[k][1]} 무${O[k][2]} 지${O[k][3]} 정${O[k][4]} · ${O[k][6]}</div></div></div>`).join(''):'<div class="empty">모든 장수가 배치됐습니다. 함대를 대기로 돌리면 그 장수가 여기로 옵니다.</div>');
   const L=left();
   $('poolShip').innerHTML=`<div class="pool-ship"><span>남은 예산</span><b>${L} / ${BUDGET}</b></div><div class="bar"><i style="width:${(BUDGET-L)/BUDGET*100}%"></i></div><div class="empty">어떤 함종이든 살 수 있다. 함대를 대기로 돌리면 그 비용이 돌아온다.</div>`;
   const all=F.flatMap(f=>errs(f).map(e=>`${f.name}: ${e}`));
@@ -176,6 +177,7 @@ function render(){
   $('ok').disabled=bad}
 $('reset').onclick=()=>{F=INIT();sel=0;picked=null;render()};
 $('ok').onclick=()=>alert('목업: 편성 사본을 프로필에 덮어쓰고 위치 배치로 넘어간다');
+$('q').oninput=render;
 $('reset').onclick();
 </script>
 </body>
