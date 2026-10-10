@@ -112,8 +112,17 @@ func _run() -> void:
 	for i in 1300:
 		mv.step()
 	if not TestCheck.ok(self, mfl.wch.artillery == 0, "정지하지 않으면 보충 없음"): return
-	# 강습모함이 없는 함대는 함재기를 보충받지 않는다(횟수 0 유지)
-	if not TestCheck.ok(self, b.wch.fighter == 0 and s.supply == null, "함재기 없음 유지"): return
+	# 강습모함이 없는 함대는 보급을 받아도 함재기 횟수 0 유지, 미사일만 찬다
+	var nc := _sup_sim([["SHP-03", 2]])
+	var nf: FleetState = nc.st.fleets[1]
+	nf.wch.artillery = 0
+	for i in 700:
+		nc.step()
+	if not TestCheck.ok(self, nf.wch.fighter == 0 and nf.wch.artillery == 3, "함재기 없음 유지, 미사일 보충: %s" % str(nf.wch)): return
+	# 강습모함이 전멸하면 최대·남은 함재기 횟수도 0(버튼 0/0)
+	a.stages["SHP-01"] = [0, 0, 0, 0, 1]
+	s.salvo.refresh_range(a)
+	if not TestCheck.ok(self, a.wmax.fighter == 0 and a.wch.fighter == 0 and a.wmax.artillery == 3, "모함 전멸: 함재기 0/0 %s" % str(a.wmax)): return
 
 	# --- 6. 결정론: 같은 시드의 지문이 같다 ---
 	var fp := []

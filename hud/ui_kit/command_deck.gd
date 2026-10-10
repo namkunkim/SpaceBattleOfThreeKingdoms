@@ -744,6 +744,8 @@ func _info_detail(c: Control, x: float, y: float, d: Dictionary, f) -> void:
 	for cat in d.ammo:
 		res.append("%s %d" % [src.AMMO_LABEL.get(cat, cat), int(d.ammo[cat])])
 	for cat in d.charges:
+		if int(d.charges_max[cat]) <= 0:
+			continue   # 그 무기가 없는 함대(강습모함 없음·전멸)는 항목을 숨긴다
 		res.append("%s %d/%d회" % [src.AMMO_LABEL.get(cat, cat), int(d.charges[cat]), int(d.charges_max[cat])])
 	var form: String = d.formation
 	if d.form_to != "":

@@ -251,6 +251,9 @@ func platforms(f: FleetState, cat: String) -> Array:
 	return out
 
 func refresh_range(f: FleetState) -> void:
+	for cat in f.wch:   # 플랫폼이 전멸하면 최대·남은 횟수도 0(버튼 0/0)
+		f.wmax[cat] = charge_cap(f, cat)
+		f.wch[cat] = mini(int(f.wch[cat]), int(f.wmax[cat]))
 	var r := 0.0
 	f.ranges = {}
 	for cat in C.categories:
@@ -270,7 +273,9 @@ func _max_range(f: FleetState, cat: String, fallback: float) -> float:
 func band(f: FleetState, dist: float) -> String:
 	if dist <= float(C.bands.assault_r):
 		return "assault"
-	if dist <= _max_range(f, "line_fire", float(C.bands.line_fire_default_r)):
+	# 교전 = 전열 사거리, 강습모함이 있으면 함재기 사거리까지(Q69로 함재기가 전열에서 분리돼도 거리대는 그대로)
+	var er := maxf(_max_range(f, "line_fire", 0.0), _max_range(f, "fighter", 0.0))
+	if dist <= (er if er > 0.0 else float(C.bands.line_fire_default_r)):
 		return "engagement"
 	if dist <= _max_range(f, "artillery", float(C.bands.artillery_default_r)):
 		return "barrage"

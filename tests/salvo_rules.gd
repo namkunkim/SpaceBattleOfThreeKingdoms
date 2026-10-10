@@ -46,16 +46,17 @@ func _run() -> void:
 	var far_wins := 0
 	var near_wins := 0
 	var runs := 30
+	var unlimited := func(cb): cb.charges.base = 999   # 사거리 시험은 횟수 제한(Q69)과 분리
 	for sd in runs:
-		var far := F.sim([F.def("포격", 400, 450, [["SHP-03", 8]], true)], [F.def("전열", 630, 450, [["SHP-04", 8]])], sd)
+		var far := F.sim([F.def("포격", 400, 450, [["SHP-03", 8]], true)], [F.def("전열", 630, 450, [["SHP-04", 8]])], sd, "", unlimited)
 		F.run(far, 900.0)
 		if _winner_side0(far):
 			far_wins += 1
-		var near := F.sim([F.def("포격", 400, 450, [["SHP-03", 8]], true)], [F.def("전열", 500, 450, [["SHP-04", 8]])], sd)
+		var near := F.sim([F.def("포격", 400, 450, [["SHP-03", 8]], true)], [F.def("전열", 500, 450, [["SHP-04", 8]])], sd, "", unlimited)
 		F.run(near, 900.0)
 		if _winner_side0(near):
 			near_wins += 1
-	if not TestCheck.ok(self, far_wins > near_wins and far_wins >= runs * 2 / 3, "포격함이 멀리서(230)는 가까이서보다 훨씬 자주 이긴다(Q69: 미사일 3회라 항상은 아님): 멀리 %d 가까이 %d / %d" % [far_wins, near_wins, runs]): return
+	if not TestCheck.ok(self, far_wins == runs, "포격함이 멀리서(230)는 항상 이긴다(횟수 제한 해제 시험): %d/%d" % [far_wins, runs]): return
 	if not TestCheck.ok(self, near_wins <= runs / 3, "포격함이 가까이서(100)는 대부분 진다: 포격 승 %d/%d" % [near_wins, runs]): return
 	# 멀리서는 사거리 밖인 전열함이 한 발도 쏘지 못한다
 	var fs := F.sim([F.def("포격", 400, 450, [["SHP-03", 8]], true)], [F.def("전열", 630, 450, [["SHP-04", 8]])], 3)
