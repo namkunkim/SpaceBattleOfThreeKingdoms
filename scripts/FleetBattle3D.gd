@@ -21,6 +21,7 @@ const FIGHTER_R := 380.0
 const PORTRAIT_SHEET := "res://assets/portraits/commanders_sheet_v1.png"
 var profile_def := "res://data/profiles/red_cliffs_rt.json"   # 적벽 시나리오 프로필. ""이면 POC 프로필(규칙 문구 대조 테스트 전용)
 var difficulty := "표준"
+var profile_patch := Callable()   # 측정 전용(bench_density 1,500척 프리셋): 프로필을 받아 고친다. 게임 흐름에서는 비어 있다
 var move_mul := 150.0   # 이동 배율: 화면 한 폭(1600)을 약 10초에 건넌다. 헤드리스 테스트는 1로 둔다
 var turn_mul := 15.0    # 선회율 배율: 선회 반경(속도÷선회율)이 도착 판정(settle 0.7×속도) 안에 들어야 목적지를 돌지 않는다. 조건은 선회율 > 82°/초(속도와 무관)
 const FIELD_SIZE := CameraRig.WORLD * 0.5   # 전투 전장 크기: 배경판(3400×2300)의 가로·세로 1/2 = 1700×1150 (이전 6800×4600의 1/4)
@@ -152,6 +153,8 @@ func init_game() -> void:
 		rig.margin = 0.4   # 시작 배율에서도 두 손가락으로 화면을 옮길 수 있게
 		GameSettings.slow_mode = GameSettings.SLOW_OFF   # 선택 감속 끔(저장 설정은 건드리지 않는다)
 		ScenarioProfile.tune_for_play(profile, move_mul, turn_mul)
+	if profile_patch.is_valid() and not profile.is_empty():
+		profile_patch.call(profile)
 	sim = BattleSim.new(battle_seed, BattleRules.TICK_HZ, profile)
 	ALLY_DEF = profile.ally.map(_with_portrait)
 	FOE_DEF = profile.foe.filter(func(d): return int(d.wait) == 0).map(_with_portrait)
