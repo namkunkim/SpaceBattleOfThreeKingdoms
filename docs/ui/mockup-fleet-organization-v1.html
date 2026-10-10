@@ -86,7 +86,7 @@ footer .msg.bad{color:var(--bad)}
   <section>
     <h2>대기 풀</h2>
     <h3>미배치 장수</h3><div id="poolOff"></div>
-    <h3>미배치 함선</h3><div id="poolShip"></div>
+    <h3>세력 예산</h3><div id="poolShip"></div>
   </section>
 </main>
 <footer>
@@ -95,7 +95,7 @@ footer .msg.bad{color:var(--bad)}
   <button class="btn primary" id="ok">편성 확정</button>
 </footer>
 <script>
-const SHIPS={'SHP-03':['포격함',12,'장거리 포화'],'SHP-04':['전열함',10,'정면 교전'],'SHP-05':['보급함',8,'수리·보급'],'SHP-07':['요격함',7,'고속 요격·호위'],'SHP-08':['고속정',3,'정찰(장비 포함)']};
+const SHIPS={'SHP-01':['강습모함',18,'함재기·강습정'],'SHP-02':['공성함',14,'요새·방어망 관통'],'SHP-03':['포격함',12,'장거리 포화'],'SHP-04':['전열함',10,'정면 교전'],'SHP-05':['보급함',8,'수리·보급'],'SHP-06':['전자전함',9,'탐지·교란'],'SHP-07':['요격함',7,'고속 요격·호위'],'SHP-08':['고속정',3,'정찰(장비 포함)']};
 const O={ // 이름, 통, 무, 지, 매, 특성
   liubei:['유비',82,73,76,99,'인덕'], zhangfei:['장비',88,98,45,45,'연인'], zhuge:['제갈량',92,38,100,92,'신기묘산'],
   guanyu:['관우',95,97,75,93,'만인지적'], liuqi:['유기',48,38,30,38,'장자'], zhaoyun:['조운',91,96,76,88,'일신시담']};
@@ -105,7 +105,9 @@ const INIT=()=>[
   {id:'RC-LIU-SQ-02',name:'관우 수군',on:true,o:{admiral:'guanyu'},s:{'SHP-03':6,'SHP-04':9,'SHP-07':6}},
   {id:'RC-LIU-SQ-03',name:'유기 강하군',on:true,o:{admiral:'liuqi'},s:{'SHP-03':3,'SHP-04':9,'SHP-05':3}},
   {id:'RC-LIU-FC-01',name:'조운 정찰 고속정대',on:true,o:{admiral:'zhaoyun'},s:{'SHP-08':18}}];
-let F,sel,picked,poolS;
+let F,sel,picked;
+const BUDGET=594; // 세력 예산 = 정사 편성 비용 합(186+204+150+54). ponytail: 고속정 장비는 정찰 고정, 장비 선택은 v2
+const left=()=>BUDGET-F.filter(f=>f.on).reduce((a,f)=>a+cost(f),0);
 const $=id=>document.getElementById(id);
 const cost=f=>Object.entries(f.s).reduce((a,[k,n])=>a+SHIPS[k][1]*n,0);
 const ships=f=>Object.values(f.s).reduce((a,n)=>a+n,0);
@@ -117,7 +119,7 @@ function errs(f){const e=[];if(!f.on)return e;
   if(ships(f)===0)e.push('함선 0척');
   if(f.o.admiral&&cost(f)>limit(f))e.push(`지휘 한도 초과 ${cost(f)}/${limit(f)}`);return e}
 function toggle(i){const f=F[i];if(f.flag)return;f.on=!f.on;
-  if(!f.on){for(const[k,n]of Object.entries(f.s))poolS[k]=(poolS[k]||0)+n;f.s={};f.o={}}picked=null;render()}
+  if(!f.on){f.s={};f.o={}}picked=null;render()}
 function officerCard(k){const[n,c,m,i,ch,t]=O[k];
   return `<div class="officer"><div class="portrait">${n[0]}</div><div class="n">${n}</div>
   <div class="stats">통<b>${c}</b> 무<b>${m}</b> 지<b>${i}</b> 매<b>${ch}</b></div><div class="trait">${t}</div></div>`}
@@ -132,8 +134,9 @@ function clickSlot(role){const f=F[sel];if(f.flag&&role==='admiral')return;
 function unassign(){if(!picked||picked.fleet==null)return;const f=F[picked.fleet];
   if(f.flag&&picked.role==='admiral')return;delete f.o[picked.role];picked=null;render()}
 function move(k,d){const f=F[sel];
-  if(d>0){if(!(poolS[k]>0))return;poolS[k]--;f.s[k]=(f.s[k]||0)+1}
-  else{if(!(f.s[k]>0))return;f.s[k]--;poolS[k]=(poolS[k]||0)+1;if(!f.s[k])delete f.s[k]}render()}
+  if(d>0){if(!canAdd(k))return;f.s[k]=(f.s[k]||0)+1}
+  else{if(!(f.s[k]>0))return;f.s[k]--;if(!f.s[k])delete f.s[k]}render()}
+const canAdd=k=>{const f=F[sel],u=SHIPS[k][1];return u<=left()&&cost(f)+u<=limit(f)};
 function render(){
   $('fleets').innerHTML=F.map((f,i)=>{const e=errs(f),l=limit(f),c=cost(f);
     return `<div class="fleet ${i===sel?'sel':''} ${f.on?'':'off'}" onclick="sel=${i};picked=null;render()">
@@ -151,12 +154,12 @@ function render(){
     const isPick=picked&&picked.fleet===sel&&picked.role===r;
     return `<div class="slot ${k?'filled':''} ${picked&&!isPick&&!lock?'target':''} ${lock?'locked':''} ${isPick?'picked':''}" onclick="clickSlot('${r}')" ${lock?'title="기함 제독은 바꿀 수 없음"':''}>
       <div class="role">${lab}${lock?' 🔒':''}</div>${k?officerCard(k):'<div class="hint">비어 있음</div>'}</div>`}).join('')}</div>
-  <h3>전함 — 세력 총 척수 안에서 대기 풀과 주고받는다</h3>
-  <table>${Object.keys(SHIPS).filter(k=>f.s[k]||poolS[k]).map(k=>`<tr>
+  <h3>전함 — 함종 제한 없음 · 세력 예산과 함대 지휘 한도 안에서</h3>
+  <table>${Object.keys(SHIPS).map(k=>`<tr>
     <td><b>${SHIPS[k][0]}</b> <span class="role-s">${k} · ${SHIPS[k][2]}</span></td>
     <td style="width:44px"><button class="pm" ${f.s[k]?'':'disabled'} onclick="move('${k}',-1)">−</button></td>
     <td class="num">${f.s[k]||0}</td>
-    <td style="width:44px"><button class="pm" ${poolS[k]?'':'disabled'} onclick="move('${k}',1)">+</button></td>
+    <td style="width:44px"><button class="pm" ${canAdd(k)?'':'disabled'} onclick="move('${k}',1)">+</button></td>
     <td class="cost">${SHIPS[k][1]} × ${f.s[k]||0} = ${SHIPS[k][1]*(f.s[k]||0)}</td></tr>`).join('')}</table>
   <div class="summary"><span>총 <b>${ships(f)}</b>척</span><span>비용 <b>${cost(f)}</b> / 지휘 한도 <b>${limit(f)||'—'}</b></span>
     <span class="role-s">한도 = (40 + 제독 통솔×2) × 3</span></div>`}
@@ -164,14 +167,14 @@ function render(){
   $('poolOff').innerHTML=(picked&&picked.fleet!=null?`<div class="pool-off" style="justify-content:center;border-style:dashed" onclick="unassign()">↩ 선택한 장수를 대기 풀로</div>`:'')+
     (po.length?po.map(k=>`<div class="pool-off ${picked&&picked.k===k?'picked':''}" onclick="picked={k:'${k}',fleet:null};render()">
     <div class="portrait">${O[k][0][0]}</div><div><b>${O[k][0]}</b><div class="stats">통${O[k][1]} 무${O[k][2]} 지${O[k][3]} · ${O[k][5]}</div></div></div>`).join(''):'<div class="empty">모든 장수가 배치됐습니다. 함대를 대기로 돌리면 그 장수가 여기로 옵니다.</div>');
-  const ps=Object.entries(poolS).filter(([,n])=>n>0);
-  $('poolShip').innerHTML=ps.length?ps.map(([k,n])=>`<div class="pool-ship"><span>${SHIPS[k][0]}</span><b>${n}척</b></div>`).join(''):'<div class="empty">모든 함선이 배치됐습니다.</div>';
-  const all=F.flatMap(f=>errs(f).map(e=>`${f.name}: ${e}`)),left=ps.reduce((a,[,n])=>a+n,0);
+  const L=left();
+  $('poolShip').innerHTML=`<div class="pool-ship"><span>남은 예산</span><b>${L} / ${BUDGET}</b></div><div class="bar"><i style="width:${(BUDGET-L)/BUDGET*100}%"></i></div><div class="empty">어떤 함종이든 살 수 있다. 함대를 대기로 돌리면 그 비용이 돌아온다.</div>`;
+  const all=F.flatMap(f=>errs(f).map(e=>`${f.name}: ${e}`));
   const bad=all.length>0||!F.some(f=>f.on);
   $('msg').className='msg'+(bad?' bad':'');
-  $('msg').textContent=bad?'확정할 수 없음 — '+all.join(' · '):`확정 가능 · 출전 ${F.filter(f=>f.on).length}개 함대`+(left?` · 미배치 함선 ${left}척은 전투에 나가지 않음`:'');
+  $('msg').textContent=bad?'확정할 수 없음 — '+all.join(' · '):`확정 가능 · 출전 ${F.filter(f=>f.on).length}개 함대`+(L?` · 남은 예산 ${L}`:'');
   $('ok').disabled=bad}
-$('reset').onclick=()=>{F=INIT();sel=0;picked=null;poolS={};render()};
+$('reset').onclick=()=>{F=INIT();sel=0;picked=null;render()};
 $('ok').onclick=()=>alert('목업: 편성 사본을 프로필에 덮어쓰고 위치 배치로 넘어간다');
 $('reset').onclick();
 </script>
