@@ -20,16 +20,33 @@ func _process(delta: float) -> void:
 	t += delta
 	queue_redraw()
 
+# 바닥 고리를 화면 좌표로. 함대 수십 개의 고리를 매 프레임 그리므로 점마다 카메라를 부르지 않고
+# 프레임마다 한 번 만든 투영 행렬(_proj_begin)로 직접 계산한다. 결과는 Camera3D.unproject_position과 같다.
+var _pm: Projection
+var _vs := Vector2.ONE
+
+func _proj_begin() -> void:
+	var cam: Camera3D = battle.rig.camera
+	_pm = cam.get_camera_projection() * Projection(cam.get_camera_transform().affine_inverse())
+	_vs = cam.get_viewport().get_visible_rect().size
+
 func _ground_ring(c: Vector2, r: float, n := 72, a0 := 0.0, a1 := TAU) -> PackedVector2Array:
 	var pts := PackedVector2Array()
+	pts.resize(n + 1)
+	var k := CameraRig.S
+	var ox := (c.x - CameraRig.WORLD.x * 0.5) * k
+	var oz := (c.y - CameraRig.WORLD.y * 0.5) * k
+	var rk := r * k
 	for i in n + 1:
 		var a := a0 + (a1 - a0) * i / n
-		pts.append(battle.w2s(c + Vector2(cos(a), sin(a)) * r))
+		var v: Vector4 = _pm * Vector4(ox + cos(a) * rk, 0.0, oz + sin(a) * rk, 1.0)
+		pts[i] = Vector2((v.x / v.w * 0.5 + 0.5) * _vs.x, (-v.y / v.w * 0.5 + 0.5) * _vs.y)
 	return pts
 
 func _draw() -> void:
 	if battle == null or battle.G.is_empty() or battle.G.state == "brief":
 		return
+	_proj_begin()
 	_terrain()
 	var pf = battle.flag(0)
 	var ef = battle.flag(1)
@@ -61,6 +78,7 @@ func _draw() -> void:
 		draw_polyline(_ground_ring(battle.marker.pos, 22.0 + (1.0 - k) * 26.0, 40), col, 2.0, true)
 		UiDraw.diamond(self, battle.w2s(battle.marker.pos), 5.0, col)
 	var compact: bool = battle.cam_z < 0.55
+	var plates := []
 	for f in battle.fleets:
 		if f.contact != "":
 			_contact(f)
@@ -68,7 +86,11 @@ func _draw() -> void:
 			if compact:
 				_symbol(f)
 			else:
-				_plate(f)
+				plates.append(f)
+	# 명패는 도형 → 글자 → 아이콘 순으로 모아 그린다. 명패마다 종류를 바꿔 그리면 묶음이 끊겨 함대 수만큼 그리기 호출이 는다(1,500척 약 5ms)
+	for ph in 3:
+		for f in plates:
+			_plate(f, ph)
 	for f in battle.fleets:
 		if not f.dead and f.speech_t > 0.0 and f.speech != "":
 			_speech(f)
@@ -284,13 +306,44 @@ func _contact(f) -> void:
 	var txt := "상실 · 마지막 위치" if lost else "추정 %d%%" % roundi(f.conf * 100.0)
 	UiDraw.text(self, s + Vector2(8, -8), txt, "serif_bold", 12, Color(UiTheme.INK_2, 0.55 if lost else 0.9), HORIZONTAL_ALIGNMENT_LEFT, -1, 3)
 
-func _plate(f) -> void:
+func _plate(f, ph: int) -> void:
 	# 명패(V-6): 소유 글리프 · 이름 · 연속 막대 · 지휘 상태 · 가장 급한 경고 하나. 초상·레벨 없음.
+	# ph: 0 = 도형, 1 = 글자, 2 = 지휘 상태·경고 아이콘(글자 위)(_draw가 단계별로 모든 명패를 돈다)
 	var s: Vector2 = battle.w2s(f.pos)
 	var foe: bool = f.side == 1
-	var sel: bool = battle.selected.has(f) or battle.inspect == f
 	var r := Rect2(s.x - 22.0, s.y - 58.0, 98.0, 34.0)   # 클릭 판정(FleetLabels.label_rect)과 같다
 	var src: BattleSource = battle.presentation.src
+	if ph == 1:
+		if f.is_flag:
+			UiDraw.text(self, r.position + Vector2(20, 14), "旗", "serif_bold", 10, UiTheme.GOLD_HI, HORIZONTAL_ALIGNMENT_LEFT, -1, 3)
+		UiDraw.text(self, r.position + Vector2(33.0 if f.is_flag else 22.0, 17), f.fname, "serif_bold", 13, UiTheme.INK)
+		return
+	if ph == 2:
+		var sc2: Color = Factions.of(src.faction(f.id)).color
+		# 지휘 상태: ● 직접 / ○ 위임(Q20). 코어가 값을 주기 전에는 그리지 않는다.
+		var cm := src.command_mode(f.id) if not foe else ""
+		if cm != "":
+			var dp := r.end - Vector2(24, 21)
+			draw_circle(dp, 3.6, Color(0.02, 0.03, 0.05, 0.9))
+			if cm == "direct":
+				draw_circle(dp, 2.6, sc2)
+			else:
+				draw_arc(dp, 2.6, 0.0, TAU, 12, sc2, 1.2, true)
+		# 가장 급한 경고 하나: 지휘 범위 밖 > 돌격 > 방어진형
+		var tag := ""
+		var tcol := UiTheme.WARN
+		if not f.in_cmd and not foe:
+			tag = "warn"
+		elif f.charge_t > 0.0:
+			tag = "charge"
+			tcol = UiTheme.GOLD_HI
+		elif f.defense:
+			tag = "def"
+			tcol = UiTheme.ALLY_HI
+		if tag != "":
+			UiDraw.icon(self, tag, Rect2(r.end.x - 18.0, r.position.y + 5.0, 14, 14), tcol, 1.3)
+		return
+	var sel: bool = battle.selected.has(f) or battle.inspect == f
 	var fk := src.faction(f.id)
 	var sc: Color = Factions.of(fk).color
 	draw_line(Vector2(s.x, r.end.y), Vector2(s.x, s.y - 8.0), Color(sc, 0.45), 1.0)
@@ -300,32 +353,6 @@ func _plate(f) -> void:
 	if sel:
 		draw_rect(r.grow(2.5), Color(UiTheme.GOLD_HI, 0.3), false, 1.0)
 	UiDraw.faction_glyph(self, r.position + Vector2(12, 13), 5.0, fk, sc)
-	if f.is_flag:
-		UiDraw.text(self, r.position + Vector2(20, 14), "旗", "serif_bold", 10, UiTheme.GOLD_HI, HORIZONTAL_ALIGNMENT_LEFT, -1, 3)
-	var nx := 33.0 if f.is_flag else 22.0
-	UiDraw.text(self, r.position + Vector2(nx, 17), f.fname, "serif_bold", 13, UiTheme.INK)
-	# 지휘 상태: ● 직접 / ○ 위임(Q20). 코어가 값을 주기 전에는 그리지 않는다.
-	var cm := src.command_mode(f.id) if not foe else ""
-	if cm != "":
-		var dp := r.end - Vector2(24, 21)
-		draw_circle(dp, 3.6, Color(0.02, 0.03, 0.05, 0.9))
-		if cm == "direct":
-			draw_circle(dp, 2.6, sc)
-		else:
-			draw_arc(dp, 2.6, 0.0, TAU, 12, sc, 1.2, true)
-	# 가장 급한 경고 하나: 지휘 범위 밖 > 돌격 > 방어진형
-	var tag := ""
-	var tcol := UiTheme.WARN
-	if not f.in_cmd and not foe:
-		tag = "warn"
-	elif f.charge_t > 0.0:
-		tag = "charge"
-		tcol = UiTheme.GOLD_HI
-	elif f.defense:
-		tag = "def"
-		tcol = UiTheme.ALLY_HI
-	if tag != "":
-		UiDraw.icon(self, tag, Rect2(r.end.x - 18.0, r.position.y + 5.0, 14, 14), tcol, 1.3)
 	var frac: float = BattleSource.strength_frac(f)
 	var bar := Rect2(r.position + Vector2(6, 23), Vector2(86, 5))
 	draw_rect(bar, UiTheme.SLOT)

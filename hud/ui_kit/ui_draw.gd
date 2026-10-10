@@ -171,11 +171,16 @@ static func _dashed_tex(ci: CanvasItem, pts: PackedVector2Array, color: Color, w
 		tex = ImageTexture.create_from_image(img)
 		_dash_tex[key] = tex
 	var hw := width * 0.5
+	var m := pts.size() - 1
 	var verts := PackedVector2Array()
 	var uvs := PackedVector2Array()
 	var idx := PackedInt32Array()
+	verts.resize(m * 4)
+	uvs.resize(m * 4)
+	idx.resize(m * 6)
+	var q := 0
 	var acc := -offset
-	for i in pts.size() - 1:
+	for i in m:
 		var a := pts[i]
 		var b := pts[i + 1]
 		var seg := a.distance_to(b)
@@ -187,13 +192,29 @@ static func _dashed_tex(ci: CanvasItem, pts: PackedVector2Array, color: Color, w
 		var n := Vector2(a.y - b.y, b.x - a.x) * (hw / seg)
 		var u0 := acc / period
 		var u1 := (acc + seg) / period
-		var k := verts.size()
-		verts.append_array([a + n, a - n, b - n, b + n])
-		uvs.append_array([Vector2(u0, 0), Vector2(u0, 1), Vector2(u1, 1), Vector2(u1, 0)])
-		idx.append_array([k, k + 1, k + 2, k, k + 2, k + 3])
+		var k := q * 4
+		verts[k] = a + n
+		verts[k + 1] = a - n
+		verts[k + 2] = b - n
+		verts[k + 3] = b + n
+		uvs[k] = Vector2(u0, 0)
+		uvs[k + 1] = Vector2(u0, 1)
+		uvs[k + 2] = Vector2(u1, 1)
+		uvs[k + 3] = Vector2(u1, 0)
+		var j := q * 6
+		idx[j] = k
+		idx[j + 1] = k + 1
+		idx[j + 2] = k + 2
+		idx[j + 3] = k
+		idx[j + 4] = k + 2
+		idx[j + 5] = k + 3
+		q += 1
 		acc += seg
-	if idx.is_empty():
+	if q == 0:
 		return
+	verts.resize(q * 4)
+	uvs.resize(q * 4)
+	idx.resize(q * 6)
 	var cols := PackedColorArray()
 	cols.resize(verts.size())
 	cols.fill(color)
