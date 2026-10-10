@@ -62,6 +62,15 @@ static func side_glyph(ci: CanvasItem, c: Vector2, r: float, side: int, color: C
 	faction_glyph(ci, c, r, Factions.of_side(side), color, filled)
 
 static func faction_glyph(ci: CanvasItem, c: Vector2, r: float, key: String, color: Color, filled := true) -> void:
+	var pts := glyph_points(c, r, key)
+	if filled:
+		ci.draw_colored_polygon(pts, color)
+	else:
+		pts.append(pts[0])
+		ci.draw_polyline(pts, color, 1.2, true)
+
+# 세력 글리프 윤곽점(볼록 다각형)
+static func glyph_points(c: Vector2, r: float, key: String) -> PackedVector2Array:
 	var pts: PackedVector2Array
 	match Factions.of(key).shape:
 		"square":
@@ -71,11 +80,7 @@ static func faction_glyph(ci: CanvasItem, c: Vector2, r: float, key: String, col
 				pts.append(c + Vector2.from_angle(TAU * i / 16.0) * r * 1.12)
 		_:
 			pts = PackedVector2Array([c + Vector2(0, -r * 1.25), c + Vector2(r * 1.25, 0), c + Vector2(0, r * 1.25), c + Vector2(-r * 1.25, 0)])
-	if filled:
-		ci.draw_colored_polygon(pts, color)
-	else:
-		pts.append(pts[0])
-		ci.draw_polyline(pts, color, 1.2, true)
+	return pts
 
 # 10칸 또는 20칸 기울인 분할 막대
 static func seg_bar(ci: CanvasItem, rect: Rect2, frac: float, n: int, on: Color, off := UiTheme.SLOT, rtl := false, skew := 3.0) -> void:

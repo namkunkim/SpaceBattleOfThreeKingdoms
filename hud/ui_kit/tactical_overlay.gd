@@ -87,8 +87,13 @@ func _draw() -> void:
 				_symbol(f)
 			else:
 				plates.append(f)
-	# 명패는 도형 → 글자 → 아이콘 순으로 모아 그린다. 명패마다 종류를 바꿔 그리면 묶음이 끊겨 함대 수만큼 그리기 호출이 는다(1,500척 약 5ms)
-	for ph in 3:
+	# 명패는 도형 → 글자 → 아이콘 순으로 모아 그린다. 도형은 삼각형 묶음 하나로 보낸다.
+	# 명패마다 선·원·다각형을 따로 그리면 묶음이 끊겨 명패 하나에 그리기 호출이 여럿 생긴다(1,500척 프리셋 약 5ms)
+	_tri_begin()
+	for f in plates:
+		_plate(f, 0)
+	_tri_flush()
+	for ph in [1, 2]:
 		for f in plates:
 			_plate(f, ph)
 	for f in battle.fleets:
@@ -346,21 +351,63 @@ func _plate(f, ph: int) -> void:
 	var sel: bool = battle.selected.has(f) or battle.inspect == f
 	var fk := src.faction(f.id)
 	var sc: Color = Factions.of(fk).color
-	draw_line(Vector2(s.x, r.end.y), Vector2(s.x, s.y - 8.0), Color(sc, 0.45), 1.0)
-	draw_circle(Vector2(s.x, s.y - 8.0), 2.0, Color(sc, 0.8))
-	draw_rect(r, Color(0.16, 0.055, 0.04, 0.78) if foe else Color(0.03, 0.07, 0.09, 0.78))
-	draw_rect(r, UiTheme.GOLD_HI if sel else Color(sc, 0.5), false, 1.5 if sel else 1.0)
+	_tri_rect(Rect2(s.x - 0.5, r.end.y, 1.0, s.y - 8.0 - r.end.y), Color(sc, 0.45))   # 명패 → 함대 기둥선
+	_tri_circle(Vector2(s.x, s.y - 8.0), 2.0, Color(sc, 0.8))
+	_tri_rect(r, Color(0.16, 0.055, 0.04, 0.78) if foe else Color(0.03, 0.07, 0.09, 0.78))
+	_tri_frame(r, UiTheme.GOLD_HI if sel else Color(sc, 0.5), 1.5 if sel else 1.0)
 	if sel:
-		draw_rect(r.grow(2.5), Color(UiTheme.GOLD_HI, 0.3), false, 1.0)
-	UiDraw.faction_glyph(self, r.position + Vector2(12, 13), 5.0, fk, sc)
+		_tri_frame(r.grow(2.5), Color(UiTheme.GOLD_HI, 0.3), 1.0)
+	_tri_fan(UiDraw.glyph_points(r.position + Vector2(12, 13), 5.0, fk), sc)
 	var frac: float = BattleSource.strength_frac(f)
 	var bar := Rect2(r.position + Vector2(6, 23), Vector2(86, 5))
-	draw_rect(bar, UiTheme.SLOT)
-	draw_rect(Rect2(bar.position, Vector2(bar.size.x * frac, bar.size.y)), UiTheme.FOE if foe else UiTheme.LIFE)
+	_tri_rect(bar, UiTheme.SLOT)
+	_tri_rect(Rect2(bar.position, Vector2(bar.size.x * frac, bar.size.y)), UiTheme.FOE if foe else UiTheme.LIFE)
 	if not foe:
 		var cd: float = 1.0 - f.missile_cd / 18.0
-		draw_rect(Rect2(r.position + Vector2(6, 30), Vector2(86, 2)), UiTheme.SLOT)
-		draw_rect(Rect2(r.position + Vector2(6, 30), Vector2(86 * cd, 2)), UiTheme.CP if f.missile_cd <= 0.0 else Color(UiTheme.CP, 0.45))
+		_tri_rect(Rect2(r.position + Vector2(6, 30), Vector2(86, 2)), UiTheme.SLOT)
+		_tri_rect(Rect2(r.position + Vector2(6, 30), Vector2(86 * cd, 2)), UiTheme.CP if f.missile_cd <= 0.0 else Color(UiTheme.CP, 0.45))
+
+# 색 삼각형 묶음: 많은 작은 도형을 그리기 호출 하나로 보낸다(명패). 그리는 순서는 넣은 순서와 같다.
+var _tv := PackedVector2Array()
+var _tc := PackedColorArray()
+var _ti := PackedInt32Array()
+
+func _tri_begin() -> void:
+	_tv.clear()
+	_tc.clear()
+	_ti.clear()
+
+func _tri_flush() -> void:
+	if not _ti.is_empty():
+		RenderingServer.canvas_item_add_triangle_array(get_canvas_item(), _ti, _tv, _tc)
+
+# 볼록 다각형(부채꼴 분할)
+func _tri_fan(pts: PackedVector2Array, col: Color) -> void:
+	var k := _tv.size()
+	_tv.append_array(pts)
+	for i in pts.size():
+		_tc.append(col)
+	for i in range(1, pts.size() - 1):
+		_ti.append_array([k, k + i, k + i + 1])
+
+func _tri_circle(c: Vector2, rad: float, col: Color) -> void:
+	var pts := PackedVector2Array()
+	for i in 12:
+		pts.append(c + Vector2.from_angle(TAU * i / 12.0) * rad)
+	_tri_fan(pts, col)
+
+func _tri_rect(r: Rect2, col: Color) -> void:
+	if r.size.x <= 0.0 or r.size.y <= 0.0:
+		return
+	_tri_fan(PackedVector2Array([r.position, Vector2(r.end.x, r.position.y), r.end, Vector2(r.position.x, r.end.y)]), col)
+
+# 테두리(draw_rect(filled = false)처럼 선 굵기 w가 변의 가운데에 걸친다)
+func _tri_frame(r: Rect2, col: Color, w: float) -> void:
+	var h := w * 0.5
+	_tri_rect(Rect2(r.position.x - h, r.position.y - h, r.size.x + w, w), col)
+	_tri_rect(Rect2(r.position.x - h, r.end.y - h, r.size.x + w, w), col)
+	_tri_rect(Rect2(r.position.x - h, r.position.y + h, w, r.size.y - w), col)
+	_tri_rect(Rect2(r.end.x - h, r.position.y + h, w, r.size.y - w), col)
 
 func _symbol(f) -> void:
 	# 원거리: 진영 기호 + 방향 + 이름

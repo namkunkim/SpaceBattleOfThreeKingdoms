@@ -318,7 +318,8 @@ func _process(delta: float) -> void:
 		# 타이틀·서막·브리핑 뒤 전장이 천천히 흐른다. 동작 줄이기면 멈춘다.
 		rig.cam_pos.x = _brief_x + sin(now_t / 5.0) * 120.0
 	rig.update()
-	view3d.sync(fleets)
+	if presentation == null:   # 표현 계층이 있으면 POC 함대 노드는 숨겨져 있다(위치 갱신 생략, 1,500척 약 1ms)
+		view3d.sync(fleets)
 	hud.paint_cmds()
 	fx.queue_redraw()
 	ui.queue_redraw()
