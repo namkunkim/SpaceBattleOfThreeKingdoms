@@ -129,6 +129,7 @@ static func squadron(st: BattleState, f: FleetState) -> Dictionary:
 		"faction_id": f.faction,
 		"counts": f.stages.duplicate(true),   # 함종 × 손상 단계 [무손상, 경파, 중파, 대파, 격침]. POC 규칙이면 빈 사전
 		"hull": f.hull, "max_hull": f.max_hull,
+		"charges": f.wch.duplicate(), "charges_max": f.wmax.duplicate(),   # Q69: 아군 전용 표시
 		"energy_milli": f.energy_m, "heat_milli": f.heat_m, "ammo": f.ammo.duplicate(), "suppressed": f.supp.duplicate(),
 		"next_fire_s": _next_fire_s(f, hz),
 	}

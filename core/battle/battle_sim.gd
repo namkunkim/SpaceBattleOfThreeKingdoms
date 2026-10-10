@@ -512,8 +512,17 @@ func apply(c: Dictionary) -> void:
 			emit("say", L.id, -1, L.pos, "ai_def")
 		"missile", "fighter", "volley":
 			if salvo:
+				var why := ""
+				var pulled := 0
 				for f in s:
-					salvo.pull(f, kind)   # 미사일 = 포격류, 함재기 = 함재기 범주, 일제사격 = 전부: 다음 주기를 당긴다(§4.3). 비용은 자원 규칙이 받는다
+					var r := salvo.pull(f, kind)   # 미사일 = 포격 범주, 함재기 = 함재기 범주, 일제사격 = 전부: 다음 주기를 당긴다(§4.3). 비용은 횟수(Q69)
+					if r == "":
+						pulled += 1
+					elif why == "" or r == "charges":
+						why = r
+				if pulled == 0 and why != "":
+					_reject(L, "%s_%s" % [kind, why], side)   # missile_charges, fighter_none, ... 거부 사유를 토스트로
+					return
 				emit("say", L.id, -1, L.pos, "fighter" if kind == "fighter" else ("missile" if side == 0 else "ai_missile"))
 			elif kind == "volley":
 				_reject(L, "unknown_command", side)

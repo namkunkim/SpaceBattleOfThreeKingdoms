@@ -81,6 +81,19 @@ func ammo_ratio_bp(f: FleetState) -> int:
 		cur += mini(c, int(f.ammo[cat]))
 	return cur * BattleRules.BP / cap if cap > 0 else BattleRules.BP
 
+# Q69: 미사일·함재기 사용 횟수 부족분
+func charge_deficit(f: FleetState) -> int:
+	var d := 0
+	for cat in f.wch:
+		d += maxi(0, sim.salvo.charge_cap(f, cat) - int(f.wch[cat]))
+	return d
+
+# 횟수 보충 한 주기를 이 공급원이 댈 수 있는가(기지는 무한, 보급함 전대는 탄약·물자 재고)
+func charge_affordable(src: Dictionary) -> bool:
+	var g: FleetState = src.fleet
+	var cc: Dictionary = S.charge_cost
+	return g == null or (g.sup_ammo >= int(cc.ammo_per_charge) and g.sup_mat >= int(cc.materials_per_cycle))
+
 func moderate_of(f: FleetState) -> int:
 	var n := 0
 	for t in f.stages:
@@ -125,11 +138,15 @@ func _reloadable(f: FleetState, src: Dictionary) -> bool:
 func serviceable(f: FleetState, src: Dictionary) -> bool:
 	if f.dead or f.max_hull == 0 or not f.sup_still:
 		return false
+	if src.fleet == f:
+		return false   # 자기 자신 보급 금지: 보급함이 있는 함대도 다른 함대에게만 보급한다
 	if src.side != f.side or not allied(src.faction, f.faction) or f.pos.distance_to(src.pos) > src.r:
 		return false
 	var g: FleetState = src.fleet
 	var d := deficit(f)
 	if d > 0 and (g == null or (g.sup_ammo >= d and g.sup_mat >= int(S.materials_per_refill))):
+		return true
+	if charge_deficit(f) > 0 and charge_affordable(src):
 		return true
 	if moderate_of(f) > 0 and (g == null or g.sup_mat >= int(S.repair.materials)):
 		return true
@@ -223,6 +240,21 @@ func _complete(f: FleetState, src: Dictionary) -> void:
 			g.sup_ammo -= d
 			g.sup_mat -= int(S.materials_per_refill)
 		got = d
+	var charges := 0
+	if charge_deficit(f) > 0 and charge_affordable(src):
+		var add: int = sim.salvo.charge_refill(int(src.rate))   # 보급 레벨 = 공급원 처리량(100/50/25% → 3/2/1회, 기지 3회)
+		var cc: Dictionary = S.charge_cost
+		if g:
+			add = mini(add, g.sup_ammo / int(cc.ammo_per_charge))   # 재고가 모자라면 댈 수 있는 만큼만
+		for cat in f.wch:
+			var room: int = sim.salvo.charge_cap(f, cat) - int(f.wch[cat])
+			if room > 0:
+				f.wch[cat] += mini(room, add)
+				charges += mini(room, add)
+				add -= mini(room, add)
+		if g:
+			g.sup_ammo -= charges * int(cc.ammo_per_charge)
+			g.sup_mat -= int(cc.materials_per_cycle)
 	if moderate_of(f) > 0 and (g == null or g.sup_mat >= int(S.repair.materials)):
 		var ids: Array = f.stages.keys()
 		ids.sort()
@@ -241,7 +273,7 @@ func _complete(f: FleetState, src: Dictionary) -> void:
 		f.sup_mat = f.sup_n * int(S.per_ship.materials)
 		reload = true
 	f.supplied += 1
-	sim.emit("supply", f.id, g.id if g else -1, f.pos, {"src": src.key, "ammo": got, "repair": fixed, "reload": reload})
+	sim.emit("supply", f.id, g.id if g else -1, f.pos, {"src": src.key, "ammo": got, "charges": charges, "repair": fixed, "reload": reload})
 
 # 경파 → 무손상: 마지막 피격 뒤 light_recover_s 동안 피격이 없으면 모두(P16). 보급 영역은 필요 없다
 func _light_recover(f: FleetState) -> void:

@@ -46,6 +46,8 @@ const REJECT := {
 	"cp_charge": "커맨드 포인트가 부족합니다 (필요 3)", "cp_missile": "커맨드 포인트가 부족합니다 (필요 2)", "cp_fighter": "커맨드 포인트가 부족합니다 (필요 3)",
 	"missile_no_target": "미사일 사정거리 안에 적이 없습니다", "missile_reload": "미사일 재장전 중",
 	"fighter_no_target": "함재기 작전 반경 안에 적이 없습니다", "fighter_reload": "함재기 정비 중",
+	"missile_charges": "미사일 남은 횟수가 없습니다. 보급함 영역에서 정지해 보급하세요", "fighter_charges": "함재기 남은 횟수가 없습니다. 보급함 영역에서 정지해 보급하세요",
+	"missile_none": "미사일을 쏠 포격함이 없습니다", "fighter_none": "강습모함이 없어 함재기를 쓸 수 없습니다",
 	"no_selection": "먼저 아군 함대를 선택하세요",
 }
 const END_TEXT := {

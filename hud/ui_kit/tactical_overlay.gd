@@ -202,6 +202,7 @@ const RANGE_STYLE := {
 	"line_fire": [BattleSource.AMMO_LABEL["line_fire"], UiTheme.ALLY, 0.0, 0.0],
 	"intercept": [BattleSource.AMMO_LABEL["intercept"], UiTheme.WARN, 3.0, 5.0],
 	"torpedo": [BattleSource.AMMO_LABEL["torpedo"], UiTheme.LIFE, 12.0, 12.0],   # 긴 선 + 점(색약 대응)
+	"fighter": [BattleSource.AMMO_LABEL["fighter"], UiTheme.ALLY, 6.0, 4.0],
 }
 
 # 성운 위에서도 읽히도록 어두운 반투명 판을 깐다.

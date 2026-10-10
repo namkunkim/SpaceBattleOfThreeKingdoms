@@ -69,6 +69,7 @@ func _run() -> void:
 			battle.multi = true   # 다중 모드 버튼 강조 확인
 			if deck:
 				deck._set_info_open(true)
+				deck._set_tab(2)   # 무장 탭: 미사일·함재기 남은 횟수 표시 확인(Q69)
 		battle.refresh_panel()
 		battle.cam_pos = battle.fleets[1].pos + Vector2(260.0, 40.0)
 		battle.cam_z = 1.0
