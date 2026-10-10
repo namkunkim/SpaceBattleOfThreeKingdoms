@@ -255,6 +255,11 @@
 - 데이터: `tools/scenario/make_world_208.py` → `data/scenarios/base/world_208.json`(본편 지도 v3 스냅숏).
 - 테스트 `tests/world_link.gd` 추가, 기존 테스트 통과. main 병합과 화면 확인은 로컬에서 한다.
 
+## 전투 전 편성 화면 + 전대 폐지 (2026-10-10, 세션 "장수/전함 배치 설정 화면", main `21b30d4`)
+- 결정 Q73~Q82(`BATTLE_DECISIONS.md` §T): 전대 폐지·함대 한 단계, 직책 제독+부제독+참모3, 함종 자유, 함대 예산 = 지휘 한도, 가용 장수 전원, 자동 편성, 손권·조조 AI 자동 편성, 조조는 함대 수로 비율 유지.
+- 사양 `docs/ui/FLEET-ORGANIZATION-SCREEN.md`, 목업 `docs/ui/mockup-fleet-organization-v1.html`. 생성기에 `factions[].available_officers`·`politics` 추가(`bc8de1b`).
+- 구현 분해 O0~O5는 §T-1. **다음: O0(약 1,500척 성능 측정) ∥ O5(UI 문구), 각각 새 세션.**
+
 ## 남은 일 (컨셉 세션이 할 수 있는 것)
 
 | 우선 | 일 | 메모 |
