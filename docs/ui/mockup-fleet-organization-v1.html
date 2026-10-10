@@ -92,6 +92,7 @@ footer .msg.bad{color:var(--bad)}
 <footer>
   <div class="msg" id="msg"></div>
   <button class="btn" id="reset">정사 편성으로 초기화</button>
+  <button class="btn" id="auto" onclick="autoFill()">자동 편성</button>
   <button class="btn primary" id="ok">편성 확정</button>
 </footer>
 <script>
@@ -175,6 +176,28 @@ function render(){
   $('msg').className='msg'+(bad?' bad':'');
   $('msg').textContent=bad?'확정할 수 없음 — '+all.join(' · '):`확정 가능 · 출전 ${F.filter(f=>f.on).length}개 함대`+(L?` · 남은 예산 ${L}`:'');
   $('ok').disabled=bad}
+
+// 자동 편성: 출전 함대를 꽉 채운다.
+// ponytail: 탐욕 규칙(능력치 순 배정 + 고정 함종 비율). 시뮬 기반 최적화는 밸런스 도구가 생기면 교체
+function autoFill(){
+  const on=F.filter(f=>f.on);
+  for(const f of on){f.o=f.flag?{admiral:f.o.admiral}:{};f.s={}}
+  const free=()=>Object.keys(O).filter(k=>!assigned().has(k));
+  const best=st=>free().sort((a,b)=>O[b][st]-O[a][st])[0];
+  for(const f of on)if(!f.o.admiral)f.o.admiral=best(1);          // 제독: 통솔
+  for(const f of on)f.o.vice=best(1);                               // 부제독: 통솔
+  for(const f of on){f.o.assault=best(2);f.o.siege=best(3);f.o.supply=best(4)} // 강습 무력·공성 지력·보급 정치
+  const total=on.reduce((a,f)=>a+limit(f),0);
+  for(const f of on){
+    const cap=Math.min(limit(f),Math.floor(BUDGET*limit(f)/total)); // 예산을 한도 비율로 나누고 한도는 넘기지 않는다
+    // 기본 비율: 전열4 포격2 요격2 보급1 강습모함1 전자전1
+    const mix=['SHP-04','SHP-04','SHP-03','SHP-07','SHP-04','SHP-03','SHP-07','SHP-05','SHP-01','SHP-04','SHP-06'];
+    let i=0,miss=0;
+    while(miss<mix.length){const k=mix[i++%mix.length];
+      if(cost(f)+SHIPS[k][1]<=cap){f.s[k]=(f.s[k]||0)+1;miss=0}else miss++}
+    while(cost(f)+SHIPS['SHP-08'][1]<=cap)f.s['SHP-08']=(f.s['SHP-08']||0)+1; // 남는 점수는 고속정
+  }
+  picked=null;render()}
 $('reset').onclick=()=>{F=INIT();sel=0;picked=null;render()};
 $('ok').onclick=()=>alert('목업: 편성 사본을 프로필에 덮어쓰고 위치 배치로 넘어간다');
 $('q').oninput=render;
