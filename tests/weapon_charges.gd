@@ -112,6 +112,34 @@ func _run() -> void:
 	for i in 1300:
 		mv.step()
 	if not TestCheck.ok(self, mfl.wch.artillery == 0, "정지하지 않으면 보충 없음"): return
+	# 재고 소모: 3회 보충 = 탄약 2×3 + 물자 1(보급함 2척 재고 탄약 24·물자 8)
+	var st := _sup_sim([["SHP-03", 2]])
+	var ssf: FleetState = st.st.fleets[0]
+	var saf: FleetState = st.st.fleets[1]
+	saf.wch.artillery = 0
+	for i in 600:
+		st.step()
+	if not TestCheck.ok(self, saf.wch.artillery == 3 and ssf.sup_ammo == 24 - 6 and ssf.sup_mat == 7, "보충이 재고를 쓴다: 탄약 %d 물자 %d" % [ssf.sup_ammo, ssf.sup_mat]): return
+	# 재고 0이면 보충 불가
+	var ze := _sup_sim([["SHP-03", 2]])
+	ze.st.fleets[0].sup_ammo = 0
+	ze.st.fleets[1].wch.artillery = 0
+	for i in 800:
+		ze.step()
+	if not TestCheck.ok(self, ze.st.fleets[1].wch.artillery == 0, "재고 0: 보충 안 됨"): return
+	# 재고가 모자라면 댈 수 있는 만큼만(탄약 4 = 2회)
+	var lo := _sup_sim([["SHP-03", 2]])
+	lo.st.fleets[0].sup_ammo = 4
+	lo.st.fleets[1].wch.artillery = 0
+	for i in 600:
+		lo.step()
+	if not TestCheck.ok(self, lo.st.fleets[1].wch.artillery == 2 and lo.st.fleets[0].sup_ammo == 0, "재고 4: 2회만 보충"): return
+	# 자기 자신 보급 금지: 보급함이 있는 함대도 자기 횟수를 못 채운다
+	var me := SalvoFixture.sim([SalvoFixture.def("S", 800, 450, [["SHP-05", 2], ["SHP-03", 2]], true)], [SalvoFixture.def("Z", 1500, 850, [["SHP-04", 1]])], 1, "", func(cb): cb.supply = SalvoFixture.combat().supply)
+	me.st.fleets[0].wch.artillery = 0
+	for i in 800:
+		me.step()
+	if not TestCheck.ok(self, me.st.fleets[0].wch.artillery == 0 and me.st.fleets[0].sup_src == "", "자기 보급 금지"): return
 	# 강습모함이 없는 함대는 보급을 받아도 함재기 횟수 0 유지, 미사일만 찬다
 	var nc := _sup_sim([["SHP-03", 2]])
 	var nf: FleetState = nc.st.fleets[1]

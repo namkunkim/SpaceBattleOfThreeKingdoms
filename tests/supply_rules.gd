@@ -64,6 +64,12 @@ func _run() -> void:
 	_ticks(s, 5)
 	if not TestCheck.ok(self, a.sup_src == "", "받을 것이 없으면 배정이 풀린다"): return
 
+	# 자기 자신 보급 금지(Q69 결정): 보급함이 있는 함대는 자기 탄약을 스스로 채우지 못한다
+	var so := _sim([_d("S", 800, 450, [["SHP-05", 2], ["SHP-04", 2]], "liu_bei", true)])
+	_empty(so.st.fleets[0])
+	_sec(so, 70)
+	if not TestCheck.ok(self, so.supply.deficit(so.st.fleets[0]) == 20 and so.st.fleets[0].sup_src == "", "자기 보급 금지"): return
+
 	# --- 2. 중간에 벗어나면 완료되지 않는다(진행 0) ---
 	s = _sim([_d("S", 800, 450, [["SHP-05", 2], ["SHP-04", 2]], "liu_bei", true), _d("A", 925, 450, [["SHP-04", 2]])])
 	a = s.st.fleets[1]
