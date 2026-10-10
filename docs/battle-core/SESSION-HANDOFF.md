@@ -260,6 +260,10 @@
 - 사양 `docs/ui/FLEET-ORGANIZATION-SCREEN.md`, 목업 `docs/ui/mockup-fleet-organization-v1.html`. 생성기에 `factions[].available_officers`·`politics` 추가(`bc8de1b`).
 - 구현 분해 O0~O5는 §T-1. **O5(UI 문구 전대→함대) 완료: 화면 문자열·표시 데이터(서황 함대 등)·조작법 문서 교체, 검사 `tests/ui_wording.gd`(hud·view·input·scripts·core 리터럴 + 표시 필드). 로컬 화면 확인은 대기. `tests/boundary.gd`는 O5와 무관하게 실패 중(`battle_source.gd:176` BattleRules 참조, 2026-10-07 코드). O0 PC 측정 끝(1,523척 31 FPS, 현재 409척 73 FPS, `out/bench-density.md`; 밀도 설정은 효과 없음). 태블릿 실측은 사용자가 PC 기준으로 갈음. 다음: O1.**
 
+## 렌더링 최적화 (2026-10-10, 구현 세션 "렌더링 최적화: 1,500척 60 FPS")
+- 병목은 2D 전술 오버레이였다(함선 3D는 이미 MultiMesh). 파선 텍스처 띠·고리 투영 행렬·명패 묶어 그리기·틱 없는 프레임 `_pump` 생략·숨은 POC 함대 sync 생략.
+- PC 1,523척 31 → 64~69 FPS(평균 14~16ms). 최악 프레임 42~53ms는 코어 `sim.step()` 틱(최대 약 23ms)이 정한다 → 코어 성능은 별도 대기열(`CHECKLIST-OPEN.md` §8). 태블릿 실측 대기. 5-b(다른 모델 리뷰·화면 확인)는 관리 세션이 맡긴다.
+
 ## 남은 일 (컨셉 세션이 할 수 있는 것)
 
 | 우선 | 일 | 메모 |
