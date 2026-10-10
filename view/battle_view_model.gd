@@ -165,6 +165,7 @@ func apply(proj: Dictionary) -> Array[FleetView]:
 		f.dead = s.dead
 		f.control = s.control
 		f.shape = s.get("formation", 0)
+		f.form.assign(s.form)   # 진형 전환 뒤 효과(fx_layer.ship_pos)가 현재 배치를 따른다
 		f.formation_id = s.get("formation_id", "")
 		f.form_to = s.get("form_to", "")
 		f.form_left_s = s.get("form_left_s", 0.0)

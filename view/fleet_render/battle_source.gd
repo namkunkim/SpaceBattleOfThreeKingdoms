@@ -283,7 +283,7 @@ func restore_orders(snap: Dictionary) -> void:
 
 # ------------------------------------------------------------ 전대 세부 정보(선택 패널 펼침)
 # 자기 진영 전대만 준다. 적 접촉은 안개 규칙(이름·역할·전력 구간만)이라, POC 규칙은 값이 없어 빈 사전이다.
-const AMMO_LABEL := {"artillery": "포격", "line_fire": "직사", "intercept": "요격", "torpedo": "뇌격"}
+const AMMO_LABEL := {"artillery": "미사일(포격)", "line_fire": "광선(전열)", "intercept": "요격", "torpedo": "뇌격"}   # 지도 고리 이름표와 공용
 func detail(id: int) -> Dictionary:
 	var v = battle.by_id(id)
 	if v == null or v.side != 0 or v.contact != "" or battle.sim.salvo == null:

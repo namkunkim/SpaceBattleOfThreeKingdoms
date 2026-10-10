@@ -138,7 +138,7 @@ func _terrain() -> void:
 		var cen: Vector2 = battle.w2s(Vector2(r[0] + r[2] * 0.5, r[1] + r[3] * 0.5))
 		UiDraw.text(self, cen, "%s 이동 ×%.2f" % [z.name, z.mul], "medium", 13, Color(col.lightened(0.45), 0.95), HORIZONTAL_ALIGNMENT_CENTER, -1, 4)
 
-# 함대별 적 탐지 범위: 센서 점수에서 "확인"·"추정" 기준 점수를 뺀 만큼의 거리(적 전자전·지형 은폐가 없을 때). 안쪽 실선 = 확인, 바깥 점선 = 추정.
+# 함대별 적 탐지 범위: 센서 점수에서 "확인"·"추정" 기준 점수를 뺀 만큼의 거리(적 전자전·지형 은폐가 없을 때). 안쪽 촘촘한 점선 = 확인, 바깥 성긴 점선 = 추정.
 # 적에게 전자전이나 은폐가 있으면 실제 범위는 이보다 줄어든다.
 func _detect_rings() -> void:
 	var det = battle.sim.detect
@@ -152,21 +152,36 @@ func _detect_rings() -> void:
 		var sc: int = det.sensor_of(sf)
 		var r_conf := maxf(0.0, float(sc - int(det.D.confirmed)) * upp)
 		var r_est := maxf(0.0, float(sc - int(det.D.estimated)) * upp)
-		var col := Color(UiTheme.ALLY_HI, 0.75 if battle.selected.has(f) else 0.45)   # 선택 여부와 관계없이 항상 보인다
+		# 무기 고리(색 있는 실선·파선)와 구분: 회백색 가는 점선만 쓴다. 확인 = 촘촘한 점, 추정 = 성긴 점. 이름표 "탐지".
+		var col := Color(UiTheme.INK_2, 0.75 if battle.selected.has(f) else 0.45)   # 선택 여부와 관계없이 항상 보인다
+		var lab := Vector2.ZERO   # 이름표 위치: 확인 고리가 있으면 그것, 없으면 추정 고리(아래쪽 90도)
 		if r_est > 0.0:
-			UiDraw.dashed_poly(self, _ground_ring(f.pos, r_est, 96), col, 1.6, 5.0, 6.0)
+			var ring_e := _ground_ring(f.pos, r_est, 96)
+			UiDraw.dashed_poly(self, ring_e, col, 1.2, 2.0, 9.0)
+			lab = ring_e[24]
 		if r_conf > 0.0:
-			draw_polyline(_ground_ring(f.pos, r_conf, 72), col, 2.0, true)
+			var ring := _ground_ring(f.pos, r_conf, 72)
+			UiDraw.dashed_poly(self, ring, col, 1.6, 2.0, 4.0)
+			lab = ring[18]
+		if lab != Vector2.ZERO and battle.selected.has(f):
+			_ring_label(lab, "탐지 %d" % int(r_conf if r_conf > 0.0 else r_est), UiTheme.INK_2)
 
 # 무기 범주별 사거리 고리(데이터에서 온 f.ranges). 미사일 사거리 = 포격(artillery) 범주. 색약 대응으로 선 모양도 다르다.
 # 지형 사거리 배율은 사격선마다 달라 원이 아니라서 여기엔 반영하지 않는다(개활 기준 원).
 # 범주: [이름, 색, 파선 길이, 틈(0이면 실선)]
 const RANGE_STYLE := {
-	"artillery": ["미사일", UiTheme.CP, 12.0, 7.0],
-	"line_fire": ["광선", UiTheme.ALLY_HI, 0.0, 0.0],
-	"intercept": ["요격", UiTheme.WARN, 3.0, 5.0],
-	"torpedo": ["뇌격", UiTheme.LIFE, 8.0, 12.0],
+	"artillery": [BattleSource.AMMO_LABEL["artillery"], UiTheme.CP, 12.0, 7.0],
+	"line_fire": [BattleSource.AMMO_LABEL["line_fire"], UiTheme.ALLY, 0.0, 0.0],
+	"intercept": [BattleSource.AMMO_LABEL["intercept"], UiTheme.WARN, 3.0, 5.0],
+	"torpedo": [BattleSource.AMMO_LABEL["torpedo"], UiTheme.LIFE, 12.0, 12.0],   # 긴 선 + 점(색약 대응)
 }
+
+# 성운 위에서도 읽히도록 어두운 반투명 판을 깐다.
+func _ring_label(p: Vector2, text: String, color: Color) -> void:
+	var w := UiDraw.text_w(text, "medium", 12)
+	p = Vector2(clampf(p.x, 4.0, maxf(4.0, size.x - w - 16.0)), clampf(p.y, 12.0, maxf(12.0, size.y - 12.0)))   # 화면 밖 고리도 이름표는 안에
+	draw_rect(Rect2(p + Vector2(3, -9), Vector2(w + 8, 17)), Color(0.03, 0.05, 0.07, 0.7))
+	UiDraw.text(self, p + Vector2(7, 4), text, "medium", 12, Color(color, 0.95), HORIZONTAL_ALIGNMENT_LEFT, -1, 2)
 
 func _weapon_arcs(f) -> void:
 	var ranges: Dictionary = f.ranges
@@ -180,10 +195,12 @@ func _weapon_arcs(f) -> void:
 		var ring := _ground_ring(f.pos, r, 96)
 		if st[3] > 0.0:
 			UiDraw.dashed_poly(self, ring, col, 1.4, st[2], st[3])
+			if cat == "torpedo":
+				UiDraw.dashed_poly(self, ring, col, 3.0, 2.0, 22.0, -6.0)
 		else:
 			draw_polyline(ring, col, 1.4, true)
 		var lp: Vector2 = ring[(12 + 24 * i) % 96]   # 고리마다 다른 각도에 이름을 붙여 겹치지 않게 한다
-		UiDraw.text(self, lp + Vector2(6, 4), "%s %d" % [st[0], int(r)], "medium", 11, Color(st[1], 0.9), HORIZONTAL_ALIGNMENT_LEFT, -1, 3)
+		_ring_label(lp, "%s %d" % [st[0], int(r)], st[1])
 		i += 1
 
 func _orders(f) -> void:
