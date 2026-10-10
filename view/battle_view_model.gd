@@ -267,6 +267,9 @@ func _apply_contact(s: Dictionary, advanced: bool, fresh: Array[FleetView]) -> v
 	f.contact = s.contact
 	f.err_r = s.err_r
 	f.conf = s.conf_bp / 10000.0
+	if s.contact != "confirmed":
+		f.band = 0   # 확인이 풀린 접촉에 마지막 전력 구간을 남기지 않는다(패널은 "전력 ?")
+		f.max_band = 0
 	if s.contact == "confirmed":
 		f.fname = s.name
 		f.role = s.role

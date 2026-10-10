@@ -30,7 +30,7 @@ const CMD_INFO := {
 # 탭 3개(Q22). 진형 탭은 코어 진형(M5·M10)이 붙기 전까지 방어진형 하나뿐이다.
 const TABS := [["태세", ["stop", "charge", "rally", "retreat", "all"]], ["진형", ["def"]], ["무장", ["missile", "fighter"]]]
 const INFO_L1 := 88.0
-const INFO_L2 := 262.0   # 펼침: 함종 구성·상태 칩 + 전대 세부 정보 5줄
+const INFO_L2 := 282.0   # 펼침: 함종 구성·상태 칩 + 전대 세부 정보 6줄
 
 var battle: Node
 var src: BattleSource
@@ -633,6 +633,11 @@ func _draw_info(c: Control) -> void:
 	else:
 		_info_none(c)
 
+# 현재 속도(px/초): 직전 틱 이동량 x 틱 빈도. 일시정지 중에는 0
+func _cur_speed(f) -> float:
+	return 0.0 if src.state() != "play" or battle.sim.st.over else f.tpos.distance_to(f.ppos) * battle.vm.hz
+
+const CONTACT_LABEL := {"confirmed": "확인", "estimated": "추정", "lost": "상실"}
 func _info_single(c: Control, f) -> void:
 	var foe: bool = f.side == 1
 	# 초상은 작게(52), 따냄 없는 사각. 함종 구성과 상태 칩은 펼쳤을 때만(L2).
@@ -649,14 +654,17 @@ func _info_single(c: Control, f) -> void:
 		meta += " · 방어진형"
 	elif f.charge_t > 0.0:
 		meta += " · 돌격"
-	UiDraw.text(c, Vector2(c.size.x - 40, 32), (("적 · " if foe else "") + meta), "regular", 12, UiTheme.INK_3, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
+	if foe:   # 적 진형은 비공개: 접촉 상태만
+		meta = "적 · " + CONTACT_LABEL.get(f.contact, "확인")
+	UiDraw.text(c, Vector2(c.size.x - 40, 32), meta, "regular", 12, UiTheme.INK_3, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
 	_chevron(c)
 	# 함선 막대: 남은 수 + 방금 잃은 몫(연속 막대)
-	var frac: float = f.ships / f.max_ships
+	var known: bool = f.contact == "" or f.max_band > 0   # 추정·상실 접촉은 전력을 모른다
+	var frac: float = BattleSource.strength_frac(f)
 	var bar := Rect2(x + 4, 52, c.size.x - x - 4 - 100, 9)
 	c.draw_rect(bar, Color(0.04, 0.06, 0.09))
 	c.draw_rect(Rect2(bar.position, Vector2(bar.size.x * frac, bar.size.y)), UiTheme.FOE if foe else UiTheme.LIFE)
-	var shown_frac: float = f.shown / f.max_ships
+	var shown_frac: float = f.shown / f.max_ships if known else 0.0
 	if shown_frac > frac:
 		c.draw_rect(Rect2(bar.position + Vector2(bar.size.x * frac, 0), Vector2(bar.size.x * (shown_frac - frac), bar.size.y)), Color(UiTheme.FOE, 0.5))
 	c.draw_rect(bar.grow(0.5), UiTheme.LINE, false, 1.0)
@@ -706,15 +714,20 @@ func _info_single(c: Control, f) -> void:
 		c.draw_rect(r, Color(ch[1], 0.45), false, 1.0)
 		UiDraw.text(c, r.position + Vector2(8, 14), ch[0], "medium", 11, ch[1])
 		chx += tw + 6.0
-	_info_detail(c, x, chy + 42.0, src.detail(f.id))
+	_info_detail(c, x, chy + 42.0, src.detail(f.id), f)
 
 # 전대 세부 정보(자기 진영만): 장수·능력치 / 사기·선체 / 손상 단계 / 탄약·에너지·열 / 속도·사거리·진형
 const MSTATE_LABEL := {"stable": "안정", "shaken": "동요", "retreat": "퇴각"}
 const STAGE_LABEL := ["무손상", "경파", "중파", "대파", "격침"]
-func _info_detail(c: Control, x: float, y: float, d: Dictionary) -> void:
+func _info_detail(c: Control, x: float, y: float, d: Dictionary, f) -> void:
 	if d.is_empty():
 		return
-	var people := "함대 %s" % (d.group if d.group != "" else "—")
+	var cur_speed := _cur_speed(f)
+	var rg := PackedStringArray()
+	for cat in f.ranges:
+		rg.append("%s %d" % [src.AMMO_LABEL.get(cat, cat), int(f.ranges[cat])])
+	var range_txt := " · ".join(rg) if not rg.is_empty() else str(int(d.range))
+	var people := "지휘관 %s  ·  함대 %s" % [d.commander, d.group if d.group != "" else "—"]
 	people += "  ·  부지휘관 %s" % (d.vice if d.vice != "" else "—")
 	people += "  ·  참모 %s" % (", ".join(PackedStringArray(d.staff)) if not d.staff.is_empty() else "—")
 	var st: Dictionary = d.stats
@@ -738,7 +751,8 @@ func _info_detail(c: Control, x: float, y: float, d: Dictionary) -> void:
 		stats + "      " + hp,
 		"손상  " + " · ".join(dmg),
 		"탄약  " + (" · ".join(res) if not res.is_empty() else "—") + "      에너지 %d / %d · 열 %d / %d" % [int(d.energy), int(d.energy_max), int(d.heat), int(d.heat_max)],
-		"속도 %.1f · 사거리 %d · 진형 %s" % [d.speed, int(d.range), form],
+		"속도 %d / %d · 진형 %s" % [roundi(cur_speed), roundi(d.speed), form],
+		"사거리  " + range_txt,
 	]
 	c.draw_line(Vector2(x, y - 16), Vector2(c.size.x - 14, y - 16), UiTheme.LINE, 1.0)
 	for i in lines.size():
@@ -760,6 +774,15 @@ func _info_multi(c: Control, sel: Array) -> void:
 	UiDraw.text(c, Vector2(20, 34), "선 택 함 대", "eyebrow", 11, UiTheme.GOLD)
 	UiDraw.text(c, Vector2(20, 64), "%d개 함대" % sel.size(), "serif_bold", 24, UiTheme.INK)
 	UiDraw.text(c, Vector2(c.size.x - 40, 62), "%d / %d척" % [ceili(tot), int(mx)], "semibold", 14, UiTheme.INK_2, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
+	var mor := 0.0
+	var nm := 0
+	for f in sel:
+		var d: Dictionary = src.detail(f.id)
+		if not d.is_empty():
+			mor += d.morale_bp / 100.0
+			nm += 1
+	if nm > 0:
+		UiDraw.text(c, Vector2(c.size.x - 40, 40), "평균 사기 %d%%" % roundi(mor / nm), "regular", 12, UiTheme.INK_3, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
 	_chevron(c)
 	if not info_open:
 		return
