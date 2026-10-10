@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>함대 편성</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&display=swap" rel="stylesheet">
+<!-- 목업 v1 (2026-10-10). 사양: FLEET-ORGANIZATION-SCREEN.md, 결정: BATTLE_DECISIONS §T Q73~Q77. 데이터: red_cliffs_208_realtime.json 유비군 -->
+<style>
+:root{
+  --bg:#070b10; --panel:#0e151d; --panel-2:#141e28; --line:#26323e;
+  --gold:#c9a45c; --gold-hi:#f3dda4; --gold-line:rgba(201,164,92,.38);
+  --ink:#eef2f4; --ink-2:#b9c4cd; --ink-3:#7f8b97; --ink-4:#56616d;
+  --ally:#5fe0cf; --ally-lo:#1d6b63; --warn:#f2b84b; --bad:#ff7550; --ok:#86e39a;
+  --serif:'Noto Serif KR',serif; --sans:system-ui,'Malgun Gothic',sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 50% 0,#0f1c28 0,var(--bg) 70%);color:var(--ink);font:14px/1.45 var(--sans);min-height:100vh}
+header{display:flex;align-items:center;gap:16px;padding:14px 24px;border-bottom:1px solid var(--gold-line)}
+header h1{font:900 22px var(--serif);color:var(--gold-hi);margin:0;letter-spacing:.08em}
+header .sub{color:var(--ink-3)}
+header .step{margin-left:auto;display:flex;gap:6px;color:var(--ink-4);font-size:13px}
+header .step b{color:var(--gold)}
+main{display:grid;grid-template-columns:300px 1fr 300px;gap:16px;padding:16px 24px;height:calc(100vh - 130px);min-height:560px}
+section{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px;overflow:auto}
+h2{font:700 15px var(--serif);color:var(--gold);margin:0 0 10px;letter-spacing:.05em}
+h3{font-size:12px;color:var(--ink-3);font-weight:600;margin:14px 0 6px;text-transform:uppercase;letter-spacing:.1em}
+.fleet{border:1px solid var(--line);border-radius:5px;padding:10px;margin-bottom:8px;cursor:pointer;background:var(--panel-2)}
+.fleet.sel{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold-line) inset}
+.fleet.off{opacity:.45}
+.fleet .top{display:flex;align-items:center;gap:8px}
+.fleet .nm{font:700 15px var(--serif);flex:1}
+.flag{font-size:11px;color:var(--gold);border:1px solid var(--gold-line);padding:0 5px;border-radius:3px}
+.tog{min-width:56px;min-height:32px;border-radius:16px;border:1px solid var(--line);background:#0a1016;color:var(--ink-3);font-size:12px;cursor:pointer}
+.tog.on{background:var(--ally-lo);color:var(--ink);border-color:var(--ally)}
+.tog:disabled{cursor:not-allowed}
+.meta{color:var(--ink-3);font-size:12px;margin-top:4px}
+.bar{height:6px;background:#0a1016;border-radius:3px;margin-top:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ally)}
+.bar i.over{background:var(--bad)}
+.err{color:var(--bad);font-size:12px;margin-top:4px}
+.slots{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.slot{min-height:120px;border:1px dashed var(--line);border-radius:6px;padding:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;text-align:center;background:#0a1016}
+.slot.filled{border-style:solid;background:var(--panel-2)}
+.slot.target{border-color:var(--gold);border-style:solid}
+.slot.locked{cursor:not-allowed}
+.slot .role{font-size:11px;color:var(--gold);letter-spacing:.1em;margin-bottom:6px}
+.slot .hint{font-size:11px;color:var(--ink-4)}
+.officer{display:flex;flex-direction:column;align-items:center;gap:2px}
+.portrait{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2a3a48,#14202b);border:1px solid var(--gold-line);display:grid;place-items:center;font:900 18px var(--serif);color:var(--gold-hi)}
+.officer .n{font:700 14px var(--serif)}
+.stats{font-size:11px;color:var(--ink-3)}
+.stats b{color:var(--ink-2);font-weight:600}
+.trait{font-size:11px;color:var(--ally)}
+.picked{outline:2px solid var(--gold);outline-offset:2px;border-radius:6px}
+table{width:100%;border-collapse:collapse}
+td{padding:7px 4px;border-bottom:1px solid var(--line)}
+td.num{text-align:center;width:44px;font:700 16px var(--sans)}
+td.cost{color:var(--ink-3);text-align:right;width:80px;font-size:12px}
+.pm{width:40px;height:40px;border-radius:5px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink);font-size:18px;cursor:pointer}
+.pm:disabled{opacity:.3;cursor:not-allowed}
+.role-s{color:var(--ink-4);font-size:12px}
+.summary{display:flex;gap:18px;margin-top:12px;color:var(--ink-2);font-size:13px}
+.summary b{color:var(--ink)}
+.pool-off{display:flex;align-items:center;gap:8px;padding:8px;border:1px solid var(--line);border-radius:5px;margin-bottom:6px;cursor:pointer;background:var(--panel-2)}
+.pool-off .portrait{width:34px;height:34px;font-size:14px}
+.empty{color:var(--ink-4);font-size:12px;padding:6px 0}
+.pool-ship{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px}
+footer{display:flex;align-items:center;gap:12px;padding:0 24px 16px}
+footer .msg{flex:1;color:var(--ink-3);font-size:13px}
+footer .msg.bad{color:var(--bad)}
+.btn{min-height:48px;padding:0 22px;border-radius:5px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink);font:700 15px var(--serif);cursor:pointer}
+.btn.primary{background:linear-gradient(#d8b46a,#a8853f);color:#1a1206;border-color:var(--gold)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+@media (max-width:1100px){main{grid-template-columns:1fr;height:auto}.slots{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<header>
+  <h1>함대 편성</h1><span class="sub">적벽 208 · 유비군</span>
+  <div class="step">브리핑 › <b>편성</b> › 위치 배치 › 전투</div>
+</header>
+<main>
+  <section><h2>함대 · 출전</h2><div id="fleets"></div></section>
+  <section id="detail"></section>
+  <section>
+    <h2>대기 풀</h2>
+    <h3>미배치 장수</h3><div id="poolOff"></div>
+    <h3>미배치 함선</h3><div id="poolShip"></div>
+  </section>
+</main>
+<footer>
+  <div class="msg" id="msg"></div>
+  <button class="btn" id="reset">정사 편성으로 초기화</button>
+  <button class="btn primary" id="ok">편성 확정</button>
+</footer>
+<script>
+const SHIPS={'SHP-03':['포격함',12,'장거리 포화'],'SHP-04':['전열함',10,'정면 교전'],'SHP-05':['보급함',8,'수리·보급'],'SHP-07':['요격함',7,'고속 요격·호위'],'SHP-08':['고속정',3,'정찰(장비 포함)']};
+const O={ // 이름, 통, 무, 지, 매, 특성
+  liubei:['유비',82,73,76,99,'인덕'], zhangfei:['장비',88,98,45,45,'연인'], zhuge:['제갈량',92,38,100,92,'신기묘산'],
+  guanyu:['관우',95,97,75,93,'만인지적'], liuqi:['유기',48,38,30,38,'장자'], zhaoyun:['조운',91,96,76,88,'일신시담']};
+const ROLES=[['admiral','제독'],['vice','부제독'],['assault','참모 · 강습'],['siege','참모 · 공성'],['supply','참모 · 보급']];
+const INIT=()=>[
+  {id:'RC-LIU-SQ-01',name:'유비 본대',flag:true,on:true,o:{admiral:'liubei',vice:'zhangfei',siege:'zhuge'},s:{'SHP-04':12,'SHP-05':3,'SHP-07':6}},
+  {id:'RC-LIU-SQ-02',name:'관우 수군',on:true,o:{admiral:'guanyu'},s:{'SHP-03':6,'SHP-04':9,'SHP-07':6}},
+  {id:'RC-LIU-SQ-03',name:'유기 강하군',on:true,o:{admiral:'liuqi'},s:{'SHP-03':3,'SHP-04':9,'SHP-05':3}},
+  {id:'RC-LIU-FC-01',name:'조운 정찰 고속정대',on:true,o:{admiral:'zhaoyun'},s:{'SHP-08':18}}];
+let F,sel,picked,poolS;
+const $=id=>document.getElementById(id);
+const cost=f=>Object.entries(f.s).reduce((a,[k,n])=>a+SHIPS[k][1]*n,0);
+const ships=f=>Object.values(f.s).reduce((a,n)=>a+n,0);
+const limit=f=>f.o.admiral?(40+O[f.o.admiral][1]*2)*3:0; // 시나리오: (40 + 통솔×2) × 3
+const assigned=()=>new Set(F.filter(f=>f.on).flatMap(f=>Object.values(f.o)));
+const poolO=()=>Object.keys(O).filter(k=>!assigned().has(k));
+function errs(f){const e=[];if(!f.on)return e;
+  if(!f.o.admiral)e.push('제독 없음');
+  if(ships(f)===0)e.push('함선 0척');
+  if(f.o.admiral&&cost(f)>limit(f))e.push(`지휘 한도 초과 ${cost(f)}/${limit(f)}`);return e}
+function toggle(i){const f=F[i];if(f.flag)return;f.on=!f.on;
+  if(!f.on){for(const[k,n]of Object.entries(f.s))poolS[k]=(poolS[k]||0)+n;f.s={};f.o={}}picked=null;render()}
+function officerCard(k){const[n,c,m,i,ch,t]=O[k];
+  return `<div class="officer"><div class="portrait">${n[0]}</div><div class="n">${n}</div>
+  <div class="stats">통<b>${c}</b> 무<b>${m}</b> 지<b>${i}</b> 매<b>${ch}</b></div><div class="trait">${t}</div></div>`}
+function clickSlot(role){const f=F[sel];if(f.flag&&role==='admiral')return;
+  const cur=f.o[role];
+  if(picked){ // 고른 장수를 이 칸으로(자리에 있던 장수와 맞바꿈)
+    const src=picked.fleet!=null?F[picked.fleet]:null;
+    if(src){delete src.o[picked.role];if(cur)src.o[picked.role]=cur}
+    f.o[role]=picked.k;picked=null}
+  else if(cur)picked={k:cur,fleet:sel,role};
+  render()}
+function unassign(){if(!picked||picked.fleet==null)return;const f=F[picked.fleet];
+  if(f.flag&&picked.role==='admiral')return;delete f.o[picked.role];picked=null;render()}
+function move(k,d){const f=F[sel];
+  if(d>0){if(!(poolS[k]>0))return;poolS[k]--;f.s[k]=(f.s[k]||0)+1}
+  else{if(!(f.s[k]>0))return;f.s[k]--;poolS[k]=(poolS[k]||0)+1;if(!f.s[k])delete f.s[k]}render()}
+function render(){
+  $('fleets').innerHTML=F.map((f,i)=>{const e=errs(f),l=limit(f),c=cost(f);
+    return `<div class="fleet ${i===sel?'sel':''} ${f.on?'':'off'}" onclick="sel=${i};picked=null;render()">
+    <div class="top"><span class="nm">${f.name}</span>${f.flag?'<span class="flag">기함</span>':''}
+    <button class="tog ${f.on?'on':''}" ${f.flag?'disabled title="기함 함대는 끌 수 없음"':''} onclick="event.stopPropagation();toggle(${i})">${f.on?'출전':'대기'}</button></div>
+    <div class="meta">${f.on?`제독 ${f.o.admiral?O[f.o.admiral][0]:'—'} · ${ships(f)}척 · 비용 ${c}/${l||'—'}`:'출전하지 않음 · 장수·함선은 대기 풀로'}</div>
+    ${f.on?`<div class="bar"><i class="${c>l?'over':''}" style="width:${l?Math.min(100,c/l*100):0}%"></i></div>`:''}
+    ${e.map(x=>`<div class="err">⚠ ${x}</div>`).join('')}</div>`}).join('');
+  const f=F[sel];
+  if(!f.on){$('detail').innerHTML=`<h2>${f.name}</h2><p class="empty">대기 중인 함대입니다. 왼쪽에서 <b>출전</b>을 켜면 편성할 수 있습니다.</p>`}
+  else{
+  $('detail').innerHTML=`<h2>${f.name} <span class="role-s">${f.id}</span></h2>
+  <h3>지휘부 — 칸을 눌러 장수를 고르고, 다른 칸이나 풀 장수와 바꾼다</h3>
+  <div class="slots">${ROLES.map(([r,lab])=>{const k=f.o[r],lock=f.flag&&r==='admiral';
+    const isPick=picked&&picked.fleet===sel&&picked.role===r;
+    return `<div class="slot ${k?'filled':''} ${picked&&!isPick&&!lock?'target':''} ${lock?'locked':''} ${isPick?'picked':''}" onclick="clickSlot('${r}')" ${lock?'title="기함 제독은 바꿀 수 없음"':''}>
+      <div class="role">${lab}${lock?' 🔒':''}</div>${k?officerCard(k):'<div class="hint">비어 있음</div>'}</div>`}).join('')}</div>
+  <h3>전함 — 세력 총 척수 안에서 대기 풀과 주고받는다</h3>
+  <table>${Object.keys(SHIPS).filter(k=>f.s[k]||poolS[k]).map(k=>`<tr>
+    <td><b>${SHIPS[k][0]}</b> <span class="role-s">${k} · ${SHIPS[k][2]}</span></td>
+    <td style="width:44px"><button class="pm" ${f.s[k]?'':'disabled'} onclick="move('${k}',-1)">−</button></td>
+    <td class="num">${f.s[k]||0}</td>
+    <td style="width:44px"><button class="pm" ${poolS[k]?'':'disabled'} onclick="move('${k}',1)">+</button></td>
+    <td class="cost">${SHIPS[k][1]} × ${f.s[k]||0} = ${SHIPS[k][1]*(f.s[k]||0)}</td></tr>`).join('')}</table>
+  <div class="summary"><span>총 <b>${ships(f)}</b>척</span><span>비용 <b>${cost(f)}</b> / 지휘 한도 <b>${limit(f)||'—'}</b></span>
+    <span class="role-s">한도 = (40 + 제독 통솔×2) × 3</span></div>`}
+  const po=poolO();
+  $('poolOff').innerHTML=(picked&&picked.fleet!=null?`<div class="pool-off" style="justify-content:center;border-style:dashed" onclick="unassign()">↩ 선택한 장수를 대기 풀로</div>`:'')+
+    (po.length?po.map(k=>`<div class="pool-off ${picked&&picked.k===k?'picked':''}" onclick="picked={k:'${k}',fleet:null};render()">
+    <div class="portrait">${O[k][0][0]}</div><div><b>${O[k][0]}</b><div class="stats">통${O[k][1]} 무${O[k][2]} 지${O[k][3]} · ${O[k][5]}</div></div></div>`).join(''):'<div class="empty">모든 장수가 배치됐습니다. 함대를 대기로 돌리면 그 장수가 여기로 옵니다.</div>');
+  const ps=Object.entries(poolS).filter(([,n])=>n>0);
+  $('poolShip').innerHTML=ps.length?ps.map(([k,n])=>`<div class="pool-ship"><span>${SHIPS[k][0]}</span><b>${n}척</b></div>`).join(''):'<div class="empty">모든 함선이 배치됐습니다.</div>';
+  const all=F.flatMap(f=>errs(f).map(e=>`${f.name}: ${e}`)),left=ps.reduce((a,[,n])=>a+n,0);
+  const bad=all.length>0||!F.some(f=>f.on);
+  $('msg').className='msg'+(bad?' bad':'');
+  $('msg').textContent=bad?'확정할 수 없음 — '+all.join(' · '):`확정 가능 · 출전 ${F.filter(f=>f.on).length}개 함대`+(left?` · 미배치 함선 ${left}척은 전투에 나가지 않음`:'');
+  $('ok').disabled=bad}
+$('reset').onclick=()=>{F=INIT();sel=0;picked=null;poolS={};render()};
+$('ok').onclick=()=>alert('목업: 편성 사본을 프로필에 덮어쓰고 위치 배치로 넘어간다');
+$('reset').onclick();
+</script>
+</body>
+</html>
