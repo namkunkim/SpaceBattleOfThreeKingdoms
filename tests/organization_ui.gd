@@ -178,5 +178,15 @@ func _run() -> void:
 			sum["cao" if fl.faction_id == "cao_cao" else "ally"] += Organization.cost_of(fl, o.prof)
 	var target := float(o.prof.scenario.difficulty_profile.target_cost_ratio)
 	if not TestCheck.ok(self, absf(float(sum.cao) / float(sum.ally) - target) <= 0.05, "skip cao ratio %.3f vs %.2f" % [float(sum.cao) / float(sum.ally), target]): return
+	# REVIEW-O2b #1: 프로필을 못 만들면(모르는 난이도) 오류 없이 대체 전장으로 열고 문구를 남긴다
+	var diff: String = battle.difficulty
+	battle.difficulty = "없는 난이도"
+	battle.init_game()
+	if not TestCheck.ok(self, battle.sim != null and not battle.ALLY_DEF.is_empty() and battle.load_error != "", "empty profile guarded: %s" % battle.load_error): return
+	deck.show_screen("brief")
+	await _frames()
+	battle.difficulty = diff
+	battle.init_game()
+	if not TestCheck.ok(self, battle.load_error == "", "error cleared on good profile"): return
 	print("ORGANIZATION_UI_PASS")
 	quit(0)

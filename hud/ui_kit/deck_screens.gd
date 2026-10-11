@@ -265,6 +265,8 @@ class BriefScreen extends Control:
 		_roster(c, Vector2(890, 150), "적 정 보", b.FOE_DEF, 1)
 		UiDraw.icon(c, "warn", Rect2(890, 576, 18, 18), UiTheme.WARN, 1.5)
 		UiDraw.text(c, Vector2(914, 590), "측면 증원 가능성", "medium", 12, UiTheme.WARN)
+		if b.load_error != "":
+			UiDraw.text(c, Vector2(36, 620), "⚠ " + b.load_error, "medium", 13, UiTheme.FOE)
 	func _roster(c: Control, o: Vector2, title: String, defs: Array, side: int) -> void:
 		var b: Node = deck.battle
 		UiDraw.text(c, o, title, "eyebrow", 11, UiTheme.GOLD)

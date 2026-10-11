@@ -21,6 +21,7 @@ const FIGHTER_R := 380.0
 const PORTRAIT_SHEET := "res://assets/portraits/commanders_sheet_v1.png"
 var profile_def := "res://data/profiles/red_cliffs_rt.json"   # 적벽 시나리오 프로필. ""이면 POC 프로필(규칙 문구 대조 테스트 전용)
 var difficulty := "표준"
+var load_error := ""   # 프로필을 만들지 못해 대체했을 때의 문구(브리핑에 보인다, REVIEW-O2b #1)
 var org := {}   # 전투 전 편성 사본(O4, Organization). 비어 있으면 정사 편성. 다시 시작해도 유지된다
 var profile_patch := Callable()   # 측정 전용(bench_density 1,500척 프리셋): 프로필을 받아 고친다. 게임 흐름에서는 비어 있다
 var move_mul := 150.0   # 이동 배율: 화면 한 폭(1600)을 약 10초에 건넌다. 헤드리스 테스트는 1로 둔다
@@ -158,9 +159,17 @@ func init_game() -> void:
 			profile = Organization.load_auto(profile_def, difficulty)
 		else:
 			profile = applied
-	if profile_def != "" and not profile.is_empty():
+	load_error = ""
+	if profile_def != "" and profile.is_empty():   # 자동 편성 검증 실패(load_auto = {}) 등: 편성 없는 프로필, 그것도 없으면 POC로 연다
+		profile = ScenarioProfile.load_profile(profile_def, difficulty)
+		load_error = "자동 편성에 실패해 시나리오 기본 편성으로 엽니다" if not profile.is_empty() else "시나리오를 읽지 못해 시험 전장으로 엽니다"
+		push_error("%s (%s, %s)" % [load_error, profile_def, difficulty])
+		if profile.is_empty():
+			profile = PocSetup.profile()
+	var scen := profile_def != "" and profile.has("combat")   # 시나리오 전장(POC로 대체됐으면 아니다)
+	if scen:
 		ScenarioProfile.enlarge_field(profile, FIELD_SIZE)   # 전장을 FIELD_SIZE로 맞추고 배치를 비율대로 늘린다. 미니맵은 이 전장을 비례 축소해 보여 준다
-	if profile_def != "" and not profile.is_empty():
+	if scen:
 		rig.margin = 0.4   # 시작 배율에서도 두 손가락으로 화면을 옮길 수 있게
 		GameSettings.slow_mode = GameSettings.SLOW_OFF   # 선택 감속 끔(저장 설정은 건드리지 않는다)
 		ScenarioProfile.tune_for_play(profile, move_mul, turn_mul)
@@ -185,14 +194,14 @@ func init_game() -> void:
 	rig.cam_pos = _field_center()
 	_brief_x = rig.cam_pos.x
 	var mine := alive(0)
-	if profile_def != "" and not mine.is_empty():   # 시작 화면은 아군(서쪽 끝) 쪽. 전장 밖으로는 clamp_cam이 막는다
+	if scen and not mine.is_empty():   # 시작 화면은 아군(서쪽 끝) 쪽. 전장 밖으로는 clamp_cam이 막는다
 		var c := Vector2.ZERO
 		for f in mine:
 			c += f.pos
 		rig.cam_pos = c / mine.size()
 		_brief_x = rig.cam_pos.x
 	rig.cam_z = clampf(vsize.x / (sim.rs.world.x + 100.0), 0.45, 1.0)   # 전장 폭이 화면에 들어오게
-	if profile_def != "":
+	if scen:
 		rig.cam_z = 0.9   # 전장이 커서 전체를 담으면 함대가 작다. 시작은 함대가 읽히는 배율, 확대·축소는 두 손가락
 	hud.reset()
 	refresh_panel()
