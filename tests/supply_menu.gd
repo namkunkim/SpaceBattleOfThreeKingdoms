@@ -166,6 +166,8 @@ func _ui() -> void:
 	deck._refresh_cmds()
 	if not TestCheck.ok(self, src.supply_view().is_empty() and not deck.cmd_tabs[3].visible, "보급함 없는 함대: 메뉴 없음"): return
 	# 보급함 함대: 손님 하나를 곁에 두고 선택
+	for cat in plain.ammo:
+		plain.ammo[cat] = 0
 	TestPoke.fleet(battle, battle.by_id(plain.id), {"pos": sup_f.pos + Vector2(60, 0)})
 	battle.selected.clear()
 	battle.selected.append(battle.by_id(sup_f.id))
@@ -182,8 +184,20 @@ func _ui() -> void:
 	for c in deck.supply_menu._box.get_children():
 		names += _text(c) + "
 "
-	if not TestCheck.ok(self, names.contains("보급 레벨") and names.contains("재고 탄약") and names.contains("먼저") and not names.contains("전대"), "보급 패널 문구(함대 표기)
+	if not TestCheck.ok(self, names.contains("보급 레벨") and not names.contains("도크") and names.contains("재고 탄약") and names.contains("먼저") and not names.contains("전대"), "보급 패널 문구(함대 표기)
 " + names): return
+	# F-1: 패널 안 버튼이 아닌 위젯은 클릭을 막지 않는다
+	if not TestCheck.ok(self, _blockers(deck.supply_menu).is_empty(), "버튼 아닌 위젯은 마우스 통과 %s" % str(_blockers(deck.supply_menu))): return
+	# F-10: 없는 ID 지정은 거부, -1은 해제
+	core.issue(BattleSim.command(0, [sup_f.id], "supply_first", 99999))
+	var rj := _rej(core)
+	core.issue(BattleSim.command(0, [sup_f.id], "supply_first", -1))
+	if not TestCheck.ok(self, rj == ["supply_target"] and _rej(core).is_empty(), "없는 ID 거부, -1 해제 %s" % str(rj)): return
+	# F-2: 목록 분리(수리 탭은 수리 필요 대상만, 많은 순)
+	var mm := {"targets": [{"id": 1, "dist": 10.0, "charges": 0, "ammo": 0, "repair": 1}, {"id": 2, "dist": 20.0, "charges": 1, "ammo": 0, "repair": 3}, {"id": 3, "dist": 5.0, "charges": 0, "ammo": 5, "repair": 0}]}
+	var sh_r: Array = deck.supply_menu.shown(mm, "repair")
+	var sh_s: Array = deck.supply_menu.shown(mm, "supply")
+	if not TestCheck.ok(self, sh_r.map(func(t): return t.id) == [2, 1] and sh_s.map(func(t): return t.id) == [2, 3], "탭별 목록 %s %s" % [str(sh_r), str(sh_s)]): return
 	# 우선 지정 버튼 → 코어 명령 기록
 	var n0: int = core.command_log.size()
 	var btn: Button = _find_btn(deck.supply_menu._box, plain.id)
@@ -207,7 +221,7 @@ func _ui() -> void:
 	for c in deck.supply_menu._box.get_children():
 		cap += _text(c) + "
 "
-	if not TestCheck.ok(self, cap.contains("수리 도크"), "수리 탭: 도크 문구
+	if not TestCheck.ok(self, cap.contains("처리 자리"), "수리 탭: 도크 문구
 " + cap): return
 	# 선택을 보급함 없는 함대로 바꾸면 탭이 사라지고 태세 탭으로 돌아간다
 	battle.selected.clear()
@@ -247,6 +261,14 @@ func _ui() -> void:
 	if not TestCheck.ok(self, src.supply_view().is_empty() and not deck.cmd_tabs[3].visible, "적 선택: 메뉴 없음"): return
 	print("OK supply_menu")
 	quit(0)
+
+func _blockers(n: Node) -> Array:
+	var out := []
+	if n is Control and not (n is BaseButton) and n.mouse_filter == Control.MOUSE_FILTER_STOP:
+		out.append(n.get_class())
+	for k in n.get_children():
+		out.append_array(_blockers(k))
+	return out
 
 func _text(c: Node) -> String:
 	var t := ""

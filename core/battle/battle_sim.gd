@@ -580,7 +580,11 @@ func apply(c: Dictionary) -> void:
 			var why := "unknown_command"
 			if supply:
 				why = "supply_none"
+				if kind == "supply_first" and int(c.target_id) >= 0 and st.by_id(int(c.target_id)) == null:
+					why = "supply_target"   # 없는 ID는 거부. 해제는 target_id -1로만
 				for f in s:
+					if why == "supply_target":
+						break
 					if supply.ships_of(f) > 0:
 						why = supply.cmd_first(f, st.by_id(int(c.target_id))) if kind == "supply_first" else supply.cmd_hold(f, bool(c.get("args", {}).get("on", true)))
 						if why != "":

@@ -5,7 +5,7 @@ extends Control
 # 새 수치는 만들지 않는다: 레벨 = 코어 보충 횟수(3/2/1), 처리량 = 선체 구간(100/50/25%).
 
 const W := preload("res://hud/ui_kit/deck_widgets.gd")
-const SIZE := Vector2(440, 252)
+const SIZE := Vector2(440, 292)
 const MAX_ROWS := 3
 
 var deck: Node
@@ -18,6 +18,7 @@ func setup(d: Node) -> void:
 	deck = d
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_bg = W.DrawPanel.new(Callable(), UiTheme.ornate())
+	_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE   # 패널 빈 곳의 클릭은 전장으로 통과한다. 버튼만 막는다
 	add_child(_bg)
 	_bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_box = VBoxContainer.new()
@@ -40,7 +41,7 @@ static func stock_text(m: Dictionary) -> String:
 	return "재고 탄약 %d/%d · 물자 %d/%d" % [m.stock_ammo, m.ammo_max, m.stock_materials, m.materials_max]
 
 static func dock_text(m: Dictionary) -> String:
-	return "수리 도크 %d/%d 사용 중 · 남은 %d" % [m.docks_used, m.docks, maxi(0, int(m.docks) - int(m.docks_used))]
+	return "처리 자리 %d/%d 사용 중 · 남은 %d" % [m.docks_used, m.docks, maxi(0, int(m.docks) - int(m.docks_used))]
 
 static func need_text(t: Dictionary, md: String) -> String:
 	var parts := PackedStringArray()
@@ -59,6 +60,19 @@ static func need_text(t: Dictionary, md: String) -> String:
 		parts.append("이동 중")
 	return " · ".join(parts)
 
+# 탭별 목록: 수리 = 수리 필요 함대를 수리할 척 수 많은 순, 보급 = 횟수·탄약 결손이 있거나 처리 중인 함대(가까운 순)
+static func shown(m: Dictionary, md: String) -> Array:
+	var out := []
+	for t in m.targets:
+		if md == "repair":
+			if int(t.repair) > 0:
+				out.append(t)
+		elif int(t.charges) > 0 or int(t.ammo) > 0:
+			out.append(t)
+	if md == "repair":
+		out.sort_custom(func(a, b): return a.repair > b.repair if a.repair != b.repair else a.dist < b.dist)
+	return out
+
 # ------------------------------------------------------------ 갱신(초당 10회 이하로 불린다)
 # 구조(함대·대상 목록·지정·중지)가 바뀔 때만 위젯을 다시 만들고, 숫자는 제자리에서 고친다(누르는 중에 버튼이 사라지지 않게).
 var _lines: Array = []   # [Label, Callable(v) -> String]
@@ -71,7 +85,7 @@ func refresh(v: Dictionary) -> void:
 	visible = true
 	var m: Dictionary = v.menu
 	var ids := []
-	for t in m.targets:
+	for t in shown(m, mode):
 		ids.append(int(t.id))
 	var sig := "%s|%d|%s|%d|%s" % [mode, v.id, m.hold, m.first, ids]
 	if sig != _sig:
@@ -79,7 +93,7 @@ func refresh(v: Dictionary) -> void:
 		_build(v, m)
 	for ln in _lines:
 		ln[0].text = ln[1].call(v.menu)
-	for t in m.targets:
+	for t in shown(m, mode):
 		if _rows.has(int(t.id)):
 			_rows[int(t.id)].text = "%s  %s" % [v.names.get(int(t.id), "?"), need_text(t, mode)]
 
@@ -97,16 +111,13 @@ func _build(v: Dictionary, m: Dictionary) -> void:
 		_line(stock_text, "Muted")
 	if m.hold:
 		_box.add_child(_label("자동 보급 중지됨", "Strong", 12))
-	var shown := 0
-	for t in m.targets:
-		if shown >= MAX_ROWS:
-			break
-		shown += 1
-		_box.add_child(_row(v, m, t))
-	if m.targets.is_empty():
-		_box.add_child(_label("반경 안에 아군 함대가 없습니다", "Muted", 12))
-	elif m.targets.size() > MAX_ROWS:
-		_box.add_child(_label("외 %d개 함대" % (m.targets.size() - MAX_ROWS), "Muted", 12))
+	var list := shown(m, mode)
+	for k in mini(MAX_ROWS, list.size()):
+		_box.add_child(_row(v, m, list[k]))
+	if list.is_empty():
+		_box.add_child(_label("수리가 필요한 함대가 없습니다" if mode == "repair" else "보급이 필요한 함대가 없습니다", "Muted", 12))
+	elif list.size() > MAX_ROWS:
+		_box.add_child(_label("외 %d개 함대" % (list.size() - MAX_ROWS), "Muted", 12))
 
 func _line(fn: Callable, variation: String) -> void:
 	var l := _label("", variation, 12)
@@ -132,7 +143,10 @@ func _row(v: Dictionary, m: Dictionary, t: Dictionary) -> Control:
 	b.text = "먼저 해제" if first else "먼저"
 	b.focus_mode = Control.FOCUS_NONE
 	b.custom_minimum_size = Vector2(78, 48)
-	b.theme_type_variation = "MenuButton2"
+	for st in ["normal", "pressed"]:
+		b.add_theme_stylebox_override(st, UiTheme.flat(Color(0.04, 0.06, 0.08, 0.78), UiTheme.LINE))
+	b.add_theme_stylebox_override("hover", UiTheme.flat(Color(0.07, 0.1, 0.12, 0.88), UiTheme.GOLD))
+	b.add_theme_font_size_override("font_size", 13)
 	b.set_meta("target_id", int(t.id))
 	b.pressed.connect(func(): deck.battle.cmds.supply_first(int(v.id), -1 if first else int(t.id)))
 	h.add_child(b)
