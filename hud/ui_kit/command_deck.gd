@@ -14,6 +14,7 @@ const Card := preload("res://hud/ui_kit/decision_card.gd")
 const Strip := preload("res://hud/ui_kit/squadron_strip.gd")
 const Pulse := preload("res://hud/ui_kit/edge_pulse.gd")
 const Quick := preload("res://hud/ui_kit/quick_alert.gd")
+const SupplyMenu := preload("res://hud/ui_kit/supply_menu.gd")
 
 # 이름·아이콘만 여기 둔다. 효과 문구와 수치는 규칙 값(BattleSource.rules → RuleText.cmd)에서 만든다.
 # confirm: 되돌릴 수 없거나 비용이 큰 명령은 길게 눌러 확정한다(EXPERIENCE-DESIGN §6 U3). 단축키는 바로 실행.
@@ -29,6 +30,7 @@ const CMD_INFO := {
 }
 # 탭 3개(Q22). 진형 탭은 코어 진형(M5·M10)이 붙기 전까지 방어진형 하나뿐이다.
 const TABS := [["태세", ["stop", "charge", "rally", "retreat", "all"]], ["진형", ["def"]], ["무장", ["missile", "fighter"]]]
+const SUPPLY_TABS := ["보급", "수리"]   # P7: 보급함 함대를 선택했을 때만 보이는 탭 3·4
 const INFO_L1 := 88.0
 const INFO_L2 := 282.0   # 펼침: 함종 구성·상태 칩 + 전대 세부 정보 6줄
 
@@ -75,6 +77,7 @@ var grp_btns: Array[DeckWidgets.IconButton] = []
 var info_open := false
 var cmd_panel: Control
 var cmd_tabs: Array = []
+var supply_menu: Control
 var cmd_grid: GridContainer
 var cmd_buttons: Array = []
 var tab_index := 0
@@ -172,6 +175,8 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 
 # 되돌리기·빠른 알림은 선택 패널(접힘 L1 / 펼침 L2) 또는 결정 카드 바로 위에 뜬다.
 func _layout_floaters() -> void:
+	if supply_menu:
+		_place_supply()
 	undo_bar.offset_top = -(decision_card.size.y + 14 + 10 + 60) if decision_card.visible else -((INFO_L2 if info_open else INFO_L1) + 14 + 8 + 60)   # info.size는 다음 프레임에 갱신된다
 	undo_bar.offset_bottom = undo_bar.offset_top + 60
 	quick_alert.offset_top = undo_bar.offset_top - 2
@@ -830,6 +835,16 @@ func _build_commands() -> void:
 		tb.pressed.connect(_set_tab.bind(i))
 		tabs.add_child(tb)
 		cmd_tabs.append(tb)
+	for k in SUPPLY_TABS.size():
+		var sb := W.TabButton.new(SUPPLY_TABS[k])
+		sb.pressed.connect(_set_tab.bind(TABS.size() + k))
+		sb.visible = false
+		tabs.add_child(sb)
+		cmd_tabs.append(sb)
+	supply_menu = SupplyMenu.new()
+	hud.add_child(supply_menu)
+	supply_menu.setup(self)
+	supply_menu.visible = false
 	var sep := ColorRect.new()
 	sep.color = Color(UiTheme.GOLD, 0.2)
 	sep.custom_minimum_size = Vector2(0, 1)
@@ -885,6 +900,10 @@ func _set_tab(i: int) -> void:
 	for b in cmd_buttons:
 		b.queue_free()
 	cmd_buttons.clear()
+	supply_menu.visible = false
+	if i >= TABS.size():
+		_build_supply_page(i)
+		return
 	if TABS[i][0] == "진형" and src.has_formations():
 		_build_formation_cards()
 		return
@@ -1007,7 +1026,45 @@ func _confirm_tick(delta: float) -> void:
 		sound.play("confirm_heavy")
 		battle.do_cmd(_confirm_btn.cmd.id)
 
+# P7 보급·수리 탭: 위쪽 패널(SupplyMenu)이 읽기값과 "먼저"를 맡고, 여기 명령 버튼은 자동 보급 중지/재개 하나다.
+func _build_supply_page(i: int) -> void:
+	supply_menu.mode = "repair" if i == TABS.size() + 1 else "supply"
+	supply_menu._sig = ""
+	var b := W.CmdButton.new({"id": "supply_hold", "label": "보급 중지", "icon": "stop", "key": "", "cost": 0}, self)
+	b.pressed.connect(func():
+		var v := src.supply_view()
+		if not v.is_empty():
+			battle.cmds.supply_hold(int(v.id), not bool(v.menu.hold)))
+	cmd_grid.add_child(b)
+	cmd_buttons.append(b)
+	if sound:
+		_hook_buttons(b)
+	_place_supply()
+
+# 선택 패널(L1/L2) 위, 되돌리기 알림 자리 위에 뜬다
+func _place_supply() -> void:
+	var up := (INFO_L2 if info_open else INFO_L1) + 14 + 8 + 60 + 6
+	_anchor(supply_menu, Control.PRESET_CENTER_BOTTOM, SupplyMenu.SIZE, Vector2(0, -up))
+
+func _refresh_supply(v: Dictionary) -> void:
+	for k in SUPPLY_TABS.size():
+		cmd_tabs[TABS.size() + k].visible = not v.is_empty()
+	if tab_index < TABS.size():
+		return
+	if v.is_empty():
+		_set_tab(0)
+		return
+	supply_menu.refresh(v)
+	var b = cmd_buttons[0]
+	b.cmd.label = "보급 재개" if v.menu.hold else "보급 중지"
+	b.cmd.icon = "rally" if v.menu.hold else "stop"
+	b.queue_redraw()
+
 func _refresh_cmds() -> void:
+	var sv := src.supply_view()
+	_refresh_supply(sv)
+	if tab_index >= TABS.size():
+		return
 	if TABS[tab_index][0] == "진형" and src.has_formations():
 		_refresh_formations()
 		return

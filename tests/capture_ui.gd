@@ -76,6 +76,17 @@ func _run() -> void:
 			if deck:
 				deck._set_info_open(true)
 				deck._set_tab(2)   # 무장 탭: 미사일·함재기 남은 횟수 표시 확인(Q69)
+		if mode.begins_with("supply") and deck:
+			# P7 보급·수리 메뉴: 보급함 함대 곁에 손님 둘(탄약·횟수를 비워) 두고 보급 탭을 연다. 수리 탭은 장면 supply_repair
+			for k in [2, 3]:
+				var g = battle.sim.st.by_id(battle.fleets[k].id)
+				for cat in g.ammo:
+					g.ammo[cat] = 0
+				for cat in g.wch:
+					g.wch[cat] = 0
+				TestPoke.fleet(battle, battle.fleets[k], {"pos": battle.fleets[1].pos + Vector2(70.0 * (k - 1), 50.0)})
+			deck._set_tab(4 if mode == "supply_repair" else 3)
+			deck._refresh_cmds()
 		battle.refresh_panel()
 		battle.cam_pos = battle.fleets[1].pos + Vector2(260.0, 40.0)
 		battle.cam_z = 1.0

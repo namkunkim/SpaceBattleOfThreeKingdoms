@@ -575,6 +575,22 @@ func apply(c: Dictionary) -> void:
 					why = chain.ignite(L, st.by_id(int(c.target_id)))
 			if why != "":
 				_reject(L, why, side)
+		"supply_first", "supply_hold":
+			# P7 수동 층: 보급함 전대의 우선 대상 지정(target_id, -1 = 해제) / 자동 보급 중지·재개(args.on)
+			var why := "unknown_command"
+			if supply:
+				why = "supply_none"
+				if kind == "supply_first" and int(c.target_id) >= 0 and st.by_id(int(c.target_id)) == null:
+					why = "supply_target"   # 없는 ID는 거부. 해제는 target_id -1로만
+				for f in s:
+					if why == "supply_target":
+						break
+					if supply.ships_of(f) > 0:
+						why = supply.cmd_first(f, st.by_id(int(c.target_id))) if kind == "supply_first" else supply.cmd_hold(f, bool(c.get("args", {}).get("on", true)))
+						if why != "":
+							break
+			if why != "":
+				_reject(L, why, side)
 		"assault":
 			# 강습(M9): args.type = unit(부대 강습) | flagship(기함 진입, 진형이 안 열렸으면 강행 돌입). target_id = 표적
 			if assault == null:
