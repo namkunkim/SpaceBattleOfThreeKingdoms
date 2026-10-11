@@ -167,8 +167,13 @@ func _run() -> void:
 	var fp_skip := _fp(battle)
 	if not TestCheck.ok(self, battle.org == auto and battle.G.state == "play", "skip -> battle with 3-faction auto org"): return
 	if not TestCheck.ok(self, fp_skip == fp_default, "skip == screen initial org result"): return
+	# Q83: 편성 사본 없는 기본 경로(load_auto)도 같은 결과
+	seed(7)
+	battle.org = {}
+	battle.init_game()
+	if not TestCheck.ok(self, _fp(battle) == fp_default, "default path (no org) == skip"): return
 	var sum := {"ally": 0, "cao": 0}
-	for fl in battle.org.fleets:
+	for fl in auto.fleets:   # = 건너뛰기 편성(위에서 확인)
 		if fl.on:
 			sum["cao" if fl.faction_id == "cao_cao" else "ally"] += Organization.cost_of(fl, o.prof)
 	var target := float(o.prof.scenario.difficulty_profile.target_cost_ratio)
