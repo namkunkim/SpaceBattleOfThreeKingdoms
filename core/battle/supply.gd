@@ -191,9 +191,12 @@ func step() -> void:
 	for f in st.fleets:
 		if f.sup_src == "" and not f.dead and f.max_hull > 0 and f.sup_still:
 			cand.append(f)
+	var ratio := {}   # 정렬 중에는 변하지 않으니 한 번만 센다(성능 C1)
+	for f in cand:
+		ratio[f.id] = ammo_ratio_bp(f)
 	cand.sort_custom(func(a, b):
-		var ra := ammo_ratio_bp(a)
-		var rb := ammo_ratio_bp(b)
+		var ra: int = ratio[a.id]
+		var rb: int = ratio[b.id]
 		if ra != rb:
 			return ra < rb
 		if a.sup_since != b.sup_since:

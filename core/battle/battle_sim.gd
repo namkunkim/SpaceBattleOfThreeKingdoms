@@ -382,10 +382,16 @@ func sight_foe(f: FleetState, max_r: float) -> FleetState:
 		return st.nearest_foe(f, max_r)
 	var best: FleetState = null
 	var bd := max_r
+	var book: Dictionary = detect.contacts[f.side]
 	for o in st.fleets:
-		if o.side == f.side or not sees(f, o):
+		if o.side == f.side or o.dead:
 			continue
-		var d := f.pos.distance_to(known_pos(f, o))
+		# sees·known_pos와 같은 판정을 접촉 기록 한 번 조회로 한다(성능 C1)
+		var r: Dictionary = book.get(o.id, {})
+		var cs := str(r.get("state", ""))
+		if cs != "confirmed" and cs != "estimated":
+			continue
+		var d := f.pos.distance_to(o.pos if cs == "confirmed" else r.pos)
 		if d < bd:
 			bd = d
 			best = o

@@ -55,11 +55,17 @@ var end_ms := -1
 func clock_s() -> float:
 	return clock_ms / 1000.0
 
+var _idx := {}            # 전대 ID → 전대(성능 C1). fleets가 늘면 다시 만든다(전대는 추가만 되고 빠지지 않는다)
+var _idx_n := -1
+
 func by_id(id: int) -> FleetState:
-	for f in fleets:
-		if f.id == id:
-			return f
-	return null
+	if _idx_n != fleets.size():
+		_idx.clear()
+		for f in fleets:
+			if not _idx.has(f.id):
+				_idx[f.id] = f   # 같은 ID가 둘이면 앞의 것(선형 탐색과 같다)
+		_idx_n = fleets.size()
+	return _idx.get(id)
 
 func alive(side: int) -> Array[FleetState]:
 	var out: Array[FleetState] = []

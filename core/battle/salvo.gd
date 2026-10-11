@@ -348,10 +348,12 @@ func damage_of(f: FleetState, tgt: FleetState, cat: String, n_total: float, coef
 
 # ============================================================ 사격 계획
 # 표적이 사거리와 사격각 안에 드는 플랫폼만 모은다. [{type, n, range, arc}]
-func qualifying(f: FleetState, cat: String, tgt: FleetState) -> Array:
+func qualifying(f: FleetState, cat: String, tgt: FleetState, cap := -1.0) -> Array:
 	var out: Array = []
 	var aim := _aim(f, tgt)
 	var dist := f.pos.distance_to(aim)
+	if dist > (cap if cap >= 0.0 else _range_cap(f, cat)):
+		return out   # 성능(C1): 어느 플랫폼 사거리에도 못 미친다. 아래 판정과 결과가 같다
 	var bearing := atan2(aim.y - f.pos.y, aim.x - f.pos.x)
 	var off := rad_to_deg(absf(BattleRules.ang_diff(f.heading, bearing)))
 	var rmul := 1.0
@@ -363,6 +365,23 @@ func qualifying(f: FleetState, cat: String, tgt: FleetState) -> Array:
 		if dist <= p.range * rmul and off <= maxf(0.0, p.arc + adelta) * 0.5 + 0.001:
 			out.append(p)
 	return out
+
+# 사거리 판정(dist <= 사거리 × 지형 배율)의 상한: 편성(손상 무관) 최대 사거리 × 지형 배율 상한. 이보다 멀면 qualifying은 빈 배열이다.
+# 지형 배율은 사격선이 지나는 구역 배율의 곱이라 구역마다 max(1, 배율)을 곱한 값보다 클 수 없다(부동소수 곱은 단조)
+func _range_cap(f: FleetState, cat: String) -> float:
+	var w: Dictionary = C.weapons[cat]
+	var r := 0.0
+	for t in w.platforms:
+		if f.stages.has(t):
+			r = maxf(r, float(w.platforms[t].range))
+	if f.equip != "" and w.equipment.has(f.equip) and f.stages.has(C.fast_craft.ship_type_id):
+		r = maxf(r, float(w.equipment[f.equip].range))
+	if terr:
+		var m := 1.0
+		for z in terr.zones:
+			m *= maxf(1.0, float(z.range_bp) / float(BattleRules.BP))
+		r *= m
+	return r
 
 # 조준점(M7). 확인 접촉은 실제 위치, 추정 접촉은 마지막으로 안 위치다. 사거리·사격각은 조준점으로 판정한다.
 func _aim(f: FleetState, tgt: FleetState) -> Vector2:
@@ -383,13 +402,30 @@ func _pick_target(f: FleetState, cat: String) -> Dictionary:
 		if not q.is_empty():
 			return {"tgt": cur, "q": q}
 	var bd := 1e9
+	var cap := -1.0
+	var book: Dictionary = sim.detect.contacts[f.side] if sim.detect else {}
 	for o in sim.st.fleets:
-		if o.dead or o.side == f.side or not sim.sees(f, o) or (sim.chain and sim.chain.truce(f, o)):
+		if o.dead or o.side == f.side:
 			continue
-		var d := f.pos.distance_to(_aim(f, o))
+		# sim.sees·_aim과 같은 판정을 접촉 기록 한 번 조회로 한다(성능 C1)
+		var aim := o.pos
+		if sim.detect:
+			var r: Dictionary = book.get(o.id, {})
+			var cs := str(r.get("state", ""))
+			if cs != "confirmed" and cs != "estimated":
+				continue
+			if cs != "confirmed":
+				aim = r.pos
+		if sim.chain and sim.chain.truce(f, o):
+			continue
+		var d := f.pos.distance_to(aim)
 		if d >= bd:
 			continue
-		var q := qualifying(f, cat, o)
+		if cap < 0.0:
+			cap = _range_cap(f, cat)
+		if d > cap:
+			continue   # qualifying이 빈 배열이다
+		var q := qualifying(f, cat, o, cap)
 		if not q.is_empty():
 			bd = d
 			best = o
