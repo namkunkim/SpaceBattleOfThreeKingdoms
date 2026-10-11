@@ -38,9 +38,9 @@ func validate() -> String:
 		return "what-if 카드는 M9 이후에 쓸 수 있다"
 	return ""
 
-# BattleSim이 받는 프로필. 실패하면 빈 사전.
+# BattleSim이 받는 프로필(세 세력 자동 편성, Q83). 실패하면 빈 사전.
 func profile() -> Dictionary:
-	return ScenarioProfile.load_profile(PROFILE_DEF, difficulty)
+	return Organization.load_auto(PROFILE_DEF, difficulty)
 
 func to_dict() -> Dictionary:
 	return {"scenario_id": scenario_id, "seed": seed, "difficulty": difficulty, "mode": mode,

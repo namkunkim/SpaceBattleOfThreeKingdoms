@@ -77,7 +77,7 @@ func _run() -> void:
 	await _frames()
 	if not TestCheck.ok(self, deck.screen == "brief", "back to brief"): return
 	var comp: Array = battle.presentation.src.composition(battle.fleets[0].id)
-	var want_text := ScenarioRoster.composition_text(ScenarioRoster.squadron(ScenarioRoster.load_scenario(), "RC-LIU-SQ-01"))
+	var want_text := ScenarioRoster.composition_text(battle.ALLY_DEF.filter(func(d): return d.squadron_id == battle.sim.st.by_id(battle.fleets[0].id).sq_id)[0])   # 전투는 자동 편성(Q83)
 	var got := " · ".join(comp.map(func(it): return "%s %d" % [it[0], it[1]]))
 	if not TestCheck.ok(self, not comp.is_empty() and got == want_text, "scenario class counters: %s vs %s" % [got, want_text]): return
 	battle.selected.assign([battle.fleets[0]])

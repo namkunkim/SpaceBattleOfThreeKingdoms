@@ -149,11 +149,13 @@ func init_game() -> void:
 	# 천하 지도에서 들어온 전투면 BattleBrief의 시드를 쓴다(같은 Brief = 같은 전투, WORLD-MAP-LINK §3).
 	var link := get_node_or_null("/root/WorldLink")
 	battle_seed = link.brief.seed if link and link.routed() else randi()
-	var profile := ScenarioProfile.load_profile(profile_def, difficulty) if profile_def != "" else PocSetup.profile()
+	# Q83: 편성 사본이 없으면 세 세력 자동 편성(load_auto). 편성 화면의 사본(O4)이 있으면 기본 프로필에 apply
+	var profile := (ScenarioProfile.load_profile(profile_def, difficulty) if not org.is_empty() else Organization.load_auto(profile_def, difficulty)) if profile_def != "" else PocSetup.profile()
 	if not org.is_empty() and not profile.is_empty():
 		var applied := Organization.apply(profile, org, ProfileLoader.read_json(ProfileLoader.read_json(profile_def).scenario_path))
 		if applied.has("errors"):
-			push_warning("편성 거부, 정사 편성으로 시작: %s" % [applied.errors])
+			push_warning("편성 거부, 자동 편성으로 시작: %s" % [applied.errors])
+			profile = Organization.load_auto(profile_def, difficulty)
 		else:
 			profile = applied
 	if profile_def != "" and not profile.is_empty():

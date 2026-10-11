@@ -116,19 +116,18 @@ func _run() -> void:
 		var fills: Array = foes[diff].foe.filter(func(d): return d.has("fill_bp"))
 		if not TestCheck.ok(self, fills.size() == 1 and fills[0] == foes[diff].foe[-1] and int(fills[0].fill_bp) == int(foes[diff].scenario.difficulty_profile.cao_last_fill_bp), "fill_bp는 마지막 조조 함대만 %s" % diff): return
 	if not TestCheck.ok(self, _def(foes["입문"].foe, "RC-CAO-SQ-01").ships == 78 and _def(foes["입문"].foe, "RC-CAO-SQ-09").is_empty() and not _def(foes["표준"].foe, "RC-CAO-SQ-09").is_empty(), "배율 없음, 앞에서부터 배치"): return
-	# Q82 비율: 세 세력 자동 편성(Q81) 뒤 조조 비용 합 / 연합 비용 합이 난이도 목표 ±0.05
-	var scn := ProfileLoader.read_json(ProfileLoader.read_json("res://data/profiles/red_cliffs_rt.json").scenario_path)
+	# Q82·Q83 비율: 게임 기본 경로(Organization.load_auto = 세 세력 자동 편성) 프로필에서 조조 비용 합 / 연합 비용 합이 난이도 목표 ±0.05
 	for diff in foes:
-		var p: Dictionary = foes[diff]
-		var org := Organization.default_org(p)
-		for fid in ["liu_bei", "sun_quan", "cao_cao"]:
-			org = Organization.auto_fill(org, fid, scn, p)
-		var sum := {"ally": 0, "cao": 0}
-		for fl in org.fleets:
-			sum["cao" if fl.faction_id == "cao_cao" else "ally"] += Organization.cost_of(fl, p)
-		var ratio := float(sum.cao) / float(sum.ally)
+		var p := Organization.load_auto("res://data/profiles/red_cliffs_rt.json", diff)
+		if not TestCheck.ok(self, not p.is_empty() and p.has("organization"), "load_auto %s" % diff): return
+		var sum := {"ally": 0, "foe": 0}
+		for side in sum:
+			for d in p[side]:
+				for c in d.composition:
+					sum[side] += int(c.count) * int(p.combat.ship_types[c.ship_type_id].cost)
+		var ratio := float(sum.foe) / float(sum.ally)
 		var want := float(p.scenario.difficulty_profile.target_cost_ratio)
-		if not TestCheck.ok(self, absf(ratio - want) <= 0.05, "Q82 %s 비율 %.3f (목표 %.2f, 조조 %d / 연합 %d)" % [diff, ratio, want, sum.cao, sum.ally]): return
+		if not TestCheck.ok(self, absf(ratio - want) <= 0.05, "Q82 %s 비율 %.3f (목표 %.2f, 조조 %d / 연합 %d)" % [diff, ratio, want, sum.foe, sum.ally]): return
 		print("Q82 %s 함대 %d 비율 %.3f" % [diff, p.foe.size(), ratio])
 	var by_delay := {"RC-CAO-SQ-02": 0, "RC-CAO-SQ-04": 0, "RC-CAO-SQ-01": 180, "RC-CAO-SQ-03": 180, "RC-CAO-SQ-05": 180, "RC-CAO-SQ-06": 360, "RC-CAO-SQ-07": 360, "RC-CAO-SQ-16": 360}
 	for id in by_delay:
