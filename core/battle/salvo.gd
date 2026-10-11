@@ -361,10 +361,26 @@ func qualifying(f: FleetState, cat: String, tgt: FleetState, cap := -1.0) -> Arr
 	if terr:
 		rmul = terr.range_mul(f.pos, aim)   # 사격선이 성운·잔해·그림자를 지나면 사거리와 사격각이 줄어든다(§4.10)
 		adelta = terr.arc_delta(f.pos, aim)
+	if not _any_qualifies(f, cat, dist, off, rmul, adelta):
+		return out   # 성능(C1): platforms() 배열을 만들기 전에 같은 판정으로 걸러 낸다
 	for p in platforms(f, cat):
 		if dist <= p.range * rmul and off <= maxf(0.0, p.arc + adelta) * 0.5 + 0.001:
 			out.append(p)
 	return out
+
+# qualifying 아래 반복과 같은 판정(유효 척 수 > 0, 사거리, 사격각)을 배열 없이 한다. 하나라도 맞으면 참
+func _any_qualifies(f: FleetState, cat: String, dist: float, off: float, rmul: float, adelta: float) -> bool:
+	var w: Dictionary = C.weapons[cat]
+	for t in w.platforms:
+		var pd: Dictionary = w.platforms[t]
+		if f.stages.has(t) and dist <= float(pd.range) * rmul and off <= maxf(0.0, float(pd.arc_deg) + adelta) * 0.5 + 0.001 				and effective_of(f, t) > 0.0:
+			return true
+	var fc: String = C.fast_craft.ship_type_id
+	if f.equip != "" and w.equipment.has(f.equip) and f.stages.has(fc):
+		var ed: Dictionary = w.equipment[f.equip]
+		if dist <= float(ed.range) * rmul and off <= maxf(0.0, float(ed.arc_deg) + adelta) * 0.5 + 0.001 and effective_of(f, fc) > 0.0:
+			return true
+	return false
 
 # 사거리 판정(dist <= 사거리 × 지형 배율)의 상한: 편성(손상 무관) 최대 사거리 × 지형 배율 상한. 이보다 멀면 qualifying은 빈 배열이다.
 # 지형 배율은 사격선이 지나는 구역 배율의 곱이라 구역마다 max(1, 배율)을 곱한 값보다 클 수 없다(부동소수 곱은 단조)
