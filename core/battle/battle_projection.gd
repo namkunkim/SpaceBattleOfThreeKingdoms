@@ -15,6 +15,9 @@ static func build(sim: BattleSim, side: int) -> Dictionary:
 			var q := squadron(st, f)
 			if sim.supply and f.side == side:
 				q.supply = sim.supply.squadron_state(f)   # M8: 배정 공급원·진행·재고. 적 항목에는 넣지 않는다
+				var mn := sim.supply.menu(f)
+				if not mn.is_empty():
+					q.supply.menu = mn   # P7: 보급 메뉴 읽기값(보급함 전대, 아군 전용)
 			if sim.salvo and f.side == side:
 				# 진형 탭용: 진형 ID마다 이 전대의 선택 불가 사유 코드("" = 가능)와 전환 시간(초). 규칙은 salvo가 판정한다
 				var fi := {}

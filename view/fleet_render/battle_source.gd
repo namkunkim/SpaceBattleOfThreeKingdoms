@@ -285,6 +285,18 @@ func order_snapshot() -> Dictionary:
 func restore_orders(snap: Dictionary) -> void:
 	battle.restore_orders(snap)
 
+# ------------------------------------------------------------ 보급·수리 메뉴(P7)
+# 선택한 아군 중 보급함(SHP-05)이 있는 첫 함대의 메뉴 읽기값. 없으면 {}. 적 접촉에는 값이 없다(투영이 아군에만 준다).
+func supply_view() -> Dictionary:
+	for f in battle.my_sel():
+		if f.side == 0 and f.contact == "" and f.supply.has("menu"):
+			var names := {}
+			for t in f.supply.menu.targets:
+				var g = battle.by_id(int(t.id))
+				names[int(t.id)] = g.fname if g else "?"
+			return {"id": f.id, "name": f.fname, "menu": f.supply.menu, "names": names}
+	return {}
+
 # ------------------------------------------------------------ 전대 세부 정보(선택 패널 펼침)
 # 자기 진영 전대만 준다. 적 접촉은 안개 규칙(이름·역할·전력 구간만)이라, POC 규칙은 값이 없어 빈 사전이다.
 const AMMO_LABEL := {"artillery": "미사일(포격)", "line_fire": "광선(전열)", "fighter": "함재기", "intercept": "요격", "torpedo": "뇌격"}   # 지도 고리 이름표와 공용

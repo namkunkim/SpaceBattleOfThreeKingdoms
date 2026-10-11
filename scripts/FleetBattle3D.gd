@@ -49,6 +49,7 @@ const REJECT := {
 	"missile_charges": "미사일 남은 횟수가 없습니다. 보급함 영역에서 정지해 보급하세요", "fighter_charges": "함재기 남은 횟수가 없습니다. 보급함 영역에서 정지해 보급하세요",
 	"missile_none": "미사일을 쏠 포격함이 없습니다", "fighter_none": "강습모함이 없어 함재기를 쓸 수 없습니다",
 	"no_selection": "먼저 아군 함대를 선택하세요",
+	"supply_none": "보급함이 있는 함대가 아닙니다", "supply_target": "보급 대상으로 지정할 수 없는 함대입니다",
 }
 const END_TEXT := {
 	"flagship_lost": "기함이 격침되었습니다. 지휘 계통이 무너진 함대는 적벽에서 철수합니다.",
