@@ -44,7 +44,7 @@ func _sq(f) -> Dictionary:
 func form_name(f) -> String:
 	if f.contact != "":
 		return ""   # 적 진형은 비공개
-	return combat.formations.get(f.formation_id, {}).get("name", "")
+	return combat.get("formations", {}).get(f.formation_id, {}).get("name", "")
 
 # 막대 비율. 추정·상실 접촉은 전력을 모르므로 0(막대 없음)
 static func strength_frac(f) -> float:
@@ -284,6 +284,18 @@ func order_snapshot() -> Dictionary:
 # 스냅숏의 명령 상태로 되돌린다. 코어에서는 "직전 상태로 돌아가는 새 명령"(restore)으로 발행되고 명령 기록에 남는다(U2).
 func restore_orders(snap: Dictionary) -> void:
 	battle.restore_orders(snap)
+
+# ------------------------------------------------------------ 보급·수리 메뉴(P7)
+# 선택한 아군 중 보급함(SHP-05)이 있는 첫 함대의 메뉴 읽기값. 없으면 {}. 적 접촉에는 값이 없다(투영이 아군에만 준다).
+func supply_view() -> Dictionary:
+	for f in battle.my_sel():
+		if f.side == 0 and f.contact == "" and f.supply.has("menu"):
+			var names := {}
+			for t in f.supply.menu.targets:
+				var g = battle.by_id(int(t.id))
+				names[int(t.id)] = g.fname if g else "?"
+			return {"id": f.id, "name": f.fname, "menu": f.supply.menu, "names": names}
+	return {}
 
 # ------------------------------------------------------------ 전대 세부 정보(선택 패널 펼침)
 # 자기 진영 전대만 준다. 적 접촉은 안개 규칙(이름·역할·전력 구간만)이라, POC 규칙은 값이 없어 빈 사전이다.

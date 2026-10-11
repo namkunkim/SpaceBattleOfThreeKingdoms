@@ -256,6 +256,15 @@ static func limit_of(fl: Dictionary, scn: Dictionary, profile: Dictionary) -> in
 	var o: Dictionary = _officers(scn, fl.faction_id).get(fl.admiral, {})
 	return 0 if o.is_empty() else int(profile.combat.command.limit_base) + int(profile.combat.command.limit_per_command) * int(o.command)
 
+# 지휘 한도 초과 단계(CommandCore.limit_tier와 같은 식, 전투 전 편성 기준). 0 = 초과 없음 또는 제독 없음
+static func tier_of(fl: Dictionary, scn: Dictionary, profile: Dictionary) -> int:
+	var lim := limit_of(fl, scn, profile)
+	var cost := cost_of(fl, profile)
+	var K: Dictionary = profile.combat.command
+	if lim <= 0 or cost <= lim:
+		return 0
+	return mini(int(K.max_tier), ceili(float(cost - lim) / (float(lim) * float(K.over_tier_ratio))))
+
 # ============================================================ 세 세력 자동 편성(Q81·Q83)
 # 기본 경로(편성 화면 없음)와 편성 화면의 "자동 편성으로 시작"이 같이 쓴다. 성공하면 프로필 사본, 실패하면 {"errors": [...]}.
 static func auto_all(profile: Dictionary, scn: Dictionary) -> Dictionary:

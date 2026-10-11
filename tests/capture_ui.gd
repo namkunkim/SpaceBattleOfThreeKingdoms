@@ -3,7 +3,7 @@ extends SceneTree
 # 상품화 표현 계층 캡처. 화면이 있는 실행에서만 의미가 있다.
 # godot --path . --script tests/capture_ui.gd -- <장면> <출력 png> [UI 크기]
 # 폰 130% 배치 확인: --resolution 1600x720 ... -- battle res://out/ui-phone.png 1.3
-# 장면: fog(안개 접촉) | title | prologue [장 0~7] | brief | quiet | battle | select | hold | undo | decision | wu | pause | suspend | result | settings | incoming | salvo | roster | roster_full | nohud(F1 HUD 숨김) | terrain(지형 3구역, 축소)
+# 장면: fog(안개 접촉) | title | prologue [장 0~7] | brief | org(편성, O4) | quiet | battle | select | hold | undo | decision | wu | pause | suspend | result | settings | incoming | salvo | roster | roster_full | nohud(F1 HUD 숨김) | terrain(지형 3구역, 축소)
 const SEED := 20261003
 
 func _initialize() -> void:
@@ -46,6 +46,12 @@ func _run() -> void:
 		deck.screens["prologue"].open_at(int(args[2]) if args.size() > 2 else 0)
 		for i in 60:
 			await process_frame
+	elif mode == "org":
+		deck.screens["org"].open_org()
+		var o = deck.screens["org"]
+		o.press(o.mine()[0], "vice")   # 고른 칸 강조와 "대기 풀로" 버튼까지 보이게
+		for i in 30:
+			await process_frame
 	elif mode == "brief":
 		if deck:
 			deck.show_screen("brief")
@@ -70,6 +76,17 @@ func _run() -> void:
 			if deck:
 				deck._set_info_open(true)
 				deck._set_tab(2)   # 무장 탭: 미사일·함재기 남은 횟수 표시 확인(Q69)
+		if mode.begins_with("supply") and deck:
+			# P7 보급·수리 메뉴: 보급함 함대 곁에 손님 둘(탄약·횟수를 비워) 두고 보급 탭을 연다. 수리 탭은 장면 supply_repair
+			for k in [2, 3]:
+				var g = battle.sim.st.by_id(battle.fleets[k].id)
+				for cat in g.ammo:
+					g.ammo[cat] = 0
+				for cat in g.wch:
+					g.wch[cat] = 0
+				TestPoke.fleet(battle, battle.fleets[k], {"pos": battle.fleets[1].pos + Vector2(70.0 * (k - 1), 50.0)})
+			deck._set_tab(4 if mode == "supply_repair" else 3)
+			deck._refresh_cmds()
 		battle.refresh_panel()
 		battle.cam_pos = battle.fleets[1].pos + Vector2(260.0, 40.0)
 		battle.cam_z = 1.0

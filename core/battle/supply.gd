@@ -140,6 +140,8 @@ func serviceable(f: FleetState, src: Dictionary) -> bool:
 		return false
 	if src.fleet == f:
 		return false   # 자기 자신 보급 금지: 보급함이 있는 함대도 다른 함대에게만 보급한다
+	if src.fleet != null and src.fleet.sup_hold:
+		return false   # P7 수동: 보급 중지
 	if src.side != f.side or not allied(src.faction, f.faction) or f.pos.distance_to(src.pos) > src.r:
 		return false
 	var g: FleetState = src.fleet
@@ -195,6 +197,9 @@ func step() -> void:
 	for f in cand:
 		ratio[f.id] = ammo_ratio_bp(f)
 	cand.sort_custom(func(a, b):
+		var pa := _prior(a)
+		if pa != _prior(b):
+			return pa   # P7 수동: "이 함대 먼저" 지정이 맨 앞
 		var ra: int = ratio[a.id]
 		var rb: int = ratio[b.id]
 		if ra != rb:
@@ -207,7 +212,7 @@ func step() -> void:
 		var bd := INF
 		for s in srcs:
 			if used[s.key] < s.cap and serviceable(f, s):
-				var d := f.pos.distance_to(s.pos)
+				var d := -1.0 if s.fleet != null and s.fleet.sup_first == f.id else f.pos.distance_to(s.pos)
 				if d < bd:
 					bd = d
 					best = s
@@ -223,6 +228,13 @@ func step() -> void:
 		if f.sup_prog >= need:
 			_complete(f, s)
 			f.sup_prog = 0
+
+# P7: 같은 진영 보급함 전대 중 하나가 이 함대를 먼저 처리하라고 지정했는가
+func _prior(f: FleetState) -> bool:
+	for g in sim.st.fleets:
+		if g.sup_first == f.id and g.side == f.side and not g.sup_hold:
+			return true
+	return false
 
 func _find(srcs: Array, key: String) -> Dictionary:
 	for s in srcs:
@@ -276,6 +288,8 @@ func _complete(f: FleetState, src: Dictionary) -> void:
 		f.sup_mat = f.sup_n * int(S.per_ship.materials)
 		reload = true
 	f.supplied += 1
+	if g and g.sup_first == f.id:
+		g.sup_first = -1   # 먼저 처리 지정은 한 주기로 끝난다
 	sim.emit("supply", f.id, g.id if g else -1, f.pos, {"src": src.key, "ammo": got, "charges": charges, "repair": fixed, "reload": reload})
 
 # 경파 → 무손상: 마지막 피격 뒤 light_recover_s 동안 피격이 없으면 모두(P16). 보급 영역은 필요 없다
@@ -313,6 +327,61 @@ func squadron_state(f: FleetState) -> Dictionary:
 
 func fingerprint() -> String:
 	var parts := PackedStringArray()
+	var man := PackedStringArray()
 	for f in sim.st.fleets:
 		parts.append("%d.%d.%d.%d.%s.%d.%d.%d.%d.%d.%d.%d" % [f.id, f.hit_tick, f.healed_wound, f.healed_mod, f.sup_src, f.sup_prog, f.sup_since, int(f.sup_still), f.sup_ammo, f.sup_mat, f.sup_n, f.supplied])
-	return "sup|" + ",".join(parts)
+		if f.sup_hold or f.sup_first >= 0:
+			man.append("%d.%d.%d" % [f.id, int(f.sup_hold), f.sup_first])
+	# 수동 명령을 쓰지 않았으면 이전 지문과 같다
+	return "sup|" + ",".join(parts) + ("|man" + ",".join(man) if not man.is_empty() else "")
+
+# ============================================================ P7 수동 층(메뉴)
+# 이 함대의 보급 메뉴 읽기값. 보급함이 없으면 {}. 자기 진영 투영(squadron_state)에만 넣는다.
+func menu(f: FleetState) -> Dictionary:
+	var n := ships_of(f)
+	if n <= 0:
+		return {}
+	var rate := rate_of(f)
+	var key := "f%d" % f.id
+	var used := 0
+	var targets := []
+	for g in sim.st.fleets:
+		if g.sup_src == key:
+			used += 1
+	for g in sim.st.fleets:
+		if g == f or g.dead or g.max_hull == 0 or g.side != f.side or not allied(f.faction, g.faction):
+			continue
+		var d := g.pos.distance_to(f.pos)
+		if d > float(S.ship_radius):
+			continue
+		var serving: bool = g.sup_src == key
+		targets.append({"id": g.id, "dist": d, "charges": charge_deficit(g), "ammo": deficit(g), "repair": moderate_of(g),
+			"serving": serving, "still": g.sup_still,
+			"left_s": float(maxi(0, need - g.sup_prog) + rate - 1) / maxf(1.0, float(rate)) / sim.st.hz if serving else -1.0})
+	targets.sort_custom(func(a, b): return a.dist < b.dist)
+	var m := {"rate_bp": rate, "level": sim.salvo.charge_refill(rate), "level_max": sim.salvo.charge_refill(BattleRules.BP),
+		"stock_ammo": f.sup_ammo, "stock_materials": f.sup_mat, "ammo_max": n * int(S.per_ship.ammo), "materials_max": n * int(S.per_ship.materials),
+		"docks": n * int(S.capacity_per_ship), "docks_used": used, "hold": f.sup_hold, "first": f.sup_first, "targets": targets}
+	for p in f.staff:
+		if str(p.get("post", "")) == "supply":
+			m.politics = int(p.get("politics", -1))   # 표시 전용: 코어 계산에는 쓰지 않는다
+			m.chief = str(p.get("name", ""))
+	return m
+
+# 수동 명령. 거부 사유 코드를 돌려준다("" = 수락)
+func cmd_first(f: FleetState, target: FleetState) -> String:
+	if ships_of(f) <= 0:
+		return "supply_none"
+	if target == null:
+		f.sup_first = -1   # 지정 해제
+		return ""
+	if target == f or target.dead or target.side != f.side or not allied(f.faction, target.faction):
+		return "supply_target"
+	f.sup_first = target.id
+	return ""
+
+func cmd_hold(f: FleetState, on: bool) -> String:
+	if ships_of(f) <= 0:
+		return "supply_none"
+	f.sup_hold = on
+	return ""

@@ -1,6 +1,6 @@
 extends SceneTree
 
-# 화면 흐름 검증(헤드리스): 실제 버튼 위치를 마우스로 눌러 타이틀 → 서막(첫 회) → 브리핑 → 전투 → 일시정지 → 계속 → 결과 → 타이틀.
+# 화면 흐름 검증(헤드리스): 실제 버튼 위치를 마우스로 눌러 타이틀 → 서막(첫 회) → 브리핑 → 편성(O4) → 전투 → 일시정지 → 계속 → 결과 → 타이틀.
 # 터치(탭)로도 HUD 버튼이 눌리는지 확인한다.
 
 func _initialize() -> void:
@@ -109,9 +109,18 @@ func _run() -> void:
 	await _frames()
 	if not TestCheck.ok(self, deck.screen == "brief", "esc -> brief"): return
 	_restore_cfg(saved_cfg)
-	_click(_find_button(deck, "출  격"), true)
+	# O4: 브리핑 → 편성 → 전투
+	_click(_find_button(deck, "편  성"), true)
 	await _frames()
-	if not TestCheck.ok(self, deck.screen == "" and battle.G.state == "play", "brief -> battle by touch"): return
+	if not TestCheck.ok(self, deck.screen == "org" and battle.G.state == "brief", "brief -> org by touch (%s)" % deck.screen): return
+	_click(_find_button(deck, "뒤로"), true)
+	await _frames()
+	if not TestCheck.ok(self, deck.screen == "brief", "org back -> brief"): return
+	_click(_find_button(deck, "편  성"), true)
+	await _frames()
+	_click(_find_button(deck, "확정 · 출격"), true)
+	await _frames()
+	if not TestCheck.ok(self, deck.screen == "" and battle.G.state == "play", "org -> battle by touch"): return
 	if not TestCheck.ok(self, deck.hud.visible and battle.ui.get_parent().visible == false, "new hud replaces legacy"): return
 	# 명령 패널 터치: 전체 선택
 	var all_btn: Control = null

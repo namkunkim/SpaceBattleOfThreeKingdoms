@@ -110,6 +110,8 @@ var sup_pos := Vector2.ZERO   # 지난 보급 판정 때 위치
 var sup_n := 0                # 보급함 전대: 지난번 보급함 수(재고 손실 계산)
 var sup_ammo := 0             # 보급함 전대 재고: 탄약 단위
 var sup_mat := 0              # 보급함 전대 재고: 물자
+var sup_hold := false         # P7 수동: 이 보급함 전대의 자동 보급을 멈춤
+var sup_first := -1           # P7 수동: 이 보급함 전대가 먼저 처리할 손님 전대 ID(끝나면 -1)
 var supplied := 0             # 끝낸 보급 주기 수(통계)
 
 # --- M9 지휘 승계·강습 ---

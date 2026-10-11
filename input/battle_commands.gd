@@ -52,6 +52,19 @@ func do_formation(fid: String) -> void:
 		return
 	formation_to(_ids(s), fid)
 
+# P7 보급 메뉴: 보급함 함대 sup_id가 target_id(-1 = 해제)를 먼저 처리 / 자동 보급 중지(on)·재개(!on)
+func supply_first(sup_id: int, target_id: int) -> void:
+	if host.G.state != "play":
+		return
+	host.issue(make("supply_first", [sup_id], target_id))
+	host.refresh_panel()
+
+func supply_hold(sup_id: int, on: bool) -> void:
+	if host.G.state != "play":
+		return
+	host.issue(make("supply_hold", [sup_id], -1, Vector2.ZERO, {"on": on}))
+	host.refresh_panel()
+
 # 선택 전체가 현재 배치를 유지한 채 목표 지점으로 이동
 func order_move(w: Vector2, strafe := false, facing_deg = null) -> void:
 	var s: Array = host.my_sel()
