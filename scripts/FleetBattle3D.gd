@@ -148,7 +148,7 @@ func init_game() -> void:
 	# 천하 지도에서 들어온 전투면 BattleBrief의 시드를 쓴다(같은 Brief = 같은 전투, WORLD-MAP-LINK §3).
 	var link := get_node_or_null("/root/WorldLink")
 	battle_seed = link.brief.seed if link and link.routed() else randi()
-	var profile := ScenarioProfile.load_profile(profile_def, difficulty) if profile_def != "" else PocSetup.profile()
+	var profile := Organization.load_auto(profile_def, difficulty) if profile_def != "" else PocSetup.profile()   # Q83 세 세력 자동 편성
 	if profile_def != "" and not profile.is_empty():
 		ScenarioProfile.enlarge_field(profile, FIELD_SIZE)   # 전장을 FIELD_SIZE로 맞추고 배치를 비율대로 늘린다. 미니맵은 이 전장을 비례 축소해 보여 준다
 	if profile_def != "" and not profile.is_empty():

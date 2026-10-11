@@ -97,7 +97,7 @@ func _run() -> void:
 		if battle.sim.st.over:
 			break
 	var log: Array = battle.sim.command_log
-	var rprof := ScenarioProfile.load_profile(battle.profile_def, battle.difficulty)
+	var rprof := Organization.load_auto(battle.profile_def, battle.difficulty)   # 게임 경로와 같은 세 세력 자동 편성(Q83)
 	if battle.profile_def != "":
 		ScenarioProfile.enlarge_field(rprof, battle.FIELD_SIZE)   # 호스트와 같은 전장
 		ScenarioProfile.tune_for_play(rprof, battle.move_mul, battle.turn_mul)   # 호스트와 같은 이동 배율

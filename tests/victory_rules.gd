@@ -215,17 +215,27 @@ func _run() -> void:
 	_f(s, "cao").pos = Vector2(1600, 300) - Vector2(80, 0)
 	_sec(s, 1)
 	if not TestCheck.ok(self, not s.st.over, "반경 밖은 도달 아님"): return
-	# 4. 유비 기함 함대가 연합 탈출 지점 → 제한적 승리. 편제 한 단계(Q73)라 다른 함대는 조건이 아니다
+	# 4. 유비 기함과 유비군 출전 함대 전부(관우·유기·조운)가 연합 탈출 지점 → 제한적 승리(Q84). 손권군은 조건이 아니다
 	print("sec 4")
 	s = _sim()
 	var ex := Vector2(0, 650)
-	_f(s, "zhuge").pos = ex + Vector2(40, 30)
-	_sec(s, 1)
-	if not TestCheck.ok(self, not s.st.over, "다른 함대만 도달하면 아님"): return
-	_wreck(s, _f(s, "zhuge"), 10000)
 	_f(s, "liu").pos = ex + Vector2(40, 0)
+	_f(s, "zhuge").pos = ex + Vector2(40, 30)
+	_f(s, "fc").pos = ex + Vector2(30, -30)
 	_sec(s, 1)
-	if not _ended(s, true, "alliance_escaped", "제한적 승리(다른 함대 격침과 무관)") or not TestCheck.ok(self, s.st.result.limited, "limited 표시"): return
+	if not TestCheck.ok(self, not s.st.over, "유비군 일부만 도달하면 아님"): return
+	_f(s, "jiang").pos = ex + Vector2(20, 10)
+	_sec(s, 1)
+	if not _ended(s, true, "alliance_escaped", "제한적 승리") or not TestCheck.ok(self, s.st.result.limited, "limited 표시"): return
+	# 4a. 유비군 함대 중 격침·항복이 있으면 나머지가 모두 도달해도 제한적 승리가 아니다
+	print("sec 4a")
+	s = _sim()
+	_f(s, "liu").pos = ex + Vector2(40, 0)
+	_f(s, "fc").pos = ex + Vector2(30, -30)
+	_f(s, "jiang").pos = ex + Vector2(20, 10)
+	_wreck(s, _f(s, "zhuge"), 10000)
+	_sec(s, 1)
+	if not TestCheck.ok(self, not (s.st.over and s.st.end_reason == "alliance_escaped"), "격침 함대가 있으면 제한적 승리 아님"): return
 	# 5. 유비군 코스트 70% 손실 → 연합 패배
 	print("sec 5")
 	s = _sim()

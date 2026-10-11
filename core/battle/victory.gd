@@ -6,7 +6,7 @@ extends RefCounted
 #
 # 연합 패배: 유비 기함 선체 0·항복 / 유비군 코스트 손실 70% / 연합 결합 코스트 손실 70% / 유비군 전 전대 소멸 / 연합 군 사기 붕괴
 # 연합 승리: 조조 기함 선체 0·항복 / 조조 기함이 조조군 탈출 지점 도달 / 조조군 코스트 손실 70% / 전 전대 소멸 / 조조군 군 사기 붕괴
-# 제한적 승리: 유비 기함과 함대 전체가 연합 탈출 지점에 도달
+# 제한적 승리: 유비 기함과 살아 있는 유비군 출전 함대 전부가 연합 탈출 지점에 도달(Q84). 격침·항복한 함대가 있으면 아님
 # 20분 시계: 시간 안에 승패가 안 나면 연합 패배(코스트 비교 없음). 같은 시점에 양쪽이 성립하면 조조군.
 
 const REASONS := ["liu_flagship_lost", "cao_flagship_lost", "cao_escaped", "alliance_escaped", "liu_cost_loss", "alliance_cost_loss",
@@ -104,10 +104,18 @@ func conditions() -> Dictionary:
 		c.append("cao_morale_collapse")
 	return {"alliance": a, "foe": c, "limited": _alliance_escaped()}
 
-# 유비 기함 함대가 탈출 지점에 닿았다(편제 한 단계, Q73: 다른 함대는 조건이 아니다)
+# Q84: 유비 기함이 탈출 지점에 닿았고, 유비군(anchor_faction) 출전 함대가 모두 그 지점에 닿았거나(arrived) 이미 탈출했다.
+# 격침·항복한 함대가 있으면 "전부 도달"이 아니라서 제한적 승리가 안 된다(REVIEW-M4 후속 1).
 func _alliance_escaped() -> bool:
 	var lf := flag_fleet(0)
-	return lf != null and lf.out == "" and lf.arrived
+	if lf == null or lf.out != "" or not lf.arrived:
+		return false
+	for f in sim.st.fleets:
+		if f.side != 0 or f.faction != anchor_faction or f == lf:
+			continue
+		if f.out == "sunk" or f.out == "surrender" or (f.out == "" and not f.arrived):
+			return false
+	return true
 
 func check() -> void:
 	var st := sim.st

@@ -7,6 +7,7 @@ extends RefCounted
 #   장수는 ID만 둔다(능력치는 시나리오 factions[].available_officers). 참모 보직 post = assault(무력) | siege(지력) | supply(정치).
 #   함대 목록 = 이 난이도에 배치된 함대(프로필 ally + foe). 조조 함대 수는 난이도별 cao_fleets(Q82, ScenarioProfile).
 # 흐름: ScenarioProfile.load_profile → default_org → (편성 화면·auto_fill) → validate → apply → BattleSim.new.
+#   기본 경로(편성 화면 없음, Q83)는 load_auto = load_profile → auto_all(세 세력 auto_fill → apply).
 # apply는 편성 사본을 profile.organization에 남긴다(재생 헤더. 틱 명령이 아니다). 같은 편성·시드면 같은 결과.
 # 지휘 한도는 상한이 아니라 불이익 기준(CommandCore.limit_tier)이고 제독 통솔(d.command)로 다시 계산된다.
 
@@ -254,6 +255,25 @@ static func cost_of(fl: Dictionary, profile: Dictionary) -> int:
 static func limit_of(fl: Dictionary, scn: Dictionary, profile: Dictionary) -> int:
 	var o: Dictionary = _officers(scn, fl.faction_id).get(fl.admiral, {})
 	return 0 if o.is_empty() else int(profile.combat.command.limit_base) + int(profile.combat.command.limit_per_command) * int(o.command)
+
+# ============================================================ 세 세력 자동 편성(Q81·Q83)
+# 기본 경로(편성 화면 없음)와 편성 화면의 "자동 편성으로 시작"이 같이 쓴다. 성공하면 프로필 사본, 실패하면 {"errors": [...]}.
+static func auto_all(profile: Dictionary, scn: Dictionary) -> Dictionary:
+	var org := default_org(profile)
+	for f in scn.factions:
+		org = auto_fill(org, f.id, scn, profile)
+	return apply(profile, org, scn)
+
+# 프로필 정의 경로에서 읽어 세 세력 자동 편성까지. 읽기 실패는 빈 사전
+static func load_auto(def_path: String, difficulty := "", dprof_override := {}) -> Dictionary:
+	var p := ScenarioProfile.load_profile(def_path, difficulty, dprof_override)
+	if p.is_empty():
+		return p
+	var res := auto_all(p, ProfileLoader.read_json(ProfileLoader.read_json(def_path).scenario_path))
+	if res.has("errors"):
+		push_error("자동 편성 실패: %s" % [res.errors])
+		return {}
+	return res
 
 # ============================================================ 프로필 덮어쓰기
 # 끈 함대는 빠지고, 출전 함대의 직책·composition이 바뀐 프로필 사본.
