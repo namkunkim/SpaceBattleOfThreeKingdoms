@@ -23,6 +23,7 @@ var profile_def := "res://data/profiles/red_cliffs_rt.json"   # 적벽 시나리
 var difficulty := "표준"
 var load_error := ""   # 프로필을 만들지 못해 대체했을 때의 문구(브리핑에 보인다, REVIEW-O2b #1)
 var org := {}   # 전투 전 편성 사본(O4, Organization). 비어 있으면 정사 편성. 다시 시작해도 유지된다
+var org_errors := []   # org가 apply에서 거부된 사유(REVIEW-O4 #1). 비어 있지 않으면 전투를 열지 않고 편성 화면으로 돌아간다
 var profile_patch := Callable()   # 측정 전용(bench_density 1,500척 프리셋): 프로필을 받아 고친다. 게임 흐름에서는 비어 있다
 var move_mul := 150.0   # 이동 배율: 화면 한 폭(1600)을 약 10초에 건넌다. 헤드리스 테스트는 1로 둔다
 var turn_mul := 15.0    # 선회율 배율: 선회 반경(속도÷선회율)이 도착 판정(settle 0.7×속도) 안에 들어야 목적지를 돌지 않는다. 조건은 선회율 > 82°/초(속도와 무관)
@@ -152,15 +153,16 @@ func init_game() -> void:
 	var link := get_node_or_null("/root/WorldLink")
 	battle_seed = link.brief.seed if link and link.routed() else randi()
 	# Q83: 편성 사본이 없으면 세 세력 자동 편성(load_auto). 편성 화면의 사본(O4)이 있으면 기본 프로필에 apply
+	org_errors = []
 	var profile := (ScenarioProfile.load_profile(profile_def, difficulty) if not org.is_empty() else Organization.load_auto(profile_def, difficulty)) if profile_def != "" else PocSetup.profile()
 	if not org.is_empty() and not profile.is_empty():
 		var applied := Organization.apply(profile, org, ProfileLoader.read_json(ProfileLoader.read_json(profile_def).scenario_path))
-		if applied.has("errors"):
-			push_warning("편성 거부, 자동 편성으로 시작: %s" % [applied.errors])
+		if applied.has("errors"):   # 난이도 변경 등: 전장은 자동 편성으로 세워 두되 시작 경로(command_deck)가 편성 화면으로 돌린다
+			org_errors = applied.errors
 			profile = Organization.load_auto(profile_def, difficulty)
 		else:
 			profile = applied
-	load_error = ""
+	load_error = "편성이 지금 전투와 맞지 않습니다. 편성 화면에서 다시 확정하십시오" if not org_errors.is_empty() else ""
 	if profile_def != "" and profile.is_empty():   # 자동 편성 검증 실패(load_auto = {}) 등: 편성 없는 프로필, 그것도 없으면 POC로 연다
 		profile = ScenarioProfile.load_profile(profile_def, difficulty)
 		load_error = "자동 편성에 실패해 시나리오 기본 편성으로 엽니다" if not profile.is_empty() else "시나리오를 읽지 못해 시험 전장으로 엽니다"

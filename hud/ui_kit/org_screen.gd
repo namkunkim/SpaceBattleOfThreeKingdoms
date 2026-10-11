@@ -32,6 +32,12 @@ var names := {}      # 함대 ID → 시나리오 함대 이름
 var sel := -1        # org.fleets 인덱스(유비군 함대)
 var picked := {}     # {fleet: 인덱스 | -1(풀), role, id}
 var errors := []
+var notice := ""     # 걸린 편성이 거부돼 새로 채웠을 때의 사유(REVIEW-O4 #1). 화면을 다시 열 때까지 msg 앞에 붙는다
+var cards := {}      # org.fleets 인덱스 → 함대 카드(± 때 그 카드만 바꾼다, REVIEW-O4 #2)
+var ship_ui := {}    # 함종 ID → [−, 수, +, 합계](± 때 값만 바꾼다)
+var detail_status: VBoxContainer   # 가운데 열 아래 비용·경고 줄
+var press_at := Vector2.INF   # 함대 카드 누른 위치(끌어 스크롤하면 선택하지 않는다, REVIEW-O4 #10)
+const DRAG_PX := 16.0
 
 var fleets_box: VBoxContainer
 var detail: VBoxContainer
@@ -81,7 +87,7 @@ func _init(d: Control) -> void:
 	search = LineEdit.new()
 	search.placeholder_text = "이름·특성 검색"
 	search.custom_minimum_size.y = BTN_H
-	search.text_changed.connect(func(_t): _refresh())
+	search.text_changed.connect(func(_t): _fill_pool())
 	right.get_parent().get_parent().get_child(0).add_sibling(search)
 	pool_box = right
 	sum_label = _label("", "Body")
@@ -138,7 +144,11 @@ func open_org() -> void:
 	names = {}
 	for sq in scn.squadrons:
 		names[sq.id] = sq.name
-	org = b.org.duplicate(true) if not b.org.is_empty() else start_org(prof, scn)
+	# 걸린 편성이 지금 전투(난이도 등)와 맞지 않으면(REVIEW-O4 #1) 사유를 보이고 첫 상태에서 다시 편성한다
+	notice = ""
+	if not b.org_errors.is_empty():
+		notice = "이전 편성이 이 전투와 맞지 않아 자동 편성으로 다시 채웠습니다(%s). 확인 뒤 확정하십시오. " % " · ".join(_merge(b.org_errors))
+	org = b.org.duplicate(true) if not b.org.is_empty() and b.org_errors.is_empty() else start_org(prof, scn)
 	sel = -1
 	picked = {}
 	search.text = ""
@@ -261,9 +271,23 @@ func add_ship(i: int, t: String, d: int) -> void:
 	entry.count = int(entry.count) + d
 	if entry.count <= 0:
 		fl.composition.erase(entry)
-	_refresh()
+	# ± = 이 함대 카드·가운데 수치·합계만(풀은 장수 배정이 바뀔 때만 다시 만든다, REVIEW-O4 #2)
+	_status()
+	_replace_card(i)
+	if i == sel:
+		_update_ships()
+	_sum()
 
 # ------------------------------------------------------------ 그리기
+# 같은 사유는 한 번만(난이도를 바꾸면 missing_fleet이 함대마다 나온다)
+func _merge(errs: Array) -> Array:
+	var out := []
+	for e in errs:
+		var t: String = REASON.get(e.code, e.code)
+		if not out.has(t):
+			out.append(t)
+	return out
+
 func reason_text(e: Dictionary) -> String:
 	var who: String = names.get(e.squadron_id, "") if e.squadron_id != "" else "유비군"
 	return "%s: %s" % [who, REASON.get(e.code, e.code)]
@@ -273,7 +297,8 @@ func tier_text(i: int) -> String:
 	if t == 0:
 		return ""
 	var fx: Dictionary = scn.realtime_rules.commander_succession.confusion.effect_per_stage
-	return "지휘 한도 초과 %d단계: 기동 %+d%% · 명중 %+d%% · 진형 전환 %+d%%" % [t, t * int(fx.move_pct), t * int(fx.hit_pct), t * int(fx.formation_change_pct)]
+	# formation_change_pct는 전환 속도 변화(salvo.gd, 음수 = 느려짐)라 사양대로 시간으로 뒤집어 보인다
+	return "지휘 한도 초과 %d단계: 기동 %+d%% · 명중 %+d%% · 진형 전환 시간 %+d%%" % [t, t * int(fx.move_pct), t * int(fx.hit_pct), -t * int(fx.formation_change_pct)]
 
 # 함선이 지휘 한도보다 적다(가장 싼 함종 하나도 더 들어간다). 정사 편성은 한도의 약 1/3이라 조조 비율 전제보다 약하다
 func under_text(i: int) -> String:
@@ -285,14 +310,19 @@ func under_text(i: int) -> String:
 		return ""
 	return "함선이 지휘 한도보다 적습니다(비용 %d / 한도 %d). 조조군은 한도까지 채웁니다" % [Organization.cost_of(fl, prof), Organization.limit_of(fl, scn, prof)]
 
+# 장수 배정·출전·초기화처럼 무엇이든 바뀔 수 있을 때 = 3열 전부. ±·검색·함대 선택은 바뀐 부분만 갱신한다(REVIEW-O4 #2)
 func _refresh() -> void:
+	_status()
+	_fill_fleets()
+	_fill_detail()
+	_fill_pool()
+
+# 검증·확정 버튼·아래 문구(함대 카드의 ⚠ 줄도 errors를 쓰니 카드보다 먼저)
+func _status() -> void:
 	var mine_i := mine()
 	if sel < 0 or not mine_i.has(sel):
 		sel = mine_i[0] if not mine_i.is_empty() else -1
 	errors = Organization.validate(org, scn, prof)
-	_fill_fleets(mine_i)
-	_fill_detail()
-	_fill_pool()
 	confirm.disabled = not errors.is_empty()
 	if errors.is_empty():
 		var ships := 0
@@ -302,66 +332,82 @@ func _refresh() -> void:
 				n += 1
 				for c in org.fleets[i].composition:
 					ships += int(c.count)
-		msg.text = "확정 가능 · 출전 %d개 함대 · 총 %d척" % [n, ships]
-		msg.add_theme_color_override("font_color", UiTheme.INK_2)
+		msg.text = notice + "확정 가능 · 출전 %d개 함대 · 총 %d척" % [n, ships]
+		msg.add_theme_color_override("font_color", UiTheme.WARN if notice != "" else UiTheme.INK_2)
 	else:
-		msg.text = "확정할 수 없음 — " + " · ".join(errors.map(reason_text))
+		msg.text = notice + "확정할 수 없음 — " + " · ".join(errors.map(reason_text))
 		msg.add_theme_color_override("font_color", UiTheme.FOE)
 
-func _fill_fleets(mine_i: Array) -> void:
+func _fill_fleets() -> void:
 	_clear(fleets_box)
-	for i in mine_i:
-		var fl: Dictionary = org.fleets[i]
-		var card := PanelContainer.new()
-		var st := UiTheme.flat(UiTheme.SLOT, UiTheme.GOLD if i == sel else UiTheme.LINE, 2 if i == sel else 1, 4)
-		st.set_content_margin_all(10)
-		card.add_theme_stylebox_override("panel", st)
-		card.modulate.a = 1.0 if fl.on else 0.55
-		card.gui_input.connect(_select.bind(i))
-		fleets_box.add_child(card)
-		var v := VBoxContainer.new()
-		v.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		card.add_child(v)
-		var top := HBoxContainer.new()
-		top.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		v.add_child(top)
-		var nm := _label(names.get(fl.squadron_id, fl.squadron_id) + ("  · 기함" if is_flag(i) else ""), "Heading")
-		nm.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		top.add_child(nm)
-		var tog := _button("출전" if fl.on else "대기", 96, toggle.bind(i))
-		tog.disabled = is_flag(i)
-		tog.tooltip_text = "기함 함대는 끌 수 없습니다" if is_flag(i) else ""
-		if fl.on:
-			tog.theme_type_variation = "PrimaryButton"
-		top.add_child(tog)
-		if not fl.on:
-			v.add_child(_label("출전하지 않음 · 장수·함선은 대기 풀로", "Muted", UiTheme.INK_3))
-			continue
-		var cost := Organization.cost_of(fl, prof)
-		var lim := Organization.limit_of(fl, scn, prof)
-		var ships := 0
-		for c in fl.composition:
-			ships += int(c.count)
-		v.add_child(_label("제독 %s · %d척 · 비용 %d / %s" % [_name(fl.admiral), ships, cost, str(lim) if lim > 0 else "—"], "Muted", UiTheme.INK_3))
-		var bar := ProgressBar.new()
-		bar.show_percentage = false
-		bar.custom_minimum_size.y = 6
-		bar.max_value = maxi(1, lim)
-		bar.value = mini(cost, lim)
-		bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		bar.add_theme_stylebox_override("background", UiTheme.flat(Color(0.04, 0.06, 0.09), Color(0.04, 0.06, 0.09)))
-		bar.add_theme_stylebox_override("fill", UiTheme.flat(UiTheme.FOE if cost > lim else UiTheme.ALLY, Color(0, 0, 0, 0)))
-		v.add_child(bar)
-		for e in errors:
-			if e.squadron_id == fl.squadron_id:
-				v.add_child(_label("⚠ " + REASON.get(e.code, e.code), "Body", UiTheme.FOE))
-		if under_text(i) != "":
-			v.add_child(_label("△ " + under_text(i), "Body", UiTheme.WARN))
-		if tier_text(i) != "":
-			v.add_child(_label("△ " + tier_text(i), "Body", UiTheme.WARN))
+	cards = {}
+	for i in mine():
+		cards[i] = _fleet_card(i)
+		fleets_box.add_child(cards[i])
+
+func _replace_card(i: int) -> void:
+	var old: Control = cards.get(i)
+	if old == null:
+		return
+	cards[i] = _fleet_card(i)
+	old.add_sibling(cards[i])
+	fleets_box.remove_child(old)
+	old.queue_free()
+
+func _fleet_card(i: int) -> PanelContainer:
+	var fl: Dictionary = org.fleets[i]
+	var card := PanelContainer.new()
+	var st := UiTheme.flat(UiTheme.SLOT, UiTheme.GOLD if i == sel else UiTheme.LINE, 2 if i == sel else 1, 4)
+	st.set_content_margin_all(10)
+	card.add_theme_stylebox_override("panel", st)
+	card.modulate.a = 1.0 if fl.on else 0.55
+	card.mouse_filter = Control.MOUSE_FILTER_PASS   # 끌기는 스크롤로 넘긴다
+	card.gui_input.connect(_select.bind(i))
+	var v := VBoxContainer.new()
+	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	card.add_child(v)
+	var top := HBoxContainer.new()
+	top.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	v.add_child(top)
+	var nm := _label(names.get(fl.squadron_id, fl.squadron_id) + ("  · 기함" if is_flag(i) else ""), "Heading")
+	nm.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	top.add_child(nm)
+	var tog := _button("출전" if fl.on else "대기", 96, toggle.bind(i))
+	tog.disabled = is_flag(i)
+	tog.tooltip_text = "기함 함대는 끌 수 없습니다" if is_flag(i) else ""
+	if fl.on:
+		tog.theme_type_variation = "PrimaryButton"
+	top.add_child(tog)
+	if not fl.on:
+		v.add_child(_label("출전하지 않음 · 장수·함선은 대기 풀로", "Muted", UiTheme.INK_3))
+		return card
+	var cost := Organization.cost_of(fl, prof)
+	var lim := Organization.limit_of(fl, scn, prof)
+	var ships := 0
+	for c in fl.composition:
+		ships += int(c.count)
+	v.add_child(_label("제독 %s · %d척 · 비용 %d / %s" % [_name(fl.admiral), ships, cost, str(lim) if lim > 0 else "—"], "Muted", UiTheme.INK_3))
+	var bar := ProgressBar.new()
+	bar.show_percentage = false
+	bar.custom_minimum_size.y = 6
+	bar.max_value = maxi(1, lim)
+	bar.value = mini(cost, lim)
+	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	bar.add_theme_stylebox_override("background", UiTheme.flat(Color(0.04, 0.06, 0.09), Color(0.04, 0.06, 0.09)))
+	bar.add_theme_stylebox_override("fill", UiTheme.flat(UiTheme.FOE if cost > lim else UiTheme.ALLY, Color(0, 0, 0, 0)))
+	v.add_child(bar)
+	for e in errors:
+		if e.squadron_id == fl.squadron_id:
+			v.add_child(_label("⚠ " + REASON.get(e.code, e.code), "Body", UiTheme.FOE))
+	if under_text(i) != "":
+		v.add_child(_label("△ " + under_text(i), "Body", UiTheme.WARN))
+	if tier_text(i) != "":
+		v.add_child(_label("△ " + tier_text(i), "Body", UiTheme.WARN))
+	return card
 
 func _fill_detail() -> void:
 	_clear(detail)
+	ship_ui = {}
 	if sel < 0:
 		return
 	var fl: Dictionary = org.fleets[sel]
@@ -394,7 +440,6 @@ func _fill_detail() -> void:
 	detail.add_child(grid)
 	for t in ScenarioRoster.SHIP_TYPES:
 		var cost := int(prof.combat.ship_types[t].cost)
-		var n := ship_count(sel, t)
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 8)
 		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -403,26 +448,44 @@ func _fill_detail() -> void:
 		nm.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(nm)
 		var minus := _button("−", 64, add_ship.bind(sel, t, -1))
-		minus.disabled = n == 0
 		row.add_child(minus)
-		var num := _label(str(n), "Heading")
+		var num := _label("", "Heading")
 		num.custom_minimum_size.x = 48
 		num.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		row.add_child(num)
 		var plus := _button("+", 64, add_ship.bind(sel, t, 1))
-		plus.disabled = cap_left(sel) < cost
 		row.add_child(plus)
-		var sub := _label("= %d" % (cost * n), "Muted")
+		var sub := _label("", "Muted")
 		sub.custom_minimum_size.x = 70
 		sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		row.add_child(sub)
+		ship_ui[t] = [minus, num, plus, sub]
+	detail_status = VBoxContainer.new()
+	detail_status.add_theme_constant_override("separation", 8)
+	detail.add_child(detail_status)
+	_update_ships()
+
+# 가운데 열 함종 수·± 가능 여부·비용·경고(행은 그대로 두고 값만)
+func _update_ships() -> void:
+	if ship_ui.is_empty() or sel < 0:
+		return
+	var fl: Dictionary = org.fleets[sel]
+	for t in ship_ui:
+		var cost := int(prof.combat.ship_types[t].cost)
+		var n := ship_count(sel, t)
+		var w: Array = ship_ui[t]
+		w[0].disabled = n == 0
+		w[1].text = str(n)
+		w[2].disabled = cap_left(sel) < cost
+		w[3].text = "= %d" % (cost * n)
+	_clear(detail_status)
 	var lim := Organization.limit_of(fl, scn, prof)
-	detail.add_child(_label("비용 %d / 지휘 한도 %s  ·  한도 = %d + 제독 통솔 × %d  ·  넘겨도 되지만 불이익" % [Organization.cost_of(fl, prof),
+	detail_status.add_child(_label("비용 %d / 지휘 한도 %s  ·  한도 = %d + 제독 통솔 × %d  ·  넘겨도 되지만 불이익" % [Organization.cost_of(fl, prof),
 		str(lim) if lim > 0 else "—", int(prof.combat.command.limit_base), int(prof.combat.command.limit_per_command)], "Body", UiTheme.INK_2))
 	if under_text(sel) != "":
-		detail.add_child(_label("△ " + under_text(sel), "Body", UiTheme.WARN))
+		detail_status.add_child(_label("△ " + under_text(sel), "Body", UiTheme.WARN))
 	if tier_text(sel) != "":
-		detail.add_child(_label("△ " + tier_text(sel), "Body", UiTheme.WARN))
+		detail_status.add_child(_label("△ " + tier_text(sel), "Body", UiTheme.WARN))
 
 func _fill_pool() -> void:
 	_clear(pool_box)
@@ -445,6 +508,9 @@ func _fill_pool() -> void:
 		pool_box.add_child(b)
 	if ids.is_empty():
 		pool_box.add_child(_label("미배치 장수가 없습니다. 함대를 대기로 돌리면 그 장수가 여기로 옵니다.", "Muted", UiTheme.INK_3))
+	_sum()
+
+func _sum() -> void:
 	var c := 0
 	var l := 0
 	for i in mine():
@@ -466,11 +532,28 @@ func _card(id: String, compact := false) -> String:
 	return ("%s%s\n통%d 무%d 지%d\n정%d 매%d" if compact else "%s%s\n통%d 무%d 지%d 정%d 매%d") % [o.name, " · " + str(tr[0]) if not tr.is_empty() else "",
 		int(o.command), int(o.might), int(o.intellect), int(o.politics), int(o.charm)]
 
+# 카드 선택은 놓을 때. 누른 곳에서 DRAG_PX 넘게 움직였으면(터치로 목록을 끌어 스크롤) 선택하지 않는다(REVIEW-O4 #10)
 func _select(e: InputEvent, i: int) -> void:
-	if e is InputEventMouseButton and e.button_index == MOUSE_BUTTON_LEFT and not e.pressed:
-		sel = i
-		picked = {}
-		_refresh.call_deferred()
+	if not (e is InputEventMouseButton and e.button_index == MOUSE_BUTTON_LEFT):
+		return
+	if e.pressed:
+		press_at = e.global_position
+		return
+	var tap: bool = press_at.distance_to(e.global_position) <= DRAG_PX
+	press_at = Vector2.INF
+	if not tap:
+		return
+	var had_pick := not picked.is_empty()
+	sel = i
+	picked = {}
+	_reselect.call_deferred(had_pick)
+
+# 함대 선택: 카드 테두리·가운데 열만(고른 장수가 있었으면 풀의 강조·되돌리기 버튼도)
+func _reselect(pool: bool) -> void:
+	_fill_fleets()
+	_fill_detail()
+	if pool:
+		_fill_pool()
 
 func _column(parent: Control, title: String, w: float) -> VBoxContainer:
 	var p := PanelContainer.new()
