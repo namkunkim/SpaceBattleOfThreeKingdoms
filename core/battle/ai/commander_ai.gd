@@ -171,8 +171,8 @@ func _desired(sim: BattleSim, f: FleetState, F: Dictionary, P: Dictionary, a: fl
 		var t := float(sim.st.tick - sim.first_hit_tick) / sim.st.hz
 		var b := float(h.barrage_hold_s_after_first_hit) * mul
 		var e := float(h.engagement_hold_s) * mul
-		if t >= b + e:
-			d = float(h.assault_distance)
+		if t >= b + e and not sim.salvo.hold_distance(f):
+			d = float(h.assault_distance)   # 강습 100은 강습모함 보유 함대만(Q68). 나머지는 교전 거리에서 멈춘다
 		elif t >= b:
 			d = float(h.engagement_distance)
 	return maxf(d, maxf(float(P.min_dist), float(F.standoff)))
