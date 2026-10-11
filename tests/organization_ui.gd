@@ -1,7 +1,8 @@
 extends SceneTree
 
 # O4 편성 화면(헤드리스): 브리핑 → 편성 → 전투, 확정 잠금, 자동 편성 버튼, 출전 토글, 기함 잠금, 장수 맞바꿈, 함선 ±,
-# 정사 편성으로 초기화, 건너뛰기("정사 편성으로 시작") 경로가 기본(정사) 편성 결과와 같음. 버튼은 실제 위치를 눌러 본다.
+# 정사 편성으로 초기화(유비군만 정사 + 한도 미달 경고), 건너뛰기("자동 편성으로 시작") = 세 세력 자동 편성(Q81)이고
+# 화면 첫 상태와 같은 결과, 조조 비용 비율이 난이도 목표 ±0.05(O2 Q82). apply 실패 가드(REVIEW-O1b #2). 버튼은 실제 위치를 눌러 본다.
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -48,8 +49,8 @@ func _run() -> void:
 	await _frames()
 	var o = deck.screens["org"]
 	if not TestCheck.ok(self, deck.screen == "org", "brief -> org (%s)" % deck.screen): return
-	var base := Organization.default_org(o.prof)
-	if not TestCheck.ok(self, o.org == base and o.errors.is_empty() and not o.confirm.disabled, "starts at default org, confirm open"): return
+	var auto: Dictionary = o.start_org(o.prof, o.scn)
+	if not TestCheck.ok(self, o.org == auto and o.errors.is_empty() and not o.confirm.disabled, "starts at 3-faction auto org, confirm open"): return
 	var mine: Array = o.mine()
 	if not TestCheck.ok(self, mine.size() >= 2 and mine.all(func(i): return o.org.fleets[i].faction_id == "liu_bei"), "only liu_bei fleets %s" % [mine]): return
 	var flag := -1
@@ -137,7 +138,12 @@ func _run() -> void:
 	# 초기화
 	_click(_find(deck, "정사 편성으로 초기화"))
 	await _frames()
-	if not TestCheck.ok(self, o.org == base, "reset to default"): return
+	if not TestCheck.ok(self, o.org == o.start_org(o.prof, o.scn, false), "reset: liu default, ai auto"): return
+	if not TestCheck.ok(self, o.under_text(flag) != "" and o.errors.is_empty(), "reset warns under limit, not blocking"): return
+	for fl in o.org.fleets:
+		if fl.faction_id == "liu_bei":
+			var d: Dictionary = Organization.default_org(o.prof).fleets.filter(func(x): return x.squadron_id == fl.squadron_id)[0]
+			if not TestCheck.ok(self, fl == d, "reset liu fleet = default " + fl.squadron_id): return
 	# 확정: 자동 편성 사본으로 전투 시작(아군 제독이 바뀐다)
 	_click(_find(deck, "자동 편성"))
 	await _frames()
@@ -147,18 +153,25 @@ func _run() -> void:
 	if not TestCheck.ok(self, deck.screen == "" and battle.G.state == "play" and battle.org == chosen, "confirm -> battle with org"): return
 	var applied := Organization.apply(o.prof, chosen, o.scn)
 	if not TestCheck.ok(self, battle.ALLY_DEF.map(func(d): return d.commander_id) == applied.ally.map(func(d): return d.commander_id), "battle uses applied org"): return
-	# 건너뛰기 경로 = 정사 편성 결과(같은 시드로 지문 비교)
+	# 건너뛰기 경로 = 세 세력 자동 편성 = 화면 첫 상태(같은 시드로 지문 비교)
 	deck.to_title()
 	deck.show_screen("brief")
 	await _frames()
 	seed(7)
-	battle.org = Organization.default_org(o.prof)
+	battle.org = auto.duplicate(true)
 	battle.init_game()
 	var fp_default := _fp(battle)
 	seed(7)
-	_click(_find(deck, "정사 편성으로 시작"))   # 누르는 즉시 전장을 다시 만든다. 프레임을 기다리면 전투가 흘러 지문이 달라진다
+	battle.org = {}   # 건너뛰기가 실제로 전장을 다시 만드는지 보려고 비워 둔다
+	_click(_find(deck, "자동 편성으로 시작"))   # 누르는 즉시 전장을 다시 만든다. 프레임을 기다리면 전투가 흘러 지문이 달라진다
 	var fp_skip := _fp(battle)
-	if not TestCheck.ok(self, battle.org.is_empty() and battle.G.state == "play", "skip -> battle, no org"): return
-	if not TestCheck.ok(self, fp_skip == fp_default, "skip == default org result"): return
+	if not TestCheck.ok(self, battle.org == auto and battle.G.state == "play", "skip -> battle with 3-faction auto org"): return
+	if not TestCheck.ok(self, fp_skip == fp_default, "skip == screen initial org result"): return
+	var sum := {"ally": 0, "cao": 0}
+	for fl in battle.org.fleets:
+		if fl.on:
+			sum["cao" if fl.faction_id == "cao_cao" else "ally"] += Organization.cost_of(fl, o.prof)
+	var target := float(o.prof.scenario.difficulty_profile.target_cost_ratio)
+	if not TestCheck.ok(self, absf(float(sum.cao) / float(sum.ally) - target) <= 0.05, "skip cao ratio %.3f vs %.2f" % [float(sum.cao) / float(sum.ally), target]): return
 	print("ORGANIZATION_UI_PASS")
 	quit(0)

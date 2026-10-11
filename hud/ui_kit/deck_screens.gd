@@ -211,12 +211,12 @@ class BriefScreen extends Control:
 		back.focus_mode = Control.FOCUS_NONE
 		back.pressed.connect(func(): deck.show_screen("title"))
 		hb.add_child(back)
-		# O4: 브리핑 → 편성 → 전투. 건너뛰기는 정사 편성 그대로(편성 사본 없음)
+		# O4: 브리핑 → 편성 → 전투. 건너뛰기는 세 세력 자동 편성(Q81, 편성 화면의 첫 상태와 같다)
 		var skip := Button.new()
-		skip.text = "정사 편성으로 시작"
+		skip.text = "자동 편성으로 시작"
 		skip.custom_minimum_size = Vector2(200, 54)
 		skip.focus_mode = Control.FOCUS_NONE
-		skip.pressed.connect(func(): deck.begin_battle({}))
+		skip.pressed.connect(func(): deck.screens["org"].start_auto())
 		hb.add_child(skip)
 		var go := ScreenKit.menu_button("편  성", true)
 		go.custom_minimum_size = Vector2(200, 54)
