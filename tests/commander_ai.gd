@@ -104,8 +104,9 @@ func _run() -> void:
 	var base_s := _rc(1, false)
 	var A: Dictionary = base_s.cai.A
 	if not TestCheck.ok(self, A.postures.size() == 5, "방침 5종"): return
-	# 4a. 목표 거리: 첫 명중 900초 뒤. 적극 100(강습), 균형 170(교전), 신중·계략 240(포화 유지)
-	var want := {"aggressive": 100.0, "balanced": 170.0, "cautious": 240.0, "scheming": 240.0}
+	# 4a. 목표 거리: 첫 명중 900초 뒤. 적극 100(강습, 강습모함 보유 함대만 - Q68), 균형 170(교전), 신중·계략 240(포화 유지).
+	# 유비군은 강습모함이 없어 적극도 교전 거리 170에서 멈춘다
+	var want := {"aggressive": 170.0, "balanced": 170.0, "cautious": 240.0, "scheming": 240.0}
 	var ally := _f(base_s, "RC-LIU-SQ-02")
 	base_s.first_hit_tick = 0
 	base_s.st.tick = 900 * base_s.st.hz
@@ -113,6 +114,11 @@ func _run() -> void:
 		var P: Dictionary = A.postures[pid]
 		var D: float = base_s.cai._desired(base_s, ally, A.factions.liu_bei, P, float(P.bias))
 		if not TestCheck.ok(self, is_equal_approx(maxf(D, 0.0), maxf(want[pid], 150.0)), "%s 목표 거리 %.0f(기대 %.0f, 진영 하한 150)" % [pid, D, want[pid]]): return
+	var carrier := _f(base_s, "RC-CAO-SQ-01")
+	var Pa: Dictionary = A.postures.aggressive
+	if not TestCheck.ok(self, base_s.salvo.hold_distance(ally) and not base_s.salvo.hold_distance(carrier), "유비 SQ-02 강습모함 없음, 조조 중군 SQ-01 있음"): return
+	var Dc: float = base_s.cai._desired(base_s, carrier, A.factions.cao_cao, Pa, float(Pa.bias))
+	if not TestCheck.ok(self, is_equal_approx(Dc, 100.0), "강습모함 보유 함대의 적극 목표 거리는 강습 100: %.0f" % Dc): return
 	# 4b~d. 같은 상황에서 방침만 바꿔 한 번 생각시킨다
 	var out := {}
 	for pid in want:
@@ -120,6 +126,7 @@ func _run() -> void:
 		_park(t, ["RC-LIU-SQ-02", "RC-CAO-SQ-02"])
 		var a := _f(t, "RC-LIU-SQ-02")
 		var c := _f(t, "RC-CAO-SQ-02")
+		a.stages["SHP-01"] = [1, 0, 0]   # 돌격은 강습모함 보유 함대만(Q68)이라 시험 함대에 강습모함을 얹는다
 		a.pos = Vector2(800, 450)
 		c.pos = Vector2(930, 450)   # 거리 130
 		t.first_hit_tick = 0
@@ -136,6 +143,18 @@ func _run() -> void:
 		a2.morale_bp = 3500
 		u.apply(BattleSim.command(0, [a2.id], "posture", -1, Vector2.ZERO, {"id": pid}))
 		u.cai.think(u)
+		if pid == "aggressive":
+			# 대조: 같은 상황에서 강습모함이 없으면 적극도 돌격하지 않는다
+			var n := _rc(1, false)
+			_park(n, ["RC-LIU-SQ-02", "RC-CAO-SQ-02"])
+			var na := _f(n, "RC-LIU-SQ-02")
+			na.pos = Vector2(800, 450)
+			_f(n, "RC-CAO-SQ-02").pos = Vector2(930, 450)
+			n.first_hit_tick = 0
+			n.st.tick = 900 * n.st.hz
+			n.apply(BattleSim.command(0, [na.id], "posture", -1, Vector2.ZERO, {"id": pid}))
+			n.cai.think(n)
+			if not TestCheck.ok(self, na.charge == 0, "강습모함 없는 적극 함대는 돌격하지 않는다"): return
 		out[pid] = {"charge": a.charge > 0, "kite": kite_to.distance_to(c.pos), "retreat": a2.retreat_order}
 	if not TestCheck.ok(self, out.aggressive.charge and not out.balanced.charge and not out.cautious.charge and not out.scheming.charge, "돌격은 적극만: %s" % str(out)): return
 	if not TestCheck.ok(self, out.cautious.kite >= 239.0 and out.scheming.kite >= 239.0 and out.balanced.kite < 131.0, "거리 130에서 신중·계략은 240까지 물러나고 균형·적극은 유지: %s" % str(out)): return

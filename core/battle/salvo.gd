@@ -524,9 +524,18 @@ func pull(f: FleetState, kind := "volley") -> String:
 	f.next_fire[cat] = mini(f.next_fire[cat], sim.st.tick)
 	return ""
 
+# Q68·R1: 강습모함(SHP-01)이 없는 함대는 적과 유지 거리를 지킨다. 강습 규칙이 없는 전투는 해당 없음
+func hold_distance(f: FleetState) -> bool:
+	if sim.assault == null:
+		return false
+	var t := str(sim.assault.A.carrier)
+	return not f.stages.has(t) or present_of(f, t) <= 0
+
 # 돌격 조건(Q28·Q42): 사기 안정, 열 여유. 사유 코드 또는 "".
 func charge_block(f: FleetState) -> String:
 	var c: Dictionary = C.charge
+	if hold_distance(f):
+		return "charge_none"   # Q68: 강습모함이 없으면 돌격(근접 돌입)을 못 한다
 	if f.morale_bp < int(c.min_morale_bp):
 		return "charge_morale"
 	var cost := _heat_cap_m(f) * int(c.heat_share_bp) / BattleRules.BP

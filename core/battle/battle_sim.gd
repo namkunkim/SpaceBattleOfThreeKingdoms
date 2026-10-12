@@ -354,6 +354,7 @@ func _clear_path(f: FleetState) -> void:
 	f.strafe = false
 	f.face_set = false
 	f.speed_cap = 0.0
+	f.move_grp = 0
 
 func _reject(lead: FleetState, reason: String, side: int) -> void:
 	emit("rejected", lead.id if lead else -1, side, Vector2.ZERO, reason)
@@ -646,6 +647,7 @@ func apply(c: Dictionary) -> void:
 				cap = 1e9
 				for f in s:
 					cap = minf(cap, f.speed)
+			var grp := (st.tick * 1000 + L.id + 1) if s.size() > 1 else 0
 			var cen := Vector2.ZERO
 			for f in s:
 				cen += f.pos
@@ -656,6 +658,7 @@ func apply(c: Dictionary) -> void:
 				f.has_move = true
 				_clear_path(f)
 				f.speed_cap = cap
+				f.move_grp = grp
 				for i in pts.size():
 					var w: Vector2 = pts[i]
 					var p := BattleRules.quant_v(Vector2(clampf(w.x + o.x, e, W.x - e), clampf(w.y + o.y, e, W.y - e)))
@@ -695,6 +698,7 @@ func apply(c: Dictionary) -> void:
 			for f in s:
 				f.has_move = true
 				f.move_to = c.point
+				f.move_grp = 0
 		"restore":
 			# 명령 되돌리기(U2): 직전 명령 상태로 돌아가는 새 명령. args.orders = {id: [has_move, move_to, target_id, defense]}
 			var orders: Dictionary = c.args.get("orders", {})
@@ -899,6 +903,7 @@ func _fleet_phase(timers: bool) -> void:
 			if f.has_move:
 				has_dest = true
 				dest = f.move_to
+		var old_pos := f.pos
 		var spd := rs.move_speed(f.spd, f.defense, f.charge > 0)
 		if salvo:
 			spd = f.speed * (R.charge_speed_mul if f.charge > 0 else 1.0)
@@ -933,6 +938,12 @@ func _fleet_phase(timers: bool) -> void:
 				var k: float = maxf(R.min_turn_cos, cos(BattleRules.ang_diff(f.heading, a)))
 				var stp := minf(spd * dt * k, dd)
 				f.pos += Vector2(cos(f.heading), sin(f.heading)) * stp
+		var blk := _hold_blocker(f, old_pos) if (has_dest and salvo) else Vector2.INF
+		if blk != Vector2.INF:
+			f.pos = old_pos   # 걸음만 막는다. 목적지가 적 쪽일 때만 이동 명령을 접는다(돌아서는 중의 앞쪽 쏠림은 명령을 지키지 않는다)
+			if (dest - old_pos).dot(blk - old_pos) > 0.0:
+				_hold_stop(f)
+				has_dest = false
 		if not has_dest and f.face_set:
 			# 도착 방향: 도착한 뒤 지정한 방향으로 돌아선다(§4.2). 맞출 때까지는 자동 조준보다 우선한다
 			# 제자리 선회율은 movement.face_turn_deg_per_s가 있으면 그것(이동 중 선회율과 따로 정할 수 있다)
@@ -952,6 +963,51 @@ func _fleet_phase(timers: bool) -> void:
 			if fm > 1.0 and f.flank_msg <= 0:
 				f.flank_msg = T.FLANK_MSG_S
 				emit("flank", f.id, ft.id, ft.pos, fm)
+
+# Q68·R1: 강습모함이 없는 함대는 적 함대의 유지 거리(engagement_distance) 안으로 들어가는 걸음을 하지 못한다.
+# 위치를 밀어내지 않고(튕김 방지, _separate 주석) 걸음만 막는다. 이미 안쪽이면 거리를 줄이는 걸음만 막는다.
+# 예외: 화공 운용 함대(황개)의 투항·발동 접근. 강습모함 보유 함대는 겹칠 수 있다(돌격·기함 진입).
+# 막는 적이 없으면 Vector2.INF, 있으면 아군이 아는 그 적의 위치(확인·추정 접촉만, 미탐지 적은 공개 경계라 멈추지 않는다 - M1)
+func _hold_blocker(f: FleetState, old: Vector2) -> Vector2:
+	if f.charge > 0 or (morale and morale.fleeing(f)) or not salvo.hold_distance(f):
+		return Vector2.INF
+	# 뇌격 운용 함대는 근접 공격 병종이라 유지 거리를 적용하지 않는다(M3, 기존 임무장비→범주 데이터)
+	if str(salvo.C.fast_craft.equipment_category.get(f.equip, "")) == "torpedo":
+		return Vector2.INF
+	# 화공 예외는 투항(feign)과 발동 창(open) 안의 접근뿐이다. 서신 전(idle)·창 밖은 면제하지 않는다
+	if chain and f.side == 0 and f.sq_id == chain.host_sq and (chain.mode == "feign" or (chain.mode == "open" and chain.window_open())):
+		return Vector2.INF
+	if _hold_d2 < 0.0:
+		_hold_d2 = pow(float(rs.rt("range_band_hold.engagement_distance")), 2)
+	for o in st.fleets:
+		if o.side == f.side or o.dead:
+			continue
+		if not sees(f, o):
+			continue
+		var kp := known_pos(f, o)
+		var dn := f.pos.distance_squared_to(kp)
+		if dn < _hold_d2 and dn < old.distance_squared_to(kp):
+			return kp
+	return Vector2.INF
+
+# 유지 거리 때문에 선 함대: 이동 명령을 접고, 같은 그룹(Q60)은 함께 선다
+func _hold_stop(f: FleetState) -> void:
+	var grp := f.move_grp
+	for g in st.fleets:
+		if g == f or (grp != 0 and g.move_grp == grp and not g.dead):
+			if g.has_move and sight_target(g) == null:
+				if g.side == 0 and st.tick >= int(_hold_msg.get(g.id, -1000000)) + HOLD_MSG_TICKS:
+					_hold_msg[g.id] = st.tick
+					_reject(g, "hold_distance", 0)   # 토스트 "교전 거리 유지"(쿨다운 있음). 아군이 아는 접촉에서만 멈추므로 새 정보가 없다
+				g.has_move = false
+				g.route.clear()
+				g.strafe = false
+				g.speed_cap = 0.0
+				g.move_grp = 0
+
+var _hold_d2 := -1.0
+var _hold_msg := {}   # 함대 id → 마지막 정지 알림 틱(쿨다운)
+const HOLD_MSG_TICKS := 50
 
 func _separate() -> void:
 	# 함대끼리 겹쳐도 밀어내지 않는다(튕김 방지). 전장 경계 안으로만 가둔다.
