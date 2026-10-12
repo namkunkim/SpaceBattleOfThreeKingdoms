@@ -56,9 +56,19 @@ static func _skills(profile: Dictionary) -> Dictionary:
 # 슬롯 기본값: 직책 순(slot_default = admiral, vice, staff_assault, 이어서 나머지 참모)으로 장수 기술을 넣고,
 # 이미 넣은 기술 ID는 건너뛰어 다음 후보로 채운다. 모자라면 빈칸. 특기 데이터가 없으면 빈 배열
 static func default_slots(fl: Dictionary, profile: Dictionary) -> Array:
+	return refill_slots(fl, profile, [])
+
+# 사용자가 고른 슬롯(keep)을 자리째 유지하고, 그 함대 장수에게 없는 기술·중복·빈칸만 기본값 후보 순으로 다시 채운다(P8b).
+# keep이 비면 default_slots와 같다
+static func refill_slots(fl: Dictionary, profile: Dictionary, keep: Array) -> Array:
 	var sk := _skills(profile)
 	if sk.is_empty():
 		return []
+	var own := fleet_skills(fl, profile)
+	var out := []
+	for i in int(sk.slots):
+		var k := str(keep[i]) if i < keep.size() else ""
+		out.append(k if k != "" and own.has(k) and not out.has(k) else "")
 	var cands := []
 	for key in sk.slot_default:
 		if key == "admiral" or key == "vice":
@@ -69,13 +79,11 @@ static func default_slots(fl: Dictionary, profile: Dictionary) -> Array:
 					cands.append(s.id)
 	for s in fl.staff:
 		cands.append(s.id)
-	var out := []
 	for id in cands:
 		var k := str(sk.by_officer.get(id, {}).get("skill", ""))
-		if k != "" and not out.has(k) and out.size() < int(sk.slots):
-			out.append(k)
-	while out.size() < int(sk.slots):
-		out.append("")
+		var at := out.find("")
+		if k != "" and not out.has(k) and at >= 0:
+			out[at] = k
 	return out
 
 # 함대 장수가 가진 기술 ID 집합
@@ -220,6 +228,10 @@ static func _fleet_shape(fl: Variant) -> bool:
 # JSON으로 읽은 재생 헤더는 정수가 float로 온다. 소수부가 없으면 정수로 본다
 static func _is_int(v: Variant) -> bool:
 	return typeof(v) == TYPE_INT or (typeof(v) == TYPE_FLOAT and v == floorf(v))
+
+# 함대 장수 ID(제독·부제독·참모 순, 빈칸 제외)
+static func people(fl: Dictionary) -> Array:
+	return _people(fl)
 
 static func _people(fl: Dictionary) -> Array:
 	var ids := [fl.admiral, fl.vice]

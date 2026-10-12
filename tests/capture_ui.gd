@@ -50,6 +50,7 @@ func _run() -> void:
 		deck.screens["org"].open_org()
 		var o = deck.screens["org"]
 		o.press(o.mine()[0], "vice")   # 고른 칸 강조와 "대기 풀로" 버튼까지 보이게
+		o.pick_skill_slot(0)   # 장수 특기 선택 목록(P8b)
 		for i in 30:
 			await process_frame
 	elif mode == "brief":

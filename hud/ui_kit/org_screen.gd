@@ -20,6 +20,9 @@ const REASON := {
 	Organization.UNKNOWN_FLEET: "알 수 없는 함대입니다",
 	Organization.MISSING_FLEET: "함대가 빠졌습니다",
 	Organization.BAD_FLEET: "편성 형식이 잘못됐습니다",
+	Organization.SKILL_DUPLICATE: "같은 장수 특기가 두 칸에 있습니다",
+	Organization.SKILL_FOREIGN: "함대 장수에게 없는 장수 특기입니다",
+	Organization.SKILL_UNKNOWN: "장수 특기 편성이 잘못됐습니다",
 }
 const BTN_H := 56.0   # 태블릿 48dp(touch_targets: 2560×1600 274dpi에서 52단위 이상)
 
@@ -36,6 +39,9 @@ var notice := ""     # 걸린 편성이 거부돼 고쳤을 때 바뀐 함대와
 var cards := {}      # org.fleets 인덱스 → 함대 카드(± 때 그 카드만 바꾼다, REVIEW-O4 #2)
 var ship_ui := {}    # 함종 ID → [−, 수, +, 합계](± 때 값만 바꾼다)
 var detail_status: VBoxContainer   # 가운데 열 아래 비용·경고 줄
+var skill_defs := {}   # 특기 ID → 정의(시나리오 special_skills.skills)
+var skill_pick := -1   # 고르는 중인 특기 칸(0..2), 없으면 -1
+var skill_box: VBoxContainer   # 가운데 열 특기 칸 + 선택 목록(바뀔 때 이 상자만 다시 만든다)
 var press_at := Vector2.INF   # 함대 카드 누른 위치(끌어 스크롤하면 선택하지 않는다, REVIEW-O4 #10)
 const DRAG_PX := 16.0
 
@@ -130,6 +136,9 @@ func _load() -> void:
 	var b: Node = deck.battle
 	scn = ProfileLoader.read_json(ProfileLoader.read_json(b.profile_def).scenario_path)
 	prof = ScenarioProfile.load_profile(b.profile_def, b.difficulty)
+	skill_defs = {}
+	for d in scn.get("realtime_rules", {}).get("special_skills", {}).get("skills", []):
+		skill_defs[d.id] = d
 
 # 브리핑 "자동 편성으로 시작"(건너뛰기): 화면을 거치지 않고 세 세력 자동 편성으로 전투
 func start_auto() -> void:
@@ -194,6 +203,11 @@ func slot_id(i: int, role: String) -> String:
 	return ""
 
 func _set_slot(i: int, role: String, id: String) -> void:
+	_put(i, role, id)
+	_reslot(i)
+
+# 직책 칸만 바꾼다(맞바꿈은 두 칸을 바꾼 뒤 한 번에 _reslot)
+func _put(i: int, role: String, id: String) -> void:
 	var fl: Dictionary = org.fleets[i]
 	if role == "admiral" or role == "vice":
 		fl[role] = id
@@ -202,7 +216,11 @@ func _set_slot(i: int, role: String, id: String) -> void:
 		if id != "":
 			fl.staff.append({"post": role, "id": id})
 		fl.staff.sort_custom(func(x, y): return Organization.POST_ORDER.find(x.post) < Organization.POST_ORDER.find(y.post))
-	fl.skill_slots = Organization.default_slots(fl, prof)   # 장수가 바뀌면 특기 슬롯을 직책 순 기본값으로 다시 채운다(P8a. 슬롯 교체 UI는 P8b)
+
+# 장수가 바뀌면(P8b): 직접 고른 슬롯은 그 장수가 남아 있는 한 유지, 빠진 장수의 슬롯만 기본값 후보 순으로 다시 채운다
+func _reslot(i: int) -> void:
+	var fl: Dictionary = org.fleets[i]
+	fl.skill_slots = Organization.refill_slots(fl, prof, fl.get("skill_slots", []))
 
 func _locked(i: int, role: String) -> bool:
 	return i >= 0 and role == "admiral" and is_flag(i)
@@ -223,9 +241,12 @@ func press(i: int, role: String, id := "") -> void:
 		picked = cur   # 풀 → 풀: 고른 장수만 바꾼다
 	else:
 		if picked.fleet >= 0:
-			_set_slot(picked.fleet, picked.role, id)
+			_put(picked.fleet, picked.role, id)
 		if i >= 0:
-			_set_slot(i, role, picked.id)
+			_put(i, role, picked.id)
+		for f in [picked.fleet, i]:
+			if f >= 0:
+				_reslot(f)
 		picked = {}
 	_refresh()
 
@@ -283,6 +304,89 @@ func add_ship(i: int, t: String, d: int) -> void:
 	if i == sel:
 		_update_ships()
 	_sum()
+
+# ------------------------------------------------------------ 장수 특기 슬롯(P8b, Q92)
+func skill_name(k: String) -> String:
+	return str(skill_defs[k].name) if skill_defs.has(k) else "비어 있음"
+
+func skill_kind(k: String) -> String:
+	return "고유" if skill_defs.get(k, {}).get("kind", "") == "unique" else "유형"
+
+# 칸 slot에 k를 넣을 수 없는 사유(없으면 ""). 중복 금지(Q92), 그 함대 장수가 가진 특기만
+func skill_block(i: int, slot: int, k: String) -> String:
+	var fl: Dictionary = org.fleets[i]
+	if not Organization.fleet_skills(fl, prof).has(k):
+		return "이 함대 장수에게 없는 특기입니다"
+	var at: int = fl.skill_slots.find(k)
+	if at >= 0 and at != slot:
+		return "칸 %d에 이미 있습니다" % (at + 1)
+	return ""
+
+func pick_skill_slot(n: int) -> void:
+	skill_pick = -1 if skill_pick == n else n
+	_fill_skills()
+
+# 칸 slot의 특기를 k로 바꾼다. 사유 문구를 돌려주고(성공이면 ""), 이 함대 카드와 특기 상자만 갱신한다
+func choose_skill(i: int, slot: int, k: String) -> String:
+	var why := skill_block(i, slot, k)
+	if why != "":
+		return why
+	org.fleets[i].skill_slots[slot] = k
+	skill_pick = -1
+	_status()
+	_replace_card(i)
+	_fill_skills()
+	return ""
+
+func _skill_tip(k: String) -> String:
+	var d: Dictionary = skill_defs.get(k, {})
+	return "" if d.is_empty() else "%s (%s · %s)
+%s" % [d.name, skill_kind(k), "즉시" if int(d.duration_s) == 0 else "%d초" % int(d.duration_s), d.text]
+
+func _fill_skills() -> void:
+	if skill_box == null or sel < 0 or skill_defs.is_empty():
+		return
+	_clear(skill_box)
+	var fl: Dictionary = org.fleets[sel]
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	skill_box.add_child(row)
+	for n in fl.skill_slots.size():
+		var k: String = fl.skill_slots[n]
+		var b := _button("칸 %d  %s
+%s" % [n + 1, skill_name(k), skill_kind(k) if k != "" else "눌러서 고르기"], 0, pick_skill_slot.bind(n))
+		b.custom_minimum_size.y = 72
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.tooltip_text = _skill_tip(k)
+		if skill_pick == n:
+			b.theme_type_variation = "PrimaryButton"
+		row.add_child(b)
+		_hold_tip(b)
+	if skill_pick < 0:
+		return
+	skill_box.add_child(_label("칸 %d 특기 고르기 — 이 함대 장수의 특기만, 같은 특기는 한 번만" % (skill_pick + 1), "Muted", UiTheme.INK_2))
+	var list := GridContainer.new()   # 2열: 목록이 열려도 아래 함종 영역이 덜 밀린다(REVIEW-P8B F-2)
+	list.columns = 2
+	list.add_theme_constant_override("h_separation", 8)
+	list.add_theme_constant_override("v_separation", 6)
+	skill_box.add_child(list)
+	for id in Organization.people(fl):
+		var k := str(prof.scenario.realtime_rules.special_skills.by_officer.get(id, {}).get("skill", ""))
+		var why := "특기 없음" if k == "" else skill_block(sel, skill_pick, k)
+		var b := _button("%s — %s%s" % [_name(id), skill_name(k) if k != "" else "—", "  (%s)" % why if why != "" else ""], 0, choose_skill.bind(sel, skill_pick, k))
+		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.disabled = why != ""
+		b.tooltip_text = _skill_tip(k)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.clip_text = true
+		if k != "" and fl.skill_slots[skill_pick] == k:
+			b.theme_type_variation = "PrimaryButton"   # 지금 이 칸의 특기
+		list.add_child(b)
+		_hold_tip(b)
+
+func _hold_tip(b: Control) -> void:
+	if deck.get("hold_tip") != null:
+		deck.hold_tip.register(b)
 
 # ------------------------------------------------------------ 그리기
 # 고친 편성 알림: 다시 채운 유비군 함대 이름, AI 세력은 세력별 함대 수(언제나 자동 편성이라 이름은 생략)
@@ -431,6 +535,8 @@ func _fleet_card(i: int) -> PanelContainer:
 	for e in errors:
 		if e.squadron_id == fl.squadron_id:
 			v.add_child(_label("⚠ " + REASON.get(e.code, e.code), "Body", UiTheme.FOE))
+	if not skill_defs.is_empty() and fl.skill_slots.any(func(k): return k != ""):
+		v.add_child(_label("장수 특기 " + " · ".join(fl.skill_slots.map(skill_name)), "Muted", UiTheme.INK_3))
 	if under_text(i) != "":
 		v.add_child(_label("△ " + under_text(i), "Body", UiTheme.WARN))
 	if tier_text(i) != "":
@@ -440,6 +546,7 @@ func _fleet_card(i: int) -> PanelContainer:
 func _fill_detail() -> void:
 	_clear(detail)
 	ship_ui = {}
+	skill_box = null
 	if sel < 0:
 		return
 	var fl: Dictionary = org.fleets[sel]
@@ -465,6 +572,13 @@ func _fill_detail() -> void:
 		if picked.get("fleet", -2) == sel and picked.role == r[0]:
 			b.theme_type_variation = "PrimaryButton"
 		slots.add_child(b)
+	if not skill_defs.is_empty():
+		detail.add_child(_label("장 수 특 기  —  칸을 누르면 이 함대 장수의 특기 중에서 고릅니다 · 길게 누르면 설명", "Eyebrow"))
+		skill_box = VBoxContainer.new()
+		skill_box.add_theme_constant_override("separation", 6)
+		detail.add_child(skill_box)
+		skill_pick = -1
+		_fill_skills()
 	detail.add_child(_label("전 함  —  함종 제한 없음 · 함대 예산 = 지휘 한도", "Eyebrow"))
 	var grid := GridContainer.new()   # 함종 8종을 두 열로(1600×900에서 스크롤 없이)
 	grid.columns = 2
@@ -527,7 +641,7 @@ func _fill_pool() -> void:
 	var used := {}
 	for i in mine():
 		if org.fleets[i].on:
-			for id in Organization._people(org.fleets[i]):
+			for id in Organization.people(org.fleets[i]):
 				used[id] = true
 	var q := search.text.strip_edges()
 	var ids := officers.keys().filter(func(id): return not used.has(id) and (q == "" or q in str(officers[id].name) or q in " ".join(officers[id].get("traits", []))))
