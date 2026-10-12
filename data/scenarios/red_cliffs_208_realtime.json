@@ -61,7 +61,7 @@
  ],
  "difficulty_profiles": {
   "입문": {
-   "target_cost_ratio": 1.07,
+   "target_cost_ratio": 1.47,
    "start_morale_bp": {
     "northern": 8000,
     "jing_navy": 6000
@@ -75,9 +75,9 @@
     "suspicion_per_s": 0.4
    },
    "note": "역병과 원정 피로가 크고 형주 수군이 훈련되지 않았다. 조조는 밀집(연환)을 풀지 않는다.",
-   "cao_fleets": 8,
-   "cao_last_fill_bp": 5548,
-   "cao_cost_at_limits": 5027
+   "cao_fleets": 11,
+   "cao_last_fill_bp": 5589,
+   "cao_cost_at_limits": 6906
   },
   "표준": {
    "target_cost_ratio": 1.59,

@@ -109,13 +109,13 @@ func _run() -> void:
 		var p := ScenarioProfile.load_profile("res://data/profiles/red_cliffs_rt.json", diff)
 		if not TestCheck.ok(self, not p.is_empty() and p.difficulty == diff, "profile " + diff): return
 		foes[diff] = p
-	# Q82: 조조 함대 수 = 난이도의 cao_fleets(입문 8 · 표준 12 · 상급/극한 16), 척 수 배율 없음, 마지막 함대만 fill_bp
-	if not TestCheck.ok(self, foes["입문"].foe.size() == 8 and foes["표준"].foe.size() == 12 and foes["상급"].foe.size() == 16 and foes["극한"].foe.size() == 16, "cao fleet count by difficulty"): return
+	# Q82: 조조 함대 수 = 난이도의 cao_fleets(입문 11 · 표준 12 · 상급/극한 16), 척 수 배율 없음, 마지막 함대만 fill_bp
+	if not TestCheck.ok(self, foes["입문"].foe.size() == 11 and foes["표준"].foe.size() == 12 and foes["상급"].foe.size() == 16 and foes["극한"].foe.size() == 16, "cao fleet count by difficulty"): return
 	for diff in foes:
 		if not TestCheck.ok(self, foes[diff].ally.size() == 7, "alliance fixed %s" % diff): return
 		var fills: Array = foes[diff].foe.filter(func(d): return d.has("fill_bp"))
 		if not TestCheck.ok(self, fills.size() == 1 and fills[0] == foes[diff].foe[-1] and int(fills[0].fill_bp) == int(foes[diff].scenario.difficulty_profile.cao_last_fill_bp), "fill_bp는 마지막 조조 함대만 %s" % diff): return
-	if not TestCheck.ok(self, _def(foes["입문"].foe, "RC-CAO-SQ-01").ships == 78 and _def(foes["입문"].foe, "RC-CAO-SQ-09").is_empty() and not _def(foes["표준"].foe, "RC-CAO-SQ-09").is_empty(), "배율 없음, 앞에서부터 배치"): return
+	if not TestCheck.ok(self, _def(foes["입문"].foe, "RC-CAO-SQ-01").ships == 78 and _def(foes["입문"].foe, "RC-CAO-SQ-12").is_empty() and not _def(foes["표준"].foe, "RC-CAO-SQ-12").is_empty(), "배율 없음, 앞에서부터 배치"): return
 	# Q82·Q83 비율: 게임 기본 경로(Organization.load_auto = 세 세력 자동 편성) 프로필에서 조조 비용 합 / 연합 비용 합이 난이도 목표 ±0.05
 	for diff in foes:
 		var p := Organization.load_auto("res://data/profiles/red_cliffs_rt.json", diff)
