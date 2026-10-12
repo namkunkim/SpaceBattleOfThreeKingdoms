@@ -43,6 +43,13 @@ func _find(n: Node, text: String) -> Button:
 			return b
 	return null
 
+func _label_text(n: Node) -> String:
+	var t := ""
+	for l in n.find_children("*", "Label", true, false):
+		t += (l as Label).text + "
+"
+	return t
+
 func _frames(n := 4) -> void:
 	for i in n:
 		await process_frame
@@ -167,6 +174,85 @@ func _run() -> void:
 	for i in mine:
 		var fl: Dictionary = o.org.fleets[i]
 		if not TestCheck.ok(self, fl.staff.size() == 3 and fl.vice != "" and Organization.cost_of(fl, o.prof) <= Organization.limit_of(fl, o.scn, o.prof), "auto filled " + fl.squadron_id): return
+	# P8b 장수 특기 슬롯: 자동 편성 뒤 5명(제독·부제독·참모 3)의 함대에서 시험한다
+	var sf: Dictionary = o.org.fleets[other]
+	var sk_by: Dictionary = o.prof.scenario.realtime_rules.special_skills.by_officer
+	var own: Dictionary = Organization.fleet_skills(sf, o.prof)
+	var free_k := ""
+	for k in own:
+		if not sf.skill_slots.has(k):
+			free_k = k
+	if not TestCheck.ok(self, sf.skill_slots.size() == 3 and free_k != "", "skill test setup: slots %s own %s" % [sf.skill_slots, own.keys()]): return
+	var before_slots: Array = sf.skill_slots.duplicate()
+	# 중복(Q92) 거부: 다른 칸에 있는 특기를 칸 0에
+	var dup_why: String = o.choose_skill(other, 0, before_slots[1])
+	if not TestCheck.ok(self, dup_why != "" and sf.skill_slots == before_slots, "duplicate skill rejected: %s" % dup_why): return
+	# 장수 없는 기술 거부
+	var foreign_k := ""
+	for id in o.officers:
+		var fk := str(sk_by.get(id, {}).get("skill", ""))
+		if fk != "" and not own.has(fk):
+			foreign_k = fk
+			break
+	var foreign_why: String = o.choose_skill(other, 0, foreign_k)
+	if not TestCheck.ok(self, foreign_why != "" and sf.skill_slots == before_slots, "foreign skill rejected: %s" % foreign_why): return
+	# 선택 목록: 칸을 누르면 목록이 뜨고, 막힌 항목은 사유가 버튼에 보이며 눌러도 안 바뀐다. ±처럼 제자리 갱신(카드만 새로)
+	o.sel = other
+	o._fill_detail()
+	await _frames()
+	var shot_ui: Array = o.skill_box.get_children()[0].get_children()
+	if not TestCheck.ok(self, shot_ui.size() == 3 and shot_ui.all(func(b): return b.custom_minimum_size.y >= 48.0 and b.tooltip_text != ""), "3 skill slot buttons, 48+, tooltip"): return
+	_click(shot_ui[0])
+	await _frames()
+	if not TestCheck.ok(self, o.skill_pick == 0 and o.skill_box.get_child_count() > 2, "slot press opens list"): return
+	var blocked := 0
+	for b in o.skill_box.find_children("*", "Button", true, false):
+		if b.disabled and (" (칸 " in b.text or "특기 없음" in b.text or "없는 특기" in b.text):
+			blocked += 1
+	if not TestCheck.ok(self, blocked >= 1, "blocked options show reason"): return
+	# 성공: 칸 0 교체, 카드 갱신, 확정 가능
+	var card_before: Control = o.cards[other]
+	if not TestCheck.ok(self, o.choose_skill(other, 0, free_k) == "" and sf.skill_slots[0] == free_k and o.errors.is_empty() and not o.confirm.disabled, "choose free skill"): return
+	await _frames()
+	if not TestCheck.ok(self, o.cards[other] != card_before and o.skill_name(free_k) in _label_text(o.cards[other]) and o.skill_pick == -1, "card updated in place"): return
+	# 장수 교체: 직접 고른 칸 0은 유지, 빠진 장수의 특기 칸만 다시 채운다
+	var chosen_slots: Array = sf.skill_slots.duplicate()
+	var gone_role := ""
+	for r in o.ROLES:
+		var rid: String = o.slot_id(other, r[0])
+		var rk := str(sk_by.get(rid, {}).get("skill", ""))
+		if rk != "" and rk != free_k and chosen_slots.has(rk) and (r[0] != "admiral" or not o.is_flag(other)):
+			gone_role = r[0]
+			break
+	if not TestCheck.ok(self, gone_role != "", "setup: a departing officer holds a slotted skill"): return
+	var gone_k := str(sk_by.get(o.slot_id(other, gone_role), {}).get("skill", ""))
+	var gone_id: String = o.slot_id(other, gone_role)
+	o.press(other, gone_role)
+	o.unassign()
+	if not TestCheck.ok(self, sf.skill_slots[0] == free_k and not sf.skill_slots.has(gone_k) or Organization.fleet_skills(sf, o.prof).has(gone_k), "officer out: chosen slot kept, gone skill removed %s" % [sf.skill_slots]): return
+	if not TestCheck.ok(self, o.errors.filter(func(e): return str(e.code).begins_with("skill_")).is_empty(), "no skill errors after officer out"): return
+	# 같은 함대 안 맞바꿈(제독 ↔ 부제독)은 같은 사람들이라 슬롯이 그대로
+	if not o.is_flag(other):
+		var s0: Array = sf.skill_slots.duplicate()
+		o.press(other, "admiral")
+		o.press(other, "vice")
+		if not TestCheck.ok(self, sf.skill_slots == s0, "in-fleet swap keeps slots"): return
+	# 확정은 skill_* 사유를 먼저 본다: 슬롯을 화면 갱신 없이 깨뜨려도 확정이 거부돼 잠긴다
+	var good_slots: Array = sf.skill_slots.duplicate()
+	sf.skill_slots[2] = foreign_k
+	o.confirm_org()
+	await _frames()
+	if not TestCheck.ok(self, deck.screen == "org" and o.confirm.disabled and "장수 특기" in o.msg.text, "confirm rejects skill_foreign: %s" % o.msg.text): return
+	sf.skill_slots = good_slots
+	o._refresh()
+	# 자동 편성 = 기본값으로(고른 칸을 지움), 초기화도 기본값
+	_click(_find(deck, "자동 편성"))
+	await _frames()
+	if not TestCheck.ok(self, o.org.fleets[other].skill_slots == Organization.default_slots(o.org.fleets[other], o.prof), "auto fill resets skill slots to default"): return
+	o.choose_skill(other, 0, free_k if Organization.fleet_skills(o.org.fleets[other], o.prof).has(free_k) else o.org.fleets[other].skill_slots[0])
+	_click(_find(deck, "정사 편성으로 초기화"))
+	await _frames()
+	if not TestCheck.ok(self, o.org.fleets[other].skill_slots == Organization.default_slots(o.org.fleets[other], o.prof), "reset -> default slots"): return
 	# 초기화
 	_click(_find(deck, "정사 편성으로 초기화"))
 	await _frames()
@@ -184,6 +270,13 @@ func _run() -> void:
 	await _frames()
 	if not TestCheck.ok(self, deck.screen == "" and battle.G.state == "play" and battle.org == chosen, "confirm -> battle with org"): return
 	var applied := Organization.apply(o.prof, chosen, o.scn)
+	for fl in chosen.fleets:   # P8b: 확정한 슬롯이 전투 함대 상태까지 간다
+		if fl.on:
+			var st_f: FleetState = null
+			for f in battle.sim.st.fleets:
+				if f.sq_id == fl.squadron_id:
+					st_f = f
+			if not TestCheck.ok(self, st_f != null and st_f.skill_slots == fl.skill_slots, "FleetState slots = org %s" % fl.squadron_id): return
 	if not TestCheck.ok(self, battle.ALLY_DEF.map(func(d): return d.commander_id) == applied.ally.map(func(d): return d.commander_id), "battle uses applied org"): return
 	# #1·O4b F-3: 표준에서 편성한 뒤 극한으로 바꾸면 apply가 거부한다(조조 함대 missing_fleet). 유비군 한 함대는 일부러 깨뜨린다(제독·함선 없음).
 	# 전투로 넘어가지 않고 편성 화면: 유효한 유비군 함대는 그대로, 깨진 함대와 빠진 조조 함대만 채우고 바뀐 함대를 문구로 알린다
