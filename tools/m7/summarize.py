@@ -17,6 +17,7 @@ for r in rows:
 se = (w * (1 - w) / n) ** 0.5
 print(f"{d} n={n} 연합승률 {w:.1%} ±{se:.1%} 길이 중앙 {ts[n//2]/60:.1f}분 p10 {ts[n//10]/60:.1f} p90 {ts[9*n//10]/60:.1f} 평균 {st.mean(ts)/60:.1f}분")
 print("  종료경로", {k: f"{v/n:.1%}" for k, v in sorted(reasons.items(), key=lambda x: -x[1])})
+print("  비용 손실 평균 연합", f"{st.mean(r['ally_cost_loss_bp'] for r in rows)/100:.1f}%", "조조", f"{st.mean(r['foe_cost_loss_bp'] for r in rows)/100:.1f}%", " 95%CI 승률", f"{max(0,w-1.96*se):.1%}~{min(1,w+1.96*se):.1%}")
 print("  시계종료", f"{reasons.get('time_limit',0)/n:.1%}", " 조조 확인 접촉 판", f"{sum(1 for r in rows if r['conf_t'][1]>=0)/n:.0%}", "연합", f"{sum(1 for r in rows if r['conf_t'][0]>=0)/n:.0%}")
 # M9: 화공·승계·강습(행에 m9가 있을 때)
 m9 = [r.get("m9", {}) for r in rows]
