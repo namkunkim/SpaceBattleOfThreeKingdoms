@@ -295,6 +295,7 @@
 - 코어 변경은 투영만: `SkillCore.view` 슬롯에 `kind`·`type`·`text`({trait} → 이름)·`active_s`(이 함대가 건 효과 남은 초, 적에게 건 것 포함). 지문 무관. `FleetView.skills`, `BattleCommands.do_skill(slot)`.
 - 사거리 고리: 강궁 중 `ranges.artillery` 260 → 338(×1.3)을 그대로 그린다(테스트 8, 캡처 `out/p8c-skills.png`).
 - 테스트 `tests/special_skills_ui.gd`(버튼 3·발동·알림·사용함·skill_used 토스트·사유 문구 전부·적/다중 숨김·받은 효과 칩·위임 → 직접·강궁 사거리). 캡처 `capture_ui skills`(1920×1200), `battle`·`select`도 특기 줄이 보인다.
+- **P8c-b(REVIEW-P8C 조건부 수용, Q99~Q102)**: 슬롯 버튼은 길게 눌러 확정(명령 데크 `_confirm_*`에 `fire`·`tap_text`·`preview` 훅), 탭 = 대상·사유 알림, 누르는 동안 기본 대상에 이동 표지 고리(`battle.marker`). 코어 `_apply_human`: 특기가 거부되면 위임 유지(성공만 직접 지휘, 다른 명령은 그대로, 지문 시험 통과). 투영 슬롯 `target_id`(target_pick 미리보기). F-5: 상태·칩 12px, 위임 안내 11px, "받은 효과" 머리글, 버튼 간격 12. F-6: 시험에 탭·길게 누르기·미리보기, 위임 거부 → 위임 유지, 적 skill 사건 무알림, 1920×1200·1600×900 배치 단언(캔버스 논리 폭 1600이라 1280×720도 1600×900과 같은 배치). 캡처 `out/p8cb-skills-{1920x1200,1600x900}.png`. 대기열: 사람이 직접 대상 고르기(Q101).
 
 ## 남은 일 (컨셉 세션이 할 수 있는 것)
 

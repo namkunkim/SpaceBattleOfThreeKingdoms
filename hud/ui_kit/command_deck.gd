@@ -1092,7 +1092,10 @@ func _confirm_end(b: Control) -> void:
 	if _confirm_btn != b:
 		return
 	if not _confirm_fired:
-		show_toast("%s: 길게 눌러 확정합니다" % b.cmd.label)
+		if b.has_method("tap_text"):   # 장수 특기: 탭 = 설명·대상(Q99·Q101)
+			show_toast(b.tap_text(), str(b.slot.get("block", "")) == "")
+		else:
+			show_toast("%s: 길게 눌러 확정합니다" % b.cmd.label)
 	b.hold_k = 0.0
 	b.queue_redraw()
 	_confirm_btn = null
@@ -1106,12 +1109,17 @@ func _confirm_tick(delta: float) -> void:
 	_confirm_t += delta
 	_confirm_btn.hold_k = clampf(_confirm_t / CONFIRM_HOLD, 0.0, 1.0)
 	_confirm_btn.queue_redraw()
+	if _confirm_btn.has_method("preview"):
+		_confirm_btn.preview()
 	if _confirm_t >= CONFIRM_HOLD:
 		_confirm_fired = true
 		_confirm_btn.hold_k = 0.0
 		hold_tip.hide_tip()
 		sound.play("confirm_heavy")
-		battle.do_cmd(_confirm_btn.cmd.id)
+		if _confirm_btn.has_method("fire"):
+			_confirm_btn.fire()
+		else:
+			battle.do_cmd(_confirm_btn.cmd.id)
 
 # P7 보급·수리 탭: 위쪽 패널(SupplyMenu)이 읽기값과 "먼저"를 맡고, 여기 명령 버튼은 자동 보급 중지/재개 하나다.
 func _build_supply_page(i: int) -> void:

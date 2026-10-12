@@ -4,7 +4,9 @@ extends SceneTree
 #  1. 단일 선택 아군: 버튼 3·터치 크기, 슬롯 이름 / 2. 발동: skill 명령 → 알림(경고 아님)·"발동 중"·끝나면 "사용함"
 #  3. 다시 누르면 skill_used 거부 토스트 / 4. 사유 코드 문구(데이터 requires 키 전부 포함)
 #  5. 적 함대·다중 선택은 특기 줄 없음, 적 항목에 skills 키 없음 / 6. 받은 효과 칩: 적이 건 효과는 이름·남은 초만(시전자 숨김, Q97)
-#  7. 위임 함대에 발동 → 직접 지휘 / 8. 강궁 효과 중 사거리 고리 값(ranges)이 ×1.3
+#  7. 위임 함대: 성공한 발동만 직접 지휘, 거부되면 위임 유지(Q100) / 8. 강궁 효과 중 사거리 고리 값(ranges)이 ×1.3
+#  9. 탭 = 설명·대상 알림(명령 없음), 누르는 동안 기본 대상 강조(Q99·Q101) / 10. 안개 없는 규칙에서 적 skill 사건이 와도 알림 없음
+#  11. 1920×1200·1600×900: 펼친 패널 + 특기 줄이 화면 안이고 명령 패널·레이더와 겹치지 않음
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -18,6 +20,17 @@ func _select(battle: Node, fs: Array) -> void:
 	for f in fs:
 		battle.selected.append(f)
 	battle.inspect = null
+
+# 길게 눌러 확정(명령 데크 confirm 경로)
+func _hold(deck, b) -> void:
+	deck._confirm_start(b)
+	deck._confirm_tick(deck.CONFIRM_HOLD + 0.1)
+	deck._confirm_end(b)
+
+func _tap(deck, b) -> void:
+	deck._confirm_start(b)
+	deck._confirm_tick(0.1)
+	deck._confirm_end(b)
 
 func _run() -> void:
 	var battle := (load("res://scenes/FleetBattle3D.tscn") as PackedScene).instantiate()
@@ -58,7 +71,10 @@ func _run() -> void:
 	var nm: String = me.skills.slots[slot].name
 
 	# --- 2. 발동 ---
-	bar.btns[slot].pressed.emit()
+	var n_log := core.command_log.size()
+	_tap(deck, bar.btns[slot])
+	if not TestCheck.ok(self, core.command_log.size() == n_log and "길게 눌러" in deck.toast_text and nm in deck.toast_text, "탭은 설명만, 명령 없음 %s" % deck.toast_text): return
+	_hold(deck, bar.btns[slot])
 	battle._sync()
 	deck._refresh_skills()
 	var ev: Array = events.filter(func(e): return e[0] == "skill")
@@ -79,7 +95,7 @@ func _run() -> void:
 
 	# --- 3. 다시 누르면 거부 ---
 	events.clear()
-	bar.btns[slot].pressed.emit()
+	_hold(deck, bar.btns[slot])
 	if not TestCheck.ok(self, events.any(func(e): return e[0] == "toast" and e[1] == battle.REJECT.skill_used) and not deck.toast_good, "skill_used 토스트 %s" % str(events)): return
 
 	# --- 4. 사유 코드 문구 ---
@@ -149,7 +165,21 @@ func _run() -> void:
 		_select(battle, [other])
 		deck._refresh_skills()
 		if not TestCheck.ok(self, "직접 지휘" in bar.btns[oslot].tooltip_text, "위임 함대 버튼 안내"): return
-		bar.btns[oslot].pressed.emit()
+		# 거부(이미 쓴 기술): 위임 유지
+		var oc: FleetState = core.st.by_id(other.id)
+		var oid: String = oc.skill_slots[oslot]
+		oc.skill_used[oid] = 1
+		battle._sync()
+		deck._refresh_skills()
+		events.clear()
+		_hold(deck, bar.btns[oslot])
+		battle._sync()
+		if not TestCheck.ok(self, other.control == "delegate" and events.any(func(e): return e[0] == "toast"), "거부되면 위임 유지 %s" % other.control): return
+		oc.skill_used.erase(oid)
+		battle._sync()
+		deck._refresh_skills()
+		_hold(deck, bar.btns[oslot])
+		battle._sync()
 		deck._refresh_skills()
 		if not TestCheck.ok(self, other.control == "direct", "발동하면 직접 지휘 %s" % other.control): return
 
@@ -163,5 +193,59 @@ func _run() -> void:
 		core.salvo.refresh_range(hz)
 		battle._sync()
 		if not TestCheck.ok(self, absf(float(me.ranges.artillery) - base * 1.3) < 1.0, "강궁 중 화면 사거리 %s → %s" % [base, me.ranges.artillery]): return
+	# --- 9. 기본 대상 미리보기(적 대상 기술) ---
+	var df = null
+	var dslot := -1
+	for f in battle.alive(0):
+		for i in f.skills.get("slots", []).size():
+			var sl: Dictionary = f.skills.slots[i]
+			if sl.target == "enemy_fleet" and sl.uses_left > 0:
+				df = f
+				dslot = i
+		if df:
+			break
+	if not TestCheck.ok(self, df != null, "적 대상 기술이 있는 아군 함대"): return
+	TestPoke.foe_beside(battle, df, Vector2(150, 0))
+	for i in 40:
+		if int(df.skills.slots[dslot].target_id) >= 0:
+			break
+		core.step()
+		battle._pump()
+	var tid := int(df.skills.slots[dslot].target_id)
+	if not TestCheck.ok(self, tid >= 0, "기본 대상 미리보기 ID"): return
+	_select(battle, [df])
+	deck._refresh_skills()
+	var db = bar.btns[dslot]
+	if not TestCheck.ok(self, "지금: " in db.tooltip_text, "툴팁에 기본 대상 %s" % db.tooltip_text): return
+	battle.marker = {}
+	n_log = core.command_log.size()
+	deck._confirm_start(db)
+	deck._confirm_tick(0.2)
+	var tv = battle.by_id(tid)
+	if not TestCheck.ok(self, not battle.marker.is_empty() and battle.marker.pos == tv.pos and battle.marker.foe, "누르는 동안 대상 강조"): return
+	deck._confirm_end(db)
+	if not TestCheck.ok(self, core.command_log.size() == n_log and tv.fname in deck.toast_text, "일찍 떼면 발동 안 함, 대상 이름 알림 %s" % deck.toast_text): return
+
+	# --- 10. 적 skill 사건(안개 없는 규칙 가정)은 알림이 없다 ---
+	events.clear()
+	battle._on_event({"kind": "skill", "sq": tid, "other": -1, "pos": Vector2.ZERO, "value": {"id": "SK-T-FIRE", "targets": [tid]}, "tick": 0})
+	if not TestCheck.ok(self, events.is_empty(), "적 발동 사건은 화면에 안 나옴 %s" % str(events)): return
+
+	# --- 11. 해상도별 배치 ---
+	_select(battle, [me])
+	deck._set_info_open(true)
+	for vs in [Vector2i(1920, 1200), Vector2i(1600, 900)]:
+		root.size = vs
+		deck._refresh_skills()
+		deck._size_info()
+		await _frames(4)
+		var ir: Rect2 = deck.info.get_global_rect()
+		var vr := root.get_visible_rect()
+		print("LAYOUT ", vs, " visible ", vr, " info ", ir, " cmd ", deck.cmd_panel.get_global_rect())
+		var bad := []
+		for c in [deck.cmd_panel, deck.radar, deck.strip]:
+			if ir.intersects(c.get_global_rect()):
+				bad.append(c.name)
+		if not TestCheck.ok(self, bar.visible and vr.encloses(ir) and bad.is_empty() and ir.size.y >= deck.INFO_L2 + bar.H - 1.0, "%s: 패널 %s 겹침 %s" % [vs, ir, bad]): return
 	print("SPECIAL_SKILLS_UI_PASS")
 	quit(0)
