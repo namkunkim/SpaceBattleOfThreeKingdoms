@@ -1,13 +1,14 @@
-# M7 기준선 요약: 난이도별 json(runs 행)을 합쳐 승률·길이·종료 경로를 낸다. 사용: python tools/m7/summarize.py <난이도> [태그]
+# M7 기준선 요약: 난이도별 json(runs 행)을 합쳐 승률·길이·종료 경로를 낸다. 사용: python tools/m7/summarize.py <난이도> [태그] [정책, 기본 none]
 import glob, json, os, sys, statistics as st
 d = sys.argv[1]
 tag = sys.argv[2] if len(sys.argv) > 2 else ""
+pol = sys.argv[3] if len(sys.argv) > 3 else "none"
 base = os.path.expandvars(r"%APPDATA%\Godot\app_userdata\SpaceBattleOfThreeKingdoms")
 rows = []
 for f in glob.glob(os.path.join(base, f"m7_{d}{tag}_[0-9]*.json")):
     j = json.load(open(f, encoding="utf-8"))
-    rows += j["policies"]["none"]["runs"]
-rows.sort(key=lambda r: r["seed"])
+    rows += j["policies"][pol]["runs"]
+rows = sorted({r["seed"]: r for r in rows}.values(), key=lambda r: r["seed"])   # 겹친 묶음은 시드로 중복 제거(결정론이라 같은 판)
 n = len(rows)
 w = sum(1 for r in rows if r["win"]) / n
 ts = sorted(r["t"] for r in rows)
@@ -15,9 +16,15 @@ reasons = {}
 for r in rows:
     reasons[r["reason"]] = reasons.get(r["reason"], 0) + 1
 se = (w * (1 - w) / n) ** 0.5
+z = 1.96   # Wilson 95% 구간(0·100% 근처에서도 맞다)
+wc = (w + z * z / (2 * n)) / (1 + z * z / n)
+wh = z * ((w * (1 - w) + z * z / (4 * n)) / n) ** 0.5 / (1 + z * z / n)
 print(f"{d} n={n} 연합승률 {w:.1%} ±{se:.1%} 길이 중앙 {ts[n//2]/60:.1f}분 p10 {ts[n//10]/60:.1f} p90 {ts[9*n//10]/60:.1f} 평균 {st.mean(ts)/60:.1f}분")
 print("  종료경로", {k: f"{v/n:.1%}" for k, v in sorted(reasons.items(), key=lambda x: -x[1])})
-print("  비용 손실 평균 연합", f"{st.mean(r['ally_cost_loss_bp'] for r in rows)/100:.1f}%", "조조", f"{st.mean(r['foe_cost_loss_bp'] for r in rows)/100:.1f}%", " 95%CI 승률", f"{max(0,w-1.96*se):.1%}~{min(1,w+1.96*se):.1%}")
+print("  비용 손실 평균 연합", f"{st.mean(max(0, r.get('ally_cost_loss_bp', 0)) for r in rows)/100:.1f}%", "조조", f"{st.mean(max(0, r.get('foe_cost_loss_bp', 0)) for r in rows)/100:.1f}%", " 95%CI 승률(Wilson)", f"{wc-wh:.1%}~{wc+wh:.1%}")
+if "cost0" in rows[0]:
+    rs = [r["cost0"][1] / r["cost0"][0] for r in rows]
+    print(f"  실제 조조 비용 비율(임무장비 제외) 평균 {st.mean(rs):.3f} 범위 {min(rs):.3f}~{max(rs):.3f}")
 print("  시계종료", f"{reasons.get('time_limit',0)/n:.1%}", " 조조 확인 접촉 판", f"{sum(1 for r in rows if r['conf_t'][1]>=0)/n:.0%}", "연합", f"{sum(1 for r in rows if r['conf_t'][0]>=0)/n:.0%}")
 # M9: 화공·승계·강습(행에 m9가 있을 때)
 m9 = [r.get("m9", {}) for r in rows]

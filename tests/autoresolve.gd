@@ -5,7 +5,7 @@ extends SceneTree
 #
 # 실행: godot --headless --path . -s tests/autoresolve.gd -- --runs 200 [--hz 10] [--out user://autoresolve.json]
 #        [--baseline res://tests/fixtures/m1_baseline.json] [--policies none,attack5,charge30]
-# M4 적벽 기준선: --profile red_cliffs [--difficulty 표준] [--policies none,attack] [--period 15] [--dmg-scale 0.25] [--stagger 15] [--org auto|historical(기본 auto, Q83)]
+# M4 적벽 기준선: --profile red_cliffs [--difficulty 표준] [--policies none,attack,fire] [--cao-fleets 11] [--cao-fill 5548] [--period 15] [--dmg-scale 0.25] [--stagger 15] [--org auto|historical(기본 auto, Q83)]
 #   BALANCE-PLAN-M4 §3의 측정값(길이, 승률, 종료 경로, 첫 일제 동기화, 파도, 사기 곡선)을 판마다 한 줄로 낸다. 정책 attack은 5초마다 가까운 적 공격(일제사격 명령 없음)
 
 const MAX_S := 1800.0
@@ -262,6 +262,8 @@ func play_rc(seed_id: int, pol: String, diff: String) -> Dictionary:
 	var ov := {}
 	if _arg("--cao-fleets", "") != "":
 		ov.cao_fleets = int(_arg("--cao-fleets", ""))   # 레버 측정(Q82): 난이도의 조조 함대 수
+	if _arg("--cao-fill", "") != "":
+		ov.cao_last_fill_bp = int(_arg("--cao-fill", ""))   # 레버 측정(Q82): 마지막 조조 함대 채움률
 	var p := ScenarioProfile.load_profile("res://data/profiles/red_cliffs_rt.json", diff, ov)
 	if _arg("--org", "auto") == "auto":   # Q81·Q83: 게임 기본 경로와 같이 세 세력 자동 편성. --org historical = 시나리오 정사 편성 그대로
 		var scn := ProfileLoader.read_json(ProfileLoader.read_json("res://data/profiles/red_cliffs_rt.json").scenario_path)
@@ -292,8 +294,16 @@ func play_rc(seed_id: int, pol: String, diff: String) -> Dictionary:
 	var samples := 0
 	var sup := [[0, 0, 0, 0], [0, 0, 0, 0]]   # M8 진영별 [보급 주기, 탄약 보충, 수리, 경파 회복 척 수]
 	while not sim.st.over and sim.st.tick < max_tick:
-		if pol == "attack" and sim.st.tick % (5 * hz) == 0:
+		# fire = 화공 시도 대리: 황개(화공대)는 AI에 맡기고 나머지는 attack과 같다. AI가 한 번 놓은 뒤 남은 폭발정은 창 안에서 가장 가까운 표적에 놓는다
+		if (pol == "attack" or pol == "fire") and sim.st.tick % (5 * hz) == 0:
+			var ch := sim.chain
 			for a in sim.st.alive(0):
+				if pol == "fire" and ch and a.sq_id == ch.host_sq:
+					if int(ch.stats.fires) > 0 and ch.charges > 0 and ch.window_open():
+						var bt := ch.best_target(a)
+						if bt:
+							sim.queue(BattleSim.command(0, [a.id], "ignite", bt.id))
+					continue
 				var n := sim.sight_foe(a, 1e9)   # 플레이어도 접촉이 있는 적만 지정할 수 있다(M6)
 				if n:
 					sim.queue(BattleSim.command(0, [a.id], "attack", n.id))
@@ -354,6 +364,7 @@ func play_rc(seed_id: int, pol: String, diff: String) -> Dictionary:
 	var res := r if st.over else {}
 	return {"seed": seed_id, "win": st.over and st.win, "reason": st.end_reason if st.over else "timeout", "limited": bool(r.get("limited", false)),
 		"t": st.end_ms / 1000.0 if st.over else st.clock_s(),
+		"cost0": [_cost0(st, 0), _cost0(st, 1)],   # 진영별 처음 코스트(임무장비 제외). 조조 비율 = [1] / [0]
 		"ally_cost_loss_bp": int(res.cost.alliance.loss_bp) if st.over else -1, "foe_cost_loss_bp": int(res.cost.foe.loss_bp) if st.over else -1,
 		"first_hit_t": snappedf(first_hit / float(hz), 0.1) if first_hit >= 0 else -1.0,
 		"sync_ally": float(sync[0]) / maxf(1.0, fired[0]), "sync_foe": float(sync[1]) / maxf(1.0, fired[1]),
@@ -365,6 +376,13 @@ func play_rc(seed_id: int, pol: String, diff: String) -> Dictionary:
 		"supply": sup,
 		"m9": _m9_row(sim),
 		"fp": sim.fingerprint()}
+
+static func _cost0(st, side: int) -> int:
+	var c := 0
+	for f in st.fleets:
+		if f.side == side:
+			c += f.cost0
+	return c
 
 # M9 통계: 화공 경과(서신·발동·간파·번짐·차단·창 시각), 승계, 강습 [시도, 성공]
 static func _m9_row(sim: BattleSim) -> Dictionary:
