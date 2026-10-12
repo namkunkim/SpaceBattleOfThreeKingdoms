@@ -279,6 +279,13 @@ func play_rc(seed_id: int, pol: String, diff: String) -> Dictionary:
 	if _arg("--no-m9", "0") == "1":
 		for k in ["command", "stratagem", "assault"]:
 			p.combat.erase(k)
+	# P8a 비교: --no-skills 1(특기 끔 = P8a 이전과 같은 판), --skill-off "SK-..,SK-.."(그 기술만 슬롯에서 뺀다, F-3 on/off)
+	if _arg("--no-skills", "0") == "1":
+		p.scenario.realtime_rules.erase("special_skills")
+	var off := _arg("--skill-off", "").split(",", false)
+	for side in ["ally", "foe"]:
+		for d in p[side]:
+			d.skill_slots = d.get("skill_slots", []).map(func(k): return "" if off.has(k) else k)
 	if _arg("--wind", "") != "":
 		var w := _arg("--wind", "").split(",")
 		p.scenario.realtime_rules.wind_window.start_after_first_hit_s = [int(w[0]), int(w[1])]
@@ -396,6 +403,8 @@ static func _m9_row(sim: BattleSim) -> Dictionary:
 		out.cmd = sim.cmd.stats.duplicate()
 	if sim.assault:
 		out.assault = sim.assault.stats.duplicate(true)
+	if sim.skills:
+		out.skills = sim.skills.stats.duplicate()   # P8a 기술 ID → 발동 수
 	return out
 
 static func summarize_rc(rows: Array) -> Dictionary:

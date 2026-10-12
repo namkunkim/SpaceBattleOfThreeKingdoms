@@ -151,6 +151,7 @@ func _run() -> void:
 	for must in ["linked_ships_and_plague", "morale_events", "chain_operation", "seed_variation", "cao_dispositions", "morale_events.rally.1"]:
 		if not TestCheck.ok(self, prop.has(must), "proposed 경로 없음: %s (%s)" % [must, str(prop)]): return
 	if not TestCheck.ok(self, rs.difficulty_ai().think_depth == 2 and rs.scenario.difficulty_policy.has("cao_scale_rule"), "difficulty policy data"): return
+	if not _special_skills(rs.rt("special_skills", {}), ProfileLoader.read_json(ProfileLoader.read_json("res://data/profiles/red_cliffs_rt.json").scenario_path)): return
 	# --- 6. 적벽 시나리오를 코어가 돌린다 ---
 	var sim := BattleSim.new(5, 10, foes["표준"])
 	if not TestCheck.ok(self, sim.st.alive(0).size() == 7 and sim.st.alive(1).size() == 12 and sim.rs.world == Vector2(1600, 900), "scenario spawn"): return
@@ -174,6 +175,57 @@ func _run() -> void:
 	if not TestCheck.ok(self, other.fingerprint() != BattleSim.new(5, 10, foes["표준"]).fingerprint(), "difficulty changes state"): return
 	print("DATA_RULES_PASS keys=%d core=%d proposed=%d first_move=%d" % [used.size(), core.size(), prop.size(), first_move])
 	quit(0)
+
+# P8a 특기 스키마(REVIEW-P8-0 F-12): 필수 키, 기술 ID 참조, 술어·requires·효과 키 허용 목록, 슬롯 기본값 직책명.
+# 코어(skills.gd)가 해석하는 키만 허용한다. 슬롯 수·사용 횟수는 데이터에만 있다(코어 리터럴 검사는 1번이 한다)
+const SK_TOP := ["uses_per_battle", "slots", "slot_default", "use_scope", "no_duplicate_skill_in_fleet", "stacking", "skills", "by_officer", "definitions"]
+const SK_KEYS := ["id", "kind", "name", "target", "duration_s", "effects", "ai_when", "status"]
+const SK_TARGETS := ["self", "ally_fleet", "enemy_fleet", "allies_in_radius", "side"]
+const SK_PREDS := ["enemy_in_band", "enemy_within", "enemy_beyond_base_range_within_mul", "estimated_within", "enemy_flagship_within", "enemy_carrier_within",
+	"self_hull_below_bp", "self_morale_below_bp", "self_retreating", "self_charges_zero", "ally_hull_below_bp_within", "ally_flagship_within",
+	"ally_flagship_hull_below_bp", "wind_window_open", "chain_host_ai"]
+const SK_REQS := ["has_ship_type", "enemy_within", "ally_within", "ally_flagship_within", "self_not_flagship", "charges_below_base", "chain_host"]
+const SK_EFFECTS := ["damage_mul_bp", "damage_taken_mul_bp", "speed_mul_bp", "transition_mul_bp", "morale_bp", "morale_loss_mul_bp", "hit_bp",
+	"sensor_mul_bp", "reveal_radius", "reveal_orders", "range_mul_bp", "categories", "charges_add", "assault_bp", "assault_cd_reset", "assault_block",
+	"chain_power_mul_bp", "damage_redirect_bp", "affinity_ignore", "rescue_equipped", "in_terrain", "only_while", "alias_command", "note"]
+const SK_STACK := ["damage_taken_reduction", "damage_taken_increase", "speed_mul", "transition_mul", "other"]
+
+func _special_skills(sk: Dictionary, scn: Dictionary) -> bool:
+	for k in SK_TOP:
+		if not TestCheck.ok(self, sk.has(k), "special_skills 키 없음: " + k): return false
+	if not TestCheck.ok(self, sk.use_scope == "fleet_skill_pair" and sk.no_duplicate_skill_in_fleet and int(sk.slots) == (sk.slot_default as Array).size(), "Q92 범위·슬롯 수"): return false
+	for p in sk.slot_default:
+		if not TestCheck.ok(self, p in ["admiral", "vice"] or (str(p).begins_with("staff_") and Organization.POSTS.has(str(p).trim_prefix("staff_"))), "slot_default 직책명 %s (F-9)" % p): return false
+	for k in SK_STACK:
+		if not TestCheck.ok(self, ["min_only", "max_only", "multiply"].has(str(sk.stacking.get(k, ""))), "stacking %s" % k): return false
+	var ids := {}
+	for d in sk.skills:
+		for k in SK_KEYS:
+			if not TestCheck.ok(self, d.has(k), "%s 키 없음: %s" % [d.get("id", "?"), k]): return false
+		if not TestCheck.ok(self, not ids.has(d.id) and SK_TARGETS.has(d.target), "%s 중복·대상 %s" % [d.id, d.target]): return false
+		ids[d.id] = true
+		for k in d.effects:
+			if not TestCheck.ok(self, SK_EFFECTS.has(k), "%s 효과 키 %s" % [d.id, k]): return false
+		for k in d.get("requires", {}):
+			if not TestCheck.ok(self, SK_REQS.has(k), "%s requires %s" % [d.id, k]): return false
+		var w: Dictionary = d.ai_when
+		if not TestCheck.ok(self, w.size() == 1 and (w.has("all") or w.has("any")), "%s ai_when 형식" % d.id): return false
+		for p in w.values()[0]:
+			if not TestCheck.ok(self, p.size() == 1 and SK_PREDS.has(p.keys()[0]), "%s 술어 %s" % [d.id, p]): return false
+			if p.keys()[0] == "enemy_in_band":
+				if not TestCheck.ok(self, SkillCore.BAND_RANK.has(p.values()[0]), "%s 거리대 %s" % [d.id, p]): return false
+		if d.target in ["ally_fleet", "enemy_fleet", "allies_in_radius"]:
+			if not TestCheck.ok(self, float(d.get("radius", 0)) > 0.0, "%s 반경" % d.id): return false
+	var avail := {}
+	for f in scn.factions:
+		for o in f.get("available_officers", []):
+			avail[str(o.id)] = o
+	for oid in sk.by_officer:
+		if not TestCheck.ok(self, ids.has(sk.by_officer[oid].skill) and avail.has(oid), "by_officer %s → %s" % [oid, sk.by_officer[oid].skill]): return false
+	for oid in avail:
+		if not TestCheck.ok(self, (avail[oid].get("traits", []) as Array).is_empty() != sk.by_officer.has(oid), "특성 보유 장수 = 기술 보유 %s" % oid): return false
+	print("special_skills %d by_officer %d" % [ids.size(), sk.by_officer.size()])
+	return true
 
 func _def(defs: Array, sq_id: String) -> Dictionary:
 	for d in defs:

@@ -125,3 +125,8 @@ var confuse_until := -1       # 이 틱 전까지 명령 혼선(승계). 지휘 
 var fr_hits: Array[int] = []  # 최근 측면·후면 명중 틱(강습 진형 붕괴 판정)
 var assault_cd := 0           # 이 틱부터 다시 강습할 수 있다
 var boarded := false          # 기함 진입을 당해 지휘관 보정이 사라졌다
+
+# --- P8a 장수 특기(SkillCore) ---
+var skill_slots: Array = []   # 기술 ID(빈칸 "") — 편성에서 오고 전투 중 바뀌지 않는다
+var skill_used := {}          # 기술 ID → 발동 틱. (함대, 기술 ID) 쌍당 전투당 uses_per_battle회(Q92)
+var fx: Array = []            # 이 함대에 걸린 기간 효과 [{id, src, until, e}]. until 틱에 풀린다

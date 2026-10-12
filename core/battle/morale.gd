@@ -88,6 +88,8 @@ func ship_departed(f: FleetState) -> void:
 func lose(f: FleetState, bp: int) -> void:
 	if sim.st.tick < f.loss_mul_until:
 		bp = bp * f.loss_mul_bp / BattleRules.BP
+	if sim.skills:
+		bp = bp * sim.skills.mul(f, "morale_loss_mul_bp") / BattleRules.BP   # 특기 격려·진창(P8a)
 	f.morale_bp = maxi(0, f.morale_bp - bp)
 
 func _linked(f: FleetState) -> bool:

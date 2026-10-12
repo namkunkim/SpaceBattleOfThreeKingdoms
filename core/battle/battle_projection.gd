@@ -26,6 +26,8 @@ static func build(sim: BattleSim, side: int) -> Dictionary:
 				q.form_info = fi
 			if f.side == side:
 				q.ranges = f.ranges.duplicate()   # 아군 전용: 범주별 사거리(적 접촉에는 넣지 않는다)
+			if sim.skills and f.side == side:
+				q.skills = sim.skills.view(f)   # P8a: 아군 전용 특기 슬롯·남은 횟수·걸린 효과. 적 항목에는 넣지 않는다
 			if sim.cmd and f.side == side:
 				# M9: 지휘관 상태·이은 사람·혼선 남은 초(지휘 공백이면 -1)·불이익 단계
 				q.commander_state = f.cmdr_state
@@ -107,6 +109,8 @@ static func contact(sim: BattleSim, c: Dictionary) -> Dictionary:
 			d.dense = sim.chain.dense(t)   # 화공 표적 조건(밀집 여부)만 공개한다. 진형 ID는 공개하지 않는다(M9)
 			d.feigning = sim.chain.truce_id(t.id)
 		d.max_strength_band = int(sim.detect.D.strength_bands)
+		if sim.skills and t.has_move and sim.skills.reveals(1 - t.side, t, true):
+			d.move_to = t.move_to   # 특기 귀모: 이동 목표 공개(P8a)
 	return d
 
 static func squadron(st: BattleState, f: FleetState) -> Dictionary:

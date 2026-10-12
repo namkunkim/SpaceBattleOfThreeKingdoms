@@ -276,6 +276,9 @@
 - 바꾼 것(결과 불변): 정적 사거리 상한으로 거리 사전 차단, 배열 없이 먼저 판정, 접촉 기록 한 번 조회, `by_id` 색인, 보급 정렬 캐시. 지문·자동 해결 행이 전후 동일하고, tests 전부 통과했다.
 - 측정(무부하 PC): 자동 해결 1판 약 75초 → 21초, 틱 평균 12 → 3.1~3.9ms, 최대 8~12ms. 표는 `out/core-perf.md`(로컬). 다음: 다른 모델 리뷰(5-b), O3 1000시드 기준선.
 
+## 장수 특기 코어 P8a (2026-10-12, 구현 세션 "P8a 구현", 브랜치 `claude/eloquent-gould-b2d0f6`) — 5-b 리뷰는 관리 세션이 맡김
+- 새 `core/battle/skills.gd`(SkillCore): 편성 `skill_slots`(기본 = 직책 순, 중복 ID는 다음 후보, validate `skill_duplicate`·`skill_foreign`·`skill_unknown`), 명령 `skill`(slot/skill_id, target_id; 거부 `skill_used`·`skill_no_slot`·`commander_down`·`skill_requires_*`·`skill_no_target`), (함대, 기술 ID) 쌍당 1회(Q92), 효과 합성 Q95, AI·위임 조건 발동(Q91, 함대 ID → 슬롯 순, 함대당 하나), 아군 전용 투영. 슬롯을 비우면 지문이 특기 없는 코어와 같다. 해석으로 정한 10가지와 정보 경계 예외(적 기함·강습모함 술어)는 `docs/core/P8A-NOTES.md`. 테스트 `tests/special_skills.gd`, `data_rules` 스키마 검사, `autoresolve --no-skills/--skill-off`. 200시드 전후 대조 결과도 노트에 있다.
+
 ## 남은 일 (컨셉 세션이 할 수 있는 것)
 
 | 우선 | 일 | 메모 |

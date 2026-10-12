@@ -185,7 +185,7 @@ func commander_fate(f: FleetState) -> String:
 		var d := f.died_pos.distance_to(o.pos)
 		if o.side == f.side:
 			near_f = minf(near_f, d)
-			if d <= rad and o.equip == str(V.commander.rescue_equipment):
+			if d <= rad and (o.equip == str(V.commander.rescue_equipment) or (sim.skills and sim.skills.flag(o, "rescue_equipped"))):
 				return "severe"
 		else:
 			near_e = minf(near_e, d)

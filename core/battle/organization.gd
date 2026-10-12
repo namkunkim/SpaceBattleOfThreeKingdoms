@@ -3,7 +3,8 @@ extends RefCounted
 
 # 전투 전 편성(BATTLE_DECISIONS §T Q73~Q81, docs/ui/FLEET-ORGANIZATION-SCREEN.md §3·§4·§6). 순수 변환이다.
 #
-# 편성(org): {"fleets": [{squadron_id, faction_id, on, admiral, vice, staff: [{post, id}], composition: [{ship_type_id, count, mission_equipment_id?}]}]}
+# 편성(org): {"fleets": [{squadron_id, faction_id, on, admiral, vice, staff: [{post, id}], composition: [{ship_type_id, count, mission_equipment_id?}], skill_slots?}]}
+#   skill_slots(P8a, §U Q92): 기술 ID 배열(길이 = special_skills.slots, 빈칸 ""). 없으면 apply가 기본값(직책 순)을 넣는다.
 #   장수는 ID만 둔다(능력치는 시나리오 factions[].available_officers). 참모 보직 post = assault(무력) | siege(지력) | supply(정치).
 #   함대 목록 = 이 난이도에 배치된 함대(프로필 ally + foe). 조조 함대 수는 난이도별 cao_fleets(Q82, ScenarioProfile).
 # 흐름: ScenarioProfile.load_profile → default_org → (편성 화면·auto_fill) → validate → apply → BattleSim.new.
@@ -31,6 +32,9 @@ const BAD_SHIP := "bad_ship"                # 모르는 함종, 음수 척 수
 const UNKNOWN_FLEET := "unknown_fleet"      # 프로필에 없는 전대, 같은 전대 두 번
 const MISSING_FLEET := "missing_fleet"      # 프로필에 있는데 편성에 없는 전대
 const BAD_FLEET := "bad_fleet"              # 형식 오류(키 없음·타입 다름). 재생 헤더 같은 외부 입력 방어
+const SKILL_DUPLICATE := "skill_duplicate"  # 한 함대 슬롯에 같은 기술 ID 두 번(Q92)
+const SKILL_FOREIGN := "skill_foreign"      # 그 함대 장수(제독·부제독·참모)가 가진 기술이 아님
+const SKILL_UNKNOWN := "skill_unknown"      # 모르는 기술 ID, 슬롯 수가 데이터와 다름
 
 # 지금 프로필의 편성(시나리오 정사 편성, 조조군은 난이도의 함대 수만큼). apply(profile, default_org(profile))는 결과를 바꾸지 않는다.
 static func default_org(profile: Dictionary) -> Dictionary:
@@ -42,7 +46,74 @@ static func default_org(profile: Dictionary) -> Dictionary:
 		_default_posts(staff, d.staff)
 		fleets.append({"squadron_id": d.squadron_id, "faction_id": d.faction_id, "on": true, "admiral": d.commander_id,
 			"vice": str(d.vice_commander.get("id", "")), "staff": staff, "composition": d.composition.duplicate(true)})
+		fleets[-1].skill_slots = default_slots(fleets[-1], profile)
 	return {"fleets": fleets}
+
+# ============================================================ 특기 슬롯(P8a, BATTLE_DECISIONS §U D4·Q92)
+static func _skills(profile: Dictionary) -> Dictionary:
+	return profile.get("scenario", {}).get("realtime_rules", {}).get("special_skills", {})
+
+# 슬롯 기본값: 직책 순(slot_default = admiral, vice, staff_assault, 이어서 나머지 참모)으로 장수 기술을 넣고,
+# 이미 넣은 기술 ID는 건너뛰어 다음 후보로 채운다. 모자라면 빈칸. 특기 데이터가 없으면 빈 배열
+static func default_slots(fl: Dictionary, profile: Dictionary) -> Array:
+	var sk := _skills(profile)
+	if sk.is_empty():
+		return []
+	var cands := []
+	for key in sk.slot_default:
+		if key == "admiral" or key == "vice":
+			cands.append(fl[key])
+		else:
+			for s in fl.staff:
+				if "staff_" + str(s.post) == key:
+					cands.append(s.id)
+	for s in fl.staff:
+		cands.append(s.id)
+	var out := []
+	for id in cands:
+		var k := str(sk.by_officer.get(id, {}).get("skill", ""))
+		if k != "" and not out.has(k) and out.size() < int(sk.slots):
+			out.append(k)
+	while out.size() < int(sk.slots):
+		out.append("")
+	return out
+
+# 함대 장수가 가진 기술 ID 집합
+static func fleet_skills(fl: Dictionary, profile: Dictionary) -> Dictionary:
+	var by: Dictionary = _skills(profile).get("by_officer", {})
+	var out := {}
+	for id in _people(fl):
+		var k := str(by.get(id, {}).get("skill", ""))
+		if k != "":
+			out[k] = true
+	return out
+
+static func _slot_codes(fl: Dictionary, profile: Dictionary) -> Array:
+	if not fl.has("skill_slots"):
+		return []
+	var sk := _skills(profile)
+	var slots: Array = fl.skill_slots
+	if sk.is_empty():
+		return [] if slots.all(func(k): return k == "") else [SKILL_UNKNOWN]
+	var known := {}
+	for d in sk.skills:
+		known[d.id] = true
+	var own := fleet_skills(fl, profile)
+	var out := []
+	if slots.size() != int(sk.slots):
+		out.append(SKILL_UNKNOWN)
+	var seen := {}
+	for k in slots:
+		if k == "":
+			continue
+		if not known.has(k):
+			out.append(SKILL_UNKNOWN)
+		elif not own.has(k):
+			out.append(SKILL_FOREIGN)
+		if seen.has(k):
+			out.append(SKILL_DUPLICATE)
+		seen[k] = true
+	return out
 
 # 기존 데이터의 참모에는 보직이 없다: 순서대로 남은 보직 중 그 장수 능력치가 가장 높은 것(같으면 POST_ORDER 순).
 # 적벽 데이터에서는 결과가 이미 강습 → 공성 → 보급 순이라 apply의 정렬이 승계 순서를 바꾸지 않는다(organization_rules 확인)
@@ -116,6 +187,8 @@ static func validate(org: Dictionary, scn: Dictionary, profile: Dictionary) -> A
 			ships += maxi(0, int(c.count))
 		if ships == 0:
 			bad.call(NO_SHIPS)
+		for code in _slot_codes(fl, profile):
+			bad.call(code)
 	for sq in known:
 		if not seen.has(sq):
 			out.append({"squadron_id": sq, "faction_id": known[sq], "code": MISSING_FLEET})
@@ -140,6 +213,8 @@ static func _fleet_shape(fl: Variant) -> bool:
 			return false
 		if c.has("mission_equipment_id") and typeof(c.mission_equipment_id) != TYPE_STRING:
 			return false
+	if fl.has("skill_slots") and (typeof(fl.skill_slots) != TYPE_ARRAY or not fl.skill_slots.all(func(k): return typeof(k) == TYPE_STRING)):
+		return false
 	return true
 
 # JSON으로 읽은 재생 헤더는 정수가 float로 온다. 소수부가 없으면 정수로 본다
@@ -218,6 +293,8 @@ static func auto_fill(org: Dictionary, faction_id: String, scn: Dictionary, prof
 			var id: String = pick.call(POSTS[post])
 			if id != "":
 				fl.staff.append({"post": post, "id": id})
+	for fl in on:
+		fl.skill_slots = default_slots(fl, profile)
 	var K: Dictionary = profile.combat.command
 	var costs := {}
 	for t in profile.combat.ship_types:
@@ -372,6 +449,7 @@ static func apply(profile: Dictionary, org: Dictionary, scn: Dictionary) -> Dict
 				o.post = s.post
 				d.staff.append(o)
 			d.composition = fl.composition.duplicate(true)
+			d.skill_slots = (fl.skill_slots if fl.has("skill_slots") else default_slots(fl, profile)).duplicate()
 			d.ships = 0
 			for c in d.composition:
 				c.count = int(c.count)
