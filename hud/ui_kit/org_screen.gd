@@ -365,14 +365,23 @@ func _fill_skills() -> void:
 	if skill_pick < 0:
 		return
 	skill_box.add_child(_label("칸 %d 특기 고르기 — 이 함대 장수의 특기만, 같은 특기는 한 번만" % (skill_pick + 1), "Muted", UiTheme.INK_2))
-	for id in Organization._people(fl):
+	var list := GridContainer.new()   # 2열: 목록이 열려도 아래 함종 영역이 덜 밀린다(REVIEW-P8B F-2)
+	list.columns = 2
+	list.add_theme_constant_override("h_separation", 8)
+	list.add_theme_constant_override("v_separation", 6)
+	skill_box.add_child(list)
+	for id in Organization.people(fl):
 		var k := str(prof.scenario.realtime_rules.special_skills.by_officer.get(id, {}).get("skill", ""))
 		var why := "특기 없음" if k == "" else skill_block(sel, skill_pick, k)
 		var b := _button("%s — %s%s" % [_name(id), skill_name(k) if k != "" else "—", "  (%s)" % why if why != "" else ""], 0, choose_skill.bind(sel, skill_pick, k))
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.disabled = why != ""
 		b.tooltip_text = _skill_tip(k)
-		skill_box.add_child(b)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.clip_text = true
+		if k != "" and fl.skill_slots[skill_pick] == k:
+			b.theme_type_variation = "PrimaryButton"   # 지금 이 칸의 특기
+		list.add_child(b)
 		_hold_tip(b)
 
 func _hold_tip(b: Control) -> void:
@@ -526,7 +535,7 @@ func _fleet_card(i: int) -> PanelContainer:
 	for e in errors:
 		if e.squadron_id == fl.squadron_id:
 			v.add_child(_label("⚠ " + REASON.get(e.code, e.code), "Body", UiTheme.FOE))
-	if not skill_defs.is_empty():
+	if not skill_defs.is_empty() and fl.skill_slots.any(func(k): return k != ""):
 		v.add_child(_label("장수 특기 " + " · ".join(fl.skill_slots.map(skill_name)), "Muted", UiTheme.INK_3))
 	if under_text(i) != "":
 		v.add_child(_label("△ " + under_text(i), "Body", UiTheme.WARN))
@@ -632,7 +641,7 @@ func _fill_pool() -> void:
 	var used := {}
 	for i in mine():
 		if org.fleets[i].on:
-			for id in Organization._people(org.fleets[i]):
+			for id in Organization.people(org.fleets[i]):
 				used[id] = true
 	var q := search.text.strip_edges()
 	var ids := officers.keys().filter(func(id): return not used.has(id) and (q == "" or q in str(officers[id].name) or q in " ".join(officers[id].get("traits", []))))

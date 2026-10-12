@@ -229,6 +229,10 @@ static func _fleet_shape(fl: Variant) -> bool:
 static func _is_int(v: Variant) -> bool:
 	return typeof(v) == TYPE_INT or (typeof(v) == TYPE_FLOAT and v == floorf(v))
 
+# 함대 장수 ID(제독·부제독·참모 순, 빈칸 제외)
+static func people(fl: Dictionary) -> Array:
+	return _people(fl)
+
 static func _people(fl: Dictionary) -> Array:
 	var ids := [fl.admiral, fl.vice]
 	for s in fl.staff:

@@ -159,6 +159,29 @@ func _run() -> void:
 	var fpa := _run_fp(pa, 1000)
 	var replayed := Organization.apply(ScenarioProfile.load_profile(DEF, "표준"), pa.organization, scn)
 	if not TestCheck.ok(self, _run_fp(replayed, 1000) == fpa and fpa != fp0, "replay header same result"): return
+	# P8b-b F-1: refill_slots 단위(결정론 근거: keep=[] = default_slots, 고른 칸은 자리째 유지, 중복·남의 기술·길이는 바로잡음)
+	var rf := _fleet(base, "RC-LIU-SQ-01")
+	var ds: Array = Organization.default_slots(rf, prof)
+	var n_sl: int = ds.size()
+	var own_sk := Organization.fleet_skills(rf, prof)
+	var alien := ""
+	for sd in prof.scenario.realtime_rules.special_skills.skills:
+		if not own_sk.has(sd.id):
+			alien = sd.id
+			break
+	if not TestCheck.ok(self, n_sl == 3 and ds[0] != "" and alien != "", "refill setup %s" % [ds]): return
+	if not TestCheck.ok(self, Organization.refill_slots(rf, prof, []) == ds and Organization.refill_slots(rf, prof, ds) == ds, "refill: keep [] = default, keep default = default"): return
+	if not TestCheck.ok(self, Organization.refill_slots(rf, prof, [ds[2], ds[0], ds[1]]) == [ds[2], ds[0], ds[1]], "refill: kept order stays in place"): return
+	var part := Organization.refill_slots(rf, prof, [ds[0], alien, ""])
+	if not TestCheck.ok(self, part[0] == ds[0] and not part.has(alien) and part.size() == n_sl and part.filter(func(k): return k != "").size() == part.filter(func(k): return k != "").reduce(func(a, k): return a if a.has(k) else a + [k], []).size(), "refill: partial keep, alien dropped, no dup %s" % [part]): return
+	var dup := Organization.refill_slots(rf, prof, [ds[0], ds[0], ds[0]])
+	if not TestCheck.ok(self, dup[0] == ds[0] and dup.count(ds[0]) == 1, "refill: duplicate in keep -> later ones refilled %s" % [dup]): return
+	if not TestCheck.ok(self, Organization.refill_slots(rf, prof, [ds[0]]).size() == n_sl and Organization.refill_slots(rf, prof, [ds[0], ds[1], ds[2], ds[0], ds[1]]).size() == n_sl, "refill: length always = slots"): return
+	var one := rf.duplicate(true)   # 특기 없는 장수만 남으면 칸은 빈칸
+	one.admiral = ""
+	one.vice = ""
+	one.staff = []
+	if not TestCheck.ok(self, Organization.refill_slots(one, prof, ds) == ["", "", ""], "refill: no officers -> all empty"): return
 	if not _to_end(): return
 	print("ORGANIZATION_RULES_OK")
 	quit(0)

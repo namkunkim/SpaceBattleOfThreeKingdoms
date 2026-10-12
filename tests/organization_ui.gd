@@ -157,7 +157,7 @@ func _run() -> void:
 	# 한도 초과(통솔 낮은 제독으로 교체) → 경고 문구, 확정은 막지 않는다
 	var weak := ""
 	for id in o.officers:
-		if not o.org.fleets.any(func(fl): return fl.on and Organization._people(fl).has(id)) and (weak == "" or int(o.officers[id].command) < int(o.officers[weak].command)):
+		if not o.org.fleets.any(func(fl): return fl.on and Organization.people(fl).has(id)) and (weak == "" or int(o.officers[id].command) < int(o.officers[weak].command)):
 			weak = id
 	o.press(other, "admiral")
 	o.press(-1, "", weak)
@@ -210,6 +210,11 @@ func _run() -> void:
 		if b.disabled and (" (칸 " in b.text or "특기 없음" in b.text or "없는 특기" in b.text):
 			blocked += 1
 	if not TestCheck.ok(self, blocked >= 1, "blocked options show reason"): return
+	var cur_marked := false
+	for b in o.skill_box.find_children("*", "Button", true, false):
+		if " — " in b.text and b.theme_type_variation == "PrimaryButton" and o.skill_name(before_slots[0]) in b.text:
+			cur_marked = true
+	if not TestCheck.ok(self, cur_marked, "current slot's skill marked in list"): return
 	# 성공: 칸 0 교체, 카드 갱신, 확정 가능
 	var card_before: Control = o.cards[other]
 	if not TestCheck.ok(self, o.choose_skill(other, 0, free_k) == "" and sf.skill_slots[0] == free_k and o.errors.is_empty() and not o.confirm.disabled, "choose free skill"): return
@@ -229,7 +234,9 @@ func _run() -> void:
 	var gone_id: String = o.slot_id(other, gone_role)
 	o.press(other, gone_role)
 	o.unassign()
-	if not TestCheck.ok(self, sf.skill_slots[0] == free_k and not sf.skill_slots.has(gone_k) or Organization.fleet_skills(sf, o.prof).has(gone_k), "officer out: chosen slot kept, gone skill removed %s" % [sf.skill_slots]): return
+	if not TestCheck.ok(self, sf.skill_slots[0] == free_k, "officer out: chosen slot 0 kept %s" % [sf.skill_slots]): return
+	var gone_still: bool = Organization.fleet_skills(sf, o.prof).has(gone_k)
+	if not TestCheck.ok(self, gone_still or not sf.skill_slots.has(gone_k), "officer out: gone skill removed unless another officer has it %s" % [sf.skill_slots]): return
 	if not TestCheck.ok(self, o.errors.filter(func(e): return str(e.code).begins_with("skill_")).is_empty(), "no skill errors after officer out"): return
 	# 같은 함대 안 맞바꿈(제독 ↔ 부제독)은 같은 사람들이라 슬롯이 그대로
 	if not o.is_flag(other):
@@ -237,6 +244,32 @@ func _run() -> void:
 		o.press(other, "admiral")
 		o.press(other, "vice")
 		if not TestCheck.ok(self, sf.skill_slots == s0, "in-fleet swap keeps slots"): return
+	# 다른 함대·풀과 맞바꿔도 양쪽 슬롯이 유효하고(재채움 뒤 한 번 더 채워도 같다) 끈 함대는 슬롯·카드 줄이 비어 있다(REVIEW-P8B F-3·F-6)
+	var snap: Dictionary = o.org.duplicate(true)
+	o.press(other, "vice")
+	o.press(flag, "vice")
+	await _frames()
+	for fi in [other, flag]:
+		var ff: Dictionary = o.org.fleets[fi]
+		var own_f := Organization.fleet_skills(ff, o.prof)
+		if not TestCheck.ok(self, ff.skill_slots.all(func(k): return k == "" or own_f.has(k)) and Organization.refill_slots(ff, o.prof, ff.skill_slots) == ff.skill_slots, "cross-fleet swap: slots valid %s" % [ff.skill_slots]): return
+	if not TestCheck.ok(self, o.errors.filter(func(e): return str(e.code).begins_with("skill_")).is_empty(), "cross-fleet swap: no skill errors"): return
+	var pool_id := ""
+	for id in o.officers:
+		if not o.org.fleets.any(func(fl): return fl.on and Organization.people(fl).has(id)):
+			pool_id = id
+			break
+	o.press(other, "vice")
+	o.press(-1, "", pool_id)
+	var pf: Dictionary = o.org.fleets[other]
+	var own_p := Organization.fleet_skills(pf, o.prof)
+	if not TestCheck.ok(self, pf.skill_slots.all(func(k): return k == "" or own_p.has(k)) and o.errors.filter(func(e): return str(e.code).begins_with("skill_")).is_empty(), "pool swap: slots valid %s" % [pf.skill_slots]): return
+	o.toggle(other)
+	await _frames()
+	if not TestCheck.ok(self, o.org.fleets[other].skill_slots.all(func(k): return k == "") and not ("장수 특기" in _label_text(o.cards[other])), "off fleet: empty slots, no skill line"): return
+	o.org = snap
+	o._refresh()
+	sf = o.org.fleets[other]
 	# 확정은 skill_* 사유를 먼저 본다: 슬롯을 화면 갱신 없이 깨뜨려도 확정이 거부돼 잠긴다
 	var good_slots: Array = sf.skill_slots.duplicate()
 	sf.skill_slots[2] = foreign_k
