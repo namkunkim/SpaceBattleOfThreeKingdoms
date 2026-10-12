@@ -173,12 +173,18 @@ static func _officers(scn: Dictionary, faction_id: String) -> Dictionary:
 # 장수: 제독(기함은 고정) → 부제독 → 함대마다 참모 강습·공성·보급, 각각 남은 장수 중 통솔·통솔·무력·지력·정치 최고(같으면 ID 순).
 # 함선: 지휘 한도 (limit_base + limit_per_command × 제독 통솔)까지 MIX 순환 탐욕, 남는 점수는 고속정.
 #   프로필 함대에 fill_bp가 있으면(조조 마지막 함대, Q82) 한도 × fill_bp까지.
-static func auto_fill(org: Dictionary, faction_id: String, scn: Dictionary, profile: Dictionary) -> Dictionary:
+# only(전대 ID 배열)가 있으면 그 함대만 채우고, 나머지 출전 함대의 장수는 쓰지 않는다(repair).
+static func auto_fill(org: Dictionary, faction_id: String, scn: Dictionary, profile: Dictionary, only := []) -> Dictionary:
 	var res := org.duplicate(true)
 	var flags := _flags(scn)
 	var pool := _officers(scn, faction_id)
-	var on: Array = res.fleets.filter(func(fl): return fl.faction_id == faction_id and fl.on)
+	var on: Array = res.fleets.filter(func(fl): return fl.faction_id == faction_id and fl.on and (only.is_empty() or only.has(fl.squadron_id)))
 	var used := {}
+	if not only.is_empty():
+		for fl in res.fleets:
+			if fl.faction_id == faction_id and fl.on and not only.has(fl.squadron_id):
+				for id in _people(fl):
+					used[id] = true
 	var fill := {}
 	var equip := {}
 	for d in profile.ally + profile.foe:
@@ -272,6 +278,48 @@ static func auto_all(profile: Dictionary, scn: Dictionary) -> Dictionary:
 	for f in scn.factions:
 		org = auto_fill(org, f.id, scn, profile)
 	return apply(profile, org, scn)
+
+# 거부된 편성 고치기(REVIEW-O4b F-3, 사용자 결정 2026-10-11): 지금 프로필(난이도)의 함대 목록으로 맞추고,
+# 플레이어 세력은 사유가 없는 함대(직책·함선·출전 여부)를 그대로 두고 빠지거나 사유가 난 함대만 자동 편성으로 채운다.
+# AI 세력(손권·조조)은 Q81대로 언제나 전부 자동 편성. 고쳐도 검증을 못 넘으면(세력 단위 사유 등) 플레이어도 전부 자동 편성.
+# {"org": 고친 편성, "changed": 다시 채운 함대 ID(모든 세력, 원래 없던 함대 포함)}
+static func repair(org: Dictionary, profile: Dictionary, scn: Dictionary) -> Dictionary:
+	var bad := {}
+	for e in validate(org, scn, profile):
+		bad[e.squadron_id] = true
+	var old := {}
+	if typeof(org.get("fleets")) == TYPE_ARRAY:
+		for fl in org.fleets:
+			if _fleet_shape(fl) and not old.has(fl.squadron_id):
+				old[fl.squadron_id] = fl
+	var player := {}
+	for f in scn.factions:
+		if f.control == "player":
+			player[f.id] = true
+	var res := default_org(profile)
+	var changed := []
+	for i in res.fleets.size():
+		var sq: String = res.fleets[i].squadron_id
+		if old.has(sq) and old[sq].faction_id == res.fleets[i].faction_id and not bad.has(sq):
+			if player.has(res.fleets[i].faction_id):
+				res.fleets[i] = old[sq].duplicate(true)
+		else:
+			changed.append(sq)
+	var fixed := res
+	for f in scn.factions:
+		var only: Array = changed.filter(func(sq): return res.fleets.any(func(fl): return fl.squadron_id == sq and fl.faction_id == f.id))
+		if not player.has(f.id):
+			fixed = auto_fill(fixed, f.id, scn, profile)
+		elif not only.is_empty():
+			fixed = auto_fill(fixed, f.id, scn, profile, only)
+	if not validate(fixed, scn, profile).is_empty():
+		fixed = default_org(profile)
+		changed = []
+		for fl in fixed.fleets:
+			changed.append(fl.squadron_id)
+		for f in scn.factions:
+			fixed = auto_fill(fixed, f.id, scn, profile)
+	return {"org": fixed, "changed": changed}
 
 # 프로필 정의 경로에서 읽어 세 세력 자동 편성까지. 읽기 실패는 빈 사전
 static func load_auto(def_path: String, difficulty := "", dprof_override := {}) -> Dictionary:

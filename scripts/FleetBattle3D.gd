@@ -236,7 +236,18 @@ func _assign_default_groups() -> void:
 			groups[num[f.faction]] = []
 		groups[num[f.faction]].append(f.id)
 
+# REVIEW-O4 #1·O4b F-1: 걸린 편성이 거부됐으면 전투를 열지 않고 편성 화면(고친 편성 + 사유)을 연다.
+# 모든 시작 경로(deck 시작·다시 시작, 구 오버레이 "출격"·"처음부터"·"다시 출격", _restart)가 _start에서 이 검사를 지난다
+func org_blocked() -> bool:
+	if org_errors.is_empty():
+		return false
+	if presentation and presentation.hud:
+		presentation.hud.screens["org"].open_org()
+	return true
+
 func _start() -> void:
+	if org_blocked():
+		return
 	hud.brief_ov.visible = false
 	hud.end_ov.visible = false
 	hud.menu_ov.visible = false

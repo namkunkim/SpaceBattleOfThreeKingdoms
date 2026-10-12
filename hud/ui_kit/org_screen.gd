@@ -32,7 +32,7 @@ var names := {}      # 함대 ID → 시나리오 함대 이름
 var sel := -1        # org.fleets 인덱스(유비군 함대)
 var picked := {}     # {fleet: 인덱스 | -1(풀), role, id}
 var errors := []
-var notice := ""     # 걸린 편성이 거부돼 새로 채웠을 때의 사유(REVIEW-O4 #1). 화면을 다시 열 때까지 msg 앞에 붙는다
+var notice := ""     # 걸린 편성이 거부돼 고쳤을 때 바뀐 함대와 사유(REVIEW-O4 #1·O4b F-3). 화면을 다시 열 때까지 msg 앞에 붙는다
 var cards := {}      # org.fleets 인덱스 → 함대 카드(± 때 그 카드만 바꾼다, REVIEW-O4 #2)
 var ship_ui := {}    # 함종 ID → [−, 수, +, 합계](± 때 값만 바꾼다)
 var detail_status: VBoxContainer   # 가운데 열 아래 비용·경고 줄
@@ -144,11 +144,15 @@ func open_org() -> void:
 	names = {}
 	for sq in scn.squadrons:
 		names[sq.id] = sq.name
-	# 걸린 편성이 지금 전투(난이도 등)와 맞지 않으면(REVIEW-O4 #1) 사유를 보이고 첫 상태에서 다시 편성한다
+	# 걸린 편성이 지금 전투(난이도 등)와 맞지 않으면(REVIEW-O4 #1) 유효한 유비군 함대는 두고 나머지만 채워(O4b F-3)
+	# 걸린 편성과 전장도 고친 편성으로 바꾼다(뒤로 → 출격해도 같은 화면이 반복되지 않게)
 	notice = ""
 	if not b.org_errors.is_empty():
-		notice = "이전 편성이 이 전투와 맞지 않아 자동 편성으로 다시 채웠습니다(%s). 확인 뒤 확정하십시오. " % " · ".join(_merge(b.org_errors))
-	org = b.org.duplicate(true) if not b.org.is_empty() and b.org_errors.is_empty() else start_org(prof, scn)
+		var r := Organization.repair(b.org, prof, scn)
+		notice = _repair_text(r.changed, b.org_errors)
+		b.org = r.org.duplicate(true)
+		b.init_game()
+	org = b.org.duplicate(true) if not b.org.is_empty() else start_org(prof, scn)
 	sel = -1
 	picked = {}
 	search.text = ""
@@ -279,6 +283,31 @@ func add_ship(i: int, t: String, d: int) -> void:
 	_sum()
 
 # ------------------------------------------------------------ 그리기
+# 고친 편성 알림: 다시 채운 유비군 함대 이름, AI 세력은 세력별 함대 수(언제나 자동 편성이라 이름은 생략)
+func _repair_text(changed: Array, errs: Array) -> String:
+	var mine_n := []
+	var ai := {}
+	for fl in org_fleets_of(changed):
+		if fl.faction_id == PLAYER:
+			mine_n.append(names.get(fl.squadron_id, fl.squadron_id))
+		else:
+			ai[fl.faction_id] = ai.get(fl.faction_id, 0) + 1
+	var parts := []
+	if not mine_n.is_empty():
+		parts.append("다시 채운 함대: " + " · ".join(mine_n))
+	for f in scn.factions:
+		if ai.has(f.id):
+			parts.append("%s 함대 %d개 자동 편성" % [f.name, ai[f.id]])
+	return "이전 편성이 이 전투와 맞지 않아 고쳤습니다(%s) — %s. %s확인 뒤 확정하십시오. " % [" · ".join(_merge(errs)), ", ".join(parts),
+		"나머지 유비군 함대는 그대로입니다. " if mine_n.size() < mine_count() else ""]
+
+# 프로필(지금 난이도)의 함대 중 ids에 든 것(squadron_id, faction_id)
+func org_fleets_of(ids: Array) -> Array:
+	return Organization.default_org(prof).fleets.filter(func(fl): return ids.has(fl.squadron_id))
+
+func mine_count() -> int:
+	return Organization.default_org(prof).fleets.filter(func(fl): return fl.faction_id == PLAYER).size()
+
 # 같은 사유는 한 번만(난이도를 바꾸면 missing_fleet이 함대마다 나온다)
 func _merge(errs: Array) -> Array:
 	var out := []
@@ -297,8 +326,9 @@ func tier_text(i: int) -> String:
 	if t == 0:
 		return ""
 	var fx: Dictionary = scn.realtime_rules.commander_succession.confusion.effect_per_stage
-	# formation_change_pct는 전환 속도 변화(salvo.gd, 음수 = 느려짐)라 사양대로 시간으로 뒤집어 보인다
-	return "지휘 한도 초과 %d단계: 기동 %+d%% · 명중 %+d%% · 진형 전환 시간 %+d%%" % [t, t * int(fx.move_pct), t * int(fx.hit_pct), -t * int(fx.formation_change_pct)]
+	# formation_change_pct는 전환 속도 변화(salvo.gd: 속도 × (1 + t·pct/100), 음수 = 느려짐). 시간은 그 역수라 1/(1 − 0.08t): +8/+19/+32/+47%
+	var slow := 1.0 / (1.0 + t * float(fx.formation_change_pct) / 100.0) - 1.0
+	return "지휘 한도 초과 %d단계: 기동 %+d%% · 명중 %+d%% · 진형 전환 시간 %+d%%" % [t, t * int(fx.move_pct), t * int(fx.hit_pct), roundi(slow * 100.0)]
 
 # 함선이 지휘 한도보다 적다(가장 싼 함종 하나도 더 들어간다). 정사 편성은 한도의 약 1/3이라 조조 비율 전제보다 약하다
 func under_text(i: int) -> String:
