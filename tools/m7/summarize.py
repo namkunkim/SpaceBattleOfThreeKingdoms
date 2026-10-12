@@ -45,7 +45,7 @@ if ch:
         wi = sum(1 for _, r in ig if r["win"]) / len(ig)
         wn = [r for c, r in zip([m.get("chain") for m in m9], rows) if c and c["ignite_t"] < 0]
         print(f"  화공 발동판 연합승률 {wi:.0%} (미발동판 {sum(1 for r in wn if r['win'])/max(1,len(wn)):.0%}, {len(wn)}판) 창 시작 뒤 발동 {st.mean(rel):.0f}초 차단 {cnt}"
-              f" 창 시작(첫 명중 뒤) 평균 {st.mean([c['win_start_s'] for c in ch if c['win_start_s']>=0]):.0f}초")
+              f" 창 시작(절대 시계) 평균 {st.mean([c['win_start_s'] for c in ch if c['win_start_s']>=0]):.0f}초")
 cm = [m.get("cmd") for m in m9 if m.get("cmd")]
 if cm:
     print("  승계 평균", {x: round(st.mean([c[x] for c in cm]), 2) for x in cm[0]})
