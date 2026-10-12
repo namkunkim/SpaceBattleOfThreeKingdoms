@@ -18,9 +18,9 @@ const SLOW_OFF := 2
 static var slow_mode := SLOW_ON_SELECT
 static var vibrate := true
 static var vol_master := 0.8
-static var vol_sfx := 0.8
-static var vol_ui := 0.7
-static var vol_music := 0.5
+static var vol_sfx := 0.0   # 기본 끔(사용자, 2026-10-12): 효과음·UI음·배경음악은 설정에서 켠다
+static var vol_ui := 0.0
+static var vol_music := 0.0
 static var ship_density := 1   # 표시 함선 밀도 0 낮음 / 1 보통 / 2 높음(리뷰 C-1·C-4)
 static var reduce_motion := false   # 동작 줄이기: 타이틀·브리핑·서막 뒤 카메라 흐름을 멈춘다
 static var prologue_seen := false   # 서막을 한 번 봤거나 건너뛰었다. 다음 출격 준비부터 서막 없이 브리핑으로
@@ -44,9 +44,9 @@ static func load_cfg() -> void:
 	vibrate = bool(cf.get_value("play", "vibrate", true))
 	ship_density = int(cf.get_value("display", "ship_density", 1))
 	vol_master = float(cf.get_value("audio", "master", 0.8))
-	vol_sfx = float(cf.get_value("audio", "sfx", 0.8))
-	vol_ui = float(cf.get_value("audio", "ui", 0.7))
-	vol_music = float(cf.get_value("audio", "music", 0.5))
+	vol_sfx = float(cf.get_value("audio", "sfx", 0.0))
+	vol_ui = float(cf.get_value("audio", "ui", 0.0))
+	vol_music = float(cf.get_value("audio", "music", 0.0))
 	reduce_motion = bool(cf.get_value("display", "reduce_motion", false))
 	prologue_seen = bool(cf.get_value("progress", "prologue_seen", false))
 
