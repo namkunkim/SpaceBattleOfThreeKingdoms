@@ -65,6 +65,8 @@ func block(src: FleetState, t: FleetState, kind: String) -> String:
 		return "assault_cooldown"
 	if kind == "flagship" and not fleet_flag(t):
 		return "assault_not_flagship"
+	if sim.skills and sim.skills.flag(t, "assault_block"):
+		return "assault_blocked"   # 특기 호치(P8a)
 	return ""
 
 func chance_bp(src: FleetState, t: FleetState, kind: String) -> int:
@@ -74,8 +76,10 @@ func chance_bp(src: FleetState, t: FleetState, kind: String) -> int:
 			if (p.get("traits", []) as Array).has(str(A.flagship.escort_trait)):
 				bp = bp * int(A.flagship.escort_trait_mul_bp) / BattleRules.BP
 				break
-		if not is_open(src, t):
-			bp /= int(A.forced_div)
+	if sim.skills and sim.skills.add(src, "assault_bp") != 0:
+		bp = clampi(bp + sim.skills.add(src, "assault_bp"), int(A.min_bp), int(A.max_bp))   # 특기 만인지적: escort 뒤·forced_div 앞(P8a)
+	if kind == "flagship" and not is_open(src, t):
+		bp /= int(A.forced_div)
 	return bp
 
 # 명령 처리. 사유 코드 또는 ""

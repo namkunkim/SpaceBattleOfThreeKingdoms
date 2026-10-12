@@ -90,6 +90,8 @@ func sensor_of(f: FleetState) -> int:
 		bp += sim.chain.sensor_bp(f.side)   # 화공 직후 조조 진영 센서 −40% 120초(M9)
 	var ship := _sum(f, D.ship_sensor, D.equip_sensor)
 	var s := (ship * (BattleRules.BP + bp) + BattleRules.BP / 2) / BattleRules.BP
+	if sim.skills:
+		s = s * sim.skills.mul(f, "sensor_mul_bp") / BattleRules.BP   # 특기 간파(P8a)
 	var iq := int(f.stats.get("intellect", 0))
 	for b in D.intellect_bands:
 		if iq >= int(b.min) and iq <= int(b.max):
@@ -136,6 +138,8 @@ func _eval(side: int) -> void:
 		var best := 0
 		for i in obs.size():
 			best = maxi(best, level_of(score(sens[i], obs[i], t)))
+		if sim.skills and sim.skills.reveals(side, t):
+			best = level_of(int(D.confirmed))   # 특기 귀모·간파: 반경 안 적은 확인 상태(P8a)
 		var r: Dictionary = book.get(t.id, {})
 		if best > 0:
 			r = {"seen": st.tick, "pos": t.pos}

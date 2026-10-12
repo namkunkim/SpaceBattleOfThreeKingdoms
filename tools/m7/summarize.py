@@ -49,6 +49,13 @@ if ch:
 cm = [m.get("cmd") for m in m9 if m.get("cmd")]
 if cm:
     print("  승계 평균", {x: round(st.mean([c[x] for c in cm]), 2) for x in cm[0]})
+sk = [m.get("skills") for m in m9 if "skills" in m]
+if sk:
+    tot = {}
+    for s in sk:
+        for k, v in s.items():
+            tot[k] = tot.get(k, 0) + v
+    print(f"  특기 발동 판당 {sum(tot.values())/len(sk):.1f}회, 기술별 판당", {k: round(v/len(sk), 2) for k, v in sorted(tot.items(), key=lambda x: -x[1])})
 asl = [m.get("assault") for m in m9 if m.get("assault")]
 if asl:
     print("  강습 [시도, 성공] 합", {x: [sum(a[x][0] for a in asl), sum(a[x][1] for a in asl)] for x in asl[0]})

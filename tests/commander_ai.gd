@@ -45,7 +45,8 @@ func _run() -> void:
 	var s := _rc(3, true, "표준", true)
 	var bad := ""
 	var allowed := ["id", "side", "contact", "pos", "err_r", "conf_bp", "faction", "name", "role", "portrait", "commander_id", "faction_id", "heading", "strength_band", "max_strength_band",
-		"dense", "feigning"]   # M9: 화공 표적 조건(밀집 여부)과 투항 중 표시. 진형 ID는 공개하지 않는다
+		"dense", "feigning",   # M9: 화공 표적 조건(밀집 여부)과 투항 중 표시. 진형 ID는 공개하지 않는다
+		"flagship", "carrier", "move_to"]   # P8a Q96: 확인 접촉의 기함 여부·강습모함 보유, 특기 귀모가 드러낸 이동 목표
 	var thinks := 0
 	var cards := 0
 	while not s.st.over and s.st.tick < 1800 * s.st.hz:

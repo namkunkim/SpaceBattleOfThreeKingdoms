@@ -34,6 +34,7 @@ var supply: SupplyCore = null   # M8 보급과 수리. combat.supply가 있을 �
 var chain: ChainOp = null       # M9 화공·위장 항복. 시나리오 chain_operation과 combat.stratagem이 있을 때
 var cmd: CommandCore = null     # M9 장수 사상·지휘 승계·혼선. 시나리오와 combat.command가 있을 때
 var assault: AssaultCore = null # M9 강습(부대 강습·기함 진입). 시나리오와 combat.assault가 있을 때
+var skills: SkillCore = null    # P8a 장수 특기. 시나리오 realtime_rules.special_skills가 있을 때(슬롯은 편성 apply가 넣는다)
 
 # profile: 프로필 사전({profile_id, rules, ally, foe, reinf}). 비우면 POC 프로필(기준선 동등).
 func _init(seed_id: int = 0, hz: int = BattleRules.TICK_HZ, profile: Dictionary = {}) -> void:
@@ -85,6 +86,8 @@ func _init(seed_id: int = 0, hz: int = BattleRules.TICK_HZ, profile: Dictionary 
 				chain = ChainOp.new(self, cb.stratagem)
 			if cb.has("assault"):
 				assault = AssaultCore.new(self, cb.assault)
+			if not rs.rt("special_skills", {}).is_empty():
+				skills = SkillCore.new(self, rs.rt("special_skills"))
 	if not profile.get("ai", {}).is_empty() and salvo and morale:
 		enable_commander_ai(profile.ai)
 
@@ -130,6 +133,8 @@ func fingerprint() -> String:
 		extra += chain.fingerprint()    # M9
 	if cmd:
 		extra += cmd.fingerprint()
+	if skills:
+		extra += skills.fingerprint()   # P8a. 발동이 없으면 빈 문자열
 	return BattleFingerprint.of(st, detect, extra)
 
 # 즉시 적용 명령. 틱 사이에 상태는 변하지 않으므로 "다음 step() 첫머리에 적용"과 결과가 같고,
@@ -143,7 +148,7 @@ func issue(cmd: Dictionary) -> void:
 
 # 플레이어가 명령한 전대는 직접 지휘가 된다(§5.4). AI 명령은 apply()를 바로 불러 여기를 거치지 않는다.
 const DIRECT_KINDS := ["stop", "move", "face", "attack", "charge", "retreat", "rally", "formation", "restore", "def", "missile", "fighter", "volley",
-	"letter", "withdraw", "ignite", "assault"]
+	"letter", "withdraw", "ignite", "assault", "skill"]
 
 func _mark_direct(c: Dictionary) -> void:
 	if int(c.side) != 0 or not (str(c.kind) in DIRECT_KINDS):
@@ -415,6 +420,8 @@ func drain_events_for(side: int) -> Array[Dictionary]:
 		if e.kind == "contact":
 			if side != 0:
 				continue
+		elif e.kind.begins_with("skill") and st.by_id(int(e.sq)) and st.by_id(int(e.sq)).side != side:
+			continue   # 적의 특기 발동·해제는 알리지 않는다(슬롯 비공개, P8a)
 		else:
 			var a := st.by_id(int(e.sq))
 			if a and a.side != side and not detect.contacts[side].has(a.id):
@@ -609,6 +616,19 @@ func apply(c: Dictionary) -> void:
 				_reject(L, "unknown_command", side)
 				return
 			var why := assault.attempt(L, st.by_id(int(c.target_id)), str(c.get("args", {}).get("type", "unit")))
+			if why != "":
+				_reject(L, why, side)
+		"skill":
+			# 장수 특기(P8a): args.slot(슬롯 번호) 또는 args.skill_id, target_id = 대상(-1이면 기본 대상). 첫 함대만 쓴다
+			if skills == null:
+				_reject(L, "unknown_command", side)
+				return
+			var a: Dictionary = c.get("args", {})
+			var id := str(a.get("skill_id", ""))
+			if a.has("slot"):
+				var i := int(a.slot)
+				id = str(L.skill_slots[i]) if i >= 0 and i < L.skill_slots.size() else ""
+			var why := skills.use(L, id, int(c.get("target_id", -1)))
 			if why != "":
 				_reject(L, why, side)
 		"morale_rally":
@@ -878,6 +898,8 @@ func _substep(first: bool) -> void:
 			_ai.think(self)
 	_fleet_phase(first)
 	if salvo and first:
+		if skills:
+			skills.step()   # 특기 효과 만료(P8a)
 		if detect:
 			detect.step()
 		salvo.step()
@@ -958,6 +980,8 @@ func _fleet_phase(timers: bool) -> void:
 				spd *= float(BattleRules.BP) / float(terrain.move_cost_bp(f.pos))   # 성운·잔해·그림자는 느리다(§4.10)
 			if cmd:
 				spd *= 1.0 + cmd.penalty(f, "move_pct")   # 승계 혼선·지휘 한도 초과(§4.14)
+			if skills:
+				spd *= skills.mulf(f, "speed_mul_bp")   # 특기 질주·신속(P8a)
 		if has_dest and f.strafe and tgt == null:
 			# 평행 이동: 방향을 유지한 채 전진 속도의 일부로 목적지를 향해 옆으로 간다(§4.2)
 			var dd := f.pos.distance_to(dest)

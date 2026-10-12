@@ -180,6 +180,7 @@ func toggle(i: int) -> void:
 		fl.vice = ""
 		fl.staff = []
 		fl.composition = []
+		fl.skill_slots = Organization.default_slots(fl, prof)
 	picked = {}
 	_refresh()
 
@@ -196,11 +197,12 @@ func _set_slot(i: int, role: String, id: String) -> void:
 	var fl: Dictionary = org.fleets[i]
 	if role == "admiral" or role == "vice":
 		fl[role] = id
-		return
-	fl.staff = fl.staff.filter(func(s): return s.post != role)
-	if id != "":
-		fl.staff.append({"post": role, "id": id})
-	fl.staff.sort_custom(func(x, y): return Organization.POST_ORDER.find(x.post) < Organization.POST_ORDER.find(y.post))
+	else:
+		fl.staff = fl.staff.filter(func(s): return s.post != role)
+		if id != "":
+			fl.staff.append({"post": role, "id": id})
+		fl.staff.sort_custom(func(x, y): return Organization.POST_ORDER.find(x.post) < Organization.POST_ORDER.find(y.post))
+	fl.skill_slots = Organization.default_slots(fl, prof)   # 장수가 바뀌면 특기 슬롯을 직책 순 기본값으로 다시 채운다(P8a. 슬롯 교체 UI는 P8b)
 
 func _locked(i: int, role: String) -> bool:
 	return i >= 0 and role == "admiral" and is_flag(i)

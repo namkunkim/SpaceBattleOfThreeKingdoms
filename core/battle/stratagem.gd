@@ -172,6 +172,8 @@ func ignite(h: FleetState, t: FleetState) -> String:
 	var st := sim.st
 	var feigned := mode == "feign"
 	var p := power_at(h.pos.distance_to(t.pos))
+	if sim.skills:
+		p *= sim.skills.mulf(h, "chain_power_mul_bp")   # 특기 미주랑(Q93, 연합 진영)
 	var fi := {"host": h.id, "next": st.tick + BattleRules.ticks(float(O.spread.interval_s), st.hz), "last": t.id, "power": p, "n": 0,
 		"burned": {t.id: true}, "counter": ""}
 	var net := _counter("interception_net")
@@ -440,7 +442,11 @@ func host_think(f: FleetState, foes: Array[Dictionary]) -> bool:
 		if mode == "idle" and letters > 0 and not tg.is_empty() and win_start >= 0:
 			var travel := maxf(0.0, td - float(H.approach)) / maxf(1.0, f.speed)
 			if float(win_start - st.tick) / st.hz <= travel + float(H.letter_margin_s):
-				sim.apply(BattleSim.command(0, [f.id], "letter"))
+				var slot := sim.skills.alias_slot(f, "letter") if sim.skills else -1
+				if slot >= 0:
+					sim.apply(BattleSim.command(0, [f.id], "skill", -1, Vector2.ZERO, {"slot": slot}))   # 고육계 슬롯 경로(같은 서신, letter_uses 공유)
+				else:
+					sim.apply(BattleSim.command(0, [f.id], "letter"))
 				return true
 		_aim(f, -1)
 		var sl := float(H.slack)

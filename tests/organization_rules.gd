@@ -138,9 +138,12 @@ func _run() -> void:
 	if not _shortage_and_ties(base): return
 	if not _succession(auto): return
 
-	# 덮어쓰기: 기본 편성은 결과를 바꾸지 않는다
+	# 덮어쓰기: 기본 편성은 결과를 바꾸지 않는다(P8a: 특기 슬롯을 비우면. 슬롯이 차 있으면 특기 발동이 결과를 바꾼다)
 	var fp0 := _run_fp(ScenarioProfile.load_profile(DEF, "표준"))
-	var pd := Organization.apply(prof, base, scn)
+	var bare := base.duplicate(true)
+	for fl in bare.fleets:
+		fl.skill_slots = ["", "", ""]
+	var pd := Organization.apply(prof, bare, scn)
 	if not TestCheck.ok(self, _run_fp(pd) == fp0, "default org keeps result"): return
 	# 자동 편성: 한도 재계산, 끈 함대 빠짐, 재생 헤더로 같은 결과
 	var auto_off := auto.duplicate(true)
@@ -195,6 +198,7 @@ func _succession(auto: Dictionary) -> bool:
 	var f3 := _fleet(o, "RC-LIU-SQ-03")
 	f3.vice = ""
 	f3.staff.reverse()
+	f3.skill_slots = Organization.default_slots(f3, prof)   # 장수가 빠지면 슬롯을 다시 채운다(P8a, 안 하면 skill_foreign)
 	var p := Organization.apply(prof, o, scn)
 	var sim := BattleSim.new(7, BattleRules.TICK_HZ, p)
 	var by := func(sq): return sim.st.fleets.filter(func(f): return f.sq_id == sq)[0]

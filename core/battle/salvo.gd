@@ -30,6 +30,7 @@ func init_fleet(f: FleetState, d: Dictionary) -> void:
 	f.level = int(d.get("level", 1))
 	f.vice = d.get("vice_commander", {})
 	f.staff = d.get("staff", [])
+	f.skill_slots = d.get("skill_slots", []).duplicate()   # P8a 특기 슬롯(편성 apply가 넣는다)
 	# 지휘관 능력치(거리대별 보정, §4.3). 데이터에 없는 능력치는 통솔로 대신한다
 	f.stats = {"command": f.cmd_stat, "might": int(d.get("might", f.cmd_stat)), "intellect": int(d.get("intellect", f.cmd_stat))}
 	f.morale_bp = int(d.get("start_morale_bp", 0))
@@ -138,6 +139,8 @@ func transition_ticks(f: FleetState, fid: String) -> int:
 		s /= float(fr.master_transition_div)
 	if sim.cmd:
 		s /= 1.0 + sim.cmd.penalty(f, "formation_change_pct")   # 승계 혼선·지휘 한도 초과(§4.14): 변경 속도 −8%/단계 → 시간이 늘어난다
+	if sim.skills:
+		s *= sim.skills.mulf(f, "transition_mul_bp")   # 특기 질주(×0.5)·신기묘산(0 = 즉시, P8a)
 	return BattleRules.ticks(s, sim.st.hz)
 
 # 진형 전환 시작. 현재 진형으로 되돌리면 전환을 취소한다. 사유 코드 또는 "".
@@ -148,6 +151,8 @@ func start_transition(f: FleetState, fid: String) -> String:
 	if fid == f.formation_id:
 		f.form_to = ""
 		f.form_left = 0
+	elif transition_ticks(f, fid) <= 0:
+		force_formation(f, fid)   # 전환 시간 0(신기묘산): 즉시 바뀐다
 	elif fid != f.form_to:
 		f.form_to = fid
 		f.form_left = transition_ticks(f, fid)
@@ -242,7 +247,7 @@ func platforms(f: FleetState, cat: String) -> Array:
 			continue
 		var n := effective_of(f, t)
 		if n > 0.0:
-			out.append({"type": t, "n": n, "range": float(w.platforms[t].range), "arc": float(w.platforms[t].arc_deg)})
+			out.append({"type": t, "n": n, "range": float(w.platforms[t].range) * range_mul(f, cat), "arc": float(w.platforms[t].arc_deg)})
 	var eqs: Array = w.equipment.keys()
 	eqs.sort()
 	var fc: String = C.fast_craft.ship_type_id
@@ -250,8 +255,12 @@ func platforms(f: FleetState, cat: String) -> Array:
 		if f.equip == eq and f.stages.has(fc):
 			var n := effective_of(f, fc)
 			if n > 0.0:
-				out.append({"type": fc, "n": n, "range": float(w.equipment[eq].range), "arc": float(w.equipment[eq].arc_deg)})
+				out.append({"type": fc, "n": n, "range": float(w.equipment[eq].range) * range_mul(f, cat), "arc": float(w.equipment[eq].arc_deg)})
 	return out
+
+# 특기 사거리 배율(강궁, P8a). 효과가 없으면 1
+func range_mul(f: FleetState, cat: String) -> float:
+	return sim.skills.mulf(f, "range_mul_bp", cat) if sim.skills and not f.fx.is_empty() else 1.0
 
 func refresh_range(f: FleetState) -> void:
 	for cat in f.wch:   # 플랫폼이 전멸하면 최대·남은 횟수도 0(버튼 0/0)
@@ -308,7 +317,7 @@ func hit_bp(f: FleetState, tgt: FleetState, cat: String) -> int:
 	var defense: int = int(C.formations[_form_id(tgt)].defense_bp) + int(C.sector.defense_bp[sector(f.pos, tgt)])
 	var h: Dictionary = C.hit
 	defense += evasion_bp(tgt, cat)   # Q72: 방어항 1개로 더한다(같은 클램프 안, 이중 계산 없음)
-	var acc := clampi(int(C.weapons[cat].base_accuracy_bp) + fire - defense, int(h.min_bp), int(h.max_bp))
+	var acc := clampi(int(C.weapons[cat].base_accuracy_bp) + fire - defense + (sim.skills.add(f, "hit_bp") if sim.skills else 0), int(h.min_bp), int(h.max_bp))
 	if not f.in_cmd:
 		acc = maxi(int(h.min_bp), acc - int(h.out_of_command_bp))
 	if sim.detect:
@@ -345,7 +354,7 @@ func formation_mul(f: FleetState, tgt: FleetState, bd: String) -> float:
 	var m := float(C.damage.formation_damage_mul.get(_form_id(f), 1.0))
 	if f.form_left > 0:
 		m *= float(fr.transition_damage_mul)
-	if bd == fr.affinity_band and affinity_wins(_form_id(f), _form_id(tgt)):
+	if bd == fr.affinity_band and affinity_wins(_form_id(f), _form_id(tgt)) and not (sim.skills and sim.skills.flag(tgt, "affinity_ignore")):
 		m *= float(fr.affinity_mul)
 	return m
 
@@ -355,6 +364,8 @@ func damage_of(f: FleetState, tgt: FleetState, cat: String, n_total: float, coef
 	d *= commander_mul(f, bd) * morale_mul(f) * formation_mul(f, tgt, bd) * float(C.damage.terrain_mul)
 	if f.charge > 0:
 		d *= sim.R.charge_power_mul
+	if sim.skills:
+		d *= sim.skills.mulf(f, "damage_mul_bp")   # 특기 맹공(P8a)
 	return d
 
 # ============================================================ 사격 계획
@@ -372,10 +383,12 @@ func qualifying(f: FleetState, cat: String, tgt: FleetState, cap := -1.0) -> Arr
 	if terr:
 		rmul = terr.range_mul(f.pos, aim)   # 사격선이 성운·잔해·그림자를 지나면 사거리와 사격각이 줄어든다(§4.10)
 		adelta = terr.arc_delta(f.pos, aim)
+	rmul *= range_mul(f, cat)
 	if not _any_qualifies(f, cat, dist, off, rmul, adelta):
 		return out   # 성능(C1): platforms() 배열을 만들기 전에 같은 판정으로 걸러 낸다
+	var rbase := rmul / range_mul(f, cat)   # platforms()의 사거리에는 특기 배율이 이미 들어 있다
 	for p in platforms(f, cat):
-		if dist <= p.range * rmul and off <= maxf(0.0, p.arc + adelta) * 0.5 + 0.001:
+		if dist <= p.range * rbase and off <= maxf(0.0, p.arc + adelta) * 0.5 + 0.001:
 			out.append(p)
 	return out
 
@@ -408,7 +421,7 @@ func _range_cap(f: FleetState, cat: String) -> float:
 		for z in terr.zones:
 			m *= maxf(1.0, float(z.range_bp) / float(BattleRules.BP))
 		r *= m
-	return r
+	return r * range_mul(f, cat)
 
 # 조준점(M7). 확인 접촉은 실제 위치, 추정 접촉은 마지막으로 안 위치다. 사거리·사격각은 조준점으로 판정한다.
 func _aim(f: FleetState, tgt: FleetState) -> Vector2:
@@ -633,7 +646,18 @@ func _resolve(s: Dictionary) -> void:
 				tgt.fr_hits.pop_front()   # 판정에는 최근 open_hits개만 필요하다
 		if sim.chain:
 			sim.chain.on_hit(f, tgt)   # 투항 중 연합의 명중은 의심을 올린다
-		var loss := apply_hull(f, tgt, s.dmg, s.band, s.sector, s.eid)
+		var dmg: float = s.dmg
+		if sim.skills:
+			# 특기(P8a): 표적의 받는 피해 배율(Q95)을 곱한 뒤 악래가 기함 피해 일부를 대신 받는다(자기 받는 피해 배율 적용). 일제사격 피해만(Q98)
+			dmg *= sim.skills.mulf(tgt, "damage_taken_mul_bp")   # 기함의 받는 피해 배율을 먼저(분담 몫에도, REVIEW-P8A F-6)
+			var g := sim.skills.guard_of(tgt)
+			if g:
+				var part := dmg * float(sim.skills.redirect_bp(g)) / float(BattleRules.BP)
+				dmg -= part
+				var gl := apply_hull(f, g, part * sim.skills.mulf(g, "damage_taken_mul_bp"), s.band, sector(f.pos, g), sim.st.new_event_id())
+				if sim.morale:
+					sim.morale.hit(g, gl, s.wband, sector(f.pos, g))
+		var loss := apply_hull(f, tgt, dmg, s.band, s.sector, s.eid)
 		if sim.morale:
 			sim.morale.hit(tgt, loss, s.wband, s.sector)
 

@@ -285,6 +285,9 @@
 - 5-b 수정(`REVIEW-P9-FOLLOWUP.md`): 반경은 규칙 `place_radius_ratio`(짧은 변 x 0.15)로 옮겨 `BattleSim.place_radius()`로 읽고, HUD는 투영 `spawn`·`place_r`로 그린다. 그룹 배치는 이동량을 일괄로 줄여 대형을 지킨다. 배치 뒤 방향은 가장 가까운 적으로 다시 정하고 `args.facing_deg`가 있으면 즉시 그 방향이다(배치 막대 [↺45°][↻45°][적 방향], 기존 `face` 명령도 배치 중엔 이것으로 바뀐다). 배치 중 방침·위임 허용.
 - 안 한 것: 제한 시간(제안서 :733), 배치 중 적 표시(CHECKLIST 후속), 배치 중 프리셋.
 
+## 장수 특기 코어 P8a (2026-10-12, 구현 세션 "P8a 구현", 브랜치 `claude/eloquent-gould-b2d0f6`) — 5-b 리뷰는 관리 세션이 맡김
+- 새 `core/battle/skills.gd`(SkillCore): 편성 `skill_slots`(기본 = 직책 순, 중복 ID는 다음 후보, validate `skill_duplicate`·`skill_foreign`·`skill_unknown`), 명령 `skill`(slot/skill_id, target_id; 거부 `skill_used`·`skill_no_slot`·`commander_down`·`skill_requires_*`·`skill_no_target`), (함대, 기술 ID) 쌍당 1회(Q92), 효과 합성 Q95, AI·위임 조건 발동(Q91, 함대 ID → 슬롯 순, 함대당 하나), 아군 전용 투영. 슬롯을 비우면 지문이 특기 없는 코어와 같다. 해석으로 정한 10가지와 정보 경계 예외(적 기함·강습모함 술어)는 `docs/core/P8A-NOTES.md`. 테스트 `tests/special_skills.gd`, `data_rules` 스키마 검사, `autoresolve --no-skills/--skill-off`. 200시드 전후 대조 결과도 노트에 있다. **P8a-b(REVIEW-P8A 조건부 수용 처리)**: F-1~F-9, 사용자 결정 Q96(확인 접촉에 기함·강습모함 공개, AI 술어는 투영만)·Q97(적 효과 시전자 숨김)·Q98(받는 피해는 사격 피해만, 문구 재생성). 표준 200시드(탐색, main P5 포함): 특기 끔 42.5%(Wilson 35.9~49.4) / 켬 38.0%(31.6~44.9), 길이 16.8/16.7분, 판당 발동 24.8회. 기준선 자체가 예전 78~85%보다 낮다(P5 쪽 변화로 보임, O3b에서 확인). 다음: P8b ∥ P8c, O3b.
+
 ## 남은 일 (컨셉 세션이 할 수 있는 것)
 
 | 우선 | 일 | 메모 |
