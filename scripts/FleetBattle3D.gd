@@ -55,13 +55,33 @@ const REJECT := {
 	"charge_none": "강습모함이 없어 돌격할 수 없습니다",
 	"no_selection": "먼저 아군 함대를 선택하세요",
 	"supply_none": "보급함이 있는 함대가 아닙니다", "supply_target": "보급 대상으로 지정할 수 없는 함대입니다",
+	# 장수 특기(P8c). skill_requires_*는 requires 키마다 하나(SPECIAL-SKILLS §4)
+	"skill_used": "이 장수 특기는 이번 전투에서 이미 썼습니다", "skill_no_slot": "빈 특기 슬롯입니다",
+	"commander_down": "지휘관이 지휘 불능이라 장수 특기를 쓸 수 없습니다",
+	"skill_no_target": "특기를 걸 대상이 반경 안에 없습니다",
+	"skill_requires_has_ship_type": "강습모함이 있는 함대만 쓸 수 있습니다",
+	"skill_requires_enemy_within": "반경 안에 확인된 적 함대가 없습니다",
+	"skill_requires_ally_within": "반경 안에 다른 아군 함대가 없습니다",
+	"skill_requires_ally_flagship_within": "아군 기함 함대가 가까이 있어야 합니다",
+	"skill_requires_self_not_flagship": "기함 함대는 쓸 수 없습니다",
+	"skill_requires_charges_below_base": "미사일 사용 횟수가 이미 가득합니다",
+	"skill_requires_chain_host": "화공 운용 함대만 쓸 수 있습니다",
+	"assault_blocked": "적 함대가 호위를 받고 있어 지금은 강습할 수 없습니다",
+	"chain_host": "화공 운용 함대만 위장 항복 서신을 보낼 수 있습니다",
+	"chain_letter_used": "위장 항복 서신은 이미 보냈습니다", "chain_spent": "화공 기회가 지났습니다",
 }
+
+# 거부 사유 코드 → 화면 문구. 모르는 skill_requires_*는 일반 문구
+static func reject_text(code: String) -> String:
+	if REJECT.has(code):
+		return REJECT[code]
+	return "장수 특기 발동 조건이 맞지 않습니다" if code.begins_with("skill_requires_") else "명령을 수행할 수 없습니다"
 const END_TEXT := {
 	"flagship_lost": "기함이 격침되었습니다. 지휘 계통이 무너진 함대는 적벽에서 철수합니다.",
 	"annihilation": "조조군이 적벽에서 모두 사라졌습니다. 적벽의 궤도는 연합의 손에 남습니다.",
 }
 
-# 표현 계층(view/fleet_render, hud/ui_kit)이 교신·알림을 받는 통로. kind: "", "foe", "sys", "toast"
+# 표현 계층(view/fleet_render, hud/ui_kit)이 교신·알림을 받는 통로. kind: "", "foe", "sys", "toast", "skill"(아군 특기 발동)
 signal battle_event(kind: String, text: String, fleet_id: int)
 signal sfx_event(name: String)   # 코어 사건 → 효과음 이름(UiSound 사건)
 signal sfx_loop(name: String, level: float)   # 코어 사건 → 루프 효과음(UiSound.set_loop). M9 화공 fire_loop
@@ -507,7 +527,15 @@ func _on_event(e: Dictionary) -> void:
 			add_log("돌격 명령 · 10초간 화력·속도 상승", "", f)
 		"rejected":
 			if e.other == 0:
-				toast(REJECT.get(e.value, "명령을 수행할 수 없습니다"))
+				toast(reject_text(str(e.value)))
+		"skill":   # 장수 특기 발동(시전 진영에만 온다). 짧은 알림 + 교신 기록
+			if f and f.side == 0:
+				var nm: String = sim.skills.defs.get(e.value.id, {}).get("name", "")
+				var to := ""
+				var t = vm.fleet(e.other) if e.other >= 0 else null
+				if t:
+					to = " → %s 함대" % t.fname
+				battle_event.emit("skill", "%s 함대 장수 특기 「%s」 발동%s" % [f.fname, nm, to], f.id)
 		"reinforcements":
 			add_log("경고: 위군 별동대 2개 함대가 측면에 출현!", "sys", null)
 			toast("적 증원 함대 출현 · 측면 주의")

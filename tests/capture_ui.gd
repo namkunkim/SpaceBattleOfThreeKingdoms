@@ -87,8 +87,27 @@ func _run() -> void:
 				TestPoke.fleet(battle, battle.fleets[k], {"pos": battle.fleets[1].pos + Vector2(70.0 * (k - 1), 50.0)})
 			deck._set_tab(4 if mode == "supply_repair" else 3)
 			deck._refresh_cmds()
+		if mode == "skills" and deck:
+			# P8c 장수 특기 줄: 강궁(황충) 함대가 있으면 그 함대로 발동(사거리 고리 ×1.3), 적이 건 교란 칩 하나(캡처 전용)
+			for f in battle.alive(0):
+				var ids: Array = f.skills.get("slots", []).map(func(s): return s.id)
+				if "SK-U-HUANGZHONG" in ids:
+					battle.selected.clear()
+					battle.selected.append(f)
+					battle.cmds.do_skill(ids.find("SK-U-HUANGZHONG"))
+					break
+			var me: FleetState = battle.sim.st.by_id(battle.my_sel()[0].id)
+			var foe_id := -1
+			for g in battle.sim.st.fleets:
+				if g.side == 1:
+					foe_id = g.id
+					break
+			me.fx.append({"id": "SK-T-DISRUPT", "src": foe_id, "until": battle.sim.st.tick + 420, "e": battle.sim.skills.defs["SK-T-DISRUPT"].effects, "r": 0.0})
+			battle._sync()
 		battle.refresh_panel()
 		battle.cam_pos = battle.fleets[1].pos + Vector2(260.0, 40.0)
+		if mode == "skills":
+			battle.cam_pos = battle.my_sel()[0].pos + Vector2(260.0, 40.0)
 		battle.cam_z = 1.0
 		for i in 150:
 			await process_frame

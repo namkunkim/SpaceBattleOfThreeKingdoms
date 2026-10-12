@@ -47,6 +47,7 @@ class FleetView:
 	var charges_max := {}
 	var supply := {}                  # 보급 상태·메뉴(아군만. 보급함 전대는 supply.menu가 있다)
 	var ranges := {}                  # 무기 범주별 최대 사거리(salvo 규칙의 아군만 값이 있다)
+	var skills := {}                  # 장수 특기 {slots, fx}(P8a 투영, 아군만. 적 접촉에는 없다)
 	var control := ""
 	var formation_id := ""            # 진형 탭용(salvo 규칙에서만 값이 있다)
 	var form_to := ""
@@ -197,6 +198,7 @@ func apply(proj: Dictionary) -> Array[FleetView]:
 			continue
 		var f: FleetView = by_id[s.id]
 		f.ranges = s.get("ranges", {})
+		f.skills = s.get("skills", {})
 		f.charges = s.get("charges", {})
 		f.charges_max = s.get("charges_max", {})
 		f.supply = s.get("supply", {})

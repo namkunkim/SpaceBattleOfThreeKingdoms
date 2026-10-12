@@ -288,6 +288,14 @@
 ## 장수 특기 코어 P8a (2026-10-12, 구현 세션 "P8a 구현", 브랜치 `claude/eloquent-gould-b2d0f6`) — 5-b 리뷰는 관리 세션이 맡김
 - 새 `core/battle/skills.gd`(SkillCore): 편성 `skill_slots`(기본 = 직책 순, 중복 ID는 다음 후보, validate `skill_duplicate`·`skill_foreign`·`skill_unknown`), 명령 `skill`(slot/skill_id, target_id; 거부 `skill_used`·`skill_no_slot`·`commander_down`·`skill_requires_*`·`skill_no_target`), (함대, 기술 ID) 쌍당 1회(Q92), 효과 합성 Q95, AI·위임 조건 발동(Q91, 함대 ID → 슬롯 순, 함대당 하나), 아군 전용 투영. 슬롯을 비우면 지문이 특기 없는 코어와 같다. 해석으로 정한 10가지와 정보 경계 예외(적 기함·강습모함 술어)는 `docs/core/P8A-NOTES.md`. 테스트 `tests/special_skills.gd`, `data_rules` 스키마 검사, `autoresolve --no-skills/--skill-off`. 200시드 전후 대조 결과도 노트에 있다. **P8a-b(REVIEW-P8A 조건부 수용 처리)**: F-1~F-9, 사용자 결정 Q96(확인 접촉에 기함·강습모함 공개, AI 술어는 투영만)·Q97(적 효과 시전자 숨김)·Q98(받는 피해는 사격 피해만, 문구 재생성). 표준 200시드(탐색, main P5 포함): 특기 끔 42.5%(Wilson 35.9~49.4) / 켬 38.0%(31.6~44.9), 길이 16.8/16.7분, 판당 발동 24.8회. 기준선 자체가 예전 78~85%보다 낮다(P5 쪽 변화로 보임, O3b에서 확인). 다음: P8b ∥ P8c, O3b.
 
+## 장수 특기 전투 UI P8c (2026-10-13, 구현 세션 "P8c 구현", 브랜치 `claude/awesome-mendeleev-61e825`) — 다른 모델 리뷰·화면 확인 대기
+- 새 `hud/ui_kit/skill_bar.gd`: 정보 패널(`command_deck` `info`) 아래쪽 특기 줄. 슬롯 버튼 3(132×56, 유형 색 띠·마름모, 고유 = 금색 이중 마름모, 상태 "준비 · 적/아군 함대"·"발동 중 N초"·"사용함"·"조건 미충족"·"빈 슬롯", 툴팁 = 데이터 text + 막힌 사유 문구) + 오른쪽 받은 효과 칩(다른 함대가 건 것만, 적이 건 것은 이름·남은 초만 Q97, 2개 + "외 N"). 보일 때 패널이 64px 늘어나고 되돌리기·보급 메뉴도 따라 올라간다(`_info_h`).
+- 정한 것: **단일 선택 아군에서만** 보인다(다중·적·접촉·특기 없는 규칙은 숨김). **대상은 지정 단계 없이 코어 `target_pick` 기본값**(target_id −1, 교란 = 가장 가까운 확인 적, 일신시담 = 선체 비율 최저 아군); 알림에 대상 함대 이름이 나온다. 버튼은 막혀 있어도 누를 수 있고 코어 거부가 토스트가 된다. 위임 함대는 줄과 툴팁에 "발동 시 직접 지휘" 안내, 누르면 `DIRECT_KINDS`로 직접 지휘(코어 그대로).
+- 문구: `FleetBattle3D.REJECT`에 `skill_used`·`skill_no_slot`·`commander_down`·`skill_no_target`·`skill_requires_*` 7종·`assault_blocked`·`chain_host`·`chain_letter_used`·`chain_spent`, `reject_text()`(모르는 requires는 특기 일반 문구). 발동 사건 `skill`(시전 진영만) → `battle_event("skill")` → 금색 알림 띠(경고 아이콘 없음) + 교신 기록. 위임 아군 AI 발동도 알린다.
+- 코어 변경은 투영만: `SkillCore.view` 슬롯에 `kind`·`type`·`text`({trait} → 이름)·`active_s`(이 함대가 건 효과 남은 초, 적에게 건 것 포함). 지문 무관. `FleetView.skills`, `BattleCommands.do_skill(slot)`.
+- 사거리 고리: 강궁 중 `ranges.artillery` 260 → 338(×1.3)을 그대로 그린다(테스트 8, 캡처 `out/p8c-skills.png`).
+- 테스트 `tests/special_skills_ui.gd`(버튼 3·발동·알림·사용함·skill_used 토스트·사유 문구 전부·적/다중 숨김·받은 효과 칩·위임 → 직접·강궁 사거리). 캡처 `capture_ui skills`(1920×1200), `battle`·`select`도 특기 줄이 보인다.
+
 ## 남은 일 (컨셉 세션이 할 수 있는 것)
 
 | 우선 | 일 | 메모 |

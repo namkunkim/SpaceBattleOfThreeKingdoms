@@ -37,6 +37,14 @@ func do_cmd(id: String) -> void:
 	host.issue(make(id, _ids(s)))
 	host.refresh_panel()
 
+# 장수 특기(P8c): 단일 선택 함대의 슬롯 번호. 대상은 코어 target_pick 기본값(-1). 거부는 사유 코드 토스트
+func do_skill(slot: int) -> void:
+	var s: Array = host.my_sel()
+	if host.G.state != "play" or s.size() != 1:
+		return
+	host.issue(make("skill", [s[0].id], -1, Vector2.ZERO, {"slot": slot}))
+	host.refresh_panel()
+
 # 진형 변경. 대상 전대 ID 배열 ids를 받는다(선택·그룹 어느 쪽이든 이 함수 하나로 보낸다). 가능 여부·시간은 코어가 판정한다.
 func formation_to(ids: Array, fid: String) -> void:
 	if host.G.state != "play" or ids.is_empty():

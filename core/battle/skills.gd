@@ -407,7 +407,10 @@ func view(f: FleetState) -> Dictionary:
 	var slots := []
 	for id in f.skill_slots:
 		var d: Dictionary = defs.get(id, {})
-		slots.append({"id": id, "name": str(d.get("name", "")), "target": str(d.get("target", "")),
+		var nm := str(d.get("name", ""))
+		slots.append({"id": id, "name": nm, "target": str(d.get("target", "")),
+			"kind": str(d.get("kind", "")), "type": str(d.get("type", "")), "text": str(d.get("text", "")).replace("{trait}", "「%s」" % nm),
+			"active_s": _active_s(f, id),
 			"uses_left": uses_left(f, id) if id != "" else 0, "block": block(f, id) if id != "" else "skill_no_slot"})
 	var fx := []
 	for x in _fx_of(f):
@@ -419,6 +422,20 @@ func view(f: FleetState) -> Dictionary:
 			e.foe = true
 		fx.append(e)
 	return {"slots": slots, "fx": fx}
+
+# 이 함대가 건 기술 id의 효과가 남은 초(대상이 적·아군 어느 함대든, 진영 효과 포함). 없으면 0
+func _active_s(f: FleetState, id: String) -> float:
+	if id == "":
+		return 0.0
+	var last := 0
+	for g in sim.st.fleets:
+		for x in g.fx:
+			if x.id == id and int(x.src) == f.id:
+				last = maxi(last, int(x.until))
+	for x in side_fx[f.side]:
+		if x.id == id and int(x.src) == f.id:
+			last = maxi(last, int(x.until))
+	return maxf(0.0, float(last - sim.st.tick) / float(sim.st.hz))
 
 func fingerprint() -> String:
 	if used_n == 0:
