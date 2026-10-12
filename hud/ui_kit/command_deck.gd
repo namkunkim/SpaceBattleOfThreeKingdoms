@@ -179,14 +179,27 @@ func _build_place_bar() -> void:
 	place_bar = PanelContainer.new()
 	place_bar.add_theme_stylebox_override("panel", UiTheme.flat(Color(0.03, 0.05, 0.07, 0.9), UiTheme.GOLD, 1))
 	hud.add_child(place_bar)
-	_anchor(place_bar, Control.PRESET_CENTER_TOP, Vector2(760, 64), Vector2(0, 84))
+	_anchor(place_bar, Control.PRESET_CENTER_TOP, Vector2(1040, 64), Vector2(0, 84))
 	var hb := HBoxContainer.new()
 	hb.add_theme_constant_override("separation", 12)
 	place_bar.add_child(hb)
-	var l := UiTheme.label("초기 배치 · 함대를 끌어 금빛 원 안에 놓으십시오", "", 14)
+	var l := UiTheme.label("초기 배치 · 끌어서 금빛 원 안에", "", 14)
 	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	hb.add_child(l)
+	for spec in [["↺ 45°", -45.0], ["↻ 45°", 45.0]]:
+		var t := Button.new()
+		t.text = spec[0]
+		t.custom_minimum_size = Vector2(96, 56)
+		t.focus_mode = Control.FOCUS_NONE
+		t.pressed.connect(func(): battle.place_turn(spec[1]))
+		hb.add_child(t)
+	var fo := Button.new()
+	fo.text = "적 방향"
+	fo.custom_minimum_size = Vector2(110, 56)
+	fo.focus_mode = Control.FOCUS_NONE
+	fo.pressed.connect(func(): battle.place_face_foe())
+	hb.add_child(fo)
 	var a := Button.new()
 	a.text = "자동 배치"
 	a.custom_minimum_size = Vector2(140, 56)
@@ -828,14 +841,14 @@ func _info_multi(c: Control, sel: Array) -> void:
 			nm += 1
 	if nm > 0:
 		UiDraw.text(c, Vector2(c.size.x - 40, 40), "평균 사기 %d%%" % roundi(mor / nm), "regular", 12, UiTheme.INK_3, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
-	# 진형 요약(그룹 진형): 이름별 함대 수, 전환 중이면 목표 진형 표시
+	# 진형 요약(그룹 진형): 현재 진형 이름별 함대 수
 	var fc := {}
 	for f in sel:
 		var fn: String = src.form_name(f)
 		if fn != "":
 			fc[fn] = int(fc.get(fn, 0)) + 1
 	if not fc.is_empty():
-		UiDraw.text(c, Vector2(c.size.x - 40, 18), " · ".join(fc.keys().map(func(k): return "%s %d" % [k, fc[k]])), "regular", 12, UiTheme.INK_3, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
+		UiDraw.text(c, Vector2(c.size.x - 70, 18), " · ".join(fc.keys().map(func(k): return "%s %d" % [k, fc[k]])), "regular", 12, UiTheme.INK_3, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
 	_chevron(c)
 	if not info_open:
 		return
@@ -995,7 +1008,7 @@ func _on_formation_pressed(b: Control) -> void:
 		show_toast("%s: %s" % [b.opt.name, b.opt.reason])
 		return
 	battle.cmds.do_formation(str(b.opt.id))
-	if b.opt.who.size() > 0:   # 그룹 일부만 받는다: 받지 못한 함대와 사유를 알린다(코어는 조용히 거른다)
+	if b.opt.state == "ok" and b.opt.who.size() > 0:   # 그룹 일부만 받는다: 받지 못한 함대와 사유를 알린다(코어는 조용히 거른다)
 		show_toast("%d개 함대 제외 — %s" % [b.opt.who.size(), ", ".join(b.opt.who.map(func(w): return "%s(%s)" % [w.name, w.text]))])
 
 func _refresh_formations() -> void:

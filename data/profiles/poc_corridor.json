@@ -2,6 +2,7 @@
  "schema_version": 1,
  "profile_id": "poc-red-cliffs-corridor",
  "note": "M1 기준선 POC 규칙과 편성. M3에서 실시간 규칙으로 대체될 때까지 동등성(tests/fixtures/m1_baseline.json)을 지키는 프로필이다. ai_period_ms 550과 swarm_life_ms 9050은 기준 POC의 부동소수 오차가 만든 실효 값이다(docs/core/M1-NOTES.md §3).",
+ "place_radius_ratio_status": "proposed (Q70: 초기 배치 허용 반경 = 전장 짧은 변 x 0.15, 플레이 전장 1150 기준 약 172px. 사용자 결정 2026-10-12, 본편에 수치 없음)",
  "rules": {
   "world_w": 3400,
   "world_h": 2300,
@@ -82,7 +83,8 @@
   "ai_missile_bp": 3000,
   "ai_fighter_bp": 1800,
   "ai_advance_speed": 4.0,
-  "formation_loose_mul": 1.35
+  "formation_loose_mul": 1.35,
+  "place_radius_ratio": 0.15
  },
  "ally": [
   {

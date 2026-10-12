@@ -52,6 +52,8 @@ class FleetView:
 	var form_to := ""
 	var form_left_s := 0.0
 	var form_info := {}
+	var spawn := Vector2.ZERO         # 초기 배치 허용 구역 중심(아군)
+	var place_r := 0.0                # 같은 반경(전장 px)
 	var contact := ""                 # 적 접촉 상태: confirmed | estimated | lost. 자기 전대는 빈 문자열
 	var err_r := 0.0                  # 접촉 오차 반경(전장 px)
 	var conf := 1.0                   # 접촉 신뢰도 0~1
@@ -173,6 +175,8 @@ func apply(proj: Dictionary) -> Array[FleetView]:
 		f.form_to = s.get("form_to", "")
 		f.form_left_s = s.get("form_left_s", 0.0)
 		f.form_info = s.get("form_info", {})
+		f.spawn = s.get("spawn", Vector2.ZERO)
+		f.place_r = s.get("place_r", 0.0)
 		f.counts = s.get("counts", {})
 	# 투영에서 빠진 접촉(탈출·격침·기억 만료)은 치운다. 남겨 두면 ppos≠tpos인 채 굳어 보간이 틱마다 되감겨 제자리에서 덜컥거린다.
 	# 남은 참조(선택·표적)를 위해 dead로 표시하고, 목록에서 빼서 렌더러가 폭발 없이 지운다(이유를 모르므로 격침 연출은 하지 않는다).

@@ -26,6 +26,8 @@ static func build(sim: BattleSim, side: int) -> Dictionary:
 				q.form_info = fi
 			if f.side == side:
 				q.under_fire = _under_fire(st, f)   # 아군 전용: 적이 이 전대를 겨누고 있다(회피 연출용, 적 접촉에는 넣지 않는다)
+				q.spawn = f.spawn   # 아군 전용: 초기 배치 허용 구역(중심·반경)
+				q.place_r = sim.place_radius()
 				q.ranges = f.ranges.duplicate()   # 아군 전용: 범주별 사거리(적 접촉에는 넣지 않는다)
 			if sim.cmd and f.side == side:
 				# M9: 지휘관 상태·이은 사람·혼선 남은 초(지휘 공백이면 -1)·불이익 단계

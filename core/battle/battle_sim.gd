@@ -36,9 +36,6 @@ var cmd: CommandCore = null     # M9 장수 사상·지휘 승계·혼선. 시�
 var assault: AssaultCore = null # M9 강습(부대 강습·기함 진입). 시나리오와 combat.assault가 있을 때
 
 # profile: 프로필 사전({profile_id, rules, ally, foe, reinf}). 비우면 POC 프로필(기준선 동등).
-# 초기 배치(place) 허용 반경: 각 함대의 시작 위치에서 이 거리(전장 px) 안. 수치는 여기 한 곳이다(Q70)
-const PLACE_RADIUS := 160.0
-
 func _init(seed_id: int = 0, hz: int = BattleRules.TICK_HZ, profile: Dictionary = {}) -> void:
 	if profile.is_empty():
 		profile = PocSetup.profile()
@@ -112,6 +109,10 @@ func set_manual_all(on: bool) -> void:
 	for f in st.fleets:
 		if f.side == 0:
 			f.control = "direct" if on else "delegate"
+
+# 초기 배치(place) 허용 반경(전장 px): 각 함대 시작 위치에서 이 거리 안. 전장 짧은 변 x 규칙 place_radius_ratio(Q70)
+func place_radius() -> float:
+	return minf(rs.world.x, rs.world.y) * R.place_radius_ratio
 
 func projection(side: int) -> Dictionary:
 	return BattleProjection.build(self, side)
@@ -676,7 +677,9 @@ func apply(c: Dictionary) -> void:
 					f.face_to = BattleRules.quant(deg_to_rad(float(args.facing_deg)))
 			emit("say", L.id, -1, L.pos, "move_all" if s.size() > 1 else "move")
 		"place":
-			# 초기 배치(Q70): 틱 0에서만. 선택 중심이 point로 가게 대형째 옮기되 각 함대는 시작 위치 반경 PLACE_RADIUS 안으로 자른다
+			# 초기 배치(Q70): 틱 0에서만. 선택을 대형째 point(중심)로 옮긴다. 이동량은 모든 함대가 시작 위치 반경·전장 경계 안에
+			# 남는 최대 비율로 줄여(찌그러지지 않게) 일괄 적용한다. 그다음 방향은 가장 가까운 적을 향하게 다시 정하고,
+			# args.facing_deg가 있으면 그 방향이 이긴다(틱 0 즉시 회전)
 			if st.tick != 0:
 				_reject(L, "place_late", side)
 				return
@@ -684,17 +687,35 @@ func apply(c: Dictionary) -> void:
 			for f in s:
 				pc += f.pos
 			pc /= s.size()
+			var dv: Vector2 = c.point - pc
+			var tk := 1.0
+			var pr := place_radius()
 			var pw := rs.world
+			if dv.length_squared() > 1e-9:
+				for f in s:
+					var a := f.pos - f.spawn
+					var qa := dv.dot(dv)
+					var qb := a.dot(dv)
+					var qc := a.dot(a) - pr * pr
+					tk = minf(tk, (-qb + sqrt(maxf(0.0, qb * qb - qa * qc))) / qa)
+					for ax in 2:
+						var lo: float = R.edge
+						var hi: float = pw[ax] - R.edge
+						if dv[ax] > 1e-9:
+							tk = minf(tk, (hi - f.pos[ax]) / dv[ax])
+						elif dv[ax] < -1e-9:
+							tk = minf(tk, (lo - f.pos[ax]) / dv[ax])
+				tk = maxf(0.0, tk)
 			for f in s:
-				var want: Vector2 = c.point + (f.pos - pc)
-				var d := want - f.spawn
-				if d.length() > PLACE_RADIUS:
-					want = f.spawn + d.normalized() * PLACE_RADIUS
-				f.pos = BattleRules.quant_v(Vector2(clampf(want.x, R.edge, pw.x - R.edge), clampf(want.y, R.edge, pw.y - R.edge)))
+				f.pos = BattleRules.quant_v(f.pos + dv * tk)
 				f.home = f.pos
 				f.has_move = false
 				f.target_id = -1
 				_clear_path(f)
+				if salvo:
+					salvo.face_nearest(f)
+				if c.get("args", {}).has("facing_deg"):
+					f.heading = BattleRules.quant(deg_to_rad(float(c.args.facing_deg)))
 		"face":
 			# 제자리 방향 전환: 이동·표적을 풀고 args.facing_deg를 향해 돌아선다(위치 고정). 도착 방향 지정(face_set)을 재사용한다
 			for f in s:

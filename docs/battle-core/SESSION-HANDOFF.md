@@ -282,7 +282,8 @@
 - 초기 배치(Q70): 코어에 `place` 명령 하나(`BattleSim.apply`). 틱 0에서만(`place_late` 거부), 선택 중심이 point로 가게 대형째 옮기되 함대마다 `FleetState.spawn`(시작 위치) 반경 `BattleSim.PLACE_RADIUS`(160px, **수치 한 곳**) 안으로 자르고 전장 경계에 맞춘다. 배치한 위치가 `home`이 된다. 일반 명령이라 `command_log`에 기록되어 `BattleSim.replay`가 같은 결과를 낸다.
 - 호스트: `place_mode`(다음 출격 때 직접 배치, 기본 꺼짐 = 생성기 배치 그대로)와 `placing`(배치 중). 배치 중에는 틱이 멈추고(`_process`), `issue()`가 이동을 place로 바꾸며 진형 외 명령은 토스트로 막는다. 그래서 마우스 우클릭, 터치 끌기(선택 함대에서 시작) 모두 기존 입력 그대로 배치가 된다. 켜는 곳은 브리핑의 "직접 배치" 체크, 배치 막대 [자동 배치][배치 확정]은 `CommandDeck.place_bar`. 허용 반경 원은 `tactical_overlay`가 선택 함대에 그린다.
 - 테스트 `tests/placement.gd`(PLACEMENT_PASS: who, 반경·그룹·replay·틱0 거부), `tests/placement_ui.gd`(PLACEMENT_UI_PASS: 호스트 흐름).
-- 안 한 것: 배치 시 방향(헤딩) 지정, 제한 시간(제안서 :733), 배치 중 진형 외 방침·프리셋. 필요하면 `place`에 `args.facing_deg`를 더하면 된다.
+- 5-b 수정(`REVIEW-P9-FOLLOWUP.md`): 반경은 규칙 `place_radius_ratio`(짧은 변 x 0.15)로 옮겨 `BattleSim.place_radius()`로 읽고, HUD는 투영 `spawn`·`place_r`로 그린다. 그룹 배치는 이동량을 일괄로 줄여 대형을 지킨다. 배치 뒤 방향은 가장 가까운 적으로 다시 정하고 `args.facing_deg`가 있으면 즉시 그 방향이다(배치 막대 [↺45°][↻45°][적 방향], 기존 `face` 명령도 배치 중엔 이것으로 바뀐다). 배치 중 방침·위임 허용.
+- 안 한 것: 제한 시간(제안서 :733), 배치 중 적 표시(CHECKLIST 후속), 배치 중 프리셋.
 
 ## 남은 일 (컨셉 세션이 할 수 있는 것)
 

@@ -152,6 +152,7 @@ func init_game() -> void:
 	for f in fleets:
 		view3d.free_fleet(f)
 	vm.reset()
+	placing = false   # 시작 경로(_start)가 다시 정한다. 타이틀·천하로 나가도 참으로 남지 않게
 	fx.clear()
 	# 천하 지도에서 들어온 전투면 BattleBrief의 시드를 쓴다(같은 Brief = 같은 전투, WORLD-MAP-LINK §3).
 	var link := get_node_or_null("/root/WorldLink")
@@ -415,7 +416,9 @@ func issue(cmd: Dictionary) -> void:
 		match cmd.kind:
 			"move":
 				cmd = BattleCommands.make("place", cmd.ids, -1, cmd.point)
-			"formation", "place":
+			"face":   # 정지 중이라 회전이 안 보인다: 틱 0 즉시 방향(place의 facing_deg)
+				cmd = BattleCommands.make("place", cmd.ids, -1, _center_of(cmd.ids), {"facing_deg": cmd.args.facing_deg})
+			"formation", "place", "posture", "delegate":
 				pass
 			_:
 				toast("배치를 확정한 뒤에 지시할 수 있습니다")
@@ -425,7 +428,33 @@ func issue(cmd: Dictionary) -> void:
 	if cmd.kind == "place":   # 정지 중이라 보간할 틱이 없다: 새 위치로 바로 옮겨 그린다
 		for f in fleets:
 			f.ppos = f.tpos
+			f.pheading = f.theading
 		vm.interpolate(1.0)
+
+func _center_of(ids: Array) -> Vector2:
+	var c := Vector2.ZERO
+	for id in ids:
+		c += sim.st.by_id(int(id)).pos
+	return c / maxi(1, ids.size())
+
+# 배치 중 선택 함대를 deg도만큼 돌린다(함대마다 제자리에서, 틱 0 즉시)
+func place_turn(deg: float) -> void:
+	var s := my_sel()
+	if not placing or s.is_empty():
+		toast("먼저 아군 함대를 선택하세요")
+		return
+	for f in s:
+		var fs := sim.st.by_id(f.id)
+		issue(BattleCommands.make("place", [f.id], -1, fs.pos, {"facing_deg": rad_to_deg(fs.heading) + deg}))
+
+# 배치 중 선택 함대가 가장 가까운 적을 보게 한다(자동 방향)
+func place_face_foe() -> void:
+	var s := my_sel()
+	if not placing or s.is_empty():
+		toast("먼저 아군 함대를 선택하세요")
+		return
+	for f in s:
+		issue(BattleCommands.make("place", [f.id], -1, sim.st.by_id(f.id).pos))
 
 # 초기 배치를 모두 시작 위치로 되돌린다(자동 배치)
 func place_auto() -> void:

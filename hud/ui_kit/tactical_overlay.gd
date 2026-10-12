@@ -72,7 +72,7 @@ func _draw() -> void:
 		_weapon_arcs(sel[0])
 	if battle.placing:   # 초기 배치 허용 구역: 선택 함대의 시작 위치 반경(Q70)
 		for f in sel:
-			draw_polyline(_ground_ring(battle.sim.st.by_id(f.id).spawn, BattleSim.PLACE_RADIUS, 64), Color(UiTheme.GOLD_HI, 0.6), 1.6, true)
+			draw_polyline(_ground_ring(f.spawn, f.place_r, 64), Color(UiTheme.GOLD_HI, 0.6), 1.6, true)
 	for f in sel:
 		_orders(f)
 		_brackets(f, UiTheme.GOLD_HI)
