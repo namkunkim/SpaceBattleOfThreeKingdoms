@@ -246,6 +246,8 @@ class BriefScreen extends Control:
 		y += 14.0
 		var rv: Dictionary = deck.src.rules()
 		var rules := [["target", RuleText.flank_rule(rv)], ["flag", RuleText.cmd_range_rule(rv)], ["charge", RuleText.cost_rule(rv)]]
+		if RuleText.evasion_rule(rv) != "":
+			rules.append(["retreat", RuleText.evasion_rule(rv)])
 		if RuleText.defense_rule(rv) != "":
 			rules.append(["def", RuleText.defense_rule(rv)])
 		for r in rules:

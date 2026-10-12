@@ -32,6 +32,7 @@ class FleetView:
 	var pheading := 0.0
 	var target: FleetView = null
 	var fire_t: FleetView = null
+	var under_fire := false          # 아군 전용: 적이 겨누고 있다(회피 연출)
 	var has_move := false
 	var move_to := Vector2.ZERO
 	var missile_cd := 0.0
@@ -163,6 +164,7 @@ func apply(proj: Dictionary) -> Array[FleetView]:
 		f.defense = s.defense
 		f.charge_t = s.charge_s
 		f.in_cmd = s.in_cmd
+		f.under_fire = s.get("under_fire", false)
 		f.dead = s.dead
 		f.control = s.control
 		f.shape = s.get("formation", 0)

@@ -292,11 +292,19 @@ func sector(att_pos: Vector2, tgt: FleetState) -> String:
 		return "rear"
 	return "flank"
 
+# 레이저 회피(Q72): 이동 중인 표적이 전열·요격 사격에 대해 얻는 방어 bp. 속도(진형 기동 포함)에 비례, 상한 있음. 정지 0
+func evasion_bp(tgt: FleetState, cat: String) -> int:
+	var ev: Dictionary = C.evasion
+	if not tgt.moving or not (ev.categories as Array).has(cat):
+		return 0
+	return mini(int(ev.max_bp), int(tgt.speed * float(ev.bp_per_speed)))
+
 # 명중률(bp) [§4.3]: clamp(범주 기본값 + (사격측 화력 − 표적 방어) , 최소, 최대), 지휘 범위 밖이면 −10%p
 func hit_bp(f: FleetState, tgt: FleetState, cat: String) -> int:
 	var fire: int = int(C.formations[_form_id(f)].fire_bp)
 	var defense: int = int(C.formations[_form_id(tgt)].defense_bp) + int(C.sector.defense_bp[sector(f.pos, tgt)])
 	var h: Dictionary = C.hit
+	defense += evasion_bp(tgt, cat)   # Q72: 방어항 1개로 더한다(같은 클램프 안, 이중 계산 없음)
 	var acc := clampi(int(C.weapons[cat].base_accuracy_bp) + fire - defense, int(h.min_bp), int(h.max_bp))
 	if not f.in_cmd:
 		acc = maxi(int(h.min_bp), acc - int(h.out_of_command_bp))

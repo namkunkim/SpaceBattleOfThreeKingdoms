@@ -45,6 +45,8 @@ const WORLD_AABB := AABB(Vector3(-120, -6, -120), Vector3(240, 12, 240))   # 함
 const SIM_STEP := 0.0     # 추종 갱신 주기: 매 프레임(30Hz로 묶으면 75Hz 화면에서 함선이 2프레임 멈췄다 점프한다). 정지한 전대는 갱신하지 않는다
 const TAU_MIN := 0.3             # 함선별 추종 시간 상수(초). 모든 함선이 같다: 다르면 지연이 짧은 함선부터 차례로 출발해 보인다
 const TAU_MAX := 0.3
+const EVADE_SWAY := 0.9             # 레이저를 맞받는 전대의 좌우 회피 흔들림 진폭(연출 전용, 코어 회피 Q72와 무관하게 표시만)
+const EVADE_RATE := 2.4             # 회피 흔들림 각속도(rad/초)
 const SWAY := 0.22               # 이동 중 개체 흔들림 진폭(3D 단위)
 const MOVE_EPS := 0.3            # 이 속도(3D 단위/초) 이상이면 속도 방향을 보고, 아니면 전대 방향을 본다
 const REFORM_MIN := 0.6          # 진형 전환 때 함선이 슬롯을 향해 수렴하는 최소 tau 배율
@@ -95,6 +97,7 @@ class FleetVis:
 	var die_acc := 0.0
 	var lod := -1
 	var formation := -1
+	var evade := false           # 이번 갱신에 적의 사격을 받는 중(회피 흔들림 연출)
 	var rest := 0                # 연속으로 목표에 닿아 있던 갱신 횟수(3 이상이면 갱신 생략)
 	var last_pos := Vector3(1e9, 0, 0)
 	var last_rot := 1e9
@@ -350,7 +353,7 @@ func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 	var fvel := (fpos - v.last_pos) / step if v.last_pos.x < 1e8 else Vector3.ZERO   # 전대 속도: 지수 추종의 정상 지연(속도×tau)을 목표에 미리 더해 상쇄한다
 	v.last_pos = fpos
 	v.last_rot = frot
-	if not moved and v.rest >= 3:
+	if not moved and not v.evade and v.rest >= 3:
 		return
 	var fb := Basis(Vector3.UP, frot)
 	var h_fleet := -float(sq.heading) - PI   # 전대 방향의 모델 yaw
@@ -375,6 +378,8 @@ func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 		if sw > 0.0:
 			t.x += sw * (sa * s.cph + ca * s.sph)
 			t.z += sw * (cb * s.cph2 - sb * s.sph2)
+		if v.evade:
+			t += fb * Vector3(0.0, 0.0, EVADE_SWAY * sin(clock * EVADE_RATE + s.phase))   # 전대 좌우축(모델 로컬 z)으로 흔든다
 		var d := (t - s.pos) * (step / (s.tau + step))   # 지수 추종의 유리 근사(안정, 오버슈트 없음)
 		s.pos += d
 		s.vel = d * inv
@@ -622,8 +627,13 @@ func update(dt: float) -> void:
 		for side in mats:
 			for m in side:
 				(m as ShaderMaterial).set_shader_parameter("detail", detail)
+	var shot_at := {}
+	for sq in sqs:
+		if not sq.dead and sq.firing_at >= 0:
+			shot_at[sq.firing_at] = true
 	for sq in sqs:
 		var v: FleetVis = vis[sq.id]
+		v.evade = (shot_at.has(sq.id) or sq.get("under_fire", false)) and not sq.dead
 		v.node.visible = sq.contact != "lost"   # 상실 접촉은 마지막 위치에 모델 없이 표식만 남는다
 		if sq.formation != v.formation:
 			_reform(v, sq)
