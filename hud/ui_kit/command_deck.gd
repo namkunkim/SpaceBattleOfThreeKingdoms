@@ -218,7 +218,7 @@ func begin_battle(org: Variant = null) -> void:
 		battle.init_game()
 	elif battle.G.state != "brief":
 		battle.init_game()
-	if _org_rejected():
+	if battle.org_blocked():   # _start도 막지만 로그·화면을 건드리기 전에 본다
 		return
 	_clear_log()
 	battle._start()
@@ -227,18 +227,11 @@ func begin_battle(org: Variant = null) -> void:
 
 func restart() -> void:
 	battle.init_game()
-	if _org_rejected():
+	if battle.org_blocked():   # _start도 막지만 로그·화면을 건드리기 전에 본다
 		return
 	_clear_log()
 	battle._start()
 	show_screen("")
-
-# REVIEW-O4 #1: 걸린 편성이 apply에서 거부됐으면(난이도 변경 등) 전투로 넘어가지 않고 편성 화면에서 사유를 보인다
-func _org_rejected() -> bool:
-	if battle.org_errors.is_empty():
-		return false
-	screens["org"].open_org()
-	return true
 
 # 천하 지도에서 들어온 전투는 "타이틀로" 대신 "천하로"
 func title_label() -> String:

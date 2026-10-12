@@ -156,7 +156,9 @@ func _run() -> void:
 	o.press(-1, "", weak)
 	await _frames()
 	if not TestCheck.ok(self, Organization.tier_of(o.org.fleets[other], o.scn, o.prof) > 0 and "지휘 한도 초과" in o.tier_text(other) and o.errors.is_empty(), "over limit warns only: %s" % o.tier_text(other)): return
-	if not TestCheck.ok(self, "진형 전환 시간 +" in o.tier_text(other), "tier wording = time +: %s" % o.tier_text(other)): return
+	var tier := Organization.tier_of(o.org.fleets[other], o.scn, o.prof)
+	var want_pct: int = [0, 9, 19, 32, 47][tier]   # 1/(1 − 0.08t) − 1, 반올림(1단계 8.7%는 9)
+	if not TestCheck.ok(self, "진형 전환 시간 +%d%%" % want_pct in o.tier_text(other), "tier wording = time +%d%%: %s" % [want_pct, o.tier_text(other)]): return
 	# 자동 편성 버튼 = Organization.auto_fill
 	var want := Organization.auto_fill(o.org, "liu_bei", o.scn, o.prof)
 	_click(_find(deck, "자동 편성"))
@@ -183,21 +185,46 @@ func _run() -> void:
 	if not TestCheck.ok(self, deck.screen == "" and battle.G.state == "play" and battle.org == chosen, "confirm -> battle with org"): return
 	var applied := Organization.apply(o.prof, chosen, o.scn)
 	if not TestCheck.ok(self, battle.ALLY_DEF.map(func(d): return d.commander_id) == applied.ally.map(func(d): return d.commander_id), "battle uses applied org"): return
-	# #1: 표준에서 편성한 뒤 극한으로 바꾸면 apply가 거부한다(missing_fleet). 전투로 넘어가지 않고 편성 화면에서 사유를 보인다
+	# #1·O4b F-3: 표준에서 편성한 뒤 극한으로 바꾸면 apply가 거부한다(조조 함대 missing_fleet). 유비군 한 함대는 일부러 깨뜨린다(제독·함선 없음).
+	# 전투로 넘어가지 않고 편성 화면: 유효한 유비군 함대는 그대로, 깨진 함대와 빠진 조조 함대만 채우고 바뀐 함대를 문구로 알린다
+	var broken_sq: String = chosen.fleets[other].squadron_id
+	var bad_org: Dictionary = chosen.duplicate(true)
+	bad_org.fleets[other].admiral = ""
+	bad_org.fleets[other].composition = []
 	deck.to_title()
 	battle.difficulty = "극한"
+	battle.org = bad_org.duplicate(true)
 	battle.init_game()
 	if not TestCheck.ok(self, not battle.org_errors.is_empty() and battle.load_error != "", "rejected org recorded: %s" % battle.load_error): return
+	battle._restart()   # F-1: 구 오버레이 "처음부터"·"다시 출격" 경로(_restart → _start)도 막는다
+	await _frames()
+	if not TestCheck.ok(self, deck.screen == "org" and battle.G.state != "play", "_restart with rejected org -> org screen (%s, %s)" % [deck.screen, battle.G.state]): return
+	var by_sq := func(org_d: Dictionary, sq: String) -> Dictionary:
+		return org_d.fleets.filter(func(fl): return fl.squadron_id == sq)[0]
+	for fl in chosen.fleets:
+		if fl.faction_id == "liu_bei" and fl.squadron_id != broken_sq:
+			if not TestCheck.ok(self, by_sq.call(o.org, fl.squadron_id) == fl, "valid fleet kept " + fl.squadron_id): return
+	var refilled: Dictionary = by_sq.call(o.org, broken_sq)
+	if not TestCheck.ok(self, refilled.admiral != "" and not refilled.composition.is_empty() and o.errors.is_empty(), "broken fleet refilled"): return
+	var broken_name: String = o.names[broken_sq]
+	if not TestCheck.ok(self, "맞지 않아" in o.msg.text and "함대가 빠졌습니다" in o.msg.text and broken_name in o.msg.text and "조조군 함대" in o.msg.text and "그대로" in o.msg.text, "repair notice: %s" % o.msg.text): return
+	if not TestCheck.ok(self, battle.org == o.org and battle.org_errors.is_empty(), "battle org replaced by repaired org"): return
+	# 뒤로 → 출격: 같은 화면이 반복되지 않고 고친 편성으로 전투
+	_click(_find(deck, "뒤로"))
+	await _frames()
 	deck.begin_battle()
 	await _frames()
-	if not TestCheck.ok(self, deck.screen == "org" and battle.G.state != "play", "rejected org -> org screen, no battle (%s, %s)" % [deck.screen, battle.G.state]): return
-	if not TestCheck.ok(self, "맞지 않아" in o.msg.text and "함대가 빠졌습니다" in o.msg.text and o.errors.is_empty(), "rejection reason shown: %s" % o.msg.text): return
-	deck.restart()   # 다시 시작 경로도 막는다
+	if not TestCheck.ok(self, deck.screen == "" and battle.G.state == "play" and battle.load_error == "", "back -> start uses repaired org"): return
+	# deck 시작 경로도 막는다(다시 거부 상태로)
+	deck.to_title()
+	battle.org = bad_org.duplicate(true)
+	battle.init_game()
+	deck.begin_battle()
 	await _frames()
-	if not TestCheck.ok(self, deck.screen == "org" and battle.G.state != "play", "restart with rejected org -> org screen"): return
-	_click(o.confirm)   # 화면은 이 난이도의 첫 상태로 다시 채워져 있어 확정하면 전투
+	if not TestCheck.ok(self, deck.screen == "org" and battle.G.state != "play", "deck start with rejected org -> org screen"): return
+	_click(o.confirm)
 	await _frames()
-	if not TestCheck.ok(self, deck.screen == "" and battle.G.state == "play" and battle.org_errors.is_empty() and battle.load_error == "", "re-confirmed org -> battle"): return
+	if not TestCheck.ok(self, deck.screen == "" and battle.G.state == "play" and battle.org_errors.is_empty(), "re-confirmed org -> battle"): return
 	battle.difficulty = "표준"
 	# 건너뛰기 경로 = 세 세력 자동 편성 = 화면 첫 상태(같은 시드로 지문 비교)
 	deck.to_title()
