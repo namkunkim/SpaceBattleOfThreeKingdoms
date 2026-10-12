@@ -277,7 +277,7 @@
 - 측정(무부하 PC): 자동 해결 1판 약 75초 → 21초, 틱 평균 12 → 3.1~3.9ms, 최대 8~12ms. 표는 `out/core-perf.md`(로컬). 다음: 다른 모델 리뷰(5-b), O3 1000시드 기준선.
 
 ## 장수 특기 코어 P8a (2026-10-12, 구현 세션 "P8a 구현", 브랜치 `claude/eloquent-gould-b2d0f6`) — 5-b 리뷰는 관리 세션이 맡김
-- 새 `core/battle/skills.gd`(SkillCore): 편성 `skill_slots`(기본 = 직책 순, 중복 ID는 다음 후보, validate `skill_duplicate`·`skill_foreign`·`skill_unknown`), 명령 `skill`(slot/skill_id, target_id; 거부 `skill_used`·`skill_no_slot`·`commander_down`·`skill_requires_*`·`skill_no_target`), (함대, 기술 ID) 쌍당 1회(Q92), 효과 합성 Q95, AI·위임 조건 발동(Q91, 함대 ID → 슬롯 순, 함대당 하나), 아군 전용 투영. 슬롯을 비우면 지문이 특기 없는 코어와 같다. 해석으로 정한 10가지와 정보 경계 예외(적 기함·강습모함 술어)는 `docs/core/P8A-NOTES.md`. 테스트 `tests/special_skills.gd`, `data_rules` 스키마 검사, `autoresolve --no-skills/--skill-off`. 200시드 전후 대조 결과도 노트에 있다.
+- 새 `core/battle/skills.gd`(SkillCore): 편성 `skill_slots`(기본 = 직책 순, 중복 ID는 다음 후보, validate `skill_duplicate`·`skill_foreign`·`skill_unknown`), 명령 `skill`(slot/skill_id, target_id; 거부 `skill_used`·`skill_no_slot`·`commander_down`·`skill_requires_*`·`skill_no_target`), (함대, 기술 ID) 쌍당 1회(Q92), 효과 합성 Q95, AI·위임 조건 발동(Q91, 함대 ID → 슬롯 순, 함대당 하나), 아군 전용 투영. 슬롯을 비우면 지문이 특기 없는 코어와 같다. 해석으로 정한 10가지와 정보 경계 예외(적 기함·강습모함 술어)는 `docs/core/P8A-NOTES.md`. 테스트 `tests/special_skills.gd`, `data_rules` 스키마 검사, `autoresolve --no-skills/--skill-off`. 200시드 전후 대조 결과도 노트에 있다. **P8a-b(REVIEW-P8A 조건부 수용 처리)**: F-1~F-9, 사용자 결정 Q96(확인 접촉에 기함·강습모함 공개, AI 술어는 투영만)·Q97(적 효과 시전자 숨김)·Q98(받는 피해는 사격 피해만, 문구 재생성). 표준 200시드(탐색, main P5 포함): 특기 끔 42.5%(Wilson 35.9~49.4) / 켬 38.0%(31.6~44.9), 길이 16.8/16.7분, 판당 발동 24.8회. 기준선 자체가 예전 78~85%보다 낮다(P5 쪽 변화로 보임, O3b에서 확인). 다음: P8b ∥ P8c, O3b.
 
 ## 남은 일 (컨셉 세션이 할 수 있는 것)
 
