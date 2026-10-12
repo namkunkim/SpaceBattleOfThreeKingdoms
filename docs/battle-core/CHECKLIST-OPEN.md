@@ -19,6 +19,8 @@
 
 ## 1. 지금 확인할 수 있는 것
 
+- [x] **data_rules 1번 "core에 규칙 수치 리터럴" 실패 보고(HOLD_MSG_TICKS 50, -1000000)** (2026-10-12): 최신 main 8f5bb30에서 재현 안 됨. `HOLD_MSG_TICKS`·`_hold_msg`는 core에 없고 `data_rules.gd`는 DATA_RULES_PASS(--import 후). 코드 변경 없음.
+
 - [x] **목표 플랫폼이 전투 문서에 반영됐는지** → Q56으로 기록하고 제안서 §2, M10, M11을 고쳤다. 원래 내용은 다음과 같았다
   - 1차 목표는 안드로이드 태블릿과 윈도우 PC이고, 폰은 1차 목표가 아니다(사용자 지시, UI 세션에서 정함).
   - 그런데 `BATTLE_DECISIONS.md`, 제안서 §7.2·§7.4·M11, `EXPERIENCE-DESIGN.md`는 아직 "모바일"과 폰 기준으로 쓰여 있다.
