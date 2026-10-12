@@ -201,7 +201,7 @@ func formation_options() -> Array:
 	var sel := []
 	for f in battle.my_sel():
 		if f.side == 0:
-			sel.append({"formation_id": f.formation_id, "form_to": f.form_to, "form_left_s": f.form_left_s, "form_info": f.form_info})
+			sel.append({"name": f.fname, "formation_id": f.formation_id, "form_to": f.form_to, "form_left_s": f.form_left_s, "form_info": f.form_info})
 	return FormationTab.options(combat, sel)
 
 # 지휘력(CP)은 POC 규칙의 자원이다. salvo 규칙(시나리오 프로필)은 CP를 쓰지 않는다.

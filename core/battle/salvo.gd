@@ -80,9 +80,12 @@ func finish_setup() -> void:
 		_enforce_terrain(f)
 	# 초기 방향: 가장 가까운 적 전대를 향한다(§4.2)
 	for f in sim.st.fleets:
-		var n := sim.st.nearest_foe(f, 1e9)
-		if n:
-			f.heading = BattleRules.quant(atan2(n.pos.y - f.pos.y, n.pos.x - f.pos.x))
+		face_nearest(f)
+
+func face_nearest(f: FleetState) -> void:
+	var n := sim.st.nearest_foe(f, 1e9)
+	if n:
+		f.heading = BattleRules.quant(atan2(n.pos.y - f.pos.y, n.pos.x - f.pos.x))
 
 func _speed(f: FleetState) -> float:
 	var slow := 1e9
