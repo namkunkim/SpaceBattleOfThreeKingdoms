@@ -968,6 +968,7 @@ func _fleet_phase(timers: bool) -> void:
 			if (dest - old_pos).dot(blk - old_pos) > 0.0:
 				_hold_stop(f)
 				has_dest = false
+		f.moving = has_dest
 		if not has_dest and f.face_set:
 			# 도착 방향: 도착한 뒤 지정한 방향으로 돌아선다(§4.2). 맞출 때까지는 자동 조준보다 우선한다
 			# 제자리 선회율은 movement.face_turn_deg_per_s가 있으면 그것(이동 중 선회율과 따로 정할 수 있다)

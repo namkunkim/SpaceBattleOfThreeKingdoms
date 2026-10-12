@@ -128,6 +128,8 @@ static func build(def: Dictionary, scn: Dictionary, base: Dictionary, difficulty
 static func tune_for_play(profile: Dictionary, move_mul: float, turn_mul: float) -> void:
 	for t in profile.combat.ship_types.values():
 		t.speed_per_turn *= move_mul
+	if profile.combat.has("evasion"):
+		profile.combat.evasion.bp_per_speed = float(profile.combat.evasion.bp_per_speed) / move_mul   # 회피는 속도 비례라 배율을 되돌려 헤드리스와 같은 유효값으로(Q72 H1)
 	var mv: Dictionary = profile.combat.movement
 	mv.face_turn_deg_per_s = mv.turn_deg_per_s * 4
 	mv.turn_deg_per_s *= turn_mul

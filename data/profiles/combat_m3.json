@@ -366,6 +366,15 @@
    "out_of_command_bp": 1000,
    "out_of_command_status": "proposed (§4.3: 지휘 범위 밖 명중률 −10%p)"
   },
+  "evasion": {
+   "categories": [
+    "line_fire",
+    "intercept"
+   ],
+   "bp_per_speed": 130,
+   "max_bp": 500,
+   "status": "proposed (Q72: 레이저 회피 = 명중률 방어항 1개. 본편에 회피 개념이 없어 수치 정본 없음, 이동 중 전대 속도(px/초, 진형 기동 포함) x bp_per_speed를 max_bp로 막는다. 정지·보급 중 0. 미사일·함재기·뇌격 제외)"
+  },
   "hull": {
    "points_per_cost": 10,
    "bands_bp": {

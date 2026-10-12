@@ -63,6 +63,7 @@ var wch: Dictionary = {}       # 범주 → 남은 사용 횟수(Q69: 미사일�
 var wmax: Dictionary = {}      # 범주 → 편성 때 최대 횟수(표시용. 0이면 그 무기가 없다)
 var next_fire: Dictionary = {}   # 범주 → 다음 일제사격 틱
 var supp: Dictionary = {}        # 범주 → 보류 사유(없으면 "")
+var moving := false           # 이번 틱에 이동 중이다(레이저 회피 Q72). 위치에서 파생되는 값이라 지문에 넣지 않는다
 var speed := 0.0              # px/초
 
 # --- M4 사기와 승패 ---

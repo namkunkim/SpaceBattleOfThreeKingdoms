@@ -25,6 +25,7 @@ static func build(sim: BattleSim, side: int) -> Dictionary:
 					fi[fid] = {"block": sim.salvo.form_block(f, fid), "secs": float(sim.salvo.transition_ticks(f, fid)) / st.hz}
 				q.form_info = fi
 			if f.side == side:
+				q.under_fire = _under_fire(st, f)   # 아군 전용: 적이 이 전대를 겨누고 있다(회피 연출용, 적 접촉에는 넣지 않는다)
 				q.ranges = f.ranges.duplicate()   # 아군 전용: 범주별 사거리(적 접촉에는 넣지 않는다)
 			if sim.skills and f.side == side:
 				q.skills = sim.skills.view(f)   # P8a: 아군 전용 특기 슬롯·남은 횟수·걸린 효과. 적 항목에는 넣지 않는다
@@ -88,6 +89,12 @@ static func build(sim: BattleSim, side: int) -> Dictionary:
 # 함종·척 수·선체·사기·표적·진형은 어느 상태에서도 공개하지 않는다.
 # 세력 표시 키(shu/wu/wei). 시나리오 세력 ID가 정본이고, 없으면(POC) 진영으로 나눈다. 손권군(side 0)이 촉으로 나오던 원인(2026-10-05).
 const FACTION_KEY := {"liu_bei": "shu", "sun_quan": "wu", "cao_cao": "wei"}
+
+static func _under_fire(st: BattleState, f: FleetState) -> bool:
+	for g in st.fleets:
+		if g.side != f.side and not g.dead and g.fire_id == f.id:
+			return true
+	return false
 
 static func faction_key(f: FleetState) -> String:
 	return FACTION_KEY.get(f.faction, "wei" if f.side == 1 else "shu")
