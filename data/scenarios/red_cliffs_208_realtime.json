@@ -3829,10 +3829,20 @@
    "uses_per_battle": 1,
    "slots": 3,
    "slot_default": [
-    "commander",
-    "vice_commander",
+    "admiral",
+    "vice",
     "staff_assault"
    ],
+   "use_scope": "fleet_skill_pair",
+   "no_duplicate_skill_in_fleet": true,
+   "stacking": {
+    "damage_taken_reduction": "min_only",
+    "damage_taken_increase": "max_only",
+    "speed_mul": "max_only",
+    "transition_mul": "min_only",
+    "other": "multiply",
+    "note": "Q95: 받는 피해 감소(<10000)는 가장 낮은 배율 하나만, 증가(>10000)는 가장 큰 하나만 따로 고르고 둘을 곱한다"
+   },
    "ai_eval": "AI 결정 틱마다 함대 ID 순 → 슬롯 순으로 ai_when을 보고, 함대당 한 틱에 하나만 발동한다",
    "skills": [
     {
@@ -3844,7 +3854,8 @@
      "duration_s": 60,
      "effects": {
       "assault_bp": 3000,
-      "assault_cd_reset": true
+      "assault_cd_reset": true,
+      "note": "재사용 대기 60초 = 지속 60초라 최대 2회 시도(의도)"
      },
      "requires": {
       "has_ship_type": "SHP-01"
@@ -3875,7 +3886,7 @@
      "ai_when": {
       "all": [
        {
-        "enemy_in_band": "engagement"
+        "enemy_in_band": "barrage"
        }
       ]
      },
@@ -3892,6 +3903,12 @@
      "target": "ally_fleet",
      "radius": 200,
      "duration_s": 30,
+     "target_pick": {
+      "from": "allied_fleets_in_radius",
+      "include_self": true,
+      "by": "lowest_hull_ratio",
+      "tie": "id"
+     },
      "effects": {
       "damage_taken_mul_bp": 0,
       "rescue_equipped": true
@@ -3930,7 +3947,10 @@
      "ai_when": {
       "all": [
        {
-        "enemy_within": 338
+        "enemy_beyond_base_range_within_mul": [
+         "artillery",
+         13000
+        ]
        }
       ]
      },
@@ -3944,10 +3964,10 @@
      "trait": "미주랑",
      "officer": "CHR-0211",
      "name": "미주랑",
-     "target": "faction",
+     "target": "side",
      "duration_s": 180,
      "effects": {
-      "chain_power_mul_bp": 15000
+      "chain_power_mul_bp": 13000
      },
      "ai_when": {
       "all": [
@@ -3956,8 +3976,8 @@
        }
       ]
      },
-     "relation": "chain_operation.power_by_range에 곱한다(최대 0.5 → 0.75). 화공 발동·번짐 규칙은 그대로",
-     "text": "「미주랑」 — 180초 동안 아군 화공 위력 +50%.",
+     "relation": "chain_operation.power_by_range에 곱한다(최대 0.5 → 0.65). 화공 발동·번짐 규칙은 그대로",
+     "text": "「미주랑」 — 180초 동안 연합 진영 화공 위력 +30%.",
      "kind": "unique",
      "status": "proposed"
     },
@@ -4021,7 +4041,8 @@
       "damage_redirect_bp": 5000
      },
      "requires": {
-      "ally_flagship_within": 200
+      "ally_flagship_within": 200,
+      "self_not_flagship": true
      },
      "ai_when": {
       "all": [
@@ -4045,6 +4066,7 @@
      "name": "호치",
      "target": "allies_in_radius",
      "radius": 200,
+     "include_self": true,
      "duration_s": 120,
      "effects": {
       "assault_block": true
@@ -4101,7 +4123,7 @@
         "self_retreating": true
        },
        {
-        "enemy_within": 340
+        "enemy_in_band": "barrage"
        }
       ]
      },
@@ -4232,6 +4254,11 @@
      "target": "enemy_fleet",
      "radius": 260,
      "duration_s": 60,
+     "target_pick": {
+      "from": "confirmed_enemy_fleets",
+      "by": "nearest",
+      "tie": "id"
+     },
      "effects": {
       "morale_bp": -800,
       "hit_bp": -800
@@ -4316,7 +4343,7 @@
     "CHR-0004": {
      "skill": "SK-T-SUPPLY",
      "trait": "모주",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0009": {
      "skill": "SK-T-SUPPLY",
@@ -4329,9 +4356,9 @@
      "basis": "keyword"
     },
     "CHR-0012": {
-     "skill": "SK-T-FIRE",
+     "skill": "SK-T-GUARD",
      "trait": "대관출전",
-     "basis": "keyword"
+     "basis": "assign"
     },
     "CHR-0013": {
      "skill": "SK-T-MORALE",
@@ -4359,9 +4386,9 @@
      "basis": "keyword"
     },
     "CHR-0024": {
-     "skill": "SK-T-SCOUT",
+     "skill": "SK-T-MORALE",
      "trait": "종실지신",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0025": {
      "skill": "SK-T-MORALE",
@@ -4369,9 +4396,9 @@
      "basis": "keyword"
     },
     "CHR-0027": {
-     "skill": "SK-T-SCOUT",
+     "skill": "SK-T-MORALE",
      "trait": "인단",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0028": {
      "skill": "SK-T-MOVE",
@@ -4379,9 +4406,9 @@
      "basis": "keyword"
     },
     "CHR-0029": {
-     "skill": "SK-T-GUARD",
+     "skill": "SK-T-FIRE",
      "trait": "호이",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0030": {
      "skill": "SK-U-DIANWEI",
@@ -4389,14 +4416,14 @@
      "basis": "unique"
     },
     "CHR-0031": {
-     "skill": "SK-T-SCOUT",
+     "skill": "SK-T-GUARD",
      "trait": "강직",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0032": {
-     "skill": "SK-T-SUPPLY",
+     "skill": "SK-T-MORALE",
      "trait": "선양",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0033": {
      "skill": "SK-U-CAOREN",
@@ -4406,7 +4433,7 @@
     "CHR-0034": {
      "skill": "SK-T-MORALE",
      "trait": "유재시거",
-     "basis": "keyword"
+     "basis": "assign"
     },
     "CHR-0035": {
      "skill": "SK-T-FIRE",
@@ -4466,7 +4493,7 @@
     "CHR-0050": {
      "skill": "SK-T-SUPPLY",
      "trait": "은일",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0051": {
      "skill": "SK-T-SUPPLY",
@@ -4486,27 +4513,27 @@
     "CHR-0058": {
      "skill": "SK-T-SCOUT",
      "trait": "봉천자",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0061": {
-     "skill": "SK-T-SUPPLY",
+     "skill": "SK-T-MORALE",
      "trait": "명사",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0062": {
      "skill": "SK-T-SUPPLY",
      "trait": "장형",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0068": {
-     "skill": "SK-T-SUPPLY",
+     "skill": "SK-T-GUARD",
      "trait": "하서",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0070": {
-     "skill": "SK-T-SUPPLY",
+     "skill": "SK-T-GUARD",
      "trait": "지절",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0071": {
      "skill": "SK-T-MORALE",
@@ -4521,7 +4548,7 @@
     "CHR-0074": {
      "skill": "SK-T-SCOUT",
      "trait": "경학",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0079": {
      "skill": "SK-T-SUPPLY",
@@ -4541,12 +4568,12 @@
     "CHR-0085": {
      "skill": "SK-T-SCOUT",
      "trait": "칠보",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0087": {
      "skill": "SK-T-GUARD",
      "trait": "장자",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0088": {
      "skill": "SK-T-MORALE",
@@ -4566,22 +4593,22 @@
     "CHR-0092": {
      "skill": "SK-T-GUARD",
      "trait": "강직",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0094": {
      "skill": "SK-T-SUPPLY",
      "trait": "돈황",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0095": {
-     "skill": "SK-T-SUPPLY",
+     "skill": "SK-T-GUARD",
      "trait": "강직",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0098": {
-     "skill": "SK-T-GUARD",
+     "skill": "SK-T-SUPPLY",
      "trait": "종군",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0100": {
      "skill": "SK-T-SUPPLY",
@@ -4591,7 +4618,7 @@
     "CHR-0103": {
      "skill": "SK-T-SUPPLY",
      "trait": "청류",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0330": {
      "skill": "SK-T-MOVE",
@@ -4601,7 +4628,7 @@
     "CHR-0104": {
      "skill": "SK-T-DISRUPT",
      "trait": "오만",
-     "basis": "keyword"
+     "basis": "assign"
     },
     "CHR-0105": {
      "skill": "SK-T-MORALE",
@@ -4624,7 +4651,7 @@
      "basis": "keyword"
     },
     "CHR-0112": {
-     "skill": "SK-T-DISRUPT",
+     "skill": "SK-T-MORALE",
      "trait": "백미",
      "basis": "keyword"
     },
@@ -4639,9 +4666,9 @@
      "basis": "keyword"
     },
     "CHR-0115": {
-     "skill": "SK-T-MOVE",
+     "skill": "SK-T-MORALE",
      "trait": "불안",
-     "basis": "keyword"
+     "basis": "assign"
     },
     "CHR-0116": {
      "skill": "SK-T-MORALE",
@@ -4671,10 +4698,10 @@
     "CHR-0122": {
      "skill": "SK-T-MORALE",
      "trait": "효심",
-     "basis": "keyword"
+     "basis": "assign"
     },
     "CHR-0123": {
-     "skill": "SK-T-DISRUPT",
+     "skill": "SK-T-MORALE",
      "trait": "변설",
      "basis": "keyword"
     },
@@ -4689,14 +4716,14 @@
      "basis": "keyword"
     },
     "CHR-0126": {
-     "skill": "SK-T-MOVE",
+     "skill": "SK-T-FIRE",
      "trait": "반골",
-     "basis": "keyword"
+     "basis": "assign"
     },
     "CHR-0127": {
      "skill": "SK-T-FIRE",
      "trait": "양자",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0128": {
      "skill": "SK-T-MORALE",
@@ -4729,7 +4756,7 @@
      "basis": "unique"
     },
     "CHR-0137": {
-     "skill": "SK-T-SUPPLY",
+     "skill": "SK-T-MORALE",
      "trait": "목우유마",
      "basis": "keyword"
     },
@@ -4749,9 +4776,9 @@
      "basis": "keyword"
     },
     "CHR-0147": {
-     "skill": "SK-T-SUPPLY",
+     "skill": "SK-T-MOVE",
      "trait": "이반",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0149": {
      "skill": "SK-T-MORALE",
@@ -4759,14 +4786,14 @@
      "basis": "keyword"
     },
     "CHR-0150": {
-     "skill": "SK-T-SUPPLY",
+     "skill": "SK-T-MORALE",
      "trait": "직언",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0152": {
      "skill": "SK-T-GUARD",
      "trait": "숙련",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0153": {
      "skill": "SK-T-SUPPLY",
@@ -4784,14 +4811,14 @@
      "basis": "keyword"
     },
     "CHR-0161": {
-     "skill": "SK-T-SCOUT",
+     "skill": "SK-T-DISRUPT",
      "trait": "원망",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0164": {
-     "skill": "SK-T-SUPPLY",
+     "skill": "SK-T-FIRE",
      "trait": "방자",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0165": {
      "skill": "SK-T-SUPPLY",
@@ -4799,12 +4826,12 @@
      "basis": "keyword"
     },
     "CHR-0167": {
-     "skill": "SK-T-DISRUPT",
+     "skill": "SK-T-MORALE",
      "trait": "변설",
      "basis": "keyword"
     },
     "CHR-0169": {
-     "skill": "SK-T-DISRUPT",
+     "skill": "SK-T-MORALE",
      "trait": "남중 회유",
      "basis": "keyword"
     },
@@ -4831,7 +4858,7 @@
     "CHR-0181": {
      "skill": "SK-T-DISRUPT",
      "trait": "오만",
-     "basis": "keyword"
+     "basis": "assign"
     },
     "CHR-0183": {
      "skill": "SK-T-SCOUT",
@@ -4839,9 +4866,9 @@
      "basis": "keyword"
     },
     "CHR-0325": {
-     "skill": "SK-T-SUPPLY",
+     "skill": "SK-T-GUARD",
      "trait": "장자",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0185": {
      "skill": "SK-T-DISRUPT",
@@ -4856,7 +4883,7 @@
     "CHR-0187": {
      "skill": "SK-T-FIRE",
      "trait": "원한",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0188": {
      "skill": "SK-T-MORALE",
@@ -4889,7 +4916,7 @@
      "basis": "keyword"
     },
     "CHR-0196": {
-     "skill": "SK-T-FIRE",
+     "skill": "SK-T-MORALE",
      "trait": "궁요희",
      "basis": "keyword"
     },
@@ -4944,9 +4971,9 @@
      "basis": "keyword"
     },
     "CHR-0216": {
-     "skill": "SK-T-GUARD",
+     "skill": "SK-T-FIRE",
      "trait": "역전",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0217": {
      "skill": "SK-U-HUANGGAI",
@@ -5004,14 +5031,14 @@
      "basis": "keyword"
     },
     "CHR-0246": {
-     "skill": "SK-T-SCOUT",
+     "skill": "SK-T-MORALE",
      "trait": "직언",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0251": {
-     "skill": "SK-T-SCOUT",
+     "skill": "SK-T-SUPPLY",
      "trait": "이장",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0255": {
      "skill": "SK-T-MORALE",
@@ -5019,9 +5046,9 @@
      "basis": "keyword"
     },
     "CHR-0256": {
-     "skill": "SK-T-SUPPLY",
+     "skill": "SK-T-DISRUPT",
      "trait": "사위",
-     "basis": "stat"
+     "basis": "assign"
     },
     "CHR-0260": {
      "skill": "SK-T-MORALE",
@@ -5034,12 +5061,18 @@
      "basis": "keyword"
     },
     "CHR-0264": {
-     "skill": "SK-T-SCOUT",
+     "skill": "SK-T-SUPPLY",
      "trait": "사령",
-     "basis": "stat"
+     "basis": "assign"
     }
    },
-   "note": "Q88~Q91·D4. 장수당 기술 1개(첫 특성). 특성 없는 장수는 기술 없음. 효과 키·조건 문법은 docs/battle-core/SPECIAL-SKILLS.md",
+   "definitions": {
+    "holding": "이동 명령·경유점이 없고 후퇴·돌격 접근 중이 아니다(진형 전환 중은 holding)",
+    "damage_reduction_stack": "Q95: 받는 피해 감소는 가장 낮은 배율 하나만",
+    "assault_bp_order": "escort 배율 뒤에 더하고 [min_bp, max_bp]로 clamp한 다음 forced_div",
+    "distance_band_order": "contact > barrage > engagement > assault (가까울수록 작다). enemy_in_band b = 그 거리대 이내"
+   },
+   "note": "Q88~Q95·D4. 장수당 기술 1개(첫 특성). 특성 없는 장수는 기술 없음. 효과 키·조건 문법은 docs/battle-core/SPECIAL-SKILLS.md",
    "status": "proposed",
    "source": "본편 combat.md §9, characters.json traits, BATTLE_DECISIONS §U"
   }
