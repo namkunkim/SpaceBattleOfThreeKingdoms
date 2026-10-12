@@ -15,6 +15,7 @@ const Strip := preload("res://hud/ui_kit/squadron_strip.gd")
 const Pulse := preload("res://hud/ui_kit/edge_pulse.gd")
 const Quick := preload("res://hud/ui_kit/quick_alert.gd")
 const SupplyMenu := preload("res://hud/ui_kit/supply_menu.gd")
+const SkillBar := preload("res://hud/ui_kit/skill_bar.gd")
 
 # 이름·아이콘만 여기 둔다. 효과 문구와 수치는 규칙 값(BattleSource.rules → RuleText.cmd)에서 만든다.
 # confirm: 되돌릴 수 없거나 비용이 큰 명령은 길게 눌러 확정한다(EXPERIENCE-DESIGN §6 U3). 단축키는 바로 실행.
@@ -76,6 +77,7 @@ var info: Control
 var multi_btn: DeckWidgets.IconButton
 var grp_btns: Array[DeckWidgets.IconButton] = []
 var info_open := false
+var skill_bar: Control   # 장수 특기 줄(P8c): 정보 패널 아래쪽, 단일 선택 아군만
 var cmd_panel: Control
 var cmd_tabs: Array = []
 var supply_menu: Control
@@ -84,6 +86,7 @@ var cmd_buttons: Array = []
 var tab_index := 0
 var toast: Control
 var toast_text := ""
+var toast_good := false   # 알림(특기 발동)이면 경고 아이콘 없이 금색
 var toast_tween: Tween
 var log_items: Array = []
 var _redraw_acc := 0.0
@@ -161,6 +164,8 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 	for c in cmd_buttons:
 		hold_tip.register(c)
 	hold_tip.register(multi_btn)
+	for sb in skill_bar.btns:
+		hold_tip.register(sb)
 	screens = Screens.build_all(self)
 	_build_sound()
 	battle.battle_event.connect(_on_event)
@@ -216,7 +221,7 @@ func _build_place_bar() -> void:
 func _layout_floaters() -> void:
 	if supply_menu:
 		_place_supply()
-	undo_bar.offset_top = -(decision_card.size.y + 14 + 10 + 60) if decision_card.visible else -((INFO_L2 if info_open else INFO_L1) + 14 + 8 + 60)   # info.size는 다음 프레임에 갱신된다
+	undo_bar.offset_top = -(decision_card.size.y + 14 + 10 + 60) if decision_card.visible else -(_info_h() + 14 + 8 + 60)   # info.size는 다음 프레임에 갱신된다
 	undo_bar.offset_bottom = undo_bar.offset_top + 60
 	quick_alert.offset_top = undo_bar.offset_top - 2
 	quick_alert.offset_bottom = quick_alert.offset_top + 64
@@ -316,6 +321,7 @@ func _process(delta: float) -> void:
 		if _redraw_acc >= 0.1:
 			_redraw_acc = 0.0
 			_refresh_cmds()
+			_refresh_skills()
 			_refresh_group_btns()
 			for c in [top_bar, cp_bar, objectives, info, toast]:
 				c.queue_redraw()
@@ -631,6 +637,12 @@ func _on_event(kind: String, text: String, fleet_id: int) -> void:
 		show_toast(text)
 		sound.play("denied")   # POC 알림 띠는 거의 다 "할 수 없음" 안내다
 		return
+	if kind == "skill":   # 아군 장수 특기 발동: 짧은 알림(경고 아님) + 교신 기록
+		show_toast(text, true)
+		add_log_entry("", text, fleet_id)
+		sound.play("confirm_heavy")
+		_refresh_skills()
+		return
 	add_log_entry(kind, text, fleet_id)
 	var f = battle.by_id(fleet_id) if fleet_id >= 0 else null
 	if kind == "sys":
@@ -662,6 +674,10 @@ func _build_info() -> void:
 	info = W.DrawPanel.new(_draw_info, UiTheme.ornate())
 	hud.add_child(info)
 	_anchor(info, Control.PRESET_CENTER_BOTTOM, Vector2(640, INFO_L1), Vector2(0, -14))
+	skill_bar = SkillBar.new()
+	info.add_child(skill_bar)
+	skill_bar.size = Vector2(640, SkillBar.BTN.y)
+	skill_bar.setup(self)
 	info.gui_input.connect(func(e: InputEvent):
 		if e is InputEventMouseButton and e.button_index == MOUSE_BUTTON_LEFT and e.pressed:
 			_set_info_open(not info_open))
@@ -669,9 +685,25 @@ func _build_info() -> void:
 # 선택 패널 접기(L1) / 펼치기(L2)
 func _set_info_open(on: bool) -> void:
 	info_open = on
-	_anchor(info, Control.PRESET_CENTER_BOTTOM, Vector2(640, INFO_L2 if on else INFO_L1), Vector2(0, -14))
+	_size_info()
+
+# 정보 패널 높이 = 접힘/펼침 + 특기 줄(보일 때)
+func _info_h() -> float:
+	return (INFO_L2 if info_open else INFO_L1) + (SkillBar.H if skill_bar.visible else 0.0)
+
+func _size_info() -> void:
+	var h := _info_h()
+	_anchor(info, Control.PRESET_CENTER_BOTTOM, Vector2(640, h), Vector2(0, -14))
+	skill_bar.position = Vector2(0, h - SkillBar.H + 2)
 	_layout_floaters()
 	info.queue_redraw()
+
+func _refresh_skills() -> void:
+	var f = SkillBar.pick(battle.my_sel())
+	var was: bool = skill_bar.visible
+	skill_bar.refresh(f)
+	if skill_bar.visible != was:
+		_size_info()
 
 func _draw_info(c: Control) -> void:
 	var sel: Array = battle.my_sel()
@@ -1060,7 +1092,10 @@ func _confirm_end(b: Control) -> void:
 	if _confirm_btn != b:
 		return
 	if not _confirm_fired:
-		show_toast("%s: 길게 눌러 확정합니다" % b.cmd.label)
+		if b.has_method("tap_text"):   # 장수 특기: 탭 = 설명·대상(Q99·Q101)
+			show_toast(b.tap_text(), str(b.slot.get("block", "")) == "")
+		else:
+			show_toast("%s: 길게 눌러 확정합니다" % b.cmd.label)
 	b.hold_k = 0.0
 	b.queue_redraw()
 	_confirm_btn = null
@@ -1074,12 +1109,17 @@ func _confirm_tick(delta: float) -> void:
 	_confirm_t += delta
 	_confirm_btn.hold_k = clampf(_confirm_t / CONFIRM_HOLD, 0.0, 1.0)
 	_confirm_btn.queue_redraw()
+	if _confirm_btn.has_method("preview"):
+		_confirm_btn.preview()
 	if _confirm_t >= CONFIRM_HOLD:
 		_confirm_fired = true
 		_confirm_btn.hold_k = 0.0
 		hold_tip.hide_tip()
 		sound.play("confirm_heavy")
-		battle.do_cmd(_confirm_btn.cmd.id)
+		if _confirm_btn.has_method("fire"):
+			_confirm_btn.fire()
+		else:
+			battle.do_cmd(_confirm_btn.cmd.id)
 
 # P7 보급·수리 탭: 위쪽 패널(SupplyMenu)이 읽기값과 "먼저"를 맡고, 여기 명령 버튼은 자동 보급 중지/재개 하나다.
 func _build_supply_page(i: int) -> void:
@@ -1098,7 +1138,7 @@ func _build_supply_page(i: int) -> void:
 
 # 선택 패널(L1/L2) 위, 되돌리기 알림 자리 위에 뜬다
 func _place_supply() -> void:
-	var up := (INFO_L2 if info_open else INFO_L1) + 14 + 8 + 60 + 6
+	var up := _info_h() + 14 + 8 + 60 + 6
 	_anchor(supply_menu, Control.PRESET_CENTER_BOTTOM, SupplyMenu.SIZE, Vector2(0, -up))
 
 func _refresh_supply(v: Dictionary) -> void:
@@ -1202,8 +1242,9 @@ func _build_toast() -> void:
 		c.draw_polygon(PackedVector2Array([Vector2(0, 0), Vector2(w * 0.5, 0), Vector2(w, 0), Vector2(w, h), Vector2(w * 0.5, h), Vector2(0, h)]), PackedColorArray([Color(mid, 0), mid, Color(mid, 0), Color(mid, 0), mid, Color(mid, 0)]))
 		c.draw_line(Vector2(w * 0.15, 0), Vector2(w * 0.85, 0), Color(UiTheme.WARN, 0.5))
 		c.draw_line(Vector2(w * 0.15, h), Vector2(w * 0.85, h), Color(UiTheme.WARN, 0.5))
-		UiDraw.icon(c, "warn", Rect2(w * 0.5 - UiDraw.text_w(toast_text, "semibold", 15) * 0.5 - 30, h * 0.5 - 10, 20, 20), UiTheme.WARN, 1.6)
-		UiDraw.text(c, Vector2(0, h * 0.5 + 5.5), toast_text, "semibold", 15, UiTheme.WARN, HORIZONTAL_ALIGNMENT_CENTER, w))
+		if not toast_good:
+			UiDraw.icon(c, "warn", Rect2(w * 0.5 - UiDraw.text_w(toast_text, "semibold", 15) * 0.5 - 30, h * 0.5 - 10, 20, 20), UiTheme.WARN, 1.6)
+		UiDraw.text(c, Vector2(0, h * 0.5 + 5.5), toast_text, "semibold", 15, UiTheme.GOLD_HI if toast_good else UiTheme.WARN, HORIZONTAL_ALIGNMENT_CENTER, w))
 	toast.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hud.add_child(toast)
 	_anchor(toast, Control.PRESET_CENTER_TOP, Vector2(640, 36), Vector2(0, 130))
@@ -1214,8 +1255,9 @@ func apply_glow() -> void:
 		if c is WorldEnvironment:
 			(c as WorldEnvironment).environment.glow_enabled = GameSettings.glow
 
-func show_toast(text: String) -> void:
+func show_toast(text: String, good := false) -> void:
 	toast_text = text
+	toast_good = good
 	toast.queue_redraw()
 	if toast_tween:
 		toast_tween.kill()

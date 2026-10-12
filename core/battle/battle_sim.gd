@@ -143,8 +143,20 @@ func issue(cmd: Dictionary) -> void:
 	var c := cmd.duplicate(true)
 	c.tick = st.tick
 	command_log.append(c)
-	_mark_direct(c)
+	_apply_human(c)
+
+# 사람 명령 적용: 직접 지휘로 바꾸고 적용. 특기는 거부되면 위임을 유지한다(Q100: 성공한 발동만 직접 지휘)
+func _apply_human(c: Dictionary) -> void:
+	if str(c.kind) != "skill":
+		_mark_direct(c)
+		apply(c)
+		return
+	var n := _events.size()
 	apply(c)
+	for i in range(n, _events.size()):
+		if _events[i].kind == "rejected":
+			return
+	_mark_direct(c)
 
 # 플레이어가 명령한 전대는 직접 지휘가 된다(§5.4). AI 명령은 apply()를 바로 불러 여기를 거치지 않는다.
 const DIRECT_KINDS := ["stop", "move", "face", "attack", "charge", "retreat", "rally", "formation", "restore", "def", "missile", "fighter", "volley",
@@ -164,8 +176,7 @@ func step() -> void:
 		c = c.duplicate(true)
 		c.tick = st.tick
 		command_log.append(c)
-		_mark_direct(c)
-		apply(c)
+		_apply_human(c)
 	_tick()
 
 # 명령 기록으로 다시 돌린다(재생). until_tick까지.
