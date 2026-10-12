@@ -16,5 +16,6 @@ func _run() -> void:
 	if not TestCheck.ok(self, RuleText.cmd_range_rule(r) == "기함 지휘 범위 밖의 함대는 명중률 −10%p", "cmd range"): return
 	if not TestCheck.ok(self, RuleText.cost_rule(r).contains("40%") and RuleText.cmd(r, "charge").desc.contains("40%"), "charge"): return
 	if not TestCheck.ok(self, not src.has_command("def") and src.has_command("missile") and src.has_command("fighter"), "commands"): return
+	if not TestCheck.ok(self, RuleText.evasion_rule(r) == "이동 중인 함대는 전열·요격 명중률 최대 −5%p", "evasion rule %s" % RuleText.evasion_rule(r)): return
 	print("RULE_TEXT_SALVO_PASS")
 	quit(0)

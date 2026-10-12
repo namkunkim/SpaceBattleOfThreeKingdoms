@@ -31,6 +31,7 @@ func _sq(f) -> Dictionary:
 		"flagship": f.is_flag, "dead": f.dead,
 		"target_id": f.target.id if f.target else -1,
 		"firing_at": f.fire_t.id if (f.fire_t and not f.fire_t.dead) else -1,
+		"under_fire": f.under_fire,
 		"formation": f.shape,
 		"formation_name": form_name(f),
 		"defense": f.defense, "charge_t": f.charge_t, "in_cmd": f.in_cmd,
@@ -180,6 +181,7 @@ func _salvo_rules() -> Dictionary:
 			"side": {"hit": (d.front - d.flank) / 100.0, "morale": w.flank / bp},
 			"rear": {"hit": (d.front - d.rear) / 100.0, "morale": w.rear / bp}},
 		"out_of_cmd_hit": c.hit.out_of_command_bp / 100.0,
+		"evasion_max": c.evasion.max_bp / 100.0,
 		"charge": {"heat": c.charge.heat_share_bp / bp, "min_morale": c.charge.min_morale_bp / bp},
 		"cmd_range": battle.CMD_R,
 	}

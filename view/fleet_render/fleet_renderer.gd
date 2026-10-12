@@ -633,7 +633,7 @@ func update(dt: float) -> void:
 			shot_at[sq.firing_at] = true
 	for sq in sqs:
 		var v: FleetVis = vis[sq.id]
-		v.evade = shot_at.has(sq.id) and not sq.dead
+		v.evade = (shot_at.has(sq.id) or sq.get("under_fire", false)) and not sq.dead
 		v.node.visible = sq.contact != "lost"   # 상실 접촉은 마지막 위치에 모델 없이 표식만 남는다
 		if sq.formation != v.formation:
 			_reform(v, sq)

@@ -54,5 +54,29 @@ func _run() -> void:
 		F.run(d, 60.0)
 		fp.append(d.fingerprint())
 	if not TestCheck.ok(self, fp[0] == fp[1], "같은 시드 재생 지문 동일"): return
+	# --- 7. 플레이 배율(tune_for_play x150)에서도 헤드리스와 같은 유효값: 상한에 붙지 않고 함종별로 갈린다 ---
+	var pl := F.sim([F.def("본대", 100, 800, gun, true), F.def("A", 400, 450, gun)], [F.def("적기함", 1500, 100, gun, true), F.def("Z", 600, 450, gun), F.def("Y", 700, 450, [["SHP-02", 6]])], 3, "", func(cb): ScenarioProfile.tune_for_play({"combat": cb}, 150.0, 1.0))
+	var pz: FleetState = pl.st.fleets[3]
+	var py: FleetState = pl.st.fleets[4]
+	pz.moving = true
+	py.moving = true
+	var ez: int = pl.salvo.evasion_bp(pz, "line_fire")
+	var ey: int = pl.salvo.evasion_bp(py, "line_fire")
+	if not TestCheck.ok(self, ez < int(ev.max_bp) and ey < ez and ez > 0 and absi(ez - mini(int(ev.max_bp), int(z0_speed(F, gun) * float(ev.bp_per_speed)))) <= 1, "플레이 배율 회피가 상한에 붙지 않는다 %d %d" % [ez, ey]): return
+	# --- 8. 아군 전용 under_fire 투영: 적이 겨누는 아군만 참 ---
+	s.st.fleets[2].fire_id = a.id
+	var proj := BattleProjection.build(s, 0)
+	var uf := {}
+	for q in proj.squadrons:
+		if q.side == 0:
+			uf[q.id] = q.get("under_fire", false)
+	if not TestCheck.ok(self, uf[a.id] == true and uf[s.st.fleets[0].id] == false, "under_fire 투영"): return
 	print("evasion OK")
 	quit(0)
+
+# 헤드리스(x1) 기준 같은 편성의 이동 속도(px/초): 가장 느린 함종 턴당 속도 / turn_div x 진형 기동
+static func z0_speed(F, comp: Array) -> float:
+	var cb: Dictionary = F.combat()
+	var t: String = comp[0][0]
+	var frm: String = cb.default_formation
+	return float(cb.ship_types[t].speed_per_turn) / float(cb.movement.turn_div) * float(10000 + int(cb.formations[frm].mobility_bp)) / 10000.0

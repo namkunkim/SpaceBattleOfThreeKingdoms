@@ -37,6 +37,12 @@ static func out_of_cmd(r: Dictionary) -> String:
 static func cmd_range_rule(r: Dictionary) -> String:
 	return "기함 지휘 범위 밖의 함대는 %s" % out_of_cmd(r)
 
+# 레이저 회피(Q72): 이동 중인 전대는 전열·요격 사격 명중률이 최대 N%p 준다. salvo 규칙에만 있다
+static func evasion_rule(r: Dictionary) -> String:
+	if not r.has("evasion_max"):
+		return ""
+	return "이동 중인 함대는 전열·요격 명중률 최대 −%d%%p" % int(r.evasion_max)
+
 static func cost_rule(r: Dictionary) -> String:
 	if r.set != "poc":
 		return "돌격: 열 용량 %d%%, 사기 %d%% 이상일 때만" % [roundi(r.charge.heat * 100.0), roundi(r.charge.get("min_morale", 0.6) * 100.0)]
