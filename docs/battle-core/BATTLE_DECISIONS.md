@@ -793,7 +793,7 @@ Q31을 유지한다. 선택하면 감속하는 것이 기본값이다. 설정에
 
 | 조각 | 내용 | 의존 | 위험도 | 인수 조건 | 5-b |
 |---|---|---|---|---|---|
-| P8-0 | **특수기술 정의(컨셉·데이터)**: 12종 고유 효과 + 유형 표(특성 → 유형 매핑, 수치 제안값), AI 발동 조건, 설명 문구. 생성기 `tools/scenario/make_red_cliffs_208.py`에 `realtime_rules.special_skills`(+ 장수별 기술 ID)로 넣는다. Godot 코드는 고치지 않는다 | 없음 | 높음(데이터 스키마·밸런스) | `data_rules` 통과, 가용 장수 특성 전부가 매핑됨(누락 0) | 다른 모델 리뷰 + 사용자 승인 |
+| P8-0 | **특수기술 정의(컨셉·데이터)** — 결과: `SPECIAL-SKILLS.md`(2026-10-12, 제안값, 리뷰·승인 대기): 12종 고유 효과 + 유형 표(특성 → 유형 매핑, 수치 제안값), AI 발동 조건, 설명 문구. 생성기 `tools/scenario/make_red_cliffs_208.py`에 `realtime_rules.special_skills`(+ 장수별 기술 ID)로 넣는다. Godot 코드는 고치지 않는다 | 없음 | 높음(데이터 스키마·밸런스) | `data_rules` 통과, 가용 장수 특성 전부가 매핑됨(누락 0) | 다른 모델 리뷰 + 사용자 승인 |
 | P8a | **코어**: 함대 `skill_slots`(편성 형식에 슬롯 3, 기본 = 직책 순, `Organization.validate` 사유 코드, `auto_fill`·`load_auto`가 채움, 재생 헤더), 발동 명령 `skill`(거부 사유: 사용함·지휘 불능·조건), 효과 적용, AI·위임 조건 발동, 투영(아군만 슬롯·남은 횟수) | P8-0 | 높음 | 새 `tests/special_skills.gd`(슬롯 기본값·검증·1회 제한·거부 사유·결정론 지문·AI 발동), `organization_rules`·`data_rules`·`autoresolve` 통과 | 다른 모델 리뷰 + 표준 200시드 전후 대조(탐색) + 사용자 승인 |
 | P8b | **편성 화면 슬롯 교체**(`hud/ui_kit/org_screen.gd`): 함대 카드에 슬롯 3, 그 함대 장수의 기술 중에서 교체, 장수가 빠지면 슬롯 자동 재채움 | P8a | 중간 | `organization_ui` 확장, `touch_targets`·`ui_wording` | 다른 모델 리뷰 + 화면 확인(PC·태블릿) |
 | P8c | **전투 발동 UI**: 선택 함대 정보 패널에 기술 버튼 3(남은 횟수·사용함·거부 토스트), 아군만 표시(P9a F-8 해소) | P8a(P8b와 병렬) | 중간 | 새 `tests/special_skills_ui.gd`, `rule_text_salvo`·`touch_targets` | 다른 모델 리뷰 + 화면 확인 |

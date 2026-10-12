@@ -217,6 +217,177 @@ def apply_difficulty(squadrons, diff):
     return out
 
 
+# P8-0 장수 특기(Q88~Q91, 설계 docs/battle-core/SPECIAL-SKILLS.md). 모든 수치는 제안값이다.
+# 효과 키와 AI 조건 문법은 SPECIAL-SKILLS.md §2·§4. 기간은 일제사격 주기(60초) 단위로 잡았다.
+SKILL_TYPES = [
+    {"id": "SK-T-FIRE", "type": "firepower", "name": "맹공", "target": "self", "duration_s": 120,
+     "effects": {"damage_mul_bp": 11500},
+     "ai_when": {"all": [{"enemy_in_band": "engagement"}]},
+     "text": "{trait} — 120초 동안 함대의 모든 무장 피해 +15%."},
+    {"id": "SK-T-GUARD", "type": "defense", "name": "견수", "target": "self", "duration_s": 120,
+     "effects": {"damage_taken_mul_bp": 8000},
+     "ai_when": {"all": [{"self_hull_below_bp": 7000}, {"enemy_in_band": "engagement"}]},
+     "text": "{trait} — 120초 동안 함대가 받는 선체 피해 −20%."},
+    {"id": "SK-T-MOVE", "type": "maneuver", "name": "질주", "target": "self", "duration_s": 60,
+     "effects": {"speed_mul_bp": 13000, "transition_mul_bp": 5000},
+     "ai_when": {"any": [{"self_retreating": True}, {"self_morale_below_bp": 4500}]},
+     "text": "{trait} — 60초 동안 이동 속도 +30%, 진형 전환 시간 절반."},
+    {"id": "SK-T-MORALE", "type": "morale", "name": "격려", "target": "self", "duration_s": 120,
+     "effects": {"morale_bp": 800, "morale_loss_mul_bp": 7000},
+     "ai_when": {"all": [{"self_morale_below_bp": 5000}]},
+     "text": "{trait} — 함대 사기 즉시 +8, 120초 동안 사기 감소 −30%."},
+    {"id": "SK-T-DISRUPT", "type": "disrupt", "name": "교란", "target": "enemy_fleet", "radius": 260, "duration_s": 60,
+     "effects": {"morale_bp": -800, "hit_bp": -800},
+     "requires": {"enemy_within": 260},
+     "ai_when": {"all": [{"enemy_in_band": "barrage"}]},
+     "text": "{trait} — 260 안의 확인된 적 함대 하나: 사기 즉시 −8, 60초 동안 명중률 −8%p."},
+    {"id": "SK-T-SCOUT", "type": "detection", "name": "간파", "target": "self", "duration_s": 120,
+     "effects": {"sensor_mul_bp": 15000, "reveal_radius": 400},
+     "ai_when": {"all": [{"estimated_within": 400}]},
+     "text": "{trait} — 120초 동안 센서 +50%, 400 안의 적 접촉을 확인 상태로 올린다."},
+    {"id": "SK-T-SUPPLY", "type": "supply", "name": "조달", "target": "self", "duration_s": 0,
+     "effects": {"charges_add": {"artillery": 1}},
+     "requires": {"charges_below_base": "artillery"},
+     "ai_when": {"all": [{"self_charges_zero": "artillery"}]},
+     "text": "{trait} — 미사일 사용 횟수 즉시 +1(기본 3회 상한, 보급함 재고 소모 없음)."},
+]
+SKILL_TYPE_BY_TYPE = {t["type"]: t["id"] for t in SKILL_TYPES}
+
+# 본편 combat.md §9 발동 시점이 있는 12종(Q88). relation = 이미 코어에 있는 규칙과의 관계(중복 효과 없음)
+SKILL_UNIQUE = [
+    {"id": "SK-U-GUANYU", "trait": "만인지적", "officer": "CHR-0107", "name": "만인지적", "target": "self", "duration_s": 60,
+     "effects": {"assault_bp": 3000, "assault_cd_reset": True},
+     "requires": {"has_ship_type": "SHP-01"},
+     "ai_when": {"all": [{"enemy_flagship_within": 100}]},
+     "relation": "combat.assault.elite_ids(관우 = 특급, 강습 개방 명중 1)는 상시 효과로 그대로 둔다. 이 특기는 그 위에 성공률을 더한다",
+     "text": "「만인지적」 — 60초 동안 강습 성공률 +30%p, 강습 재사용 대기 초기화. 강습모함이 있어야 쓴다."},
+    {"id": "SK-U-ZHUGE", "trait": "신기묘산", "officer": "CHR-0134", "name": "신기묘산", "target": "self", "duration_s": 120,
+     "effects": {"transition_mul_bp": 0, "affinity_ignore": True},
+     "ai_when": {"all": [{"enemy_in_band": "engagement"}]},
+     "relation": "formation_rules.master_trait(팔진 사용 자격)는 상시 효과로 그대로 둔다. 이 특기는 배치 재조정 1회를 진형 즉시 전환으로 옮긴 것이다",
+     "text": "「신기묘산」 — 120초 동안 진형 전환이 즉시 끝나고(전환 중 피해 ×0.8 없음), 진형 상성 불리를 받지 않는다."},
+    {"id": "SK-U-ZHAOYUN", "trait": "일신시담", "officer": "CHR-0136", "name": "일신시담", "target": "ally_fleet", "radius": 200, "duration_s": 30,
+     "effects": {"damage_taken_mul_bp": 0, "rescue_equipped": True},
+     "requires": {"ally_within": 200},
+     "ai_when": {"all": [{"ally_hull_below_bp_within": [4000, 200]}]},
+     "relation": "commander_casualties 표의 '구조 장비 아군 함대 반경 안'을 효과 동안 이 함대에도 적용한다",
+     "text": "「일신시담」 — 200 안의 아군 함대 하나(자기 포함): 30초 동안 받는 선체 피해 0, 지휘관 구조 판정에서 구조 함대로 본다."},
+    {"id": "SK-U-HUANGZHONG", "trait": "강궁", "officer": "CHR-0138", "name": "강궁", "target": "self", "duration_s": 120,
+     "effects": {"range_mul_bp": 13000, "categories": ["artillery"]},
+     "ai_when": {"all": [{"enemy_within": 338}]},
+     "relation": "사거리 원(P2)은 효과 중 늘어난 포격 사거리를 그려야 한다",
+     "text": "「강궁」 — 120초 동안 포격(미사일) 사거리 +30%."},
+    {"id": "SK-U-ZHOUYU", "trait": "미주랑", "officer": "CHR-0211", "name": "미주랑", "target": "faction", "duration_s": 180,
+     "effects": {"chain_power_mul_bp": 15000},
+     "ai_when": {"all": [{"wind_window_open": True}]},
+     "relation": "chain_operation.power_by_range에 곱한다(최대 0.5 → 0.75). 화공 발동·번짐 규칙은 그대로",
+     "text": "「미주랑」 — 180초 동안 아군 화공 위력 +50%."},
+    {"id": "SK-U-HUANGGAI", "trait": "고육계", "officer": "CHR-0217", "name": "고육계", "target": "self", "duration_s": 0,
+     "effects": {"alias_command": "letter"},
+     "requires": {"chain_host": True},
+     "ai_when": {"all": [{"chain_host_ai": True}]},
+     "relation": "새 효과가 없다. 기존 서신 명령(letter, feigned_surrender.letter_uses 1)을 슬롯에서 부르는 단축이다. 사용 여부도 letter_uses를 그대로 쓴다. AI는 기존 chain_host_ai를 따른다",
+     "text": "「고육계」 — 위장 항복 서신을 보낸다(화공 운용 함대만)."},
+    {"id": "SK-U-GUOJIA", "trait": "귀모", "officer": "CHR-0003", "name": "귀모", "target": "self", "duration_s": 120,
+     "effects": {"reveal_radius": 600, "reveal_orders": True},
+     "ai_when": {"all": [{"estimated_within": 600}]},
+     "relation": "탐지 규칙(진영 공유 Q46)으로 확인된 접촉은 진영 전체가 본다",
+     "text": "「귀모」 — 120초 동안 600 안의 적 함대를 확인 상태로 올리고 그 이동 목표를 보여 준다."},
+    {"id": "SK-U-DIANWEI", "trait": "악래", "officer": "CHR-0030", "name": "악래", "target": "self", "radius": 200, "duration_s": 120,
+     "effects": {"damage_redirect_bp": 5000},
+     "requires": {"ally_flagship_within": 200},
+     "ai_when": {"all": [{"ally_flagship_within": 200}, {"ally_flagship_hull_below_bp": 8000}]},
+     "relation": "기함 함대가 받는 선체 피해의 50%를 이 함대가 대신 받는다. 같은 함대가 기함이면 효과 없음",
+     "text": "「악래」 — 120초 동안 200 안의 아군 기함 함대가 받는 피해의 절반을 대신 받는다."},
+    {"id": "SK-U-XUCHU", "trait": "호치", "officer": "CHR-0047", "name": "호치", "target": "allies_in_radius", "radius": 200, "duration_s": 120,
+     "effects": {"assault_block": True},
+     "ai_when": {"all": [{"enemy_carrier_within": 200}]},
+     "relation": "combat.assault.flagship.escort_trait(호치, 기함 강습 성공률 ×0.5)는 상시 효과로 그대로 둔다. 이 특기는 효과 동안 반경 안 아군 함대에 대한 강습을 막는다",
+     "text": "「호치」 — 120초 동안 200 안의 아군 함대는 강습을 받지 않는다."},
+    {"id": "SK-U-CAOREN", "trait": "철벽", "officer": "CHR-0033", "name": "철벽", "target": "self", "duration_s": 180,
+     "effects": {"damage_taken_mul_bp": 6667, "only_while": "holding"},
+     "ai_when": {"all": [{"enemy_in_band": "engagement"}]},
+     "relation": "본편 '방어 시 전열함 내구 +50%'를 정지(이동 명령 없음) 중 받는 피해 ×1/1.5로 옮겼다",
+     "text": "「철벽」 — 180초 동안 멈춰 있는 사이 받는 선체 피해 −33%."},
+    {"id": "SK-U-XIAHOUYUAN", "trait": "신속", "officer": "CHR-0044", "name": "신속", "target": "self", "duration_s": 90,
+     "effects": {"speed_mul_bp": 14000, "damage_taken_mul_bp": 11500},
+     "ai_when": {"any": [{"self_retreating": True}, {"enemy_within": 340}]},
+     "relation": "본편 단점(매복 피해 +30%)을 효과 중 받는 피해 +15%로 옮겼다",
+     "text": "「신속」 — 90초 동안 이동 속도 +40%. 그동안 받는 선체 피해 +15%."},
+    {"id": "SK-U-HAOZHAO", "trait": "진창", "officer": "CHR-0046", "name": "진창", "target": "self", "duration_s": 180,
+     "effects": {"damage_taken_mul_bp": 8000, "morale_loss_mul_bp": 7000,
+                 "in_terrain": {"damage_taken_mul_bp": 6000, "morale_loss_mul_bp": 5000}},
+     "ai_when": {"all": [{"enemy_in_band": "engagement"}]},
+     "relation": "적벽에는 회랑이 없어 '회랑'을 지형 구역(성운·잔해대·행성 그림자) 안으로 옮겼다",
+     "text": "「진창」 — 180초 동안 받는 선체 피해 −20%, 사기 감소 −30%. 지형 구역 안이면 −40%·−50%."},
+]
+
+# 나머지 특성 → 유형(Q88). 근거는 본편 characters.json 특성 설명의 낱말(SPECIAL-SKILLS.md §3). 여기에 없는 특성은 최고 능력치로 정한다.
+TRAIT_TYPE = {
+    # 화력: 무용·선봉·정예·토벌·포박
+    "부풍": "firepower", "금마초": "firepower", "부자": "firepower", "강동지호": "firepower", "선봉": "firepower",
+    "궁요희": "firepower", "포박": "firepower", "산월토벌": "firepower", "무릉 평정": "firepower", "이릉 분전": "firepower",
+    "여강 정예": "firepower", "대관출전": "firepower", "대장군": "firepower", "황수아": "firepower",
+    # 방어: 방어·농성·호위·노장·내구
+    "무당비군": "defense", "노익장": "defense", "고수": "defense", "노장": "defense", "고절": "defense", "종자": "defense",
+    "백모병": "defense", "만신창이": "defense", "변경": "defense", "수비": "defense", "낭고": "defense",
+    # 기동: 이동·기습·돌파·추격·항행
+    "반골": "maneuver", "불안": "maneuver", "소패왕": "maneuver", "백의도강": "maneuver", "주아부의 풍": "maneuver",
+    "교변": "maneuver", "천리구": "maneuver", "호표기": "maneuver", "수군": "maneuver",
+    # 사기: 결속·인덕·안정·군기·여걸·사기
+    "인고": "morale", "장판": "morale", "집행": "morale", "조정": "morale", "효심": "morale", "인덕": "morale",
+    "사직지기": "morale", "순절": "morale", "천하이분": "morale", "강동이교": "morale", "군기": "morale", "국태": "morale",
+    "순직": "morale", "화평": "morale", "원로": "morale", "낙신": "morale", "내조": "morale", "사군자": "morale",
+    "유재시거": "morale", "호가십팔박": "morale", "독안": "morale", "진무": "morale", "병주 안무": "morale",
+    "청주 진무": "morale", "조율": "morale",
+    # 교란: 계략·이간·외교·회유·야습·위압
+    "오만": "disrupt", "백미": "disrupt", "담병": "disrupt", "봉추": "disrupt", "기모": "disrupt", "변설": "disrupt",
+    "남중 회유": "disrupt", "연인": "disrupt", "금범적": "disrupt", "밀서": "disrupt", "독사": "disrupt", "십이기책": "disrupt",
+    "이간": "disrupt",
+    # 탐지: 정보·내응·선견·정찰
+    "내응": "detection", "선견": "detection", "의성": "detection",
+    # 조달: 보급·재정·내정·둔전
+    "거상": "supply", "탁고": "supply", "목우유마": "supply", "보급": "supply", "직백전": "supply", "교주": "supply",
+    "중신": "supply", "청렴": "supply", "남방 경략": "supply", "교주 경략": "supply", "혹리": "supply", "왕좌지재": "supply",
+    "가재": "supply", "관중경영": "supply", "구품관인법": "supply", "경제": "supply", "하동 경영": "supply", "염철": "supply",
+    "둔전 운영": "supply", "둔전 창시": "supply", "둔전 호위": "supply",
+}
+# 낱말이 없는 특성(이벤트·인물 관계 등): 최고 능력치 → 유형. 같으면 이 순서가 앞선다
+STAT_TYPE = [("command", "defense"), ("might", "firepower"), ("intellect", "detection"), ("politics", "supply"), ("charm", "morale")]
+
+
+def special_skills(pool):
+    """realtime_rules.special_skills: 기술 정의 + 장수별 기술(by_officer). 가용 장수 특성 누락 0을 여기서 검사한다."""
+    unique = {u["trait"]: u for u in SKILL_UNIQUE}
+    by_officer, used, fallback = {}, set(), {}
+    for fid in sorted(pool):
+        for o in pool[fid]:
+            if not o["traits"]:
+                continue   # 특성 없는 장수는 기술 없음(Q88)
+            t = o["traits"][0]   # P()는 특성 문자열마다 첫 「」만 읽는다. 장수당 기술 1개
+            if t in unique:
+                assert unique[t]["officer"] == o["id"], (t, o["id"])
+                sid, basis = unique[t]["id"], "unique"
+            elif t in TRAIT_TYPE:
+                sid, basis = SKILL_TYPE_BY_TYPE[TRAIT_TYPE[t]], "keyword"
+                used.add(t)
+            else:
+                ty = max(STAT_TYPE, key=lambda st: o[st[0]])[1]   # max는 같은 값이면 앞의 것
+                sid, basis = SKILL_TYPE_BY_TYPE[ty], "stat"
+                fallback[t] = ty
+            by_officer[o["id"]] = {"skill": sid, "trait": t, "basis": basis}
+    assert used == set(TRAIT_TYPE), set(TRAIT_TYPE) - used   # 표에 오타·죽은 항목 없음
+    assert {u["officer"] for u in SKILL_UNIQUE} <= set(by_officer)
+    skills = [dict(u, kind="unique", status="proposed") for u in SKILL_UNIQUE]
+    skills += [dict(t, kind="type", status="proposed") for t in SKILL_TYPES]
+    return {
+        "uses_per_battle": 1, "slots": 3, "slot_default": ["commander", "vice_commander", "staff_assault"],
+        "ai_eval": "AI 결정 틱마다 함대 ID 순 → 슬롯 순으로 ai_when을 보고, 함대당 한 틱에 하나만 발동한다",
+        "skills": skills, "by_officer": by_officer,
+        "note": "Q88~Q91·D4. 장수당 기술 1개(첫 특성). 특성 없는 장수는 기술 없음. 효과 키·조건 문법은 docs/battle-core/SPECIAL-SKILLS.md",
+        "status": "proposed", "source": "본편 combat.md §9, characters.json traits, BATTLE_DECISIONS §U"}
+
+
 if __name__ == "__main__":
     scenario = {
         "schema_version": 1,
@@ -335,6 +506,7 @@ if __name__ == "__main__":
                 {"id": "southeast_wind", "name": "동남풍 「단 위의 사흘 밤」", "effect": "기류 창 시작을 배치 단계에서 한 번 고른다", "pick_range_after_first_hit_s": [360, 720], "duration_s": 180},
                 {"id": "double_agent", "name": "반간계 「장간의 서신」", "effect": "형주 수군 을의 사기 −1000, 지휘관을 모개로 교체", "target_squadron_id": "RC-CAO-SQ-05", "morale_bp": -1000, "replacement_commander": "CHR-0058"},
                 {"id": "cheng_yu_insight", "name": "정욱 간파 「가볍게 뜬 배」", "effect": "화공 표적 하나가 처음부터 분산 진형"}],
+            "special_skills": special_skills(POOL),
         },
         "chain_explosion_override": {"host_squadron_id": "RC-SUN-SQ-03", "operator_faction_id": "liu_bei",
                                      "note": "본편 데이터는 주유 전대를 운용 전대로 두었다. 정사에서 화공을 이끈 것은 황개이므로 황개 화공대로 옮긴다."},
