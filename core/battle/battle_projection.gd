@@ -116,6 +116,8 @@ static func contact(sim: BattleSim, c: Dictionary) -> Dictionary:
 			d.dense = sim.chain.dense(t)   # 화공 표적 조건(밀집 여부)만 공개한다. 진형 ID는 공개하지 않는다(M9)
 			d.feigning = sim.chain.truce_id(t.id)
 		d.max_strength_band = int(sim.detect.D.strength_bands)
+		d.flagship = t.is_flag   # Q96: 기함 여부·강습모함 보유는 확인 접촉에 공개(AI 특기 술어도 이것만 읽는다)
+		d.carrier = sim.assault != null and t.stages.has(str(sim.assault.A.carrier)) and sim.salvo.present_of(t, str(sim.assault.A.carrier)) > 0
 		if sim.skills and t.has_move and sim.skills.reveals(1 - t.side, t, true):
 			d.move_to = t.move_to   # 특기 귀모: 이동 목표 공개(P8a)
 	return d

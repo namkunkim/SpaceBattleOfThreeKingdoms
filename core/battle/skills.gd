@@ -12,7 +12,9 @@ extends RefCounted
 # 겹침(Q95, 데이터 stacking): 받는 피해 감소는 가장 낮은 값 하나, 증가는 가장 큰 값 하나, 둘을 곱한다.
 #   speed 가장 큰 값, transition 가장 낮은 값, 그 밖은 곱.
 # AI(Q91): 지휘관 AI 생각 틱마다 함대 ID 순 → 슬롯 순으로 ai_when + requires를 보고 함대당 하나만 발동한다(ai_eval). 난수 없음.
-#   적 조건은 진영 접촉표의 확인 접촉으로만 판정한다(estimated_within만 추정 포함).
+#   적 조건은 진영 접촉표의 확인 접촉으로만 판정한다(estimated_within만 추정 포함). 적 기함·강습모함 여부는
+#   공개 투영의 확인 접촉 키(flagship·carrier, Q96)만 읽는다.
+# 정보 경계: 발동·해제 사건은 시전 진영에만 간다(sq = 시전 함대). 적이 건 효과는 받은 함대의 투영에 기술 ID·이름만(Q97).
 
 const BAND_RANK := {"contact": 0, "barrage": 1, "engagement": 2, "assault": 3}
 
@@ -22,6 +24,12 @@ var defs := {}                  # 기술 ID → 정의
 var side_fx: Array = [[], []]   # 진영 전체 효과(미주랑)
 var used_n := 0                 # 전투 전체 발동 수(지문·통계)
 var stats := {}                 # 기술 ID → 발동 수
+var _views: Array = [{}, {}]    # ai_eval 중 진영별 공개 투영(Q96 술어 입력)
+
+func _view(side: int) -> Dictionary:
+	if _views[side].is_empty():
+		_views[side] = sim.projection(side)
+	return _views[side]
 
 func _init(s: BattleSim, cfg: Dictionary) -> void:
 	sim = s
@@ -222,11 +230,13 @@ func _pred(f: FleetState, k: String, v: Variant) -> bool:
 				if c.state in ["confirmed", "estimated"] and f.pos.distance_to(c.pos) <= float(v) + 0.001:
 					return true
 			return false
-		"enemy_flagship_within":
-			return _within(f, _confirmed(f), float(v)).any(func(o): return o.is_flag)
-		"enemy_carrier_within":
-			var ct := str(sim.salvo.C.assault.carrier) if sim.salvo.C.has("assault") else ""
-			return _within(f, _confirmed(f), float(v)).any(func(o): return o.stages.has(ct) and sim.salvo.present_of(o, ct) > 0)
+		"enemy_flagship_within", "enemy_carrier_within":
+			# Q96: 공개 투영의 확인 접촉에 있는 기함·강습모함 여부만 읽는다(사람도 같은 정보를 본다)
+			var key := "flagship" if k == "enemy_flagship_within" else "carrier"
+			for q in _view(f.side).squadrons:
+				if q.side != f.side and not q.get("dead", false) and q.get("contact", "confirmed") == "confirmed" and bool(q.get(key, false)) 						and f.pos.distance_to(q.pos) <= float(v) + 0.001:
+					return true
+			return false
 		"self_hull_below_bp":
 			return hull_bp(f) < int(v)
 		"self_morale_below_bp":
@@ -287,8 +297,11 @@ func targets(f: FleetState, d: Dictionary, target_id := -1) -> Array[FleetState]
 	var out: Array[FleetState] = []
 	var best: FleetState = null
 	for o in cands:
-		if (target_id >= 0 and o.id == target_id) or (target_id < 0 and (best == null or _score(f, o, d) < _score(f, best, d))):
-			best = o
+		if target_id >= 0:
+			if o.id == target_id:
+				best = o
+		elif best == null or _score(f, o, d) < _score(f, best, d) or (_score(f, o, d) == _score(f, best, d) and o.id < best.id):
+			best = o   # 동률은 함대 ID 오름차순(target_pick.tie)
 	if best:
 		out.append(best)
 	return out
@@ -348,15 +361,20 @@ func _changed(t: FleetState, e: Dictionary) -> void:
 		sim.salvo.force_formation(t, t.form_to)   # 신기묘산: 진행 중인 전환을 바로 끝낸다
 
 # AI·위임 발동(Q91): 슬롯 순으로 처음 조건이 맞는 기술 하나
-func ai_eval(f: FleetState) -> void:
+# view: 지휘관 AI가 이번 생각에 읽은 공개 투영(없으면 새로 만든다)
+func ai_eval(f: FleetState, view := {}) -> void:
 	if f.skill_slots.is_empty() or (sim.morale and sim.morale.forced(f)):
 		return
+	_views[f.side] = view
+	var pick := -1
 	for i in f.skill_slots.size():
 		var id: String = f.skill_slots[i]
-		if block(f, id) != "" or not _when(f, defs[id].get("ai_when", {})) or targets(f, defs[id]).is_empty():
-			continue
-		sim.apply(BattleSim.command(f.side, [f.id], "skill", -1, Vector2.ZERO, {"slot": i}))
-		return
+		if block(f, id) == "" and _when(f, defs[id].get("ai_when", {})) and not targets(f, defs[id]).is_empty():
+			pick = i
+			break
+	_views[f.side] = {}
+	if pick >= 0:
+		sim.apply(BattleSim.command(f.side, [f.id], "skill", -1, Vector2.ZERO, {"slot": pick}))
 
 # 고육계 슬롯이 남아 있으면 그 슬롯(화공 AI가 서신을 이 경로로 보낸다). 없으면 -1
 func alias_slot(f: FleetState, cmd: String) -> int:
@@ -378,7 +396,7 @@ func step() -> void:
 		f.fx = f.fx.filter(func(x): return now < int(x.until))
 		for x in gone:
 			_changed(f, x.e)
-			sim.emit("skill_end", f.id, -1, f.pos, x.id)
+			sim.emit("skill_end", int(x.src), f.id, f.pos, x.id)   # sq = 시전 함대(시전 진영에만 간다), other = 효과를 가졌던 함대
 	for side in 2:
 		side_fx[side] = side_fx[side].filter(func(x): return now < int(x.until))
 
@@ -393,7 +411,13 @@ func view(f: FleetState) -> Dictionary:
 			"uses_left": uses_left(f, id) if id != "" else 0, "block": block(f, id) if id != "" else "skill_no_slot"})
 	var fx := []
 	for x in _fx_of(f):
-		fx.append({"id": x.id, "src": x.src, "left_s": maxf(0.0, float(int(x.until) - sim.st.tick) / hz)})
+		var e := {"id": x.id, "name": str(defs.get(x.id, {}).get("name", "")), "left_s": maxf(0.0, float(int(x.until) - sim.st.tick) / hz)}
+		var src := sim.st.by_id(int(x.src))
+		if src and src.side == f.side:
+			e.src = x.src   # Q97: 적이 건 효과는 시전 함대를 숨긴다
+		else:
+			e.foe = true
+		fx.append(e)
 	return {"slots": slots, "fx": fx}
 
 func fingerprint() -> String:
@@ -403,5 +427,8 @@ func fingerprint() -> String:
 	for f in sim.st.fleets:
 		var ks: Array = f.skill_used.keys()
 		ks.sort()
-		parts.append("%d.%s.%d" % [f.id, "+".join(PackedStringArray(ks)), f.fx.size()])
-	return "|sk%d.%d.%d|%s" % [used_n, side_fx[0].size(), side_fx[1].size(), ",".join(parts)]
+		parts.append("%d.%s.%s" % [f.id, "+".join(PackedStringArray(ks)), "+".join(PackedStringArray(f.fx.map(func(x): return "%s@%d" % [x.id, x.until])))])
+	var sides := PackedStringArray()
+	for side in 2:
+		sides.append("+".join(PackedStringArray(side_fx[side].map(func(x): return "%s@%d" % [x.id, x.until]))))
+	return "|sk%d.%s|%s" % [used_n, ".".join(sides), ",".join(parts)]

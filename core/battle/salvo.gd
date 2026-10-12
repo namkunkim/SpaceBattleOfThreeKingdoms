@@ -645,7 +645,8 @@ func _resolve(s: Dictionary) -> void:
 			sim.chain.on_hit(f, tgt)   # 투항 중 연합의 명중은 의심을 올린다
 		var dmg: float = s.dmg
 		if sim.skills:
-			# 특기(P8a): 악래가 기함 피해 일부를 대신 받고(자기 받는 피해 배율 적용), 남은 피해에 표적의 받는 피해 배율(Q95)
+			# 특기(P8a): 표적의 받는 피해 배율(Q95)을 곱한 뒤 악래가 기함 피해 일부를 대신 받는다(자기 받는 피해 배율 적용). 일제사격 피해만(Q98)
+			dmg *= sim.skills.mulf(tgt, "damage_taken_mul_bp")   # 기함의 받는 피해 배율을 먼저(분담 몫에도, REVIEW-P8A F-6)
 			var g := sim.skills.guard_of(tgt)
 			if g:
 				var part := dmg * float(sim.skills.redirect_bp(g)) / float(BattleRules.BP)
@@ -653,7 +654,6 @@ func _resolve(s: Dictionary) -> void:
 				var gl := apply_hull(f, g, part * sim.skills.mulf(g, "damage_taken_mul_bp"), s.band, sector(f.pos, g), sim.st.new_event_id())
 				if sim.morale:
 					sim.morale.hit(g, gl, s.wband, sector(f.pos, g))
-			dmg *= sim.skills.mulf(tgt, "damage_taken_mul_bp")
 		var loss := apply_hull(f, tgt, dmg, s.band, s.sector, s.eid)
 		if sim.morale:
 			sim.morale.hit(tgt, loss, s.wband, s.sector)

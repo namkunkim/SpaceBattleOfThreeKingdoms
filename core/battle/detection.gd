@@ -139,7 +139,7 @@ func _eval(side: int) -> void:
 		for i in obs.size():
 			best = maxi(best, level_of(score(sens[i], obs[i], t)))
 		if sim.skills and sim.skills.reveals(side, t):
-			best = 2   # 특기 귀모·간파: 반경 안 적은 확인 상태(P8a)
+			best = level_of(int(D.confirmed))   # 특기 귀모·간파: 반경 안 적은 확인 상태(P8a)
 		var r: Dictionary = book.get(t.id, {})
 		if best > 0:
 			r = {"seen": st.tick, "pos": t.pos}

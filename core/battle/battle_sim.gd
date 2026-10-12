@@ -144,7 +144,7 @@ func issue(cmd: Dictionary) -> void:
 
 # 플레이어가 명령한 전대는 직접 지휘가 된다(§5.4). AI 명령은 apply()를 바로 불러 여기를 거치지 않는다.
 const DIRECT_KINDS := ["stop", "move", "face", "attack", "charge", "retreat", "rally", "formation", "restore", "def", "missile", "fighter", "volley",
-	"letter", "withdraw", "ignite", "assault"]
+	"letter", "withdraw", "ignite", "assault", "skill"]
 
 func _mark_direct(c: Dictionary) -> void:
 	if int(c.side) != 0 or not (str(c.kind) in DIRECT_KINDS):

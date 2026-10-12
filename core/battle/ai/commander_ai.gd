@@ -80,7 +80,7 @@ func _think_side(sim: BattleSim, side: int) -> void:
 			allies.append(s.pos)
 	for f in mine:
 		if sim.skills:
-			sim.skills.ai_eval(f)   # 특기 조건 발동(Q91). 함대 ID 순 → 슬롯 순, 함대당 하나
+			sim.skills.ai_eval(f, view)   # 특기 조건 발동(Q91). 함대 ID 순 → 슬롯 순, 함대당 하나
 		_think_fleet(sim, f, side, foes, view, lvl, allies)
 
 func _think_fleet(sim: BattleSim, f: FleetState, side: int, foes: Array[Dictionary], view: Dictionary, lvl: Dictionary, allies: Array[Vector2]) -> void:
