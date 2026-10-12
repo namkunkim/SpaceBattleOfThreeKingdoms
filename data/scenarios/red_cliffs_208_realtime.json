@@ -3824,7 +3824,1225 @@
     "name": "정욱 간파 「가볍게 뜬 배」",
     "effect": "화공 표적 하나가 처음부터 분산 진형"
    }
-  ]
+  ],
+  "special_skills": {
+   "uses_per_battle": 1,
+   "slots": 3,
+   "slot_default": [
+    "commander",
+    "vice_commander",
+    "staff_assault"
+   ],
+   "ai_eval": "AI 결정 틱마다 함대 ID 순 → 슬롯 순으로 ai_when을 보고, 함대당 한 틱에 하나만 발동한다",
+   "skills": [
+    {
+     "id": "SK-U-GUANYU",
+     "trait": "만인지적",
+     "officer": "CHR-0107",
+     "name": "만인지적",
+     "target": "self",
+     "duration_s": 60,
+     "effects": {
+      "assault_bp": 3000,
+      "assault_cd_reset": true
+     },
+     "requires": {
+      "has_ship_type": "SHP-01"
+     },
+     "ai_when": {
+      "all": [
+       {
+        "enemy_flagship_within": 100
+       }
+      ]
+     },
+     "relation": "combat.assault.elite_ids(관우 = 특급, 강습 개방 명중 1)는 상시 효과로 그대로 둔다. 이 특기는 그 위에 성공률을 더한다",
+     "text": "「만인지적」 — 60초 동안 강습 성공률 +30%p, 강습 재사용 대기 초기화. 강습모함이 있어야 쓴다.",
+     "kind": "unique",
+     "status": "proposed"
+    },
+    {
+     "id": "SK-U-ZHUGE",
+     "trait": "신기묘산",
+     "officer": "CHR-0134",
+     "name": "신기묘산",
+     "target": "self",
+     "duration_s": 120,
+     "effects": {
+      "transition_mul_bp": 0,
+      "affinity_ignore": true
+     },
+     "ai_when": {
+      "all": [
+       {
+        "enemy_in_band": "engagement"
+       }
+      ]
+     },
+     "relation": "formation_rules.master_trait(팔진 사용 자격)는 상시 효과로 그대로 둔다. 이 특기는 배치 재조정 1회를 진형 즉시 전환으로 옮긴 것이다",
+     "text": "「신기묘산」 — 120초 동안 진형 전환이 즉시 끝나고(전환 중 피해 ×0.8 없음), 진형 상성 불리를 받지 않는다.",
+     "kind": "unique",
+     "status": "proposed"
+    },
+    {
+     "id": "SK-U-ZHAOYUN",
+     "trait": "일신시담",
+     "officer": "CHR-0136",
+     "name": "일신시담",
+     "target": "ally_fleet",
+     "radius": 200,
+     "duration_s": 30,
+     "effects": {
+      "damage_taken_mul_bp": 0,
+      "rescue_equipped": true
+     },
+     "requires": {
+      "ally_within": 200
+     },
+     "ai_when": {
+      "all": [
+       {
+        "ally_hull_below_bp_within": [
+         4000,
+         200
+        ]
+       }
+      ]
+     },
+     "relation": "commander_casualties 표의 '구조 장비 아군 함대 반경 안'을 효과 동안 이 함대에도 적용한다",
+     "text": "「일신시담」 — 200 안의 아군 함대 하나(자기 포함): 30초 동안 받는 선체 피해 0, 지휘관 구조 판정에서 구조 함대로 본다.",
+     "kind": "unique",
+     "status": "proposed"
+    },
+    {
+     "id": "SK-U-HUANGZHONG",
+     "trait": "강궁",
+     "officer": "CHR-0138",
+     "name": "강궁",
+     "target": "self",
+     "duration_s": 120,
+     "effects": {
+      "range_mul_bp": 13000,
+      "categories": [
+       "artillery"
+      ]
+     },
+     "ai_when": {
+      "all": [
+       {
+        "enemy_within": 338
+       }
+      ]
+     },
+     "relation": "사거리 원(P2)은 효과 중 늘어난 포격 사거리를 그려야 한다",
+     "text": "「강궁」 — 120초 동안 포격(미사일) 사거리 +30%.",
+     "kind": "unique",
+     "status": "proposed"
+    },
+    {
+     "id": "SK-U-ZHOUYU",
+     "trait": "미주랑",
+     "officer": "CHR-0211",
+     "name": "미주랑",
+     "target": "faction",
+     "duration_s": 180,
+     "effects": {
+      "chain_power_mul_bp": 15000
+     },
+     "ai_when": {
+      "all": [
+       {
+        "wind_window_open": true
+       }
+      ]
+     },
+     "relation": "chain_operation.power_by_range에 곱한다(최대 0.5 → 0.75). 화공 발동·번짐 규칙은 그대로",
+     "text": "「미주랑」 — 180초 동안 아군 화공 위력 +50%.",
+     "kind": "unique",
+     "status": "proposed"
+    },
+    {
+     "id": "SK-U-HUANGGAI",
+     "trait": "고육계",
+     "officer": "CHR-0217",
+     "name": "고육계",
+     "target": "self",
+     "duration_s": 0,
+     "effects": {
+      "alias_command": "letter"
+     },
+     "requires": {
+      "chain_host": true
+     },
+     "ai_when": {
+      "all": [
+       {
+        "chain_host_ai": true
+       }
+      ]
+     },
+     "relation": "새 효과가 없다. 기존 서신 명령(letter, feigned_surrender.letter_uses 1)을 슬롯에서 부르는 단축이다. 사용 여부도 letter_uses를 그대로 쓴다. AI는 기존 chain_host_ai를 따른다",
+     "text": "「고육계」 — 위장 항복 서신을 보낸다(화공 운용 함대만).",
+     "kind": "unique",
+     "status": "proposed"
+    },
+    {
+     "id": "SK-U-GUOJIA",
+     "trait": "귀모",
+     "officer": "CHR-0003",
+     "name": "귀모",
+     "target": "self",
+     "duration_s": 120,
+     "effects": {
+      "reveal_radius": 600,
+      "reveal_orders": true
+     },
+     "ai_when": {
+      "all": [
+       {
+        "estimated_within": 600
+       }
+      ]
+     },
+     "relation": "탐지 규칙(진영 공유 Q46)으로 확인된 접촉은 진영 전체가 본다",
+     "text": "「귀모」 — 120초 동안 600 안의 적 함대를 확인 상태로 올리고 그 이동 목표를 보여 준다.",
+     "kind": "unique",
+     "status": "proposed"
+    },
+    {
+     "id": "SK-U-DIANWEI",
+     "trait": "악래",
+     "officer": "CHR-0030",
+     "name": "악래",
+     "target": "self",
+     "radius": 200,
+     "duration_s": 120,
+     "effects": {
+      "damage_redirect_bp": 5000
+     },
+     "requires": {
+      "ally_flagship_within": 200
+     },
+     "ai_when": {
+      "all": [
+       {
+        "ally_flagship_within": 200
+       },
+       {
+        "ally_flagship_hull_below_bp": 8000
+       }
+      ]
+     },
+     "relation": "기함 함대가 받는 선체 피해의 50%를 이 함대가 대신 받는다. 같은 함대가 기함이면 효과 없음",
+     "text": "「악래」 — 120초 동안 200 안의 아군 기함 함대가 받는 피해의 절반을 대신 받는다.",
+     "kind": "unique",
+     "status": "proposed"
+    },
+    {
+     "id": "SK-U-XUCHU",
+     "trait": "호치",
+     "officer": "CHR-0047",
+     "name": "호치",
+     "target": "allies_in_radius",
+     "radius": 200,
+     "duration_s": 120,
+     "effects": {
+      "assault_block": true
+     },
+     "ai_when": {
+      "all": [
+       {
+        "enemy_carrier_within": 200
+       }
+      ]
+     },
+     "relation": "combat.assault.flagship.escort_trait(호치, 기함 강습 성공률 ×0.5)는 상시 효과로 그대로 둔다. 이 특기는 효과 동안 반경 안 아군 함대에 대한 강습을 막는다",
+     "text": "「호치」 — 120초 동안 200 안의 아군 함대는 강습을 받지 않는다.",
+     "kind": "unique",
+     "status": "proposed"
+    },
+    {
+     "id": "SK-U-CAOREN",
+     "trait": "철벽",
+     "officer": "CHR-0033",
+     "name": "철벽",
+     "target": "self",
+     "duration_s": 180,
+     "effects": {
+      "damage_taken_mul_bp": 6667,
+      "only_while": "holding"
+     },
+     "ai_when": {
+      "all": [
+       {
+        "enemy_in_band": "engagement"
+       }
+      ]
+     },
+     "relation": "본편 '방어 시 전열함 내구 +50%'를 정지(이동 명령 없음) 중 받는 피해 ×1/1.5로 옮겼다",
+     "text": "「철벽」 — 180초 동안 멈춰 있는 사이 받는 선체 피해 −33%.",
+     "kind": "unique",
+     "status": "proposed"
+    },
+    {
+     "id": "SK-U-XIAHOUYUAN",
+     "trait": "신속",
+     "officer": "CHR-0044",
+     "name": "신속",
+     "target": "self",
+     "duration_s": 90,
+     "effects": {
+      "speed_mul_bp": 14000,
+      "damage_taken_mul_bp": 11500
+     },
+     "ai_when": {
+      "any": [
+       {
+        "self_retreating": true
+       },
+       {
+        "enemy_within": 340
+       }
+      ]
+     },
+     "relation": "본편 단점(매복 피해 +30%)을 효과 중 받는 피해 +15%로 옮겼다",
+     "text": "「신속」 — 90초 동안 이동 속도 +40%. 그동안 받는 선체 피해 +15%.",
+     "kind": "unique",
+     "status": "proposed"
+    },
+    {
+     "id": "SK-U-HAOZHAO",
+     "trait": "진창",
+     "officer": "CHR-0046",
+     "name": "진창",
+     "target": "self",
+     "duration_s": 180,
+     "effects": {
+      "damage_taken_mul_bp": 8000,
+      "morale_loss_mul_bp": 7000,
+      "in_terrain": {
+       "damage_taken_mul_bp": 6000,
+       "morale_loss_mul_bp": 5000
+      }
+     },
+     "ai_when": {
+      "all": [
+       {
+        "enemy_in_band": "engagement"
+       }
+      ]
+     },
+     "relation": "적벽에는 회랑이 없어 '회랑'을 지형 구역(성운·잔해대·행성 그림자) 안으로 옮겼다",
+     "text": "「진창」 — 180초 동안 받는 선체 피해 −20%, 사기 감소 −30%. 지형 구역 안이면 −40%·−50%.",
+     "kind": "unique",
+     "status": "proposed"
+    },
+    {
+     "id": "SK-T-FIRE",
+     "type": "firepower",
+     "name": "맹공",
+     "target": "self",
+     "duration_s": 120,
+     "effects": {
+      "damage_mul_bp": 11500
+     },
+     "ai_when": {
+      "all": [
+       {
+        "enemy_in_band": "engagement"
+       }
+      ]
+     },
+     "text": "{trait} — 120초 동안 함대의 모든 무장 피해 +15%.",
+     "kind": "type",
+     "status": "proposed"
+    },
+    {
+     "id": "SK-T-GUARD",
+     "type": "defense",
+     "name": "견수",
+     "target": "self",
+     "duration_s": 120,
+     "effects": {
+      "damage_taken_mul_bp": 8000
+     },
+     "ai_when": {
+      "all": [
+       {
+        "self_hull_below_bp": 7000
+       },
+       {
+        "enemy_in_band": "engagement"
+       }
+      ]
+     },
+     "text": "{trait} — 120초 동안 함대가 받는 선체 피해 −20%.",
+     "kind": "type",
+     "status": "proposed"
+    },
+    {
+     "id": "SK-T-MOVE",
+     "type": "maneuver",
+     "name": "질주",
+     "target": "self",
+     "duration_s": 60,
+     "effects": {
+      "speed_mul_bp": 13000,
+      "transition_mul_bp": 5000
+     },
+     "ai_when": {
+      "any": [
+       {
+        "self_retreating": true
+       },
+       {
+        "self_morale_below_bp": 4500
+       }
+      ]
+     },
+     "text": "{trait} — 60초 동안 이동 속도 +30%, 진형 전환 시간 절반.",
+     "kind": "type",
+     "status": "proposed"
+    },
+    {
+     "id": "SK-T-MORALE",
+     "type": "morale",
+     "name": "격려",
+     "target": "self",
+     "duration_s": 120,
+     "effects": {
+      "morale_bp": 800,
+      "morale_loss_mul_bp": 7000
+     },
+     "ai_when": {
+      "all": [
+       {
+        "self_morale_below_bp": 5000
+       }
+      ]
+     },
+     "text": "{trait} — 함대 사기 즉시 +8, 120초 동안 사기 감소 −30%.",
+     "kind": "type",
+     "status": "proposed"
+    },
+    {
+     "id": "SK-T-DISRUPT",
+     "type": "disrupt",
+     "name": "교란",
+     "target": "enemy_fleet",
+     "radius": 260,
+     "duration_s": 60,
+     "effects": {
+      "morale_bp": -800,
+      "hit_bp": -800
+     },
+     "requires": {
+      "enemy_within": 260
+     },
+     "ai_when": {
+      "all": [
+       {
+        "enemy_in_band": "barrage"
+       }
+      ]
+     },
+     "text": "{trait} — 260 안의 확인된 적 함대 하나: 사기 즉시 −8, 60초 동안 명중률 −8%p.",
+     "kind": "type",
+     "status": "proposed"
+    },
+    {
+     "id": "SK-T-SCOUT",
+     "type": "detection",
+     "name": "간파",
+     "target": "self",
+     "duration_s": 120,
+     "effects": {
+      "sensor_mul_bp": 15000,
+      "reveal_radius": 400
+     },
+     "ai_when": {
+      "all": [
+       {
+        "estimated_within": 400
+       }
+      ]
+     },
+     "text": "{trait} — 120초 동안 센서 +50%, 400 안의 적 접촉을 확인 상태로 올린다.",
+     "kind": "type",
+     "status": "proposed"
+    },
+    {
+     "id": "SK-T-SUPPLY",
+     "type": "supply",
+     "name": "조달",
+     "target": "self",
+     "duration_s": 0,
+     "effects": {
+      "charges_add": {
+       "artillery": 1
+      }
+     },
+     "requires": {
+      "charges_below_base": "artillery"
+     },
+     "ai_when": {
+      "all": [
+       {
+        "self_charges_zero": "artillery"
+       }
+      ]
+     },
+     "text": "{trait} — 미사일 사용 횟수 즉시 +1(기본 3회 상한, 보급함 재고 소모 없음).",
+     "kind": "type",
+     "status": "proposed"
+    }
+   ],
+   "by_officer": {
+    "CHR-0001": {
+     "skill": "SK-T-DISRUPT",
+     "trait": "독사",
+     "basis": "keyword"
+    },
+    "CHR-0002": {
+     "skill": "SK-T-MORALE",
+     "trait": "낙신",
+     "basis": "keyword"
+    },
+    "CHR-0003": {
+     "skill": "SK-U-GUOJIA",
+     "trait": "귀모",
+     "basis": "unique"
+    },
+    "CHR-0004": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "모주",
+     "basis": "stat"
+    },
+    "CHR-0009": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "혹리",
+     "basis": "keyword"
+    },
+    "CHR-0010": {
+     "skill": "SK-T-GUARD",
+     "trait": "수비",
+     "basis": "keyword"
+    },
+    "CHR-0012": {
+     "skill": "SK-T-FIRE",
+     "trait": "대관출전",
+     "basis": "keyword"
+    },
+    "CHR-0013": {
+     "skill": "SK-T-MORALE",
+     "trait": "내조",
+     "basis": "keyword"
+    },
+    "CHR-0016": {
+     "skill": "SK-T-GUARD",
+     "trait": "낭고",
+     "basis": "keyword"
+    },
+    "CHR-0017": {
+     "skill": "SK-T-MOVE",
+     "trait": "주아부의 풍",
+     "basis": "keyword"
+    },
+    "CHR-0018": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "왕좌지재",
+     "basis": "keyword"
+    },
+    "CHR-0019": {
+     "skill": "SK-T-DISRUPT",
+     "trait": "십이기책",
+     "basis": "keyword"
+    },
+    "CHR-0024": {
+     "skill": "SK-T-SCOUT",
+     "trait": "종실지신",
+     "basis": "stat"
+    },
+    "CHR-0025": {
+     "skill": "SK-T-MORALE",
+     "trait": "사군자",
+     "basis": "keyword"
+    },
+    "CHR-0027": {
+     "skill": "SK-T-SCOUT",
+     "trait": "인단",
+     "basis": "stat"
+    },
+    "CHR-0028": {
+     "skill": "SK-T-MOVE",
+     "trait": "교변",
+     "basis": "keyword"
+    },
+    "CHR-0029": {
+     "skill": "SK-T-GUARD",
+     "trait": "호이",
+     "basis": "stat"
+    },
+    "CHR-0030": {
+     "skill": "SK-U-DIANWEI",
+     "trait": "악래",
+     "basis": "unique"
+    },
+    "CHR-0031": {
+     "skill": "SK-T-SCOUT",
+     "trait": "강직",
+     "basis": "stat"
+    },
+    "CHR-0032": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "선양",
+     "basis": "stat"
+    },
+    "CHR-0033": {
+     "skill": "SK-U-CAOREN",
+     "trait": "철벽",
+     "basis": "unique"
+    },
+    "CHR-0034": {
+     "skill": "SK-T-MORALE",
+     "trait": "유재시거",
+     "basis": "keyword"
+    },
+    "CHR-0035": {
+     "skill": "SK-T-FIRE",
+     "trait": "대장군",
+     "basis": "keyword"
+    },
+    "CHR-0036": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "가재",
+     "basis": "keyword"
+    },
+    "CHR-0037": {
+     "skill": "SK-T-MOVE",
+     "trait": "천리구",
+     "basis": "keyword"
+    },
+    "CHR-0038": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "관중경영",
+     "basis": "keyword"
+    },
+    "CHR-0040": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "구품관인법",
+     "basis": "keyword"
+    },
+    "CHR-0042": {
+     "skill": "SK-T-MORALE",
+     "trait": "호가십팔박",
+     "basis": "keyword"
+    },
+    "CHR-0043": {
+     "skill": "SK-T-MORALE",
+     "trait": "독안",
+     "basis": "keyword"
+    },
+    "CHR-0044": {
+     "skill": "SK-U-XIAHOUYUAN",
+     "trait": "신속",
+     "basis": "unique"
+    },
+    "CHR-0046": {
+     "skill": "SK-U-HAOZHAO",
+     "trait": "진창",
+     "basis": "unique"
+    },
+    "CHR-0047": {
+     "skill": "SK-U-XUCHU",
+     "trait": "호치",
+     "basis": "unique"
+    },
+    "CHR-0049": {
+     "skill": "SK-T-DISRUPT",
+     "trait": "이간",
+     "basis": "keyword"
+    },
+    "CHR-0050": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "은일",
+     "basis": "stat"
+    },
+    "CHR-0051": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "경제",
+     "basis": "keyword"
+    },
+    "CHR-0055": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "하동 경영",
+     "basis": "keyword"
+    },
+    "CHR-0056": {
+     "skill": "SK-T-MORALE",
+     "trait": "진무",
+     "basis": "keyword"
+    },
+    "CHR-0058": {
+     "skill": "SK-T-SCOUT",
+     "trait": "봉천자",
+     "basis": "stat"
+    },
+    "CHR-0061": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "명사",
+     "basis": "stat"
+    },
+    "CHR-0062": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "장형",
+     "basis": "stat"
+    },
+    "CHR-0068": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "하서",
+     "basis": "stat"
+    },
+    "CHR-0070": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "지절",
+     "basis": "stat"
+    },
+    "CHR-0071": {
+     "skill": "SK-T-MORALE",
+     "trait": "병주 안무",
+     "basis": "keyword"
+    },
+    "CHR-0073": {
+     "skill": "SK-T-MORALE",
+     "trait": "청주 진무",
+     "basis": "keyword"
+    },
+    "CHR-0074": {
+     "skill": "SK-T-SCOUT",
+     "trait": "경학",
+     "basis": "stat"
+    },
+    "CHR-0079": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "염철",
+     "basis": "keyword"
+    },
+    "CHR-0082": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "둔전 운영",
+     "basis": "keyword"
+    },
+    "CHR-0084": {
+     "skill": "SK-T-MOVE",
+     "trait": "호표기",
+     "basis": "keyword"
+    },
+    "CHR-0085": {
+     "skill": "SK-T-SCOUT",
+     "trait": "칠보",
+     "basis": "stat"
+    },
+    "CHR-0087": {
+     "skill": "SK-T-GUARD",
+     "trait": "장자",
+     "basis": "stat"
+    },
+    "CHR-0088": {
+     "skill": "SK-T-MORALE",
+     "trait": "조율",
+     "basis": "keyword"
+    },
+    "CHR-0090": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "둔전 창시",
+     "basis": "keyword"
+    },
+    "CHR-0091": {
+     "skill": "SK-T-FIRE",
+     "trait": "황수아",
+     "basis": "keyword"
+    },
+    "CHR-0092": {
+     "skill": "SK-T-GUARD",
+     "trait": "강직",
+     "basis": "stat"
+    },
+    "CHR-0094": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "돈황",
+     "basis": "stat"
+    },
+    "CHR-0095": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "강직",
+     "basis": "stat"
+    },
+    "CHR-0098": {
+     "skill": "SK-T-GUARD",
+     "trait": "종군",
+     "basis": "stat"
+    },
+    "CHR-0100": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "둔전 호위",
+     "basis": "keyword"
+    },
+    "CHR-0103": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "청류",
+     "basis": "stat"
+    },
+    "CHR-0330": {
+     "skill": "SK-T-MOVE",
+     "trait": "수군",
+     "basis": "keyword"
+    },
+    "CHR-0104": {
+     "skill": "SK-T-DISRUPT",
+     "trait": "오만",
+     "basis": "keyword"
+    },
+    "CHR-0105": {
+     "skill": "SK-T-MORALE",
+     "trait": "인고",
+     "basis": "keyword"
+    },
+    "CHR-0107": {
+     "skill": "SK-U-GUANYU",
+     "trait": "만인지적",
+     "basis": "unique"
+    },
+    "CHR-0108": {
+     "skill": "SK-T-FIRE",
+     "trait": "부풍",
+     "basis": "keyword"
+    },
+    "CHR-0111": {
+     "skill": "SK-T-MORALE",
+     "trait": "집행",
+     "basis": "keyword"
+    },
+    "CHR-0112": {
+     "skill": "SK-T-DISRUPT",
+     "trait": "백미",
+     "basis": "keyword"
+    },
+    "CHR-0113": {
+     "skill": "SK-T-DISRUPT",
+     "trait": "담병",
+     "basis": "keyword"
+    },
+    "CHR-0114": {
+     "skill": "SK-T-FIRE",
+     "trait": "금마초",
+     "basis": "keyword"
+    },
+    "CHR-0115": {
+     "skill": "SK-T-MOVE",
+     "trait": "불안",
+     "basis": "keyword"
+    },
+    "CHR-0116": {
+     "skill": "SK-T-MORALE",
+     "trait": "장판",
+     "basis": "keyword"
+    },
+    "CHR-0117": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "거상",
+     "basis": "keyword"
+    },
+    "CHR-0118": {
+     "skill": "SK-T-DISRUPT",
+     "trait": "봉추",
+     "basis": "keyword"
+    },
+    "CHR-0119": {
+     "skill": "SK-T-DISRUPT",
+     "trait": "기모",
+     "basis": "keyword"
+    },
+    "CHR-0121": {
+     "skill": "SK-T-MORALE",
+     "trait": "조정",
+     "basis": "keyword"
+    },
+    "CHR-0122": {
+     "skill": "SK-T-MORALE",
+     "trait": "효심",
+     "basis": "keyword"
+    },
+    "CHR-0123": {
+     "skill": "SK-T-DISRUPT",
+     "trait": "변설",
+     "basis": "keyword"
+    },
+    "CHR-0124": {
+     "skill": "SK-T-GUARD",
+     "trait": "무당비군",
+     "basis": "keyword"
+    },
+    "CHR-0125": {
+     "skill": "SK-T-GUARD",
+     "trait": "노익장",
+     "basis": "keyword"
+    },
+    "CHR-0126": {
+     "skill": "SK-T-MOVE",
+     "trait": "반골",
+     "basis": "keyword"
+    },
+    "CHR-0127": {
+     "skill": "SK-T-FIRE",
+     "trait": "양자",
+     "basis": "stat"
+    },
+    "CHR-0128": {
+     "skill": "SK-T-MORALE",
+     "trait": "인덕",
+     "basis": "keyword"
+    },
+    "CHR-0129": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "탁고",
+     "basis": "keyword"
+    },
+    "CHR-0130": {
+     "skill": "SK-T-DISRUPT",
+     "trait": "연인",
+     "basis": "keyword"
+    },
+    "CHR-0132": {
+     "skill": "SK-T-MORALE",
+     "trait": "사직지기",
+     "basis": "keyword"
+    },
+    "CHR-0134": {
+     "skill": "SK-U-ZHUGE",
+     "trait": "신기묘산",
+     "basis": "unique"
+    },
+    "CHR-0136": {
+     "skill": "SK-U-ZHAOYUN",
+     "trait": "일신시담",
+     "basis": "unique"
+    },
+    "CHR-0137": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "목우유마",
+     "basis": "keyword"
+    },
+    "CHR-0138": {
+     "skill": "SK-U-HUANGZHONG",
+     "trait": "강궁",
+     "basis": "unique"
+    },
+    "CHR-0140": {
+     "skill": "SK-T-GUARD",
+     "trait": "고수",
+     "basis": "keyword"
+    },
+    "CHR-0141": {
+     "skill": "SK-T-FIRE",
+     "trait": "부자",
+     "basis": "keyword"
+    },
+    "CHR-0147": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "이반",
+     "basis": "stat"
+    },
+    "CHR-0149": {
+     "skill": "SK-T-MORALE",
+     "trait": "순절",
+     "basis": "keyword"
+    },
+    "CHR-0150": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "직언",
+     "basis": "stat"
+    },
+    "CHR-0152": {
+     "skill": "SK-T-GUARD",
+     "trait": "숙련",
+     "basis": "stat"
+    },
+    "CHR-0153": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "보급",
+     "basis": "keyword"
+    },
+    "CHR-0155": {
+     "skill": "SK-T-GUARD",
+     "trait": "노장",
+     "basis": "keyword"
+    },
+    "CHR-0156": {
+     "skill": "SK-T-GUARD",
+     "trait": "고절",
+     "basis": "keyword"
+    },
+    "CHR-0161": {
+     "skill": "SK-T-SCOUT",
+     "trait": "원망",
+     "basis": "stat"
+    },
+    "CHR-0164": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "방자",
+     "basis": "stat"
+    },
+    "CHR-0165": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "직백전",
+     "basis": "keyword"
+    },
+    "CHR-0167": {
+     "skill": "SK-T-DISRUPT",
+     "trait": "변설",
+     "basis": "keyword"
+    },
+    "CHR-0169": {
+     "skill": "SK-T-DISRUPT",
+     "trait": "남중 회유",
+     "basis": "keyword"
+    },
+    "CHR-0171": {
+     "skill": "SK-T-SCOUT",
+     "trait": "내응",
+     "basis": "keyword"
+    },
+    "CHR-0173": {
+     "skill": "SK-T-FIRE",
+     "trait": "부풍",
+     "basis": "keyword"
+    },
+    "CHR-0176": {
+     "skill": "SK-T-GUARD",
+     "trait": "종자",
+     "basis": "keyword"
+    },
+    "CHR-0177": {
+     "skill": "SK-T-GUARD",
+     "trait": "백모병",
+     "basis": "keyword"
+    },
+    "CHR-0181": {
+     "skill": "SK-T-DISRUPT",
+     "trait": "오만",
+     "basis": "keyword"
+    },
+    "CHR-0183": {
+     "skill": "SK-T-SCOUT",
+     "trait": "선견",
+     "basis": "keyword"
+    },
+    "CHR-0325": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "장자",
+     "basis": "stat"
+    },
+    "CHR-0185": {
+     "skill": "SK-T-DISRUPT",
+     "trait": "금범적",
+     "basis": "keyword"
+    },
+    "CHR-0186": {
+     "skill": "SK-T-MORALE",
+     "trait": "천하이분",
+     "basis": "keyword"
+    },
+    "CHR-0187": {
+     "skill": "SK-T-FIRE",
+     "trait": "원한",
+     "basis": "stat"
+    },
+    "CHR-0188": {
+     "skill": "SK-T-MORALE",
+     "trait": "강동이교",
+     "basis": "keyword"
+    },
+    "CHR-0189": {
+     "skill": "SK-T-FIRE",
+     "trait": "포박",
+     "basis": "keyword"
+    },
+    "CHR-0190": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "교주",
+     "basis": "keyword"
+    },
+    "CHR-0191": {
+     "skill": "SK-T-SCOUT",
+     "trait": "의성",
+     "basis": "keyword"
+    },
+    "CHR-0192": {
+     "skill": "SK-T-MORALE",
+     "trait": "강동이교",
+     "basis": "keyword"
+    },
+    "CHR-0193": {
+     "skill": "SK-T-FIRE",
+     "trait": "강동지호",
+     "basis": "keyword"
+    },
+    "CHR-0196": {
+     "skill": "SK-T-FIRE",
+     "trait": "궁요희",
+     "basis": "keyword"
+    },
+    "CHR-0198": {
+     "skill": "SK-T-MOVE",
+     "trait": "소패왕",
+     "basis": "keyword"
+    },
+    "CHR-0199": {
+     "skill": "SK-T-MOVE",
+     "trait": "백의도강",
+     "basis": "keyword"
+    },
+    "CHR-0200": {
+     "skill": "SK-T-MORALE",
+     "trait": "군기",
+     "basis": "keyword"
+    },
+    "CHR-0201": {
+     "skill": "SK-T-MORALE",
+     "trait": "국태",
+     "basis": "keyword"
+    },
+    "CHR-0204": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "중신",
+     "basis": "keyword"
+    },
+    "CHR-0205": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "청렴",
+     "basis": "keyword"
+    },
+    "CHR-0207": {
+     "skill": "SK-T-GUARD",
+     "trait": "노장",
+     "basis": "keyword"
+    },
+    "CHR-0211": {
+     "skill": "SK-U-ZHOUYU",
+     "trait": "미주랑",
+     "basis": "unique"
+    },
+    "CHR-0212": {
+     "skill": "SK-T-GUARD",
+     "trait": "만신창이",
+     "basis": "keyword"
+    },
+    "CHR-0215": {
+     "skill": "SK-T-FIRE",
+     "trait": "산월토벌",
+     "basis": "keyword"
+    },
+    "CHR-0216": {
+     "skill": "SK-T-GUARD",
+     "trait": "역전",
+     "basis": "stat"
+    },
+    "CHR-0217": {
+     "skill": "SK-U-HUANGGAI",
+     "trait": "고육계",
+     "basis": "unique"
+    },
+    "CHR-0218": {
+     "skill": "SK-T-DISRUPT",
+     "trait": "밀서",
+     "basis": "keyword"
+    },
+    "CHR-0221": {
+     "skill": "SK-T-MORALE",
+     "trait": "순직",
+     "basis": "keyword"
+    },
+    "CHR-0223": {
+     "skill": "SK-T-FIRE",
+     "trait": "포박",
+     "basis": "keyword"
+    },
+    "CHR-0225": {
+     "skill": "SK-T-FIRE",
+     "trait": "무릉 평정",
+     "basis": "keyword"
+    },
+    "CHR-0227": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "남방 경략",
+     "basis": "keyword"
+    },
+    "CHR-0228": {
+     "skill": "SK-T-FIRE",
+     "trait": "선봉",
+     "basis": "keyword"
+    },
+    "CHR-0230": {
+     "skill": "SK-T-GUARD",
+     "trait": "변경",
+     "basis": "keyword"
+    },
+    "CHR-0238": {
+     "skill": "SK-T-FIRE",
+     "trait": "이릉 분전",
+     "basis": "keyword"
+    },
+    "CHR-0240": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "청렴",
+     "basis": "keyword"
+    },
+    "CHR-0243": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "교주 경략",
+     "basis": "keyword"
+    },
+    "CHR-0246": {
+     "skill": "SK-T-SCOUT",
+     "trait": "직언",
+     "basis": "stat"
+    },
+    "CHR-0251": {
+     "skill": "SK-T-SCOUT",
+     "trait": "이장",
+     "basis": "stat"
+    },
+    "CHR-0255": {
+     "skill": "SK-T-MORALE",
+     "trait": "화평",
+     "basis": "keyword"
+    },
+    "CHR-0256": {
+     "skill": "SK-T-SUPPLY",
+     "trait": "사위",
+     "basis": "stat"
+    },
+    "CHR-0260": {
+     "skill": "SK-T-MORALE",
+     "trait": "원로",
+     "basis": "keyword"
+    },
+    "CHR-0262": {
+     "skill": "SK-T-FIRE",
+     "trait": "여강 정예",
+     "basis": "keyword"
+    },
+    "CHR-0264": {
+     "skill": "SK-T-SCOUT",
+     "trait": "사령",
+     "basis": "stat"
+    }
+   },
+   "note": "Q88~Q91·D4. 장수당 기술 1개(첫 특성). 특성 없는 장수는 기술 없음. 효과 키·조건 문법은 docs/battle-core/SPECIAL-SKILLS.md",
+   "status": "proposed",
+   "source": "본편 combat.md §9, characters.json traits, BATTLE_DECISIONS §U"
+  }
  },
  "chain_explosion_override": {
   "host_squadron_id": "RC-SUN-SQ-03",
