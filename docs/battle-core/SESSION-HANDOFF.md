@@ -276,6 +276,14 @@
 - 바꾼 것(결과 불변): 정적 사거리 상한으로 거리 사전 차단, 배열 없이 먼저 판정, 접촉 기록 한 번 조회, `by_id` 색인, 보급 정렬 캐시. 지문·자동 해결 행이 전후 동일하고, tests 전부 통과했다.
 - 측정(무부하 PC): 자동 해결 1판 약 75초 → 21초, 틱 평균 12 → 3.1~3.9ms, 최대 8~12ms. 표는 `out/core-perf.md`(로컬). 다음: 다른 모델 리뷰(5-b), O3 1000시드 기준선.
 
+## P9 후속: 그룹 진형 표시·초기 배치 (2026-10-12, 브랜치 `p9-followup`, 병합 대기)
+
+- 그룹 진형: 진형 탭이 이미 선택 전체 ID 배열을 `formation_to`로 보낸다. 추가한 것은 표시뿐이다. `FormationTab.options`가 카드마다 `who`(못 받는 함대 이름·사유)를 만들고 툴팁에 "제외: 이름(사유)"를 붙이며, 누른 직후 일부 제외면 토스트로 알린다(`command_deck._on_formation_pressed`). 다중 선택 패널 머리에 진형별 함대 수 요약. 정보 패널 `_info_single`은 P1 때 이미 `src.form_name`(실제 진형 이름)이라 바꿀 것이 없었다. 코어 무변경.
+- 초기 배치(Q70): 코어에 `place` 명령 하나(`BattleSim.apply`). 틱 0에서만(`place_late` 거부), 선택 중심이 point로 가게 대형째 옮기되 함대마다 `FleetState.spawn`(시작 위치) 반경 `BattleSim.PLACE_RADIUS`(160px, **수치 한 곳**) 안으로 자르고 전장 경계에 맞춘다. 배치한 위치가 `home`이 된다. 일반 명령이라 `command_log`에 기록되어 `BattleSim.replay`가 같은 결과를 낸다.
+- 호스트: `place_mode`(다음 출격 때 직접 배치, 기본 꺼짐 = 생성기 배치 그대로)와 `placing`(배치 중). 배치 중에는 틱이 멈추고(`_process`), `issue()`가 이동을 place로 바꾸며 진형 외 명령은 토스트로 막는다. 그래서 마우스 우클릭, 터치 끌기(선택 함대에서 시작) 모두 기존 입력 그대로 배치가 된다. 켜는 곳은 브리핑의 "직접 배치" 체크, 배치 막대 [자동 배치][배치 확정]은 `CommandDeck.place_bar`. 허용 반경 원은 `tactical_overlay`가 선택 함대에 그린다.
+- 테스트 `tests/placement.gd`(PLACEMENT_PASS: who, 반경·그룹·replay·틱0 거부), `tests/placement_ui.gd`(PLACEMENT_UI_PASS: 호스트 흐름).
+- 안 한 것: 배치 시 방향(헤딩) 지정, 제한 시간(제안서 :733), 배치 중 진형 외 방침·프리셋. 필요하면 `place`에 `args.facing_deg`를 더하면 된다.
+
 ## 남은 일 (컨셉 세션이 할 수 있는 것)
 
 | 우선 | 일 | 메모 |

@@ -97,6 +97,8 @@ var G := {}
 var selected: Array = []
 var inspect = null
 var groups := {}
+var place_mode := false   # 다음 출격에서 초기 배치를 직접 한다(기본 자동 = 생성기 배치 그대로)
+var placing := false      # 초기 배치 중: 시간 정지, 이동 명령은 place가 된다. 확정하면 풀린다
 var multi := false   # 다중 선택 모드(터치): 탭 = 추가/해제, 빈 곳 끌기 = 범위 선택
 var marker := {}
 var drag := {}
@@ -254,9 +256,10 @@ func _start() -> void:
 	hud.end_ov.visible = false
 	hud.menu_ov.visible = false
 	G.state = "play"
+	placing = place_mode
 	selected.assign([flag(0)])
 	refresh_panel()
-	add_log("전 함대, 전투 배치 완료.", "", fleets[0])
+	add_log("함대를 끌어 배치하고 확정하십시오." if placing else "전 함대, 전투 배치 완료.", "", fleets[0])
 	var foe = null
 	for f in fleets:
 		if f.side == 1 and not f.is_flag:
@@ -329,14 +332,14 @@ func _process(delta: float) -> void:
 	if G.state == "play":
 		input_node.poll_camera(dt)
 		clock.set_speed(float(G.speed) * G.slow)
-		var n := clock.advance(delta)
+		var n := 0 if placing else clock.advance(delta)   # 초기 배치 중에는 틱이 멈춘다
 		for i in n:
 			if sim.st.over:
 				break
 			if i > 0 and i == n - 1:
 				_sync()   # 한 프레임에 여러 틱이면 마지막 틱 직전 상태를 보간 시작점(ppos)으로 둔다. 안 하면 2틱 구간을 1틱 alpha로 보간해 배속에서 표시가 앞뒤로 튄다
 			sim.step()
-		var a := 1.0 if sim.st.over else clock.alpha()   # 전투가 끝나면 틱이 멈춘다: 보간을 마지막 위치에 고정(안 하면 결과 화면까지 직전 틱과 사이를 반복 재생해 흔들린다)
+		var a := 1.0 if (sim.st.over or placing) else clock.alpha()   # 전투가 끝나면 틱이 멈춘다: 보간을 마지막 위치에 고정(안 하면 결과 화면까지 직전 틱과 사이를 반복 재생해 흔들린다)
 		vm.alpha = a
 		if n > 0:   # 틱이 없으면 투영·사건이 그대로다(명령·디버그 경로는 직접 _pump한다). 매 프레임 투영을 다시 만들면 1,500척에서 약 3ms
 			_pump()
@@ -408,8 +411,36 @@ func _pump() -> void:
 
 # 플레이어 명령(input/ 이 만든 사전)을 코어에 넘긴다. 즉시 적용되고 명령 기록에 남는다.
 func issue(cmd: Dictionary) -> void:
+	if placing:   # 초기 배치(Q70): 이동 = 배치(틱 0 전용 place 명령, 허용 반경은 코어가 자른다), 진형만 그대로, 나머지는 확정 뒤
+		match cmd.kind:
+			"move":
+				cmd = BattleCommands.make("place", cmd.ids, -1, cmd.point)
+			"formation", "place":
+				pass
+			_:
+				toast("배치를 확정한 뒤에 지시할 수 있습니다")
+				return
 	sim.issue(BattleSim.command(0, cmd.ids, cmd.kind, cmd.get("target_id", -1), cmd.get("point", Vector2.ZERO), cmd.get("args", {})))
 	_pump()
+	if cmd.kind == "place":   # 정지 중이라 보간할 틱이 없다: 새 위치로 바로 옮겨 그린다
+		for f in fleets:
+			f.ppos = f.tpos
+		vm.interpolate(1.0)
+
+# 초기 배치를 모두 시작 위치로 되돌린다(자동 배치)
+func place_auto() -> void:
+	if not placing:
+		return
+	for f in alive(0):
+		issue(BattleCommands.make("place", [f.id], -1, sim.st.by_id(f.id).spawn))
+	toast("자동 배치로 되돌렸습니다")
+
+# 초기 배치를 확정하고 전투를 시작한다
+func place_confirm() -> void:
+	if not placing:
+		return
+	placing = false
+	toast("배치 확정 · 전투 시작")
 
 # 명령 되돌리기(U2): 스냅숏 {id: [has_move, move_to, target_id, defense]}의 상태로 돌아가는 새 명령을 발행한다.
 func restore_orders(snap: Dictionary) -> void:

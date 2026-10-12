@@ -196,9 +196,16 @@ class BriefScreen extends Control:
 		var hb := HBoxContainer.new()
 		hb.add_theme_constant_override("separation", 12)
 		panel.add_child(hb)
-		hb.position = Vector2(1180 - 24 - 800, 680 - 24 - 54)
-		hb.size = Vector2(800, 54)
+		hb.position = Vector2(1180 - 24 - 1000, 680 - 24 - 54)
+		hb.size = Vector2(1000, 54)
 		hb.alignment = BoxContainer.ALIGNMENT_END
+		var place := CheckButton.new()   # Q70: 켜면 출격 직후 시간 정지 상태에서 함대를 직접 배치한다. 기본 꺼짐 = 자동 배치
+		place.text = "직접 배치"
+		place.custom_minimum_size = Vector2(170, 54)
+		place.focus_mode = Control.FOCUS_NONE
+		place.button_pressed = deck.battle.place_mode
+		place.toggled.connect(func(on: bool): deck.battle.place_mode = on)
+		hb.add_child(place)
 		var roster := Button.new()
 		roster.text = "정본 편성"
 		roster.custom_minimum_size = Vector2(160, 54)

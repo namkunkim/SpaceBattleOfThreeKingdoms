@@ -36,6 +36,9 @@ var cmd: CommandCore = null     # M9 장수 사상·지휘 승계·혼선. 시�
 var assault: AssaultCore = null # M9 강습(부대 강습·기함 진입). 시나리오와 combat.assault가 있을 때
 
 # profile: 프로필 사전({profile_id, rules, ally, foe, reinf}). 비우면 POC 프로필(기준선 동등).
+# 초기 배치(place) 허용 반경: 각 함대의 시작 위치에서 이 거리(전장 px) 안. 수치는 여기 한 곳이다(Q70)
+const PLACE_RADIUS := 160.0
+
 func _init(seed_id: int = 0, hz: int = BattleRules.TICK_HZ, profile: Dictionary = {}) -> void:
 	if profile.is_empty():
 		profile = PocSetup.profile()
@@ -213,6 +216,7 @@ func _spawn(d: Dictionary, side: int) -> FleetState:
 	f.wait = BattleRules.ticks(float(d.get("wait", 0)), st.hz)
 	f.portrait = d.p
 	f.home = f.pos
+	f.spawn = f.pos
 	f.sq_id = d.get("squadron_id", "")
 	f.morale_group = d.get("morale_group", "")
 	f.faction = d.get("faction_id", "")
@@ -671,6 +675,26 @@ func apply(c: Dictionary) -> void:
 					f.face_set = true
 					f.face_to = BattleRules.quant(deg_to_rad(float(args.facing_deg)))
 			emit("say", L.id, -1, L.pos, "move_all" if s.size() > 1 else "move")
+		"place":
+			# 초기 배치(Q70): 틱 0에서만. 선택 중심이 point로 가게 대형째 옮기되 각 함대는 시작 위치 반경 PLACE_RADIUS 안으로 자른다
+			if st.tick != 0:
+				_reject(L, "place_late", side)
+				return
+			var pc := Vector2.ZERO
+			for f in s:
+				pc += f.pos
+			pc /= s.size()
+			var pw := rs.world
+			for f in s:
+				var want: Vector2 = c.point + (f.pos - pc)
+				var d := want - f.spawn
+				if d.length() > PLACE_RADIUS:
+					want = f.spawn + d.normalized() * PLACE_RADIUS
+				f.pos = BattleRules.quant_v(Vector2(clampf(want.x, R.edge, pw.x - R.edge), clampf(want.y, R.edge, pw.y - R.edge)))
+				f.home = f.pos
+				f.has_move = false
+				f.target_id = -1
+				_clear_path(f)
 		"face":
 			# 제자리 방향 전환: 이동·표적을 풀고 args.facing_deg를 향해 돌아선다(위치 고정). 도착 방향 지정(face_set)을 재사용한다
 			for f in s:

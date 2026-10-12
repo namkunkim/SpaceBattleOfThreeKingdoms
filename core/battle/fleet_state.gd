@@ -33,6 +33,7 @@ var spd := 1.0
 var wait := 0             # 적 AI 대기 틱
 var is_flag := false
 var home := Vector2.ZERO
+var spawn := Vector2.ZERO  # 생성기가 정한 시작 위치. 초기 배치(place) 허용 반경의 중심이다(home은 배치 때 따라 움직인다)
 var range_r := 0.0
 var ranges := {}          # 무기 범주별 최대 사거리 {범주: 거리}. 쏠 플랫폼이 없는 범주는 키가 없다(아군 표시용)
 var sq_id := ""           # 시나리오 전대 ID (POC 프로필은 빈 문자열)

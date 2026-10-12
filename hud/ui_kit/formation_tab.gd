@@ -38,6 +38,7 @@ static func options(combat: Dictionary, sel: Array) -> Array:
 		var secs := 0.0
 		var left := 0.0
 		var code := ""
+		var who: Array = []   # 이 진형을 못 받는 함대 [{name, text}] (그룹 일부 거부 표시)
 		for s in rows:
 			var info: Dictionary = s.get("form_info", {}).get(fid, {})
 			if str(s.formation_id) == fid:
@@ -48,6 +49,7 @@ static func options(combat: Dictionary, sel: Array) -> Array:
 			if str(info.get("block", "")) != "":
 				n_block += 1
 				code = str(info.block)
+				who.append({"name": str(s.get("name", "")), "text": _block_text(fr, code)})
 			secs = maxf(secs, float(info.get("secs", 0.0)))
 		var n := rows.size()
 		var state := "ok"
@@ -86,8 +88,10 @@ static func options(combat: Dictionary, sel: Array) -> Array:
 			foot.append(hint)
 		if reason != "":
 			foot.append("⚠ " + reason + ("" if n_block == n else " (%d개 함대 제외)" % n_block))
+			if n > 1:   # 그룹: 함대별 사유
+				foot.append("제외: " + ", ".join(who.map(func(w): return "%s(%s)" % [w.name, w.text])))
 		out.append({"id": fid, "name": _name(combat, fid), "directive": DIRECTIVE.get(fid, ""), "shape": SHAPE.get(fid, "wedge"),
-			"state": state, "line": line, "warn": warn, "cancel": cancel, "reason": reason, "fx": fx, "foot": " · ".join(foot)})
+			"state": state, "who": who, "line": line, "warn": warn, "cancel": cancel, "reason": reason, "fx": fx, "foot": " · ".join(foot)})
 	return out
 
 static func _block_text(fr: Dictionary, code: String) -> String:
