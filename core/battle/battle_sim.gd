@@ -996,9 +996,8 @@ func _hold_stop(f: FleetState) -> void:
 	for g in st.fleets:
 		if g == f or (grp != 0 and g.move_grp == grp and not g.dead):
 			if g.has_move and sight_target(g) == null:
-				if g.side == 0 and st.tick >= int(_hold_msg.get(g.id, -1000000)) + HOLD_MSG_TICKS:
-					_hold_msg[g.id] = st.tick
-					_reject(g, "hold_distance", 0)   # 토스트 "교전 거리 유지"(쿨다운 있음). 아군이 아는 접촉에서만 멈추므로 새 정보가 없다
+				if g.side == 0:
+					_reject(g, "hold_distance", 0)   # 토스트 "교전 거리 유지". 명령이 취소될 때 한 번만 나온다. 아군이 아는 접촉에서만 멈추므로 새 정보가 없다
 				g.has_move = false
 				g.route.clear()
 				g.strafe = false
@@ -1006,8 +1005,6 @@ func _hold_stop(f: FleetState) -> void:
 				g.move_grp = 0
 
 var _hold_d2 := -1.0
-var _hold_msg := {}   # 함대 id → 마지막 정지 알림 틱(쿨다운)
-const HOLD_MSG_TICKS := 50
 
 func _separate() -> void:
 	# 함대끼리 겹쳐도 밀어내지 않는다(튕김 방지). 전장 경계 안으로만 가둔다.
