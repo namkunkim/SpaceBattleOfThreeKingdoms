@@ -28,10 +28,22 @@ func _run() -> void:
 	battle.update_sim(0.1)
 	var tshape: int = BattleRules.FORM_SHAPE[ids.find(target)]
 	if not TestCheck.ok(self, core.formation_id != target and ally.shape == tshape and ally.form == core.form_t, "명령 직후 뷰 모델 shape·form이 목표 모양(F-1·F-2)"): return
+	# 렌더러(D1): 함선 슬롯이 전환 시간에 맞춰 진행한다. 약 2.5초 뒤에는 중간쯤, 완료 뒤에는 목표 슬롯
+	var rv: FleetRenderer.FleetVis = battle.presentation.renderer.vis[ally.id]
+	await process_frame
+	await process_frame
+	for i in 25:
+		battle.update_sim(0.1)
+	await process_frame
+	await process_frame
+	if not TestCheck.ok(self, rv.rk > 0.3 and rv.rk < 0.7, "전환 중 렌더러 진행률 약 절반: %f" % rv.rk): return
 	for i in 700:
 		battle.update_sim(0.1)
 		if ally.formation_id == target:
 			break
+	await process_frame
+	await process_frame
+	if not TestCheck.ok(self, rv.rk == 1.0 and rv.slots[0].home.is_equal_approx(rv.slots[0].goal), "완료 시 렌더러 진행률 1, 슬롯이 목표"): return
 	if not TestCheck.ok(self, ally.formation_id == target, "전환 완료 (%s)" % target): return
 	if not TestCheck.ok(self, ally.shape != before and ally.shape == core.shape, "뷰 모델 shape 갱신 %d -> %d" % [before, ally.shape]): return
 	if not TestCheck.ok(self, src.squadron(ally.id).formation == ally.shape and src.form_name(ally) != name0, "렌더러 formation·패널 이름 갱신 (%s)" % src.form_name(ally)): return

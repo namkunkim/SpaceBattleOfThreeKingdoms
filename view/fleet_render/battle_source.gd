@@ -33,6 +33,7 @@ func _sq(f) -> Dictionary:
 		"firing_at": f.fire_t.id if (f.fire_t and not f.fire_t.dead) else -1,
 		"under_fire": f.under_fire,
 		"formation": f.shape,
+		"form_to": f.form_to, "form_left_s": f.form_left_s,   # 전환 진행 표시용(렌더러가 목표 모양으로 진행)
 		"formation_name": form_name(f),
 		"defense": f.defense, "charge_t": f.charge_t, "in_cmd": f.in_cmd,
 		"missile_cd": f.missile_cd, "fighter_cd": f.fighter_cd,

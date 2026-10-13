@@ -63,7 +63,9 @@ class Slot:
 	var cls := 0
 	var idx := 0
 	var pos := Vector3.ZERO      # 현재 월드 위치(대형 추종 결과)
-	var home := Vector3.ZERO     # 진형 슬롯(전대 로컬: 전방 -Z, 측면 +X)
+	var home := Vector3.ZERO     # 진형 슬롯(전대 로컬: 전방 -Z, 측면 +X). 전환 중에는 from→goal 진행률 보간값
+	var from := Vector3.ZERO     # 전환 시작 때의 home
+	var goal := Vector3.ZERO     # 전환 목표 home
 	var vel := Vector3.ZERO
 	var yaw := 0.0               # 월드 yaw(모델 기준)
 	var tau := 0.5
@@ -98,6 +100,8 @@ class FleetVis:
 	var lod := -1
 	var formation := -1
 	var evade := false           # 이번 갱신에 적의 사격을 받는 중(회피 흔들림 연출)
+	var rtotal := 0.0            # 진형 전환 표시 총 시간(초, 0이면 즉시)
+	var rk := 1.0                # 전환 진행률 0~1(코어 form_left_s 기준, 표시 전용)
 	var rest := 0                # 연속으로 목표에 닿아 있던 갱신 횟수(3 이상이면 갱신 생략)
 	var last_pos := Vector3(1e9, 0, 0)
 	var last_rot := 1e9
@@ -408,6 +412,8 @@ func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 func _reform(v: FleetVis, sq: Dictionary) -> void:
 	v.formation = sq.formation
 	v.rest = 0
+	v.rtotal = float(sq.get("form_left_s", 0.0)) if sq.get("form_to", "") != "" else 0.0
+	v.rk = 0.0 if v.rtotal > 0.0 else 1.0
 	var alive: Array = v.slots.filter(func(x): return x.alive)
 	var n := alive.size()
 	if n == 0:
@@ -427,8 +433,25 @@ func _reform(v: FleetVis, sq: Dictionary) -> void:
 	for i in n:
 		var s: Slot = alive[order_old[i]]
 		var p: Vector3 = pts[order_new[i]]
-		s.home = Vector3(p.z * S, p.y, -p.x * S)
+		s.from = s.home   # 지금 보이는 위치에서 새 목표로(전환 중 재명령·취소도 부드럽게)
+		s.goal = Vector3(p.z * S, p.y, -p.x * S)
+		s.home = s.goal if v.rtotal <= 0.0 else s.from
 		s.rank = (maxf_ - p.x) / span
+
+# 전환 중에는 코어 남은 시간(form_left_s)에 맞춰 슬롯을 현재 모양에서 목표 모양으로 진행시킨다(5초, 팔진 2.5초 - 투영 값 그대로, 표시 전용).
+func _form_progress(v: FleetVis, sq: Dictionary) -> void:
+	if v.rk >= 1.0:
+		return
+	var k := 1.0
+	if v.rtotal > 0.0 and sq.get("form_to", "") != "":
+		k = clampf(1.0 - float(sq.get("form_left_s", 0.0)) / v.rtotal, 0.0, 1.0)
+	if k == v.rk:
+		return
+	v.rk = k
+	v.rest = 0
+	for s: Slot in v.slots:
+		if s.alive:
+			s.home = s.from.lerp(s.goal, k)
 
 # ------------------------------------------------------------ fleets
 func _make_vis(sq: Dictionary) -> FleetVis:
@@ -637,6 +660,7 @@ func update(dt: float) -> void:
 		v.node.visible = sq.contact != "lost"   # 상실 접촉은 마지막 위치에 모델 없이 표식만 남는다
 		if sq.formation != v.formation:
 			_reform(v, sq)
+		_form_progress(v, sq)
 		if not sq.dead:
 			_follow(v, sq, dt)
 		var want := 0 if near else 1
