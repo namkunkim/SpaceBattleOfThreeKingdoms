@@ -15,8 +15,8 @@ func _run() -> void:
 	await process_frame
 	seed(SEED)
 	# 적벽 프로필: 안개 시작이라 아군(유비 4 + 손권 3)만 보이고 적은 접촉이 생길 때 나타난다
-	if not TestCheck.ok(self, battle.fleets.size() == 7, "fleets %d" % battle.fleets.size()): return
-	if not TestCheck.ok(self, battle.alive(0).size() == 7 and battle.alive(1).is_empty(), "ally fleets"): return
+	if not TestCheck.ok(self, battle.fleets.size() == 6, "fleets %d" % battle.fleets.size()): return
+	if not TestCheck.ok(self, battle.alive(0).size() == 6 and battle.alive(1).is_empty(), "ally fleets"): return
 	if not TestCheck.ok(self, battle.flag(0) != null and battle.flag(1) == null, "flagships"): return
 	for f in battle.fleets:
 		if not TestCheck.ok(self, f.nodes.size() == battle.MAX_VISIBLE, "nodes %s" % f.fname): return

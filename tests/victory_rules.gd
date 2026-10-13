@@ -3,7 +3,7 @@ extends SceneTree
 # M4 완료 기준(제안서 §9): §4.12 모든 종료 경로, 전대·군 사기, 강제 퇴각 이동, 탈출 지점, 코스트 70%, 20분 시계, CP 제거.
 # 적벽 표준 프로필을 읽고 상태를 직접 만들어 한 경로씩 확인한다. 헤드리스, 실패하면 종료 코드 1.
 
-const SQ := {"liu": "RC-LIU-SQ-01", "zhuge": "RC-LIU-SQ-02", "jiang": "RC-LIU-SQ-03", "fc": "RC-LIU-FC-01",
+const SQ := {"liu": "RC-LIU-SQ-01", "zhuge": "RC-LIU-SQ-02", "jiang": "RC-LIU-SQ-03",
 	"zhou": "RC-SUN-SQ-01", "cao": "RC-CAO-SQ-01"}
 
 func _initialize() -> void:
@@ -215,13 +215,12 @@ func _run() -> void:
 	_f(s, "cao").pos = Vector2(1600, 300) - Vector2(80, 0)
 	_sec(s, 1)
 	if not TestCheck.ok(self, not s.st.over, "반경 밖은 도달 아님"): return
-	# 4. 유비 기함과 유비군 출전 함대 전부(관우·유기·조운)가 연합 탈출 지점 → 제한적 승리(Q84). 손권군은 조건이 아니다
+	# 4. 유비 기함과 유비군 출전 함대 전부(관우·유기)가 연합 탈출 지점 → 제한적 승리(Q84). 손권군은 조건이 아니다
 	print("sec 4")
 	s = _sim()
 	var ex := Vector2(0, 650)
 	_f(s, "liu").pos = ex + Vector2(40, 0)
 	_f(s, "zhuge").pos = ex + Vector2(40, 30)
-	_f(s, "fc").pos = ex + Vector2(30, -30)
 	_sec(s, 1)
 	if not TestCheck.ok(self, not s.st.over, "유비군 일부만 도달하면 아님"): return
 	_f(s, "jiang").pos = ex + Vector2(20, 10)
@@ -231,7 +230,6 @@ func _run() -> void:
 	print("sec 4a")
 	s = _sim()
 	_f(s, "liu").pos = ex + Vector2(40, 0)
-	_f(s, "fc").pos = ex + Vector2(30, -30)
 	_f(s, "jiang").pos = ex + Vector2(20, 10)
 	_wreck(s, _f(s, "zhuge"), 10000)
 	_sec(s, 1)
@@ -239,7 +237,7 @@ func _run() -> void:
 	# 5. 유비군 코스트 70% 손실 → 연합 패배
 	print("sec 5")
 	s = _sim()
-	for k in ["zhuge", "jiang", "fc"]:
+	for k in ["zhuge", "jiang"]:
 		_wreck(s, _f(s, k), 9500)
 	_wreck(s, _f(s, "liu"), 6500)
 	_sec(s, 1)
@@ -248,7 +246,7 @@ func _run() -> void:
 	# 6. 연합 결합 코스트 70% (유비군 단독으로는 안 닿는다)
 	print("sec 6")
 	s = _sim()
-	for k in ["zhuge", "jiang", "fc", "zhou"]:
+	for k in ["zhuge", "jiang", "zhou"]:
 		_wreck(s, _f(s, k), 9900)
 	_wreck(s, _f(s, "RC-SUN-SQ-02"), 9900)
 	_wreck(s, _f(s, "RC-SUN-SQ-03"), 9900)

@@ -5,7 +5,7 @@ extends SceneTree
 # 이을 사람이 없으면 끝까지 혼선,
 # 지휘 한도 초과 단계, 결집 제한, 결산 사상 목록, 투영(자기 진영만). 헤드리스, 실패하면 종료 코드 1.
 
-const SQ := {"liu": "RC-LIU-SQ-01", "guan": "RC-LIU-SQ-02", "liuqi": "RC-LIU-SQ-03", "zhao": "RC-LIU-FC-01",
+const SQ := {"liu": "RC-LIU-SQ-01", "guan": "RC-LIU-SQ-02", "liuqi": "RC-LIU-SQ-03",
 	"zhou": "RC-SUN-SQ-01", "cheng": "RC-SUN-SQ-02", "cao": "RC-CAO-SQ-01", "ren": "RC-CAO-SQ-02", "xu": "RC-CAO-SQ-03",
 	"wen": "RC-CAO-SQ-04", "hong": "RC-CAO-SQ-07"}
 

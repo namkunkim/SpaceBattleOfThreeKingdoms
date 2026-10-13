@@ -58,7 +58,7 @@ func _run() -> void:
 		Organization.MISSING_FLEET: func(o): o.fleets.erase(_fleet(o, "RC-LIU-SQ-02")),
 		Organization.BAD_FLEET: func(o): o.fleets.append({"squadron_id": "RC-LIU-SQ-02"}),
 		"bad_fleet_count": func(o): _fleet(o, "RC-LIU-SQ-02").composition[0].count = 1.5,
-		"bad_ship_equip": func(o): _fleet(o, "RC-LIU-FC-01").composition[0].mission_equipment_id = "FAST-EQ-NOPE",
+		"bad_ship_equip": func(o): _fleet(o, "RC-LIU-SQ-01").composition[-1].mission_equipment_id = "FAST-EQ-NOPE",
 		"bad_ship_dup": func(o): _fleet(o, "RC-LIU-SQ-02").composition.append(_fleet(o, "RC-LIU-SQ-02").composition[0].duplicate()),
 		Organization.UNKNOWN_FLEET: func(o): o.fleets.append({"squadron_id": "RC-X", "faction_id": "liu_bei", "on": true, "admiral": "", "vice": "", "staff": [], "composition": []}),
 	}
@@ -193,7 +193,7 @@ func _is_flag(sq: String) -> bool:
 func _shortage_and_ties(base: Dictionary) -> bool:
 	var liu: Dictionary = scn.factions.filter(func(f): return f.id == "liu_bei")[0]
 	var full: Array = liu.available_officers
-	for keep_n in [7, 2]:
+	for keep_n in [6, 2]:
 		var s2 := scn.duplicate(true)
 		var l2: Dictionary = s2.factions.filter(func(f): return f.id == "liu_bei")[0]
 		l2.available_officers = full.filter(func(o): return o.id == "CHR-0128").duplicate(true)
@@ -204,9 +204,9 @@ func _shortage_and_ties(base: Dictionary) -> bool:
 		for fl in mine:
 			people.append_array(Organization._people(fl))
 		var errs := Organization.validate(o, s2, prof).map(func(e): return e.code)
-		if keep_n == 7:
+		if keep_n == 6:
 			var vices := mine.filter(func(fl): return fl.vice != "").size()
-			if not TestCheck.ok(self, people.size() == 7 and vices == 3 and mine.all(func(fl): return fl.staff.is_empty()) and errs.is_empty(), "shortage 7: %s %s" % [people, errs]): return false
+			if not TestCheck.ok(self, people.size() == 6 and vices == 3 and mine.all(func(fl): return fl.staff.is_empty()) and errs.is_empty(), "shortage 6: %s %s" % [people, errs]): return false
 		elif not TestCheck.ok(self, people.size() == 2 and errs.has(Organization.NO_ADMIRAL) and Organization.apply(prof, o, s2).has("errors"), "shortage 2: %s" % [errs]): return false
 	var s3 := scn.duplicate(true)
 	for o in s3.factions.filter(func(f): return f.id == "liu_bei")[0].available_officers:
