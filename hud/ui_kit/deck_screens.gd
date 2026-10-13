@@ -78,7 +78,7 @@ class TitleScreen extends Control:
 		UiDraw.seal(c, Rect2(c.size.x - 108, 24, 38, 38), 0)
 		UiDraw.text(c, Vector2(c.size.x - 61, 49), "對", "serif", 13, UiTheme.INK_3, HORIZONTAL_ALIGNMENT_CENTER, 0.0)
 		UiDraw.seal(c, Rect2(c.size.x - 52, 24, 38, 38), 1)
-		var rows := [["편성", "손유 연합 6개 함대  대  조조군 7개 함대"], ["승리", "조조군 전멸 (증원 포함)"], ["패배", "기함 유비 격침"], ["지휘", "직접 지휘 · 실시간 · 일시정지 가능"]]
+		var rows := [["편성", "손유 연합  대  조조군 (난이도별 함대 수)"], ["승리", "조조군 전멸 (증원 포함)"], ["패배", "기함 유비 격침"], ["지휘", "직접 지휘 · 실시간 · 일시정지 가능"]]
 		var y := 108.0
 		for r in rows:
 			UiDraw.text(c, Vector2(24, y), r[0], "semibold", 12, UiTheme.GOLD)

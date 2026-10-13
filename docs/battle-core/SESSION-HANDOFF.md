@@ -345,3 +345,10 @@
 - 바꾼 것: 생성기·JSON, 시나리오 문서, 제안서 :212, DATA-CROSSCHECK, 테스트(data_rules·organization_rules·victory_rules·succession_rules·smoke·battle_flow·roster). 통과: 위 7종 + detection·commander_ai·stratagem·supply·salvo·formation·selection_groups. boundary 위반 목록은 변경 전과 같다(신규 0).
 - **AI 대 AI 전후(표준, `--policies none`, 같은 시드 0~19):** 연합 승률 25% → 30%(n=20, ±10%p라 차이 없음), 길이 1019s → 1016s, 시드별 승패 뒤바뀜 7/20. 종료 경로: 연합 사기 붕괴 13 → 11, 조조 사기 붕괴 5 → 6, 유비 기함 격침 1 → 3, 시계 종료 1 → 0. 1000시드 재측정은 O3b가 편성 뒤 한 번에 한다.
 - 로컬 확인: 전투 화면에서 유비 본대 레이더 탐지 원이 정찰정 6척을 반영해 넓은지, 편성 화면 유비군 3함대.
+
+## P10b 자동 편성 정찰정 예약 (2026-10-13, 브랜치 `p10b-auto-scout`, 5-b 대기)
+
+- `Organization.auto_fill`이 시나리오 편성의 고속정 수(유비 본대 정찰 6)를 먼저 예약한다(H1). 생성기 `ALLY_LIMIT`은 유비 4함대 기준 4698로 고정해 조조 함대 수 입문 11 / 표준 12 / 상급·극한 16을 복원했다(D2). 인계 문서 등의 4692는 4698의 오기다.
+- **사용자 확인 필요:** 조조 비용이 고정이라 실제 조조/연합 비용비가 1.715 / 1.855 / 2.497(목표 1.47 / 1.59 / 2.14)로 오른다. `data_rules`·`organization_ui`의 비용비 검사를 `cao_cost_at_limits` 기준으로 옮겼다.
+- M2·M3 측정, AI 전후 표는 `REVIEW-P10.md` 맨 아래 "P10b 대응 요약". 1000시드 재측정(O3b)은 이 편성 뒤 한 번에 한다.
+- 로컬 확인: 기본 흐름 전투에서 유비 본대 레이더 원이 정찰정 6척을 반영해 넓은지.

@@ -260,6 +260,7 @@ static func _officers(scn: Dictionary, faction_id: String) -> Dictionary:
 # 장수: 제독(기함은 고정) → 부제독 → 함대마다 참모 강습·공성·보급, 각각 남은 장수 중 통솔·통솔·무력·지력·정치 최고(같으면 ID 순).
 # 함선: 지휘 한도 (limit_base + limit_per_command × 제독 통솔)까지 MIX 순환 탐욕, 남는 점수는 고속정.
 #   프로필 함대에 fill_bp가 있으면(조조 마지막 함대, Q82) 한도 × fill_bp까지.
+#   시나리오 편성의 고속정(정찰 고속정, P10b·R5)은 먼저 예약하고 나머지를 채운다(한도를 넘지 않는 만큼).
 # only(전대 ID 배열)가 있으면 그 함대만 채우고, 나머지 출전 함대의 장수는 쓰지 않는다(repair).
 static func auto_fill(org: Dictionary, faction_id: String, scn: Dictionary, profile: Dictionary, only := []) -> Dictionary:
 	var res := org.duplicate(true)
@@ -274,6 +275,11 @@ static func auto_fill(org: Dictionary, faction_id: String, scn: Dictionary, prof
 					used[id] = true
 	var fill := {}
 	var equip := {}
+	var scouts := {}   # 전대 ID → 시나리오 편성의 고속정 수(예약)
+	for sq in scn.squadrons:
+		for c in sq.composition:
+			if c.ship_type_id == FILLER:
+				scouts[sq.id] = scouts.get(sq.id, 0) + int(c.count)
 	for d in profile.ally + profile.foe:
 		fill[d.squadron_id] = int(d.get("fill_bp", BattleRules.BP))
 	for fl in on:
@@ -317,6 +323,10 @@ static func auto_fill(org: Dictionary, faction_id: String, scn: Dictionary, prof
 		var cap := (int(K.limit_base) + int(K.limit_per_command) * int(pool[fl.admiral].command)) * int(fill.get(fl.squadron_id, BattleRules.BP)) / BattleRules.BP
 		var n := {}
 		var spent := 0
+		var keep: int = mini(scouts.get(fl.squadron_id, 0), cap / costs[FILLER])
+		if keep > 0:
+			n[FILLER] = keep
+			spent = keep * costs[FILLER]
 		var i := 0
 		var miss := 0
 		while miss < MIX.size():
@@ -330,7 +340,7 @@ static func auto_fill(org: Dictionary, faction_id: String, scn: Dictionary, prof
 				miss += 1
 		var extra: int = (cap - spent) / costs[FILLER]
 		if extra > 0:
-			n[FILLER] = extra
+			n[FILLER] = n.get(FILLER, 0) + extra
 		var keys := n.keys()
 		keys.sort()
 		for t in keys:

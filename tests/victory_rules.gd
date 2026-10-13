@@ -243,7 +243,7 @@ func _run() -> void:
 	_sec(s, 1)
 	var anchor: Dictionary = s.victory.cost_of("anchor")
 	if not TestCheck.ok(self, anchor.loss_bp >= 7000 and s.st.over and not s.st.win and s.st.end_reason == "liu_cost_loss", "유비군 70%%: loss=%d reason=%s" % [anchor.loss_bp, s.st.end_reason]): return
-	# 6. 연합 결합 코스트 70% (유비군 단독으로는 안 닿는다)
+	# 6. 연합 결합 코스트 70% (유비군 단독 손실도 70%를 넘어 liu_cost_loss가 먼저일 수 있다)
 	print("sec 6")
 	s = _sim()
 	for k in ["zhuge", "jiang", "zhou"]:
