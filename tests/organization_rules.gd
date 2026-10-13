@@ -92,6 +92,22 @@ func _run() -> void:
 		again = Organization.auto_fill(again, fid, scn, prof)
 	if not TestCheck.ok(self, JSON.stringify(auto) == JSON.stringify(again), "auto_fill deterministic"): return
 	if not TestCheck.ok(self, _codes(auto).is_empty(), "auto org valid %s" % [Organization.validate(auto, scn, prof)]): return
+	# P10b: 자동 편성은 시나리오 정찰 고속정 수를 예약한다(유비 본대 정찰정 18척(문서 6 x 3배), 장비 유지). 조조 함대 수는 Q82 결정값(입문 11 · 표준 12 · 상급/극한 16)
+	var scout_n := 0
+	for c in scn.squadrons.filter(func(x): return x.id == "RC-LIU-SQ-01")[0].composition:
+		if c.ship_type_id == Organization.FILLER:
+			scout_n += int(c.count)
+	var got := 0
+	var recon_ok := false
+	for c in _fleet(auto, "RC-LIU-SQ-01").composition:
+		if c.ship_type_id == Organization.FILLER:
+			got += int(c.count)
+			recon_ok = c.mission_equipment_id == "FAST-EQ-RECON"
+	if not TestCheck.ok(self, scout_n == 18 and got >= scout_n and recon_ok, "auto scouts reserved %d/%d" % [got, scout_n]): return
+	var want_foes := {"입문": 11, "표준": 12, "상급": 16, "극한": 16}
+	for dn in want_foes:
+		var pd := Organization.load_auto(DEF, dn)
+		if not TestCheck.ok(self, pd.has("organization") and pd.foe.size() == want_foes[dn], "%s cao fleets %d (want %d)" % [dn, pd.foe.size(), want_foes[dn]]): return
 	var min_cost := 1 << 30
 	for t in prof.combat.ship_types.values():
 		min_cost = mini(min_cost, int(t.cost))
