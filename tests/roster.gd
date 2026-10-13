@@ -22,9 +22,9 @@ func _find_button(n: Node, text: String) -> Button:
 
 func _run() -> void:
 	var d := ScenarioRoster.load_scenario()
-	if not TestCheck.ok(self, d.get("factions", []).size() == 3 and d.get("squadrons", []).size() == 23, "scenario loaded"): return
+	if not TestCheck.ok(self, d.get("factions", []).size() == 3 and d.get("squadrons", []).size() == 20, "scenario loaded"): return
 	var s := ScenarioRoster.squadron(d, "RC-LIU-SQ-01")
-	if not TestCheck.ok(self, ScenarioRoster.ship_count(s) == 21 and ScenarioRoster.composition_text(s) == "전열 12 · 보급 3 · 요격 6", "composition %s" % ScenarioRoster.composition_text(s)): return
+	if not TestCheck.ok(self, ScenarioRoster.ship_count(s) == 39 and ScenarioRoster.composition_text(s) == "전열 12 · 보급 3 · 요격 6 · 고속 18", "composition %s" % ScenarioRoster.composition_text(s)): return
 	for sq in d.squadrons:
 		for c in sq.composition:
 			if not ScenarioRoster.SHIP_TYPES.has(c.ship_type_id):
@@ -34,18 +34,18 @@ func _run() -> void:
 	var p := Commanders.person("CHR-0207")
 	if not TestCheck.ok(self, p.get("name", "") == "정보" and p.get("faction", "") == "wu" and p.get("portrait", 0) == -1, "person CHR-0207 %s" % p): return
 	if not TestCheck.ok(self, Commanders.person("CHR-0134").get("portrait", -1) == 2 and Commanders.person("liu_bei").is_empty(), "portrait by CHR id"): return
-	# W-2(Q82): 조조 함대 앞에서부터 입문 11 · 표준 12 · 상급/극한 16개, 척 수 배율 없음
+	# W-2(Q82): 조조 함대 앞에서부터 입문 9 · 표준 10 · 상급/극한 14개, 척 수 배율 없음
 	var n := {}
 	for diff in ["입문", "표준", "상급", "극한"]:
 		n[diff] = ScenarioRoster.deployed(d, "cao_cao", diff).size()
-	if not TestCheck.ok(self, n.입문 == 11 and n.표준 == 12 and n.상급 == 16 and n.극한 == 16, "deploy by difficulty %s" % n): return
+	if not TestCheck.ok(self, n.입문 == 9 and n.표준 == 10 and n.상급 == 14 and n.극한 == 14, "deploy by difficulty %s" % n): return
 	var cao1: Dictionary = ScenarioRoster.deployed(d, "cao_cao", "입문")[0]
 	var want := {"SHP-01": 6, "SHP-03": 12, "SHP-04": 24}   # 3배 편성 그대로
 	for c in cao1.composition:
 		if want.has(c.ship_type_id) and int(c.count) != want[c.ship_type_id]:
 			TestCheck.ok(self, false, "scaled %s = %d" % [c.ship_type_id, c.count])
 			return
-	if not TestCheck.ok(self, ScenarioRoster.deployed(d, "liu_bei", "입문").size() == 4, "alliance same in all difficulties"): return
+	if not TestCheck.ok(self, ScenarioRoster.deployed(d, "liu_bei", "입문").size() == 3, "alliance same in all difficulties"): return
 	# Q78: 가용 장수 = 유비 58 · 손권 46 · 조조 71, 불참 제외, 모든 함대의 직책 장수가 자기 세력 가용 장수 안
 	var avail := {}
 	for f in d.factions:
@@ -87,7 +87,7 @@ func _run() -> void:
 	var cnt := {}
 	for sq in BattleProjection.build(sim, 0).squadrons:
 		cnt[sq.faction] = int(cnt.get(sq.faction, 0)) + 1
-	if not TestCheck.ok(self, cnt.get("shu", 0) == 4 and cnt.get("wu", 0) == 3 and cnt.size() == 2, "projection factions %s" % cnt): return
+	if not TestCheck.ok(self, cnt.get("shu", 0) == 3 and cnt.get("wu", 0) == 3 and cnt.size() == 2, "projection factions %s" % cnt): return
 	for f in sim.st.fleets:
 		if f.side == 1 and BattleProjection.faction_key(f) != "wei":
 			TestCheck.ok(self, false, "cao faction key")
