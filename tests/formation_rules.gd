@@ -215,6 +215,37 @@ func _run() -> void:
 	_cmd(s, s.st.fleets[0], "formation", {"id": "FRM-02"})
 	pj = s.projection(0).squadrons[0]
 	if not TestCheck.ok(self, pj.form_to == "FRM-02" and is_equal_approx(pj.form_left_s, 5.0), "투영 전환 남은 시간"): return
+	# 전환 중 표시: 투영 formation은 그대로, formation_to·form_to_pts는 명령 즉시 목표 모양(코어 규칙 불변)
+	if not TestCheck.ok(self, pj.formation == BattleRules.FORM_SHAPE[0] and pj.formation_to == BattleRules.FORM_SHAPE[1] and pj.form_to_pts == BattleRules.formation_offsets(BattleRules.FORM_SHAPE[1], s.R.ship_gap) and pj.form_to_pts != pj.form, "투영 목표 모양 키(명령 직후)"): return
+	_cmd(s, s.st.fleets[0], "formation", {"id": "FRM-01"})
+	pj = s.projection(0).squadrons[0]
+	if not TestCheck.ok(self, pj.formation_to == pj.formation and pj.form_to_pts == pj.form, "전환 취소 시 목표 모양 복귀"): return
+	_cmd(s, s.st.fleets[0], "formation", {"id": "FRM-02"})
+	_sec(s, 5.5)
+	pj = s.projection(0).squadrons[0]
+	if not TestCheck.ok(self, pj.formation == BattleRules.FORM_SHAPE[1] and pj.formation_to == pj.formation and pj.form_to_pts == pj.form, "전환 완료 시 현재와 목표 일치"): return
+
+	# 전환 중 다른 진형 재명령: 목표 모양이 새 진형으로 바뀌고 시간은 새로 5초
+	s = _pair("FRM-01", "FRM-01", 80)
+	a = s.st.fleets[0]
+	_cmd(s, a, "formation", {"id": "FRM-02"})
+	_sec(s, 2.0)
+	_cmd(s, a, "formation", {"id": "FRM-03"})
+	pj = s.projection(0).squadrons[0]
+	if not TestCheck.ok(self, pj.formation == BattleRules.FORM_SHAPE[0] and pj.formation_to == BattleRules.FORM_SHAPE[2] and pj.form_to == "FRM-03" and is_equal_approx(pj.form_left_s, 5.0), "전환 중 재명령: 새 목표·새 5초"): return
+	# 신기묘산류 즉시 완료(force_formation)가 전환 중간에 들어오면 목표 모양도 같이 정리된다
+	s.salvo.force_formation(a, "FRM-04")
+	pj = s.projection(0).squadrons[0]
+	if not TestCheck.ok(self, pj.form_to == "" and pj.formation == BattleRules.FORM_SHAPE[3] and pj.formation_to == pj.formation and pj.form_to_pts == pj.form, "전환 중 즉시 완료: 목표=현재"): return
+	# POC 프로필(salvo 없음): form_to_pts가 비지 않고 효과 위치가 정상(H1)
+	var poc := BattleSim.new(1)
+	var vm := BattleViewModel.new()
+	vm.apply(poc.projection(0))
+	var fx := FxLayer.new()
+	var okp := not vm.fleets.is_empty()
+	for fv in vm.fleets:
+		okp = okp and fv.form.size() > 0 and fx.ship_pos(fv, 3).is_finite()
+	if not TestCheck.ok(self, okp, "POC: form 비지 않음, FxLayer.ship_pos 정상"): return
 
 	# --- 8. 결정론: 진형·경유점·평행 명령을 섞은 같은 입력은 같은 지문 ---
 	var fps := []

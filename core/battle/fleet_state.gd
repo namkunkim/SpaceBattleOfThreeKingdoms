@@ -90,6 +90,8 @@ var speed_cap := 0.0          # 그룹 이동 속도 상한(0 = 없음). 함께 
 var move_grp := 0             # 그룹 이동 묶음 번호(0 = 단독). 유지 거리 정지 때 그룹이 함께 선다. 지문에는 넣지 않는다
 var face_to := 0.0
 var traits: Array = []        # 지휘관 특성(팔진 조건)
+var shape_to := -1            # 전환 중이면 목표 진형의 배치도 번호(표시 전용, 없으면 shape와 같다)
+var form_t: Array[Vector2] = []   # 목표 배치 오프셋(표시 전용)
 var shape := -1               # 배치도 번호(BattleRules.formation_offsets의 kind). -1이면 POC(form_id)
 
 # --- M7 지휘관 AI ---
