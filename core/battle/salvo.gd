@@ -151,11 +151,14 @@ func start_transition(f: FleetState, fid: String) -> String:
 	if fid == f.formation_id:
 		f.form_to = ""
 		f.form_left = 0
+		f.shape_to = f.shape
+		f.form_t = f.form
 	elif transition_ticks(f, fid) <= 0:
 		force_formation(f, fid)   # 전환 시간 0(신기묘산): 즉시 바뀐다
 	elif fid != f.form_to:
 		f.form_to = fid
 		f.form_left = transition_ticks(f, fid)
+		_show_target(f, fid)
 		sim.emit("formation_start", f.id, -1, f.pos, fid)
 	return ""
 
@@ -203,6 +206,13 @@ func force_formation(f: FleetState, fid: String) -> void:
 func _apply_shape(f: FleetState) -> void:
 	f.shape = BattleRules.FORM_SHAPE[maxi(0, formation_ids().find(_form_id(f)))]
 	f.form = BattleRules.formation_offsets(f.shape, sim.R.ship_gap)
+	f.shape_to = f.shape
+	f.form_t = f.form
+
+# 전환 시작 즉시 표시용 목표 모양을 정한다(코어 규칙은 불변, §4.7)
+func _show_target(f: FleetState, fid: String) -> void:
+	f.shape_to = BattleRules.FORM_SHAPE[maxi(0, formation_ids().find(fid))]
+	f.form_t = BattleRules.formation_offsets(f.shape_to, sim.R.ship_gap)
 
 # 상성(정본 §5.4): 교전 거리대에서 우위 진형이면 피해 배율. 팔진은 양쪽 모두 판정을 무효화한다
 func affinity_wins(a: String, b: String) -> bool:

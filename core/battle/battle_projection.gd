@@ -142,6 +142,7 @@ static func squadron(st: BattleState, f: FleetState) -> Dictionary:
 		"missile_cd_s": f.missile_cd / hz, "fighter_cd_s": f.fighter_cd / hz,
 		"range": f.range_r,
 		"form": f.form,
+		"formation_to": f.shape_to if f.shape >= 0 else f.form_id % BattleRules.FORM_COUNT, "form_to_pts": f.form_t,   # 전환 목표 모양(없으면 현재와 같다)
 		"control": f.control, "posture": f.posture,   # 직접·위임(Q20), 전투 방침(§5.2). posture "delegated"는 인물 위임
 		"morale_bp": f.morale_bp, "mstate": f.mstate, "out": f.out, "retreat_order": f.retreat_order,
 		"faction_id": f.faction,

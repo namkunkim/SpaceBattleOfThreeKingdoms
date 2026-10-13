@@ -170,8 +170,8 @@ func apply(proj: Dictionary) -> Array[FleetView]:
 		f.under_fire = s.get("under_fire", false)
 		f.dead = s.dead
 		f.control = s.control
-		f.shape = s.get("formation", 0)
-		f.form.assign(s.form)   # 진형 전환 뒤 효과(fx_layer.ship_pos)가 현재 배치를 따른다
+		f.shape = s.get("formation_to", s.get("formation", 0))   # 전환 중에는 명령 즉시 목표 모양으로 표시한다(P1 F-1)
+		f.form.assign(s.get("form_to_pts", s.form))   # 효과(fx_layer.ship_pos)도 같은 배치를 따른다(P1 F-2)
 		f.formation_id = s.get("formation_id", "")
 		f.form_to = s.get("form_to", "")
 		f.form_left_s = s.get("form_left_s", 0.0)

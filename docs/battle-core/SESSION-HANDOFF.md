@@ -331,3 +331,9 @@
 - 장수를 바꾸면 `Organization.refill_slots(fl, prof, keep)`: 직접 고른 칸은 그 장수가 남아 있는 한 자리째 유지, 빠진 장수의 특기·중복·빈칸만 기본값 후보 순으로 채운다(`default_slots` = keep 빈 배열). 칸끼리 맞바꿈은 두 칸을 바꾼 뒤 한 번만 재채움. "자동 편성"·"정사 편성으로 초기화"는 기본값.
 - 확정은 `apply`(= validate) 사유를 먼저 본다: `skill_duplicate/foreign/unknown` 문구 추가, 거부 시 잠금 + 사유. 테스트 `organization_ui` 확장(중복·타 장수 거부, 목록·카드 갱신, 장수 교체 유지/재채움, 맞바꿈, 확정 거부, 자동·초기화, 확정 뒤 `FleetState.skill_slots`).
 - **P8b-b (REVIEW-P8B 조건부 수용 처리)**: F-1 `organization_rules`에 `refill_slots` 단위(keep=[] = default, 자리 유지, 중복·남의 기술·길이, 장수 없음). F-2 선택 목록 2열(1600×900에서 함종 ± 보임). F-3 단언 분리·괄호, 함대 간·풀 맞바꿈·출전 끄기 시험. F-5 현재 칸 특기 `PrimaryButton` 표시. F-6 공개 `Organization.people`, 슬롯이 모두 빈 카드는 특기 줄 생략. F-4 칸 비우기는 넣지 않음(관리 판단). 의도: 고른 칸 유지(P8A-NOTES 메모 대체). 캡처 `out/org-p8bb-{1920x1200,1600x900}.png`. `organization_rules`는 약 5분 걸린다(`_to_end`) — 400초 미만 타임아웃이면 출력 없이 끊긴다.
+
+## 진형 전환 목표 모양 표시 (2026-10-13, 브랜치 `p1-form-target`, 병합 대기, `BATTLE_DECISIONS.md` §S-2)
+- 사용자 결정: 전환 중 3D 모양은 명령 즉시 목표 진형. 코어 규칙(5초, 통솔·팔진)과 `formation`·`formation_id`(완료 틱에 변경)는 불변.
+- 코어: `FleetState.shape_to`·`form_t`(표시 전용, 지문 제외), `Salvo._show_target`·`_apply_shape`가 설정, 투영 키 `formation_to`·`form_to_pts`. 뷰 모델은 매 갱신 `shape`·`form`에 목표 값을 반영(P1 F-1·F-2). 안개 접촉에는 키 없음(적 진형 비공개 그대로).
+- 추정·상실 적 이름·초상은 마지막 확인 값을 계속 표시(코드 이미 그러함, 제안서 정정). 처리 자리 1·P3 소모량 현행 확정.
+- 로컬 화면 확인: 진형 탭에서 다른 모양 진형을 누르면 즉시 함선들이 새 대형으로 이동하는지, 전환 중 피격·폭발 효과가 새 대형 위치에 뜨는지, 취소(현재 진형 재선택) 시 원래 모양으로 돌아가는지.

@@ -215,6 +215,15 @@ func _run() -> void:
 	_cmd(s, s.st.fleets[0], "formation", {"id": "FRM-02"})
 	pj = s.projection(0).squadrons[0]
 	if not TestCheck.ok(self, pj.form_to == "FRM-02" and is_equal_approx(pj.form_left_s, 5.0), "투영 전환 남은 시간"): return
+	# 전환 중 표시: 투영 formation은 그대로, formation_to·form_to_pts는 명령 즉시 목표 모양(코어 규칙 불변)
+	if not TestCheck.ok(self, pj.formation == BattleRules.FORM_SHAPE[0] and pj.formation_to == BattleRules.FORM_SHAPE[1] and pj.form_to_pts == BattleRules.formation_offsets(BattleRules.FORM_SHAPE[1], s.R.ship_gap) and pj.form_to_pts != pj.form, "투영 목표 모양 키(명령 직후)"): return
+	_cmd(s, s.st.fleets[0], "formation", {"id": "FRM-01"})
+	pj = s.projection(0).squadrons[0]
+	if not TestCheck.ok(self, pj.formation_to == pj.formation and pj.form_to_pts == pj.form, "전환 취소 시 목표 모양 복귀"): return
+	_cmd(s, s.st.fleets[0], "formation", {"id": "FRM-02"})
+	_sec(s, 5.5)
+	pj = s.projection(0).squadrons[0]
+	if not TestCheck.ok(self, pj.formation == BattleRules.FORM_SHAPE[1] and pj.formation_to == pj.formation and pj.form_to_pts == pj.form, "전환 완료 시 현재와 목표 일치"): return
 
 	# --- 8. 결정론: 진형·경유점·평행 명령을 섞은 같은 입력은 같은 지문 ---
 	var fps := []

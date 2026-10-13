@@ -25,6 +25,9 @@ func _run() -> void:
 			target = fid
 			break
 	battle.sim.issue(BattleSim.command(0, [ally.id], "formation", -1, Vector2.ZERO, {"id": target}))
+	battle.update_sim(0.1)
+	var tshape: int = BattleRules.FORM_SHAPE[ids.find(target)]
+	if not TestCheck.ok(self, core.formation_id != target and ally.shape == tshape and ally.form == core.form_t, "명령 직후 뷰 모델 shape·form이 목표 모양(F-1·F-2)"): return
 	for i in 700:
 		battle.update_sim(0.1)
 		if ally.formation_id == target:
