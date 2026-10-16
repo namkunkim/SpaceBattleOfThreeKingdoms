@@ -1,0 +1,34 @@
+[
+  {
+    "path": "core/battle/organization.gd",
+    "sha256": "A281AA8FAA0870604E22E4289A2406BB516E077CD74BEE8869B8D2E1EFF20FA9"
+  },
+  {
+    "path": "data/scenarios/red_cliffs_208_realtime.json",
+    "sha256": "EB22161763E7B0F6EFF77AE2407CFDEA5B6BC8A37EA56794CC0B45C89DFE203D"
+  },
+  {
+    "path": "tests/data_rules.gd",
+    "sha256": "5527688FCA853E957680D79DA959350B14D7792B58896EDDBD05CF114CA41144"
+  },
+  {
+    "path": "tests/organization_rules.gd",
+    "sha256": "8618F7F79D1271AE1942F72CB394721FDA3AD9D24C0CDDB12C16A07D25BB8743"
+  },
+  {
+    "path": "tests/organization_ui.gd",
+    "sha256": "9005EC6DAE5A57621C0AE137EA95D27D61391F3913606CB5A204396D3FDFE4AE"
+  },
+  {
+    "path": "tests/roster.gd",
+    "sha256": "828B491A4B42C3B40A490C4A0F76B0A92E18E553DBF1014ACC86E0E57004D63E"
+  },
+  {
+    "path": "tests/stratagem_rules.gd",
+    "sha256": "75CD289D1CC66553594CE230A14798C78BF9D49AD61FCA8B8CAFFE548CFC806D"
+  },
+  {
+    "path": "tools/scenario/make_red_cliffs_208.py",
+    "sha256": "6807D32B882AE75F8B5977471787371474AE6366ACDAE47AF75FA46B78342FEF"
+  }
+]

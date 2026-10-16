@@ -1,0 +1,8 @@
+ERROR: TEST_FAIL screen layer touches core classes:
+res://view/fleet_render/battle_source.gd:178  \bBattleRules\b  <- var bp := float(BattleRules.BP)
+res://hud/ui_kit/org_screen.gd:137  \bProfileLoader\b  <- scn = ProfileLoader.read_json(ProfileLoader.read_json(b.profile_def).scenario_path)
+res://hud/ui_kit/org_screen.gd:138  \bScenarioProfile\b  <- prof = ScenarioProfile.load_profile(b.profile_def, b.difficulty)
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] ok (res://tests/lib/check.gd:8)
+       [1] _run (res://tests/boundary.gd:79)

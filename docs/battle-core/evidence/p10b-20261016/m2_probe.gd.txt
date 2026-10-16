@@ -1,0 +1,78 @@
+extends SceneTree
+
+const DEF = "res://data/profiles/red_cliffs_rt.json"
+
+func _initialize() -> void:
+	call_deferred("run")
+
+func run() -> void:
+	var scenario = ProfileLoader.read_json(ProfileLoader.read_json(DEF).scenario_path)
+	var profile = ScenarioProfile.load_profile(DEF, "표준")
+	var without = scenario.duplicate(true)
+	for sq in without.squadrons:
+		sq.composition = sq.composition.filter(func(c): return not (c.ship_type_id == Organization.FILLER and c.get("mission_equipment_id", "") == "FAST-EQ-RECON"))
+	var variants = {}
+	for reserve in [false, true]:
+		var org = Organization.default_org(profile)
+		for fid in ["liu_bei", "sun_quan", "cao_cao"]:
+			org = Organization.auto_fill(org, fid, scenario if reserve else without, profile)
+		variants[str(reserve)] = Organization.apply(profile, org, scenario)
+		assert(not variants[str(reserve)].has("errors"))
+	var unchanged = []
+	for i in variants["true"].organization.fleets.size():
+		var on = variants["true"].organization.fleets[i]
+		var off = variants["false"].organization.fleets[i]
+		if on.squadron_id != "RC-LIU-SQ-01":
+			assert(on == off)
+			unchanged.append(on.squadron_id)
+	var result = {"fixed_profile": "final P10b standard (10 Cao fleets and final fill)", "unchanged_fleets": unchanged, "costs": [], "runs": []}
+	for diff in ["입문", "표준", "상급", "극한"]:
+		var p = Organization.load_auto(DEF, diff)
+		var costs = [0, 0]
+		for fl in p.organization.fleets:
+			costs[1 if fl.faction_id == "cao_cao" else 0] += Organization.cost_of(fl, p)
+		result.costs.append({"difficulty": diff, "ally": costs[0], "foe": costs[1], "ratio": float(costs[1]) / costs[0], "target": p.scenario.difficulty_profile.target_cost_ratio, "cao_fleets": p.foe.size(), "fill_bp": p.scenario.difficulty_profile.cao_last_fill_bp})
+	for reserve in [false, true]:
+		for policy in ["none", "attack"]:
+			for seed_id in 4:
+				result.runs.append(play(variants[str(reserve)], reserve, policy, seed_id))
+	var path = OS.get_cmdline_user_args()[0]
+	var file = FileAccess.open(path, FileAccess.WRITE)
+	assert(file != null)
+	file.store_string(JSON.stringify(result, "\t"))
+	print("P10B_M2_PROBE_PASS")
+	quit(0)
+
+func play(profile: Dictionary, reserve: bool, policy: String, seed_id: int) -> Dictionary:
+	var sim = BattleSim.new(seed_id, BattleRules.TICK_HZ, profile)
+	var liu = fleet(sim, "RC-LIU-SQ-01")
+	var r = {"reserve": reserve, "policy": policy, "seed": seed_id, "liu_comp": liu.comp0.duplicate(true), "liu_equip": liu.equip, "liu_sensor": sim.detect.sensor_of(liu), "liu_ew": sim.detect.ew_of(liu), "first_confirm_s": -1.0, "at_1s": []}
+	for tick in 120 * sim.st.hz:
+		if policy == "attack" and sim.st.tick % (5 * sim.st.hz) == 0:
+			for a in sim.st.alive(0):
+				var n = sim.sight_foe(a, 1e9)
+				if n:
+					sim.queue(BattleSim.command(0, [a.id], "attack", n.id))
+		sim.step()
+		if sim.st.tick % sim.st.hz == 0:
+			for target in sim.st.alive(1):
+				if sim.detect.state(0, target.id) == "confirmed":
+					if r.first_confirm_s < 0:
+						r.first_confirm_s = sim.st.tick / float(sim.st.hz)
+					if sim.st.tick == sim.st.hz:
+						var best = {"score": -999}
+						for obs in sim.st.alive(0):
+							var sensor = sim.detect.sensor_of(obs)
+							var score = sim.detect.score(sensor, obs, target)
+							if score > best.score:
+								best = {"observer": obs.sq_id, "sensor": sensor, "score": score, "distance": obs.pos.distance_to(target.pos), "target_ew": sim.detect.ew_of(target)}
+						r.at_1s.append({"target": target.sq_id, "best": best})
+		sim.drain_events()
+	r.fp_at_120s = sim.fingerprint()
+	return r
+
+func fleet(sim: BattleSim, id: String) -> FleetState:
+	for f in sim.st.fleets:
+		if f.sq_id == id:
+			return f
+	return null

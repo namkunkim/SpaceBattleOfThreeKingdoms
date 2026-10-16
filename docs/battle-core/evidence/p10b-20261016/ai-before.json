@@ -1,0 +1,2019 @@
+{
+	"meta": {
+		"difficulty": "표준",
+		"dmg_scale": "1.0",
+		"org": "auto",
+		"period": "",
+		"runs": 4,
+		"stagger": ""
+	},
+	"policies": {
+		"attack": {
+			"runs": [
+				{
+					"ally_cost_loss_bp": 3209,
+					"army_end": [
+						2233,
+						5259
+					],
+					"conf_share": [
+						1.0,
+						0.877906976744186
+					],
+					"conf_t": [
+						1.0,
+						85.0
+					],
+					"cost0": [
+						4022,
+						6395
+					],
+					"curve": [
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							9299,
+							7479
+						],
+						[
+							9299,
+							7479
+						],
+						[
+							7904,
+							6792
+						],
+						[
+							7904,
+							6737
+						],
+						[
+							7281,
+							6534
+						],
+						[
+							7188,
+							6451
+						],
+						[
+							6495,
+							6205
+						],
+						[
+							5589,
+							6393
+						],
+						[
+							5889,
+							5753
+						],
+						[
+							5249,
+							5623
+						],
+						[
+							5249,
+							5433
+						],
+						[
+							4511,
+							5293
+						],
+						[
+							4511,
+							4917
+						],
+						[
+							3313,
+							5119
+						]
+					],
+					"fired_ally": 6,
+					"fired_foe": 9,
+					"first_hit_t": 263.2,
+					"foe_cost_loss_bp": 1740,
+					"fp": "8b06d6af95da06812e0fbef0b775d5d591655112f85f0b2cacdb32466a4315a0",
+					"join": {
+						"RC-CAO-SQ-01": 544.9,
+						"RC-CAO-SQ-02": 263.2,
+						"RC-CAO-SQ-03": 594.8,
+						"RC-CAO-SQ-04": 269.7,
+						"RC-CAO-SQ-05": 397.7,
+						"RC-CAO-SQ-06": 476.6,
+						"RC-CAO-SQ-08": 372.5,
+						"RC-CAO-SQ-09": 687.5,
+						"RC-CAO-SQ-10": 267.8
+					},
+					"limited": false,
+					"m9": {
+						"assault": {
+							"flagship": [
+								0,
+								0
+							],
+							"forced": [
+								0,
+								0
+							],
+							"unit": [
+								0,
+								0
+							]
+						},
+						"chain": {
+							"counters": [],
+							"detected": 0,
+							"feigned": false,
+							"fires": 0,
+							"ignite_power": 0.0,
+							"ignite_t": -1.0,
+							"letter_t": -1.0,
+							"mode": "idle",
+							"spreads": -1,
+							"susp_at_ignite": 0.0,
+							"win_start_s": 825.2
+						},
+						"cmd": {
+							"leaderless": 0,
+							"light": 7,
+							"severe": 0,
+							"succession": 0
+						},
+						"skills": {
+							"SK-T-DISRUPT": 1,
+							"SK-T-FIRE": 1,
+							"SK-T-GUARD": 1,
+							"SK-T-MORALE": 3,
+							"SK-T-MOVE": 1,
+							"SK-T-SCOUT": 2,
+							"SK-T-SUPPLY": 4,
+							"SK-U-XIAHOUYUAN": 1
+						}
+					},
+					"plague_bp": 1320,
+					"reason": "alliance_morale_collapse",
+					"retreats": [
+						[
+							324.1,
+							"RC-CAO-SQ-02"
+						],
+						[
+							327.8,
+							"RC-SUN-SQ-02"
+						],
+						[
+							457.7,
+							"RC-SUN-SQ-03"
+						],
+						[
+							488.0,
+							"RC-CAO-SQ-10"
+						],
+						[
+							654.8,
+							"RC-LIU-SQ-02"
+						],
+						[
+							687.5,
+							"RC-SUN-SQ-01"
+						]
+					],
+					"seed": 0,
+					"supply": [
+						[
+							7,
+							3,
+							2,
+							23
+						],
+						[
+							0,
+							0,
+							0,
+							16
+						]
+					],
+					"sync_ally": 0.0,
+					"sync_foe": 0.0,
+					"t": 687.95,
+					"win": false
+				},
+				{
+					"ally_cost_loss_bp": 3157,
+					"army_end": [
+						2504,
+						5683
+					],
+					"conf_share": [
+						1.0,
+						0.86
+					],
+					"conf_t": [
+						1.0,
+						85.0
+					],
+					"cost0": [
+						4022,
+						6395
+					],
+					"curve": [
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							9034,
+							7692
+						],
+						[
+							8904,
+							7692
+						],
+						[
+							7897,
+							7367
+						],
+						[
+							7707,
+							7230
+						],
+						[
+							7714,
+							6227
+						],
+						[
+							7030,
+							6081
+						],
+						[
+							5933,
+							6227
+						],
+						[
+							5933,
+							6073
+						],
+						[
+							4781,
+							5948
+						],
+						[
+							4408,
+							5600
+						],
+						[
+							3805,
+							5529
+						],
+						[
+							2504,
+							5683
+						]
+					],
+					"fired_ally": 5,
+					"fired_foe": 8,
+					"first_hit_t": 262.7,
+					"foe_cost_loss_bp": 1046,
+					"fp": "0fc9d460d43d6c2e2b575c94d9e9a015eaeade95ca6088277d859540516ade08",
+					"join": {
+						"RC-CAO-SQ-01": 567.3,
+						"RC-CAO-SQ-02": 262.7,
+						"RC-CAO-SQ-03": 598.5,
+						"RC-CAO-SQ-04": 266.4,
+						"RC-CAO-SQ-05": 402.0,
+						"RC-CAO-SQ-06": 488.2,
+						"RC-CAO-SQ-08": 376.7,
+						"RC-CAO-SQ-10": 267.7
+					},
+					"limited": false,
+					"m9": {
+						"assault": {
+							"flagship": [
+								0,
+								0
+							],
+							"forced": [
+								0,
+								0
+							],
+							"unit": [
+								0,
+								0
+							]
+						},
+						"chain": {
+							"counters": [],
+							"detected": 0,
+							"feigned": false,
+							"fires": 0,
+							"ignite_power": 0.0,
+							"ignite_t": -1.0,
+							"letter_t": -1.0,
+							"mode": "idle",
+							"spreads": -1,
+							"susp_at_ignite": 0.0,
+							"win_start_s": 861.7
+						},
+						"cmd": {
+							"leaderless": 0,
+							"light": 6,
+							"severe": 0,
+							"succession": 0
+						},
+						"skills": {
+							"SK-T-DISRUPT": 1,
+							"SK-T-FIRE": 1,
+							"SK-T-GUARD": 1,
+							"SK-T-MORALE": 1,
+							"SK-T-MOVE": 1,
+							"SK-T-SCOUT": 1,
+							"SK-T-SUPPLY": 3,
+							"SK-U-XIAHOUYUAN": 1
+						}
+					},
+					"plague_bp": 1000,
+					"reason": "alliance_morale_collapse",
+					"retreats": [
+						[
+							322.7,
+							"RC-SUN-SQ-02"
+						],
+						[
+							382.1,
+							"RC-CAO-SQ-02"
+						],
+						[
+							436.7,
+							"RC-SUN-SQ-03"
+						],
+						[
+							513.1,
+							"RC-SUN-SQ-01"
+						],
+						[
+							527.4,
+							"RC-CAO-SQ-10"
+						],
+						[
+							599.6,
+							"RC-LIU-SQ-02"
+						]
+					],
+					"seed": 1,
+					"supply": [
+						[
+							2,
+							1,
+							0,
+							18
+						],
+						[
+							1,
+							0,
+							1,
+							9
+						]
+					],
+					"sync_ally": 0.0,
+					"sync_foe": 0.0,
+					"t": 599.95,
+					"win": false
+				},
+				{
+					"ally_cost_loss_bp": 3122,
+					"army_end": [
+						2907,
+						3871
+					],
+					"conf_share": [
+						1.0,
+						0.883977900552486
+					],
+					"conf_t": [
+						1.0,
+						85.0
+					],
+					"cost0": [
+						4022,
+						6395
+					],
+					"curve": [
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							9034,
+							7479
+						],
+						[
+							9034,
+							7479
+						],
+						[
+							9034,
+							6252
+						],
+						[
+							8940,
+							6198
+						],
+						[
+							7813,
+							6090
+						],
+						[
+							7657,
+							6078
+						],
+						[
+							7630,
+							5359
+						],
+						[
+							6871,
+							5304
+						],
+						[
+							6211,
+							4998
+						],
+						[
+							5935,
+							4985
+						],
+						[
+							5935,
+							4710
+						],
+						[
+							5095,
+							4698
+						],
+						[
+							5095,
+							4481
+						],
+						[
+							4530,
+							4469
+						],
+						[
+							3787,
+							4040
+						],
+						[
+							3787,
+							3932
+						]
+					],
+					"fired_ally": 6,
+					"fired_foe": 9,
+					"first_hit_t": 263.2,
+					"foe_cost_loss_bp": 1831,
+					"fp": "7a954dc6fa7ecdfb67824c86113ee4e484138e810a4990302b523b445776daf7",
+					"join": {
+						"RC-CAO-SQ-01": 540.7,
+						"RC-CAO-SQ-02": 263.2,
+						"RC-CAO-SQ-03": 589.6,
+						"RC-CAO-SQ-04": 268.7,
+						"RC-CAO-SQ-05": 400.4,
+						"RC-CAO-SQ-06": 478.4,
+						"RC-CAO-SQ-08": 364.2,
+						"RC-CAO-SQ-09": 680.1,
+						"RC-CAO-SQ-10": 267.8
+					},
+					"limited": false,
+					"m9": {
+						"assault": {
+							"flagship": [
+								0,
+								0
+							],
+							"forced": [
+								0,
+								0
+							],
+							"unit": [
+								0,
+								0
+							]
+						},
+						"chain": {
+							"counters": [],
+							"detected": 0,
+							"feigned": false,
+							"fires": 0,
+							"ignite_power": 0.0,
+							"ignite_t": -1.0,
+							"letter_t": -1.0,
+							"mode": "idle",
+							"spreads": -1,
+							"susp_at_ignite": 0.0,
+							"win_start_s": 854.2
+						},
+						"cmd": {
+							"leaderless": 0,
+							"light": 8,
+							"severe": 0,
+							"succession": 0
+						},
+						"skills": {
+							"SK-T-DISRUPT": 1,
+							"SK-T-MORALE": 3,
+							"SK-T-MOVE": 1,
+							"SK-T-SCOUT": 2,
+							"SK-T-SUPPLY": 4,
+							"SK-U-XIAHOUYUAN": 1
+						}
+					},
+					"plague_bp": 1480,
+					"reason": "alliance_morale_collapse",
+					"retreats": [
+						[
+							322.7,
+							"RC-CAO-SQ-02"
+						],
+						[
+							364.2,
+							"RC-SUN-SQ-02"
+						],
+						[
+							433.3,
+							"RC-CAO-SQ-04"
+						],
+						[
+							482.2,
+							"RC-CAO-SQ-10"
+						],
+						[
+							484.2,
+							"RC-SUN-SQ-03"
+						],
+						[
+							660.7,
+							"RC-LIU-SQ-02"
+						],
+						[
+							661.0,
+							"RC-CAO-SQ-08"
+						],
+						[
+							723.7,
+							"RC-SUN-SQ-01"
+						]
+					],
+					"seed": 2,
+					"supply": [
+						[
+							7,
+							4,
+							0,
+							33
+						],
+						[
+							0,
+							0,
+							0,
+							23
+						]
+					],
+					"sync_ally": 0.0,
+					"sync_foe": 0.0,
+					"t": 723.95,
+					"win": false
+				},
+				{
+					"ally_cost_loss_bp": 3142,
+					"army_end": [
+						2688,
+						4924
+					],
+					"conf_share": [
+						1.0,
+						0.871165644171779
+					],
+					"conf_t": [
+						1.0,
+						85.0
+					],
+					"cost0": [
+						4022,
+						6395
+					],
+					"curve": [
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							9367,
+							7572
+						],
+						[
+							9367,
+							7572
+						],
+						[
+							8105,
+							7152
+						],
+						[
+							8009,
+							7098
+						],
+						[
+							8146,
+							5494
+						],
+						[
+							8049,
+							5348
+						],
+						[
+							7780,
+							5272
+						],
+						[
+							7053,
+							5260
+						],
+						[
+							6693,
+							4467
+						],
+						[
+							5239,
+							4666
+						],
+						[
+							5239,
+							4654
+						],
+						[
+							3830,
+							4874
+						],
+						[
+							3646,
+							4685
+						]
+					],
+					"fired_ally": 6,
+					"fired_foe": 8,
+					"first_hit_t": 262.2,
+					"foe_cost_loss_bp": 1385,
+					"fp": "d4934cb0a854921f8e75f5c8d916a4a6a0cf8cb69303aa3f495278da1dcd9be4",
+					"join": {
+						"RC-CAO-SQ-01": 531.6,
+						"RC-CAO-SQ-02": 262.9,
+						"RC-CAO-SQ-03": 575.0,
+						"RC-CAO-SQ-04": 264.2,
+						"RC-CAO-SQ-05": 394.8,
+						"RC-CAO-SQ-06": 474.6,
+						"RC-CAO-SQ-08": 377.9,
+						"RC-CAO-SQ-10": 267.6
+					},
+					"limited": false,
+					"m9": {
+						"assault": {
+							"flagship": [
+								0,
+								0
+							],
+							"forced": [
+								0,
+								0
+							],
+							"unit": [
+								0,
+								0
+							]
+						},
+						"chain": {
+							"counters": [],
+							"detected": 0,
+							"feigned": false,
+							"fires": 0,
+							"ignite_power": 0.0,
+							"ignite_t": -1.0,
+							"letter_t": -1.0,
+							"mode": "idle",
+							"spreads": -1,
+							"susp_at_ignite": 0.0,
+							"win_start_s": 831.2
+						},
+						"cmd": {
+							"leaderless": 0,
+							"light": 7,
+							"severe": 0,
+							"succession": 0
+						},
+						"skills": {
+							"SK-T-DISRUPT": 1,
+							"SK-T-MORALE": 1,
+							"SK-T-MOVE": 1,
+							"SK-T-SCOUT": 1,
+							"SK-T-SUPPLY": 4,
+							"SK-U-XIAHOUYUAN": 1
+						}
+					},
+					"plague_bp": 1200,
+					"reason": "alliance_morale_collapse",
+					"retreats": [
+						[
+							327.6,
+							"RC-SUN-SQ-02"
+						],
+						[
+							368.0,
+							"RC-CAO-SQ-02"
+						],
+						[
+							368.8,
+							"RC-CAO-SQ-04"
+						],
+						[
+							503.0,
+							"RC-CAO-SQ-10"
+						],
+						[
+							530.9,
+							"RC-SUN-SQ-03"
+						],
+						[
+							575.9,
+							"RC-LIU-SQ-02"
+						],
+						[
+							636.8,
+							"RC-SUN-SQ-01"
+						]
+					],
+					"seed": 3,
+					"supply": [
+						[
+							4,
+							2,
+							1,
+							30
+						],
+						[
+							0,
+							0,
+							0,
+							21
+						]
+					],
+					"sync_ally": 0.333333333333333,
+					"sync_foe": 0.0,
+					"t": 651.95,
+					"win": false
+				}
+			],
+			"summary": {
+				"ally_cost_loss_bp": 3158.0,
+				"confirm_ally": 1.0,
+				"confirm_first_ally_s": 1.0,
+				"confirm_first_foe_s": 85.0,
+				"confirm_foe": 1.0,
+				"confirm_share_ally": 1.0,
+				"confirm_share_foe": 0.873,
+				"first_hit_t": 262.8,
+				"foe_cost_loss_bp": 1501.0,
+				"join_mean_s": {
+					"RC-CAO-SQ-01": 546.1,
+					"RC-CAO-SQ-02": 263.0,
+					"RC-CAO-SQ-03": 589.5,
+					"RC-CAO-SQ-04": 267.3,
+					"RC-CAO-SQ-05": 398.7,
+					"RC-CAO-SQ-06": 479.5,
+					"RC-CAO-SQ-08": 372.8,
+					"RC-CAO-SQ-09": 341.9,
+					"RC-CAO-SQ-10": 267.7
+				},
+				"limited": 0,
+				"n": 4,
+				"plague_bp": 1250.0,
+				"reasons": {
+					"alliance_morale_collapse": 4
+				},
+				"retreats": 6.75,
+				"sync_ally": 0.083,
+				"sync_foe": 0.0,
+				"t_mean": 666.0,
+				"t_median": 687.95,
+				"t_p10": 599.95,
+				"t_p90": 723.95,
+				"win_rate": 0.0,
+				"win_se": 0.0
+			}
+		},
+		"none": {
+			"runs": [
+				{
+					"ally_cost_loss_bp": 2637,
+					"army_end": [
+						5707,
+						4765
+					],
+					"conf_share": [
+						1.0,
+						0.825708061002179
+					],
+					"conf_t": [
+						1.0,
+						161.0
+					],
+					"cost0": [
+						4022,
+						6395
+					],
+					"curve": [
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7688
+						],
+						[
+							10000,
+							7675
+						],
+						[
+							10000,
+							7663
+						],
+						[
+							10000,
+							7651
+						],
+						[
+							10000,
+							7639
+						],
+						[
+							10000,
+							7626
+						],
+						[
+							10000,
+							7527
+						],
+						[
+							9632,
+							7067
+						],
+						[
+							9333,
+							6298
+						],
+						[
+							9333,
+							6208
+						],
+						[
+							9333,
+							5918
+						],
+						[
+							9333,
+							5906
+						],
+						[
+							9333,
+							5243
+						],
+						[
+							9065,
+							5062
+						],
+						[
+							8667,
+							5001
+						],
+						[
+							7726,
+							4590
+						],
+						[
+							7337,
+							4578
+						],
+						[
+							7039,
+							4516
+						],
+						[
+							6014,
+							4769
+						]
+					],
+					"fired_ally": 5,
+					"fired_foe": 7,
+					"first_hit_t": 544.4,
+					"foe_cost_loss_bp": 1871,
+					"fp": "6c76e937ccc8c1614d66b357f47aedf9806661dfbd3b3a5f7fd4464046f07c36",
+					"join": {
+						"RC-CAO-SQ-02": 484.4,
+						"RC-CAO-SQ-03": 830.8,
+						"RC-CAO-SQ-04": 579.5,
+						"RC-CAO-SQ-05": 729.5,
+						"RC-CAO-SQ-06": 777.3,
+						"RC-CAO-SQ-08": 797.6,
+						"RC-CAO-SQ-10": 747.3
+					},
+					"limited": false,
+					"m9": {
+						"assault": {
+							"flagship": [
+								0,
+								0
+							],
+							"forced": [
+								0,
+								0
+							],
+							"unit": [
+								0,
+								0
+							]
+						},
+						"chain": {
+							"counters": [],
+							"detected": 0,
+							"feigned": false,
+							"fires": 0,
+							"ignite_power": 0.0,
+							"ignite_t": -1.0,
+							"letter_t": -1.0,
+							"mode": "idle",
+							"spreads": -1,
+							"susp_at_ignite": 0.0,
+							"win_start_s": 1106.4
+						},
+						"cmd": {
+							"leaderless": 0,
+							"light": 5,
+							"severe": 1,
+							"succession": 1
+						},
+						"skills": {
+							"SK-T-DISRUPT": 3,
+							"SK-T-FIRE": 2,
+							"SK-T-MORALE": 3,
+							"SK-T-MOVE": 2,
+							"SK-T-SCOUT": 2,
+							"SK-T-SUPPLY": 3,
+							"SK-U-HUANGZHONG": 1,
+							"SK-U-XIAHOUYUAN": 1,
+							"SK-U-ZHUGE": 1
+						}
+					},
+					"plague_bp": 2240,
+					"reason": "liu_flagship_lost",
+					"retreats": [
+						[
+							595.0,
+							"RC-CAO-SQ-02"
+						],
+						[
+							693.1,
+							"RC-CAO-SQ-04"
+						],
+						[
+							797.6,
+							"RC-LIU-SQ-02"
+						],
+						[
+							799.5,
+							"RC-CAO-SQ-05"
+						],
+						[
+							890.8,
+							"RC-LIU-SQ-01"
+						]
+					],
+					"seed": 0,
+					"supply": [
+						[
+							0,
+							0,
+							0,
+							13
+						],
+						[
+							0,
+							0,
+							0,
+							7
+						]
+					],
+					"sync_ally": 0.0,
+					"sync_foe": 0.0,
+					"t": 917.95,
+					"win": false
+				},
+				{
+					"ally_cost_loss_bp": 2143,
+					"army_end": [
+						2974,
+						3798
+					],
+					"conf_share": [
+						1.0,
+						0.83756345177665
+					],
+					"conf_t": [
+						1.0,
+						161.0
+					],
+					"cost0": [
+						4022,
+						6395
+					],
+					"curve": [
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7688
+						],
+						[
+							10000,
+							7675
+						],
+						[
+							10000,
+							7663
+						],
+						[
+							10000,
+							7651
+						],
+						[
+							10000,
+							7639
+						],
+						[
+							10000,
+							7413
+						],
+						[
+							10000,
+							6558
+						],
+						[
+							10000,
+							6545
+						],
+						[
+							10000,
+							6400
+						],
+						[
+							10000,
+							5547
+						],
+						[
+							10000,
+							5451
+						],
+						[
+							10000,
+							5341
+						],
+						[
+							9571,
+							5329
+						],
+						[
+							9571,
+							5156
+						],
+						[
+							8506,
+							5095
+						],
+						[
+							7834,
+							4304
+						],
+						[
+							7834,
+							4247
+						],
+						[
+							6602,
+							4387
+						],
+						[
+							6395,
+							3491
+						],
+						[
+							6154,
+							3375
+						],
+						[
+							4474,
+							3806
+						]
+					],
+					"fired_ally": 6,
+					"fired_foe": 9,
+					"first_hit_t": 485.0,
+					"foe_cost_loss_bp": 1756,
+					"fp": "2ca4567cf08ce8173acf8a7fd6793cc5e46c763b8e6e3606cf1f67bf1359ca50",
+					"join": {
+						"RC-CAO-SQ-02": 485.0,
+						"RC-CAO-SQ-03": 757.1,
+						"RC-CAO-SQ-04": 569.5,
+						"RC-CAO-SQ-05": 656.7,
+						"RC-CAO-SQ-06": 736.8,
+						"RC-CAO-SQ-07": 918.7,
+						"RC-CAO-SQ-08": 747.3,
+						"RC-CAO-SQ-09": 875.1,
+						"RC-CAO-SQ-10": 688.9
+					},
+					"limited": false,
+					"m9": {
+						"assault": {
+							"flagship": [
+								0,
+								0
+							],
+							"forced": [
+								0,
+								0
+							],
+							"unit": [
+								0,
+								0
+							]
+						},
+						"chain": {
+							"counters": [],
+							"detected": 1,
+							"feigned": false,
+							"fires": 0,
+							"ignite_power": 0.0,
+							"ignite_t": -1.0,
+							"letter_t": 926.75,
+							"mode": "open",
+							"spreads": -1,
+							"susp_at_ignite": 0.0,
+							"win_start_s": 1084.0
+						},
+						"cmd": {
+							"leaderless": 0,
+							"light": 7,
+							"severe": 0,
+							"succession": 0
+						},
+						"skills": {
+							"SK-T-DISRUPT": 3,
+							"SK-T-FIRE": 3,
+							"SK-T-GUARD": 1,
+							"SK-T-MORALE": 2,
+							"SK-T-MOVE": 4,
+							"SK-T-SCOUT": 2,
+							"SK-T-SUPPLY": 4,
+							"SK-U-CAOREN": 1,
+							"SK-U-HUANGGAI": 1,
+							"SK-U-HUANGZHONG": 1,
+							"SK-U-XIAHOUYUAN": 1,
+							"SK-U-ZHUGE": 1
+						}
+					},
+					"plague_bp": 2520,
+					"reason": "alliance_morale_collapse",
+					"retreats": [
+						[
+							534.7,
+							"RC-CAO-SQ-02"
+						],
+						[
+							608.8,
+							"RC-CAO-SQ-04"
+						],
+						[
+							797.1,
+							"RC-CAO-SQ-05"
+						],
+						[
+							856.8,
+							"RC-LIU-SQ-02"
+						],
+						[
+							896.6,
+							"RC-CAO-SQ-10"
+						],
+						[
+							935.1,
+							"RC-SUN-SQ-02"
+						],
+						[
+							953.1,
+							"RC-SUN-SQ-01"
+						]
+					],
+					"seed": 1,
+					"supply": [
+						[
+							0,
+							0,
+							0,
+							6
+						],
+						[
+							0,
+							0,
+							0,
+							11
+						]
+					],
+					"sync_ally": 0.0,
+					"sync_foe": 0.0,
+					"t": 984.95,
+					"win": false
+				},
+				{
+					"ally_cost_loss_bp": 1939,
+					"army_end": [
+						4921,
+						2958
+					],
+					"conf_share": [
+						1.0,
+						0.839034205231388
+					],
+					"conf_t": [
+						1.0,
+						161.0
+					],
+					"cost0": [
+						4022,
+						6395
+					],
+					"curve": [
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7688
+						],
+						[
+							10000,
+							7675
+						],
+						[
+							10000,
+							7663
+						],
+						[
+							10000,
+							7651
+						],
+						[
+							10000,
+							7639
+						],
+						[
+							9632,
+							7626
+						],
+						[
+							9632,
+							7292
+						],
+						[
+							9299,
+							6354
+						],
+						[
+							8966,
+							6126
+						],
+						[
+							8870,
+							6039
+						],
+						[
+							8071,
+							6161
+						],
+						[
+							8071,
+							6149
+						],
+						[
+							8371,
+							5429
+						],
+						[
+							8067,
+							5416
+						],
+						[
+							8067,
+							5285
+						],
+						[
+							7490,
+							4961
+						],
+						[
+							7388,
+							4232
+						],
+						[
+							7071,
+							4118
+						],
+						[
+							7071,
+							4057
+						],
+						[
+							6536,
+							3700
+						],
+						[
+							6421,
+							3688
+						],
+						[
+							6421,
+							3015
+						]
+					],
+					"fired_ally": 6,
+					"fired_foe": 9,
+					"first_hit_t": 484.5,
+					"foe_cost_loss_bp": 3340,
+					"fp": "1da7461a8603ed8b93ec8cb6d91524fc0229168415f01ac5e8148969503a1995",
+					"join": {
+						"RC-CAO-SQ-02": 484.5,
+						"RC-CAO-SQ-03": 808.6,
+						"RC-CAO-SQ-04": 580.6,
+						"RC-CAO-SQ-05": 724.3,
+						"RC-CAO-SQ-06": 781.4,
+						"RC-CAO-SQ-07": 989.8,
+						"RC-CAO-SQ-08": 800.0,
+						"RC-CAO-SQ-09": 938.3,
+						"RC-CAO-SQ-10": 755.1
+					},
+					"limited": false,
+					"m9": {
+						"assault": {
+							"flagship": [
+								0,
+								0
+							],
+							"forced": [
+								0,
+								0
+							],
+							"unit": [
+								0,
+								0
+							]
+						},
+						"chain": {
+							"counters": [],
+							"detected": 1,
+							"feigned": false,
+							"fires": 0,
+							"ignite_power": 0.0,
+							"ignite_t": -1.0,
+							"letter_t": 919.05,
+							"mode": "open",
+							"spreads": -1,
+							"susp_at_ignite": 0.0,
+							"win_start_s": 1075.5
+						},
+						"cmd": {
+							"leaderless": 0,
+							"light": 7,
+							"severe": 0,
+							"succession": 0
+						},
+						"skills": {
+							"SK-T-DISRUPT": 3,
+							"SK-T-FIRE": 1,
+							"SK-T-GUARD": 1,
+							"SK-T-MORALE": 2,
+							"SK-T-MOVE": 3,
+							"SK-T-SCOUT": 2,
+							"SK-T-SUPPLY": 3,
+							"SK-U-HUANGGAI": 1,
+							"SK-U-HUANGZHONG": 1,
+							"SK-U-XIAHOUYUAN": 1,
+							"SK-U-ZHUGE": 1
+						}
+					},
+					"plague_bp": 2560,
+					"reason": "cao_morale_collapse",
+					"retreats": [
+						[
+							563.8,
+							"RC-CAO-SQ-02"
+						],
+						[
+							640.6,
+							"RC-SUN-SQ-02"
+						],
+						[
+							716.0,
+							"RC-CAO-SQ-04"
+						],
+						[
+							833.0,
+							"RC-CAO-SQ-05"
+						],
+						[
+							967.2,
+							"RC-CAO-SQ-10"
+						]
+					],
+					"seed": 2,
+					"supply": [
+						[
+							1,
+							0,
+							1,
+							21
+						],
+						[
+							0,
+							0,
+							0,
+							9
+						]
+					],
+					"sync_ally": 0.0,
+					"sync_foe": 0.0,
+					"t": 993.95,
+					"win": true
+				},
+				{
+					"ally_cost_loss_bp": 2772,
+					"army_end": [
+						2389,
+						3487
+					],
+					"conf_share": [
+						1.0,
+						0.850046860356139
+					],
+					"conf_t": [
+						1.0,
+						161.0
+					],
+					"cost0": [
+						4022,
+						6395
+					],
+					"curve": [
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7692
+						],
+						[
+							10000,
+							7688
+						],
+						[
+							10000,
+							7675
+						],
+						[
+							10000,
+							7663
+						],
+						[
+							10000,
+							7651
+						],
+						[
+							10000,
+							7639
+						],
+						[
+							10000,
+							7626
+						],
+						[
+							10000,
+							7527
+						],
+						[
+							9632,
+							7067
+						],
+						[
+							9333,
+							6298
+						],
+						[
+							9333,
+							6208
+						],
+						[
+							9000,
+							6062
+						],
+						[
+							9000,
+							6050
+						],
+						[
+							8200,
+							6187
+						],
+						[
+							8500,
+							5467
+						],
+						[
+							8500,
+							5454
+						],
+						[
+							7685,
+							5282
+						],
+						[
+							6944,
+							5270
+						],
+						[
+							6962,
+							4401
+						],
+						[
+							6962,
+							4389
+						],
+						[
+							6877,
+							4246
+						],
+						[
+							6232,
+							3666
+						],
+						[
+							6232,
+							3522
+						],
+						[
+							5780,
+							3459
+						],
+						[
+							3262,
+							3195
+						]
+					],
+					"fired_ally": 6,
+					"fired_foe": 9,
+					"first_hit_t": 545.1,
+					"foe_cost_loss_bp": 2536,
+					"fp": "685e24e015dd1818bb8f3e35d395a5745ea80f819e276215460e3058927781ac",
+					"join": {
+						"RC-CAO-SQ-02": 485.1,
+						"RC-CAO-SQ-03": 815.5,
+						"RC-CAO-SQ-04": 577.6,
+						"RC-CAO-SQ-05": 737.9,
+						"RC-CAO-SQ-06": 787.5,
+						"RC-CAO-SQ-07": 998.6,
+						"RC-CAO-SQ-08": 807.0,
+						"RC-CAO-SQ-09": 951.4,
+						"RC-CAO-SQ-10": 760.8
+					},
+					"limited": false,
+					"m9": {
+						"assault": {
+							"flagship": [
+								0,
+								0
+							],
+							"forced": [
+								0,
+								0
+							],
+							"unit": [
+								0,
+								0
+							]
+						},
+						"chain": {
+							"counters": [],
+							"detected": 1,
+							"feigned": false,
+							"fires": 0,
+							"ignite_power": 0.0,
+							"ignite_t": -1.0,
+							"letter_t": 957.55,
+							"mode": "open",
+							"spreads": -1,
+							"susp_at_ignite": 0.0,
+							"win_start_s": 1114.1
+						},
+						"cmd": {
+							"leaderless": 0,
+							"light": 8,
+							"severe": 0,
+							"succession": 0
+						},
+						"skills": {
+							"SK-T-DISRUPT": 3,
+							"SK-T-FIRE": 4,
+							"SK-T-MORALE": 3,
+							"SK-T-MOVE": 4,
+							"SK-T-SCOUT": 2,
+							"SK-T-SUPPLY": 4,
+							"SK-U-CAOREN": 1,
+							"SK-U-HUANGGAI": 1,
+							"SK-U-HUANGZHONG": 1,
+							"SK-U-XIAHOUYUAN": 1,
+							"SK-U-ZHUGE": 1
+						}
+					},
+					"plague_bp": 3000,
+					"reason": "alliance_morale_collapse",
+					"retreats": [
+						[
+							597.1,
+							"RC-CAO-SQ-02"
+						],
+						[
+							697.6,
+							"RC-SUN-SQ-02"
+						],
+						[
+							722.9,
+							"RC-CAO-SQ-04"
+						],
+						[
+							867.4,
+							"RC-CAO-SQ-05"
+						],
+						[
+							941.4,
+							"RC-LIU-SQ-01"
+						],
+						[
+							953.1,
+							"RC-CAO-SQ-10"
+						],
+						[
+							1066.7,
+							"RC-SUN-SQ-01"
+						]
+					],
+					"seed": 3,
+					"supply": [
+						[
+							1,
+							1,
+							0,
+							20
+						],
+						[
+							0,
+							0,
+							0,
+							15
+						]
+					],
+					"sync_ally": 0.0,
+					"sync_foe": 0.0,
+					"t": 1066.95,
+					"win": false
+				}
+			],
+			"summary": {
+				"ally_cost_loss_bp": 2373.0,
+				"confirm_ally": 1.0,
+				"confirm_first_ally_s": 1.0,
+				"confirm_first_foe_s": 161.0,
+				"confirm_foe": 1.0,
+				"confirm_share_ally": 1.0,
+				"confirm_share_foe": 0.838,
+				"first_hit_t": 514.8,
+				"foe_cost_loss_bp": 2376.0,
+				"join_mean_s": {
+					"RC-CAO-SQ-02": 484.8,
+					"RC-CAO-SQ-03": 803.0,
+					"RC-CAO-SQ-04": 576.8,
+					"RC-CAO-SQ-05": 712.1,
+					"RC-CAO-SQ-06": 770.8,
+					"RC-CAO-SQ-07": 726.8,
+					"RC-CAO-SQ-08": 788.0,
+					"RC-CAO-SQ-09": 691.2,
+					"RC-CAO-SQ-10": 738.0
+				},
+				"limited": 0,
+				"n": 4,
+				"plague_bp": 2580.0,
+				"reasons": {
+					"alliance_morale_collapse": 2,
+					"cao_morale_collapse": 1,
+					"liu_flagship_lost": 1
+				},
+				"retreats": 6.0,
+				"sync_ally": 0.0,
+				"sync_foe": 0.0,
+				"t_mean": 991.0,
+				"t_median": 993.95,
+				"t_p10": 917.95,
+				"t_p90": 1066.95,
+				"win_rate": 0.25,
+				"win_se": 0.217
+			}
+		}
+	}
+}

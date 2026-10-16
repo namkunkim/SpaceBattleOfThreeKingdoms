@@ -1,0 +1,279 @@
+{
+  "none": {
+    "before": {
+      "wins": 1,
+      "n": 4,
+      "mean_s": 990.95,
+      "reasons": {
+        "liu_flagship_lost": 1,
+        "alliance_morale_collapse": 2,
+        "cao_morale_collapse": 1
+      },
+      "cost0": [
+        4022,
+        6395
+      ],
+      "ally_first_confirm_s": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "after": {
+      "wins": 1,
+      "n": 4,
+      "mean_s": 987.7,
+      "reasons": {
+        "liu_flagship_lost": 1,
+        "alliance_morale_collapse": 2,
+        "cao_morale_collapse": 1
+      },
+      "cost0": [
+        4022,
+        6395
+      ],
+      "ally_first_confirm_s": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "rows": [
+      {
+        "seed": 0,
+        "fp_before": "6c76e937ccc8c1614d66b357f47aedf9806661dfbd3b3a5f7fd4464046f07c36",
+        "fp_after": "b941750fb9bfb70c8c00593c78fd5a5cbdd0309078467d43dcde114698c91d18",
+        "fp_equal": false,
+        "before": {
+          "win": false,
+          "t": 917.95,
+          "reason": "liu_flagship_lost",
+          "conf_t": [
+            1.0,
+            161.0
+          ]
+        },
+        "after": {
+          "win": false,
+          "t": 915.95,
+          "reason": "liu_flagship_lost",
+          "conf_t": [
+            1.0,
+            161.0
+          ]
+        }
+      },
+      {
+        "seed": 1,
+        "fp_before": "2ca4567cf08ce8173acf8a7fd6793cc5e46c763b8e6e3606cf1f67bf1359ca50",
+        "fp_after": "176c5072cf6c6a3742e1c09c96b904ee4926e176d6c7e447e75c106a228ead41",
+        "fp_equal": false,
+        "before": {
+          "win": false,
+          "t": 984.95,
+          "reason": "alliance_morale_collapse",
+          "conf_t": [
+            1.0,
+            161.0
+          ]
+        },
+        "after": {
+          "win": false,
+          "t": 984.95,
+          "reason": "alliance_morale_collapse",
+          "conf_t": [
+            1.0,
+            161.0
+          ]
+        }
+      },
+      {
+        "seed": 2,
+        "fp_before": "1da7461a8603ed8b93ec8cb6d91524fc0229168415f01ac5e8148969503a1995",
+        "fp_after": "11e9d5a82a204c8abbae6460f6c1dee8790c5b0881054f7139381c2fafb01f43",
+        "fp_equal": false,
+        "before": {
+          "win": true,
+          "t": 993.95,
+          "reason": "cao_morale_collapse",
+          "conf_t": [
+            1.0,
+            161.0
+          ]
+        },
+        "after": {
+          "win": true,
+          "t": 993.95,
+          "reason": "cao_morale_collapse",
+          "conf_t": [
+            1.0,
+            161.0
+          ]
+        }
+      },
+      {
+        "seed": 3,
+        "fp_before": "685e24e015dd1818bb8f3e35d395a5745ea80f819e276215460e3058927781ac",
+        "fp_after": "2910edadc19d89d80602f407baeefa134b93e2dca6679e11acafbcd5a09c0b80",
+        "fp_equal": false,
+        "before": {
+          "win": false,
+          "t": 1066.95,
+          "reason": "alliance_morale_collapse",
+          "conf_t": [
+            1.0,
+            161.0
+          ]
+        },
+        "after": {
+          "win": false,
+          "t": 1055.95,
+          "reason": "alliance_morale_collapse",
+          "conf_t": [
+            1.0,
+            161.0
+          ]
+        }
+      }
+    ]
+  },
+  "attack": {
+    "before": {
+      "wins": 0,
+      "n": 4,
+      "mean_s": 665.95,
+      "reasons": {
+        "alliance_morale_collapse": 4
+      },
+      "cost0": [
+        4022,
+        6395
+      ],
+      "ally_first_confirm_s": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "after": {
+      "wins": 2,
+      "n": 4,
+      "mean_s": 667.95,
+      "reasons": {
+        "alliance_morale_collapse": 2,
+        "cao_morale_collapse": 2
+      },
+      "cost0": [
+        4022,
+        6395
+      ],
+      "ally_first_confirm_s": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "rows": [
+      {
+        "seed": 0,
+        "fp_before": "8b06d6af95da06812e0fbef0b775d5d591655112f85f0b2cacdb32466a4315a0",
+        "fp_after": "78e59b9127b5f13ccadf7cd0ea6f89b7e290fa727f1dbe221eff264e3af27e5f",
+        "fp_equal": false,
+        "before": {
+          "win": false,
+          "t": 687.95,
+          "reason": "alliance_morale_collapse",
+          "conf_t": [
+            1.0,
+            85.0
+          ]
+        },
+        "after": {
+          "win": false,
+          "t": 602.95,
+          "reason": "alliance_morale_collapse",
+          "conf_t": [
+            1.0,
+            85.0
+          ]
+        }
+      },
+      {
+        "seed": 1,
+        "fp_before": "0fc9d460d43d6c2e2b575c94d9e9a015eaeade95ca6088277d859540516ade08",
+        "fp_after": "6f680879f7e2c2d1c2f1bcd7f74fe8d27b9dd981f98524c3bab15cd6837f1a9d",
+        "fp_equal": false,
+        "before": {
+          "win": false,
+          "t": 599.95,
+          "reason": "alliance_morale_collapse",
+          "conf_t": [
+            1.0,
+            85.0
+          ]
+        },
+        "after": {
+          "win": false,
+          "t": 658.95,
+          "reason": "alliance_morale_collapse",
+          "conf_t": [
+            1.0,
+            85.0
+          ]
+        }
+      },
+      {
+        "seed": 2,
+        "fp_before": "7a954dc6fa7ecdfb67824c86113ee4e484138e810a4990302b523b445776daf7",
+        "fp_after": "37a69a11d4adeb5a707a68eb75cc19702d27cd71e9f4d5913ee9966764c5cff0",
+        "fp_equal": false,
+        "before": {
+          "win": false,
+          "t": 723.95,
+          "reason": "alliance_morale_collapse",
+          "conf_t": [
+            1.0,
+            85.0
+          ]
+        },
+        "after": {
+          "win": true,
+          "t": 742.95,
+          "reason": "cao_morale_collapse",
+          "conf_t": [
+            1.0,
+            85.0
+          ]
+        }
+      },
+      {
+        "seed": 3,
+        "fp_before": "d4934cb0a854921f8e75f5c8d916a4a6a0cf8cb69303aa3f495278da1dcd9be4",
+        "fp_after": "59b3b31fe44d112c906c7a59422161363c3bb28df8a2d88e157469d215c1cc46",
+        "fp_equal": false,
+        "before": {
+          "win": false,
+          "t": 651.95,
+          "reason": "alliance_morale_collapse",
+          "conf_t": [
+            1.0,
+            85.0
+          ]
+        },
+        "after": {
+          "win": true,
+          "t": 666.95,
+          "reason": "cao_morale_collapse",
+          "conf_t": [
+            1.0,
+            85.0
+          ]
+        }
+      }
+    ]
+  }
+}

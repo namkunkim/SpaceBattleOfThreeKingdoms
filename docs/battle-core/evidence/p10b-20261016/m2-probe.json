@@ -1,0 +1,868 @@
+{
+	"costs": [
+		{
+			"ally": 4022,
+			"cao_fleets": 9,
+			"difficulty": "입문",
+			"fill_bp": 9654.0,
+			"foe": 5912,
+			"ratio": 1.46991546494281,
+			"target": 1.47
+		},
+		{
+			"ally": 4022,
+			"cao_fleets": 10,
+			"difficulty": "표준",
+			"fill_bp": 7393.0,
+			"foe": 6395,
+			"ratio": 1.59000497265042,
+			"target": 1.59
+		},
+		{
+			"ally": 4022,
+			"cao_fleets": 14,
+			"difficulty": "상급",
+			"fill_bp": 3794.0,
+			"foe": 8604,
+			"ratio": 2.13923421183491,
+			"target": 2.14
+		},
+		{
+			"ally": 4022,
+			"cao_fleets": 14,
+			"difficulty": "극한",
+			"fill_bp": 3794.0,
+			"foe": 8604,
+			"ratio": 2.13923421183491,
+			"target": 2.14
+		}
+	],
+	"fixed_profile": "final P10b standard (10 Cao fleets and final fill)",
+	"runs": [
+		{
+			"at_1s": [
+				{
+					"best": {
+						"distance": 822.982360839844,
+						"observer": "RC-SUN-SQ-01",
+						"score": 30,
+						"sensor": 69,
+						"target_ew": 7
+					},
+					"target": "RC-CAO-SQ-10"
+				}
+			],
+			"first_confirm_s": 1.0,
+			"fp_at_120s": "3b6fa5045c905bc02fbc0d2c648b42dee13af1088e37b6a8767e6acbee227a1b",
+			"liu_comp": {
+				"SHP-01": 5,
+				"SHP-03": 11,
+				"SHP-04": 22,
+				"SHP-05": 5,
+				"SHP-06": 5,
+				"SHP-07": 12
+			},
+			"liu_equip": "",
+			"liu_ew": 8,
+			"liu_sensor": 53,
+			"policy": "none",
+			"reserve": false,
+			"seed": 0
+		},
+		{
+			"at_1s": [
+				{
+					"best": {
+						"distance": 822.982360839844,
+						"observer": "RC-SUN-SQ-01",
+						"score": 30,
+						"sensor": 69,
+						"target_ew": 7
+					},
+					"target": "RC-CAO-SQ-10"
+				}
+			],
+			"first_confirm_s": 1.0,
+			"fp_at_120s": "fa94ba3051d5ef1abad4addd1a1fca9616e19714023c9ad7812fd54db99ff0ad",
+			"liu_comp": {
+				"SHP-01": 5,
+				"SHP-03": 11,
+				"SHP-04": 22,
+				"SHP-05": 5,
+				"SHP-06": 5,
+				"SHP-07": 12
+			},
+			"liu_equip": "",
+			"liu_ew": 8,
+			"liu_sensor": 53,
+			"policy": "none",
+			"reserve": false,
+			"seed": 1
+		},
+		{
+			"at_1s": [
+				{
+					"best": {
+						"distance": 822.982360839844,
+						"observer": "RC-SUN-SQ-01",
+						"score": 30,
+						"sensor": 69,
+						"target_ew": 7
+					},
+					"target": "RC-CAO-SQ-10"
+				}
+			],
+			"first_confirm_s": 1.0,
+			"fp_at_120s": "29cb832c700b5ec29e4f42adc0553c8c205ca09f48c7d7f5f340e82a059d7728",
+			"liu_comp": {
+				"SHP-01": 5,
+				"SHP-03": 11,
+				"SHP-04": 22,
+				"SHP-05": 5,
+				"SHP-06": 5,
+				"SHP-07": 12
+			},
+			"liu_equip": "",
+			"liu_ew": 8,
+			"liu_sensor": 53,
+			"policy": "none",
+			"reserve": false,
+			"seed": 2
+		},
+		{
+			"at_1s": [
+				{
+					"best": {
+						"distance": 822.982360839844,
+						"observer": "RC-SUN-SQ-01",
+						"score": 30,
+						"sensor": 69,
+						"target_ew": 7
+					},
+					"target": "RC-CAO-SQ-10"
+				}
+			],
+			"first_confirm_s": 1.0,
+			"fp_at_120s": "175d3b299d351ecb925ac2dd3fe5f57c3a024527b165d9d92fbcc63c137a1b76",
+			"liu_comp": {
+				"SHP-01": 5,
+				"SHP-03": 11,
+				"SHP-04": 22,
+				"SHP-05": 5,
+				"SHP-06": 5,
+				"SHP-07": 12
+			},
+			"liu_equip": "",
+			"liu_ew": 8,
+			"liu_sensor": 53,
+			"policy": "none",
+			"reserve": false,
+			"seed": 3
+		},
+		{
+			"at_1s": [
+				{
+					"best": {
+						"distance": 822.982360839844,
+						"observer": "RC-SUN-SQ-01",
+						"score": 30,
+						"sensor": 69,
+						"target_ew": 7
+					},
+					"target": "RC-CAO-SQ-10"
+				}
+			],
+			"first_confirm_s": 1.0,
+			"fp_at_120s": "b9b906b08d46fbc502a58c3a1b2b5547b12b03cea3d9e24d23cdfa6aee2cee57",
+			"liu_comp": {
+				"SHP-01": 5,
+				"SHP-03": 11,
+				"SHP-04": 22,
+				"SHP-05": 5,
+				"SHP-06": 5,
+				"SHP-07": 12
+			},
+			"liu_equip": "",
+			"liu_ew": 8,
+			"liu_sensor": 53,
+			"policy": "attack",
+			"reserve": false,
+			"seed": 0
+		},
+		{
+			"at_1s": [
+				{
+					"best": {
+						"distance": 822.982360839844,
+						"observer": "RC-SUN-SQ-01",
+						"score": 30,
+						"sensor": 69,
+						"target_ew": 7
+					},
+					"target": "RC-CAO-SQ-10"
+				}
+			],
+			"first_confirm_s": 1.0,
+			"fp_at_120s": "01939c1666aa5a288b031782d2bc474e90279691472c2d36e1c55563e80c7e73",
+			"liu_comp": {
+				"SHP-01": 5,
+				"SHP-03": 11,
+				"SHP-04": 22,
+				"SHP-05": 5,
+				"SHP-06": 5,
+				"SHP-07": 12
+			},
+			"liu_equip": "",
+			"liu_ew": 8,
+			"liu_sensor": 53,
+			"policy": "attack",
+			"reserve": false,
+			"seed": 1
+		},
+		{
+			"at_1s": [
+				{
+					"best": {
+						"distance": 822.982360839844,
+						"observer": "RC-SUN-SQ-01",
+						"score": 30,
+						"sensor": 69,
+						"target_ew": 7
+					},
+					"target": "RC-CAO-SQ-10"
+				}
+			],
+			"first_confirm_s": 1.0,
+			"fp_at_120s": "a47f383bfaf3469ed1477fa05ab26d236127f068c3930104ee5ac96b74418b4f",
+			"liu_comp": {
+				"SHP-01": 5,
+				"SHP-03": 11,
+				"SHP-04": 22,
+				"SHP-05": 5,
+				"SHP-06": 5,
+				"SHP-07": 12
+			},
+			"liu_equip": "",
+			"liu_ew": 8,
+			"liu_sensor": 53,
+			"policy": "attack",
+			"reserve": false,
+			"seed": 2
+		},
+		{
+			"at_1s": [
+				{
+					"best": {
+						"distance": 822.982360839844,
+						"observer": "RC-SUN-SQ-01",
+						"score": 30,
+						"sensor": 69,
+						"target_ew": 7
+					},
+					"target": "RC-CAO-SQ-10"
+				}
+			],
+			"first_confirm_s": 1.0,
+			"fp_at_120s": "d5acdc0cc78222ed033a9c5a0629046a828f1de138d69ce767b6354a9cb1559e",
+			"liu_comp": {
+				"SHP-01": 5,
+				"SHP-03": 11,
+				"SHP-04": 22,
+				"SHP-05": 5,
+				"SHP-06": 5,
+				"SHP-07": 12
+			},
+			"liu_equip": "",
+			"liu_ew": 8,
+			"liu_sensor": 53,
+			"policy": "attack",
+			"reserve": false,
+			"seed": 3
+		},
+		{
+			"at_1s": [
+				{
+					"best": {
+						"distance": 1186.00170898438,
+						"observer": "RC-LIU-SQ-01",
+						"score": 30,
+						"sensor": 87,
+						"target_ew": 10
+					},
+					"target": "RC-CAO-SQ-01"
+				},
+				{
+					"best": {
+						"distance": 1049.81335449219,
+						"observer": "RC-LIU-SQ-01",
+						"score": 37,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-04"
+				},
+				{
+					"best": {
+						"distance": 1106.93273925781,
+						"observer": "RC-LIU-SQ-01",
+						"score": 34,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-05"
+				},
+				{
+					"best": {
+						"distance": 1091.65014648438,
+						"observer": "RC-LIU-SQ-01",
+						"score": 35,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-06"
+				},
+				{
+					"best": {
+						"distance": 955.667297363281,
+						"observer": "RC-LIU-SQ-01",
+						"score": 42,
+						"sensor": 87,
+						"target_ew": 7
+					},
+					"target": "RC-CAO-SQ-10"
+				}
+			],
+			"first_confirm_s": 1.0,
+			"fp_at_120s": "3a365522b3ae4b169001aba74aef950bd7cd3236fdec6886f4771f0a61f6f1b4",
+			"liu_comp": {
+				"SHP-01": 5,
+				"SHP-03": 10,
+				"SHP-04": 21,
+				"SHP-05": 5,
+				"SHP-06": 5,
+				"SHP-07": 10,
+				"SHP-08": 18
+			},
+			"liu_equip": "FAST-EQ-RECON",
+			"liu_ew": 14,
+			"liu_sensor": 87,
+			"policy": "none",
+			"reserve": true,
+			"seed": 0
+		},
+		{
+			"at_1s": [
+				{
+					"best": {
+						"distance": 1186.00170898438,
+						"observer": "RC-LIU-SQ-01",
+						"score": 30,
+						"sensor": 87,
+						"target_ew": 10
+					},
+					"target": "RC-CAO-SQ-01"
+				},
+				{
+					"best": {
+						"distance": 1049.81335449219,
+						"observer": "RC-LIU-SQ-01",
+						"score": 37,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-04"
+				},
+				{
+					"best": {
+						"distance": 1106.93273925781,
+						"observer": "RC-LIU-SQ-01",
+						"score": 34,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-05"
+				},
+				{
+					"best": {
+						"distance": 1091.65014648438,
+						"observer": "RC-LIU-SQ-01",
+						"score": 35,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-06"
+				},
+				{
+					"best": {
+						"distance": 955.667297363281,
+						"observer": "RC-LIU-SQ-01",
+						"score": 42,
+						"sensor": 87,
+						"target_ew": 7
+					},
+					"target": "RC-CAO-SQ-10"
+				}
+			],
+			"first_confirm_s": 1.0,
+			"fp_at_120s": "e55c92224e14744df96e04f5709e739e73ee6e07a318d12ec364f3fa23ea40da",
+			"liu_comp": {
+				"SHP-01": 5,
+				"SHP-03": 10,
+				"SHP-04": 21,
+				"SHP-05": 5,
+				"SHP-06": 5,
+				"SHP-07": 10,
+				"SHP-08": 18
+			},
+			"liu_equip": "FAST-EQ-RECON",
+			"liu_ew": 14,
+			"liu_sensor": 87,
+			"policy": "none",
+			"reserve": true,
+			"seed": 1
+		},
+		{
+			"at_1s": [
+				{
+					"best": {
+						"distance": 1186.00170898438,
+						"observer": "RC-LIU-SQ-01",
+						"score": 30,
+						"sensor": 87,
+						"target_ew": 10
+					},
+					"target": "RC-CAO-SQ-01"
+				},
+				{
+					"best": {
+						"distance": 1049.81335449219,
+						"observer": "RC-LIU-SQ-01",
+						"score": 37,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-04"
+				},
+				{
+					"best": {
+						"distance": 1106.93273925781,
+						"observer": "RC-LIU-SQ-01",
+						"score": 34,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-05"
+				},
+				{
+					"best": {
+						"distance": 1091.65014648438,
+						"observer": "RC-LIU-SQ-01",
+						"score": 35,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-06"
+				},
+				{
+					"best": {
+						"distance": 955.667297363281,
+						"observer": "RC-LIU-SQ-01",
+						"score": 42,
+						"sensor": 87,
+						"target_ew": 7
+					},
+					"target": "RC-CAO-SQ-10"
+				}
+			],
+			"first_confirm_s": 1.0,
+			"fp_at_120s": "b7d9cbc747ab7a52411d92b30bb65c8bf2174068cbac22ce07ebaeb73b0e840b",
+			"liu_comp": {
+				"SHP-01": 5,
+				"SHP-03": 10,
+				"SHP-04": 21,
+				"SHP-05": 5,
+				"SHP-06": 5,
+				"SHP-07": 10,
+				"SHP-08": 18
+			},
+			"liu_equip": "FAST-EQ-RECON",
+			"liu_ew": 14,
+			"liu_sensor": 87,
+			"policy": "none",
+			"reserve": true,
+			"seed": 2
+		},
+		{
+			"at_1s": [
+				{
+					"best": {
+						"distance": 1186.00170898438,
+						"observer": "RC-LIU-SQ-01",
+						"score": 30,
+						"sensor": 87,
+						"target_ew": 10
+					},
+					"target": "RC-CAO-SQ-01"
+				},
+				{
+					"best": {
+						"distance": 1049.81335449219,
+						"observer": "RC-LIU-SQ-01",
+						"score": 37,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-04"
+				},
+				{
+					"best": {
+						"distance": 1106.93273925781,
+						"observer": "RC-LIU-SQ-01",
+						"score": 34,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-05"
+				},
+				{
+					"best": {
+						"distance": 1091.65014648438,
+						"observer": "RC-LIU-SQ-01",
+						"score": 35,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-06"
+				},
+				{
+					"best": {
+						"distance": 955.667297363281,
+						"observer": "RC-LIU-SQ-01",
+						"score": 42,
+						"sensor": 87,
+						"target_ew": 7
+					},
+					"target": "RC-CAO-SQ-10"
+				}
+			],
+			"first_confirm_s": 1.0,
+			"fp_at_120s": "a81e84e71473dc29c945f2399055efa89309cf23fbba9ea5bfd055ec8b85fdc7",
+			"liu_comp": {
+				"SHP-01": 5,
+				"SHP-03": 10,
+				"SHP-04": 21,
+				"SHP-05": 5,
+				"SHP-06": 5,
+				"SHP-07": 10,
+				"SHP-08": 18
+			},
+			"liu_equip": "FAST-EQ-RECON",
+			"liu_ew": 14,
+			"liu_sensor": 87,
+			"policy": "none",
+			"reserve": true,
+			"seed": 3
+		},
+		{
+			"at_1s": [
+				{
+					"best": {
+						"distance": 1186.00170898438,
+						"observer": "RC-LIU-SQ-01",
+						"score": 30,
+						"sensor": 87,
+						"target_ew": 10
+					},
+					"target": "RC-CAO-SQ-01"
+				},
+				{
+					"best": {
+						"distance": 1049.81335449219,
+						"observer": "RC-LIU-SQ-01",
+						"score": 37,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-04"
+				},
+				{
+					"best": {
+						"distance": 1106.93273925781,
+						"observer": "RC-LIU-SQ-01",
+						"score": 34,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-05"
+				},
+				{
+					"best": {
+						"distance": 1091.65014648438,
+						"observer": "RC-LIU-SQ-01",
+						"score": 35,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-06"
+				},
+				{
+					"best": {
+						"distance": 955.667297363281,
+						"observer": "RC-LIU-SQ-01",
+						"score": 42,
+						"sensor": 87,
+						"target_ew": 7
+					},
+					"target": "RC-CAO-SQ-10"
+				}
+			],
+			"first_confirm_s": 1.0,
+			"fp_at_120s": "c273e447e1a20d86a74dfd2e9d438425d4e4a0a25216826764c0b0edc274b046",
+			"liu_comp": {
+				"SHP-01": 5,
+				"SHP-03": 10,
+				"SHP-04": 21,
+				"SHP-05": 5,
+				"SHP-06": 5,
+				"SHP-07": 10,
+				"SHP-08": 18
+			},
+			"liu_equip": "FAST-EQ-RECON",
+			"liu_ew": 14,
+			"liu_sensor": 87,
+			"policy": "attack",
+			"reserve": true,
+			"seed": 0
+		},
+		{
+			"at_1s": [
+				{
+					"best": {
+						"distance": 1186.00170898438,
+						"observer": "RC-LIU-SQ-01",
+						"score": 30,
+						"sensor": 87,
+						"target_ew": 10
+					},
+					"target": "RC-CAO-SQ-01"
+				},
+				{
+					"best": {
+						"distance": 1049.81335449219,
+						"observer": "RC-LIU-SQ-01",
+						"score": 37,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-04"
+				},
+				{
+					"best": {
+						"distance": 1106.93273925781,
+						"observer": "RC-LIU-SQ-01",
+						"score": 34,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-05"
+				},
+				{
+					"best": {
+						"distance": 1091.65014648438,
+						"observer": "RC-LIU-SQ-01",
+						"score": 35,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-06"
+				},
+				{
+					"best": {
+						"distance": 955.667297363281,
+						"observer": "RC-LIU-SQ-01",
+						"score": 42,
+						"sensor": 87,
+						"target_ew": 7
+					},
+					"target": "RC-CAO-SQ-10"
+				}
+			],
+			"first_confirm_s": 1.0,
+			"fp_at_120s": "c550be592060bd6f481c224ece08f737ae88210f03a21ca5d4c1f2e9f3e19c7a",
+			"liu_comp": {
+				"SHP-01": 5,
+				"SHP-03": 10,
+				"SHP-04": 21,
+				"SHP-05": 5,
+				"SHP-06": 5,
+				"SHP-07": 10,
+				"SHP-08": 18
+			},
+			"liu_equip": "FAST-EQ-RECON",
+			"liu_ew": 14,
+			"liu_sensor": 87,
+			"policy": "attack",
+			"reserve": true,
+			"seed": 1
+		},
+		{
+			"at_1s": [
+				{
+					"best": {
+						"distance": 1186.00170898438,
+						"observer": "RC-LIU-SQ-01",
+						"score": 30,
+						"sensor": 87,
+						"target_ew": 10
+					},
+					"target": "RC-CAO-SQ-01"
+				},
+				{
+					"best": {
+						"distance": 1049.81335449219,
+						"observer": "RC-LIU-SQ-01",
+						"score": 37,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-04"
+				},
+				{
+					"best": {
+						"distance": 1106.93273925781,
+						"observer": "RC-LIU-SQ-01",
+						"score": 34,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-05"
+				},
+				{
+					"best": {
+						"distance": 1091.65014648438,
+						"observer": "RC-LIU-SQ-01",
+						"score": 35,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-06"
+				},
+				{
+					"best": {
+						"distance": 955.667297363281,
+						"observer": "RC-LIU-SQ-01",
+						"score": 42,
+						"sensor": 87,
+						"target_ew": 7
+					},
+					"target": "RC-CAO-SQ-10"
+				}
+			],
+			"first_confirm_s": 1.0,
+			"fp_at_120s": "e0316fd45cc305c0ee22dc86ae9e480a6b544e6b5521196a8e02d8af00c7c3b1",
+			"liu_comp": {
+				"SHP-01": 5,
+				"SHP-03": 10,
+				"SHP-04": 21,
+				"SHP-05": 5,
+				"SHP-06": 5,
+				"SHP-07": 10,
+				"SHP-08": 18
+			},
+			"liu_equip": "FAST-EQ-RECON",
+			"liu_ew": 14,
+			"liu_sensor": 87,
+			"policy": "attack",
+			"reserve": true,
+			"seed": 2
+		},
+		{
+			"at_1s": [
+				{
+					"best": {
+						"distance": 1186.00170898438,
+						"observer": "RC-LIU-SQ-01",
+						"score": 30,
+						"sensor": 87,
+						"target_ew": 10
+					},
+					"target": "RC-CAO-SQ-01"
+				},
+				{
+					"best": {
+						"distance": 1049.81335449219,
+						"observer": "RC-LIU-SQ-01",
+						"score": 37,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-04"
+				},
+				{
+					"best": {
+						"distance": 1106.93273925781,
+						"observer": "RC-LIU-SQ-01",
+						"score": 34,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-05"
+				},
+				{
+					"best": {
+						"distance": 1091.65014648438,
+						"observer": "RC-LIU-SQ-01",
+						"score": 35,
+						"sensor": 87,
+						"target_ew": 9
+					},
+					"target": "RC-CAO-SQ-06"
+				},
+				{
+					"best": {
+						"distance": 955.667297363281,
+						"observer": "RC-LIU-SQ-01",
+						"score": 42,
+						"sensor": 87,
+						"target_ew": 7
+					},
+					"target": "RC-CAO-SQ-10"
+				}
+			],
+			"first_confirm_s": 1.0,
+			"fp_at_120s": "6d05c0604bf386c0762b832f286301325919012a094173474fca16362c0b43e9",
+			"liu_comp": {
+				"SHP-01": 5,
+				"SHP-03": 10,
+				"SHP-04": 21,
+				"SHP-05": 5,
+				"SHP-06": 5,
+				"SHP-07": 10,
+				"SHP-08": 18
+			},
+			"liu_equip": "FAST-EQ-RECON",
+			"liu_ew": 14,
+			"liu_sensor": 87,
+			"policy": "attack",
+			"reserve": true,
+			"seed": 3
+		}
+	],
+	"unchanged_fleets": [
+		"RC-LIU-SQ-02",
+		"RC-LIU-SQ-03",
+		"RC-SUN-SQ-01",
+		"RC-SUN-SQ-02",
+		"RC-SUN-SQ-03",
+		"RC-CAO-SQ-01",
+		"RC-CAO-SQ-02",
+		"RC-CAO-SQ-03",
+		"RC-CAO-SQ-04",
+		"RC-CAO-SQ-05",
+		"RC-CAO-SQ-06",
+		"RC-CAO-SQ-07",
+		"RC-CAO-SQ-08",
+		"RC-CAO-SQ-09",
+		"RC-CAO-SQ-10"
+	]
+}

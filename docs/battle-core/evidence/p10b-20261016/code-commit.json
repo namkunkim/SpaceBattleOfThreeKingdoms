@@ -1,0 +1,15 @@
+{
+  "branch": "p10b-auto-scout",
+  "commit": "c471ee2be6c4851df3927ddbc0c87937118e5560",
+  "files": [
+    "core/battle/organization.gd",
+    "data/scenarios/red_cliffs_208_realtime.json",
+    "tests/data_rules.gd",
+    "tests/organization_rules.gd",
+    "tests/organization_ui.gd",
+    "tests/roster.gd",
+    "tests/stratagem_rules.gd",
+    "tools/scenario/make_red_cliffs_208.py"
+  ],
+  "restored_imports": 118
+}

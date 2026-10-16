@@ -1,0 +1,24 @@
+ERROR: Could not create editor data directory: C:/Users/nk782/AppData/Roaming/Godot
+   at: EditorPaths (editor/file_system/editor_paths.cpp:201)
+ERROR: Could not create editor config directory: C:/Users/nk782/AppData/Roaming/Godot
+   at: EditorPaths (editor/file_system/editor_paths.cpp:216)
+ERROR: Could not open 'user://' directory: 'user://'.
+   at: _get_and_create_snapshot_storage_dir (modules/objectdb_profiler/editor/objectdb_profiler_panel.cpp:157)
+ERROR: Safe save failed. This may be a permissions problem, but also may happen because you are running a paranoid antivirus. If this is the case, please switch to Windows Defender or disable the 'safe save' option in editor settings. This makes it work, but increases the risk of file corruption in a crash.
+   at: _close (drivers/windows/file_access_windows.cpp:277)
+Unable to open Android 'build-tools' directory.
+ERROR: Cannot open directory 'C:/Users/nk782/AppData/Roaming/Godot/feature_profiles'.
+   at: _update_profile_list (editor/settings/editor_feature_profile.cpp:392)
+Unable to open Android 'build-tools' directory.
+ERROR: Cannot export project with preset "Android 태블릿" due to configuration errors:
+편집기 설정에서 잘못된 Android SDK 경로입니다. 'platform-tools' 디렉터리가 누락되어 있습니다!
+편집기 설정에서 잘못된 Android SDK 경로입니다. 'build-tools' 디렉터리가 누락되어 있습니다!
+Android SDK build-tools의 apksigner 명령을 찾을 수 없습니다. 편집기 설정에서 지정된 Android SDK 디렉터리를 확인해 주세요.
+
+   at: _fs_changed (editor/editor_node.cpp:1401)
+ERROR: Project export for preset "Android 태블릿" failed.
+   at: _fs_changed (editor/editor_node.cpp:1417)
+ERROR: Can't save resource to empty path. Provide non-empty path or a Resource with non-empty resource_path.
+   at: save (core/io/resource_saver.cpp:108)
+ERROR: Error saving editor settings to
+   at: save (editor/settings/editor_settings.cpp:1525)

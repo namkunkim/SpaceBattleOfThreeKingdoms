@@ -1,0 +1,11 @@
+{
+  "code_commit": "c471ee2be6c4851df3927ddbc0c87937118e5560",
+  "file": "output/p10b/final-20261016/P10b-debug.apk",
+  "bytes": 87339336,
+  "sha256": "95839477C61B435193302479258804C476FF14D9D0E157B820E8D995EE208D0D",
+  "export_exit": 0,
+  "signing_and_verification": "completed per export log",
+  "known_export_warning": "No project icon specified",
+  "tablet_verified": true,
+  "verification_source": "user confirmation 2026-10-16: 태블릿에서 확인했고 이상 없음"
+}
