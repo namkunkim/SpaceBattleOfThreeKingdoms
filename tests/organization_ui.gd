@@ -375,10 +375,8 @@ func _run() -> void:
 	for fl in auto.fleets:   # = 건너뛰기 편성(위에서 확인)
 		if fl.on:
 			sum["cao" if fl.faction_id == "cao_cao" else "ally"] += Organization.cost_of(fl, o.prof)
-	# P10b(D2): 조조 비용은 연합 한도 합 4698(P10 이전 7함대 기준) 기준으로 고정이다. 유비 함대가 3개라 실제 연합 비용 대비 비율은 목표보다 높다(보고 대상)
-	var dp: Dictionary = o.prof.scenario.difficulty_profile
-	var at_limits := float(dp.cao_cost_at_limits)
-	if not TestCheck.ok(self, absf(float(sum.cao) / at_limits - 1.0) <= 0.03, "skip cao cost %d vs at-limits %d (실제 비율 %.3f, 목표 %.2f)" % [sum.cao, int(at_limits), float(sum.cao) / float(sum.ally), float(dp.target_cost_ratio)]): return
+	var target := float(o.prof.scenario.difficulty_profile.target_cost_ratio)
+	if not TestCheck.ok(self, absf(float(sum.cao) / float(sum.ally) - target) <= 0.05, "skip cao ratio %.3f vs %.2f" % [float(sum.cao) / float(sum.ally), target]): return
 	# REVIEW-O2b #1: 프로필을 못 만들면(모르는 난이도) 오류 없이 대체 전장으로 열고 문구를 남긴다
 	var diff: String = battle.difficulty
 	battle.difficulty = "없는 난이도"

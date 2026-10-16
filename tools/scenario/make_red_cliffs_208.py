@@ -155,10 +155,9 @@ def auto_limits(fid, n):
     return [limit(flag["command"])] + [limit(o["command"]) for o in rest[:n - 1]]
 
 
-# P10b(D2): 유비 함대를 4개로 고정해 계산한다(조운 정찰대 폐지 전 연합 7함대 한도 합 4698). 함대 수가 줄어도 Q82 조조 함대 수(입문 11·표준 12·상급/극한 16)를 유지한다.
-ALLY_FLEETS = {"liu_bei": 4, "sun_quan": sum(1 for s in SQUADRONS if s["faction_id"] == "sun_quan")}
-ALLY_LIMIT = sum(sum(auto_limits(f, n)) for f, n in ALLY_FLEETS.items())
-assert ALLY_LIMIT == 4698, ALLY_LIMIT
+# P10b 사용자 결정: 실제 출전 연합 함대의 한도로 비용비를 먼저 맞춘다.
+# 정찰 함대 통합 전의 한도(4698)나 조조 함대 수를 고정하지 않는다.
+ALLY_LIMIT = sum(sum(auto_limits(f, sum(1 for s in SQUADRONS if s["faction_id"] == f))) for f in ("liu_bei", "sun_quan"))
 
 # Q82: 조조의 수적 우위 = 함대 수. 난이도마다 조조 함대 앞에서부터 cao_fleets개를 배치하고, 마지막 함대만 한도 × cao_last_fill_bp까지 채워
 # 조조 비용 합 / 연합 비용 합을 target_cost_ratio에 맞춘다(함대 하나가 비율을 약 0.13씩 바꿔 함대 수만으로는 ±0.05를 못 맞춘다, 2026-10-10 사용자 결정).

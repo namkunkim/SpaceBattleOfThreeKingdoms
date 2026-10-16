@@ -248,7 +248,7 @@ func _run() -> void:
 	s.salvo.apply_hull(null, host, host.max_hull * 0.1, "engagement", "front", 1)
 	s.issue(BattleSim.command(0, [host.id], "letter"))
 	_ticks(s, 100)
-	if not TestCheck.ok(self, s.chain.susp_m == -30000 + 8000 and s.chain.suspicion() == 0.0, "고육계: 선체 10% 피해 뒤 서신 → 시작 −30 (%d)" % s.chain.susp_m): return
+	if not TestCheck.ok(self, s.chain.susp_m == -30000 + 8000 and s.chain.suspicion() == 0.0, "고육계: 선체 10%% 피해 뒤 서신 → 시작 −30 (%d)" % s.chain.susp_m): return
 	# 경고 50·80, 의심 80 결정 카드, 간파 100
 	s = _stage()
 	host = _f(s, "host")

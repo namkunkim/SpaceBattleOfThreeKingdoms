@@ -260,7 +260,7 @@ static func _officers(scn: Dictionary, faction_id: String) -> Dictionary:
 # 장수: 제독(기함은 고정) → 부제독 → 함대마다 참모 강습·공성·보급, 각각 남은 장수 중 통솔·통솔·무력·지력·정치 최고(같으면 ID 순).
 # 함선: 지휘 한도 (limit_base + limit_per_command × 제독 통솔)까지 MIX 순환 탐욕, 남는 점수는 고속정.
 #   프로필 함대에 fill_bp가 있으면(조조 마지막 함대, Q82) 한도 × fill_bp까지.
-#   시나리오 편성의 고속정(정찰 고속정, P10b·R5)은 먼저 예약하고 나머지를 채운다(한도를 넘지 않는 만큼).
+#   시나리오 편성의 RECON 정찰 고속정(P10b·R5)은 먼저 예약하고 나머지를 채운다(한도를 넘지 않는 만큼).
 # only(전대 ID 배열)가 있으면 그 함대만 채우고, 나머지 출전 함대의 장수는 쓰지 않는다(repair).
 static func auto_fill(org: Dictionary, faction_id: String, scn: Dictionary, profile: Dictionary, only := []) -> Dictionary:
 	var res := org.duplicate(true)
@@ -275,10 +275,10 @@ static func auto_fill(org: Dictionary, faction_id: String, scn: Dictionary, prof
 					used[id] = true
 	var fill := {}
 	var equip := {}
-	var scouts := {}   # 전대 ID → 시나리오 편성의 고속정 수(예약)
+	var scouts := {}   # 전대 ID → 시나리오 편성의 RECON 정찰 고속정 수(예약)
 	for sq in scn.squadrons:
 		for c in sq.composition:
-			if c.ship_type_id == FILLER:
+			if c.ship_type_id == FILLER and c.get("mission_equipment_id", "") == "FAST-EQ-RECON":
 				scouts[sq.id] = scouts.get(sq.id, 0) + int(c.count)
 	for d in profile.ally + profile.foe:
 		fill[d.squadron_id] = int(d.get("fill_bp", BattleRules.BP))

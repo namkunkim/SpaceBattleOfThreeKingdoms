@@ -22,7 +22,7 @@ func _find_button(n: Node, text: String) -> Button:
 
 func _run() -> void:
 	var d := ScenarioRoster.load_scenario()
-	if not TestCheck.ok(self, d.get("factions", []).size() == 3 and d.get("squadrons", []).size() == 22, "scenario loaded"): return
+	if not TestCheck.ok(self, d.get("factions", []).size() == 3 and d.get("squadrons", []).size() == 20, "scenario loaded"): return
 	var s := ScenarioRoster.squadron(d, "RC-LIU-SQ-01")
 	if not TestCheck.ok(self, ScenarioRoster.ship_count(s) == 39 and ScenarioRoster.composition_text(s) == "전열 12 · 보급 3 · 요격 6 · 고속 18", "composition %s" % ScenarioRoster.composition_text(s)): return
 	for sq in d.squadrons:
@@ -34,11 +34,11 @@ func _run() -> void:
 	var p := Commanders.person("CHR-0207")
 	if not TestCheck.ok(self, p.get("name", "") == "정보" and p.get("faction", "") == "wu" and p.get("portrait", 0) == -1, "person CHR-0207 %s" % p): return
 	if not TestCheck.ok(self, Commanders.person("CHR-0134").get("portrait", -1) == 2 and Commanders.person("liu_bei").is_empty(), "portrait by CHR id"): return
-	# W-2(Q82): 조조 함대 앞에서부터 입문 11 · 표준 12 · 상급/극한 16개, 척 수 배율 없음
+	# W-2(Q82): 조조 함대 앞에서부터 입문 9 · 표준 10 · 상급/극한 14개, 척 수 배율 없음
 	var n := {}
 	for diff in ["입문", "표준", "상급", "극한"]:
 		n[diff] = ScenarioRoster.deployed(d, "cao_cao", diff).size()
-	if not TestCheck.ok(self, n.입문 == 11 and n.표준 == 12 and n.상급 == 16 and n.극한 == 16, "deploy by difficulty %s" % n): return
+	if not TestCheck.ok(self, n.입문 == 9 and n.표준 == 10 and n.상급 == 14 and n.극한 == 14, "deploy by difficulty %s" % n): return
 	var cao1: Dictionary = ScenarioRoster.deployed(d, "cao_cao", "입문")[0]
 	var want := {"SHP-01": 6, "SHP-03": 12, "SHP-04": 24}   # 3배 편성 그대로
 	for c in cao1.composition:

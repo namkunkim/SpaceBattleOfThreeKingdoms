@@ -75,9 +75,9 @@
     "suspicion_per_s": 0.4
    },
    "note": "역병과 원정 피로가 크고 형주 수군이 훈련되지 않았다. 조조는 밀집(연환)을 풀지 않는다.",
-   "cao_fleets": 11,
-   "cao_last_fill_bp": 5589,
-   "cao_cost_at_limits": 6906
+   "cao_fleets": 9,
+   "cao_last_fill_bp": 9654,
+   "cao_cost_at_limits": 5918
   },
   "표준": {
    "target_cost_ratio": 1.59,
@@ -94,9 +94,9 @@
     "suspicion_per_s": 0.8
    },
    "note": "본편 데모의 보통 난이도에 해당한다.",
-   "cao_fleets": 12,
-   "cao_last_fill_bp": 4801,
-   "cao_cost_at_limits": 7470
+   "cao_fleets": 10,
+   "cao_last_fill_bp": 7393,
+   "cao_cost_at_limits": 6401
   },
   "상급": {
    "target_cost_ratio": 2.14,
@@ -113,9 +113,9 @@
     "suspicion_per_s": 1.5
    },
    "note": "본편 정본의 동원비 2.20배.",
-   "cao_fleets": 16,
-   "cao_last_fill_bp": 8022,
-   "cao_cost_at_limits": 10054
+   "cao_fleets": 14,
+   "cao_last_fill_bp": 3794,
+   "cao_cost_at_limits": 8616
   },
   "극한": {
    "target_cost_ratio": 2.14,
@@ -132,9 +132,9 @@
     "suspicion_per_s": 2.0
    },
    "note": "역병 없음, 형주 수군 정상 훈련. 규모는 상급과 같고 정보 이점은 없다.",
-   "cao_fleets": 16,
-   "cao_last_fill_bp": 8022,
-   "cao_cost_at_limits": 10054
+   "cao_fleets": 14,
+   "cao_last_fill_bp": 3794,
+   "cao_cost_at_limits": 8616
   }
  },
  "factions": [
@@ -3310,96 +3310,6 @@
    "historical_basis": "Q82 추가 함대: 조조의 수적 우위를 함대 수로 맞춘다(게임 수치). 편성은 조홍 후군과 같은 틀이다.",
    "declared_total_cost": 330,
    "command_limit": 624
-  },
-  {
-   "id": "RC-CAO-SQ-15",
-   "faction_id": "cao_cao",
-   "name": "학소 증원군",
-   "commander": {
-    "id": "CHR-0046",
-    "name": "학소",
-    "command": 82,
-    "might": 72,
-    "intellect": 80,
-    "politics": 62,
-    "charm": 58,
-    "traits": [
-     "진창"
-    ]
-   },
-   "vice_commander": null,
-   "staff": [],
-   "flagship": false,
-   "initial_position": [
-    1480,
-    640
-   ],
-   "formation_id": "FRM-03",
-   "composition": [
-    {
-     "ship_type_id": "SHP-03",
-     "count": 9
-    },
-    {
-     "ship_type_id": "SHP-04",
-     "count": 18
-    },
-    {
-     "ship_type_id": "SHP-07",
-     "count": 6
-    }
-   ],
-   "morale_group": "northern",
-   "deploy_delay_s": 360,
-   "historical": false,
-   "historical_basis": "Q82 추가 함대: 조조의 수적 우위를 함대 수로 맞춘다(게임 수치). 편성은 조홍 후군과 같은 틀이다.",
-   "declared_total_cost": 330,
-   "command_limit": 612
-  },
-  {
-   "id": "RC-CAO-SQ-16",
-   "faction_id": "cao_cao",
-   "name": "이전 증원군",
-   "commander": {
-    "id": "CHR-0025",
-    "name": "이전",
-    "command": 80,
-    "might": 76,
-    "intellect": 78,
-    "politics": 70,
-    "charm": 72,
-    "traits": [
-     "사군자"
-    ]
-   },
-   "vice_commander": null,
-   "staff": [],
-   "flagship": false,
-   "initial_position": [
-    1240,
-    560
-   ],
-   "formation_id": "FRM-03",
-   "composition": [
-    {
-     "ship_type_id": "SHP-03",
-     "count": 9
-    },
-    {
-     "ship_type_id": "SHP-04",
-     "count": 18
-    },
-    {
-     "ship_type_id": "SHP-07",
-     "count": 6
-    }
-   ],
-   "morale_group": "northern",
-   "deploy_delay_s": 360,
-   "historical": false,
-   "historical_basis": "Q82 추가 함대: 조조의 수적 우위를 함대 수로 맞춘다(게임 수치). 편성은 조홍 후군과 같은 틀이다.",
-   "declared_total_cost": 330,
-   "command_limit": 600
   }
  ],
  "realtime_rules": {

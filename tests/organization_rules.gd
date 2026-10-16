@@ -92,7 +92,7 @@ func _run() -> void:
 		again = Organization.auto_fill(again, fid, scn, prof)
 	if not TestCheck.ok(self, JSON.stringify(auto) == JSON.stringify(again), "auto_fill deterministic"): return
 	if not TestCheck.ok(self, _codes(auto).is_empty(), "auto org valid %s" % [Organization.validate(auto, scn, prof)]): return
-	# P10b: 자동 편성은 시나리오 정찰 고속정 수를 예약한다(유비 본대 정찰정 18척(문서 6 x 3배), 장비 유지). 조조 함대 수는 Q82 결정값(입문 11 · 표준 12 · 상급/극한 16)
+	# P10b: 자동 편성은 시나리오 정찰 고속정 수를 예약한다(유비 본대 정찰정 18척(문서 6 x 3배), 장비 유지). 조조 함대 수는 비용비 우선 결과(P10b, 입문 9 · 표준 10 · 상급/극한 14)
 	var scout_n := 0
 	for c in scn.squadrons.filter(func(x): return x.id == "RC-LIU-SQ-01")[0].composition:
 		if c.ship_type_id == Organization.FILLER:
@@ -104,7 +104,8 @@ func _run() -> void:
 			got += int(c.count)
 			recon_ok = c.mission_equipment_id == "FAST-EQ-RECON"
 	if not TestCheck.ok(self, scout_n == 18 and got >= scout_n and recon_ok, "auto scouts reserved %d/%d" % [got, scout_n]): return
-	var want_foes := {"입문": 11, "표준": 12, "상급": 16, "극한": 16}
+	if not _scout_boundaries(base, auto): return
+	var want_foes := {"입문": 9, "표준": 10, "상급": 14, "극한": 14}
 	for dn in want_foes:
 		var pd := Organization.load_auto(DEF, dn)
 		if not TestCheck.ok(self, pd.has("organization") and pd.foe.size() == want_foes[dn], "%s cao fleets %d (want %d)" % [dn, pd.foe.size(), want_foes[dn]]): return
@@ -201,6 +202,33 @@ func _run() -> void:
 	if not _to_end(): return
 	print("ORGANIZATION_RULES_OK")
 	quit(0)
+
+# 정찰 예약만 영향: 비정찰 고속정·다른 함대 불변, only/출전 끔 보존, 낮은 한도 절삭.
+func _scout_boundaries(base: Dictionary, auto: Dictionary) -> bool:
+	var without := scn.duplicate(true)
+	for sq in without.squadrons:
+		sq.composition = sq.composition.filter(func(c): return c.ship_type_id != Organization.FILLER)
+	var reference := base
+	for fid in ["liu_bei", "sun_quan", "cao_cao"]:
+		reference = Organization.auto_fill(reference, fid, without, prof)
+	for fl in auto.fleets:
+		if fl.squadron_id != "RC-LIU-SQ-01":
+			if not TestCheck.ok(self, fl == _fleet(reference, fl.squadron_id), "non-recon fleet unchanged " + fl.squadron_id): return false
+	var limited := Organization.auto_fill(base, "liu_bei", scn, prof, ["RC-LIU-SQ-01"])
+	for fl in base.fleets:
+		if fl.squadron_id != "RC-LIU-SQ-01":
+			if not TestCheck.ok(self, fl == _fleet(limited, fl.squadron_id), "only preserves " + fl.squadron_id): return false
+	var off := base.duplicate(true)
+	_fleet(off, "RC-LIU-SQ-01").on = false
+	var after_off := Organization.auto_fill(off, "liu_bei", scn, prof)
+	if not TestCheck.ok(self, _fleet(off, "RC-LIU-SQ-01") == _fleet(after_off, "RC-LIU-SQ-01"), "off scout fleet preserved"): return false
+	var small := prof.duplicate(true)
+	for d in small.ally:
+		if d.squadron_id == "RC-LIU-SQ-01":
+			d.fill_bp = 100   # 한도 612의 1% = 6점: 2점 정찰정 3척만 가능
+	var clipped := Organization.auto_fill(base, "liu_bei", scn, small, ["RC-LIU-SQ-01"])
+	var fl := _fleet(clipped, "RC-LIU-SQ-01")
+	return TestCheck.ok(self, fl.composition == [{"ship_type_id": Organization.FILLER, "count": 3, "mission_equipment_id": "FAST-EQ-RECON"}] and Organization.cost_of(fl, small) == 6, "scouts clipped at actual cap %s" % [fl.composition])
 
 func _is_flag(sq: String) -> bool:
 	return Organization._flags(scn).has(sq)
