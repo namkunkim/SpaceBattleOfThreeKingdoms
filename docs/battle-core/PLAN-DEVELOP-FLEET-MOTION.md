@@ -16,7 +16,7 @@
 - [x] develop용 제품/회귀/화면 도구 작성 및 이식 내역 기록
 - [x] import·기존 일반 순차 게이트·추가 기동/지형 회귀 통과, boundary 기존/신규 구분
 - [x] PC 화면 확인(최신 사용자 지시: 검증은 PC만, Android/태블릿은 이번 범위 제외)
-- [ ] 독립 5-b 검토·수정 완료 후 develop 커밋·원격 반영, 다른 작업 미포함 확인
+- [x] 독립 5-b 검토·수정 완료 후 develop 커밋·원격 반영, 다른 작업 미포함 확인
 
 원본 K3의 자동검사/화면 통과는 develop 이식본의 검증을 대신하지 않는다.
 
@@ -33,3 +33,5 @@
 일반35종34PASS/종료0, boundary는 develop기준 기존1건/신규0·종료1. import 종료0, salvo_compare runs10 종료0·825.9초. fixture K3후 영향회귀 종료0·PASS. PC1600×900/1280×720 기동 각10단계·실패0, 최종 교전 각4화면·실패0·양방향 교전표적 활성239프레임·생존슬롯 위치/yaw drift0. 기계 근거는 develop의 docs/battle-core/evidence/develop-fleet-motion-20261017/, 전체 로그/PNG는 out/develop-motion-20261017/에 보존한다.
 
 독립 gpt-6-astra가 코드·로그·최종 화면28장을 직접 대조해 PC범위 수용, 수정요구0으로 판정했다. K1 유비 fallback 격침 실패와 K2 자연접촉 없는 쌍의 사격0 실패는 보존했고 K3에서 기존 탐지/사거리로 상호 접촉 가능한 비기함을 선택하도록 검증도구만 교정했다. 제품·피해·12초·오차기준 불변. 종료 ObjectDB/resources 경고와 기존 stratagem_rules 문자열 포맷 경고는 남는다. develop Git 반영 상태는 완료 후 추가한다.
+
+Git 반영 완료: `pull --no-rebase origin develop` 최신 확인 후 `627e40efe0c4c42ba556e4bce667c7586e9d8e28`을 develop에 커밋·origin/develop에 푸시했고 양쪽 해시 일치를 확인했다. 코드/테스트/관련 문서·근거34파일만 포함했다. import118개·pause_button uid·원본 K3/feature 브랜치·main 변경은 포함하지 않았다. 이 완료 체크와 인계 갱신은 후속 문서 커밋으로 보존한다.

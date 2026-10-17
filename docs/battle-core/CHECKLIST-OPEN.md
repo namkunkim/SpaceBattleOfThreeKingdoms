@@ -202,6 +202,6 @@ M3 리뷰(2026-10-04): `REVIEW-M3.md`. 수용. 후속은 방향 배분 잔여 �
 - [x] 삭제된 renderer API를 참조하던 fleet_follow 복구 및 reference_motion_only/fixture 이식.
 - [x] 일반35종:34PASS, boundary 기존1건/신규0. salvo_compare runs10 종료0. fixture K3 영향 회귀 재통과.
 - [x] PC1600×900/1280×720 기동 각10단계 및 교전 각4화면·실패0. 주유/서황 자연 탐지·자동 사격·생존·drift0 확인.
-- [ ] 독립5-b 최종 판정 후 develop 선별 커밋·origin/develop 일치 확인.
+- [x] 독립 gpt-6-astra PC범위 수용·수정요구0 후 develop 선별 커밋627e40e·origin/develop 일치 확인.
 - 최신 사용자 지시로 테스트는 PC만. Android 빌드/태블릿은 이번 완료 조건에서 제외한다. main 병합 거부 및 feature/worktree/원본K3 보존 유지.
 - 상세: PLAN-DEVELOP-FLEET-MOTION.md, DEVELOP-FLEET-MOTION-NOTES.md, REVIEW-DEVELOP-FLEET-MOTION.md. 최초 K1/K2 fixture 실패·기존 boundary·종료 리소스 경고를 보존한다.

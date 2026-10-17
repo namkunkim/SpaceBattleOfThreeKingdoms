@@ -270,3 +270,13 @@
 서브 에이전트를 쓸 때는 네가 오케스트레이터가 되어 의견을 채택·조정·후속·보류로 판정하고 조율해 문서에 반영해라.
 시작하면 현재 상태를 짧게 요약하고, 인수 메모의 "남은 일" 가운데 지금 할 수 있는 것을 제안해라.
 ```
+
+## 2026-10-17 develop 기동·지형 이식 완료
+
+기반46e0533의 기존 develop API를 유지하고 화면 기동·공개 지형만 선별 이식했다. fleet_follow 삭제 API 참조를 복구하고 reference_motion_only/fixture/PC캡처를 추가했다. 구현 gpt-6.1-sol, 독립5-b gpt-6-astra PC범위 수용·수정요구0.
+
+일반35종34PASS/종료0, boundary 기존1건/신규0·종료1. salvo_compare runs10 종료0. fixture K1 유비fallback 격침·K2 상호탐지 없는 쌍 선택 실패는 보존하고, K3 기존 Detection/사거리로 상호접촉 가능한 비기함을 선택해 영향회귀 재통과. PC1600/1280 기동 각10단계·교전 각4화면 실패0, 상호교전 표적활성239·생존슬롯 위치/yaw drift0. 최종화면28장 독립 직접확인.
+
+최신 사용자 지시 '테스트는 pc로만'에 따라 Android/APK/태블릿은 실행·완료대기조건에서 제외했다. 기존 종료ObjectDB/resources·stratagem_rules 포맷경고는 남는다. 실제 격침 native사례/장시간성능/최신HTML까지 통과했다고 주장하지 않는다. 상세 PLAN-DEVELOP-FLEET-MOTION·DEVELOP-FLEET-MOTION-NOTES·REVIEW-DEVELOP-FLEET-MOTION 및 evidence/develop-fleet-motion-20261017 참조. 원본PNG/전체로그는 out/develop-motion-20261017/.
+
+pull --no-rebase origin develop 확인 후 코드/테스트/관련문서34파일 커밋627e40e를 origin/develop에 푸시하고 동일해시를 확인했다. 이 완료체크/인계는 후속문서커밋에 보존한다. main 병합거부 유지. 모든 feature브랜치·작업폴더·원본K3미커밋변경·import118개·무관pause_button uid를 보존했다. root의 AGENTS/WORKFLOW/output/플레이북 및 다른세션변경은 포함하지 않았다.

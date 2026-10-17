@@ -18,7 +18,7 @@
 
 ## 검증 상태
 
-import 승인 재실행 종료0, 일반 게이트는 단독·순차 실행 중이다. capture/audit/bench/autoresolve는 일반 게이트와 분리하며 salvo_compare는 runs10이다. boundary의 develop 기준선은 기존 BattleRules.BP 1건이며 원본 main의 3건과 구분한다. `out/develop-motion-20261017/`에 실행 로그와 정적 기준선 대조를 보존한다.
+import 승인 재실행 종료0, 일반 게이트는 단독·순차 실행 완료했다. capture/audit/bench/autoresolve는 일반 게이트와 분리하며 salvo_compare는 runs10이다. boundary의 develop 기준선은 기존 BattleRules.BP 1건이며 원본 main의 3건과 구분한다. `out/develop-motion-20261017/`에 실행 로그와 기준선 대조를 보존한다.
 
 최신 사용자 지시는 “테스트는 pc로만 합니다”다. 이번 완료 조건은 PC 일반/기동/지형 게이트·PC 화면·다른 모델 최종 검토이며 결과를 확인한 뒤 갱신한다. Android 빌드/서명·태블릿 실기는 실행하지 않으며 완료 대기 조건에도 넣지 않는다. 최신 HTML 브라우저 확인·장시간 성능은 미검증이다.
 
@@ -33,3 +33,5 @@ import 승인 재실행 종료0, 일반 게이트는 단독·순차 실행 중�
 - K3 영향 reference_motion_only는 종료0·PASS. 실제 선택 주유/서황의 감지점수48/16·센서55/29·EW7/1·사거리260/260 및 seed를 로그에 기록했다. 30/60fps×1/4배속 실제 교전과 VM/코어 이동 종료 경계를 재검증했다.
 - K3 PC 교전1600×900/1280×720은 각 종료0·PASS·실패0·active239·생존 슬롯 위치/yaw 최대변위0이다. 양측 실제 생존척수는 시작/끝14/16척으로 같았다. 이번 native 캡처에 격침이 발생했다고 주장하지 않는다. 격침 뒤 생존 슬롯 보존은 별도 행동 회귀로 구분한다.
 - 최종 기계 판정과 실패 이력은 [evidence/develop-fleet-motion-20261017](evidence/develop-fleet-motion-20261017)에 보존했다. PC PNG28장과 전체 로그/실행 runner는 worktree의 out/develop-motion-20261017/에 있다. 기본 기동20장과 최종 교전8장이며, 최초 교전 실패 이미지도 별도 폴더에 보존한다.
+
+독립 gpt-6-astra가 최종 코드/로그/PC28장을 검토해 PC범위 수용·수정요구0으로 판정했다. 627e40e를 develop에 커밋·origin/develop에 푸시하고 해시 일치를 확인했다. 완료 체크와 SESSION-HANDOFF는 후속 문서 커밋으로 기록한다. main·feature·원본 K3는 보존했다.
