@@ -17,6 +17,8 @@ var _start := Vector2.ZERO
 var _t := 0.0
 var _tip: Control = null
 var _fade: Tween
+var _tip_target: Control = null
+var _pinned := false   # 클릭으로 연 설명은 재클릭/바깥 클릭/Esc까지 유지
 
 func _init() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -30,7 +32,22 @@ func register(c: Control) -> void:
 func showing() -> bool:
 	return _tip != null
 
+func toggle(c: Control) -> void:
+	if _tip != null and _tip_target == c and _pinned:
+		hide_tip()
+		return
+	_btn = null
+	_open(c)
+	_pinned = _tip != null
+
 func _input(e: InputEvent) -> void:
+	if e is InputEventKey and e.pressed and e.keycode == KEY_ESCAPE and showing():
+		hide_tip()
+		get_viewport().set_input_as_handled()
+		return
+	if e is InputEventMouseButton and e.pressed and e.device != InputEvent.DEVICE_ID_EMULATION and _pinned:
+		if not _tip.get_global_rect().has_point(e.position) and (not is_instance_valid(_tip_target) or not _tip_target.get_global_rect().has_point(e.position)):
+			hide_tip()
 	if e is InputEventMouseButton and e.button_index == MOUSE_BUTTON_LEFT and e.device == InputEvent.DEVICE_ID_EMULATION:
 		if e.pressed:
 			_hide()
@@ -63,6 +80,7 @@ func _hit(p: Vector2) -> Control:
 	return null
 
 func _open(b: Control) -> void:
+	_hide()   # 교체할 때 기존 팝업 자식을 남기지 않는다
 	var tip: Control = b._make_custom_tooltip(b.tooltip_text) if b.has_method("_make_custom_tooltip") else null
 	if tip == null:
 		if b.tooltip_text.strip_edges() == "":
@@ -74,6 +92,7 @@ func _open(b: Control) -> void:
 		(b as BaseButton).disabled = true
 		(b as BaseButton).disabled = false
 	_tip = tip
+	_tip_target = b
 	add_child(tip)
 	tip.reset_size()
 	_place(tip, b.get_global_rect())
@@ -108,6 +127,12 @@ func hide_tip() -> void:
 	_hide()
 
 func _hide() -> void:
+	_pinned = false
+	_tip_target = null
+	if _fade:
+		_fade.kill()
+		_fade = null
 	if _tip:
+		remove_child(_tip)
 		_tip.queue_free()
 		_tip = null

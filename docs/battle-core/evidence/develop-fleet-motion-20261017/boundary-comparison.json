@@ -1,0 +1,22 @@
+{
+  "baselineCommit": "46e0533999ecf358012f5becd1f9b140d0e024db",
+  "method": "boundary.gd 동일 패턴/문자열 제거 규칙으로 HEAD와 worktree 소스 정적 대조; Godot 실행 baseline이라고 주장하지 않음",
+  "baseline": [
+    {
+      "file": "view/fleet_render/battle_source.gd",
+      "line": 163,
+      "pattern": "\\bBattleRules\\b",
+      "source": "var bp := float(BattleRules.BP)"
+    }
+  ],
+  "current": [
+    {
+      "file": "view/fleet_render/battle_source.gd",
+      "line": 219,
+      "pattern": "\\bBattleRules\\b",
+      "source": "var bp := float(BattleRules.BP)"
+    }
+  ],
+  "newViolations": [],
+  "removed": []
+}

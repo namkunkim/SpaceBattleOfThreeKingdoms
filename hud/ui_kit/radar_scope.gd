@@ -40,6 +40,36 @@ func _w2r(p: Vector2) -> Vector2:
 func _r2w(p: Vector2) -> Vector2:
 	return (p - _map().position) / _scale()
 
+func terrain_rect(z: Dictionary) -> Rect2:
+	var r: Array = z.rect
+	return Rect2(_w2r(Vector2(r[0], r[1])), Vector2(r[2], r[3]) * _scale()).intersection(_map())
+
+func _terrain() -> void:
+	for z in battle.presentation.src.terrain_zones():
+		var r := terrain_rect(z)
+		var st: Array = TacticalOverlay.TERRAIN_STYLE[z.type]
+		var col: Color = st[0]
+		draw_rect(r, Color(col, 0.22))
+		var outline := PackedVector2Array([r.position, Vector2(r.end.x, r.position.y), r.end, Vector2(r.position.x, r.end.y), r.position])
+		if st[2] > 0.0:
+			UiDraw.dashed_poly(self, outline, Color(col, 0.8), 1.0, 3.0 if z.type == "nebula" else 1.0, 2.0)
+		else:
+			draw_polyline(outline, Color(col, 0.8), 1.0)
+		if z.type == "debris":
+			for y in range(2, int(r.size.y), 4):
+				for x in range(2, int(r.size.x), 5):
+					draw_circle(r.position + Vector2(x, y), 0.7, Color(col, 0.65))
+		elif z.type == "planet_shadow":
+			for x in range(0, int(r.size.x), 5):
+				draw_line(r.position + Vector2(x, r.size.y), r.position + Vector2(minf(x + 4.0, r.size.x), 0), Color(col, 0.4), 1.0)
+
+func camera_outline() -> PackedVector2Array:
+	var vs: Vector2 = get_viewport_rect().size
+	var points := PackedVector2Array()
+	for p in [Vector2.ZERO, Vector2(vs.x, 0), vs, Vector2(0, vs.y)]:
+		points.append(_w2r(battle.s2w(p)))
+	return points
+
 func _draw() -> void:
 	if battle == null or battle.G.is_empty():
 		return
@@ -52,6 +82,18 @@ func _draw() -> void:
 		draw_line(Vector2(m.position.x + m.size.x * i / 4.0, m.position.y), Vector2(m.position.x + m.size.x * i / 4.0, m.end.y), Color(UiTheme.GOLD_LINE, 0.12), 1.0)
 	for i in range(1, 3):
 		draw_line(Vector2(m.position.x, m.position.y + m.size.y * i / 3.0), Vector2(m.end.x, m.position.y + m.size.y * i / 3.0), Color(UiTheme.GOLD_LINE, 0.12), 1.0)
+	_terrain()
+	for e in battle.presentation.src.escape_points():
+		var ep := _w2r(e.pos).clamp(m.position + Vector2(3, 3), m.end - Vector2(3, 3))
+		UiDraw.diamond(self, ep, 3.0, Color(UiTheme.GOLD_HI, 0.95), false)
+	for f in battle.fleets:
+		var route := PackedVector2Array()
+		for p in battle.presentation.src.fleet_route(f):
+			route.append(_w2r(p))
+		if route.size() > 1:
+			UiDraw.dashed_poly(self, route, Color(UiTheme.GOLD_HI, 0.7), 1.0, 3.0, 3.0)
+			for i in range(1, route.size()):
+				UiDraw.diamond(self, route[i], 2.0, Color(UiTheme.GOLD_HI, 0.85), false)
 	var pf = battle.flag(0)
 	if pf:
 		draw_arc(_w2r(pf.pos), battle.CMD_R * _scale(), 0.0, TAU, 48, Color(UiTheme.ALLY, 0.4), 1.0, true)
@@ -64,18 +106,12 @@ func _draw() -> void:
 		var col: Color = Color.WHITE if sel else Factions.of(fk).color
 		UiDraw.faction_glyph(self, p, 3.4 if not f.is_flag else 4.2, fk, col)
 		draw_line(p, p + Vector2(cos(f.heading), sin(f.heading)) * 8.0, col, 1.2, true)
-		if f.has_move and f.side == 0:
-			UiDraw.dashed_poly(self, PackedVector2Array([p, _w2r(f.move_to)]), Color(UiTheme.GOLD_HI, 0.7), 1.0, 3.0, 3.0)
-	# 현재 카메라 범위: 화면 네 모서리의 바깥 사각 틀
-	var vs: Vector2 = get_viewport_rect().size
-	var lo := Vector2(INF, INF)
-	var hi := Vector2(-INF, -INF)
-	for q in [battle.s2w(Vector2(0, 0)), battle.s2w(Vector2(vs.x, 0)), battle.s2w(vs), battle.s2w(Vector2(0, vs.y))]:
-		var rp := _w2r(q)
-		lo = lo.min(rp)
-		hi = hi.max(rp)
-	var frame := Rect2(lo, hi - lo).intersection(m)
-	draw_rect(frame, Color(UiTheme.GOLD_HI, 0.85), false, 1.4)
+	# 실제 주 화면의 바닥 투영 다각형을 전장 사각형으로 잘라 그린다.
+	var bounds := PackedVector2Array([m.position, Vector2(m.end.x, m.position.y), m.end, Vector2(m.position.x, m.end.y)])
+	for polygon in Geometry2D.intersect_polygons(camera_outline(), bounds):
+		var frame: PackedVector2Array = polygon
+		frame.append(frame[0])
+		draw_polyline(frame, Color(UiTheme.GOLD_HI, 0.85), 1.4, true)
 
 func _on_input(e: InputEvent) -> void:
 	if battle.G.state == "brief":

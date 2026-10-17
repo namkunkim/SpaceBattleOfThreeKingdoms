@@ -1,0 +1,167 @@
+{
+	"active_frames": 239,
+	"ally_final_ships": 14000,
+	"enemy_final_ships": 16000,
+	"failures": 0,
+	"fixture": {
+		"ally_detection_score": 48,
+		"ally_ew": 7,
+		"ally_id": 5,
+		"ally_initial_ships": 14000,
+		"ally_name": "주유",
+		"ally_pos": "(650.0, 450.0)",
+		"ally_range": 260.0,
+		"ally_sensor": 55,
+		"battle_seed": 2217001891,
+		"enemy_detection_score": 16,
+		"enemy_ew": 1,
+		"enemy_id": 10,
+		"enemy_initial_ships": 16000,
+		"enemy_name": "서황",
+		"enemy_pos": "(810.0, 450.0)",
+		"enemy_range": 260.0,
+		"enemy_sensor": 29
+	},
+	"input_isolated": true,
+	"max_position_drift": 0.0,
+	"max_yaw_drift": 0.0,
+	"mode": "core-combat",
+	"stages": [
+		{
+			"clock_s": 0.0,
+			"core_combat_active": false,
+			"fingerprint": "b09d012baba3ad1d605efab5fc38d0ea5b750efa289d6b236493170d44a61d6a",
+			"fixture_ok": true,
+			"fleet_pos": [
+				650.0,
+				450.0
+			],
+			"form_left_s": 0.0,
+			"form_to": "",
+			"heading": 0.0,
+			"living_slots": 12,
+			"max_slot_error": 0.0,
+			"max_yaw_error": 0.0,
+			"selected_count": 1,
+			"ship_pos": [
+				-52.2541656494141,
+				-0.170000001788139,
+				-36.2458343505859
+			],
+			"ship_yaw": -3.14159265358979,
+			"stage": "combat-00-start",
+			"strafe": false,
+			"terrain_effects": {
+				"arc": 0.0,
+				"conceal": 0,
+				"move": 1.0,
+				"names": "개활",
+				"range": 1.0,
+				"sensor": 0.0
+			},
+			"visual_formation": 5
+		},
+		{
+			"clock_s": 3.0,
+			"core_combat_active": true,
+			"fingerprint": "94fe1181b8865c6d02a61d5aae6b4e67f1c9e9b773128e2066dec65ba674e32d",
+			"fixture_ok": true,
+			"fleet_pos": [
+				650.0,
+				450.0
+			],
+			"form_left_s": 0.0,
+			"form_to": "",
+			"heading": 0.0,
+			"living_slots": 12,
+			"max_slot_error": 0.0,
+			"max_yaw_error": 0.0,
+			"selected_count": 1,
+			"ship_pos": [
+				-52.2541656494141,
+				-0.170000001788139,
+				-36.2458343505859
+			],
+			"ship_yaw": -3.14159265358979,
+			"stage": "combat-03-seconds",
+			"strafe": false,
+			"terrain_effects": {
+				"arc": 0.0,
+				"conceal": 0,
+				"move": 1.0,
+				"names": "개활",
+				"range": 1.0,
+				"sensor": 0.0
+			},
+			"visual_formation": 5
+		},
+		{
+			"clock_s": 6.0,
+			"core_combat_active": true,
+			"fingerprint": "7a11f8da91cb6ad91ae04e44c96ed55d28c3dd52e0af14eb14d8a9e948723e26",
+			"fixture_ok": true,
+			"fleet_pos": [
+				650.0,
+				450.0
+			],
+			"form_left_s": 0.0,
+			"form_to": "",
+			"heading": 0.0,
+			"living_slots": 12,
+			"max_slot_error": 0.0,
+			"max_yaw_error": 0.0,
+			"selected_count": 1,
+			"ship_pos": [
+				-52.2541656494141,
+				-0.170000001788139,
+				-36.2458343505859
+			],
+			"ship_yaw": -3.14159265358979,
+			"stage": "combat-06-seconds",
+			"strafe": false,
+			"terrain_effects": {
+				"arc": 0.0,
+				"conceal": 0,
+				"move": 1.0,
+				"names": "개활",
+				"range": 1.0,
+				"sensor": 0.0
+			},
+			"visual_formation": 5
+		},
+		{
+			"clock_s": 12.0,
+			"core_combat_active": true,
+			"fingerprint": "197fae52cf50407a42d55e86ee549fa26dc81d6f854232bf20b2db53c605cf91",
+			"fixture_ok": true,
+			"fleet_pos": [
+				650.0,
+				450.0
+			],
+			"form_left_s": 0.0,
+			"form_to": "",
+			"heading": 0.0,
+			"living_slots": 12,
+			"max_slot_error": 0.0,
+			"max_yaw_error": 0.0,
+			"selected_count": 1,
+			"ship_pos": [
+				-52.2541656494141,
+				-0.170000001788139,
+				-36.2458343505859
+			],
+			"ship_yaw": -3.14159265358979,
+			"stage": "combat-12-seconds",
+			"strafe": false,
+			"terrain_effects": {
+				"arc": 0.0,
+				"conceal": 0,
+				"move": 1.0,
+				"names": "개활",
+				"range": 1.0,
+				"sensor": 0.0
+			},
+			"visual_formation": 5
+		}
+	]
+}

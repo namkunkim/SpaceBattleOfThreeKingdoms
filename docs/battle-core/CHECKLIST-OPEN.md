@@ -196,3 +196,12 @@ M3 리뷰(2026-10-04): `REVIEW-M3.md`. 수용. 후속은 방향 배분 잔여 �
   - 그룹 특수기술: 리더(전대장·제독)들의 기술 중 3개만 제공한다. 소속이 4개 이상이면 리더 능력치 높은 순으로 3개를 고른다
   - 결정할 것: 수치 식 확정(통솔+지력 / 통솔+무력은 둘 중 큰 값인지, 병종·역할별 선택인지), 동점 처리, 교체 시 UI 알림·특수기술 쿨다운 승계, 그룹 기술과 편성별 슬롯(위)의 중복·합산 관계
 - [ ] **전투 진입 시 초기 배치 선택(UI)** — 전투 화면에 들어갈 때 함대·전대 배치를 자동 배치 / 사용자 배치 중 고르게 한다. 결정할 것: 사용자 배치 허용 영역(아군 진입 구역), 배치 확정 버튼·제한 시간, 자동 배치 기준(진형·역할), 결정론 재생(`BattleSim.replay`)에 배치 입력을 기록하는 방법, 태블릿 터치 배치 조작
+
+## develop 기동·지형 선별 이식 (2026-10-17)
+
+- [x] 삭제된 renderer API를 참조하던 fleet_follow 복구 및 reference_motion_only/fixture 이식.
+- [x] 일반35종:34PASS, boundary 기존1건/신규0. salvo_compare runs10 종료0. fixture K3 영향 회귀 재통과.
+- [x] PC1600×900/1280×720 기동 각10단계 및 교전 각4화면·실패0. 주유/서황 자연 탐지·자동 사격·생존·drift0 확인.
+- [ ] 독립5-b 최종 판정 후 develop 선별 커밋·origin/develop 일치 확인.
+- 최신 사용자 지시로 테스트는 PC만. Android 빌드/태블릿은 이번 완료 조건에서 제외한다. main 병합 거부 및 feature/worktree/원본K3 보존 유지.
+- 상세: PLAN-DEVELOP-FLEET-MOTION.md, DEVELOP-FLEET-MOTION-NOTES.md, REVIEW-DEVELOP-FLEET-MOTION.md. 최초 K1/K2 fixture 실패·기존 boundary·종료 리소스 경고를 보존한다.

@@ -29,6 +29,7 @@ func _ground_ring(c: Vector2, r: float, n := 72, a0 := 0.0, a1 := TAU) -> Packed
 func _draw() -> void:
 	if battle == null or battle.G.is_empty() or battle.G.state == "brief":
 		return
+	_terrain()
 	var pf = battle.flag(0)
 	var ef = battle.flag(1)
 	if ef:
@@ -90,6 +91,48 @@ func _draw() -> void:
 		draw_rect(r, Color(UiTheme.GOLD_HI, 0.06))
 		draw_rect(r, Color(UiTheme.GOLD_HI, 0.85), false, 1.0)
 
+const TERRAIN_STYLE := {
+	"nebula": [Color(0.75, 0.45, 0.95), 14.0, 8.0, 0.0, 1],
+	"debris": [Color(0.95, 0.65, 0.3), 4.0, 6.0, 40.0, 1],
+	"planet_shadow": [Color(0.45, 0.6, 0.95), 0.0, 0.0, 55.0, -1],
+}
+
+# 표시할 구역 목록(검증용 순수 함수): 이동 비용이 있는 구역만. [{id, type, name, rect, mul}]
+func terrain_zones() -> Array:
+	return battle.presentation.src.terrain_zones()
+
+func _terrain() -> void:
+	for z in terrain_zones():
+		var st: Array = TERRAIN_STYLE[z.type]
+		var col: Color = st[0]
+		var r: Array = z.rect
+		var quad := PackedVector2Array()
+		for c in [Vector2(r[0], r[1]), Vector2(r[0] + r[2], r[1]), Vector2(r[0] + r[2], r[1] + r[3]), Vector2(r[0], r[1] + r[3])]:
+			quad.append(battle.w2s(c))
+		draw_colored_polygon(quad, Color(col, 0.10))
+		var gap: float = st[3]
+		if gap > 0.0:   # 빗금: 사각형 안의 대각선(월드 좌표 → 화면)
+			var h := PackedVector2Array()
+			var k: float = -r[3]
+			while k < r[2]:
+				var a: Vector2 = Vector2(maxf(k, 0.0), maxf(-k, 0.0))   # 대각선이 사각형과 만나는 양 끝(+방향: 좌상→우하)
+				var len: float = minf(r[2] - a.x, r[3] - a.y)
+				if len > 0.0:
+					var b: Vector2 = a + Vector2(len, len)
+					var pa: Vector2 = Vector2(r[0] + a.x, r[1] + a.y) if st[4] > 0 else Vector2(r[0] + r[2] - a.x, r[1] + a.y)
+					var pb: Vector2 = Vector2(r[0] + b.x, r[1] + b.y) if st[4] > 0 else Vector2(r[0] + r[2] - b.x, r[1] + b.y)
+					h.append(battle.w2s(pa))
+					h.append(battle.w2s(pb))
+				k += gap
+			draw_multiline(h, Color(col, 0.22), 1.0)
+		quad.append(quad[0])
+		if st[2] > 0.0:
+			UiDraw.dashed_poly(self, quad, Color(col, 0.75), 1.8, st[1], st[2])
+		else:
+			draw_polyline(quad, Color(col, 0.75), 2.0, true)
+		var cen: Vector2 = battle.w2s(Vector2(r[0] + r[2] * 0.5, r[1] + r[3] * 0.5))
+		UiDraw.text(self, cen, "%s 이동비용 ×%.2f" % [z.name, z.mul], "medium", 13, Color(col.lightened(0.45), 0.95), HORIZONTAL_ALIGNMENT_CENTER, -1, 4)
+
 # 함대별 적 탐지 범위: 센서 점수에서 "확인"·"추정" 기준 점수를 뺀 만큼의 거리(적 전자전·지형 은폐가 없을 때). 안쪽 실선 = 확인, 바깥 점선 = 추정.
 # 적에게 전자전이나 은폐가 있으면 실제 범위는 이보다 줄어든다.
 func _detect_rings() -> void:
@@ -134,7 +177,12 @@ func _orders(f) -> void:
 		_reticle(b, Color(UiTheme.FOE, 0.9))
 	elif f.has_move:
 		var b: Vector2 = battle.w2s(f.move_to)
-		UiDraw.dashed_poly(self, PackedVector2Array([a, b]), Color(UiTheme.GOLD_HI, 0.8), 1.6, 9.0, 6.0, -t * 30.0)
+		var route := PackedVector2Array()
+		for p in battle.presentation.src.fleet_route(f):
+			route.append(battle.w2s(p))
+		UiDraw.dashed_poly(self, route, Color(UiTheme.GOLD_HI, 0.8), 1.6, 9.0, 6.0, -t * 30.0)
+		for i in range(2, route.size()):
+			UiDraw.diamond(self, route[i], 4.0, Color(UiTheme.GOLD_HI, 0.75), false)
 		var dir: Vector2 = (f.move_to - f.pos).normalized()
 		var tip: Vector2 = battle.w2s(f.move_to + dir * 46.0)
 		var l: Vector2 = battle.w2s(f.move_to + dir * 22.0 + dir.orthogonal() * 14.0)

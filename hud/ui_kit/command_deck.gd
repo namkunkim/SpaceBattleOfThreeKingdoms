@@ -30,7 +30,7 @@ const CMD_INFO := {
 # 탭 3개(Q22). 진형 탭은 코어 진형(M5·M10)이 붙기 전까지 방어진형 하나뿐이다.
 const TABS := [["태세", ["stop", "charge", "rally", "retreat", "all"]], ["진형", ["def"]], ["무장", ["missile", "fighter"]]]
 const INFO_L1 := 88.0
-const INFO_L2 := 158.0
+const INFO_L2 := 210.0   # 기존 편성·칩 아래 공개 지형 효과 두 줄
 
 var battle: Node
 var src: BattleSource
@@ -49,6 +49,7 @@ var speed_btns: Array = []
 var pause_btn: Control
 var skip_btn: Control
 var pacing: Node
+var terrain_info: Button
 var hold_tip: HoldTip
 var undo_bar: Control
 var decision_card: Control
@@ -156,6 +157,7 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 	for c in cmd_buttons:
 		hold_tip.register(c)
 	hold_tip.register(multi_btn)
+	hold_tip.register(terrain_info)
 	screens = Screens.build_all(self)
 	_build_sound()
 	battle.battle_event.connect(_on_event)
@@ -589,6 +591,14 @@ func _build_radar() -> void:
 	radar.setup(battle)
 	_anchor(radar, Control.PRESET_BOTTOM_LEFT, Vector2(RadarScope.W, RadarScope.H), Vector2(14, -14))
 
+	terrain_info = W.IconButton.new("", "지형")
+	terrain_info.tooltip_text = src.terrain_legend()
+	hud.add_child(terrain_info)
+	_anchor(terrain_info, Control.PRESET_BOTTOM_LEFT, Vector2(64, 52), Vector2(14, -RadarScope.H - 18))
+	terrain_info.pressed.connect(func():
+		terrain_info.tooltip_text = src.terrain_legend()
+		hold_tip.toggle(terrain_info))
+
 # ------------------------------------------------------------ 하단 정보 패널
 func _build_info() -> void:
 	info = W.DrawPanel.new(_draw_info, UiTheme.ornate())
@@ -689,6 +699,11 @@ func _info_single(c: Control, f) -> void:
 		c.draw_rect(r, Color(ch[1], 0.45), false, 1.0)
 		UiDraw.text(c, r.position + Vector2(8, 14), ch[0], "medium", 11, ch[1])
 		chx += tw + 6.0
+
+	if not foe:
+		var te := src.terrain_effects(f.pos, f.fire_t.pos if f.fire_t and not f.fire_t.dead else null)
+		UiDraw.text(c, Vector2(x, chy + 42), "공개 지형 이동비용 ×%.2f · 센서 %+.0f%% · 은폐 +%d" % [te.move, te.sensor, te.conceal], "regular", 11, UiTheme.INK_2)
+		UiDraw.text(c, Vector2(x, chy + 60), "사격선 사거리 ×%.2f · 사격각 %+.0f°" % [te.range, te.arc] if f.fire_t and not f.fire_t.dead else "사격선 효과: 공개 교전 표적이 있을 때 표시", "regular", 11, UiTheme.INK_3)
 
 # 접기·펼치기 표시(패널을 탭하면 바뀐다)
 func _chevron(c: Control) -> void:

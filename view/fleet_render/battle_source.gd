@@ -36,7 +36,7 @@ func _sq(f) -> Dictionary:
 		"defense": f.defense, "charge_t": f.charge_t, "in_cmd": f.in_cmd,
 		"missile_cd": f.missile_cd, "fighter_cd": f.fighter_cd,
 		"speech": f.speech, "speech_t": f.speech_t,
-		"has_move": f.has_move, "move_to": f.move_to, "lv": f.lv, "range": f.range_r,
+		"has_move": f.has_move, "move_to": f.move_to, "route": f.route.duplicate(), "strafe": f.strafe, "lv": f.lv, "range": f.range_r,
 			"contact": f.contact,
 	}
 
@@ -81,6 +81,62 @@ func world_size() -> Vector2:
 
 func unit_scale() -> float:
 	return battle.S
+
+# 공개 정적 지형만 공유한다. 임시 화공 구역은 미탐지 점화 위치를 누설할 수 있다.
+func terrain_zones() -> Array:
+	var out := []
+	if battle.sim.terrain == null:
+		return out
+	for z in battle.sim.terrain.zones:
+		if TacticalOverlay.TERRAIN_STYLE.has(z.get("type", "")) and z.has("rect"):
+			var item: Dictionary = z.duplicate(true)
+			item["mul"] = float(z.get("move_cost_bp", 10000)) / 10000.0
+			out.append(item)
+	return out
+
+func terrain_effects(p: Vector2, to = null) -> Dictionary:
+	var zones := terrain_zones()
+	var public_terrain := BattleTerrain.new({"zones": zones})
+	var names := PackedStringArray()
+	for z in zones:
+		if public_terrain._has(z, p):
+			names.append(z.name)
+	var lim: Array = combat.get("detection", {}).get("sensor_bp_clamp", [-6000, 3000])
+	return {"names": " + ".join(names) if not names.is_empty() else "개활",
+		"move": public_terrain.move_cost_bp(p) / 10000.0,
+		"sensor": public_terrain.sensor_bp(p, int(lim[0]), int(lim[1])) / 100.0,
+		"conceal": public_terrain.conceal(p),
+		"range": public_terrain.range_mul(p, to) if to != null else 1.0,
+		"arc": public_terrain.arc_delta(p, to) if to != null else 0.0}
+
+func terrain_legend() -> String:
+	var lines := PackedStringArray(["공개 지형 · 이동은 통과 가능"])
+	for z in terrain_zones():
+		lines.append("%s\n  이동비용 ×%.2f · 센서 %+.0f%% · 은폐 +%d\n  사격선 사거리 ×%.2f · 사격각 %+.0f°" %
+			[z.name, z.mul, z.sensor_bp / 100.0, z.conceal, z.range_bp / 10000.0, z.arc_deg])
+	var lim: Array = combat.get("detection", {}).get("sensor_bp_clamp", [-6000, 3000])
+	lines.append("겹침: 이동 최댓값 · 센서 합(%+.0f~%+.0f%%) · 은폐 합\n사격선: 지나는 구역의 사거리 곱 · 사격각 합" % [lim[0] / 100.0, lim[1] / 100.0])
+	return "\n".join(lines)
+
+func escape_points() -> Array:
+	var out := []
+	var keys: Array = combat.get("victory", {}).get("exit_key_by_side", [])
+	for side in [0, 1]:
+		var key: String = keys[side] if side < keys.size() else ""
+		var e: Dictionary = battle.sim.rs.scenario.get("escape_points", {}).get(key, {})
+		if e.has("position"):
+			out.append({"side": side, "pos": Vector2(e.position[0], e.position[1])})
+	return out
+
+func fleet_route(f) -> PackedVector2Array:
+	var points := PackedVector2Array()
+	if f.side != 0 or f.contact != "" or f.dead or not f.has_move:
+		return points
+	points.append(f.pos)
+	points.append(f.move_to)
+	for p in f.route:
+		points.append(p)
+	return points
 
 # ------------------------------------------------------------ 시간 진행(Q52)
 # 교전 거리대: 주포·미사일·함재기 중 가장 긴 사거리에 여유를 더한 거리.

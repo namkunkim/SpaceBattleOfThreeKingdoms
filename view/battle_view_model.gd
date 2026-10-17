@@ -29,6 +29,8 @@ class FleetView:
 	var target: FleetView = null
 	var fire_t: FleetView = null
 	var has_move := false
+	var route: Array[Vector2] = []
+	var strafe := false
 	var move_to := Vector2.ZERO
 	var missile_cd := 0.0
 	var fighter_cd := 0.0
@@ -142,6 +144,8 @@ func apply(proj: Dictionary) -> Array[FleetView]:
 		elif advanced:
 			f.ppos = f.tpos
 			f.pheading = f.theading
+		f.form_id = s.get("formation", s.form_id)
+		f.form.assign(s.form)
 		f.tpos = s.pos
 		f.theading = s.heading
 		f.ships = s.ships_milli / 1000.0
@@ -149,6 +153,8 @@ func apply(proj: Dictionary) -> Array[FleetView]:
 		f.lv = s.lv
 		f.has_move = s.has_move
 		f.move_to = s.move_to
+		f.route.assign(s.get("route", []))
+		f.strafe = s.get("strafe", false)
 		f.missile_cd = s.missile_cd_s
 		f.fighter_cd = s.fighter_cd_s
 		f.defense = s.defense

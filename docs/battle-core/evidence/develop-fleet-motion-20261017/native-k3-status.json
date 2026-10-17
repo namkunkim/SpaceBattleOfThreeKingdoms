@@ -1,0 +1,24 @@
+[
+  {
+    "name": "combat-1600-k3",
+    "exit": 0,
+    "timedOut": false,
+    "seconds": 8.3,
+    "marks": [
+      "REFERENCE_COMBAT_CAPTURE_PASS fleet=주유 active_frames=239 peak=(0.0, 0.0)",
+      "WARNING: 48 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+      "ERROR: 17 resources still in use at exit (run with --verbose for details)."
+    ]
+  },
+  {
+    "name": "combat-1280-k3",
+    "exit": 0,
+    "timedOut": false,
+    "seconds": 7,
+    "marks": [
+      "REFERENCE_COMBAT_CAPTURE_PASS fleet=주유 active_frames=239 peak=(0.0, 0.0)",
+      "WARNING: 48 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+      "ERROR: 17 resources still in use at exit (run with --verbose for details)."
+    ]
+  }
+]

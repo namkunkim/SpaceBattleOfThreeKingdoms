@@ -1,0 +1,350 @@
+{
+	"failures": 0,
+	"input_isolated": true,
+	"stages": [
+		{
+			"clock_s": 0.0,
+			"core_combat_active": false,
+			"fingerprint": "cada4ef98e555f7d690232992c55cae6f461a93687d2a0e2e123938c3a377227",
+			"fixture_ok": true,
+			"fleet_pos": [
+				300.0,
+				340.0
+			],
+			"form_left_s": 0.0,
+			"form_to": "",
+			"heading": 0.0,
+			"living_slots": 12,
+			"max_slot_error": 0.0,
+			"max_yaw_error": 0.0,
+			"selected_count": 1,
+			"ship_pos": [
+				-70.1903228759766,
+				-0.170000001788139,
+				-40.873722076416
+			],
+			"ship_yaw": -3.14159265358979,
+			"stage": "01-start",
+			"strafe": false,
+			"terrain_effects": {
+				"arc": 0.0,
+				"conceal": 0,
+				"move": 1.0,
+				"names": "개활",
+				"range": 1.0,
+				"sensor": 0.0
+			},
+			"visual_formation": 4
+		},
+		{
+			"clock_s": 1.5,
+			"core_combat_active": false,
+			"fingerprint": "a36d92cc6e550ccca3c6723c57e5a11cf726d751e68d1d5bcc2ffdf982ad84bc",
+			"fixture_ok": true,
+			"fleet_pos": [
+				506.696990966797,
+				340.0
+			],
+			"form_left_s": 0.0,
+			"form_to": "",
+			"heading": 0.0,
+			"living_slots": 12,
+			"max_slot_error": 0.000003814697265625,
+			"max_yaw_error": 0.0,
+			"selected_count": 1,
+			"ship_pos": [
+				-59.8554725646973,
+				-0.170000001788139,
+				-40.873722076416
+			],
+			"ship_yaw": -3.14159265358979,
+			"stage": "02-straight",
+			"strafe": false,
+			"terrain_effects": {
+				"arc": 0.0,
+				"conceal": 0,
+				"move": 1.0,
+				"names": "개활",
+				"range": 1.0,
+				"sensor": 0.0
+			},
+			"visual_formation": 4
+		},
+		{
+			"clock_s": 2.5,
+			"core_combat_active": false,
+			"fingerprint": "fee4513d4765fa460d8eb2aff208e718860284814a420413e49ec573b4cdcb4b",
+			"fixture_ok": true,
+			"fleet_pos": [
+				538.422973632813,
+				429.088012695313
+			],
+			"form_left_s": 0.0,
+			"form_to": "",
+			"heading": 1.778,
+			"living_slots": 12,
+			"max_slot_error": 0.455018430948257,
+			"max_yaw_error": 0.451823443174362,
+			"selected_count": 1,
+			"ship_pos": [
+				-57.7875366210938,
+				-0.170000001788139,
+				-36.2614250183105
+			],
+			"ship_yaw": -4.46776921325007,
+			"stage": "03-turn90",
+			"strafe": false,
+			"terrain_effects": {
+				"arc": 0.0,
+				"conceal": 0,
+				"move": 1.0,
+				"names": "개활",
+				"range": 1.0,
+				"sensor": 0.0
+			},
+			"visual_formation": 4
+		},
+		{
+			"clock_s": 7.5,
+			"core_combat_active": false,
+			"fingerprint": "3b3f63171453a5577863b20a596053421ab7aec184b2c9eac2a6bdd77bf743a7",
+			"fixture_ok": true,
+			"fleet_pos": [
+				535.182983398438,
+				444.501007080078
+			],
+			"form_left_s": 0.0,
+			"form_to": "",
+			"heading": 1.778,
+			"living_slots": 12,
+			"max_slot_error": 0.000951642752625048,
+			"max_yaw_error": 0.00149034219793975,
+			"selected_count": 1,
+			"ship_pos": [
+				-57.8362083435059,
+				-0.170000001788139,
+				-35.3845443725586
+			],
+			"ship_yaw": -4.91810231137116,
+			"stage": "04-settled",
+			"strafe": false,
+			"terrain_effects": {
+				"arc": 0.0,
+				"conceal": 0,
+				"move": 1.0,
+				"names": "개활",
+				"range": 1.0,
+				"sensor": 0.0
+			},
+			"visual_formation": 4
+		},
+		{
+			"clock_s": 9.5,
+			"core_combat_active": false,
+			"fingerprint": "3e105f9f127ee6cf4998204c10a66067bf3c9440015db06a7d6ced729e5129e0",
+			"fixture_ok": true,
+			"fleet_pos": [
+				535.182983398438,
+				444.501007080078
+			],
+			"form_left_s": 3.0,
+			"form_to": "FRM-02",
+			"heading": 1.778,
+			"living_slots": 12,
+			"max_slot_error": 0.000951642752625048,
+			"max_yaw_error": 0.00149034219793975,
+			"selected_count": 1,
+			"ship_pos": [
+				-57.8362083435059,
+				-0.170000001788139,
+				-35.3845443725586
+			],
+			"ship_yaw": -4.91810231137116,
+			"stage": "05-formation-mid",
+			"strafe": false,
+			"terrain_effects": {
+				"arc": 0.0,
+				"conceal": 0,
+				"move": 1.0,
+				"names": "개활",
+				"range": 1.0,
+				"sensor": 0.0
+			},
+			"visual_formation": 4
+		},
+		{
+			"clock_s": 10.5,
+			"core_combat_active": false,
+			"fingerprint": "5fa45f968586220a7d3589254eca69cb4e39f3fd14c08556a07140e74a97a2df",
+			"fixture_ok": true,
+			"fleet_pos": [
+				535.182983398438,
+				444.501007080078
+			],
+			"form_left_s": 0.0,
+			"form_to": "",
+			"heading": 1.778,
+			"living_slots": 12,
+			"max_slot_error": 0.000951642752625048,
+			"max_yaw_error": 0.00149034219793975,
+			"selected_count": 1,
+			"ship_pos": [
+				-57.8362083435059,
+				-0.170000001788139,
+				-35.3845443725586
+			],
+			"ship_yaw": -4.91810231137116,
+			"stage": "06-formation-cancel",
+			"strafe": false,
+			"terrain_effects": {
+				"arc": 0.0,
+				"conceal": 0,
+				"move": 1.0,
+				"names": "개활",
+				"range": 1.0,
+				"sensor": 0.0
+			},
+			"visual_formation": 4
+		},
+		{
+			"clock_s": 12.0,
+			"core_combat_active": false,
+			"fingerprint": "66857ede36440590dcf889ab897fbcbb165bfb160d94dba6ff05e610c6de0547",
+			"fixture_ok": true,
+			"fleet_pos": [
+				562.398986816406,
+				315.028991699219
+			],
+			"form_left_s": 0.0,
+			"form_to": "",
+			"heading": 1.778,
+			"living_slots": 12,
+			"max_slot_error": 0.0000161843890964519,
+			"max_yaw_error": 0.0000272965698968619,
+			"selected_count": 1,
+			"ship_pos": [
+				-56.4751777648926,
+				-0.170000001788139,
+				-41.8579330444336
+			],
+			"ship_yaw": -4.9195653570199,
+			"stage": "07-strafe-back",
+			"strafe": true,
+			"terrain_effects": {
+				"arc": 0.0,
+				"conceal": 0,
+				"move": 1.0,
+				"names": "개활",
+				"range": 1.0,
+				"sensor": 0.0
+			},
+			"visual_formation": 4
+		},
+		{
+			"clock_s": 24.0,
+			"core_combat_active": false,
+			"fingerprint": "0fe5b6319c30287c9c243be7c78b2da8e11f49d72b0411e34af5f3d3e1c1f3e4",
+			"fixture_ok": true,
+			"fleet_pos": [
+				564.343017578125,
+				305.781005859375
+			],
+			"form_left_s": 0.0,
+			"form_to": "",
+			"heading": -1.363,
+			"living_slots": 12,
+			"max_slot_error": 0.000989485648460686,
+			"max_yaw_error": 0.00133304984774441,
+			"selected_count": 1,
+			"ship_pos": [
+				-57.1878204345703,
+				-0.170000001788139,
+				-42.1021575927734
+			],
+			"ship_yaw": -1.77992570348348,
+			"stage": "08-turn180",
+			"strafe": false,
+			"terrain_effects": {
+				"arc": 0.0,
+				"conceal": 0,
+				"move": 1.0,
+				"names": "개활",
+				"range": 1.0,
+				"sensor": 0.0
+			},
+			"visual_formation": 4
+		},
+		{
+			"clock_s": 24.0,
+			"core_combat_active": false,
+			"fingerprint": "6926eeaa4f5a2f0cbf1b150393b2d3a7fda59e0ff1435347e893255e148dff07",
+			"fixture_ok": true,
+			"fleet_pos": [
+				743.75,
+				166.111114501953
+			],
+			"form_left_s": 0.0,
+			"form_to": "",
+			"heading": 0.0,
+			"living_slots": 12,
+			"max_slot_error": 0.0,
+			"max_yaw_error": 0.0,
+			"selected_count": 1,
+			"ship_pos": [
+				-48.0028228759766,
+				-0.170000001788139,
+				-49.5681648254395
+			],
+			"ship_yaw": -3.14159265358979,
+			"stage": "09-terrain-route-info",
+			"strafe": false,
+			"terrain_effects": {
+				"arc": 0.0,
+				"conceal": 11,
+				"move": 1.5385,
+				"names": "파쇄 잔해대 + 적운 성운",
+				"range": 1.0,
+				"sensor": -25.0
+			},
+			"visual_formation": 4
+		},
+		{
+			"clock_s": 24.0,
+			"core_combat_active": false,
+			"fingerprint": "6926eeaa4f5a2f0cbf1b150393b2d3a7fda59e0ff1435347e893255e148dff07",
+			"fixture_ok": true,
+			"fleet_pos": [
+				743.75,
+				166.111114501953
+			],
+			"form_left_s": 0.0,
+			"form_to": "",
+			"heading": 0.0,
+			"living_slots": 12,
+			"max_slot_error": 0.0,
+			"max_yaw_error": 0.0,
+			"selected_count": 1,
+			"ship_pos": [
+				-48.0028228759766,
+				-0.170000001788139,
+				-49.5681648254395
+			],
+			"ship_yaw": -3.14159265358979,
+			"stage": "10-terrain-legend",
+			"strafe": false,
+			"terrain_effects": {
+				"arc": 0.0,
+				"conceal": 11,
+				"move": 1.5385,
+				"names": "파쇄 잔해대 + 적운 성운",
+				"range": 1.0,
+				"sensor": -25.0
+			},
+			"visual_formation": 4
+		}
+	],
+	"viewport": [
+		1280,
+		720
+	]
+}
