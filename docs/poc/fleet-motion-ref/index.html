@@ -1,0 +1,1083 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>함대 기동 PoC</title>
+<style>
+:root{--bg:#05070d;--panel:#0d1424eb;--line:#2a3b5c;--text:#d8e2f2;--dim:#8592ab;--ally:#4fc3ff;--enemy:#ff6b5e;--accent:#7cf0c8;--group:#c7a6ff}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:14px/1.4 system-ui,"Malgun Gothic",sans-serif;overflow:hidden}
+canvas{display:block;touch-action:none}
+#bar{position:fixed;left:0;right:0;bottom:0;display:flex;flex-wrap:wrap;gap:6px 14px;padding:8px 16px calc(8px + env(safe-area-inset-bottom));background:var(--panel);border-top:1px solid var(--line)}
+.grp{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.lbl{color:var(--dim);font-size:12px;margin-right:2px}
+button{min-height:40px;min-width:44px;padding:0 10px;border:1px solid var(--line);border-radius:6px;background:#15203a;color:var(--text);font:inherit;cursor:pointer}
+button.on{background:#1d4a66;border-color:var(--ally)}
+button:disabled{opacity:.35;cursor:default}
+#log{position:fixed;left:16px;top:12px;pointer-events:none;font-size:13px;max-width:60vw}
+#log div{background:var(--panel);border-left:3px solid var(--accent);padding:4px 8px;margin-bottom:4px;transition:opacity .6s}
+#help{position:fixed;right:16px;top:12px;width:330px;max-width:calc(100vw - 32px);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px 12px;font-size:12px;color:var(--dim)}
+#help b{color:var(--text)}
+#help p{margin:4px 0}
+#menu{position:fixed;display:none;z-index:10;min-width:200px;background:#0d1424f5;border:1px solid var(--group);border-radius:8px;padding:6px 8px;box-shadow:0 6px 24px #0008}
+#menu .head{font-weight:600;color:var(--ally);padding:2px 2px 6px;border-bottom:1px solid var(--line);margin-bottom:4px}
+#menu .row{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin:4px 0}
+#menu .lbl{min-width:30px}
+#menu button{min-height:34px;padding:0 9px}
+#test{position:fixed;left:50%;top:12px;transform:translateX(-50%);padding:6px 12px;border-radius:6px;font-weight:600;display:none;white-space:pre;font-size:12px}
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+<div id="log"></div>
+<div id="help">
+  <p><b>아군</b> 유비·관우·장비·조운·마초·황충 함대 · <b>적</b> 조조·장료·악진·우금·장합·서황 함대(각 함선 100척, 소집단 없이 한 진형)</p>
+  <p><b>왼쪽 클릭</b> 선택(묶음이면 묶음 전체) · <b>더블클릭</b> 그 함대만 · <b>Shift·Ctrl+클릭</b> 추가·빼기 · 빈 곳 클릭 해제</p>
+  <p><b>왼쪽 끌기</b> 상자 선택. 묶음이 통째로 들어가면 묶음, 일부만 들어가면 그 함대</p>
+  <p><b>오른쪽 클릭</b> 이동 · <b>오른쪽 끌기</b> 이동 + 도착 방향. 묶음은 상대 위치를 유지해 함께 움직이고 동시에 도착</p>
+  <p><b>아군 위 오른쪽 클릭</b> 메뉴: 진형 · 후퇴 · 정지 · 선택 묶기 · 묶음 해제 · 그 함대만 선택</p>
+  <p><b>진형</b> 함대를 고르면 그 함대만 · 묶음을 고르면 묶음 배치를 그 진형 모양으로 바꾸고 안의 모든 함대 진형도 같이 맞춘다(안쪽 묶음 포함)</p>
+  <p><b>제자리 반전</b>(기본 켜짐) 90°보다 크게 방향을 바꾸면 함대를 빙 돌리지 않는다. 함선은 자리를 지킨 채 1초 동안 제자리에서 돌아서고, 묶음도 함대 자리를 바꾸지 않는다</p>
+  <p><b>가시 범위</b> 진형 가장 바깥 함선들에서 250까지. 정찰함(흰 마름모)이 살아 있으면 레이더 450을 같은 방식으로 적용(조운·마초, 적 장료·서황). 선택하면 범위가 옅게 보인다(레이더는 청록)</p>
+  <p><b>접적 이동</b> 가시 범위 안에 적 함대가 보이면 각 함선은 적 함대를 향하고, 진형은 돌리지 않은 채 이동만 한다(적 쪽 ±45° 밖은 60% 속도). 도착해도 방향을 다시 맞추지 않는다. 안 보이면 평소처럼 이동. 사격도 보이는 적에게만</p>
+  <p><b>개별 명령</b> 묶음 안의 함대에 따로 명령하면 그 함대는 묶음에서 빠진다</p>
+  <p><b>터치</b> 탭 선택·이동 · 끌기 방향 이동(선택이 없거나 아군에서 시작하면 상자 선택) · 길게 누르기 메뉴</p>
+  <p><b>단축키(선택)</b> 1~6·0 선택 · Q~T 진형 · B 후퇴 · S 정지 · G 묶기 · U 해제 · Esc</p>
+  <p><b>교전</b>(기본 꺼짐, 하단 「교전」으로 켬) 사거리 안, 함수 좌우 70° 안의 가장 가까운 적에게 자동 사격. 적 측면·후방(100° 밖)은 피해 ×1.5. 격침 자리는 비워 둔다</p>
+</div>
+<div id="test"></div>
+<div id="menu"></div>
+<div id="bar">
+  <div class="grp"><button data-cmd="restart">재시작</button><button data-opt="combat">교전</button><button data-opt="flip" class="on">제자리 반전</button></div>
+  <div class="grp"><span class="lbl">표시</span><button data-opt="preview" class="on">도착 미리보기</button><button data-opt="stretch" class="on">이동 늘림</button><button data-opt="rings">윤곽 항상</button><button data-opt="help" class="on">도움말</button></div>
+</div>
+<script>
+'use strict';
+// 월드 1600×900. 아래 값은 화면 확인용 PoC 값이다. 코어 정본 값(선회 9°/초 등)과 다르다.
+// 함대는 하위 분할하지 않는다. 묶음은 여러 함대를 함께 지휘하는 PoC 실험이며 Q60 그룹 이동과 같은 성격이다.
+const W = 1600, H = 900;
+const C = { V: 60, RETREAT: 0.6, TURN: 36 * Math.PI / 180, FORM_TIME: 5, GAP: 10, RANGE: 420,
+            SHIPS: 100,                // 함대 1개의 함선 수(소집단 없이 한 진형)
+            ARC: 70 * Math.PI / 180,   // 전방 사격각(좌우 각각)
+            DPS: 0.12,                 // 함선 1척의 초당 피해
+            FLANK: 1.5,                // 측후방 피격 배율
+            FLANK_ANG: 100 * Math.PI / 180,
+            HP: 10,                    // 함선 1척 내구
+            AI_SEE: 1100, AI_DIST: 320, AI_THINK: 1.5,
+            FLIP_ANG: 90 * Math.PI / 180, // 이보다 크게 방향을 바꾸면 함대를 돌리지 않고 제자리 반전
+            FLIP_TIME: 1.0,               // 제자리 반전 때 함선이 돌아서는 시간(이동 정지)
+            VIS: 250,                     // 가시 거리: 진형 가장 바깥 함선들(볼록 껍질)에서 이만큼 넓힌 영역이 가시 범위
+            RADAR: 450,                   // 정찰함 레이더 거리: 가시 거리보다 크면 같은 방식(바깥 함선 기준)으로 이 거리를 쓴다
+            FWD_ANG: 45 * Math.PI / 180 }; // 접적 이동: 조준 방향 ±45° 안이면 전진 속도, 밖이면 RETREAT 배율
+
+// 진형: 함선 k(전체 n척)의 로컬 좌표(+x 앞, +y 오른쪽), 함선 간격 단위. 줄은 1/4칸씩 엇갈린다
+function grid(cols, k) { const r = Math.floor(k / cols), c = k % cols; return [-r, c - (cols - 1) / 2 + (r % 2 ? 0.25 : -0.25)]; }
+const FORMS = {
+  block:   { name: '덩어리', f: (k, n) => grid(Math.ceil(Math.sqrt(n * 1.6)), k) },
+  line:    { name: '가로줄', f: (k, n) => grid(Math.ceil(n / 3), k) },
+  column:  { name: '세로줄', f: (k, n) => grid(3, k) },
+  echelon: { name: '사선',   f: (k, n) => { const [x, y] = grid(Math.ceil(n / 4), k); return [x - y * 0.7, y]; } },
+  arc:     { name: '호',     f: (k, n) => { const cols = Math.ceil(n / 3), r = Math.floor(k / cols), c = k % cols, R = cols / 2.1;
+                                            const a = ((c + (r % 2 ? 0.25 : -0.25)) / (cols - 1) - 0.5) * 2.1;
+                                            return [R * (1 - Math.cos(a)) - r, (R - r) * Math.sin(a)]; } },
+};
+// 아군: 촉 오호대장 + 유비. 적: 위 오자양장 + 조조. 함대마다 함선 100척, 하위 분할 없음
+// 세 번째 값: 정찰함 수(함대 안에 고르게 섞여 있다)
+const ALLY = [['lb', '유비', 0], ['gy', '관우', 0], ['jf', '장비', 0], ['zy', '조운', 2], ['mc', '마초', 2], ['hz', '황충', 0]];
+const ENEMY = [['cc', '조조', 0], ['zl', '장료', 2], ['yj', '악진', 0], ['yg', '우금', 0], ['zh', '장합', 0], ['xh', '서황', 1]];
+
+const opt = { preview: true, stretch: true, rings: false, help: innerWidth >= 900, combat: false, flip: true }; // combat: 양측 공격(기본 꺼짐), flip: 제자리 반전
+const lerp = (a, b, t) => a + (b - a) * t;
+const ease = t => t * t * (3 - 2 * t);
+const angDiff = (a, b) => Math.atan2(Math.sin(a - b), Math.cos(a - b));
+const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+let LOG = () => {};
+const say = m => LOG(m);
+
+function formOffsets(key, n) {
+  const pts = [...Array(n)].map((_, k) => FORMS[key].f(k, n).map(v => v * C.GAP));
+  const mx = pts.reduce((s, p) => s + p[0], 0) / n, my = pts.reduce((s, p) => s + p[1], 0) / n;
+  return pts.map(([x, y]) => [x - mx, y - my]);
+}
+
+// 로컬 → 월드. stretch는 함수 축 방향으로만 늘린다.
+function toWorld(off, h, x, y, stretch = 1) {
+  const c = Math.cos(h), s = Math.sin(h), ox = off[0] * stretch;
+  return [x + ox * c - off[1] * s, y + ox * s + off[1] * c];
+}
+function toLocal(dx, dy, h) { const c = Math.cos(h), s = Math.sin(h); return [dx * c + dy * s, -dx * s + dy * c]; }
+
+// ---- 함대(실제로 움직이는 단위): 함선 k는 진형의 k번 자리를 맡는다 ----
+function makeUnit(name, side, x, y, h, form, n = C.SHIPS, id = name, recon = 0) {
+  const off = formOffsets(form, n);
+  const u = { kind: 'unit', id, name, side, n, x, y, h, form, from: off, to: off, cur: off.map(p => p.slice()), formT: 1,
+              target: null, mode: 'idle', speed: 0, speedMul: 1, ships: [], count: n, firing: null, flank: false,
+              think: 0, parent: null, hold: 0, contact: null, aim: null };
+  const reconK = new Set([...Array(recon)].map((_, i) => Math.floor((i + 0.5) * n / recon)));
+  for (let k = 0; k < n; k++) u.ships.push({ k, x, y, h, hp: C.HP, alive: true, deathT: 0, recon: reconK.has(k) });
+  stepShips(u, 0, true);
+  return u;
+}
+// ---- 묶음(그룹): 자식은 함대 또는 다른 묶음. offs는 묶음 함수 기준 자식 중심의 상대 위치 ----
+let groups = [];
+const leaves = n => n.kind === 'unit' ? [n] : n.children.flatMap(leaves);
+const aliveNode = n => leaves(n).some(u => u.count > 0);
+const topOf = n => { while (n.parent) n = n.parent; return n; };
+function centroid(n) {
+  const all = leaves(n), ls = all.filter(u => u.count > 0).length ? all.filter(u => u.count > 0) : all;
+  return [ls.reduce((s, u) => s + u.x, 0) / ls.length, ls.reduce((s, u) => s + u.y, 0) / ls.length];
+}
+function refHeading(nodes) {
+  let cx = 0, cy = 0;
+  for (const u of nodes.flatMap(leaves)) if (u.count > 0) { cx += Math.cos(u.h); cy += Math.sin(u.h); }
+  return Math.atan2(cy, cx);
+}
+function capture(g) {
+  const cs = g.children.map(centroid);
+  const G = [cs.reduce((s, c) => s + c[0], 0) / cs.length, cs.reduce((s, c) => s + c[1], 0) / cs.length];
+  g.h = refHeading(g.children);
+  g.offs = cs.map(c => toLocal(c[0] - G[0], c[1] - G[1], g.h));
+}
+function makeGroup(name, children, tag = null, offs = null, h = 0) {
+  for (const c of children) detach(c);
+  const g = { kind: 'group', name, tag, children: children.slice(), parent: null, offs: null, h };
+  g.children.forEach(c => { c.parent = g; });
+  if (offs) g.offs = offs.map(p => p.slice()); else capture(g);
+  groups.push(g);
+  return g;
+}
+function detach(n) {
+  const p = n.parent;
+  if (!p) return;
+  const i = p.children.indexOf(n);
+  p.children.splice(i, 1); p.offs.splice(i, 1);
+  n.parent = null;
+  if (p.children.length < 2) dissolve(p);
+}
+function dissolve(g) {
+  const i = groups.indexOf(g);
+  if (i >= 0) groups.splice(i, 1);
+  const cs = g.children, p = g.parent;
+  if (p) {
+    const j = p.children.indexOf(g);
+    p.children.splice(j, 1, ...cs);
+    cs.forEach(c => { c.parent = p; });
+    capture(p);
+  } else cs.forEach(c => { c.parent = null; });
+  g.children = []; g.offs = []; g.parent = null;
+}
+// 선택 정리: 중복·죽은 대상·조상이 이미 선택된 대상 제거
+function norm(nodes) {
+  const set = [...new Set(nodes)].filter(aliveNode);
+  return set.filter(n => { for (let p = n.parent; p; p = p.parent) if (set.includes(p)) return false; return true; });
+}
+
+// ---- 명령 ----
+function orderMove(u, x, y, face) {
+  u.target = { x: clamp(x, 40, W - 40), y: clamp(y, 40, H - 40), face };
+  u.mode = 'move'; u.speedMul = 1;
+}
+function orderRetreat(u, h = u.h) {
+  orderMove(u, u.x - Math.cos(h) * 220, u.y - Math.sin(h) * 220, null);
+  u.mode = 'retreat';
+}
+function orderForm(u, key) {
+  if (key === u.form && u.formT >= 1) return;
+  u.from = u.cur.map(p => p.slice()); // 현재 위치에서 이어서 전환
+  u.to = formOffsets(key, u.n);
+  u.form = key;
+  u.formT = 0;
+}
+function orderStop(u) { u.target = null; u.mode = 'idle'; u.speedMul = 1; }
+
+// 묶음 이동 계획: 묶음 함수 F 기준으로 자식 목표를 정한다. 중첩 묶음은 재귀
+function planMove(n, x, y, face, out) {
+  if (n.kind === 'unit') { out.push({ u: n, x, y, face }); return; }
+  const c = centroid(n), d = Math.hypot(x - c[0], y - c[1]);
+  // 구성 함대 중 하나라도 접적이면 묶음 배치를 돌리지 않고 평행 이동
+  const F = leaves(n).some(u => u.contact) ? n.h : face ?? (d > 5 ? Math.atan2(y - c[1], x - c[0]) : n.h);
+  // 묶음도 크게 돌 때는 배치를 빙 돌리지 않고 뒤집어, 함대들이 서로 자리를 바꾸지 않게 한다
+  if (opt.flip && Math.abs(angDiff(F, n.h)) > C.FLIP_ANG) n.offs = n.offs.map(neg);
+  n.h = F;
+  n.children.forEach((ch, i) => { const [tx, ty] = toWorld(n.offs[i], F, x, y); planMove(ch, tx, ty, F, out); });
+}
+// 동시 도착: 가장 먼 함대 기준으로 속도 배율을 나눈다
+function execMove(out) {
+  const ds = out.map(o => Math.hypot(o.x - o.u.x, o.y - o.u.y)), m = Math.max(1, ...ds);
+  out.forEach((o, i) => { orderMove(o.u, o.x, o.y, o.face); if (out.length > 1) o.u.speedMul = Math.max(0.2, ds[i] / m); });
+}
+// 묶음 안의 대상에 따로 명령하면 그 대상은 묶음에서 빠진다
+function prepOrder(nodes) {
+  for (const n of nodes) if (n.parent) { say(`${n.name}: ${n.parent.name}에서 이탈(개별 명령)`); detach(n); }
+}
+function cmdMove(nodes, x, y, face) {
+  nodes = norm(nodes); if (!nodes.length) return;
+  prepOrder(nodes);
+  const out = [];
+  if (nodes.length === 1) planMove(nodes[0], x, y, face, out);
+  else { const tmp = { kind: 'group', children: nodes }; capture(tmp); planMove(tmp, x, y, face, out); } // 임시 묶음
+  execMove(out);
+}
+function cmdRetreat(nodes) {
+  nodes = norm(nodes); prepOrder(nodes);
+  for (const n of nodes) { const h = refHeading([n]); leaves(n).filter(u => u.count > 0).forEach(u => orderRetreat(u, h)); }
+}
+// 진형: 함대를 고르면 그 함대만, 묶음을 고르면 묶음 배치 + 안의 모든 함대(안쪽 묶음 포함)를 같은 진형으로
+function cmdForm(nodes, key) {
+  for (const n of norm(nodes)) {
+    if (n.kind === 'unit') { orderForm(n, key); continue; }
+    applyGroupForm(n, key);
+    const [cx, cy] = centroid(n), out = [];
+    planMove(n, cx, cy, n.h, out); // 제자리에서 새 배치로 이동
+    execMove(out);
+    say(`${n.name}: ${FORMS[key].name} 진형으로 재배치`);
+  }
+}
+// 묶음 단위 배치 모양(구성원 수가 적을 때 쓰는 단순한 모양, 구성원 간격 단위)
+const GROUP_SHAPES = {
+  block:   (i, n) => { const cols = Math.ceil(Math.sqrt(n)); return [-Math.floor(i / cols), (i % cols) - (Math.min(n, cols) - 1) / 2]; },
+  line:    (i, n) => [0, i - (n - 1) / 2],
+  column:  (i, n) => [(n - 1) / 2 - i, 0],
+  echelon: (i, n) => [((n - 1) / 2 - i) * 0.7, i - (n - 1) / 2],
+  arc:     (i, n) => { if (n < 2) return [0, 0]; const a = (-60 + 120 * i / (n - 1)) * Math.PI / 180, R = (n - 1) * 0.6; return [R * (1 - Math.cos(a)), R * Math.sin(a)]; },
+};
+// 반폭: 노드가 진형 key일 때 묶음 함수 기준 [앞뒤, 좌우] 절반 크기
+function halfExtent(n, key) {
+  const pts = n.kind === 'unit' ? formOffsets(key, n.n) : n.offs.map((o, i) => { const [hx, hy] = halfExtent(n.children[i], key); return [Math.abs(o[0]) + hx, Math.abs(o[1]) + hy]; });
+  return [Math.max(...pts.map(p => Math.abs(p[0]))), Math.max(...pts.map(p => Math.abs(p[1])))];
+}
+function applyGroupForm(g, key) {
+  g.form = key;
+  for (const c of g.children) if (c.kind === 'unit') orderForm(c, key); else applyGroupForm(c, key);
+  const n = g.children.length, ext = g.children.map(c => halfExtent(c, key));
+  const sx = 2 * Math.max(...ext.map(e => e[0])) + 30, sy = 2 * Math.max(...ext.map(e => e[1])) + 30;
+  let slots = [...Array(n)].map((_, i) => GROUP_SHAPES[key](i, n)).map(([x, y]) => [x * sx, y * sy]);
+  const mx = slots.reduce((s, p) => s + p[0], 0) / n, my = slots.reduce((s, p) => s + p[1], 0) / n;
+  slots = slots.map(([x, y]) => [x - mx, y - my]);
+  // 엇갈림 방지: 현재 좌우(같으면 앞뒤) 순서대로 자리를 준다
+  const G = centroid(g), lat = slots.every(s => Math.abs(s[1] - slots[0][1]) < 1e-6) ? 0 : 1;
+  const order = p => lat ? p[1] * 1e4 - p[0] : -p[0];
+  const now = g.children.map(c => { const [x, y] = centroid(c); return toLocal(x - G[0], y - G[1], g.h); });
+  const ci = [...Array(n).keys()].sort((a, b) => order(now[a]) - order(now[b]));
+  const si = [...Array(n).keys()].sort((a, b) => order(slots[a]) - order(slots[b]));
+  g.offs = Array(n);
+  ci.forEach((c, r) => { g.offs[c] = slots[si[r]]; });
+}
+function cmdStop(nodes) { norm(nodes).flatMap(leaves).forEach(orderStop); }
+function cmdGroup(nodes) {
+  nodes = norm(nodes);
+  if (nodes.length < 2) { say('묶으려면 2개 이상 선택'); return nodes; }
+  const name = nodes.map(n => n.name).join(' + ');
+  const g = makeGroup(name, nodes);
+  say(`${name}: 하나의 묶음으로 지휘`);
+  return [g];
+}
+function cmdUngroup(nodes) {
+  const res = [];
+  for (const n of norm(nodes)) {
+    if (n.kind !== 'group') { res.push(n); continue; }
+    res.push(...n.children); say(`${n.name}: 묶음 해제`); dissolve(n);
+  }
+  return norm(res);
+}
+function turnTo(u, goal, dt) {
+  const d = angDiff(goal, u.h), m = C.TURN * dt;
+  u.h += Math.abs(d) <= m ? d : Math.sign(d) * m;
+}
+// 제자리 반전: 기준 방향을 180° 뒤집고 진형 자리도 점대칭으로 뒤집는다.
+// toWorld(-off, h+π) = toWorld(off, h)이므로 함선 위치는 그대로이고, 함선들만 제자리에서 돌아선다.
+const neg = p => [-p[0], -p[1]];
+function flip(f) {
+  f.h += Math.PI;
+  f.cur = f.cur.map(neg); f.from = f.from.map(neg); f.to = f.to.map(neg);
+  f.hold = C.FLIP_TIME;
+}
+function faceToward(f, goal, dt) {
+  if (opt.flip && Math.abs(angDiff(goal, f.h)) > C.FLIP_ANG) flip(f);
+  else turnTo(f, goal, dt);
+}
+
+// ---- 함대 코어(결정적, 난수 없음) ----
+function stepFleet(f, dt, all, log) {
+  if (f.formT < 1) {
+    f.formT = Math.min(1, f.formT + dt / C.FORM_TIME);
+    const e = ease(f.formT);
+    f.cur = f.from.map((p, i) => [lerp(p[0], f.to[i][0], e), lerp(p[1], f.to[i][1], e)]);
+    if (f.formT === 1 && f.side === 'ally') log(`${f.name}: ${FORMS[f.form].name} 진형 전환 완료`);
+  }
+  f.speed = 0;
+  // 접적: 기준 거리 안의 가장 가까운 적 함대. 함선들은 그 함대를 향한다
+  f.contact = contactOf(f, all);
+  f.aim = f.contact ? Math.atan2(f.contact.y - f.y, f.contact.x - f.x) : null;
+  if (f.hold > 0) { f.hold = Math.max(0, f.hold - dt); return; } // 함선들이 돌아서는 동안 정지
+  const t = f.target;
+  if (!t) return;
+  const dx = t.x - f.x, dy = t.y - f.y, dist = Math.hypot(dx, dy);
+  if (f.contact) { // 접적 이동: 진형은 돌리지 않고 평행 이동만, 도착해도 방향을 다시 맞추지 않는다
+    if (dist > 0.5) {
+      const fwd = Math.abs(angDiff(Math.atan2(dy, dx), f.aim)) <= C.FWD_ANG;
+      const v = C.V * (f.mode === 'retreat' ? C.RETREAT : f.speedMul * (fwd ? 1 : C.RETREAT));
+      const s = Math.min(dist, v * dt);
+      f.x += dx / dist * s; f.y += dy / dist * s;
+      f.speed = dt > 0 ? s / dt : 0;
+    } else {
+      if (f.side === 'ally') log(`${f.name}: 접적 이동 완료`);
+      orderStop(f);
+    }
+    return;
+  }
+  if (dist > 0.5) {
+    const travel = Math.atan2(dy, dx);
+    let v = C.V * C.RETREAT; // 후퇴: 함수 고정
+    if (f.mode !== 'retreat') {
+      faceToward(f, travel, dt);
+      if (f.hold > 0) return;
+      v = C.V * f.speedMul * Math.max(0.25, Math.cos(angDiff(travel, f.h)));
+    }
+    const s = Math.min(dist, v * dt);
+    f.x += dx / dist * s; f.y += dy / dist * s;
+    f.speed = dt > 0 ? s / dt : 0;
+  } else if (t.face != null && Math.abs(angDiff(t.face, f.h)) > 0.005) {
+    f.x = t.x; f.y = t.y; faceToward(f, t.face, dt);
+  } else {
+    if (f.side === 'ally') log(`${f.name}: ${f.mode === 'retreat' ? '후퇴' : '이동'} 완료`);
+    orderStop(f);
+  }
+}
+
+// ---- 가시 범위: 진형 가장 바깥 함선들(볼록 껍질)에서 sight만큼 넓힌 영역 ----
+function convexHull(pts) {
+  if (pts.length < 3) return pts.slice();
+  const p = pts.slice().sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  const cr = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+  const lo = [], up = [];
+  for (const q of p) { while (lo.length >= 2 && cr(lo[lo.length - 2], lo[lo.length - 1], q) <= 0) lo.pop(); lo.push(q); }
+  for (let i = p.length - 1; i >= 0; i--) { const q = p[i]; while (up.length >= 2 && cr(up[up.length - 2], up[up.length - 1], q) <= 0) up.pop(); up.push(q); }
+  lo.pop(); up.pop();
+  return lo.concat(up);
+}
+// 점과 볼록 다각형 사이 거리(안쪽이면 0)
+function distToHull(px, py, h) {
+  if (!h.length) return Infinity;
+  if (h.length === 1) return Math.hypot(px - h[0][0], py - h[0][1]);
+  let inside = h.length >= 3, best = Infinity;
+  for (let i = 0; i < h.length; i++) {
+    const [ax, ay] = h[i], [bx, by] = h[(i + 1) % h.length], ex = bx - ax, ey = by - ay;
+    if (ex * (py - ay) - ey * (px - ax) < 0) inside = false;
+    const t = clamp(((px - ax) * ex + (py - ay) * ey) / (ex * ex + ey * ey || 1), 0, 1);
+    best = Math.min(best, Math.hypot(px - (ax + t * ex), py - (ay + t * ey)));
+  }
+  return inside ? 0 : best;
+}
+// 정찰함이 살아 있고 레이더 거리가 가시 거리보다 크면 레이더 거리를 쓴다
+function updateSight(f) {
+  const alive = f.ships.filter(s => s.alive);
+  f.hull = convexHull(alive.map(s => [s.x, s.y]));
+  f.hullR = Math.max(0, ...f.hull.map(([x, y]) => Math.hypot(x - f.x, y - f.y)));
+  f.radar = alive.some(s => s.recon) && C.RADAR > C.VIS;
+  f.sight = f.radar ? C.RADAR : C.VIS;
+}
+// o의 살아 있는 함선이 하나라도 f의 가시 범위 안이면 보인다
+function visibleTo(f, o) {
+  if (!f.hull || !f.hull.length || o.count === 0) return false;
+  if (Math.hypot(o.x - f.x, o.y - f.y) - f.hullR - unitR(o) > f.sight) return false; // 빠른 배제
+  return o.ships.some(s => s.alive && distToHull(s.x, s.y, f.hull) <= f.sight);
+}
+// 보이는 적 함대 중 가장 가까운 것
+function nearestVisible(f, all) {
+  let best = null, bd = Infinity;
+  for (const o of all) if (o.side !== f.side && o.count > 0 && visibleTo(f, o)) { const d = Math.hypot(o.x - f.x, o.y - f.y); if (d < bd) { bd = d; best = o; } }
+  return best;
+}
+function contactOf(f, all) { updateSight(f); return nearestVisible(f, all); }
+// 함선이 실제로 바라보는 방향: 접적이면 적 쪽, 아니면 함대 기준 방향
+const facing = f => f.aim ?? f.h;
+function nearest(f, all) {
+  let best = null, bd = Infinity;
+  for (const o of all) if (o.side !== f.side && o.count > 0) { const d = Math.hypot(o.x - f.x, o.y - f.y); if (d < bd) { bd = d; best = o; } }
+  return best;
+}
+
+// ---- 적 AI: 보이면 다가가 교전 거리에서 마주 본다 ----
+function stepAI(f, dt, all) {
+  if (f.count === 0 || (f.think -= dt) > 0) return;
+  f.think = C.AI_THINK;
+  const o = nearest(f, all);
+  if (!o) return;
+  if (Math.hypot(o.x - f.x, o.y - f.y) > C.AI_SEE) return;
+  const a = Math.atan2(o.y - f.y, o.x - f.x);
+  const gx = o.x - Math.cos(a) * C.AI_DIST, gy = o.y - Math.sin(a) * C.AI_DIST;
+  const cur = f.target;
+  if (cur && Math.hypot(cur.x - gx, cur.y - gy) <= 60) cur.face = a;
+  else if (Math.hypot(f.x - gx, f.y - gy) > 60) orderMove(f, gx, gy, a);
+  else if (Math.abs(angDiff(a, f.h)) > 0.1) orderMove(f, f.x, f.y, a); // 제자리 선회
+}
+
+// ---- 교전: 가시 범위 안에 보이는 가장 가까운 적에게, 사거리·전방 사격각 안이면 사격. 측후방이면 배율 ----
+function stepCombat(all, dt, now) {
+  for (const f of all) updateSight(f);
+  for (const f of all) {
+    f.firing = null;
+    if (f.count === 0) continue;
+    const o = nearestVisible(f, all);
+    if (!o || Math.hypot(o.x - f.x, o.y - f.y) > C.RANGE) continue;
+    if (Math.abs(angDiff(Math.atan2(o.y - f.y, o.x - f.x), facing(f))) > C.ARC) continue;
+    f.firing = o;
+  }
+  // 피해는 모든 함대가 사격을 정한 뒤 한꺼번에 적용(처리 순서에 따른 차이 없음)
+  for (const f of all) if (f.firing) {
+    const o = f.firing;
+    f.flank = Math.abs(angDiff(Math.atan2(f.y - o.y, f.x - o.x), facing(o))) > C.FLANK_ANG;
+    hit(o, f.count * C.DPS * dt * (f.flank ? C.FLANK : 1), f.x, f.y, now);
+  }
+  for (const f of all) f.count = f.ships.reduce((n, s) => n + s.alive, 0);
+}
+// 공격자에게 가장 가까운 함선부터 피해. 격침된 자리는 비워 둔다(빈자리 메우기 없음).
+function hit(o, dmg, ax, ay, now) {
+  while (dmg > 0) {
+    let best = null, bd = Infinity;
+    for (const s of o.ships) if (s.alive) { const d = Math.hypot(s.x - ax, s.y - ay); if (d < bd) { bd = d; best = s; } }
+    if (!best) return;
+    const used = Math.min(dmg, best.hp);
+    best.hp -= used; dmg -= used;
+    if (best.hp <= 1e-9) { best.alive = false; best.deathT = now; }
+  }
+}
+
+// ---- 함선 표현: 자기 자리 고정, 동시 추종, 같은 방향 ----
+function stretchOf(f) {
+  const r = opt.stretch ? Math.min(1, f.speed / C.V) : 0;
+  return 1 + 0.6 * r; // 이동 중 함수 축 방향 간격 배율
+}
+function stepShips(f, dt, snap = false) {
+  const st = stretchOf(f), a = snap ? 1 : Math.min(1, dt * 5);
+  const m = snap ? Infinity : Math.PI / C.FLIP_TIME * dt; // 함선 선회 속도: 180°를 FLIP_TIME에 돈다
+  for (const sh of f.ships) {
+    const [tx, ty] = toWorld(f.cur[sh.k], f.h, f.x, f.y, st);
+    sh.x += (tx - sh.x) * a;
+    sh.y += (ty - sh.y) * a;
+    // 접적이면 각 함선이 적 함대 중심을 향한다(진형 배치는 그대로)
+    const want = f.contact && f.contact.count > 0 ? Math.atan2(f.contact.y - sh.y, f.contact.x - sh.x) : f.h;
+    sh.h += clamp(angDiff(want, sh.h), -m, m);
+  }
+}
+// 함대 윤곽 반지름: 현재 진형에서 가장 먼 함선 자리 + 여유
+function unitR(u) {
+  let m = 0;
+  for (const [x, y] of u.cur) m = Math.max(m, Math.hypot(x, y));
+  return m + 12;
+}
+
+// ---- 전장 ----
+let units = [], sel = [], ptr = null, time = 0, over = false, lastTap = { u: null, t: 0 };
+function newBattle() {
+  groups = [];
+  const y = i => 115 + i * 134;
+  units = [
+    ...ALLY.map(([id, name, rc], i) => makeUnit(`${name} 함대`, 'ally', 300, y(i), 0, 'block', C.SHIPS, id, rc)),
+    ...ENEMY.map(([id, name, rc], i) => makeUnit(`${name} 함대`, 'enemy', i % 2 ? 1330 : 1250, y(i), Math.PI, 'block', C.SHIPS, id, rc)),
+  ];
+}
+
+function statusOf(f) {
+  if (f.count === 0) return '전멸';
+  if (f.hold > 0) return '제자리 반전 중';
+  if (f.contact) return `${f.mode === 'idle' ? '접적 대기' : '접적 이동'} · ${f.contact.name} 조준${f.firing ? (f.flank ? ' · 측후방 사격' : ' · 사격 중') : ''}`;
+  const fire = f.firing ? (f.flank ? ' · 측후방 사격' : ' · 사격 중') : '';
+  if (f.mode === 'retreat') return '후퇴 중' + fire;
+  if (f.mode === 'move') return '항행 중' + fire;
+  if (f.formT < 1) return '진형 전환 중' + fire;
+  if (f.firing) return '교전 중' + (f.flank ? ' · 측후방 사격' : '');
+  const o = opt.combat && nearest(f, units);
+  return o && Math.hypot(o.x - f.x, o.y - f.y) < C.RANGE ? '사각 밖(함수를 적 쪽으로)' : '정지';
+}
+
+// ---- 로그 ----
+const logEl = document.getElementById('log');
+function uiLog(msg) {
+  const d = document.createElement('div');
+  d.textContent = msg;
+  logEl.prepend(d);
+  while (logEl.children.length > 6) logEl.lastChild.remove();
+  setTimeout(() => { d.style.opacity = 0; setTimeout(() => d.remove(), 700); }, 5000);
+}
+LOG = uiLog;
+
+// ---- 그리기 ----
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d'), bar = document.getElementById('bar');
+let view = { k: 1, ox: 0, oy: 0, dpr: 1 };
+function resize() {
+  const dpr = window.devicePixelRatio || 1, cw = innerWidth, ch = innerHeight;
+  cv.width = cw * dpr; cv.height = ch * dpr; cv.style.width = cw + 'px'; cv.style.height = ch + 'px';
+  const avail = ch - bar.offsetHeight;
+  const k = Math.min(cw / W, avail / H);
+  view = { k, ox: (cw - W * k) / 2, oy: Math.max(0, (avail - H * k) / 2), dpr };
+}
+addEventListener('resize', resize);
+
+// 결정적 별 배경
+const stars = (() => { let s = 7; const r = () => (s = (s * 16807) % 2147483647) / 2147483647;
+  return [...Array(260)].map(() => [r() * W, r() * H, r() * 1.4 + 0.3, r() * 0.6 + 0.2]); })();
+
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const COL = { ally: css('--ally'), enemy: css('--enemy'), accent: css('--accent'), text: css('--text'), dim: css('--dim'), group: css('--group') };
+const FONT = 'system-ui,"Malgun Gothic",sans-serif';
+
+function ring(x, y, r, color, alpha, dash) {
+  ctx.save(); ctx.globalAlpha = alpha; ctx.strokeStyle = color; ctx.lineWidth = 2;
+  if (dash) ctx.setLineDash(dash === true ? [5, 5] : dash);
+  ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
+}
+function arrow(x, y, h, len, color, alpha) {
+  ctx.save(); ctx.globalAlpha = alpha; ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 2;
+  const ex = x + Math.cos(h) * len, ey = y + Math.sin(h) * len;
+  ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(ex, ey); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ex, ey);
+  ctx.lineTo(ex - Math.cos(h - 0.5) * 10, ey - Math.sin(h - 0.5) * 10);
+  ctx.lineTo(ex - Math.cos(h + 0.5) * 10, ey - Math.sin(h + 0.5) * 10);
+  ctx.fill(); ctx.restore();
+}
+// 가시 범위 그리기: 볼록 껍질을 2×sight 두께 둥근 선으로 긋고 안을 채워 별도 캔버스에 그린 뒤 옅게 합성
+const sightCv = document.createElement('canvas'), sctx = sightCv.getContext('2d');
+function drawSight(f) {
+  if (!f.hull || !f.hull.length) return;
+  if (sightCv.width !== cv.width || sightCv.height !== cv.height) { sightCv.width = cv.width; sightCv.height = cv.height; }
+  sctx.setTransform(1, 0, 0, 1, 0, 0); sctx.clearRect(0, 0, sightCv.width, sightCv.height);
+  sctx.setTransform(ctx.getTransform());
+  sctx.fillStyle = sctx.strokeStyle = f.radar ? COL.accent : COL[f.side];
+  sctx.beginPath();
+  if (f.hull.length === 1) sctx.arc(f.hull[0][0], f.hull[0][1], f.sight, 0, Math.PI * 2);
+  else {
+    f.hull.forEach(([x, y], i) => (i ? sctx.lineTo(x, y) : sctx.moveTo(x, y)));
+    sctx.closePath();
+    sctx.lineJoin = 'round'; sctx.lineWidth = 2 * f.sight; sctx.stroke();
+  }
+  sctx.fill();
+  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 0.14; ctx.drawImage(sightCv, 0, 0); ctx.restore();
+}
+const isSelected = n => { for (let p = n; p; p = p.parent) if (sel.includes(p)) return true; return false; };
+
+function draw() {
+  const { k, ox, oy, dpr } = view;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.fillStyle = css('--bg'); ctx.fillRect(0, 0, innerWidth, innerHeight);
+  ctx.setTransform(dpr * k, 0, 0, dpr * k, dpr * ox, dpr * oy);
+
+  ctx.strokeStyle = '#ffffff0d'; ctx.lineWidth = 1;
+  for (let x = 0; x <= W; x += 100) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+  for (let y = 0; y <= H; y += 100) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+  for (const [x, y, r, a] of stars) { ctx.globalAlpha = a; ctx.fillStyle = '#fff'; ctx.fillRect(x, y, r, r); }
+  ctx.globalAlpha = 1;
+  ctx.strokeStyle = '#ffffff22'; ctx.strokeRect(0, 0, W, H);
+
+  // 묶음 경계: 점선 원 + 이름. 선택된 묶음은 진하게
+  for (const g of groups) {
+    if (!aliveNode(g)) continue;
+    const [cx, cy] = centroid(g);
+    const r = Math.max(...leaves(g).filter(u => u.count > 0).map(u => Math.hypot(u.x - cx, u.y - cy) + unitR(u))) + 18;
+    const on = isSelected(g);
+    ring(cx, cy, r, COL.group, on ? 0.8 : 0.3, [10, 6]);
+    ctx.font = `600 13px ${FONT}`; ctx.textAlign = 'center'; ctx.fillStyle = COL.group; ctx.globalAlpha = on ? 1 : 0.55;
+    ctx.fillText(`[${g.name}]`, cx, cy - r - 8);
+    ctx.globalAlpha = 1;
+  }
+
+  // 사격선: 살아 있는 함선 중 고르게 6척 → 목표 함대에서 가장 가까운 살아 있는 함선. 후퇴 중에도 사격각 안이면 유지
+  for (const f of units) {
+    const o = f.firing;
+    if (!o) continue;
+    const mine = f.ships.filter(s => s.alive), theirs = o.ships.filter(s => s.alive);
+    if (!mine.length || !theirs.length) continue;
+    ctx.strokeStyle = COL[f.side]; ctx.lineWidth = f.flank ? 2 : 1;
+    const lines = Math.min(6, mine.length);
+    for (let i = 0; i < lines; i++) {
+      const a = mine[Math.floor((i + 0.5) * mine.length / lines)];
+      let b = theirs[0], bd = Infinity;
+      for (const s of theirs) { const d = Math.hypot(s.x - a.x, s.y - a.y); if (d < bd) { bd = d; b = s; } }
+      ctx.globalAlpha = 0.15 + 0.15 * (1 + Math.sin(time * 6 + i * 1.3 + (f.side === 'ally' ? 0 : 2)));
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    }
+  }
+  ctx.globalAlpha = 1;
+
+  for (const f of units) {
+    const col = COL[f.side], on = isSelected(f), direct = sel.includes(f);
+    const showRings = on || (opt.rings && f.side === 'ally');
+    if (direct) {
+      ctx.globalAlpha = 0.06; ctx.fillStyle = col; ctx.beginPath(); ctx.arc(f.x, f.y, unitR(f) + 40, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+      ring(f.x, f.y, unitR(f) + 40, col, 0.25);
+      drawSight(f); // 가시 범위(정찰함 레이더면 청록)
+      if (f.contact) { ctx.save(); ctx.globalAlpha = 0.5; ctx.strokeStyle = COL.enemy; ctx.setLineDash([2, 6]);
+        ctx.beginPath(); ctx.moveTo(f.x, f.y); ctx.lineTo(f.contact.x, f.contact.y); ctx.stroke(); ctx.restore(); }
+    }
+    // 도착 진형 미리보기(M1) + 이동 마커
+    if (f.target && f.side === 'ally' && f.count > 0 && (on || opt.rings)) {
+      const t = f.target;
+      const face = f.contact || f.mode === 'retreat' ? f.h : t.face ?? Math.atan2(t.y - f.y, t.x - f.x);
+      if (opt.preview) { ctx.save(); ctx.globalAlpha = 0.45; ctx.fillStyle = COL.accent;
+        f.to.forEach((off, k) => { if (!f.ships[k].alive) return; const [x, y] = toWorld(off, face, t.x, t.y); ctx.fillRect(x - 1.2, y - 1.2, 2.4, 2.4); });
+        ctx.restore(); }
+      ring(t.x, t.y, 8, COL.accent, 0.9);
+      arrow(t.x, t.y, face, 30, COL.accent, 0.9);
+      ctx.save(); ctx.globalAlpha = 0.3; ctx.strokeStyle = COL.accent; ctx.setLineDash([3, 6]);
+      ctx.beginPath(); ctx.moveTo(f.x, f.y); ctx.lineTo(t.x, t.y); ctx.stroke(); ctx.restore();
+    }
+    if (showRings && f.count > 0) ring(f.x, f.y, unitR(f) * stretchOf(f), col, 0.6); // 함대 윤곽(소집단 링 없음)
+    // 함선
+    ctx.fillStyle = col;
+    for (const sh of f.ships) {
+      if (!sh.alive) {
+        const age = time - sh.deathT; // 격침 섬광 0.6초, 그 뒤 빈자리로 남는다
+        if (age < 0.6) { ctx.save(); ctx.globalAlpha = 1 - age / 0.6; ctx.fillStyle = '#ffd38a';
+          ctx.beginPath(); ctx.arc(sh.x, sh.y, 3 + age * 14, 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
+        continue;
+      }
+      const c = Math.cos(sh.h), s = Math.sin(sh.h);
+      ctx.beginPath();
+      if (sh.recon) { // 정찰함: 마름모, 밝은 색
+        ctx.fillStyle = '#ffffff';
+        ctx.moveTo(sh.x + c * 7, sh.y + s * 7); ctx.lineTo(sh.x - s * 3.5, sh.y + c * 3.5);
+        ctx.lineTo(sh.x - c * 5, sh.y - s * 5); ctx.lineTo(sh.x + s * 3.5, sh.y - c * 3.5);
+        ctx.fill(); ctx.fillStyle = col;
+        continue;
+      }
+      ctx.moveTo(sh.x + c * 5, sh.y + s * 5);
+      ctx.lineTo(sh.x - c * 4 - s * 2.4, sh.y - s * 4 + c * 2.4);
+      ctx.lineTo(sh.x - c * 4 + s * 2.4, sh.y - s * 4 - c * 2.4);
+      ctx.fill();
+    }
+    ctx.font = `600 13px ${FONT}`; ctx.textAlign = 'center'; ctx.fillStyle = col;
+    ctx.globalAlpha = f.count === 0 ? 0.35 : 0.9;
+    ctx.fillText(`${f.name} ${f.count}`, f.x, f.y - unitR(f) - 6);
+    ctx.globalAlpha = 1;
+  }
+
+  // 선택 정보 박스(M5)
+  if (sel.length) {
+    const ls = sel.flatMap(leaves), alive = ls.filter(u => u.count > 0);
+    if (alive.length) {
+      const u0 = alive[0], forms = [...new Set(alive.map(u => FORMS[u.form].name))].join('·');
+      const lines = [
+        sel.length === 1 ? sel[0].name : `${sel.length}개 선택`,
+        alive.length === 1 ? `${forms} 진형 (${statusOf(u0)})`
+          : `함대 ${alive.length} · ${sel.length === 1 && sel[0].form ? `묶음 ${FORMS[sel[0].form].name} 진형` : `${forms} 진형`} · ${statusOf(u0)}`,
+        `함선 ${alive.reduce((s, u) => s + u.count, 0)}/${ls.reduce((s, u) => s + u.n, 0)}척 · 정찰함 ${alive.reduce((s, u) => s + u.ships.filter(x => x.alive && x.recon).length, 0)}척`
+          + (alive.length === 1 ? ` · ${u0.radar ? `레이더 ${C.RADAR}` : `가시 ${C.VIS}`}` : ''),
+      ];
+      const xs = alive.map(u => u.x), ys = alive.map(u => u.y);
+      ctx.font = `13px ${FONT}`; ctx.textAlign = 'left';
+      const bw = Math.max(...lines.map(l => ctx.measureText(l).width)) + 20, bh = 64;
+      let bx = Math.max(...xs) + 120, by = Math.min(...ys) - 30;
+      if (bx + bw > W) bx = Math.min(...xs) - 120 - bw;
+      bx = clamp(bx, 4, W - bw - 4); by = clamp(by, 4, H - bh - 4);
+      ctx.fillStyle = '#0d1424e6'; ctx.fillRect(bx, by, bw, bh);
+      ctx.strokeStyle = sel.length === 1 && sel[0].kind === 'unit' ? COL.ally : COL.group; ctx.strokeRect(bx, by, bw, bh);
+      lines.forEach((l, i) => { ctx.fillStyle = i ? COL.text : COL.ally; ctx.fillText(l, bx + 10, by + 20 + i * 18); });
+    }
+  }
+  if (ptr && ptr.moved && !ptr.menu) {
+    const { p0, p1 } = ptr;
+    if (dragKind(ptr) === 'move') arrow(p0.x, p0.y, Math.atan2(p1.y - p0.y, p1.x - p0.x), 40, COL.accent, 0.9);
+    else {
+      ctx.save(); ctx.strokeStyle = COL.group; ctx.fillStyle = COL.group; ctx.setLineDash([6, 4]); ctx.lineWidth = 1.5;
+      ctx.globalAlpha = 0.08; ctx.fillRect(p0.x, p0.y, p1.x - p0.x, p1.y - p0.y);
+      ctx.globalAlpha = 0.9; ctx.strokeRect(p0.x, p0.y, p1.x - p0.x, p1.y - p0.y); ctx.restore();
+    }
+  }
+}
+
+// ---- 입력 ----
+function worldPt(e) { return { x: (e.clientX - view.ox) / view.k, y: (e.clientY - view.oy) / view.k }; }
+function pickUnit(p) {
+  let best = null, bd = Infinity;
+  for (const u of units) if (u.count > 0) {
+    const d = Math.min(Math.hypot(u.x - p.x, u.y - p.y), ...u.ships.filter(s => s.alive).map(s => Math.hypot(s.x - p.x, s.y - p.y) * 1.5));
+    if (d < bd && d < unitR(u) + 10) { bd = d; best = u; }
+  }
+  return best;
+}
+function select(nodes, add = false) {
+  if (add) { const next = sel.slice(); for (const n of nodes) { const i = next.indexOf(n); if (i >= 0) next.splice(i, 1); else next.push(n); } sel = norm(next); }
+  else sel = norm(nodes);
+  syncUI();
+}
+function pickNodes(key) {
+  const byId = id => units.find(u => u.id === id);
+  if (key === 'all') return norm(units.filter(u => u.side === 'ally' && u.count > 0).map(topOf));
+  return [byId(key)];
+}
+function restart() { newBattle(); sel = []; ptr = null; over = false; hideMenu(); logEl.replaceChildren(); say('재시작'); syncUI(); }
+
+// 상자 선택: 묶음이 통째로 상자 안이면 묶음으로, 일부만 들어가면 그 함대(또는 통째로 들어간 안쪽 묶음)로
+function boxNodes(list, x0, y0, x1, y1) {
+  const ax = Math.min(x0, x1), bx = Math.max(x0, x1), ay = Math.min(y0, y1), by = Math.max(y0, y1);
+  const inside = u => u.count > 0 && u.x >= ax && u.x <= bx && u.y >= ay && u.y <= by;
+  const res = [];
+  for (const u of list) if (u.side === 'ally' && inside(u)) {
+    let n = u;
+    while (n.parent && leaves(n.parent).filter(l => l.count > 0).every(inside)) n = n.parent;
+    res.push(n);
+  }
+  return norm(res);
+}
+// 같은 함대를 다시 누르면(더블클릭·더블탭) 그 함대만 선택
+function tapSelect(u, add) {
+  const now = performance.now(), again = lastTap.u === u && now - lastTap.t < 450;
+  lastTap = { u, t: now };
+  select([again ? u : topOf(u)], add && !again);
+}
+
+// ---- 오른쪽 클릭·길게 누르기 메뉴 ----
+const menu = document.getElementById('menu');
+function hideMenu() { menu.style.display = 'none'; }
+function openMenu(cx, cy, u) {
+  if (!sel.length) return;
+  menu.replaceChildren();
+  const btn = (label, fn, on) => {
+    const b = document.createElement('button');
+    b.textContent = label; if (on) b.className = 'on';
+    b.onclick = () => { fn(); hideMenu(); syncUI(); };
+    return b;
+  };
+  const row = (title, items) => {
+    if (!items.length) return;
+    const d = document.createElement('div'), s = document.createElement('span');
+    d.className = 'row'; s.className = 'lbl'; s.textContent = title;
+    d.append(s, ...items); menu.append(d);
+  };
+  const head = document.createElement('div');
+  head.className = 'head'; head.textContent = sel.length === 1 ? sel[0].name : `${sel.length}개 선택`;
+  menu.append(head);
+  const ls = sel.flatMap(leaves).filter(l => l.count > 0);
+  const grp = sel.length === 1 && sel[0].kind === 'group' ? sel[0] : null;
+  row(grp ? '묶음 진형' : '진형', Object.entries(FORMS).map(([k, f]) =>
+    btn(f.name, () => cmdForm(sel, k), grp ? grp.form === k : ls.every(l => l.form === k))));
+  row('명령', [btn('후퇴', () => cmdRetreat(sel)), btn('정지', () => cmdStop(sel))]);
+  const org = [];
+  if (sel.length >= 2) org.push(btn('선택 묶기', () => select(cmdGroup(sel))));
+  if (sel.some(n => n.kind === 'group')) org.push(btn('묶음 해제', () => select(cmdUngroup(sel))));
+  if (u && !(sel.length === 1 && sel[0] === u)) org.push(btn(`${u.name}만 선택`, () => select([u])));
+  row('편성', org);
+  menu.style.display = 'block';
+  const r = menu.getBoundingClientRect();
+  menu.style.left = clamp(cx + 4, 4, innerWidth - r.width - 4) + 'px';
+  menu.style.top = clamp(cy + 4, 4, innerHeight - r.height - 4) + 'px';
+}
+function menuAt(u, cx, cy) {
+  if (u && !isSelected(u)) select([topOf(u)]);
+  openMenu(cx, cy, u);
+}
+
+// ---- 마우스·터치 ----
+// 마우스: 왼쪽=선택(끌면 상자), 오른쪽=이동(끌면 방향), 아군 위 오른쪽 클릭=메뉴
+// 터치: 탭=선택/이동, 끌기=방향 이동(선택이 없거나 아군에서 시작하면 상자), 길게 누르기=메뉴
+function dragKind(q) {
+  if (!q.touch) return q.btn === 2 ? 'move' : 'box';
+  return sel.length && !q.ally ? 'move' : 'box';
+}
+let press = 0;
+cv.addEventListener('contextmenu', e => e.preventDefault());
+cv.addEventListener('pointerdown', e => {
+  hideMenu();
+  const p = worldPt(e), u = pickUnit(p);
+  ptr = { p0: p, p1: p, sx: e.clientX, sy: e.clientY, btn: e.button, touch: e.pointerType !== 'mouse',
+          ally: u && u.side === 'ally' ? u : null, moved: false, menu: false, add: e.shiftKey || e.ctrlKey };
+  cv.setPointerCapture(e.pointerId);
+  if (ptr.touch) {
+    const q = ptr;
+    press = setTimeout(() => { if (ptr !== q || q.moved) return; q.menu = true; if (q.ally || sel.length) menuAt(q.ally, q.sx, q.sy); }, 550);
+  }
+});
+cv.addEventListener('pointermove', e => {
+  if (!ptr) return;
+  ptr.p1 = worldPt(e);
+  if (Math.hypot(e.clientX - ptr.sx, e.clientY - ptr.sy) > 8) ptr.moved = true;
+});
+cv.addEventListener('pointerup', e => {
+  clearTimeout(press);
+  const q = ptr; ptr = null;
+  if (!q || q.menu) return;
+  const face = q.moved ? Math.atan2(q.p1.y - q.p0.y, q.p1.x - q.p0.x) : null;
+  const kind = dragKind(q);
+  if (!q.touch && q.btn === 2) {
+    if (!q.moved && q.ally) menuAt(q.ally, e.clientX, e.clientY);
+    else if (sel.length) cmdMove(sel, q.p0.x, q.p0.y, face);
+  } else if (!q.touch) {
+    if (q.moved) select(boxNodes(units, q.p0.x, q.p0.y, q.p1.x, q.p1.y), q.add);
+    else if (q.ally) tapSelect(q.ally, q.add);
+    else if (!q.add) select([]);
+  } else if (!q.moved) {
+    if (q.ally) tapSelect(q.ally, false);
+    else if (sel.length) cmdMove(sel, q.p0.x, q.p0.y, null);
+  } else if (kind === 'move') cmdMove(sel, q.p0.x, q.p0.y, face);
+  else select(boxNodes(units, q.p0.x, q.p0.y, q.p1.x, q.p1.y), false);
+  syncUI();
+});
+cv.addEventListener('pointercancel', () => { clearTimeout(press); ptr = null; });
+addEventListener('blur', hideMenu);
+addEventListener('resize', hideMenu);
+
+function syncUI() {
+  sel = norm(sel);
+  document.querySelectorAll('[data-opt]').forEach(b => b.classList.toggle('on', opt[b.dataset.opt]));
+  document.getElementById('help').style.display = opt.help ? '' : 'none';
+}
+bar.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.cmd === 'restart') restart();
+  if (b.dataset.opt) { opt[b.dataset.opt] = !opt[b.dataset.opt]; resize(); }
+  syncUI();
+});
+const FORM_KEYS = { q: 'block', w: 'line', e: 'column', r: 'echelon', t: 'arc' };
+const PICK_KEYS = { 0: 'all', ...Object.fromEntries(ALLY.map(([id], i) => [i + 1, id])) };
+addEventListener('keydown', e => {
+  const key = e.key.toLowerCase();
+  if (PICK_KEYS[key]) select(pickNodes(PICK_KEYS[key]), e.shiftKey);
+  else if (key === 'escape') { hideMenu(); select([]); }
+  else if (FORM_KEYS[key]) cmdForm(sel, FORM_KEYS[key]);
+  else if (key === 'b') cmdRetreat(sel);
+  else if (key === 's') cmdStop(sel);
+  else if (key === 'g') select(cmdGroup(sel));
+  else if (key === 'u') select(cmdUngroup(sel));
+  syncUI();
+});
+
+// ---- 루프 ----
+let last = performance.now();
+function frame(now) {
+  const dt = Math.min(0.05, (now - last) / 1000); last = now; time += dt;
+  if (!over) {
+    for (const f of units) if (f.side === 'enemy') stepAI(f, dt, units);
+    for (const f of units) if (f.count > 0) stepFleet(f, dt, units, say);
+    for (const f of units) stepShips(f, dt);
+    const before = units.map(f => f.count);
+    if (opt.combat) stepCombat(units, dt, time);
+    else for (const f of units) f.firing = null;
+    let changed = false;
+    units.forEach((f, i) => { if (before[i] > 0 && f.count === 0) { say(`${f.name} 전멸`); orderStop(f); changed = true; } });
+    if (changed) syncUI();
+    const allyLeft = units.some(f => f.side === 'ally' && f.count), enemyLeft = units.some(f => f.side === 'enemy' && f.count);
+    if (!allyLeft || !enemyLeft) { over = true; say(allyLeft ? '승리 — 적 함대 전멸' : '패배 — 아군 함대 전멸'); }
+  }
+  draw();
+  requestAnimationFrame(frame);
+}
+
+// ---- 자체 검사: ?test 또는 콘솔 selfTest() ----
+function selfTest() {
+  const out = [], ok = (c, m) => out.push(`${c ? 'PASS' : 'FAIL'} ${m}`);
+  const savedGroups = groups, savedLog = LOG;
+  groups = []; LOG = () => {};
+  try {
+    const sim = (us, sec, onFrame) => { for (let i = 0; i < Math.round(sec * 60); i++) {
+      for (const u of us) stepFleet(u, 1 / 60, us, say); for (const u of us) stepShips(u, 1 / 60); if (onFrame) onFrame(i / 60); } };
+    const near = (a, b) => a.every((p, i) => Math.hypot(p[0] - b[i][0], p[1] - b[i][1]) < 1e-6);
+
+    // 기동
+    const f = makeUnit('검사', 'ally', 500, 450, 0, 'block');
+    orderForm(f, 'line');
+    sim([f], C.FORM_TIME - 0.2);
+    ok(f.formT < 1, '전환 시간 전에는 전환 중');
+    sim([f], 0.4);
+    ok(f.formT === 1 && near(f.cur, formOffsets('line', f.n)), `${C.FORM_TIME}초 뒤 목표 진형과 일치`);
+    const h0 = f.h;
+    orderRetreat(f); sim([f], 1);
+    ok(f.mode === 'retreat' && Math.abs(angDiff(f.h, h0)) < 1e-9, '후퇴 중 함수 방향 유지');
+    sim([f], 10);
+    ok(f.mode === 'idle' && Math.abs(angDiff(f.h, h0)) < 1e-9, '후퇴 도착 후에도 함수 유지');
+    orderMove(f, f.x + 300, f.y + 120, Math.PI / 2); sim([f], 30);
+    ok(f.target === null && Math.abs(angDiff(f.h, Math.PI / 2)) < 0.01, '이동 도착 후 지정 방향으로 정렬');
+    sim([f], 3);
+    const ownSlot = u => { const slots = u.cur.map(off => toWorld(off, u.h, u.x, u.y));
+      return u.ships.filter(s => s.alive).every(sh => {
+        let bi = 0, bd = Infinity;
+        slots.forEach(([x, y], i) => { const d = Math.hypot(sh.x - x, sh.y - y); if (d < bd) { bd = d; bi = i; } });
+        return bi === sh.k; }); };
+    ok(ownSlot(f), '모든 함선이 자기 번호 자리에 가장 가깝다(자리 고정)');
+    ok(f.ships.every(sh => Math.abs(angDiff(sh.h, f.h)) < 0.01), '정지 후 모든 함선이 같은 방향');
+    const run = () => { const g = makeUnit('결정성', 'ally', 400, 400, 0.3, 'arc'); orderMove(g, 900, 700, null); orderForm(g, 'column'); sim([g], 7); return g.ships.map(s => s.x.toFixed(6) + s.y.toFixed(6)).join(); };
+    ok(run() === run(), '같은 명령이면 같은 결과(결정적)');
+
+    // 교전
+    const duel = (bh, sec) => {
+      const a = makeUnit('A', 'ally', 400, 450, 0, 'block'), b = makeUnit('B', 'enemy', 700, 450, bh, 'block'), all = [a, b];
+      for (let i = 0, t = 0; i < Math.round(sec * 60); i++, t += 1 / 60) { stepShips(a, 1 / 60); stepShips(b, 1 / 60); stepCombat(all, 1 / 60, t); }
+      return [a, b];
+    };
+    const [fa, fb] = duel(Math.PI, 20);
+    ok(fa.count < C.SHIPS && fa.count === fb.count, '정면 대치는 양쪽 손실이 같다(동시 적용)');
+    const [ra, rb] = duel(0, 20);
+    ok(ra.count === C.SHIPS && !rb.firing, '사격각 밖(등 돌린 함대)은 사격하지 않는다');
+    ok(C.SHIPS - rb.count > C.SHIPS - fb.count, '후방 피격이 정면 피격보다 손실이 크다');
+    ok(ownSlot(rb) && rb.ships.some(s => !s.alive), '격침 뒤에도 남은 함선은 자기 자리 유지(빈자리 메우기 없음)');
+    const dr = () => duel(Math.PI * 0.8, 15).map(u => u.ships.map(s => +s.alive + s.hp.toFixed(6)).join()).join('|');
+    ok(dr() === dr(), '교전도 결정적');
+
+    // 함대 묶음(하위 분할 없음)
+    const shapeErr = g => { const cs = g.children.map(centroid), base = toWorld(g.offs[0], g.h, 0, 0);
+      return Math.max(...cs.map((c, i) => { const w = toWorld(g.offs[i], g.h, 0, 0);
+        return Math.hypot((c[0] - cs[0][0]) - (w[0] - base[0]), (c[1] - cs[0][1]) - (w[1] - base[1])); })); };
+    const GAP = 160;
+    const mk3 = (ids = ['A', 'B', 'C'], n = C.SHIPS, cx = 300, cy = 300) => {
+      const us = ids.map((id, i) => makeUnit(id, 'ally', cx, cy + (i - 1) * GAP, 0, 'block', n, id));
+      return [makeGroup('G', us, null, [[0, -GAP], [0, 0], [0, GAP]], 0), us];
+    };
+    let [g, us] = mk3();
+    cmdMove([g], 900, 300, 0); sim(us, 20);
+    ok(us.every(u => !u.target) && shapeErr(g) < 1, '묶음 평행 이동: 도착 후 함대 상대 위치 유지');
+
+    [g, us] = mk3();
+    cmdMove([g], 800, 600, Math.PI / 2);
+    const arrive = us.map(() => null);
+    sim(us, 40, t => us.forEach((u, i) => { if (!u.target && arrive[i] === null) arrive[i] = t; }));
+    const spread = Math.max(...arrive) - Math.min(...arrive);
+    ok(arrive.every(a => a !== null) && shapeErr(g) < 1, '묶음 회전 이동: 90° 돌린 배치로 도착');
+    ok(spread < 2, `묶음 함대들이 거의 동시에 도착(차이 ${spread.toFixed(2)}초)`);
+
+    cmdMove([us[0]], 1200, 150, null);
+    ok(us[0].parent === null && g.children.length === 2 && groups.includes(g), '묶음 안 함대에 개별 명령 → 그 함대만 이탈');
+    cmdMove([us[1]], 1200, 400, null);
+    ok(!groups.includes(g) && us.every(u => u.parent === null), '남은 함대가 1개가 되면 묶음 자동 해제');
+
+    const [g2, us2] = mk3(['D', 'E', 'F']);
+    const solo = makeUnit('S', 'ally', 300, 800, 0, 'block');
+    const U = makeGroup('U', [g2, solo]);
+    ok(g2.parent === U && solo.parent === U && U.children.length === 2, '묶음 안에 묶음');
+    const all2 = [...us2, solo];
+    cmdMove([U], 1000, 450, -Math.PI / 4); sim(all2, 40);
+    ok(all2.every(u => !u.target) && shapeErr(g2) < 1 && shapeErr(U) < 1, '중첩 묶음 이동: 바깥·안쪽 상대 위치 모두 유지');
+    cmdMove([us2[0]], 200, 100, null);
+    ok(us2[0].parent === null && g2.parent === U, '안쪽 묶음의 함대 이탈 시 바깥 묶음 구조는 유지');
+    const back = cmdUngroup([U]);
+    ok(back.length === 2 && back.includes(g2) && back.includes(solo) && !groups.includes(U) && g2.parent === null, '바깥 묶음 해제: 안쪽 묶음과 함대가 독립');
+    const back2 = cmdUngroup([g2]);
+    ok(back2.length === 2 && us2.every(u => u.parent === null) && !groups.includes(g2), '안쪽 묶음 해제: 함대 모두 독립');
+
+    // 진형: 함대별 / 묶음(구성원 진형도 함께)
+    const near0 = v => Math.abs(v) < 1e-6;
+    const [gf, uf] = mk3(['P', 'Q', 'R'], 30, 800, 450);
+    cmdForm([gf], 'line'); sim(uf, 40);
+    ok(gf.form === 'line' && uf.every(u => u.form === 'line' && u.formT === 1), '묶음 진형 지정 → 안의 모든 함대 진형도 같은 진형');
+    ok(gf.offs.every(o => near0(o[0])) && uf.every(u => !u.target) && shapeErr(gf) < 1, '묶음 가로줄: 함대들이 옆으로 한 줄로 재배치');
+    ok(gf.offs[0][1] < gf.offs[1][1] && gf.offs[1][1] < gf.offs[2][1], '재배치 때 함대 좌우 순서 유지(엇갈림 없음)');
+    cmdForm([uf[1]], 'arc');
+    ok(uf[1].form === 'arc' && uf[0].form === 'line' && uf[1].parent === gf, '묶음 안 함대 하나만 진형 변경 가능(묶음 유지)');
+
+    const [gn, un] = mk3(['X', 'Y', 'Z'], 30, 700, 300);
+    const sn = makeUnit('W', 'ally', 700, 650, 0, 'line', 30);
+    const UN = makeGroup('UN', [gn, sn]), alln = [...un, sn];
+    cmdForm([UN], 'block'); sim(alln, 60);
+    ok(UN.form === 'block' && gn.form === 'block' && alln.every(u => u.form === 'block' && u.formT === 1), '중첩 묶음 진형 → 안쪽 묶음·모든 함대까지 같은 진형');
+    ok(alln.every(u => !u.target) && shapeErr(UN) < 1 && shapeErr(gn) < 1, '중첩 묶음 진형: 바깥·안쪽 배치 모두 도착');
+    // 제자리 반전
+    const posOf = u => u.ships.map(s => [s.x, s.y]);
+    const maxMove = (a, b) => Math.max(...a.map((p, i) => Math.hypot(p[0] - b[i][0], p[1] - b[i][1])));
+    const fr = makeUnit('반전', 'ally', 800, 450, 0, 'block', 30);
+    const p0 = posOf(fr);
+    orderMove(fr, 450, 450, null); sim([fr], 1 / 60);
+    ok(Math.abs(angDiff(fr.h, Math.PI)) < 1e-9 && fr.hold > 0, '뒤쪽 이동 명령 → 기준 방향이 한 번에 180° 반전');
+    sim([fr], C.FLIP_TIME * 0.5);
+    ok(maxMove(p0, posOf(fr)) < 1e-6, '반전 중 함선 위치는 그대로(함대가 빙 돌지 않음)');
+    ok(fr.ships.every(s => Math.abs(angDiff(s.h, 0)) > 0.5 && Math.abs(angDiff(s.h, Math.PI)) > 0.5), '반전 중 함선은 제자리에서 돌아서는 중');
+    sim([fr], C.FLIP_TIME * 0.6);
+    ok(fr.hold === 0 && fr.ships.every(s => Math.abs(angDiff(s.h, Math.PI)) < 0.02), `${C.FLIP_TIME}초 뒤 모든 함선이 180° 돌아섬`);
+    sim([fr], 12);
+    ok(!fr.target && Math.abs(fr.x - 450) < 1 && Math.abs(angDiff(fr.h, Math.PI)) < 1e-6, '돌아선 뒤 그대로 전진해 도착');
+    const p1 = posOf(fr);
+    orderMove(fr, fr.x, fr.y, 0); sim([fr], C.FLIP_TIME + 0.2);
+    ok(!fr.target && maxMove(p1, posOf(fr)) < 1e-6 && fr.ships.every(s => Math.abs(angDiff(s.h, 0)) < 0.02), '제자리 방향 지정(180°)도 위치 유지·함선만 반전');
+
+    opt.flip = false;
+    const fo = makeUnit('회전', 'ally', 800, 450, 0, 'block', 30);
+    orderMove(fo, 450, 450, null); sim([fo], 0.5);
+    ok(fo.hold === 0 && Math.abs(angDiff(fo.h, 0)) < C.TURN * 0.6 && maxMove(posOf(makeUnit('기준', 'ally', 800, 450, 0, 'block', 30)), posOf(fo)) > 1, '제자리 반전 끄면 예전처럼 함대 전체가 선회');
+    opt.flip = true;
+
+    const [gr, ur] = mk3(['L1', 'M1', 'R1'], 30, 900, 450);
+    cmdMove([gr], 450, 450, Math.PI); sim(ur, 30);
+    ok(ur.every(u => !u.target) && ur[0].y < ur[1].y && ur[1].y < ur[2].y && shapeErr(gr) < 1, '묶음 180° 반전: 함대들이 자리를 바꾸지 않음');
+    // 접적 이동: 적이 가시 범위 안에 보이면 함선은 적을 향하고 진형은 돌리지 않고 이동만
+    const ca = makeUnit('접적', 'ally', 400, 450, 0, 'block', 30, 'ca', 1), ce = makeUnit('적', 'enemy', 800, 450, Math.PI, 'block', 30);
+    const pair = [ca, ce];
+    orderMove(ca, 400, 250, null); sim(pair, 1);
+    ok(ca.contact === ce && Math.abs(angDiff(ca.h, 0)) < 1e-9 && ca.hold === 0, '접적 이동: 진형 방향을 돌리지 않음');
+    ok(Math.abs((450 - ca.y) - C.V * C.RETREAT) < 1.5, '접적 옆걸음은 60% 속도');
+    ok(ca.ships.every(s => Math.abs(angDiff(s.h, Math.atan2(ce.y - s.y, ce.x - s.x))) < 0.05), '접적 중 각 함선은 적 함대를 향함');
+    sim(pair, 8);
+    ok(!ca.target && Math.abs(ca.y - 250) < 1 && Math.abs(angDiff(ca.h, 0)) < 1e-9, '접적 도착: 이동만 하고 진형 방향을 다시 맞추지 않음');
+    const pc = posOf(ca); orderMove(ca, 400, 450, null); sim(pair, 1 / 60);
+    ok(ca.hold === 0 && Math.abs(angDiff(ca.h, 0)) < 1e-9, '접적 중 뒤쪽 명령도 반전 없이 이동만');
+
+    const far = makeUnit('원거리', 'ally', 300, 450, 0, 'block', 30), fe = makeUnit('먼 적', 'enemy', 1500, 450, Math.PI, 'block', 30);
+    orderMove(far, 300, 250, null); sim([far, fe], 1);
+    ok(!far.contact && Math.abs(angDiff(far.h, 0)) > 0.3, '적이 멀면 예전처럼 이동 방향으로 선회');
+
+    const [gc, uc] = mk3(['C1', 'C2', 'C3'], 30, 400, 450);
+    const ge = makeUnit('묶음 적', 'enemy', 620, 450, Math.PI, 'block', 30), allc = [...uc, ge];
+    sim(allc, 1 / 60);
+    const h0g = gc.h;
+    cmdMove([gc], 400, 300, null); sim(allc, 15);
+    ok(uc.every(u => !u.target) && Math.abs(angDiff(gc.h, h0g)) < 1e-9 && shapeErr(gc) < 1 && uc[0].y < uc[1].y && uc[1].y < uc[2].y, '접적 묶음: 배치를 돌리지 않고 평행 이동');
+    // 가시 범위(바깥 함선 기준 + 거리)와 정찰함 레이더
+    // 30척 덩어리: 앞뒤 ±20. 아군(함수 0) 앞끝 x=420, 적(함수 π)의 앞끝은 적 중심 x-20 → 간격 = 적x - 440
+    const va = makeUnit('시야', 'ally', 400, 450, 0, 'block', 30);
+    updateSight(va);
+    ok(visibleTo(va, makeUnit('e1', 'enemy', 680, 450, Math.PI, 'block', 30)) && !visibleTo(va, makeUnit('e2', 'enemy', 700, 450, Math.PI, 'block', 30)),
+       `가시 범위 = 가장 바깥 함선에서 ${C.VIS}까지(간격 240 보임, 260 안 보임)`);
+    const vl = makeUnit('가로', 'ally', 400, 450, 0, 'line', 30); updateSight(vl);
+    const side = makeUnit('e3', 'enemy', 400, 760, Math.PI, 'block', 30);
+    ok(visibleTo(vl, side) && Math.hypot(side.x - vl.x, side.y - vl.y) > C.VIS + 50, '중심이 아니라 진형 끝 함선 기준(넓은 가로줄은 옆으로 더 멀리 봄)');
+    const vr = makeUnit('정찰', 'ally', 400, 450, 0, 'block', 30, 'vr', 1); updateSight(vr);
+    const e4 = makeUnit('e4', 'enemy', 870, 450, Math.PI, 'block', 30);
+    ok(vr.radar && vr.sight === C.RADAR && visibleTo(vr, e4) && !visibleTo(va, e4), `정찰함이 있으면 레이더 ${C.RADAR}를 같은 방식으로 적용`);
+    vr.ships.find(s => s.recon).alive = false; updateSight(vr);
+    ok(!vr.radar && vr.sight === C.VIS && !visibleTo(vr, e4), '정찰함이 격침되면 가시 범위로 돌아감');
+    const fa2 = makeUnit('사격', 'ally', 400, 450, 0, 'block', 30), fe2 = makeUnit('e5', 'enemy', 700, 450, Math.PI, 'block', 30);
+    stepCombat([fa2, fe2], 1 / 60, 0);
+    const fr2 = makeUnit('정찰 사격', 'ally', 400, 450, 0, 'block', 30, 'fr2', 1), fe3 = makeUnit('e6', 'enemy', 700, 450, Math.PI, 'block', 30);
+    stepCombat([fr2, fe3], 1 / 60, 0);
+    ok(!fa2.firing && fr2.firing === fe3, '사거리 안이어도 안 보이면 사격하지 않고, 정찰함으로 보이면 사격');
+    // 상자 선택
+    const [g3, us3] = mk3();
+    const solo3 = makeUnit('S3', 'ally', 300, 800, 0, 'block');
+    const U3 = makeGroup('U3', [g3, solo3]), list3 = [...us3, solo3];
+    let b = boxNodes(list3, 200, 50, 400, 900);
+    ok(b.length === 1 && b[0] === U3, '상자에 전부 들어가면 가장 바깥 묶음 선택');
+    b = boxNodes(list3, 200, 50, 400, 700);
+    ok(b.length === 1 && b[0] === g3, '안쪽 묶음만 통째로 들어가면 그 묶음 선택');
+    b = boxNodes(list3, 200, 50, 400, 200);
+    ok(b.length === 1 && b[0] === us3[0], '함대 하나만 들어가면 그 함대 선택');
+    b = boxNodes(list3, 200, 400, 400, 900);
+    ok(b.length === 2 && b.includes(us3[2]) && b.includes(solo3), '여러 묶음에 걸치면 들어간 함대들을 선택');
+
+    // 초기 배치
+    const savedUnits = units;
+    newBattle();
+    ok(units.filter(u => u.side === 'ally').map(u => u.name).join() === '유비 함대,관우 함대,장비 함대,조운 함대,마초 함대,황충 함대'
+       && units.filter(u => u.side === 'enemy').map(u => u.name).join() === '조조 함대,장료 함대,악진 함대,우금 함대,장합 함대,서황 함대'
+       && units.every(u => u.n === C.SHIPS && u.count === C.SHIPS && !u.parent) && groups.length === 0, '아군 6·적 6 함대, 함대당 함선 100척, 소집단·초기 묶음 없음');
+    units = savedUnits;  } catch (err) {
+    out.push('FAIL 예외: ' + err.message);
+  } finally {
+    groups = savedGroups; LOG = savedLog;
+  }
+  return out;
+}
+
+newBattle();
+resize();
+syncUI();
+if (new URLSearchParams(location.search).has('test')) {
+  const res = selfTest(), el = document.getElementById('test'), fail = res.some(r => r.startsWith('FAIL'));
+  el.textContent = res.join('\n');
+  el.style.display = 'block';
+  el.style.background = fail ? '#5c1a1a' : '#14432f';
+  console.log(res.join('\n'));
+  window.TEST_RESULT = fail ? 'FAIL' : 'PASS';
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
