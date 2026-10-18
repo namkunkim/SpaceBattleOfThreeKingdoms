@@ -578,9 +578,10 @@ func _draw_cut(c: Control) -> void:
 	var side: int = cut_data.side
 	var pi_: int = cut_data.portrait
 	var pr := Rect2(3, 3, 150, c.size.y - 6)
-	# 초상 상반신을 잘라 넣고 오른쪽을 사선으로 깎는다
-	var src_r := Rect2((pi_ % 3) * 512.0 + 60.0, (pi_ / 3) * 512.0 + 20.0, 380.0, 268.0)
-	c.draw_texture_rect_region(battle.sheet, pr, src_r)
+	# 같은 장수별 초상을 사용하고 슬롯의 가로세로 비율로 잘라 얼굴을 찌그러뜨리지 않는다.
+	var portrait: Texture2D = battle._portrait_tex(pi_)
+	var src_r := Rect2(0, 0, portrait.get_width(), portrait.get_width() * pr.size.y / pr.size.x)
+	c.draw_texture_rect_region(portrait, pr, src_r)
 	c.draw_colored_polygon(PackedVector2Array([Vector2(125, 3), Vector2(154, 3), Vector2(154, c.size.y - 3), Vector2(100, c.size.y - 3)]), UiTheme.BG_BOTTOM)
 	c.draw_rect(Rect2(0, 0, 3, c.size.y), UiTheme.side_color(side))
 	UiDraw.text(c, Vector2(160, 34), cut_data.name, "serif_bold", 18, UiTheme.INK)

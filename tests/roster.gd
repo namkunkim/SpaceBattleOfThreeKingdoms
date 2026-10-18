@@ -32,7 +32,7 @@ func _run() -> void:
 				return
 	# W-1: 이름·세력은 시나리오에서
 	var p := Commanders.person("CHR-0207")
-	if not TestCheck.ok(self, p.get("name", "") == "정보" and p.get("faction", "") == "wu" and p.get("portrait", 0) == -1, "person CHR-0207 %s" % p): return
+	if not TestCheck.ok(self, p.get("name", "") == "정보" and p.get("faction", "") == "wu" and p.get("portrait", -1) == Commanders.portrait_index("정보"), "person CHR-0207 %s" % p): return
 	if not TestCheck.ok(self, Commanders.person("CHR-0134").get("portrait", -1) == 2 and Commanders.person("liu_bei").is_empty(), "portrait by CHR id"): return
 	# W-2(Q82): 조조 함대 앞에서부터 입문 9 · 표준 10 · 상급/극한 14개, 척 수 배율 없음
 	var n := {}

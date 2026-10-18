@@ -119,7 +119,17 @@ func _run() -> void:
 	var Pa: Dictionary = A.postures.aggressive
 	if not TestCheck.ok(self, base_s.salvo.hold_distance(ally) and not base_s.salvo.hold_distance(carrier), "유비 SQ-02 강습모함 없음, 조조 중군 SQ-01 있음"): return
 	var Dc: float = base_s.cai._desired(base_s, carrier, A.factions.cao_cao, Pa, float(Pa.bias))
-	if not TestCheck.ok(self, is_equal_approx(Dc, 100.0), "강습모함 보유 함대의 적극 목표 거리는 강습 100: %.0f" % Dc): return
+	# 원거리 유지(ai.standoff): 일정상 강습 단계여도 돌격(강습 특기) 전에는 교전 거리 170, 돌격 중에만 강습 100으로 붙는다
+	if not TestCheck.ok(self, is_equal_approx(Dc, 170.0) and base_s.cai._due, "강습 단계 강습모함 함대는 돌격 전엔 교전 거리 170: %.0f" % Dc): return
+	carrier.charge = 1
+	Dc = base_s.cai._desired(base_s, carrier, A.factions.cao_cao, Pa, float(Pa.bias))
+	carrier.charge = 0
+	if not TestCheck.ok(self, is_equal_approx(Dc, 100.0), "돌격(강습 특기) 중인 강습모함 함대는 강습 100: %.0f" % Dc): return
+	# 집중 사격(ai.focus): 확인 접촉 중 전력 구간이 가장 낮은 것. 추정 접촉은 고르지 않는다(정보 경계), 같은 구간이면 아군과 가까운 쪽
+	var fo: Array[Dictionary] = [{"id": 7, "pos": Vector2(500, 0), "state": "confirmed", "band": 4}, {"id": 8, "pos": Vector2(900, 0), "state": "confirmed", "band": 2},
+		{"id": 9, "pos": Vector2(100, 0), "state": "estimated", "band": 1}, {"id": 10, "pos": Vector2(300, 0), "state": "confirmed", "band": 2}]
+	var ap: Array[Vector2] = [Vector2.ZERO]
+	if not TestCheck.ok(self, base_s.cai._focus_of(fo, ap) == 10, "집중 표적은 확인 접촉 중 최저 구간·가까운 쪽"): return
 	# 4b~d. 같은 상황에서 방침만 바꿔 한 번 생각시킨다
 	var out := {}
 	for pid in want:
@@ -158,9 +168,9 @@ func _run() -> void:
 			if not TestCheck.ok(self, na.charge == 0, "강습모함 없는 적극 함대는 돌격하지 않는다"): return
 		out[pid] = {"charge": a.charge > 0, "kite": kite_to.distance_to(c.pos), "retreat": a2.retreat_order}
 	if not TestCheck.ok(self, out.aggressive.charge and not out.balanced.charge and not out.cautious.charge and not out.scheming.charge, "돌격은 적극만: %s" % str(out)): return
-	if not TestCheck.ok(self, out.cautious.kite >= 239.0 and out.scheming.kite >= 239.0 and out.balanced.kite < 131.0, "거리 130에서 신중·계략은 240까지 물러나고 균형·적극은 유지: %s" % str(out)): return
+	if not TestCheck.ok(self, out.cautious.kite >= 239.0 and out.scheming.kite >= 239.0 and out.balanced.kite >= 169.0, "거리 130에서 신중·계략은 240, 균형은 교전 거리 170까지 쏘면서 물러난다(ai.standoff): %s" % str(out)): return
 	if not TestCheck.ok(self, out.cautious.retreat and out.scheming.retreat and not out.aggressive.retreat and not out.balanced.retreat, "사기 3500: 신중·계략만 질서 퇴각: %s" % str(out)): return
-	# 4d2. 적 AI는 물러나지 않는다(PoC D): 신중 방침의 적 함대도 거리 130에서 그 자리를 지킨다
+	# 4d2. 원거리 유지(ai.standoff): 적 AI도 강습 특기 중이 아니면 물러난다(PoC D·Q108의 '물러나지 않는다'를 덮는다). 신중 방침은 240까지
 	var nt := _rc(1, false)
 	_park(nt, ["RC-LIU-SQ-02", "RC-CAO-SQ-02"])
 	var na2 := _f(nt, "RC-LIU-SQ-02")
@@ -172,7 +182,7 @@ func _run() -> void:
 	ne.posture = "cautious"
 	ne.ai_seen = 0
 	nt.cai.think(nt)
-	if not TestCheck.ok(self, (not ne.has_move) or ne.move_to.distance_to(na2.pos) < 131.0, "적 AI는 가까워도 물러나지 않는다 %s" % str(ne.move_to)): return
+	if not TestCheck.ok(self, ne.has_move and ne.move_to.distance_to(na2.pos) >= 239.0, "적 AI도 강습 특기가 아니면 목표 거리까지 물러난다 %s" % str(ne.move_to)): return
 	# 4e. 인물 위임(기본값): 지휘관 성향(정본 §4)으로 방침이 정해진다. 관우·조인(절의)은 신중, 조조(야심)는 적극, 황개는 계략 중시
 	var cai: CommanderAi = base_s.cai
 	if not TestCheck.ok(self, cai.posture_of(_f(base_s, "RC-LIU-SQ-02")) == "cautious" and cai.posture_of(_f(base_s, "RC-CAO-SQ-02")) == "cautious" and cai.posture_of(_f(base_s, "RC-CAO-SQ-01")) == "aggressive" and cai.posture_of(_f(base_s, "RC-SUN-SQ-03")) == "scheming" and cai.posture_of(_f(base_s, "RC-LIU-SQ-01")) == "balanced", "성향 → 방침"): return
