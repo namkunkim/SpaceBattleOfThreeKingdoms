@@ -112,6 +112,31 @@ func level_of(sc: int) -> int:
 		return 1
 	return 0
 
+# ============================================================ 가시 범위(PoC, Q107)
+# 관측 함대의 바깥 함선에서 view_r만큼 넓힌 영역. 정찰함(전자전함·정찰 장비 고속정)이 있으면 radar_r. 영역 안에 적 함선이 하나라도 있으면 확인 접촉이다.
+func scout(f: FleetState) -> bool:
+	return _count(f, "SHP-06") > 0 or (f.equip == "FAST-EQ-RECON" and _count(f, sim.salvo.C.fast_craft.ship_type_id) > 0)
+
+func view_range(f: FleetState) -> float:
+	return float(D.radar_r) if scout(f) else float(D.view_r)
+
+func in_view(o: FleetState, t: FleetState) -> bool:
+	var r := view_range(o)
+	var ext := 0.0
+	for p in o.form:
+		ext = maxf(ext, p.length())
+	for p in t.form:
+		ext = maxf(ext, p.length())
+	if o.pos.distance_to(t.pos) > r + 2.0 * ext:
+		return false   # 배치 반경 밖의 먼 거리는 점 단위 검사를 건너뛴다
+	var r2 := r * r
+	for p in t.form:
+		var tp := t.pos + p.rotated(t.heading)
+		for q in o.form:
+			if (o.pos + q.rotated(o.heading)).distance_squared_to(tp) <= r2:
+				return true
+	return false
+
 # ============================================================ 한 틱
 func step() -> void:
 	var st := sim.st
@@ -138,6 +163,8 @@ func _eval(side: int) -> void:
 		var best := 0
 		for i in obs.size():
 			best = maxi(best, level_of(score(sens[i], obs[i], t)))
+			if best < 2 and in_view(obs[i], t):
+				best = 2
 		if sim.skills and sim.skills.reveals(side, t):
 			best = level_of(int(D.confirmed))   # 특기 귀모·간파: 반경 안 적은 확인 상태(P8a)
 		var r: Dictionary = book.get(t.id, {})
