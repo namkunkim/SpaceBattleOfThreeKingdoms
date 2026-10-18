@@ -14,6 +14,8 @@ var A: Dictionary
 var last_view := [{}, {}]      # 진영별로 마지막에 읽은 공개 투영(테스트가 입력을 검사한다)
 var last_known := [[], []]     # 같은 순간 그 진영의 접촉표 ID(안개가 있을 때). 투영의 적은 이 안에만 있어야 한다
 var stats := {"charge": 0, "retreat": 0, "formation": 0}
+var _focus := -1     # 이번 생각에서 그 진영이 함께 노리는 표적 ID(집중 사격). 없으면 -1
+var _due := false    # 이번 함대가 거리 일정상 강습 단계에 왔다(원거리 유지 규칙에서 돌격 허용)
 
 func _init(cfg: Dictionary) -> void:
 	A = cfg
@@ -78,6 +80,7 @@ func _think_side(sim: BattleSim, side: int) -> void:
 	for s in view.squadrons:
 		if s.side == side and not s.get("dead", false):
 			allies.append(s.pos)
+	_focus = _focus_of(foes, allies)
 	for f in mine:
 		if sim.skills:
 			sim.skills.ai_eval(f, view)   # 특기 조건 발동(Q91). 함대 ID 순 → 슬롯 순, 함대당 하나
@@ -155,7 +158,10 @@ func _think_fleet(sim: BattleSim, f: FleetState, side: int, foes: Array[Dictiona
 	elif d > D + slack:
 		_do(sim, f, "ai_target", best.id if D <= chase_r + 1.0 else -1)
 		_do(sim, f, "ai_move", -1, aim)
-	elif d < D - slack and bool(P.kite) and f.side == 0:   # 적 AI는 물러나지 않는다(PoC D, Q108). 가까워지면 그 자리에서 마주 본다
+	elif d < D - slack and _std() and not _close(sim, f):
+		_do(sim, f, "ai_target", best.id if d <= f.range_r else -1)
+		_do(sim, f, "ai_move", -1, aim)   # 원거리 유지(Q110): 강습 특기 중이 아니면 적·아군 모두 쏘면서 목표 거리로 물러난다
+	elif d < D - slack and bool(P.kite) and f.side == 0:   # 원거리 유지(Q110)가 꺼져 있을 때: 적 AI는 kite를 쓰지 않는다(Q108 원래 규칙)
 		_do(sim, f, "ai_target", -1)
 		_do(sim, f, "ai_move", -1, aim)   # 너무 가깝다: 물러나 거리를 유지한다
 	else:
@@ -166,17 +172,50 @@ func _think_fleet(sim: BattleSim, f: FleetState, side: int, foes: Array[Dictiona
 	if sim.assault:
 		sim.assault.ai_try(f, best)   # 강습 거리에서 진형이 열렸으면 강습(M9)
 
+# ============================================================ 원거리 유지 · 집중 사격(ai.standoff·ai.focus)
+func _std() -> bool:
+	return bool(A.get("standoff", {}).get("enabled", false))
+
+# 근접 교전 중인가: 돌격(강습) 중이거나 강습 특기(assault_bp) 효과가 걸려 있다. 이때만 강습 거리로 붙는다
+func _close(sim: BattleSim, f: FleetState) -> bool:
+	return f.charge > 0 or (sim.skills != null and sim.skills.mul(f, "assault_bp") > BattleRules.BP)
+
+# 진영 집중 표적: 확인된 접촉 중 전력 구간이 가장 낮은 것, 같으면 아군 전대들과의 거리 합이 가장 작은 것.
+# 공개 투영의 확인 접촉만 쓴다(정보 경계). 결정적: 같은 값이면 ID가 작은 쪽
+func _focus_of(foes: Array[Dictionary], allies: Array[Vector2]) -> int:
+	if not A.has("focus"):
+		return -1
+	var best := -1
+	var bk := [INF, INF]
+	for c in foes:
+		if c.state != "confirmed":
+			continue
+		var sum := 0.0
+		for ap in allies:
+			sum += ap.distance_to(c.pos)
+		var k := [float(c.band), sum]
+		if k[0] < bk[0] or (k[0] == bk[0] and (k[1] < bk[1] or (k[1] == bk[1] and int(c.id) < best))):
+			bk = k
+			best = int(c.id)
+	return best
+
 # 현재 목표 거리: 첫 명중 뒤 포화 → 교전 → 강습 일정(realtime_rules.range_band_hold). a가 높으면 단계를 짧게 쓴다.
 func _desired(sim: BattleSim, f: FleetState, F: Dictionary, P: Dictionary, a: float) -> float:
 	var h: Dictionary = sim.rs.rt("range_band_hold", {})
 	var d := float(h.barrage_distance)
+	_due = false
+	var std := _std()
+	if std and _close(sim, f) and not sim.salvo.hold_distance(f):
+		return maxf(float(h.assault_distance), float(F.standoff))   # 강습 특기 중: 근접 교전(방침 최소 거리는 보지 않는다)
 	if sim.first_hit_tick >= 0:
 		var mul := float(P.hold_mul) * clampf(1.0 - 0.5 * (a - float(P.bias)), float(A.hold_clamp[0]), float(A.hold_clamp[1]))
 		var t := float(sim.st.tick - sim.first_hit_tick) / sim.st.hz
 		var b := float(h.barrage_hold_s_after_first_hit) * mul
 		var e := float(h.engagement_hold_s) * mul
 		if t >= b + e and not sim.salvo.hold_distance(f):
-			d = float(h.assault_distance)   # 강습 100은 강습모함 보유 함대만(Q68). 나머지는 교전 거리에서 멈춘다
+			_due = true
+			# 강습 100은 강습모함 보유 함대만(Q68). 원거리 유지 규칙이면 일정만으로는 붙지 않고 돌격(특기)을 써야 붙는다
+			d = float(h.engagement_distance) if std else float(h.assault_distance)
 		elif t >= b:
 			d = float(h.engagement_distance)
 	return maxf(d, maxf(float(P.min_dist), float(F.standoff)))
@@ -193,6 +232,8 @@ func _pick(sim: BattleSim, f: FleetState, tg: Array[Dictionary], lvl: Dictionary
 			s *= float(sc.base) + float(c.band) / 4 * float(sc.span)
 		if depth >= 3 and c.state != "confirmed":
 			s *= float(sc.estimated_mul)
+		if c.id == _focus and depth >= int(A.focus.min_depth):
+			s *= float(A.focus.mul)   # 진영이 함께 노리는 표적에 가산(집중 사격)
 		if s < bs:
 			bs = s
 			best = c
@@ -247,7 +288,7 @@ func _retreat(sim: BattleSim, f: FleetState, P: Dictionary) -> void:
 		stats.retreat += 1
 
 func _charge(sim: BattleSim, f: FleetState, P: Dictionary, a: float, d: float) -> void:
-	if not bool(P.charge) or f.charge > 0 or a < float(A.reaction.charge_bias) or f.mstate != "stable":
+	if not (bool(P.charge) or (_std() and _due)) or f.charge > 0 or a < float(A.reaction.charge_bias) or f.mstate != "stable":
 		return
 	if d > float(sim.rs.rt("range_band_hold.engagement_distance")) * float(A.reaction.charge_dist_share):
 		return
