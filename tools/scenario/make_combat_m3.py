@@ -146,7 +146,7 @@ def main():
                 "max_bp": 1500,
                 "player_counter_launch": False,
                 "enemy_counter_launch": True,
-                "status": "proposed (Q110: ratio-based air defense; Q111: per-fleet counter launch, player opt-in, enemy automatic)"
+                "status": "proposed (Q112: ratio-based air defense; Q111: per-fleet counter launch, player opt-in, enemy automatic)"
             },
             "evasion": {
                 "categories": ["line_fire", "intercept"],

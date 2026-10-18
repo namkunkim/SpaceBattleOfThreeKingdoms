@@ -328,7 +328,7 @@ func evasion_bp(tgt: FleetState, cat: String) -> int:
 		return 0
 	return mini(int(ev.max_bp), int(tgt.speed * float(ev.bp_per_speed)))
 
-# Q110: 현재 남은 함선 대비 유효 방공 함선 비율. 수치는 proposed 데이터에서 읽는다.
+# Q112: 현재 남은 함선 대비 유효 방공 함선 비율. 수치는 proposed 데이터에서 읽는다.
 func air_defense_bp(tgt: FleetState, cat: String) -> int:
 	var ad: Dictionary = C.get("air_defense", {})
 	if not ad.get("categories", []).has(cat):
