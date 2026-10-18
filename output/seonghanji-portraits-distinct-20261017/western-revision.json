@@ -1,0 +1,332 @@
+{
+  "date": "2026-10-18",
+  "reason": "User requested Western-region people be Western or Arab instead of East Asian",
+  "total": 13,
+  "records": [
+    {
+      "id": "SHJ-F090",
+      "name": "진론",
+      "status": "generated",
+      "filename": "SHJ-F090-western-v2.png",
+      "prompt": "Use case: stylized-concept. Create ONE original fictional Western Mediterranean man, age 43. Explicit new casting for the Western-region characters: Western Mediterranean man; this replacement must visibly reflect the requested Western or Arab casting. Individual identity: compact square face, high broad forehead, deep-set warm brown eyes, thick straight eyebrows, medium prominent straight nose, wide well-shaped mouth with a cleft chin; lightly olive skin; short neat dark-brown curls with tapered sides; completely clean-shaven; fit average shoulders. Handsome, likable, intelligent and approachable; neat professional hair and meticulous grooming. Preserve the distinctive face anatomy, eye colour, skin tone and build stated above. Do not reuse a generic face or famous actor likeness. Production metadata only: 진론; 서방권 — 중국 도래 기록·지식인; 관료 · 참모. Role characterization: 「대진상인」 서방 교역로 개통, 로마 외교 개시 조건 완화. Photoreal cinematic military science-fiction character portrait for a strategy game. Chest-up, entire head and hair visible with slight headroom, centered composition, no hands. Tailored futuristic civil or tactical staff uniform in muted graphite and bronze with sparse antique gold trim, functional science-fiction materials and individually varied collar design. Dark softly blurred futuristic spaceship bridge with sparse dim cyan instruments; cool subtle fill and warm neutral face light. Realistic healthy skin, fabric and metal; restrained low-saturation rendering and a thin subtle teal-grey border. No historical or religious costume, no celebrity likeness, no franchise design, no glossy plastic skin, no exaggerated neon, no weapons. Absolutely NO text, letters, numbers, captions, nameplates, identity tags, logos or watermark anywhere. Exactly ONE portrait, no collage or contact sheet, no extra person. Final delivery 561 x 701 pixels. Names and identity tags are separate files. This is creative fictional casting requested for a game, not a claim about the historical person's ethnicity, anatomy or lifespan.",
+      "castingSpec": "compact square face, high broad forehead, deep-set warm brown eyes, thick straight eyebrows, medium prominent straight nose, wide well-shaped mouth with a cleft chin; lightly olive skin; short neat dark-brown curls with tapered sides; completely clean-shaven; fit average shoulders",
+      "visualCasting": {
+        "label": "서구·지중해계",
+        "description": "Western Mediterranean man",
+        "fictionalInterpretation": true,
+        "age": 43,
+        "faceDesign": "compact square face, high broad forehead, deep-set warm brown eyes, thick straight eyebrows, medium prominent straight nose, wide well-shaped mouth with a cleft chin; lightly olive skin; short neat dark-brown curls with tapered sides; completely clean-shaven; fit average shoulders",
+        "appealDirection": "호감형 미남, 단정한 머리"
+      },
+      "tags": [
+        "SHJ-F090",
+        "진론",
+        "서방권 — 중국 도래 기록·지식인",
+        "관료 · 참모",
+        "개별얼굴설계",
+        "서구·지중해계"
+      ],
+      "generatedSource": "C:\\Users\\nk782\\.codex\\generated_images\\01a13522-280f-7d00-91d2-7c5476a167d5\\exec-f91a67e1-9157-45bd-8754-f5dbfa689c68.png"
+    },
+    {
+      "id": "SHJ-F091",
+      "name": "강승회",
+      "status": "generated",
+      "filename": "SHJ-F091-western-v2.png",
+      "prompt": "Use case: stylized-concept. Create ONE original fictional Arab man, age 31. Explicit new casting for the Western-region characters: Arab man; this replacement must visibly reflect the requested Western or Arab casting. Individual identity: heart-shaped face, broad forehead and tapering jaw; large expressive dark brown eyes with curved brows, high gently arched nose bridge, full lips and a subtle asymmetric smile; warm medium olive skin; neatly brushed-back short black hair, tidy separate moustache and bare chin; slender upright build. Handsome, likable, intelligent and approachable; neat professional hair and meticulous grooming. Preserve the distinctive face anatomy, eye colour, skin tone and build stated above. Do not reuse a generic face or famous actor likeness. Production metadata only: 강승회; 서방권 — 중국 도래 기록·지식인; 관료. Role characterization: 「역경」 민심 회복 +30%, 사상 정책 개방. Photoreal cinematic military science-fiction character portrait for a strategy game. Chest-up, entire head and hair visible with slight headroom, centered composition, no hands. Tailored futuristic civil or tactical staff uniform in muted graphite and bronze with sparse antique gold trim, functional science-fiction materials and individually varied collar design. Dark softly blurred futuristic spaceship bridge with sparse dim cyan instruments; cool subtle fill and warm neutral face light. Realistic healthy skin, fabric and metal; restrained low-saturation rendering and a thin subtle teal-grey border. No historical or religious costume, no celebrity likeness, no franchise design, no glossy plastic skin, no exaggerated neon, no weapons. Absolutely NO text, letters, numbers, captions, nameplates, identity tags, logos or watermark anywhere. Exactly ONE portrait, no collage or contact sheet, no extra person. Final delivery 561 x 701 pixels. Names and identity tags are separate files. This is creative fictional casting requested for a game, not a claim about the historical person's ethnicity, anatomy or lifespan.",
+      "castingSpec": "heart-shaped face, broad forehead and tapering jaw; large expressive dark brown eyes with curved brows, high gently arched nose bridge, full lips and a subtle asymmetric smile; warm medium olive skin; neatly brushed-back short black hair, tidy separate moustache and bare chin; slender upright build",
+      "visualCasting": {
+        "label": "아랍계",
+        "description": "Arab man",
+        "fictionalInterpretation": true,
+        "age": 31,
+        "faceDesign": "heart-shaped face, broad forehead and tapering jaw; large expressive dark brown eyes with curved brows, high gently arched nose bridge, full lips and a subtle asymmetric smile; warm medium olive skin; neatly brushed-back short black hair, tidy separate moustache and bare chin; slender upright build",
+        "appealDirection": "호감형 미남, 단정한 머리"
+      },
+      "tags": [
+        "SHJ-F091",
+        "강승회",
+        "서방권 — 중국 도래 기록·지식인",
+        "관료",
+        "개별얼굴설계",
+        "아랍계"
+      ],
+      "generatedSource": "C:\\Users\\nk782\\.codex\\generated_images\\01a13522-280f-7d00-91d2-7c5476a167d5\\exec-d8fca40e-40b5-4911-9ed7-836fcbdb52c5.png"
+    },
+    {
+      "id": "SHJ-F092",
+      "name": "지겸",
+      "status": "generated",
+      "filename": "SHJ-F092-western-v2.png",
+      "prompt": "Use case: stylized-concept. Create ONE original fictional Arab man, age 60. Explicit new casting for the Western-region characters: Arab man; this replacement must visibly reflect the requested Western or Arab casting. Individual identity: long rectangular face, high cheekbones and fine jaw; wide-set hazel eyes below thin straight eyebrows; long narrow aquiline nose, thin well-shaped lips; light olive skin with natural age lines; silver hair in a neat short side part; entirely clean-shaven; lean shoulders. Handsome, likable, intelligent and approachable; neat professional hair and meticulous grooming. Preserve the distinctive face anatomy, eye colour, skin tone and build stated above. Do not reuse a generic face or famous actor likeness. Production metadata only: 지겸; 서방권 — 중국 도래 기록·지식인; 참모. Role characterization: 「문사」 외교·행정 효율 +25%. Photoreal cinematic military science-fiction character portrait for a strategy game. Chest-up, entire head and hair visible with slight headroom, centered composition, no hands. Tailored futuristic civil or tactical staff uniform in muted graphite and bronze with sparse antique gold trim, functional science-fiction materials and individually varied collar design. Dark softly blurred futuristic spaceship bridge with sparse dim cyan instruments; cool subtle fill and warm neutral face light. Realistic healthy skin, fabric and metal; restrained low-saturation rendering and a thin subtle teal-grey border. No historical or religious costume, no celebrity likeness, no franchise design, no glossy plastic skin, no exaggerated neon, no weapons. Absolutely NO text, letters, numbers, captions, nameplates, identity tags, logos or watermark anywhere. Exactly ONE portrait, no collage or contact sheet, no extra person. Final delivery 561 x 701 pixels. Names and identity tags are separate files. This is creative fictional casting requested for a game, not a claim about the historical person's ethnicity, anatomy or lifespan.",
+      "castingSpec": "long rectangular face, high cheekbones and fine jaw; wide-set hazel eyes below thin straight eyebrows; long narrow aquiline nose, thin well-shaped lips; light olive skin with natural age lines; silver hair in a neat short side part; entirely clean-shaven; lean shoulders",
+      "visualCasting": {
+        "label": "아랍계",
+        "description": "Arab man",
+        "fictionalInterpretation": true,
+        "age": 60,
+        "faceDesign": "long rectangular face, high cheekbones and fine jaw; wide-set hazel eyes below thin straight eyebrows; long narrow aquiline nose, thin well-shaped lips; light olive skin with natural age lines; silver hair in a neat short side part; entirely clean-shaven; lean shoulders",
+        "appealDirection": "호감형 미남, 단정한 머리"
+      },
+      "tags": [
+        "SHJ-F092",
+        "지겸",
+        "서방권 — 중국 도래 기록·지식인",
+        "참모",
+        "개별얼굴설계",
+        "아랍계"
+      ],
+      "generatedSource": "C:\\Users\\nk782\\.codex\\generated_images\\01a13522-280f-7d00-91d2-7c5476a167d5\\exec-af7a9e9f-8d54-4c1c-8aa0-ff416d1f0c50.png"
+    },
+    {
+      "id": "SHJ-F093",
+      "name": "안세고",
+      "status": "generated",
+      "filename": "SHJ-F093-western-v2.png",
+      "prompt": "Use case: stylized-concept. Create ONE original fictional Arab man, age 61. Explicit new casting for the Western-region characters: Arab man; this replacement must visibly reflect the requested Western or Arab casting. Individual identity: broad oval face, low forehead, deep brown rounded eyes under thick low eyebrows; strong convex nose, full relaxed lips, broad chin; warm tan skin and mature smile lines; neat short salt-and-pepper hair and a short meticulously trimmed rounded salt-and-pepper beard; sturdy average build. Handsome, likable, intelligent and approachable; neat professional hair and meticulous grooming. Preserve the distinctive face anatomy, eye colour, skin tone and build stated above. Do not reuse a generic face or famous actor likeness. Production metadata only: 안세고; 서방권 — 중국 도래 기록·지식인; 관료. Role characterization: 「사왕자」 이역 인물 등용 시 천명 감소 완화. Photoreal cinematic military science-fiction character portrait for a strategy game. Chest-up, entire head and hair visible with slight headroom, centered composition, no hands. Tailored futuristic civil or tactical staff uniform in muted graphite and bronze with sparse antique gold trim, functional science-fiction materials and individually varied collar design. Dark softly blurred futuristic spaceship bridge with sparse dim cyan instruments; cool subtle fill and warm neutral face light. Realistic healthy skin, fabric and metal; restrained low-saturation rendering and a thin subtle teal-grey border. No historical or religious costume, no celebrity likeness, no franchise design, no glossy plastic skin, no exaggerated neon, no weapons. Absolutely NO text, letters, numbers, captions, nameplates, identity tags, logos or watermark anywhere. Exactly ONE portrait, no collage or contact sheet, no extra person. Final delivery 561 x 701 pixels. Names and identity tags are separate files. This is creative fictional casting requested for a game, not a claim about the historical person's ethnicity, anatomy or lifespan.",
+      "castingSpec": "broad oval face, low forehead, deep brown rounded eyes under thick low eyebrows; strong convex nose, full relaxed lips, broad chin; warm tan skin and mature smile lines; neat short salt-and-pepper hair and a short meticulously trimmed rounded salt-and-pepper beard; sturdy average build",
+      "visualCasting": {
+        "label": "아랍계",
+        "description": "Arab man",
+        "fictionalInterpretation": true,
+        "age": 61,
+        "faceDesign": "broad oval face, low forehead, deep brown rounded eyes under thick low eyebrows; strong convex nose, full relaxed lips, broad chin; warm tan skin and mature smile lines; neat short salt-and-pepper hair and a short meticulously trimmed rounded salt-and-pepper beard; sturdy average build",
+        "appealDirection": "호감형 미남, 단정한 머리"
+      },
+      "tags": [
+        "SHJ-F093",
+        "안세고",
+        "서방권 — 중국 도래 기록·지식인",
+        "관료",
+        "개별얼굴설계",
+        "아랍계"
+      ],
+      "generatedSource": "C:\\Users\\nk782\\.codex\\generated_images\\01a13522-280f-7d00-91d2-7c5476a167d5\\exec-cc799db1-8640-486e-bf87-a8056c551e76.png"
+    },
+    {
+      "id": "SHJ-F094",
+      "name": "지루가참",
+      "status": "generated",
+      "filename": "SHJ-F094-western-v2.png",
+      "prompt": "Use case: stylized-concept. Create ONE original fictional Arab man, age 47. Explicit new casting for the Western-region characters: Arab man; this replacement must visibly reflect the requested Western or Arab casting. Individual identity: diamond-shaped face, prominent cheekbones, narrow temples and angular chin; dark amber almond-shaped eyes, dense separated brows, strong straight high-bridged nose, narrow mouth with a fuller lower lip; warm medium-brown skin; close-cropped tidy black curls and a neat short square black beard; slim shoulders. Handsome, likable, intelligent and approachable; neat professional hair and meticulous grooming. Preserve the distinctive face anatomy, eye colour, skin tone and build stated above. Do not reuse a generic face or famous actor likeness. Production metadata only: 지루가참; 서방권 — 중국 도래 기록·지식인; 참모. Role characterization: 프롤로그 시기 배경 인물. Photoreal cinematic military science-fiction character portrait for a strategy game. Chest-up, entire head and hair visible with slight headroom, centered composition, no hands. Tailored futuristic civil or tactical staff uniform in muted graphite and bronze with sparse antique gold trim, functional science-fiction materials and individually varied collar design. Dark softly blurred futuristic spaceship bridge with sparse dim cyan instruments; cool subtle fill and warm neutral face light. Realistic healthy skin, fabric and metal; restrained low-saturation rendering and a thin subtle teal-grey border. No historical or religious costume, no celebrity likeness, no franchise design, no glossy plastic skin, no exaggerated neon, no weapons. Absolutely NO text, letters, numbers, captions, nameplates, identity tags, logos or watermark anywhere. Exactly ONE portrait, no collage or contact sheet, no extra person. Final delivery 561 x 701 pixels. Names and identity tags are separate files. This is creative fictional casting requested for a game, not a claim about the historical person's ethnicity, anatomy or lifespan.",
+      "castingSpec": "diamond-shaped face, prominent cheekbones, narrow temples and angular chin; dark amber almond-shaped eyes, dense separated brows, strong straight high-bridged nose, narrow mouth with a fuller lower lip; warm medium-brown skin; close-cropped tidy black curls and a neat short square black beard; slim shoulders",
+      "visualCasting": {
+        "label": "아랍계",
+        "description": "Arab man",
+        "fictionalInterpretation": true,
+        "age": 47,
+        "faceDesign": "diamond-shaped face, prominent cheekbones, narrow temples and angular chin; dark amber almond-shaped eyes, dense separated brows, strong straight high-bridged nose, narrow mouth with a fuller lower lip; warm medium-brown skin; close-cropped tidy black curls and a neat short square black beard; slim shoulders",
+        "appealDirection": "호감형 미남, 단정한 머리"
+      },
+      "tags": [
+        "SHJ-F094",
+        "지루가참",
+        "서방권 — 중국 도래 기록·지식인",
+        "참모",
+        "개별얼굴설계",
+        "아랍계"
+      ],
+      "generatedSource": "C:\\Users\\nk782\\.codex\\generated_images\\01a13522-280f-7d00-91d2-7c5476a167d5\\exec-fe12fb01-2aac-4fb1-9c77-a36042450f24.png"
+    },
+    {
+      "id": "SHJ-F095",
+      "name": "갈레노스",
+      "status": "generated",
+      "filename": "SHJ-F095-western-v2.png",
+      "prompt": "Use case: stylized-concept. Create ONE original fictional Western Mediterranean man, age 35. Explicit new casting for the Western-region characters: Western Mediterranean man; this replacement must visibly reflect the requested Western or Arab casting. Individual identity: lean angular face, high cheeks and pointed chin; open green-brown eyes with expressive arched eyebrows; short straight nose and full balanced lips; light olive skin with a few subtle freckles; neatly styled short chestnut wavy hair; completely clean-shaven; lean athletic build. Handsome, likable, intelligent and approachable; neat professional hair and meticulous grooming. Preserve the distinctive face anatomy, eye colour, skin tone and build stated above. Do not reuse a generic face or famous actor likeness. Production metadata only: 갈레노스; 서방권 — 중국 도래 기록·지식인; 관료. Role characterization: 「의성」 무장 사망률 -40%, 부상 회복 가속. Photoreal cinematic military science-fiction character portrait for a strategy game. Chest-up, entire head and hair visible with slight headroom, centered composition, no hands. Tailored futuristic civil or tactical staff uniform in muted graphite and bronze with sparse antique gold trim, functional science-fiction materials and individually varied collar design. Dark softly blurred futuristic spaceship bridge with sparse dim cyan instruments; cool subtle fill and warm neutral face light. Realistic healthy skin, fabric and metal; restrained low-saturation rendering and a thin subtle teal-grey border. No historical or religious costume, no celebrity likeness, no franchise design, no glossy plastic skin, no exaggerated neon, no weapons. Absolutely NO text, letters, numbers, captions, nameplates, identity tags, logos or watermark anywhere. Exactly ONE portrait, no collage or contact sheet, no extra person. Final delivery 561 x 701 pixels. Names and identity tags are separate files. This is creative fictional casting requested for a game, not a claim about the historical person's ethnicity, anatomy or lifespan.",
+      "castingSpec": "lean angular face, high cheeks and pointed chin; open green-brown eyes with expressive arched eyebrows; short straight nose and full balanced lips; light olive skin with a few subtle freckles; neatly styled short chestnut wavy hair; completely clean-shaven; lean athletic build",
+      "visualCasting": {
+        "label": "서구·지중해계",
+        "description": "Western Mediterranean man",
+        "fictionalInterpretation": true,
+        "age": 35,
+        "faceDesign": "lean angular face, high cheeks and pointed chin; open green-brown eyes with expressive arched eyebrows; short straight nose and full balanced lips; light olive skin with a few subtle freckles; neatly styled short chestnut wavy hair; completely clean-shaven; lean athletic build",
+        "appealDirection": "호감형 미남, 단정한 머리"
+      },
+      "tags": [
+        "SHJ-F095",
+        "갈레노스",
+        "서방권 — 중국 도래 기록·지식인",
+        "관료",
+        "개별얼굴설계",
+        "서구·지중해계"
+      ],
+      "generatedSource": "C:\\Users\\nk782\\.codex\\generated_images\\01a13522-280f-7d00-91d2-7c5476a167d5\\exec-a66e4cd6-f3c6-4077-b6a2-2f6b83f774ed.png"
+    },
+    {
+      "id": "SHJ-F096",
+      "name": "파피니아누스",
+      "status": "generated",
+      "filename": "SHJ-F096-western-v2.png",
+      "prompt": "Use case: stylized-concept. Create ONE original fictional Western European man, age 24. Explicit new casting for the Western-region characters: Western European man; this replacement must visibly reflect the requested Western or Arab casting. Individual identity: youthful broad square face, strong jaw and rounded cheeks; clear blue eyes below straight dark-blond brows; short rounded nose, full mouth and a small dimple on one cheek; fair skin with light freckles; neat short dark-blond side-part haircut; completely clean-shaven; compact athletic build. Handsome, likable, intelligent and approachable; neat professional hair and meticulous grooming. Preserve the distinctive face anatomy, eye colour, skin tone and build stated above. Do not reuse a generic face or famous actor likeness. Production metadata only: 파피니아누스; 서방권 — 중국 도래 기록·지식인; 관료. Role characterization: 「법전」 행정 효율 +30%. Photoreal cinematic military science-fiction character portrait for a strategy game. Chest-up, entire head and hair visible with slight headroom, centered composition, no hands. Tailored futuristic civil or tactical staff uniform in muted graphite and bronze with sparse antique gold trim, functional science-fiction materials and individually varied collar design. Dark softly blurred futuristic spaceship bridge with sparse dim cyan instruments; cool subtle fill and warm neutral face light. Realistic healthy skin, fabric and metal; restrained low-saturation rendering and a thin subtle teal-grey border. No historical or religious costume, no celebrity likeness, no franchise design, no glossy plastic skin, no exaggerated neon, no weapons. Absolutely NO text, letters, numbers, captions, nameplates, identity tags, logos or watermark anywhere. Exactly ONE portrait, no collage or contact sheet, no extra person. Final delivery 561 x 701 pixels. Names and identity tags are separate files. This is creative fictional casting requested for a game, not a claim about the historical person's ethnicity, anatomy or lifespan.",
+      "castingSpec": "youthful broad square face, strong jaw and rounded cheeks; clear blue eyes below straight dark-blond brows; short rounded nose, full mouth and a small dimple on one cheek; fair skin with light freckles; neat short dark-blond side-part haircut; completely clean-shaven; compact athletic build",
+      "visualCasting": {
+        "label": "서구·지중해계",
+        "description": "Western European man",
+        "fictionalInterpretation": true,
+        "age": 24,
+        "faceDesign": "youthful broad square face, strong jaw and rounded cheeks; clear blue eyes below straight dark-blond brows; short rounded nose, full mouth and a small dimple on one cheek; fair skin with light freckles; neat short dark-blond side-part haircut; completely clean-shaven; compact athletic build",
+        "appealDirection": "호감형 미남, 단정한 머리"
+      },
+      "tags": [
+        "SHJ-F096",
+        "파피니아누스",
+        "서방권 — 중국 도래 기록·지식인",
+        "관료",
+        "개별얼굴설계",
+        "서구·지중해계"
+      ],
+      "generatedSource": "C:\\Users\\nk782\\.codex\\generated_images\\01a13522-280f-7d00-91d2-7c5476a167d5\\exec-9a335037-1e98-49fb-a203-ff03c58b277c.png"
+    },
+    {
+      "id": "SHJ-F097",
+      "name": "울피아누스",
+      "status": "generated",
+      "filename": "SHJ-F097-western-v2.png",
+      "prompt": "Use case: stylized-concept. Create ONE original fictional Arab man, age 53. Explicit new casting for the Western-region characters: Arab man; this replacement must visibly reflect the requested Western or Arab casting. Individual identity: long narrow face, high temples and a strong small chin; deep-set dark brown eyes under heavy straight eyebrows; long broad aquiline nose, narrow lips and deep philtrum; medium olive skin with mature forehead lines; neatly brushed-back short black hair with silver temples; meticulously groomed short stubble, no goatee; broad fit shoulders. Handsome, likable, intelligent and approachable; neat professional hair and meticulous grooming. Preserve the distinctive face anatomy, eye colour, skin tone and build stated above. Do not reuse a generic face or famous actor likeness. Production metadata only: 울피아누스; 서방권 — 중국 도래 기록·지식인; 관료. Role characterization: 「법제」 반란 발생률 -25%. Photoreal cinematic military science-fiction character portrait for a strategy game. Chest-up, entire head and hair visible with slight headroom, centered composition, no hands. Tailored futuristic civil or tactical staff uniform in muted graphite and bronze with sparse antique gold trim, functional science-fiction materials and individually varied collar design. Dark softly blurred futuristic spaceship bridge with sparse dim cyan instruments; cool subtle fill and warm neutral face light. Realistic healthy skin, fabric and metal; restrained low-saturation rendering and a thin subtle teal-grey border. No historical or religious costume, no celebrity likeness, no franchise design, no glossy plastic skin, no exaggerated neon, no weapons. Absolutely NO text, letters, numbers, captions, nameplates, identity tags, logos or watermark anywhere. Exactly ONE portrait, no collage or contact sheet, no extra person. Final delivery 561 x 701 pixels. Names and identity tags are separate files. This is creative fictional casting requested for a game, not a claim about the historical person's ethnicity, anatomy or lifespan.",
+      "castingSpec": "long narrow face, high temples and a strong small chin; deep-set dark brown eyes under heavy straight eyebrows; long broad aquiline nose, narrow lips and deep philtrum; medium olive skin with mature forehead lines; neatly brushed-back short black hair with silver temples; meticulously groomed short stubble, no goatee; broad fit shoulders",
+      "visualCasting": {
+        "label": "아랍계",
+        "description": "Arab man",
+        "fictionalInterpretation": true,
+        "age": 53,
+        "faceDesign": "long narrow face, high temples and a strong small chin; deep-set dark brown eyes under heavy straight eyebrows; long broad aquiline nose, narrow lips and deep philtrum; medium olive skin with mature forehead lines; neatly brushed-back short black hair with silver temples; meticulously groomed short stubble, no goatee; broad fit shoulders",
+        "appealDirection": "호감형 미남, 단정한 머리"
+      },
+      "tags": [
+        "SHJ-F097",
+        "울피아누스",
+        "서방권 — 중국 도래 기록·지식인",
+        "관료",
+        "개별얼굴설계",
+        "아랍계"
+      ],
+      "generatedSource": "C:\\Users\\nk782\\.codex\\generated_images\\01a13522-280f-7d00-91d2-7c5476a167d5\\exec-6754c8c7-4d88-4292-9d58-11c75a4103ad.png"
+    },
+    {
+      "id": "SHJ-F098",
+      "name": "카시우스 디오",
+      "status": "generated",
+      "filename": "SHJ-F098-western-v2.png",
+      "prompt": "Use case: stylized-concept. Create ONE original fictional Western Mediterranean man, age 52. Explicit new casting for the Western-region characters: Western Mediterranean man; this replacement must visibly reflect the requested Western or Arab casting. Individual identity: short wide face, full cheeks and a cleft broad chin; slightly hooded grey-blue eyes, heavy curved eyebrows, broad prominent nose, wide relaxed lips; light warm olive skin; neatly combed salt-and-pepper short hair; short rounded salt-and-pepper full beard; stocky broad shoulders. Handsome, likable, intelligent and approachable; neat professional hair and meticulous grooming. Preserve the distinctive face anatomy, eye colour, skin tone and build stated above. Do not reuse a generic face or famous actor likeness. Production metadata only: 카시우스 디오; 서방권 — 중국 도래 기록·지식인; 참모. Role characterization: 「사관」 세력의 행적이 기록됨 — 천명 변동 완화. Photoreal cinematic military science-fiction character portrait for a strategy game. Chest-up, entire head and hair visible with slight headroom, centered composition, no hands. Tailored futuristic civil or tactical staff uniform in muted graphite and bronze with sparse antique gold trim, functional science-fiction materials and individually varied collar design. Dark softly blurred futuristic spaceship bridge with sparse dim cyan instruments; cool subtle fill and warm neutral face light. Realistic healthy skin, fabric and metal; restrained low-saturation rendering and a thin subtle teal-grey border. No historical or religious costume, no celebrity likeness, no franchise design, no glossy plastic skin, no exaggerated neon, no weapons. Absolutely NO text, letters, numbers, captions, nameplates, identity tags, logos or watermark anywhere. Exactly ONE portrait, no collage or contact sheet, no extra person. Final delivery 561 x 701 pixels. Names and identity tags are separate files. This is creative fictional casting requested for a game, not a claim about the historical person's ethnicity, anatomy or lifespan.",
+      "castingSpec": "short wide face, full cheeks and a cleft broad chin; slightly hooded grey-blue eyes, heavy curved eyebrows, broad prominent nose, wide relaxed lips; light warm olive skin; neatly combed salt-and-pepper short hair; short rounded salt-and-pepper full beard; stocky broad shoulders",
+      "visualCasting": {
+        "label": "서구·지중해계",
+        "description": "Western Mediterranean man",
+        "fictionalInterpretation": true,
+        "age": 52,
+        "faceDesign": "short wide face, full cheeks and a cleft broad chin; slightly hooded grey-blue eyes, heavy curved eyebrows, broad prominent nose, wide relaxed lips; light warm olive skin; neatly combed salt-and-pepper short hair; short rounded salt-and-pepper full beard; stocky broad shoulders",
+        "appealDirection": "호감형 미남, 단정한 머리"
+      },
+      "tags": [
+        "SHJ-F098",
+        "카시우스 디오",
+        "서방권 — 중국 도래 기록·지식인",
+        "참모",
+        "개별얼굴설계",
+        "서구·지중해계"
+      ],
+      "generatedSource": "C:\\Users\\nk782\\.codex\\generated_images\\01a13522-280f-7d00-91d2-7c5476a167d5\\exec-5cdb423e-5910-4a6a-89a7-3f749569fa4c.png"
+    },
+    {
+      "id": "SHJ-F099",
+      "name": "플로티노스",
+      "status": "generated",
+      "filename": "SHJ-F099-western-v2.png",
+      "prompt": "Use case: stylized-concept. Create ONE original fictional Western European man, age 39. Explicit new casting for the Western-region characters: Western European man; this replacement must visibly reflect the requested Western or Arab casting. Individual identity: broad angular face with high smooth forehead, flat cheeks and firm square jaw; wide-set blue-green eyes and fine level brows; long straight narrow nose, thin upper lip and fuller lower lip; fair lightly sun-kissed skin; tidy short dark-brown wavy hair; completely clean-shaven; fit broad shoulders. Handsome, likable, intelligent and approachable; neat professional hair and meticulous grooming. Preserve the distinctive face anatomy, eye colour, skin tone and build stated above. Do not reuse a generic face or famous actor likeness. Production metadata only: 플로티노스; 서방권 — 중국 도래 기록·지식인; 참모. Role characterization: 「일자」 사상 정책 시 민심 +30%. Photoreal cinematic military science-fiction character portrait for a strategy game. Chest-up, entire head and hair visible with slight headroom, centered composition, no hands. Tailored futuristic civil or tactical staff uniform in muted graphite and bronze with sparse antique gold trim, functional science-fiction materials and individually varied collar design. Dark softly blurred futuristic spaceship bridge with sparse dim cyan instruments; cool subtle fill and warm neutral face light. Realistic healthy skin, fabric and metal; restrained low-saturation rendering and a thin subtle teal-grey border. No historical or religious costume, no celebrity likeness, no franchise design, no glossy plastic skin, no exaggerated neon, no weapons. Absolutely NO text, letters, numbers, captions, nameplates, identity tags, logos or watermark anywhere. Exactly ONE portrait, no collage or contact sheet, no extra person. Final delivery 561 x 701 pixels. Names and identity tags are separate files. This is creative fictional casting requested for a game, not a claim about the historical person's ethnicity, anatomy or lifespan.",
+      "castingSpec": "broad angular face with high smooth forehead, flat cheeks and firm square jaw; wide-set blue-green eyes and fine level brows; long straight narrow nose, thin upper lip and fuller lower lip; fair lightly sun-kissed skin; tidy short dark-brown wavy hair; completely clean-shaven; fit broad shoulders",
+      "visualCasting": {
+        "label": "서구·지중해계",
+        "description": "Western European man",
+        "fictionalInterpretation": true,
+        "age": 39,
+        "faceDesign": "broad angular face with high smooth forehead, flat cheeks and firm square jaw; wide-set blue-green eyes and fine level brows; long straight narrow nose, thin upper lip and fuller lower lip; fair lightly sun-kissed skin; tidy short dark-brown wavy hair; completely clean-shaven; fit broad shoulders",
+        "appealDirection": "호감형 미남, 단정한 머리"
+      },
+      "tags": [
+        "SHJ-F099",
+        "플로티노스",
+        "서방권 — 중국 도래 기록·지식인",
+        "참모",
+        "개별얼굴설계",
+        "서구·지중해계"
+      ],
+      "generatedSource": "C:\\Users\\nk782\\.codex\\generated_images\\01a13522-280f-7d00-91d2-7c5476a167d5\\exec-395aaf43-3fb6-4cba-9e55-76be08a7698f.png"
+    },
+    {
+      "id": "SHJ-F100",
+      "name": "포르피리오스",
+      "status": "generated",
+      "filename": "SHJ-F100-western-v2.png",
+      "prompt": "Use case: stylized-concept. Create ONE original fictional Arab man, age 28. Explicit new casting for the Western-region characters: Arab man; this replacement must visibly reflect the requested Western or Arab casting. Individual identity: youthful heart-shaped face with high cheekbones and tapering chin; bright hazel-brown eyes below elegant angled brows; slightly crooked high-bridged nose, full curved lips and a small cheek dimple; golden olive skin; short neat black curls with low tapered sides; very light carefully groomed stubble; slender athletic build. Handsome, likable, intelligent and approachable; neat professional hair and meticulous grooming. Preserve the distinctive face anatomy, eye colour, skin tone and build stated above. Do not reuse a generic face or famous actor likeness. Production metadata only: 포르피리오스; 서방권 — 중국 도래 기록·지식인; 참모. Role characterization: 「주해」 플로티노스 제자. Photoreal cinematic military science-fiction character portrait for a strategy game. Chest-up, entire head and hair visible with slight headroom, centered composition, no hands. Tailored futuristic civil or tactical staff uniform in muted graphite and bronze with sparse antique gold trim, functional science-fiction materials and individually varied collar design. Dark softly blurred futuristic spaceship bridge with sparse dim cyan instruments; cool subtle fill and warm neutral face light. Realistic healthy skin, fabric and metal; restrained low-saturation rendering and a thin subtle teal-grey border. No historical or religious costume, no celebrity likeness, no franchise design, no glossy plastic skin, no exaggerated neon, no weapons. Absolutely NO text, letters, numbers, captions, nameplates, identity tags, logos or watermark anywhere. Exactly ONE portrait, no collage or contact sheet, no extra person. Final delivery 561 x 701 pixels. Names and identity tags are separate files. This is creative fictional casting requested for a game, not a claim about the historical person's ethnicity, anatomy or lifespan.",
+      "castingSpec": "youthful heart-shaped face with high cheekbones and tapering chin; bright hazel-brown eyes below elegant angled brows; slightly crooked high-bridged nose, full curved lips and a small cheek dimple; golden olive skin; short neat black curls with low tapered sides; very light carefully groomed stubble; slender athletic build",
+      "visualCasting": {
+        "label": "아랍계",
+        "description": "Arab man",
+        "fictionalInterpretation": true,
+        "age": 28,
+        "faceDesign": "youthful heart-shaped face with high cheekbones and tapering chin; bright hazel-brown eyes below elegant angled brows; slightly crooked high-bridged nose, full curved lips and a small cheek dimple; golden olive skin; short neat black curls with low tapered sides; very light carefully groomed stubble; slender athletic build",
+        "appealDirection": "호감형 미남, 단정한 머리"
+      },
+      "tags": [
+        "SHJ-F100",
+        "포르피리오스",
+        "서방권 — 중국 도래 기록·지식인",
+        "참모",
+        "개별얼굴설계",
+        "아랍계"
+      ],
+      "generatedSource": "C:\\Users\\nk782\\.codex\\generated_images\\01a13522-280f-7d00-91d2-7c5476a167d5\\exec-6214ae91-6b89-4d61-b79a-bd5fcba01fa1.png"
+    },
+    {
+      "id": "SHJ-F101",
+      "name": "오리게네스",
+      "status": "generated",
+      "filename": "SHJ-F101-western-v2.png",
+      "prompt": "Use case: stylized-concept. Create ONE original fictional Western Mediterranean man, age 57. Explicit new casting for the Western-region characters: Western Mediterranean man; this replacement must visibly reflect the requested Western or Arab casting. Individual identity: long rectangular face, high cheeks and strong jaw; deep-set cool grey eyes and uneven expressive eyebrows; straight medium nose with a subtly asymmetric tip; small mouth with a defined upper lip; pale olive skin with natural age lines; neat short silver hair, fine well-trimmed grey moustache and clean-shaven chin; broad average build. Handsome, likable, intelligent and approachable; neat professional hair and meticulous grooming. Preserve the distinctive face anatomy, eye colour, skin tone and build stated above. Do not reuse a generic face or famous actor likeness. Production metadata only: 오리게네스; 서방권 — 중국 도래 기록·지식인; 관료 · 참모. Role characterization: 「호교」 종교 세력 회유. Photoreal cinematic military science-fiction character portrait for a strategy game. Chest-up, entire head and hair visible with slight headroom, centered composition, no hands. Tailored futuristic civil or tactical staff uniform in muted graphite and bronze with sparse antique gold trim, functional science-fiction materials and individually varied collar design. Dark softly blurred futuristic spaceship bridge with sparse dim cyan instruments; cool subtle fill and warm neutral face light. Realistic healthy skin, fabric and metal; restrained low-saturation rendering and a thin subtle teal-grey border. No historical or religious costume, no celebrity likeness, no franchise design, no glossy plastic skin, no exaggerated neon, no weapons. Absolutely NO text, letters, numbers, captions, nameplates, identity tags, logos or watermark anywhere. Exactly ONE portrait, no collage or contact sheet, no extra person. Final delivery 561 x 701 pixels. Names and identity tags are separate files. This is creative fictional casting requested for a game, not a claim about the historical person's ethnicity, anatomy or lifespan.",
+      "castingSpec": "long rectangular face, high cheeks and strong jaw; deep-set cool grey eyes and uneven expressive eyebrows; straight medium nose with a subtly asymmetric tip; small mouth with a defined upper lip; pale olive skin with natural age lines; neat short silver hair, fine well-trimmed grey moustache and clean-shaven chin; broad average build",
+      "visualCasting": {
+        "label": "서구·지중해계",
+        "description": "Western Mediterranean man",
+        "fictionalInterpretation": true,
+        "age": 57,
+        "faceDesign": "long rectangular face, high cheeks and strong jaw; deep-set cool grey eyes and uneven expressive eyebrows; straight medium nose with a subtly asymmetric tip; small mouth with a defined upper lip; pale olive skin with natural age lines; neat short silver hair, fine well-trimmed grey moustache and clean-shaven chin; broad average build",
+        "appealDirection": "호감형 미남, 단정한 머리"
+      },
+      "tags": [
+        "SHJ-F101",
+        "오리게네스",
+        "서방권 — 중국 도래 기록·지식인",
+        "관료 · 참모",
+        "개별얼굴설계",
+        "서구·지중해계"
+      ],
+      "generatedSource": "C:\\Users\\nk782\\.codex\\generated_images\\01a13522-280f-7d00-91d2-7c5476a167d5\\exec-1d9d10ce-4321-4531-83c0-74caddec9eeb.png"
+    },
+    {
+      "id": "SHJ-F102",
+      "name": "나가르주나",
+      "status": "generated",
+      "filename": "SHJ-F102-western-v2.png",
+      "prompt": "Use case: stylized-concept. Create ONE original fictional Arab man, age 56. Explicit new casting for the Western-region characters: Arab man; this replacement must visibly reflect the requested Western or Arab casting. Individual identity: broad oval face with a high forehead, rounded cheeks and a strong chin; large dark brown eyes and thick softly curved eyebrows; high straight broad nose, generous lips and a warm reserved smile; warm tan skin with fine mature lines; close-cut neat salt-and-pepper hair with widow peak; short neatly tapered silver beard and tidy moustache; strong broad shoulders. Handsome, likable, intelligent and approachable; neat professional hair and meticulous grooming. Preserve the distinctive face anatomy, eye colour, skin tone and build stated above. Do not reuse a generic face or famous actor likeness. Production metadata only: 나가르주나; 서방권 — 중국 도래 기록·지식인; 참모. Role characterization: 「중론」 사상 정책 특화. Photoreal cinematic military science-fiction character portrait for a strategy game. Chest-up, entire head and hair visible with slight headroom, centered composition, no hands. Tailored futuristic civil or tactical staff uniform in muted graphite and bronze with sparse antique gold trim, functional science-fiction materials and individually varied collar design. Dark softly blurred futuristic spaceship bridge with sparse dim cyan instruments; cool subtle fill and warm neutral face light. Realistic healthy skin, fabric and metal; restrained low-saturation rendering and a thin subtle teal-grey border. No historical or religious costume, no celebrity likeness, no franchise design, no glossy plastic skin, no exaggerated neon, no weapons. Absolutely NO text, letters, numbers, captions, nameplates, identity tags, logos or watermark anywhere. Exactly ONE portrait, no collage or contact sheet, no extra person. Final delivery 561 x 701 pixels. Names and identity tags are separate files. This is creative fictional casting requested for a game, not a claim about the historical person's ethnicity, anatomy or lifespan.",
+      "castingSpec": "broad oval face with a high forehead, rounded cheeks and a strong chin; large dark brown eyes and thick softly curved eyebrows; high straight broad nose, generous lips and a warm reserved smile; warm tan skin with fine mature lines; close-cut neat salt-and-pepper hair with widow peak; short neatly tapered silver beard and tidy moustache; strong broad shoulders",
+      "visualCasting": {
+        "label": "아랍계",
+        "description": "Arab man",
+        "fictionalInterpretation": true,
+        "age": 56,
+        "faceDesign": "broad oval face with a high forehead, rounded cheeks and a strong chin; large dark brown eyes and thick softly curved eyebrows; high straight broad nose, generous lips and a warm reserved smile; warm tan skin with fine mature lines; close-cut neat salt-and-pepper hair with widow peak; short neatly tapered silver beard and tidy moustache; strong broad shoulders",
+        "appealDirection": "호감형 미남, 단정한 머리"
+      },
+      "tags": [
+        "SHJ-F102",
+        "나가르주나",
+        "서방권 — 중국 도래 기록·지식인",
+        "참모",
+        "개별얼굴설계",
+        "아랍계"
+      ],
+      "generatedSource": "C:\\Users\\nk782\\.codex\\generated_images\\01a13522-280f-7d00-91d2-7c5476a167d5\\exec-3e436965-7676-411c-8701-e03e0072c86e.png"
+    }
+  ]
+}

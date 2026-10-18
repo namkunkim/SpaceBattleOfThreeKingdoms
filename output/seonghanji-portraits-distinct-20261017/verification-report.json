@@ -1,0 +1,22 @@
+{
+  "result": "passed",
+  "date": "2026-10-18",
+  "completed": 501,
+  "total": 501,
+  "pending": 0,
+  "uniqueIds": 501,
+  "uniqueCurrentFilenames": 501,
+  "uniqueCurrentImageHashes": 501,
+  "dimensions": "561x701",
+  "format": "PNG",
+  "jsonMetadataRecords": 501,
+  "exactIdNameImageTagMapping": true,
+  "castingRecords": {
+    "동아시아계": 488,
+    "서구·지중해계": 6,
+    "아랍계": 7
+  },
+  "westernReplacements": 13,
+  "femaleAdult20to39Records": 20,
+  "visualReview": "New portraits inspected as returned by image_gen; restored portraits retain previously reviewed originals. Text absence and facial appearance are visual checks, not conclusions from the hash check."
+}
