@@ -113,6 +113,7 @@ static func contact(sim: BattleSim, c: Dictionary) -> Dictionary:
 		d.faction_id = t.faction
 		d.pos = t.pos   # 확인 접촉은 실제 위치(§4.9). 평가 시점(1초 주기) 위치를 쓰면 적이 1초마다 멈췄다 점프한다
 		d.heading = t.heading
+		d.flip = t.flip
 		d.strength_band = sim.detect.strength_band(t)
 		if sim.chain:
 			d.dense = sim.chain.dense(t)   # 화공 표적 조건(밀집 여부)만 공개한다. 진형 ID는 공개하지 않는다(M9)
@@ -136,7 +137,7 @@ static func squadron(st: BattleState, f: FleetState) -> Dictionary:
 		"firing_at": f.fire_id if not f.dead else -1,
 		"form_id": f.form_id, "formation": f.shape if f.shape >= 0 else f.form_id % BattleRules.FORM_COUNT,
 		"formation_id": f.formation_id, "form_to": f.form_to, "form_left_s": f.form_left / hz,
-		"route": f.route, "strafe": f.strafe, "face_set": f.face_set, "face_to": f.face_to,
+		"route": f.route, "flip": f.flip, "strafe": f.strafe, "face_set": f.face_set, "face_to": f.face_to,
 		"has_move": f.has_move, "move_to": f.move_to,
 		"defense": f.defense, "charge_s": f.charge / hz, "in_cmd": f.in_cmd,
 		"missile_cd_s": f.missile_cd / hz, "fighter_cd_s": f.fighter_cd / hz,

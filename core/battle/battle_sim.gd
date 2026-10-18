@@ -870,6 +870,21 @@ func _turn(f: FleetState, a: float, rate_deg := -1.0) -> void:
 	var dh := BattleRules.ang_diff(f.heading, a)
 	f.heading += dh if absf(dh) < m else signf(dh) * m
 
+# 제자리 반전(PoC): 방향 차이가 flip_over_deg를 넘으면 기준 방향을 180° 뒤집고 배치를 점대칭으로 뒤집는다.
+# 함선 위치는 그대로이고 함대는 flip_s초 멈춘다. 남은 차이는 기존 선회로 맞춘다.
+func _flip(f: FleetState) -> void:
+	f.heading += PI
+	f.flip = not f.flip
+	f.form = BattleRules.mirror(f.form)
+	f.form_t = BattleRules.mirror(f.form_t)
+	f.flip_wait = maxi(1, BattleRules.ticks(float(salvo.C.movement.flip_s), st.hz))
+
+func _orient(f: FleetState, a: float, rate_deg := -1.0) -> void:
+	if salvo and absf(BattleRules.ang_diff(f.heading, a)) > deg_to_rad(float(salvo.C.movement.flip_over_deg)):
+		_flip(f)
+		return
+	_turn(f, a, rate_deg)
+
 func _tick() -> void:
 	st.tick += 1
 	if not salvo:
@@ -950,6 +965,8 @@ func _fleet_phase(timers: bool) -> void:
 				f.charge -= 1
 			if f.flank_msg > 0:
 				f.flank_msg -= 1
+			if f.flip_wait > 0:
+				f.flip_wait -= 1
 		var fl: FleetState = flags[f.side]
 		f.in_cmd = fl == null or fl == f or f.pos.distance_to(fl.pos) < R.cmd_r
 		if morale and morale.forced(f):
@@ -981,6 +998,8 @@ func _fleet_phase(timers: bool) -> void:
 			if f.has_move:
 				has_dest = true
 				dest = f.move_to
+		var frozen := f.flip_wait > 0
+		var cfoe: FleetState = sight_foe(f, float(salvo.C.movement.contact_r)) if salvo else null   # 접적: 가까이 보이는 적 함대가 있다
 		var old_pos := f.pos
 		var spd := rs.move_speed(f.spd, f.defense, f.charge > 0)
 		if salvo:
@@ -993,7 +1012,16 @@ func _fleet_phase(timers: bool) -> void:
 				spd *= 1.0 + cmd.penalty(f, "move_pct")   # 승계 혼선·지휘 한도 초과(§4.14)
 			if skills:
 				spd *= skills.mulf(f, "speed_mul_bp")   # 특기 질주·신속(P8a)
-		if has_dest and f.strafe and tgt == null:
+		if frozen:
+			has_dest = false
+		elif has_dest and cfoe != null and not f.strafe:
+			# 접적 이동(PoC): 진형 방향은 그대로 두고 평행 이동한다. 적 쪽 ±contact_fast_deg 안으로 가면 전진 속도, 옆·뒤는 평행 속도
+			var dd := f.pos.distance_to(dest)
+			var ea := atan2(cfoe.pos.y - f.pos.y, cfoe.pos.x - f.pos.x)
+			var ma := atan2(dest.y - f.pos.y, dest.x - f.pos.x)
+			var mul := 1.0 if absf(BattleRules.ang_diff(ea, ma)) <= deg_to_rad(float(salvo.C.movement.contact_fast_deg)) else float(salvo.C.movement.strafe_speed_bp) / float(BattleRules.BP)
+			f.pos += (dest - f.pos) / maxf(dd, 0.001) * minf(spd * mul * dt, dd)
+		elif has_dest and f.strafe and tgt == null:
 			# 평행 이동: 방향을 유지한 채 전진 속도의 일부로 목적지를 향해 옆으로 간다(§4.2)
 			var dd := f.pos.distance_to(dest)
 			f.pos += (dest - f.pos) / maxf(dd, 0.001) * minf(spd * float(salvo.C.movement.strafe_speed_bp) / float(BattleRules.BP) * dt, dd)
@@ -1010,9 +1038,11 @@ func _fleet_phase(timers: bool) -> void:
 					f.face_set = false
 		elif has_dest:
 			var a := atan2(dest.y - f.pos.y, dest.x - f.pos.x)
-			_turn(f, a)
+			_orient(f, a)
 			var dd := f.pos.distance_to(dest)
-			if dd < spd * R.settle_speed_share:
+			if f.flip_wait > 0:
+				pass   # 방금 반전했다: 이번 걸음은 멈춘다
+			elif dd < spd * R.settle_speed_share:
 				f.pos += (dest - f.pos) * BattleRules.lerp_k(R.arrive_k_ref * BattleRules.REF_DT, dt)
 			else:
 				var k: float = maxf(R.min_turn_cos, cos(BattleRules.ang_diff(f.heading, a)))
@@ -1025,18 +1055,20 @@ func _fleet_phase(timers: bool) -> void:
 				_hold_stop(f)
 				has_dest = false
 		f.moving = has_dest
-		if not has_dest and f.face_set:
+		if not has_dest and f.face_set and not frozen:
 			# 도착 방향: 도착한 뒤 지정한 방향으로 돌아선다(§4.2). 맞출 때까지는 자동 조준보다 우선한다
 			# 제자리 선회율은 movement.face_turn_deg_per_s가 있으면 그것(이동 중 선회율과 따로 정할 수 있다)
-			_turn(f, f.face_to, float(salvo.C.movement.get("face_turn_deg_per_s", -1.0)) if salvo else -1.0)
+			_orient(f, f.face_to, float(salvo.C.movement.get("face_turn_deg_per_s", -1.0)) if salvo else -1.0)
 			if absf(BattleRules.ang_diff(f.heading, f.face_to)) < deg_to_rad(float(salvo.C.movement.face_tolerance_deg)):
 				f.face_set = false
 		var ft: FleetState = tgt if (tgt and f.pos.distance_to(known_pos(f, tgt)) <= f.range_r) else sight_foe(f, f.range_r)
 		f.fire_id = ft.id if ft else -1
+		if ft == null and cfoe != null and not has_dest and not f.face_set and not frozen:
+			_orient(f, atan2(cfoe.pos.y - f.pos.y, cfoe.pos.x - f.pos.x))   # 접적 도착: 사거리 밖이어도 보이는 적 쪽으로 진형을 맞춘다(PoC)
 		if ft:
-			if not has_dest and not f.face_set:
+			if not has_dest and not f.face_set and not frozen:
 				var fp := known_pos(f, ft)
-				_turn(f, atan2(fp.y - f.pos.y, fp.x - f.pos.x))
+				_orient(f, atan2(fp.y - f.pos.y, fp.x - f.pos.x))
 			if salvo:
 				continue   # 사격은 salvo.step()이 범주별 주기로 한다
 			var fm := rs.flank_mul(f.pos, ft.pos, ft.heading)

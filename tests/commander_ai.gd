@@ -44,7 +44,7 @@ func _run() -> void:
 	# --- 1. 플레이어 명령 0건으로 정상 종료 + AI 입력 경계(미탐지 정보 0건) ---
 	var s := _rc(3, true, "표준", true)
 	var bad := ""
-	var allowed := ["id", "side", "contact", "pos", "err_r", "conf_bp", "faction", "name", "role", "portrait", "commander_id", "faction_id", "heading", "strength_band", "max_strength_band",
+	var allowed := ["id", "side", "contact", "pos", "err_r", "conf_bp", "faction", "name", "role", "portrait", "commander_id", "faction_id", "heading", "flip", "strength_band", "max_strength_band",
 		"dense", "feigning",   # M9: 화공 표적 조건(밀집 여부)과 투항 중 표시. 진형 ID는 공개하지 않는다
 		"flagship", "carrier", "move_to"]   # P8a Q96: 확인 접촉의 기함 여부·강습모함 보유, 특기 귀모가 드러낸 이동 목표
 	var thinks := 0

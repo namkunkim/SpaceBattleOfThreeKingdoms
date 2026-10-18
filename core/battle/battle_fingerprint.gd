@@ -33,7 +33,7 @@ static func of(st: BattleState, detect: Detection = null, extra := "") -> String
 			var rt := PackedStringArray()
 			for w in f.route:
 				rt.append("%d.%d" % [q.call(w.x), q.call(w.y)])
-			parts.append("v%d:%s,%d,%d,%d,%d|%s" % [f.id, f.form_to, f.form_left, int(f.strafe), int(f.face_set), q.call(f.face_to), ",".join(rt)])
+			parts.append("v%d:%s,%d,%d,%d,%d,%d,%d|%s" % [f.id, f.form_to, f.form_left, int(f.strafe), int(f.face_set), q.call(f.face_to), int(f.flip), f.flip_wait, ",".join(rt)])
 	for m in st.missiles:
 		parts.append("m%d:%d,%d,%d,%d,%d,%d" % [m.id, q.call(m.pos.x), q.call(m.pos.y), m.target_id, m.dmg, q.call(m.v), m.age])
 	for s in st.swarms:

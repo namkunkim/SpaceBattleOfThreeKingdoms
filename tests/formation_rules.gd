@@ -169,12 +169,17 @@ func _run() -> void:
 	a = s.st.fleets[0]
 	a.heading = 0.0
 	var p0 := a.pos
-	_cmd(s, a, "move", {"facing_deg": 180}, p0 + Vector2(2, 0))   # 도착 반경 안: 제자리에서 돌아선다
-	_sec(s, 10.0)
-	var h10 := absf(a.heading)
-	if not TestCheck.ok(self, absf(rad_to_deg(h10) - 90.0) < 3.0, "선회 9°/초: 10초에 %f°" % rad_to_deg(h10)): return
-	_sec(s, 11.0)
-	if not TestCheck.ok(self, absf(absf(a.heading) - PI) < deg_to_rad(2.0) and not a.face_set, "180° 선회 20초, 맞으면 해제"): return
+	_cmd(s, a, "move", {"facing_deg": 80}, p0 + Vector2(2, 0))   # 도착 반경 안: 제자리에서 돌아선다(90° 이하라 선회)
+	_sec(s, 5.0)
+	var h5 := absf(a.heading)
+	if not TestCheck.ok(self, absf(rad_to_deg(h5) - 45.0) < 3.0, "선회 9°/초: 5초에 %f°" % rad_to_deg(h5)): return
+	_sec(s, 6.0)
+	if not TestCheck.ok(self, absf(rad_to_deg(a.heading) - 80.0) < 2.0 and not a.face_set, "80° 선회 후 맞으면 해제"): return
+	# 90° 넘는 방향은 제자리 반전(PoC): 1초 만에 180°, 선회 20초가 아니다
+	a.heading = 0.0
+	_cmd(s, a, "move", {"facing_deg": 180}, a.pos + Vector2(2, 0))
+	_sec(s, 3.0)
+	if not TestCheck.ok(self, a.flip and absf(absf(a.heading) - PI) < deg_to_rad(2.0) and not a.face_set, "180°는 제자리 반전"): return
 	# 경유점: 지나는 순서대로, 도착 방향
 	s = F.sim([F.def("A", 200, 450, [["SHP-04", 8]], true)], [F.def("B", 1500, 850, [["SHP-04", 4]])])
 	a = s.st.fleets[0]

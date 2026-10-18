@@ -585,6 +585,10 @@
    "strafe_speed_bp": 6000,
    "face_tolerance_deg": 1,
    "max_waypoints": 5,
+   "flip_over_deg": 90,
+   "flip_s": 1,
+   "contact_r": 600,
+   "contact_fast_deg": 45,
    "status": "proposed (turn_deg_per_s·strafe_speed_bp: §4.2 제자리 선회 180°에 20초, 평행 이동은 전진 속도의 60%. 정본에 수치 없음)",
    "note": "전대 속도 = 편성에서 가장 느린 함종의 턴당 속도 / 60 (px/초) × (100 + 진형 기동%) / 100 (§4.2). 경유점은 최대 max_waypoints(경유 + 목적지)"
   },

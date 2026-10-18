@@ -206,6 +206,8 @@ func force_formation(f: FleetState, fid: String) -> void:
 func _apply_shape(f: FleetState) -> void:
 	f.shape = BattleRules.FORM_SHAPE[maxi(0, formation_ids().find(_form_id(f)))]
 	f.form = BattleRules.formation_offsets(f.shape, sim.R.ship_gap)
+	if f.flip:
+		f.form = BattleRules.mirror(f.form)
 	f.shape_to = f.shape
 	f.form_t = f.form
 
@@ -213,6 +215,8 @@ func _apply_shape(f: FleetState) -> void:
 func _show_target(f: FleetState, fid: String) -> void:
 	f.shape_to = BattleRules.FORM_SHAPE[maxi(0, formation_ids().find(fid))]
 	f.form_t = BattleRules.formation_offsets(f.shape_to, sim.R.ship_gap)
+	if f.flip:
+		f.form_t = BattleRules.mirror(f.form_t)
 
 # 상성(정본 §5.4): 교전 거리대에서 우위 진형이면 피해 배율. 팔진은 양쪽 모두 판정을 무효화한다
 func affinity_wins(a: String, b: String) -> bool:

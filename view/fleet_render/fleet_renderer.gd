@@ -355,6 +355,7 @@ func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 	if not moved and v.rest >= 3 and not v.aim:
 		return
 	var fb := Basis(Vector3.UP, frot)
+	var fs := -1.0 if bool(sq.get("flip", false)) else 1.0
 	var h_fleet := -float(sq.heading) - PI   # 전대 방향의 모델 yaw
 	var maxerr := 0.0
 	var maxtr := 0.0
@@ -369,7 +370,7 @@ func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 		gi += 1
 		if not s.alive:
 			continue
-		var t := fpos + fb * Vector3(s.home.x, s.home.y, s.home.z) + fvel * s.tau
+		var t := fpos + fb * Vector3(s.home.x * fs, s.home.y, s.home.z * fs) + fvel * s.tau
 		var d := (t - s.pos) * (step / (s.tau + step))   # 지수 추종의 유리 근사(안정, 오버슈트 없음)
 		s.pos += d
 		s.vel = d * inv
@@ -484,7 +485,7 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 	var fpos := src.to3(sq.pos)
 	var frot := -float(sq.heading) - PI * 0.5
 	for s in v.slots:
-		s.pos = _target(s, fpos, frot)
+		s.pos = _target(s, fpos, frot, bool(sq.get("flip", false)))
 		s.yaw = -float(sq.heading) - PI
 	v.last_pos = fpos
 	v.last_rot = frot
@@ -553,8 +554,9 @@ func _glow_xform(s: Slot, sz: float) -> Transform3D:
 	return Transform3D(Basis.from_scale(Vector3.ONE * sz), s.pos - _fwd(s) * (s.half_len * 0.98))
 
 # 슬롯 목표(월드): 전대 위치 + 전대 회전 x 슬롯
-func _target(s: Slot, fpos: Vector3, frot: float) -> Vector3:
-	return fpos + Basis(Vector3.UP, frot) * s.home
+# 제자리 반전한 함대는 슬롯을 점대칭으로 뒤집어 읽는다(방향이 180° 돌아도 함선 위치가 그대로다)
+func _target(s: Slot, fpos: Vector3, frot: float, flip := false) -> Vector3:
+	return fpos + Basis(Vector3.UP, frot) * (s.home * Vector3(-1.0, 1.0, -1.0) if flip else s.home)
 
 func _hide_slot(v: FleetVis, s: Slot) -> void:
 	s.alive = false

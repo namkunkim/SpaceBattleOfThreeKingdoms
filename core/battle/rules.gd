@@ -107,5 +107,12 @@ static func formation_offsets(kind: int, gap: float) -> Array[Vector2]:
 		pts[i] -= c
 	return pts
 
+# 제자리 반전: 배치 오프셋을 점대칭으로 뒤집는다(방향을 180° 돌려도 함선의 세계 위치가 그대로다)
+static func mirror(form: Array[Vector2]) -> Array[Vector2]:
+	var out: Array[Vector2] = []
+	for p in form:
+		out.append(-p)
+	return out
+
 static func ship_pos(pos: Vector2, heading: float, form: Array[Vector2], i: int) -> Vector2:
 	return pos + form[i % form.size()].rotated(heading)

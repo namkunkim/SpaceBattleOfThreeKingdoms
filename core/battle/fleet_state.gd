@@ -89,6 +89,8 @@ var face_set := false         # 도착 방향 지정
 var speed_cap := 0.0          # 그룹 이동 속도 상한(0 = 없음). 함께 이동하는 함대 중 가장 느린 속도
 var move_grp := 0             # 그룹 이동 묶음 번호(0 = 단독). 유지 거리 정지 때 그룹이 함께 선다. 지문에는 넣지 않는다
 var face_to := 0.0
+var flip := false            # 제자리 반전으로 진형 배치가 점대칭으로 뒤집힌 상태(함선 위치는 그대로)
+var flip_wait := 0           # 제자리 반전 남은 틱(그동안 함대는 멈춘다)
 var traits: Array = []        # 지휘관 특성(팔진 조건)
 var shape_to := -1            # 전환 중이면 목표 진형의 배치도 번호(표시 전용, 없으면 shape와 같다)
 var form_t: Array[Vector2] = []   # 목표 배치 오프셋(표시 전용)
