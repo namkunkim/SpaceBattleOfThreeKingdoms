@@ -320,13 +320,16 @@ func _dest_rings(f, dir: Vector2, center := Vector2.INF) -> void:
 	var sq := renderer.src.squadron(f.id)
 	var pts := renderer.formation_points(sq.formation, v.slots.size())   # 도착 배치와 같게: 격침된 자리는 비워 둔다
 	var side := dir.rotated(PI * 0.5)
+	# 도착 방향이 지금 함수에서 90° 넘게 다르면 도착하며 제자리 반전한다(배치가 점대칭으로 뒤집힌다)
+	var mir: bool = f.flip != (absf(angle_difference(f.heading, dir.angle())) > PI * 0.5)
+	var sg := -1.0 if mir else 1.0
 	var step := maxi(1, pts.size() / 120)
 	var col := Color(UiTheme.GOLD_HI, 0.5)
 	for i in range(0, pts.size(), step):
 		if not v.slots[i].alive:
 			continue
 		var p: Vector3 = pts[i]
-		var c: Vector2 = (f.move_to if center == Vector2.INF else center) + dir * p.x + side * p.z
+		var c: Vector2 = (f.move_to if center == Vector2.INF else center) + dir * p.x * sg + side * p.z * sg
 		draw_polyline(_ground_ring(c, 4.5, 10), col, 1.2, true)
 
 func _reticle(c: Vector2, col: Color) -> void:

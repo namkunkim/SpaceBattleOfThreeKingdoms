@@ -6,6 +6,10 @@ extends RefCounted
 # 함대끼리 엇갈리지 않게 좌우(방향의 수직) 순서대로 슬롯에 배정한다. 전장 밖이면 중심을 안쪽으로 옮기고, 그래도 넘으면 경계로 자른다.
 # ponytail: 전장보다 긴 줄을 여러 줄로 접는 것은 진형 모양 자체(횡진 2열 등)에 맡긴다. 10개 이상 함대의 접기는 필요해지면 추가.
 
+# 좌우가 같으면(종대) 앞뒤 순서로 가른다
+static func _less(la: float, lb: float, aa: float, ab: float) -> bool:
+	return la < lb if absf(la - lb) > 1.0 else aa < ab
+
 # fleets: 대상 함대 배열, kind: 배치도 번호, 반환: {함대 id: 목표 위치}
 static func slots(fleets: Array, kind: int, gap: float, edge: float, world: Vector2) -> Dictionary:
 	var n := fleets.size()
@@ -19,7 +23,7 @@ static func slots(fleets: Array, kind: int, gap: float, edge: float, world: Vect
 		for p in f.form:
 			ext = maxf(ext, p.length())
 	cen /= n
-	var h: float = fleets[0].heading
+	var h: float = fleets[0].heading + (PI if fleets[0].flip else 0.0)   # 반전한 함대는 배치의 앞이 뒤를 향한다
 	var step := 2.0 * ext + gap
 	var pts := BattleRules.formation_offsets(kind, step)
 	var sel: Array[Vector2] = []
@@ -49,9 +53,10 @@ static func slots(fleets: Array, kind: int, gap: float, edge: float, world: Vect
 		sh.y = world.y - edge - hi.y
 	var side := Vector2(-sin(h), cos(h))
 	var fs := fleets.duplicate()
-	fs.sort_custom(func(a, b): return (a.pos - cen).dot(side) < (b.pos - cen).dot(side))
+	var fwd := Vector2.from_angle(h)
+	fs.sort_custom(func(a, b): return _less((a.pos - cen).dot(side), (b.pos - cen).dot(side), (a.pos - cen).dot(fwd), (b.pos - cen).dot(fwd)))
 	var ps := abs_pts.duplicate()
-	ps.sort_custom(func(a, b): return (a - cen).dot(side) < (b - cen).dot(side))
+	ps.sort_custom(func(a, b): return _less((a - cen).dot(side), (b - cen).dot(side), (a - cen).dot(fwd), (b - cen).dot(fwd)))
 	for i in n:
 		var q: Vector2 = ps[i] + sh
 		out[fs[i].id] = BattleRules.quant_v(Vector2(clampf(q.x, edge, world.x - edge), clampf(q.y, edge, world.y - edge)))

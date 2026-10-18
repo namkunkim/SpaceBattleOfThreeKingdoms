@@ -370,4 +370,5 @@
 - 신규 테스트: `flip_rules`, `view_range`, `bundle_layout`(모두 PASS). 갱신: `formation_rules`(180° 선회 → 제자리 반전), `commander_ai`(flip 공개 키, 적 AI 물러나지 않음), `fleet_follow`, `detection_rules`(view_r 0).
 - 변경 전부터 실패: `boundary`, `selection_groups`(헤드리스 입력·폰트), `formation_display`(헤드리스 폰트). 새 워크트리는 `.godot/imported`가 없어 `--import`가 죽으면 메인 폴더의 `.godot/imported`를 복사해야 화면이 정상으로 뜬다.
 - 화면 확인(PC 1600×900, `tests/capture_poc_apply.gd`): 메뉴·함선 이미지·편성 그대로, 묶음 진형 재배치 확인. 제자리 반전은 접적 중이라 화면에서 못 띄웠고 헤드리스(`flip_rules`)로만 확인했다.
+- 리뷰(Opus, 2026-10-18) 반영: flip의 렌더러 전달(`battle_source`·`battle_view_model`), 이중 반전, 그룹·퇴각 제외, 알려진 위치 사용, 반전 도착 미리보기, 거부 함대 재배치 제외, in_view 최적화. 안 한 것: 유지 거리(170)와 가시 접근(150)의 정지-재발행 반복(낮음), 반전 후 소폭 차이 정지, 그룹 번호 충돌(매우 낮음).
 - **남은 일**: ① 1000시드 재측정(B·C·D가 승률·길이를 바꿀 수 있음, 대기열) ② 가시 영역 그리기(선택 함대) ③ 묶음 중첩·통째 회전·여러 줄 접기(Q109 한계) ④ 접적 `contact_r`(600)를 가시 범위로 대체 ⑤ 렌더러의 도착 진형 미리보기가 반전 상태를 반영하는지 ⑥ 다른 모델 5-b 리뷰, 태블릿 확인, main 병합(CLAUDE.md 규칙).

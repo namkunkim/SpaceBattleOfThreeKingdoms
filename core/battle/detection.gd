@@ -130,10 +130,13 @@ func in_view(o: FleetState, t: FleetState) -> bool:
 	if o.pos.distance_to(t.pos) > r + 2.0 * ext:
 		return false   # 배치 반경 밖의 먼 거리는 점 단위 검사를 건너뛴다
 	var r2 := r * r
+	var op: Array[Vector2] = []
+	for q in o.form:
+		op.append(o.pos + q.rotated(o.heading))
 	for p in t.form:
 		var tp := t.pos + p.rotated(t.heading)
-		for q in o.form:
-			if (o.pos + q.rotated(o.heading)).distance_squared_to(tp) <= r2:
+		for q in op:
+			if q.distance_squared_to(tp) <= r2:
 				return true
 	return false
 

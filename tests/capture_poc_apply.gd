@@ -41,6 +41,18 @@ func _run() -> void:
 		battle.update_sim(0.1)
 		await process_frame
 	await _shot(dir, "2-flip-moving")
+	# 제자리 방향 지정 180° -> 제자리 반전: 반전 직전·직후·후에 함선 위치가 그대로인지 본다
+	battle.selected.clear()
+	battle.selected.append(f)
+	battle.order_face(f.heading + PI)
+	for i in 3:
+		battle.update_sim(0.05)
+		await process_frame
+	await _shot(dir, "2b-face-flip-start")
+	for i in 30:
+		battle.update_sim(0.1)
+		await process_frame
+	await _shot(dir, "2c-face-flip-after")
 	battle.selected.clear()
 	for i in mini(3, mine.size()):
 		battle.selected.append(mine[i])

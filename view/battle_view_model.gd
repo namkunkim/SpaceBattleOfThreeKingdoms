@@ -24,6 +24,7 @@ class FleetView:
 	var spd := 1.0
 	var pos := Vector2.ZERO          # 화면에 그릴 위치(틱 사이 보간)
 	var heading := 0.0
+	var flip := false                # 제자리 반전 상태(배치 점대칭). 바뀌는 틱에는 방향 보간을 건너뛴다(함선 위치가 휙 돌지 않게)
 	var tpos := Vector2.ZERO         # 이번 틱 위치
 	var ppos := Vector2.ZERO         # 직전 틱 위치
 	var cgoal := Vector2.INF         # 접촉 위치(탐지 평가 주기마다 바뀜). 표시 위치는 여기로 일정 속도로 미끄러진다
@@ -159,6 +160,10 @@ func apply(proj: Dictionary) -> Array[FleetView]:
 			f.pheading = f.theading
 		f.tpos = s.pos
 		f.theading = s.heading
+		var fl: bool = bool(s.get("flip", false))
+		if fl != f.flip:
+			f.flip = fl
+			f.pheading = s.heading
 		f.ships = s.ships_milli / 1000.0
 		f.shown = s.shown_milli / 1000.0
 		f.lv = s.lv
@@ -291,6 +296,10 @@ func _apply_contact(s: Dictionary, advanced: bool, fresh: Array[FleetView]) -> v
 		f.role = s.role
 		f.portrait = s.portrait
 		f.theading = s.heading
+		var fl: bool = bool(s.get("flip", false))
+		if fl != f.flip:
+			f.flip = fl
+			f.pheading = s.heading
 		f.band = s.strength_band
 		f.max_band = s.max_strength_band
 		f.ships = CONTACT_SHIPS * float(s.strength_band) / float(s.max_strength_band)
