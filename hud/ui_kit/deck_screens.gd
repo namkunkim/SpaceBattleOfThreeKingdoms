@@ -16,6 +16,7 @@ static func build_all(deck: Control) -> Dictionary:
 		"result": ResultScreen.new(deck),
 		"roster": preload("res://hud/ui_kit/roster_screen.gd").new(deck),
 		"org": preload("res://hud/ui_kit/org_screen.gd").new(deck),
+		"formation_guide": preload("res://hud/ui_kit/formation_guide.gd").new(deck),
 	}
 	for k in out:
 		deck.add_child(out[k])
@@ -41,7 +42,7 @@ class TitleScreen extends Control:
 		var spacer := Control.new()
 		spacer.custom_minimum_size = Vector2(0, 10)
 		col.add_child(spacer)
-		for spec in [["서막", func(): deck.open_prologue()], ["설정", func(): deck.show_screen("settings")], ["종료", func(): deck.get_tree().quit()]]:
+		for spec in [["서막", func(): deck.open_prologue()], ["진형 배치도", func(): deck.screens["formation_guide"].open_guide()], ["설정", func(): deck.show_screen("settings")], ["종료", func(): deck.get_tree().quit()]]:
 			var b := ScreenKit.menu_button(spec[0])
 			b.custom_minimum_size = Vector2(280, 52)
 			b.pressed.connect(spec[1])

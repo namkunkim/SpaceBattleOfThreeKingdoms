@@ -91,10 +91,11 @@ func _run() -> void:
 			moved_homes += 1
 	_check(moved_homes > v.slots.size() / 2, "진형 전환 슬롯 이동 %d/%d" % [moved_homes, v.slots.size()])
 	var pts := r.formation_points(sq.formation, v.slots.size())
+	pts = r._role_points(pts, v.slots.map(func(s): return s.ship_type))
 	var idx_ok := true
 	for i in v.slots.size():
 		idx_ok = idx_ok and v.slots[i].goal.is_equal_approx(Vector3(pts[i].z * r.src.unit_scale(), pts[i].y, -pts[i].x * r.src.unit_scale()))
-	_check(idx_ok, "함선 k는 새 진형의 k번 자리(M2)")
+	_check(idx_ok, "진형 전환 후 함종별 역할 자리 유지")
 	for i in 600:
 		r._follow(v, sq, 0.05)
 	_check(_max_err(r, v, sq) < 0.02, "진형 전환 후 수렴 err=%.4f" % _max_err(r, v, sq))

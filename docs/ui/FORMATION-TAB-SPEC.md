@@ -3,6 +3,16 @@
 2026-10-05. 정본: 본편 `C:\WorkSpace\Seonghanji\docs\03-systems\ship-specs.md` §5, `docs\06-tech\screens.md` §3.2~§3.4·§5, `data\formations.json`, `app\views\formation_spec.gd`(도형 규격).
 실시간 코어 규칙(`PROPOSAL-realtime-battle-core.md` §4.7, `docs/core/M5-NOTES.md`)이 본편 턴제 규칙과 다르면 코어가 이긴다.
 
+## 함종별 배치 시각 자료 (2026-10-18 추가)
+
+- [함선 이미지로 보는 7종 진형 배치도 (HTML)](fleet-formations.html): 전체 비교와 진형별 확대 보기, 함종별 이미지·역할 범례.
+- [함종별 배치 스펙](FLEET-ROLE-LAYOUT.md): 배치 원칙과 구현·검증 범위.
+- [Godot 실행 설정 정본](../../data/fleet-role-layout.md): 실행 시 읽는 배치 우선순위·선호 좌표.
+
+HTML은 2026-10-18 설정을 기준으로 동일 편성 56척을 배치한 기록이다. 이미지를 파일 안에 포함하여 외부 이미지 경로 없이 열 수 있다. 위쪽이 전방이며, 고속정은 요격함 이미지를 작게 표시한다. 실제 게임 편성은 시나리오에 따르며 문서 설정을 바꾸면 이 HTML 기록도 다시 생성해야 한다.
+
+Godot에서도 타이틀의 **진형 배치도**, 전투 중 **진형 → 배치도 보기**에서 같은 자료를 볼 수 있다. 게임 내 화면은 `formation_guide.gd`가 실제 `FleetRenderer`의 진형 좌표와 현재 문서 설정을 사용해 그린다. 진형 7종 선택, 예시 56척 또는 아군 실제 편성 선택, 함선 이미지와 역할 범례를 제공한다. 적 편성은 목록에 넣지 않는다. 열람 중에는 전투를 멈추고, 돌아가기·Esc로 원래 화면과 진행 상태를 복원한다. 배치도 열람은 진형 변경 명령을 보내지 않는다.
+
 ## 1. 정정: 진형은 10종이 아니라 7종이다
 - 본편 정본과 코어(Q10) 모두 7종: 어린 FRM-01, 학익 FRM-02, 방원 FRM-03, 안행 FRM-04, 봉시 FRM-05, 장사 FRM-06, 팔진 FRM-07.
 - "10종"은 호스트 POC의 배치 이름(`FleetBattle3D.FORM_NAMES`)이다. 효과·상성이 없고 코어 `formation` 명령과 무관하다. 탭에 올리지 않는다.

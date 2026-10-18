@@ -12,6 +12,8 @@ signal fx_event(kind: String)
 const CLASS_NAMES := ["전열함", "화력함", "공성함", "보급_수리함", "전자전함", "호위함", "항모"]
 enum { LINE, FIRE, SIEGE, SUPPLY, EW, ESCORT, CARRIER }
 const CLASS_LABEL := ["전열", "화력", "공성", "보급", "전자전", "호위", "항모"]
+const RoleLayout := preload("res://view/fleet_render/fleet_role_layout.gd")
+var _role_layout: Dictionary = RoleLayout.load_config()
 # 함종별 선체 길이(3D 단위). 원본 모델은 길이 약 1.9.
 const CLASS_LEN := [1.15, 1.0, 1.2, 0.9, 0.88, 0.6, 1.25]
 const MODEL_LEN := 1.9
@@ -59,6 +61,7 @@ const C_FLASH := Color(2.4, 2.4, 2.6)
 
 class Slot:
 	var cls := 0
+	var ship_type := ""          # 같은 호위함 모델을 쓰는 요격함·고속정의 배치 역할을 구분한다
 	var idx := 0
 	var pos := Vector3.ZERO      # 현재 월드 위치(대형 추종 결과)
 	var home := Vector3.ZERO     # 진형 슬롯(전대 로컬: 전방 -Z, 측면 +X). 전환 중에는 from→goal 진행률 보간값
@@ -265,26 +268,88 @@ func _pattern(kind: int, m: int) -> Array:
 	return out
 
 # 편성이 있는 전대(시나리오 salvo 규칙)는 화면 함선 = 실제 척 수, 함종도 편성대로다. 안개 속 적 접촉·POC는 편성이 없어 아래 _assign_class를 쓴다.
-# 순서는 앞줄부터: 전열 → 공성 → 화력 → 전자전 → 항모 → 보급, 호위(요격함·고속정)는 맨 뒤
+# 선체 생성 순서. 실제 위치는 _role_points가 함종 역할에 따라 정한다.
 const REAL_ORDER := [LINE, SIEGE, FIRE, EW, CARRIER, SUPPLY, ESCORT]
-func _real_classes(counts: Dictionary) -> Array:
+func _real_ship_ids(counts: Dictionary) -> Array:
 	var out := []
+	var ids := counts.keys()
+	ids.sort()
 	for c in REAL_ORDER:
-		for t in counts:
+		for t in ids:
 			var model: String = ScenarioRoster.SHIP_TYPES.get(t, {}).get("model", "")
 			var k := CLASS_NAMES.find(model) if model != "" else ESCORT   # 고속정은 모델이 없어 호위함 선체로 그린다
 			if k == c:
 				for i in (counts[t] as Array).reduce(func(a, b): return a + b, 0):
-					out.append(c)
+					out.append(t)
 	return out
 
-func _assign_real(pts: Array, types: Array, flag: bool) -> Array:
+func _real_classes(counts: Dictionary) -> Array:
+	return _real_ship_ids(counts).map(func(t): return _model_class(t))
+
+func _model_class(t: String) -> int:
+	var model: String = ScenarioRoster.SHIP_TYPES.get(t, {}).get("model", "")
+	return CLASS_NAMES.find(model) if model != "" else ESCORT
+
+# 기존 진형의 점을 그대로 사용하되 함종에 알맞은 자리로 대응시킨다.
+# 좌표: 전방 +x, 양익 ±z. 부족한 자리는 가장 가까운 가용 자리로 배치한다.
+# 순서는 보호가 필요한 지원함 → 외곽 초계 → 전열 → 화력선이다.
+# 우선순위·선호 좌표 정본: data/fleet-role-layout.md (렌더러 생성 시 한 번 읽는다).
+
+func _role_points(pts: Array, ship_ids: Array) -> Array:
+	if ship_ids.is_empty():
+		return pts
+	var lo := INF
+	var hi := -INF
+	var width := 1.0
+	for p: Vector3 in pts:
+		lo = minf(lo, p.x)
+		hi = maxf(hi, p.x)
+		width = maxf(width, absf(p.z))
+	var depth := maxf(1.0, hi - lo)
+	var free := range(pts.size())
+	var out := []
+	out.resize(pts.size())
+	var roles: Array = _role_layout.order.duplicate()
+	for t in ship_ids:
+		if not roles.has(t):
+			roles.append(t)
+	for t in roles:
+		var balance := 0
+		var coordinates: Array = _role_layout.targets.get(t, [0.5, 0.5])
+		var target := Vector2(float(coordinates[0]), float(coordinates[1]))
+		for i in ship_ids.size():
+			if ship_ids[i] != t:
+				continue
+			var best := -1
+			var score := INF
+			for j in free:
+				var p: Vector3 = pts[j]
+				var front := (p.x - lo) / depth
+				var edge := absf(p.z) / width
+				var side := signf(p.z)
+				var cost := 2.0 * pow(front - target.x, 2) + pow(edge - target.y, 2)
+				cost += 0.12 * maxf(0.0, balance * side) # 같은 함종은 좌우 균형
+				if cost < score:
+					score = cost
+					best = j
+			out[i] = pts[best]
+			balance += int(signf(pts[best].z))
+			free.erase(best)
+	return out
+
+func _assign_real(pts: Array, types: Array, flag: bool, ordered := false) -> Array:
 	var idx := range(pts.size())
-	idx.sort_custom(func(a, b): return pts[a].x > pts[b].x)   # 앞(+x)부터
+	if not ordered:
+		idx.sort_custom(func(a, b): return pts[a].x > pts[b].x)
+	var lo := INF
+	var hi := -INF
+	for p: Vector3 in pts:
+		lo = minf(lo, p.x)
+		hi = maxf(hi, p.x)
 	var out := []
 	out.resize(pts.size())
 	for i in idx.size():
-		out[idx[i]] = {"cls": types[i], "rank": float(i) / maxf(1.0, idx.size() - 1)}
+		out[idx[i]] = {"cls": types[i], "rank": (hi - pts[idx[i]].x) / maxf(1.0, hi - lo)}
 	if flag:
 		var best := 0
 		for i in pts.size():
@@ -394,7 +459,7 @@ func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 		gl.set_instance_transform(gi, Transform3D(Basis.from_scale(Vector3.ONE * s.gsz), s.pos + Vector3(c, 0.0, -sn) * (s.half_len * 0.98)))
 	v.rest = v.rest + 1 if (maxerr < 0.0004 and maxtr < 0.02 and maxyaw < 0.002) else 0
 
-# 진형이 바뀌면 함선 k는 새 진형의 k번 자리로 간다(재배정·빈자리 메우기 없음. 격침된 자리는 비어 있다).
+# 진형 전환 때도 함종 역할을 유지한다. 격침 슬롯도 배정에 포함해 빈자리는 그대로 남긴다.
 func _reform(v: FleetVis, sq: Dictionary) -> void:
 	v.formation = sq.formation
 	v.rest = 0
@@ -404,6 +469,9 @@ func _reform(v: FleetVis, sq: Dictionary) -> void:
 	if n == 0:
 		return
 	var pts := formation_points(sq.formation, n)
+	var ship_ids := v.slots.map(func(s): return s.ship_type)
+	if ship_ids.any(func(t): return t != ""):
+		pts = _role_points(pts, ship_ids)
 	var S := src.unit_scale()
 	var minf_ := 1e9
 	var maxf_ := -1e9
@@ -455,10 +523,12 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 	v.mmis = []
 	v.slots = []
 	v.formation = sq.formation
-	var types := _real_classes(sq.get("counts", {}))
+	var ship_ids := _real_ship_ids(sq.get("counts", {}))
+	var types := ship_ids.map(func(t): return _model_class(t))
 	var n := types.size() if not types.is_empty() else maxi(12, roundi(sq.max_ships * vis_ratio()))
 	var pts := formation_points(sq.formation, n)
-	var cls := _assign_real(pts, types, sq.flagship) if not types.is_empty() else _assign_class(pts, sq.flagship, sq.id * 7919)
+	pts = _role_points(pts, ship_ids)
+	var cls := _assign_real(pts, types, sq.flagship, true) if not types.is_empty() else _assign_class(pts, sq.flagship, sq.id * 7919)
 	var S := src.unit_scale()
 	var per_class := []
 	per_class.resize(CLASS_NAMES.size())
@@ -469,6 +539,7 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 	for i in pts.size():
 		var s := Slot.new()
 		s.cls = cls[i].cls
+		s.ship_type = ship_ids[i] if not ship_ids.is_empty() else ""
 		s.rank = cls[i].rank
 		s.flag = cls[i].get("flag", false)
 		var p: Vector3 = pts[i]

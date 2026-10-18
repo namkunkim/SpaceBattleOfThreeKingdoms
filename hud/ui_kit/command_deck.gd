@@ -83,6 +83,7 @@ var cmd_tabs: Array = []
 var supply_menu: Control
 var cmd_grid: GridContainer
 var cmd_buttons: Array = []
+var formation_guide_button: Button
 var tab_index := 0
 var toast: Control
 var toast_text := ""
@@ -978,6 +979,9 @@ func _refresh_group_btns() -> void:
 		grp_btns[i].queue_redraw()
 
 func _set_tab(i: int) -> void:
+	if is_instance_valid(formation_guide_button):
+		formation_guide_button.queue_free()
+	formation_guide_button = null
 	tab_index = i
 	for k in cmd_tabs.size():
 		cmd_tabs[k].on = k == i
@@ -1024,6 +1028,7 @@ func _build_formation_cards() -> void:
 		var l := UiTheme.label("함대를 선택하십시오", "Muted", 12)
 		cmd_grid.add_child(l)
 		cmd_buttons.append(l)
+		_add_formation_guide_button()
 		return
 	for o in opts:
 		var b := FormationTab.FormButton.new(o, self)
@@ -1034,6 +1039,17 @@ func _build_formation_cards() -> void:
 			_hook_buttons(b)
 		if hold_tip:
 			hold_tip.register(b)
+	_add_formation_guide_button()
+
+func _add_formation_guide_button() -> void:
+	formation_guide_button = Button.new()
+	formation_guide_button.name = "OpenFormationGuide"
+	formation_guide_button.text = "배치도 보기"
+	formation_guide_button.add_theme_font_size_override("font_size", 12)
+	formation_guide_button.custom_minimum_size = Vector2(78, 80)
+	formation_guide_button.tooltip_text = "함선 이미지로 7종 진형과 아군 함대 배치를 확인합니다"
+	formation_guide_button.pressed.connect(func(): screens["formation_guide"].open_guide())
+	cmd_grid.add_child(formation_guide_button)
 
 func _on_formation_pressed(b: Control) -> void:
 	if b.opt.state == "locked":
