@@ -518,7 +518,10 @@ func restore_orders(snap: Dictionary) -> void:
 # 코어 사건 → 효과음. 코어에 아직 없는 사건: 함재기 기관포·회수, 보호막·장갑 피격
 const SFX_OF := {"missile_launch": "missile_launch", "missile_hit": "missile_hit", "fighter_launch": "fighter_launch", "charge": "engine_boost",
 	"chain_explosion": "chain_explosion", "fire_ignite": "fire_ignite"}   # M9 화공: 발동 폭발, 불붙음(번짐 포함)
-const SFX_OF_CAT := {"artillery": "laser_heavy", "line_fire": "laser_light"}
+const SFX_OF_CAT := {"artillery": "missile_launch", "line_fire": "laser_light", "fighter": "fighter_launch"}
+# salvo 규칙의 미사일(포격 범주)·함재기 사격은 코어에 비행체가 없다. 렌더러가 이 대기열을 꺼내 비행 연출을 만든다(표시 전용).
+const FX_CATS := ["artillery", "fighter"]
+var salvo_fx: Array = []
 
 func _on_event(e: Dictionary) -> void:
 	var f = vm.fleet(e.sq) if e.sq >= 0 else null
@@ -526,6 +529,8 @@ func _on_event(e: Dictionary) -> void:
 		sfx_event.emit(SFX_OF[e.kind])
 	elif e.kind == "salvo" and SFX_OF_CAT.has(e.value.cat):
 		sfx_event.emit(SFX_OF_CAT[e.value.cat])
+	if e.kind == "salvo" and e.value.cat in FX_CATS:
+		salvo_fx.append({"cat": e.value.cat, "from": e.sq, "to": e.other, "n": int(e.value.n)})
 	elif e.kind == "fire_loop":
 		sfx_loop.emit("fire_loop", 1.0 if e.value.on else 0.0)   # 불이 타는 동안(발동 ~ 번짐 끝)
 	match e.kind:

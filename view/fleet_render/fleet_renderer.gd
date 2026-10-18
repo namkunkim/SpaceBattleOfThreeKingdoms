@@ -660,10 +660,13 @@ func update(dt: float) -> void:
 					v.volley_t = rng.randf_range(1.5, 2.3)
 					_volley(v, vis[sq.firing_at])
 		_update_flash(v)
+	for q in src.drain_salvo_fx():
+		_spawn_weapon_fx(q)
 	if dt > 0.0:
 		_update_shots(dt)
 		_update_missiles()
 		_update_swarms()
+		_update_weapon_fx(dt)
 		_update_wrecks(dt)
 		fx_add.step(dt)
 		fx_mix.step(dt)
@@ -673,12 +676,14 @@ func update(dt: float) -> void:
 func _free_vis(v: FleetVis) -> void:
 	v.node.queue_free()
 	shots = shots.filter(func(s): return s.av != v and s.bv != v)
+	weapon_fx = weapon_fx.filter(func(w): return w.av != v and w.bv != v)
 
 func reset() -> void:
 	for id in vis.keys():
 		vis[id].node.queue_free()
 	vis.clear()
 	shots.clear()
+	weapon_fx.clear()
 	for w in wrecks:
 		w.node.queue_free()
 	wrecks.clear()
@@ -915,3 +920,84 @@ func _update_swarms() -> void:
 		var col := Color(0.8, 0.95, 1.0) if sw.side == 0 else Color(1.0, 0.8, 0.6)
 		for p in sw.pts:
 			fx_add.spawn(FxPool.GLOW, src.to3(p, 0.9), 0.16, 0.035, col, 1.3)
+
+# salvo 규칙의 미사일(포격 범주)·함재기 사격: 코어에는 비행체가 없어 사건 하나를 비행 연출로 바꾼다(표시 전용, 피해와 무관).
+# 미사일 = 쏜 함선에서 표적 함선까지 포물선으로 날아가 폭발. 함재기 = 표적 둘레로 날아가 선회하며 기관포를 쏘다 사라진다.
+const MISSILE_S := 1.3    # 미사일 비행 시간(초)
+const FIGHTER_S := 3.2    # 함재기 출격~소멸(초), 앞 0.9초가 접근
+var weapon_fx: Array = []
+
+func _spawn_weapon_fx(q: Dictionary) -> void:
+	if not vis.has(q.from) or not vis.has(q.to):
+		return
+	var a: FleetVis = vis[q.from]
+	var b: FleetVis = vis[q.to]
+	var own := a.slots.filter(func(s): return s.alive)
+	if own.is_empty() or b.slots.filter(func(s): return s.alive).is_empty():
+		return
+	var missile: bool = q.cat == "artillery"
+	var n := clampi(int(q.n) * 2, 10, 18) if missile else 16
+	for i in n:
+		weapon_fx.append({"missile": missile, "av": a, "bv": b, "slot": own[rng.randi() % own.size()], "tslot": null, "fired": false,
+			"t": -rng.randf_range(0.0, 0.6), "ph": rng.randf() * TAU, "jit": Vector3(rng.randf_range(-1, 1), 0, rng.randf_range(-1, 1)) * 0.6,
+			"arc": rng.randf_range(0.12, 0.3), "side_k": rng.randf_range(-0.12, 0.12), "r": rng.randf_range(1.8, 3.4),
+			"col": (Color(0.75, 0.88, 1.0) if a.side == 0 else Color(1.0, 0.75, 0.5))})
+	shake = maxf(shake, 0.18 if missile else 0.1)
+
+func _burst(p: Vector3, size: float, n: int) -> void:
+	fx_add.spawn(FxPool.FIRE, p, 1.2 * size, 0.6, Color.WHITE, 1.0, Vector3.ZERO, 0.8)
+	fx_add.spawn(FxPool.FLARE, p, 2.2 * size, 0.16, Color(1.0, 0.9, 0.7), 1.3)
+	fx_add.spawn(FxPool.SHIELD, p, 1.6 * size, 0.3, Color(1.0, 0.75, 0.45), 0.6)
+	for i in n:
+		var d := Vector3(rng.randf_range(-1, 1), rng.randf_range(-0.2, 1), rng.randf_range(-1, 1)).normalized()
+		fx_add.spawn(FxPool.EMBER, p, 0.08, rng.randf_range(0.3, 0.7), Color(1.0, 0.7, 0.35), 1.0, d * rng.randf_range(2.0, 4.5), 0.0, 2.0)
+	fx_mix.spawn(FxPool.SMOKE, p, 0.9 * size, 2.0, Color(0.45, 0.42, 0.4), 0.5, Vector3(0, 0.1, 0), 1.5)
+
+func _update_weapon_fx(dt: float) -> void:
+	var keep := []
+	for w in weapon_fx:
+		w.t += dt
+		if w.t < 0.0:
+			keep.append(w)
+			continue
+		var b: FleetVis = w.bv
+		if w.tslot == null or not w.tslot.alive:
+			var alt := b.slots.filter(func(x): return x.alive)
+			if alt.is_empty():
+				continue
+			w.tslot = alt[rng.randi() % alt.size()]
+		var A := bow_world(w.av, w.slot)
+		var B: Vector3 = slot_world(b, w.tslot) + w.jit
+		if not w.fired:   # 발사구 섬광
+			w.fired = true
+			fx_add.spawn(FxPool.FLARE, A, 1.1 if w.missile else 0.7, 0.15, w.col, 1.3)
+		if w.missile:
+			var k: float = w.t / MISSILE_S
+			if k >= 1.0:
+				_burst(B, 1.0, 6)
+				_flash(b, w.tslot)
+				continue
+			var dist := A.distance_to(B)
+			var lat: Vector3 = (B - A).cross(Vector3.UP).normalized() * dist * w.side_k * sin(PI * k)
+			var p: Vector3 = A.lerp(B, k) + Vector3.UP * sin(PI * k) * dist * w.arc + lat
+			fx_add.spawn(FxPool.FLARE, p, 0.85, 0.04, w.col, 1.5)
+			fx_add.spawn(FxPool.GLOW, p, 0.35, 0.12, Color(1.0, 0.8, 0.5), 1.2)   # 추진 불꽃
+			if rng.randf() < 30.0 * dt:
+				fx_mix.spawn(FxPool.SMOKE, p, 0.3, 1.6, Color(0.6, 0.64, 0.72), 0.55, Vector3(0, 0.05, 0), 2.5)
+		else:
+			if w.t >= FIGHTER_S:
+				continue
+			var ang: float = w.ph + w.t * 2.6
+			var orbit: Vector3 = B + Vector3(cos(ang), 0.3 + 0.25 * sin(ang * 2.0), sin(ang)) * w.r
+			var p: Vector3 = A.lerp(orbit, smoothstep(0.0, 0.9, w.t))
+			fx_add.spawn(FxPool.GLOW, p, 0.38, 0.06, w.col, 1.6)
+			fx_add.spawn(FxPool.GLOW, p, 0.18, 0.25, w.col * 0.8, 0.9)   # 엔진 잔광 꼬리
+			if w.t > 0.9 and rng.randf() < 9.0 * dt:   # 선회 중 기관포: 예광탄 점선 + 착탄
+				for j in 4:
+					fx_add.spawn(FxPool.FLARE, p.lerp(B, (j + 1) / 5.0), 0.22, 0.06, Color(1.0, 0.85, 0.4), 1.2)
+				fx_add.spawn(FxPool.FLARE, B, 0.6, 0.1, Color(1.0, 0.85, 0.5), 1.2)
+				w.tslot.hit_t = clock
+			if w.t >= FIGHTER_S - dt * 1.5 and rng.randf() < 0.15:   # 일부는 격추되어 터진다
+				_burst(p, 0.4, 3)
+		keep.append(w)
+	weapon_fx = keep

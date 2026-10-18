@@ -74,6 +74,13 @@ func swarms() -> Array:
 		out.append({"side": s.side, "pts": pts, "life": s.life})
 	return out
 
+# salvo 규칙의 미사일·함재기 사격 [{cat, from, to, n}]. 꺼내면 비운다(렌더러가 비행 연출을 만든다)
+func drain_salvo_fx() -> Array:
+	var q: Array = battle.get("salvo_fx") if battle.get("salvo_fx") != null else []
+	var out := q.duplicate()
+	q.clear()
+	return out
+
 func state() -> String:
 	return battle.G.get("state", "")
 
