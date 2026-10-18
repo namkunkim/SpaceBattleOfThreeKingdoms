@@ -160,6 +160,19 @@ func _run() -> void:
 	if not TestCheck.ok(self, out.aggressive.charge and not out.balanced.charge and not out.cautious.charge and not out.scheming.charge, "돌격은 적극만: %s" % str(out)): return
 	if not TestCheck.ok(self, out.cautious.kite >= 239.0 and out.scheming.kite >= 239.0 and out.balanced.kite < 131.0, "거리 130에서 신중·계략은 240까지 물러나고 균형·적극은 유지: %s" % str(out)): return
 	if not TestCheck.ok(self, out.cautious.retreat and out.scheming.retreat and not out.aggressive.retreat and not out.balanced.retreat, "사기 3500: 신중·계략만 질서 퇴각: %s" % str(out)): return
+	# 4d2. 적 AI는 물러나지 않는다(PoC D): 신중 방침의 적 함대도 거리 130에서 그 자리를 지킨다
+	var nt := _rc(1, false)
+	_park(nt, ["RC-LIU-SQ-02", "RC-CAO-SQ-02"])
+	var na2 := _f(nt, "RC-LIU-SQ-02")
+	var ne := _f(nt, "RC-CAO-SQ-02")
+	na2.pos = Vector2(800, 450)
+	ne.pos = Vector2(930, 450)
+	nt.first_hit_tick = 0
+	nt.st.tick = 900 * nt.st.hz
+	ne.posture = "cautious"
+	ne.ai_seen = 0
+	nt.cai.think(nt)
+	if not TestCheck.ok(self, (not ne.has_move) or ne.move_to.distance_to(na2.pos) < 131.0, "적 AI는 가까워도 물러나지 않는다 %s" % str(ne.move_to)): return
 	# 4e. 인물 위임(기본값): 지휘관 성향(정본 §4)으로 방침이 정해진다. 관우·조인(절의)은 신중, 조조(야심)는 적극, 황개는 계략 중시
 	var cai: CommanderAi = base_s.cai
 	if not TestCheck.ok(self, cai.posture_of(_f(base_s, "RC-LIU-SQ-02")) == "cautious" and cai.posture_of(_f(base_s, "RC-CAO-SQ-02")) == "cautious" and cai.posture_of(_f(base_s, "RC-CAO-SQ-01")) == "aggressive" and cai.posture_of(_f(base_s, "RC-SUN-SQ-03")) == "scheming" and cai.posture_of(_f(base_s, "RC-LIU-SQ-01")) == "balanced", "성향 → 방침"): return

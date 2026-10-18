@@ -142,6 +142,8 @@ func _think_fleet(sim: BattleSim, f: FleetState, side: int, foes: Array[Dictiona
 				_do(sim, f, "ai_move", -1, f.home)
 		return
 	var D := _desired(sim, f, F, P, a)
+	if f.side == 1 and sim.detect != null and best.state != "confirmed":
+		D = minf(D, sim.detect.view_range(f))   # 적 AI는 자기 가시 범위 안까지 다가간다. 아직 확인 못 한 표적이면 보일 때까지 더 붙는다(PoC D, Q108)
 	var slack := float(A.slack)
 	var chase_r: float = f.range_r * sim.R.chase_range_share
 	if f.charge > 0:
@@ -153,7 +155,7 @@ func _think_fleet(sim: BattleSim, f: FleetState, side: int, foes: Array[Dictiona
 	elif d > D + slack:
 		_do(sim, f, "ai_target", best.id if D <= chase_r + 1.0 else -1)
 		_do(sim, f, "ai_move", -1, aim)
-	elif d < D - slack and bool(P.kite):
+	elif d < D - slack and bool(P.kite) and f.side == 0:   # 적 AI는 물러나지 않는다(PoC D, Q108). 가까워지면 그 자리에서 마주 본다
 		_do(sim, f, "ai_target", -1)
 		_do(sim, f, "ai_move", -1, aim)   # 너무 가깝다: 물러나 거리를 유지한다
 	else:
