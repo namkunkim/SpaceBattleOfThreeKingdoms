@@ -137,6 +137,17 @@ func _key(e: InputEventKey) -> void:
 		return
 	if host.G.state != "play":
 		return
+	# 확대·축소 단축키(PoC §7.3): + 확대, - 축소, Home 처음 배율. 화면 가운데 기준
+	var mid: Vector2 = host.get_viewport().get_visible_rect().size * 0.5
+	if e.keycode == KEY_EQUAL or e.keycode == KEY_KP_ADD:
+		host._zoom(mid, 1.5)
+		return
+	if e.keycode == KEY_MINUS or e.keycode == KEY_KP_SUBTRACT:
+		host._zoom(mid, 1.0 / 1.5)
+		return
+	if e.keycode == KEY_HOME:
+		host._zoom(mid, 0.9 / host.cam_z)
+		return
 	if e.keycode >= KEY_1 and e.keycode <= KEY_9:
 		var n: int = e.keycode - KEY_0
 		if e.ctrl_pressed or e.meta_pressed:
