@@ -330,7 +330,7 @@ M3 리뷰(2026-10-04): `REVIEW-M3.md`. 수용. 후속은 방향 배분 잔여 �
 - [x] Q82·SESSION-HANDOFF·REVIEW-P10 대응·CHECKLIST 결과/남은조건 갱신. O3b 중복 없음, P6b 미착수(마지막·착수 전 사용자 한 줄 확인).
 
 ## 9. 함대 기동 PoC 본 게임 적용 (2026-10-18, 계획 `PLAN-POC-APPLY.md`)
-- [ ] A 이동 늘림(STRETCH) 제거
+- [x] A 이동 늘림(STRETCH) 제거 (fleet_follow·fx_follow_formation PASS, formation_display는 헤드리스 폰트 오류로 변경 전에도 실패)
 - [ ] B 접적 평행 이동·도착 후 진형 정렬·제자리 반전(코어)
 - [ ] C 가시 범위·정찰 레이더·보이는 적에게만 사격(코어)
 - [ ] D 적 AI 교전 거리·물러나지 않기

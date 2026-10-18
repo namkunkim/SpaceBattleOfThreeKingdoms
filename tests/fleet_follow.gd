@@ -57,10 +57,9 @@ func _run() -> void:
 	for i in 40:
 		mv.pos += Vector2(0, 30)
 		r._follow(v, mv, 0.05)
-	_check(v.stretch > 1.2, "이동 중 간격 늘림 %.2f" % v.stretch)
 	for i in 400:
 		r._follow(v, mv, 0.05)
-	_check(v.stretch == 1.0, "정지 후 간격 복귀")
+	_check(_max_err(r, v, mv) < 0.02, "이동 뒤 슬롯 간격 그대로(이동 늘림 없음)")
 	sq.pos = mv.pos
 	# B2. 조준 중에는 모든 함선이 같은 방향(함대 중심 → 적), 조준이 풀리면 함대 방향으로 돌아온다
 	var foe_pos := r.src.to3(sq.pos + Vector2(500.0, 500.0))

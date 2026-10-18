@@ -45,7 +45,6 @@ const WORLD_AABB := AABB(Vector3(-120, -6, -120), Vector3(240, 12, 240))   # 함
 const SIM_STEP := 0.0     # 추종 갱신 주기: 매 프레임(30Hz로 묶으면 75Hz 화면에서 함선이 2프레임 멈췄다 점프한다). 정지한 전대는 갱신하지 않는다
 const TAU_MIN := 0.3             # 함선별 추종 시간 상수(초). 모든 함선이 같다: 다르면 지연이 짧은 함선부터 차례로 출발해 보인다
 const TAU_MAX := 0.3
-const STRETCH := 0.6             # 이동 중 함수 축 방향 간격 늘림(최대, 정지하면 1로 돌아온다. PoC M7)
 const MOVE_EPS := 0.3            # 이 속도(3D 단위/초) 이상이면 항적을 켠다
 const YAW_RATE := PI             # 함선 선회 속도(rad/초): 180°를 1초에(PoC FLIP_TIME)
 const SPEED_REF := 62.0          # 기준 이동 속도(월드 단위/초, 전술 오버레이의 62와 같다)
@@ -95,7 +94,6 @@ class FleetVis:
 	var formation := -1
 	var aim := false              # 조준 중인 적 함대가 있다(함선이 그쪽을 본다)
 	var aim_pos := Vector3.ZERO   # 조준 중인 적 함대의 월드 위치(3D)
-	var stretch := 1.0            # 이동 중 함수 축 간격 배율
 	var rtotal := 0.0            # 진형 전환 표시 총 시간(초, 0이면 즉시)
 	var rk := 1.0                # 전환 진행률 0~1(코어 form_left_s 기준, 표시 전용)
 	var rest := 0                # 연속으로 목표에 닿아 있던 갱신 횟수(3 이상이면 갱신 생략)
@@ -339,7 +337,7 @@ func _assign_class(pts: Array, flag: bool, seed_v: int) -> Array:
 # ------------------------------------------------------------ 대형 추종 (뷰 전용)
 # 함선은 모두 같은 시간 상수로 자기 슬롯을 따라간다(동시 출발·평행 진로). 흔들림·난수 편차·회피 변위는 없다.
 # 함선 방향은 전대 방향을 공유하고, 조준 중인 적 함대가 있으면 모두 같은 방향(함대 중심 → 적 중심)을 본다(진형 배치는 그대로).
-# 이동 중에는 슬롯 간격을 함수 축으로 늘리고(STRETCH) 정지하면 되돌린다. 코어 상태·전투 난수에 닿지 않는다.
+# 이동 중에도 슬롯 간격은 정지 때와 같다(이동 늘림 없음, PoC 사용자 결정). 코어 상태·전투 난수에 닿지 않는다.
 func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 	if dt <= 0.0:
 		return
@@ -354,13 +352,7 @@ func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 	var moved := fpos.distance_squared_to(v.last_pos) > 1e-8 or absf(frot - v.last_rot) > 1e-5
 	v.last_pos = fpos
 	v.last_rot = frot
-	var st_goal := 1.0 + STRETCH * clampf(fvel.length() / (SPEED_REF * src.unit_scale()), 0.0, 1.0)
-	var st_prev := v.stretch
-	v.stretch += (st_goal - v.stretch) * (1.0 - exp(-step / 0.4))
-	if absf(v.stretch - 1.0) < 0.002 and st_goal == 1.0:
-		v.stretch = 1.0
-	var stretching := v.stretch != st_prev
-	if not moved and not stretching and v.rest >= 3 and not v.aim:
+	if not moved and v.rest >= 3 and not v.aim:
 		return
 	var fb := Basis(Vector3.UP, frot)
 	var h_fleet := -float(sq.heading) - PI   # 전대 방향의 모델 yaw
@@ -377,7 +369,7 @@ func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 		gi += 1
 		if not s.alive:
 			continue
-		var t := fpos + fb * Vector3(s.home.x, s.home.y, s.home.z * v.stretch) + fvel * s.tau
+		var t := fpos + fb * Vector3(s.home.x, s.home.y, s.home.z) + fvel * s.tau
 		var d := (t - s.pos) * (step / (s.tau + step))   # 지수 추종의 유리 근사(안정, 오버슈트 없음)
 		s.pos += d
 		s.vel = d * inv

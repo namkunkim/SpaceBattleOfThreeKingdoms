@@ -45,5 +45,5 @@ func _run() -> void:
 		battle.update_sim(0.1)
 		await process_frame
 	await _shot(dir, "3-arrived")
-	print("MOTION_CAPTURE_DONE has_move=", f.has_move, " stretch=", battle.presentation.renderer.vis[f.id].stretch)
+	print("MOTION_CAPTURE_DONE has_move=", f.has_move)
 	quit(0)
