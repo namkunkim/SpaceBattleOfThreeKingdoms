@@ -18,7 +18,6 @@ const FORM_NAMES := ["횡진", "쐐기진", "방진", "종진", "원진", "학�
 const CMD_R := 560.0
 const MISSILE_R := 480.0
 const FIGHTER_R := 380.0
-const PORTRAIT_SHEET := "res://assets/portraits/commanders_sheet_v1.png"
 var profile_def := "res://data/profiles/red_cliffs_rt.json"   # 적벽 시나리오 프로필. ""이면 POC 프로필(규칙 문구 대조 테스트 전용)
 var difficulty := "표준"
 var load_error := ""   # 프로필을 만들지 못해 대체했을 때의 문구(브리핑에 보인다, REVIEW-O2b #1)
@@ -124,7 +123,6 @@ var marker := {}
 var drag := {}
 var now_t := 0.0
 var vsize := Vector2(1600.0, 900.0)
-var sheet: Texture2D
 var cam_pos: Vector2:
 	get: return rig.cam_pos
 	set(v): rig.cam_pos = v
@@ -139,7 +137,6 @@ func _ready() -> void:
 	randomize()
 	vsize = get_viewport().get_visible_rect().size
 	rig.vsize = vsize
-	sheet = load(PORTRAIT_SHEET) as Texture2D
 	view3d.setup(self, rig)
 	_build_canvas()
 	cmds = BattleCommands.new(self)
@@ -243,10 +240,10 @@ var _brief_x := 0.0   # 브리핑 배경 카메라가 흔들리는 중심 x(시�
 func _field_center() -> Vector2:
 	return rig.limit * 0.5
 
-# 프로필 전대 정의의 초상 번호(p)는 0 고정이라 인물 ID로 초상 시트 번호를 채운다. 없는 인물은 0.
+# 프로필 전대 정의는 표시용 사본에만 최신 인물 초상 번호를 채운다.
 func _with_portrait(d: Dictionary) -> Dictionary:
 	var e := d.duplicate()
-	e.p = maxi(0, int(Commanders.PORTRAIT.get(d.get("commander_id", ""), d.get("p", 0))))
+	e.p = Commanders.portrait_index(str(d.get("commander_id", d.get("name", ""))), -1 if d.has("commander_id") else int(d.get("p", 0)))
 	return e
 
 # 기본 그룹 1~n: 아군 세력 하나가 번호 하나다(등장 순서, 1 유비군 · 2 손권군). 코어 상태가 아닌 UI 편성이다(Q73: 상위 묶음 없음).
@@ -414,7 +411,12 @@ func update_sim(dt: float) -> void:
 # ============================================================ 코어 ↔ 화면
 # 투영을 화면 모델에 반영하고 새 전대의 3D 노드를 만든다.
 func _sync() -> void:
-	var fresh := vm.apply(sim.projection(0))
+	var projection := sim.projection(0)
+	for squadron in projection.squadrons:
+		# 확인된 접촉과 아군만 인물이 공개된다. 추정·상실 접촉에는 인물 정보를 추가하지 않는다.
+		if squadron.has("commander_id"):
+			squadron.portrait = Commanders.portrait_index(str(squadron.commander_id))
+	var fresh := vm.apply(projection)
 	for f in fresh:
 		view3d.build_fleet(f)
 	G.t = vm.clock_s
@@ -612,11 +614,24 @@ func label_rect(f) -> Rect2:
 func _portrait_tex(i: int) -> Texture2D:
 	if _ptex.has(i):
 		return _ptex[i]
-	var at := AtlasTexture.new()
-	at.atlas = sheet
-	at.region = Rect2((i % 3) * 512.0 + 5.0, (i / 3) * 512.0 + 5.0, 502.0, 502.0)
-	_ptex[i] = at
-	return at
+	var path := Commanders.portrait_path(i)
+	if not path.is_empty():
+		var texture := load(path) as Texture2D
+		if texture:
+			# 정사각형 HUD 슬롯에 얼굴 비율을 유지한다. 원본 전체 초상은 파일에 보존한다.
+			var portrait := AtlasTexture.new()
+			portrait.atlas = texture
+			portrait.region = Rect2(0, 0, texture.get_width(), texture.get_width())
+			_ptex[i] = portrait
+			return portrait
+	# 무명 집단이나 알 수 없는 인물에게 다른 장수의 얼굴을 빌려 주지 않는다.
+	var blank := GradientTexture2D.new()
+	blank.gradient = Gradient.new()
+	blank.gradient.colors = PackedColorArray([Color("18242e"), Color("111b24")])
+	blank.width = 561
+	blank.height = 561
+	_ptex[i] = blank
+	return blank
 
 func toast(text: String) -> void:
 	battle_event.emit("toast", text, -1)

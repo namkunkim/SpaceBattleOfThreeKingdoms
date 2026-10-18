@@ -24,15 +24,15 @@ const LOSS_LINES := [
 const REINF_LINE := "별동대입니다. 측면을 비워 두지 마십시오. 예비 함대를 돌려야 합니다."
 const OPEN_LINE := "전 함대, 전투 배치. 조조의 선봉이 적벽에 들어섰다."
 
-# 인물 ID(본편 characters.json·시나리오 JSON과 같은 CHR-xxxx) → POC 초상 시트 번호(리뷰 W-1).
-# 이름과 세력은 시나리오 JSON에서 읽는다(ScenarioRoster.person). 여기 없는 인물은 머리글자 패를 쓴다.
-const PORTRAIT := {
-	"CHR-0128": 0,   # 유비
-	"CHR-0107": 1,   # 관우
-	"CHR-0134": 2,   # 제갈량
-	"CHR-0136": 3,   # 조운
-	"CHR-0034": 4,   # 조조
-}
+# 표시 전용: CHR 인물 ID와 SHJ 초상을 연결한다. 복수 인물·무명 집단은 머리글자 패를 유지한다.
+const PortraitCatalog = preload("res://assets/portraits/seonghanji/catalog.gd")
+const PORTRAIT := PortraitCatalog.BY_CHARACTER_ID
+
+static func portrait_index(id_or_name: String, fallback := -1) -> int:
+	return int(PORTRAIT.get(id_or_name, PortraitCatalog.BY_NAME.get(id_or_name, PortraitCatalog.BY_PORTRAIT_ID.get(id_or_name, fallback))))
+
+static func portrait_path(index: int) -> String:
+	return str(PortraitCatalog.PATHS[index]) if index >= 0 and index < PortraitCatalog.PATHS.size() else ""
 
 # {id, name, faction(세력 키 shu·wu·wei), portrait(-1 = 없음)}. 시나리오에 없는 ID면 빈 사전.
 static func person(id: String) -> Dictionary:

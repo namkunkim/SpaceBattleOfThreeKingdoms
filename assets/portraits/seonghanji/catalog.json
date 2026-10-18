@@ -1,0 +1,5031 @@
+{
+  "source": "output/seonghanji-portraits-distinct-20261017/manifest.json",
+  "total": 501,
+  "matchedCharacterIds": 482,
+  "unresolved": [
+    {
+      "id": "CHR-0162",
+      "name": "유봉의 부장 맹달 계열",
+      "reason": "No individual portrait for composite or unnamed group"
+    },
+    {
+      "id": "CHR-0304",
+      "name": "송헌·위속",
+      "reason": "No individual portrait for composite or unnamed group"
+    },
+    {
+      "id": "CHR-0403",
+      "name": "좌가려·어비류",
+      "reason": "No individual portrait for composite or unnamed group"
+    },
+    {
+      "id": "CHR-0440",
+      "name": "소리·미가·궐기",
+      "reason": "No individual portrait for composite or unnamed group"
+    },
+    {
+      "id": "CHR-0446",
+      "name": "북궁백옥·이문후",
+      "reason": "No individual portrait for composite or unnamed group"
+    },
+    {
+      "id": "CHR-0450",
+      "name": "철리길·월길",
+      "reason": "No individual portrait for composite or unnamed group"
+    },
+    {
+      "id": "CHR-0458",
+      "name": "여개·왕항",
+      "reason": "No individual portrait for composite or unnamed group"
+    },
+    {
+      "id": "CHR-0463",
+      "name": "언기·소륵·차사왕",
+      "reason": "No individual portrait for composite or unnamed group"
+    },
+    {
+      "id": "CHR-0469",
+      "name": "팽식·진복·조자",
+      "reason": "No individual portrait for composite or unnamed group"
+    },
+    {
+      "id": "CHR-0477",
+      "name": "마여·의려",
+      "reason": "No individual portrait for composite or unnamed group"
+    }
+  ],
+  "entries": [
+    {
+      "index": 0,
+      "id": "SHJ-G048",
+      "name": "유비",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G048.png",
+      "character_ids": [
+        "CHR-0128"
+      ]
+    },
+    {
+      "index": 1,
+      "id": "SHJ-G049",
+      "name": "관우",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G049.png",
+      "character_ids": [
+        "CHR-0107"
+      ]
+    },
+    {
+      "index": 2,
+      "id": "SHJ-G052",
+      "name": "제갈량",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G052.png",
+      "character_ids": [
+        "CHR-0134"
+      ]
+    },
+    {
+      "index": 3,
+      "id": "SHJ-G051",
+      "name": "조운",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G051.png",
+      "character_ids": [
+        "CHR-0136"
+      ]
+    },
+    {
+      "index": 4,
+      "id": "SHJ-G001",
+      "name": "조조",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G001.png",
+      "character_ids": [
+        "CHR-0034"
+      ]
+    },
+    {
+      "index": 5,
+      "id": "SHJ-G050",
+      "name": "장비",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G050.png",
+      "character_ids": [
+        "CHR-0130"
+      ]
+    },
+    {
+      "index": 6,
+      "id": "SHJ-G002",
+      "name": "하후돈",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G002.png",
+      "character_ids": [
+        "CHR-0043"
+      ]
+    },
+    {
+      "index": 7,
+      "id": "SHJ-G003",
+      "name": "하후연",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G003.png",
+      "character_ids": [
+        "CHR-0044"
+      ]
+    },
+    {
+      "index": 8,
+      "id": "SHJ-G004",
+      "name": "조인",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G004.png",
+      "character_ids": [
+        "CHR-0033"
+      ]
+    },
+    {
+      "index": 9,
+      "id": "SHJ-G005",
+      "name": "조홍",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G005-v2.png",
+      "character_ids": [
+        "CHR-0036"
+      ]
+    },
+    {
+      "index": 10,
+      "id": "SHJ-G006",
+      "name": "순욱",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G006-v2.png",
+      "character_ids": [
+        "CHR-0018"
+      ]
+    },
+    {
+      "index": 11,
+      "id": "SHJ-G007",
+      "name": "순유",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G007-v2.png",
+      "character_ids": [
+        "CHR-0019"
+      ]
+    },
+    {
+      "index": 12,
+      "id": "SHJ-G008",
+      "name": "곽가",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G008-v2.png",
+      "character_ids": [
+        "CHR-0003"
+      ]
+    },
+    {
+      "index": 13,
+      "id": "SHJ-G009",
+      "name": "정욱",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G009.png",
+      "character_ids": [
+        "CHR-0031"
+      ]
+    },
+    {
+      "index": 14,
+      "id": "SHJ-G010",
+      "name": "전위",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G010-v2.png",
+      "character_ids": [
+        "CHR-0030"
+      ]
+    },
+    {
+      "index": 15,
+      "id": "SHJ-G011",
+      "name": "허저",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G011.png",
+      "character_ids": [
+        "CHR-0047"
+      ]
+    },
+    {
+      "index": 16,
+      "id": "SHJ-G012",
+      "name": "악진",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G012.png",
+      "character_ids": [
+        "CHR-0021"
+      ]
+    },
+    {
+      "index": 17,
+      "id": "SHJ-G013",
+      "name": "이전",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G013.png",
+      "character_ids": [
+        "CHR-0025"
+      ]
+    },
+    {
+      "index": 18,
+      "id": "SHJ-G014",
+      "name": "우금",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G014.png",
+      "character_ids": [
+        "CHR-0023"
+      ]
+    },
+    {
+      "index": 19,
+      "id": "SHJ-G015",
+      "name": "장료",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G015.png",
+      "character_ids": [
+        "CHR-0026"
+      ]
+    },
+    {
+      "index": 20,
+      "id": "SHJ-G016",
+      "name": "서황",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G016.png",
+      "character_ids": [
+        "CHR-0017"
+      ]
+    },
+    {
+      "index": 21,
+      "id": "SHJ-G017",
+      "name": "장합",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G017.png",
+      "character_ids": [
+        "CHR-0028"
+      ]
+    },
+    {
+      "index": 22,
+      "id": "SHJ-G018",
+      "name": "조비",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G018-v2.png",
+      "character_ids": [
+        "CHR-0032"
+      ]
+    },
+    {
+      "index": 23,
+      "id": "SHJ-G019",
+      "name": "사마의",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G019.png",
+      "character_ids": [
+        "CHR-0016"
+      ]
+    },
+    {
+      "index": 24,
+      "id": "SHJ-G020",
+      "name": "가후",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G020.png",
+      "character_ids": [
+        "CHR-0001"
+      ]
+    },
+    {
+      "index": 25,
+      "id": "SHJ-G021",
+      "name": "조진",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G021.png",
+      "character_ids": [
+        "CHR-0035"
+      ]
+    },
+    {
+      "index": 26,
+      "id": "SHJ-G022",
+      "name": "조휴",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G022.png",
+      "character_ids": [
+        "CHR-0037"
+      ]
+    },
+    {
+      "index": 27,
+      "id": "SHJ-G023",
+      "name": "방덕",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G023.png",
+      "character_ids": [
+        "CHR-0012"
+      ]
+    },
+    {
+      "index": 28,
+      "id": "SHJ-G024",
+      "name": "문빙",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G024.png",
+      "character_ids": [
+        "CHR-0010"
+      ]
+    },
+    {
+      "index": 29,
+      "id": "SHJ-G025",
+      "name": "만총",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G025-v2.png",
+      "character_ids": [
+        "CHR-0009"
+      ]
+    },
+    {
+      "index": 30,
+      "id": "SHJ-G026",
+      "name": "진군",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G026.png",
+      "character_ids": [
+        "CHR-0040"
+      ]
+    },
+    {
+      "index": 31,
+      "id": "SHJ-G027",
+      "name": "등애",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G027.png",
+      "character_ids": [
+        "CHR-0008"
+      ]
+    },
+    {
+      "index": 32,
+      "id": "SHJ-G028",
+      "name": "종회",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G028.png",
+      "character_ids": [
+        "CHR-0039"
+      ]
+    },
+    {
+      "index": 33,
+      "id": "SHJ-G029",
+      "name": "곽회",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G029.png",
+      "character_ids": [
+        "CHR-0005"
+      ]
+    },
+    {
+      "index": 34,
+      "id": "SHJ-G030",
+      "name": "진태",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G030.png",
+      "character_ids": [
+        "CHR-0041"
+      ]
+    },
+    {
+      "index": 35,
+      "id": "SHJ-G031",
+      "name": "왕기",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G031.png",
+      "character_ids": [
+        "CHR-0022"
+      ]
+    },
+    {
+      "index": 36,
+      "id": "SHJ-G032",
+      "name": "사마사",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G032.png",
+      "character_ids": [
+        "CHR-0014"
+      ]
+    },
+    {
+      "index": 37,
+      "id": "SHJ-G033",
+      "name": "사마소",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G033.png",
+      "character_ids": [
+        "CHR-0015"
+      ]
+    },
+    {
+      "index": 38,
+      "id": "SHJ-G034",
+      "name": "하후패",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G034.png",
+      "character_ids": [
+        "CHR-0045"
+      ]
+    },
+    {
+      "index": 39,
+      "id": "SHJ-G035",
+      "name": "두예",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G035.png",
+      "character_ids": [
+        "CHR-0007"
+      ]
+    },
+    {
+      "index": 40,
+      "id": "SHJ-G036",
+      "name": "변씨",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G036.png",
+      "character_ids": [
+        "CHR-0013"
+      ]
+    },
+    {
+      "index": 41,
+      "id": "SHJ-G037",
+      "name": "채염",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G037.png",
+      "character_ids": [
+        "CHR-0042"
+      ]
+    },
+    {
+      "index": 42,
+      "id": "SHJ-G038",
+      "name": "곽여왕",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G038.png",
+      "character_ids": [
+        "CHR-0004"
+      ]
+    },
+    {
+      "index": 43,
+      "id": "SHJ-G039",
+      "name": "신헌영",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G039.png",
+      "character_ids": [
+        "CHR-0020"
+      ]
+    },
+    {
+      "index": 44,
+      "id": "SHJ-G040",
+      "name": "유엽",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G040.png",
+      "character_ids": [
+        "CHR-0024"
+      ]
+    },
+    {
+      "index": 45,
+      "id": "SHJ-G041",
+      "name": "종요",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G041.png",
+      "character_ids": [
+        "CHR-0038"
+      ]
+    },
+    {
+      "index": 46,
+      "id": "SHJ-G042",
+      "name": "학소",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G042.png",
+      "character_ids": [
+        "CHR-0046"
+      ]
+    },
+    {
+      "index": 47,
+      "id": "SHJ-G043",
+      "name": "문앙",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G043.png",
+      "character_ids": [
+        "CHR-0011"
+      ]
+    },
+    {
+      "index": 48,
+      "id": "SHJ-G044",
+      "name": "전예",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G044.png",
+      "character_ids": [
+        "CHR-0029"
+      ]
+    },
+    {
+      "index": 49,
+      "id": "SHJ-G045",
+      "name": "견희",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G045.png",
+      "character_ids": [
+        "CHR-0002"
+      ]
+    },
+    {
+      "index": 50,
+      "id": "SHJ-G046",
+      "name": "장춘화",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G046.png",
+      "character_ids": [
+        "CHR-0027"
+      ]
+    },
+    {
+      "index": 51,
+      "id": "SHJ-G047",
+      "name": "관구검",
+      "faction": "위 · 승상부",
+      "path": "res://assets/portraits/seonghanji/SHJ-G047.png",
+      "character_ids": [
+        "CHR-0006"
+      ]
+    },
+    {
+      "index": 52,
+      "id": "SHJ-G053",
+      "name": "서서",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G053.png",
+      "character_ids": [
+        "CHR-0122"
+      ]
+    },
+    {
+      "index": 53,
+      "id": "SHJ-G054",
+      "name": "미축",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G054.png",
+      "character_ids": [
+        "CHR-0117"
+      ]
+    },
+    {
+      "index": 54,
+      "id": "SHJ-G055",
+      "name": "손건",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G055.png",
+      "character_ids": [
+        "CHR-0123"
+      ]
+    },
+    {
+      "index": 55,
+      "id": "SHJ-G056",
+      "name": "간옹",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G056.png",
+      "character_ids": [
+        "CHR-0104"
+      ]
+    },
+    {
+      "index": 56,
+      "id": "SHJ-G057",
+      "name": "미방",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G057.png",
+      "character_ids": [
+        "CHR-0115"
+      ]
+    },
+    {
+      "index": 57,
+      "id": "SHJ-G058",
+      "name": "유봉",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G058.png",
+      "character_ids": [
+        "CHR-0127"
+      ]
+    },
+    {
+      "index": 58,
+      "id": "SHJ-G059",
+      "name": "요화",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G059.png",
+      "character_ids": [
+        "CHR-0125"
+      ]
+    },
+    {
+      "index": 59,
+      "id": "SHJ-G060",
+      "name": "방통",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G060.png",
+      "character_ids": [
+        "CHR-0118"
+      ]
+    },
+    {
+      "index": 60,
+      "id": "SHJ-G061",
+      "name": "황충",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G061.png",
+      "character_ids": [
+        "CHR-0138"
+      ]
+    },
+    {
+      "index": 61,
+      "id": "SHJ-G062",
+      "name": "마초",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G062.png",
+      "character_ids": [
+        "CHR-0114"
+      ]
+    },
+    {
+      "index": 62,
+      "id": "SHJ-G063",
+      "name": "위연",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G063.png",
+      "character_ids": [
+        "CHR-0126"
+      ]
+    },
+    {
+      "index": 63,
+      "id": "SHJ-G064",
+      "name": "법정",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G064.png",
+      "character_ids": [
+        "CHR-0119"
+      ]
+    },
+    {
+      "index": 64,
+      "id": "SHJ-G065",
+      "name": "이엄",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G065.png",
+      "character_ids": [
+        "CHR-0129"
+      ]
+    },
+    {
+      "index": 65,
+      "id": "SHJ-G066",
+      "name": "마량",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G066.png",
+      "character_ids": [
+        "CHR-0112"
+      ]
+    },
+    {
+      "index": 66,
+      "id": "SHJ-G067",
+      "name": "마속",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G067.png",
+      "character_ids": [
+        "CHR-0113"
+      ]
+    },
+    {
+      "index": 67,
+      "id": "SHJ-G068",
+      "name": "장완",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G068.png",
+      "character_ids": [
+        "CHR-0132"
+      ]
+    },
+    {
+      "index": 68,
+      "id": "SHJ-G069",
+      "name": "비의",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G069.png",
+      "character_ids": [
+        "CHR-0121"
+      ]
+    },
+    {
+      "index": 69,
+      "id": "SHJ-G070",
+      "name": "왕평",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G070.png",
+      "character_ids": [
+        "CHR-0124"
+      ]
+    },
+    {
+      "index": 70,
+      "id": "SHJ-G071",
+      "name": "강유",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G071.png",
+      "character_ids": [
+        "CHR-0106"
+      ]
+    },
+    {
+      "index": 71,
+      "id": "SHJ-G072",
+      "name": "동윤",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G072.png",
+      "character_ids": [
+        "CHR-0110"
+      ]
+    },
+    {
+      "index": 72,
+      "id": "SHJ-G073",
+      "name": "장익",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G073.png",
+      "character_ids": [
+        "CHR-0133"
+      ]
+    },
+    {
+      "index": 73,
+      "id": "SHJ-G074",
+      "name": "장억",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G074.png",
+      "character_ids": [
+        "CHR-0131"
+      ]
+    },
+    {
+      "index": 74,
+      "id": "SHJ-G075",
+      "name": "제갈첨",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G075.png",
+      "character_ids": [
+        "CHR-0135"
+      ]
+    },
+    {
+      "index": 75,
+      "id": "SHJ-G076",
+      "name": "나헌",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G076.png",
+      "character_ids": [
+        "CHR-0109"
+      ]
+    },
+    {
+      "index": 76,
+      "id": "SHJ-G077",
+      "name": "황월영",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G077.png",
+      "character_ids": [
+        "CHR-0137"
+      ]
+    },
+    {
+      "index": 77,
+      "id": "SHJ-G078",
+      "name": "감부인",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G078.png",
+      "character_ids": [
+        "CHR-0105"
+      ]
+    },
+    {
+      "index": 78,
+      "id": "SHJ-G079",
+      "name": "미부인",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G079.png",
+      "character_ids": [
+        "CHR-0116"
+      ]
+    },
+    {
+      "index": 79,
+      "id": "SHJ-G080",
+      "name": "마대",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G080.png",
+      "character_ids": [
+        "CHR-0111"
+      ]
+    },
+    {
+      "index": 80,
+      "id": "SHJ-G081",
+      "name": "관흥",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G081.png",
+      "character_ids": [
+        "CHR-0108"
+      ]
+    },
+    {
+      "index": 81,
+      "id": "SHJ-G082",
+      "name": "부첨",
+      "faction": "촉 · 계한",
+      "path": "res://assets/portraits/seonghanji/SHJ-G082.png",
+      "character_ids": [
+        "CHR-0120"
+      ]
+    },
+    {
+      "index": 82,
+      "id": "SHJ-G083",
+      "name": "손견",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G083.png",
+      "character_ids": [
+        "CHR-0193"
+      ]
+    },
+    {
+      "index": 83,
+      "id": "SHJ-G084",
+      "name": "손책",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G084.png",
+      "character_ids": [
+        "CHR-0198"
+      ]
+    },
+    {
+      "index": 84,
+      "id": "SHJ-G085",
+      "name": "손권",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G085.png",
+      "character_ids": [
+        "CHR-0194"
+      ]
+    },
+    {
+      "index": 85,
+      "id": "SHJ-G086",
+      "name": "주유",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G086.png",
+      "character_ids": [
+        "CHR-0211"
+      ]
+    },
+    {
+      "index": 86,
+      "id": "SHJ-G087",
+      "name": "정보",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G087.png",
+      "character_ids": [
+        "CHR-0207"
+      ]
+    },
+    {
+      "index": 87,
+      "id": "SHJ-G088",
+      "name": "황개",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G088.png",
+      "character_ids": [
+        "CHR-0217"
+      ]
+    },
+    {
+      "index": 88,
+      "id": "SHJ-G089",
+      "name": "한당",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G089.png",
+      "character_ids": [
+        "CHR-0216"
+      ]
+    },
+    {
+      "index": 89,
+      "id": "SHJ-G090",
+      "name": "태사자",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G090.png",
+      "character_ids": [
+        "CHR-0214"
+      ]
+    },
+    {
+      "index": 90,
+      "id": "SHJ-G091",
+      "name": "장소",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G091.png",
+      "character_ids": [
+        "CHR-0204"
+      ]
+    },
+    {
+      "index": 91,
+      "id": "SHJ-G092",
+      "name": "노숙",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G092.png",
+      "character_ids": [
+        "CHR-0186"
+      ]
+    },
+    {
+      "index": 92,
+      "id": "SHJ-G093",
+      "name": "여몽",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G093.png",
+      "character_ids": [
+        "CHR-0199"
+      ]
+    },
+    {
+      "index": 93,
+      "id": "SHJ-G094",
+      "name": "감녕",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G094.png",
+      "character_ids": [
+        "CHR-0185"
+      ]
+    },
+    {
+      "index": 94,
+      "id": "SHJ-G095",
+      "name": "능통",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G095.png",
+      "character_ids": [
+        "CHR-0187"
+      ]
+    },
+    {
+      "index": 95,
+      "id": "SHJ-G096",
+      "name": "서성",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G096.png",
+      "character_ids": [
+        "CHR-0191"
+      ]
+    },
+    {
+      "index": 96,
+      "id": "SHJ-G097",
+      "name": "반장",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G097.png",
+      "character_ids": [
+        "CHR-0189"
+      ]
+    },
+    {
+      "index": 97,
+      "id": "SHJ-G098",
+      "name": "주태",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G098.png",
+      "character_ids": [
+        "CHR-0212"
+      ]
+    },
+    {
+      "index": 98,
+      "id": "SHJ-G099",
+      "name": "장흠",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G099.png",
+      "character_ids": [
+        "CHR-0205"
+      ]
+    },
+    {
+      "index": 99,
+      "id": "SHJ-G100",
+      "name": "보즐",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G100.png",
+      "character_ids": [
+        "CHR-0190"
+      ]
+    },
+    {
+      "index": 100,
+      "id": "SHJ-G101",
+      "name": "육손",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G101.png",
+      "character_ids": [
+        "CHR-0202"
+      ]
+    },
+    {
+      "index": 101,
+      "id": "SHJ-G102",
+      "name": "육항",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G102.png",
+      "character_ids": [
+        "CHR-0203"
+      ]
+    },
+    {
+      "index": 102,
+      "id": "SHJ-G103",
+      "name": "제갈각",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G103.png",
+      "character_ids": [
+        "CHR-0209"
+      ]
+    },
+    {
+      "index": 103,
+      "id": "SHJ-G104",
+      "name": "정봉",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G104.png",
+      "character_ids": [
+        "CHR-0208"
+      ]
+    },
+    {
+      "index": 104,
+      "id": "SHJ-G105",
+      "name": "주연",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G105.png",
+      "character_ids": [
+        "CHR-0210"
+      ]
+    },
+    {
+      "index": 105,
+      "id": "SHJ-G106",
+      "name": "주환",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G106.png",
+      "character_ids": [
+        "CHR-0213"
+      ]
+    },
+    {
+      "index": 106,
+      "id": "SHJ-G107",
+      "name": "전종",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G107.png",
+      "character_ids": [
+        "CHR-0206"
+      ]
+    },
+    {
+      "index": 107,
+      "id": "SHJ-G108",
+      "name": "오국태",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G108.png",
+      "character_ids": [
+        "CHR-0201"
+      ]
+    },
+    {
+      "index": 108,
+      "id": "SHJ-G109",
+      "name": "대교",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G109.png",
+      "character_ids": [
+        "CHR-0188"
+      ]
+    },
+    {
+      "index": 109,
+      "id": "SHJ-G110",
+      "name": "소교",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G110.png",
+      "character_ids": [
+        "CHR-0192"
+      ]
+    },
+    {
+      "index": 110,
+      "id": "SHJ-G111",
+      "name": "손상향",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G111.png",
+      "character_ids": [
+        "CHR-0196"
+      ]
+    },
+    {
+      "index": 111,
+      "id": "SHJ-G112",
+      "name": "여범",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G112.png",
+      "character_ids": [
+        "CHR-0200"
+      ]
+    },
+    {
+      "index": 112,
+      "id": "SHJ-G113",
+      "name": "손준",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G113.png",
+      "character_ids": [
+        "CHR-0197"
+      ]
+    },
+    {
+      "index": 113,
+      "id": "SHJ-G114",
+      "name": "하제",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G114.png",
+      "character_ids": [
+        "CHR-0215"
+      ]
+    },
+    {
+      "index": 114,
+      "id": "SHJ-G115",
+      "name": "손노반",
+      "faction": "오 · 강동",
+      "path": "res://assets/portraits/seonghanji/SHJ-G115.png",
+      "character_ids": [
+        "CHR-0195"
+      ]
+    },
+    {
+      "index": 115,
+      "id": "SHJ-G116",
+      "name": "동탁",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G116.png",
+      "character_ids": [
+        "CHR-0379"
+      ]
+    },
+    {
+      "index": 116,
+      "id": "SHJ-G117",
+      "name": "여포",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G117.png",
+      "character_ids": [
+        "CHR-0383"
+      ]
+    },
+    {
+      "index": 117,
+      "id": "SHJ-G118",
+      "name": "원소",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G118.png",
+      "character_ids": [
+        "CHR-0269"
+      ]
+    },
+    {
+      "index": 118,
+      "id": "SHJ-G119",
+      "name": "원술",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G119.png",
+      "character_ids": [
+        "CHR-0387"
+      ]
+    },
+    {
+      "index": 119,
+      "id": "SHJ-G120",
+      "name": "공손찬",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G120.png",
+      "character_ids": [
+        "CHR-0375"
+      ]
+    },
+    {
+      "index": 120,
+      "id": "SHJ-G121",
+      "name": "유표",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G121.png",
+      "character_ids": [
+        "CHR-0390"
+      ]
+    },
+    {
+      "index": 121,
+      "id": "SHJ-G122",
+      "name": "유장",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G122.png",
+      "character_ids": [
+        "CHR-0389"
+      ]
+    },
+    {
+      "index": 122,
+      "id": "SHJ-G123",
+      "name": "마등",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G123.png",
+      "character_ids": [
+        "CHR-0380"
+      ]
+    },
+    {
+      "index": 123,
+      "id": "SHJ-G124",
+      "name": "한수",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G124.png",
+      "character_ids": [
+        "CHR-0398"
+      ]
+    },
+    {
+      "index": 124,
+      "id": "SHJ-G125",
+      "name": "도겸",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G125.png",
+      "character_ids": [
+        "CHR-0378"
+      ]
+    },
+    {
+      "index": 125,
+      "id": "SHJ-G126",
+      "name": "진궁",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G126.png",
+      "character_ids": [
+        "CHR-0395"
+      ]
+    },
+    {
+      "index": 126,
+      "id": "SHJ-G127",
+      "name": "저수",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G127.png",
+      "character_ids": [
+        "CHR-0270"
+      ]
+    },
+    {
+      "index": 127,
+      "id": "SHJ-G128",
+      "name": "전풍",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G128.png",
+      "character_ids": [
+        "CHR-0271"
+      ]
+    },
+    {
+      "index": 128,
+      "id": "SHJ-G129",
+      "name": "안량",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G129.png",
+      "character_ids": [
+        "CHR-0268"
+      ]
+    },
+    {
+      "index": 129,
+      "id": "SHJ-G130",
+      "name": "문추",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G130.png",
+      "character_ids": [
+        "CHR-0267"
+      ]
+    },
+    {
+      "index": 130,
+      "id": "SHJ-G131",
+      "name": "국의",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G131.png",
+      "character_ids": [
+        "CHR-0266"
+      ]
+    },
+    {
+      "index": 131,
+      "id": "SHJ-G132",
+      "name": "장수",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G132.png",
+      "character_ids": [
+        "CHR-0392"
+      ]
+    },
+    {
+      "index": 132,
+      "id": "SHJ-G133",
+      "name": "고순",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G133.png",
+      "character_ids": [
+        "CHR-0372"
+      ]
+    },
+    {
+      "index": 133,
+      "id": "SHJ-G134",
+      "name": "장임",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G134.png",
+      "character_ids": [
+        "CHR-0394"
+      ]
+    },
+    {
+      "index": 134,
+      "id": "SHJ-G135",
+      "name": "황조",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G135.png",
+      "character_ids": [
+        "CHR-0399"
+      ]
+    },
+    {
+      "index": 135,
+      "id": "SHJ-G136",
+      "name": "공융",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G136.png",
+      "character_ids": [
+        "CHR-0376"
+      ]
+    },
+    {
+      "index": 136,
+      "id": "SHJ-G137",
+      "name": "유요",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G137.png",
+      "character_ids": [
+        "CHR-0388"
+      ]
+    },
+    {
+      "index": 137,
+      "id": "SHJ-G138",
+      "name": "장로",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G138.png",
+      "character_ids": [
+        "CHR-0391"
+      ]
+    },
+    {
+      "index": 138,
+      "id": "SHJ-G139",
+      "name": "공손강",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G139.png",
+      "character_ids": [
+        "CHR-0373"
+      ]
+    },
+    {
+      "index": 139,
+      "id": "SHJ-G140",
+      "name": "사섭",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G140.png",
+      "character_ids": [
+        "CHR-0382"
+      ]
+    },
+    {
+      "index": 140,
+      "id": "SHJ-G141",
+      "name": "맹획",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G141.png",
+      "character_ids": [
+        "CHR-0381"
+      ]
+    },
+    {
+      "index": 141,
+      "id": "SHJ-G142",
+      "name": "축융",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G142.png",
+      "character_ids": [
+        "CHR-0397"
+      ]
+    },
+    {
+      "index": 142,
+      "id": "SHJ-G143",
+      "name": "공손연",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G143.png",
+      "character_ids": [
+        "CHR-0374"
+      ]
+    },
+    {
+      "index": 143,
+      "id": "SHJ-G144",
+      "name": "가비능",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G144.png",
+      "character_ids": [
+        "CHR-0371"
+      ]
+    },
+    {
+      "index": 144,
+      "id": "SHJ-G145",
+      "name": "초선",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G145.png",
+      "character_ids": [
+        "CHR-0396"
+      ]
+    },
+    {
+      "index": 145,
+      "id": "SHJ-G146",
+      "name": "왕이",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G146.png",
+      "character_ids": [
+        "CHR-0386"
+      ]
+    },
+    {
+      "index": 146,
+      "id": "SHJ-G147",
+      "name": "답돈",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G147.png",
+      "character_ids": [
+        "CHR-0377"
+      ]
+    },
+    {
+      "index": 147,
+      "id": "SHJ-G148",
+      "name": "장연",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G148.png",
+      "character_ids": [
+        "CHR-0393"
+      ]
+    },
+    {
+      "index": 148,
+      "id": "SHJ-G149",
+      "name": "올돌골",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G149.png",
+      "character_ids": [
+        "CHR-0384"
+      ]
+    },
+    {
+      "index": 149,
+      "id": "SHJ-G150",
+      "name": "왕윤",
+      "faction": "군웅 · 기타",
+      "path": "res://assets/portraits/seonghanji/SHJ-G150.png",
+      "character_ids": [
+        "CHR-0385"
+      ]
+    },
+    {
+      "index": 150,
+      "id": "SHJ-O001",
+      "name": "조앙",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O001.png",
+      "character_ids": [
+        "CHR-0087"
+      ]
+    },
+    {
+      "index": 151,
+      "id": "SHJ-O002",
+      "name": "조안민",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O002.png",
+      "character_ids": [
+        "CHR-0086"
+      ]
+    },
+    {
+      "index": 152,
+      "id": "SHJ-O003",
+      "name": "조순",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O003.png",
+      "character_ids": [
+        "CHR-0084"
+      ]
+    },
+    {
+      "index": 153,
+      "id": "SHJ-O004",
+      "name": "조창",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O004.png",
+      "character_ids": [
+        "CHR-0091"
+      ]
+    },
+    {
+      "index": 154,
+      "id": "SHJ-O005",
+      "name": "조식",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O005.png",
+      "character_ids": [
+        "CHR-0085"
+      ]
+    },
+    {
+      "index": 155,
+      "id": "SHJ-O006",
+      "name": "조웅",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O006.png",
+      "character_ids": [
+        "CHR-0089"
+      ]
+    },
+    {
+      "index": 156,
+      "id": "SHJ-O007",
+      "name": "하후상",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O007.png",
+      "character_ids": [
+        "CHR-0098"
+      ]
+    },
+    {
+      "index": 157,
+      "id": "SHJ-O008",
+      "name": "하후무",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O008.png",
+      "character_ids": [
+        "CHR-0097"
+      ]
+    },
+    {
+      "index": 158,
+      "id": "SHJ-O009",
+      "name": "하후덕",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O009.png",
+      "character_ids": [
+        "CHR-0096"
+      ]
+    },
+    {
+      "index": 159,
+      "id": "SHJ-O010",
+      "name": "하후은",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O010.png",
+      "character_ids": [
+        "CHR-0099"
+      ]
+    },
+    {
+      "index": 160,
+      "id": "SHJ-O011",
+      "name": "사마랑",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O011.png",
+      "character_ids": [
+        "CHR-0062"
+      ]
+    },
+    {
+      "index": 161,
+      "id": "SHJ-O012",
+      "name": "사마부",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O012.png",
+      "character_ids": [
+        "CHR-0063"
+      ]
+    },
+    {
+      "index": 162,
+      "id": "SHJ-O013",
+      "name": "여건",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O013.png",
+      "character_ids": [
+        "CHR-0073"
+      ]
+    },
+    {
+      "index": 163,
+      "id": "SHJ-O014",
+      "name": "사환",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O014.png",
+      "character_ids": [
+        "CHR-0065"
+      ]
+    },
+    {
+      "index": 164,
+      "id": "SHJ-O015",
+      "name": "한호",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O015.png",
+      "character_ids": [
+        "CHR-0100"
+      ]
+    },
+    {
+      "index": 165,
+      "id": "SHJ-O016",
+      "name": "주령",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O016.png",
+      "character_ids": [
+        "CHR-0092"
+      ]
+    },
+    {
+      "index": 166,
+      "id": "SHJ-O017",
+      "name": "노초",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O017.png",
+      "character_ids": [
+        "CHR-0053"
+      ]
+    },
+    {
+      "index": 167,
+      "id": "SHJ-O018",
+      "name": "왕충",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O018.png",
+      "character_ids": [
+        "CHR-0077"
+      ]
+    },
+    {
+      "index": 168,
+      "id": "SHJ-O019",
+      "name": "유대",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O019.png",
+      "character_ids": [
+        "CHR-0080"
+      ]
+    },
+    {
+      "index": 169,
+      "id": "SHJ-O020",
+      "name": "조엄",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O020.png",
+      "character_ids": [
+        "CHR-0088"
+      ]
+    },
+    {
+      "index": 170,
+      "id": "SHJ-O021",
+      "name": "두습",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O021.png",
+      "character_ids": [
+        "CHR-0056"
+      ]
+    },
+    {
+      "index": 171,
+      "id": "SHJ-O022",
+      "name": "신비",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O022.png",
+      "character_ids": [
+        "CHR-0070"
+      ]
+    },
+    {
+      "index": 172,
+      "id": "SHJ-O023",
+      "name": "문흠",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O023.png",
+      "character_ids": [
+        "CHR-0059"
+      ]
+    },
+    {
+      "index": 173,
+      "id": "SHJ-O024",
+      "name": "호준",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O024.png",
+      "character_ids": [
+        "CHR-0102"
+      ]
+    },
+    {
+      "index": 174,
+      "id": "SHJ-O025",
+      "name": "호열",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O025.png",
+      "character_ids": [
+        "CHR-0101"
+      ]
+    },
+    {
+      "index": 175,
+      "id": "SHJ-O026",
+      "name": "제갈서",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O026.png",
+      "character_ids": [
+        "CHR-0083"
+      ]
+    },
+    {
+      "index": 176,
+      "id": "SHJ-O027",
+      "name": "사찬",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O027.png",
+      "character_ids": [
+        "CHR-0064"
+      ]
+    },
+    {
+      "index": 177,
+      "id": "SHJ-O028",
+      "name": "등충",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O028.png",
+      "character_ids": [
+        "CHR-0057"
+      ]
+    },
+    {
+      "index": 178,
+      "id": "SHJ-O029",
+      "name": "왕창",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O029.png",
+      "character_ids": [
+        "CHR-0076"
+      ]
+    },
+    {
+      "index": 179,
+      "id": "SHJ-O030",
+      "name": "석포",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O030.png",
+      "character_ids": [
+        "CHR-0067"
+      ]
+    },
+    {
+      "index": 180,
+      "id": "SHJ-O031",
+      "name": "당자",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O031.png",
+      "character_ids": [
+        "CHR-0054"
+      ]
+    },
+    {
+      "index": 181,
+      "id": "SHJ-O032",
+      "name": "견초",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O032.png",
+      "character_ids": [
+        "CHR-0049"
+      ]
+    },
+    {
+      "index": 182,
+      "id": "SHJ-O033",
+      "name": "왕웅",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O033.png",
+      "character_ids": [
+        "CHR-0075"
+      ]
+    },
+    {
+      "index": 183,
+      "id": "SHJ-O034",
+      "name": "모개",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O034.png",
+      "character_ids": [
+        "CHR-0058"
+      ]
+    },
+    {
+      "index": 184,
+      "id": "SHJ-O035",
+      "name": "조지",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O035.png",
+      "character_ids": [
+        "CHR-0090"
+      ]
+    },
+    {
+      "index": 185,
+      "id": "SHJ-O036",
+      "name": "임준",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O036.png",
+      "character_ids": [
+        "CHR-0082"
+      ]
+    },
+    {
+      "index": 186,
+      "id": "SHJ-O037",
+      "name": "국연",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O037.png",
+      "character_ids": [
+        "CHR-0051"
+      ]
+    },
+    {
+      "index": 187,
+      "id": "SHJ-O038",
+      "name": "화흠",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O038.png",
+      "character_ids": [
+        "CHR-0103"
+      ]
+    },
+    {
+      "index": 188,
+      "id": "SHJ-O039",
+      "name": "왕랑",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O039.png",
+      "character_ids": [
+        "CHR-0074"
+      ]
+    },
+    {
+      "index": 189,
+      "id": "SHJ-O040",
+      "name": "최염",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O040.png",
+      "character_ids": [
+        "CHR-0095"
+      ]
+    },
+    {
+      "index": 190,
+      "id": "SHJ-O041",
+      "name": "병원",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O041.png",
+      "character_ids": [
+        "CHR-0061"
+      ]
+    },
+    {
+      "index": 191,
+      "id": "SHJ-O042",
+      "name": "관녕",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O042.png",
+      "character_ids": [
+        "CHR-0050"
+      ]
+    },
+    {
+      "index": 192,
+      "id": "SHJ-O043",
+      "name": "위기",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O043.png",
+      "character_ids": [
+        "CHR-0079"
+      ]
+    },
+    {
+      "index": 193,
+      "id": "SHJ-O044",
+      "name": "두기",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O044.png",
+      "character_ids": [
+        "CHR-0055"
+      ]
+    },
+    {
+      "index": 194,
+      "id": "SHJ-O045",
+      "name": "양습",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O045.png",
+      "character_ids": [
+        "CHR-0071"
+      ]
+    },
+    {
+      "index": 195,
+      "id": "SHJ-O046",
+      "name": "창자",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O046.png",
+      "character_ids": [
+        "CHR-0094"
+      ]
+    },
+    {
+      "index": 196,
+      "id": "SHJ-O047",
+      "name": "소칙",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O047.png",
+      "character_ids": [
+        "CHR-0068"
+      ]
+    },
+    {
+      "index": 197,
+      "id": "SHJ-O048",
+      "name": "진교",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O048.png",
+      "character_ids": [
+        "CHR-0093"
+      ]
+    },
+    {
+      "index": 198,
+      "id": "SHJ-O049",
+      "name": "서선",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O049.png",
+      "character_ids": [
+        "CHR-0066"
+      ]
+    },
+    {
+      "index": 199,
+      "id": "SHJ-O050",
+      "name": "유무",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O050.png",
+      "character_ids": [
+        "CHR-0081"
+      ]
+    },
+    {
+      "index": 200,
+      "id": "SHJ-O051",
+      "name": "궁준",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O051.png",
+      "character_ids": [
+        "CHR-0052"
+      ]
+    },
+    {
+      "index": 201,
+      "id": "SHJ-O052",
+      "name": "가충",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O052.png",
+      "character_ids": [
+        "CHR-0048"
+      ]
+    },
+    {
+      "index": 202,
+      "id": "SHJ-O053",
+      "name": "배수",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O053.png",
+      "character_ids": [
+        "CHR-0060"
+      ]
+    },
+    {
+      "index": 203,
+      "id": "SHJ-O054",
+      "name": "위관",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O054.png",
+      "character_ids": [
+        "CHR-0078"
+      ]
+    },
+    {
+      "index": 204,
+      "id": "SHJ-O055",
+      "name": "양호",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O055.png",
+      "character_ids": [
+        "CHR-0072"
+      ]
+    },
+    {
+      "index": 205,
+      "id": "SHJ-O056",
+      "name": "순의",
+      "faction": "위 · 승상부 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O056.png",
+      "character_ids": [
+        "CHR-0069"
+      ]
+    },
+    {
+      "index": 206,
+      "id": "SHJ-O057",
+      "name": "관평",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O057.png",
+      "character_ids": [
+        "CHR-0141"
+      ]
+    },
+    {
+      "index": 207,
+      "id": "SHJ-O058",
+      "name": "관색",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O058.png",
+      "character_ids": [
+        "CHR-0142"
+      ]
+    },
+    {
+      "index": 208,
+      "id": "SHJ-O059",
+      "name": "장포",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O059.png",
+      "character_ids": [
+        "CHR-0173"
+      ]
+    },
+    {
+      "index": 209,
+      "id": "SHJ-O060",
+      "name": "주창",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O060.png",
+      "character_ids": [
+        "CHR-0176"
+      ]
+    },
+    {
+      "index": 210,
+      "id": "SHJ-O061",
+      "name": "진도",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O061.png",
+      "character_ids": [
+        "CHR-0177"
+      ]
+    },
+    {
+      "index": 211,
+      "id": "SHJ-O062",
+      "name": "진식",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O062.png",
+      "character_ids": [
+        "CHR-0178"
+      ]
+    },
+    {
+      "index": 212,
+      "id": "SHJ-O063",
+      "name": "부동",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O063.png",
+      "character_ids": [
+        "CHR-0149"
+      ]
+    },
+    {
+      "index": 213,
+      "id": "SHJ-O064",
+      "name": "장남",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O064.png",
+      "character_ids": [
+        "CHR-0170"
+      ]
+    },
+    {
+      "index": 214,
+      "id": "SHJ-O065",
+      "name": "풍습",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O065.png",
+      "character_ids": [
+        "CHR-0182"
+      ]
+    },
+    {
+      "index": 215,
+      "id": "SHJ-O066",
+      "name": "오반",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O066.png",
+      "character_ids": [
+        "CHR-0158"
+      ]
+    },
+    {
+      "index": 216,
+      "id": "SHJ-O067",
+      "name": "오의",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O067.png",
+      "character_ids": [
+        "CHR-0159"
+      ]
+    },
+    {
+      "index": 217,
+      "id": "SHJ-O068",
+      "name": "엄안",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O068.png",
+      "character_ids": [
+        "CHR-0155"
+      ]
+    },
+    {
+      "index": 218,
+      "id": "SHJ-O069",
+      "name": "곽준",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O069.png",
+      "character_ids": [
+        "CHR-0140"
+      ]
+    },
+    {
+      "index": 219,
+      "id": "SHJ-O070",
+      "name": "곽익",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O070.png",
+      "character_ids": [
+        "CHR-0139"
+      ]
+    },
+    {
+      "index": 220,
+      "id": "SHJ-O071",
+      "name": "상총",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O071.png",
+      "character_ids": [
+        "CHR-0152"
+      ]
+    },
+    {
+      "index": 221,
+      "id": "SHJ-O072",
+      "name": "마충",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O072.png",
+      "character_ids": [
+        "CHR-0146"
+      ]
+    },
+    {
+      "index": 222,
+      "id": "SHJ-O073",
+      "name": "장의",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O073.png",
+      "character_ids": [
+        "CHR-0172"
+      ]
+    },
+    {
+      "index": 223,
+      "id": "SHJ-O074",
+      "name": "장표",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O074.png",
+      "character_ids": [
+        "CHR-0174"
+      ]
+    },
+    {
+      "index": 224,
+      "id": "SHJ-O075",
+      "name": "염우",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O075.png",
+      "character_ids": [
+        "CHR-0157"
+      ]
+    },
+    {
+      "index": 225,
+      "id": "SHJ-O076",
+      "name": "유파",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O076.png",
+      "character_ids": [
+        "CHR-0165"
+      ]
+    },
+    {
+      "index": 226,
+      "id": "SHJ-O077",
+      "name": "이적",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O077.png",
+      "character_ids": [
+        "CHR-0167"
+      ]
+    },
+    {
+      "index": 227,
+      "id": "SHJ-O078",
+      "name": "장송",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O078.png",
+      "character_ids": [
+        "CHR-0171"
+      ]
+    },
+    {
+      "index": 228,
+      "id": "SHJ-O079",
+      "name": "황권",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O079.png",
+      "character_ids": [
+        "CHR-0183"
+      ]
+    },
+    {
+      "index": 229,
+      "id": "SHJ-O080",
+      "name": "이회",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O080.png",
+      "character_ids": [
+        "CHR-0169"
+      ]
+    },
+    {
+      "index": 230,
+      "id": "SHJ-O081",
+      "name": "여개",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O081.png",
+      "character_ids": [
+        "CHR-0156"
+      ]
+    },
+    {
+      "index": 231,
+      "id": "SHJ-O082",
+      "name": "왕항",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O082.png",
+      "character_ids": [
+        "CHR-0160"
+      ]
+    },
+    {
+      "index": 232,
+      "id": "SHJ-O083",
+      "name": "양의",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O083.png",
+      "character_ids": [
+        "CHR-0153"
+      ]
+    },
+    {
+      "index": 233,
+      "id": "SHJ-O084",
+      "name": "등지",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O084.png",
+      "character_ids": [
+        "CHR-0145"
+      ]
+    },
+    {
+      "index": 234,
+      "id": "SHJ-O085",
+      "name": "종예",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O085.png",
+      "character_ids": [
+        "CHR-0175"
+      ]
+    },
+    {
+      "index": 235,
+      "id": "SHJ-O086",
+      "name": "초주",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O086.png",
+      "character_ids": [
+        "CHR-0180"
+      ]
+    },
+    {
+      "index": 236,
+      "id": "SHJ-O087",
+      "name": "극정",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O087.png",
+      "character_ids": [
+        "CHR-0143"
+      ]
+    },
+    {
+      "index": 237,
+      "id": "SHJ-O088",
+      "name": "진지",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O088.png",
+      "character_ids": [
+        "CHR-0179"
+      ]
+    },
+    {
+      "index": 238,
+      "id": "SHJ-O089",
+      "name": "번건",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O089.png",
+      "character_ids": [
+        "CHR-0148"
+      ]
+    },
+    {
+      "index": 239,
+      "id": "SHJ-O090",
+      "name": "이복",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O090.png",
+      "character_ids": [
+        "CHR-0166"
+      ]
+    },
+    {
+      "index": 240,
+      "id": "SHJ-O091",
+      "name": "양희",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O091.png",
+      "character_ids": [
+        "CHR-0154"
+      ]
+    },
+    {
+      "index": 241,
+      "id": "SHJ-O092",
+      "name": "비시",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O092.png",
+      "character_ids": [
+        "CHR-0150"
+      ]
+    },
+    {
+      "index": 242,
+      "id": "SHJ-O093",
+      "name": "상랑",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O093.png",
+      "character_ids": [
+        "CHR-0151"
+      ]
+    },
+    {
+      "index": 243,
+      "id": "SHJ-O094",
+      "name": "황호",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O094.png",
+      "character_ids": [
+        "CHR-0184"
+      ]
+    },
+    {
+      "index": 244,
+      "id": "SHJ-O095",
+      "name": "유염",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O095.png",
+      "character_ids": [
+        "CHR-0164"
+      ]
+    },
+    {
+      "index": 245,
+      "id": "SHJ-O096",
+      "name": "요립",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O096.png",
+      "character_ids": [
+        "CHR-0161"
+      ]
+    },
+    {
+      "index": 246,
+      "id": "SHJ-O097",
+      "name": "팽양",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O097.png",
+      "character_ids": [
+        "CHR-0181"
+      ]
+    },
+    {
+      "index": 247,
+      "id": "SHJ-O098",
+      "name": "이풍",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O098.png",
+      "character_ids": [
+        "CHR-0168"
+      ]
+    },
+    {
+      "index": 248,
+      "id": "SHJ-O099",
+      "name": "유선(촉)",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O099.png",
+      "character_ids": [
+        "CHR-0163"
+      ]
+    },
+    {
+      "index": 249,
+      "id": "SHJ-O100",
+      "name": "맹달",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O100.png",
+      "character_ids": [
+        "CHR-0147"
+      ]
+    },
+    {
+      "index": 250,
+      "id": "SHJ-O101",
+      "name": "동궐",
+      "faction": "촉 · 계한 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O101.png",
+      "character_ids": [
+        "CHR-0144"
+      ]
+    },
+    {
+      "index": 251,
+      "id": "SHJ-O102",
+      "name": "손정",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O102.png",
+      "character_ids": [
+        "CHR-0232"
+      ]
+    },
+    {
+      "index": 252,
+      "id": "SHJ-O103",
+      "name": "손유",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O103.png",
+      "character_ids": [
+        "CHR-0231"
+      ]
+    },
+    {
+      "index": 253,
+      "id": "SHJ-O104",
+      "name": "손교",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O104.png",
+      "character_ids": [
+        "CHR-0228"
+      ]
+    },
+    {
+      "index": 254,
+      "id": "SHJ-O105",
+      "name": "손환",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O105.png",
+      "character_ids": [
+        "CHR-0238"
+      ]
+    },
+    {
+      "index": 255,
+      "id": "SHJ-O106",
+      "name": "손소",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O106.png",
+      "character_ids": [
+        "CHR-0230"
+      ]
+    },
+    {
+      "index": 256,
+      "id": "SHJ-O107",
+      "name": "손하",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O107.png",
+      "character_ids": [
+        "CHR-0235"
+      ]
+    },
+    {
+      "index": 257,
+      "id": "SHJ-O108",
+      "name": "손화",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O108.png",
+      "character_ids": [
+        "CHR-0237"
+      ]
+    },
+    {
+      "index": 258,
+      "id": "SHJ-O109",
+      "name": "손패",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O109.png",
+      "character_ids": [
+        "CHR-0234"
+      ]
+    },
+    {
+      "index": 259,
+      "id": "SHJ-O110",
+      "name": "손휴",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O110.png",
+      "character_ids": [
+        "CHR-0239"
+      ]
+    },
+    {
+      "index": 260,
+      "id": "SHJ-O111",
+      "name": "손호",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O111.png",
+      "character_ids": [
+        "CHR-0236"
+      ]
+    },
+    {
+      "index": 261,
+      "id": "SHJ-O112",
+      "name": "주치",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O112.png",
+      "character_ids": [
+        "CHR-0260"
+      ]
+    },
+    {
+      "index": 262,
+      "id": "SHJ-O113",
+      "name": "진무",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O113.png",
+      "character_ids": [
+        "CHR-0262"
+      ]
+    },
+    {
+      "index": 263,
+      "id": "SHJ-O114",
+      "name": "동습",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O114.png",
+      "character_ids": [
+        "CHR-0221"
+      ]
+    },
+    {
+      "index": 264,
+      "id": "SHJ-O115",
+      "name": "능조",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O115.png",
+      "character_ids": [
+        "CHR-0220"
+      ]
+    },
+    {
+      "index": 265,
+      "id": "SHJ-O116",
+      "name": "여대",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O116.png",
+      "character_ids": [
+        "CHR-0243"
+      ]
+    },
+    {
+      "index": 266,
+      "id": "SHJ-O117",
+      "name": "주거",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O117.png",
+      "character_ids": [
+        "CHR-0258"
+      ]
+    },
+    {
+      "index": 267,
+      "id": "SHJ-O118",
+      "name": "주이",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O118.png",
+      "character_ids": [
+        "CHR-0259"
+      ]
+    },
+    {
+      "index": 268,
+      "id": "SHJ-O119",
+      "name": "마충(오)",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O119.png",
+      "character_ids": [
+        "CHR-0223"
+      ]
+    },
+    {
+      "index": 269,
+      "id": "SHJ-O120",
+      "name": "반준",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O120.png",
+      "character_ids": [
+        "CHR-0225"
+      ]
+    },
+    {
+      "index": 270,
+      "id": "SHJ-O121",
+      "name": "종리목",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O121.png",
+      "character_ids": [
+        "CHR-0257"
+      ]
+    },
+    {
+      "index": 271,
+      "id": "SHJ-O122",
+      "name": "유찬",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O122.png",
+      "character_ids": [
+        "CHR-0248"
+      ]
+    },
+    {
+      "index": 272,
+      "id": "SHJ-O123",
+      "name": "유략",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O123.png",
+      "character_ids": [
+        "CHR-0247"
+      ]
+    },
+    {
+      "index": 273,
+      "id": "SHJ-O124",
+      "name": "여거",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O124.png",
+      "character_ids": [
+        "CHR-0242"
+      ]
+    },
+    {
+      "index": 274,
+      "id": "SHJ-O125",
+      "name": "등윤",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O125.png",
+      "character_ids": [
+        "CHR-0222"
+      ]
+    },
+    {
+      "index": 275,
+      "id": "SHJ-O126",
+      "name": "손침",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O126.png",
+      "character_ids": [
+        "CHR-0233"
+      ]
+    },
+    {
+      "index": 276,
+      "id": "SHJ-O127",
+      "name": "장제(오)",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O127.png",
+      "character_ids": [
+        "CHR-0252"
+      ]
+    },
+    {
+      "index": 277,
+      "id": "SHJ-O128",
+      "name": "전서",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O128.png",
+      "character_ids": [
+        "CHR-0253"
+      ]
+    },
+    {
+      "index": 278,
+      "id": "SHJ-O129",
+      "name": "시적",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O129.png",
+      "character_ids": [
+        "CHR-0240"
+      ]
+    },
+    {
+      "index": 279,
+      "id": "SHJ-O130",
+      "name": "장굉",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O130.png",
+      "character_ids": [
+        "CHR-0251"
+      ]
+    },
+    {
+      "index": 280,
+      "id": "SHJ-O131",
+      "name": "제갈근",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O131.png",
+      "character_ids": [
+        "CHR-0255"
+      ]
+    },
+    {
+      "index": 281,
+      "id": "SHJ-O132",
+      "name": "감택",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O132.png",
+      "character_ids": [
+        "CHR-0218"
+      ]
+    },
+    {
+      "index": 282,
+      "id": "SHJ-O133",
+      "name": "우번",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O133.png",
+      "character_ids": [
+        "CHR-0246"
+      ]
+    },
+    {
+      "index": 283,
+      "id": "SHJ-O134",
+      "name": "조자",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O134.png",
+      "character_ids": [
+        "CHR-0256"
+      ]
+    },
+    {
+      "index": 284,
+      "id": "SHJ-O135",
+      "name": "설종",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O135.png",
+      "character_ids": [
+        "CHR-0227"
+      ]
+    },
+    {
+      "index": 285,
+      "id": "SHJ-O136",
+      "name": "엄준",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O136.png",
+      "character_ids": [
+        "CHR-0241"
+      ]
+    },
+    {
+      "index": 286,
+      "id": "SHJ-O137",
+      "name": "정병",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O137.png",
+      "character_ids": [
+        "CHR-0254"
+      ]
+    },
+    {
+      "index": 287,
+      "id": "SHJ-O138",
+      "name": "오찬",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O138.png",
+      "character_ids": [
+        "CHR-0244"
+      ]
+    },
+    {
+      "index": 288,
+      "id": "SHJ-O139",
+      "name": "호종",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O139.png",
+      "character_ids": [
+        "CHR-0264"
+      ]
+    },
+    {
+      "index": 289,
+      "id": "SHJ-O140",
+      "name": "손노육",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O140.png",
+      "character_ids": [
+        "CHR-0229"
+      ]
+    },
+    {
+      "index": 290,
+      "id": "SHJ-O141",
+      "name": "육윤",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O141.png",
+      "character_ids": [
+        "CHR-0250"
+      ]
+    },
+    {
+      "index": 291,
+      "id": "SHJ-O142",
+      "name": "화핵",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O142.png",
+      "character_ids": [
+        "CHR-0265"
+      ]
+    },
+    {
+      "index": 292,
+      "id": "SHJ-O143",
+      "name": "왕번",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O143.png",
+      "character_ids": [
+        "CHR-0245"
+      ]
+    },
+    {
+      "index": 293,
+      "id": "SHJ-O144",
+      "name": "누현",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O144.png",
+      "character_ids": [
+        "CHR-0219"
+      ]
+    },
+    {
+      "index": 294,
+      "id": "SHJ-O145",
+      "name": "하정",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O145.png",
+      "character_ids": [
+        "CHR-0263"
+      ]
+    },
+    {
+      "index": 295,
+      "id": "SHJ-O146",
+      "name": "만욱",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O146.png",
+      "character_ids": [
+        "CHR-0224"
+      ]
+    },
+    {
+      "index": 296,
+      "id": "SHJ-O147",
+      "name": "육모",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O147.png",
+      "character_ids": [
+        "CHR-0249"
+      ]
+    },
+    {
+      "index": 297,
+      "id": "SHJ-O148",
+      "name": "주환의 부장",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O148.png",
+      "character_ids": [
+        "CHR-0261"
+      ]
+    },
+    {
+      "index": 298,
+      "id": "SHJ-O149",
+      "name": "보협",
+      "faction": "오 · 강동 계열",
+      "path": "res://assets/portraits/seonghanji/SHJ-O149.png",
+      "character_ids": [
+        "CHR-0226"
+      ]
+    },
+    {
+      "index": 299,
+      "id": "SHJ-O150",
+      "name": "심배",
+      "faction": "원소 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O150.png",
+      "character_ids": [
+        "CHR-0281"
+      ]
+    },
+    {
+      "index": 300,
+      "id": "SHJ-O151",
+      "name": "봉기",
+      "faction": "원소 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O151.png",
+      "character_ids": [
+        "CHR-0277"
+      ]
+    },
+    {
+      "index": 301,
+      "id": "SHJ-O152",
+      "name": "곽도",
+      "faction": "원소 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O152.png",
+      "character_ids": [
+        "CHR-0273"
+      ]
+    },
+    {
+      "index": 302,
+      "id": "SHJ-O153",
+      "name": "신평",
+      "faction": "원소 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O153.png",
+      "character_ids": [
+        "CHR-0280"
+      ]
+    },
+    {
+      "index": 303,
+      "id": "SHJ-O154",
+      "name": "순심",
+      "faction": "원소 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O154.png",
+      "character_ids": [
+        "CHR-0278"
+      ]
+    },
+    {
+      "index": 304,
+      "id": "SHJ-O155",
+      "name": "허유",
+      "faction": "원소 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O155.png",
+      "character_ids": [
+        "CHR-0292"
+      ]
+    },
+    {
+      "index": 305,
+      "id": "SHJ-O156",
+      "name": "순우경",
+      "faction": "원소 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O156.png",
+      "character_ids": [
+        "CHR-0279"
+      ]
+    },
+    {
+      "index": 306,
+      "id": "SHJ-O157",
+      "name": "고람",
+      "faction": "원소 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O157.png",
+      "character_ids": [
+        "CHR-0272"
+      ]
+    },
+    {
+      "index": 307,
+      "id": "SHJ-O158",
+      "name": "여광",
+      "faction": "원소 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O158.png",
+      "character_ids": [
+        "CHR-0282"
+      ]
+    },
+    {
+      "index": 308,
+      "id": "SHJ-O159",
+      "name": "여상",
+      "faction": "원소 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O159.png",
+      "character_ids": [
+        "CHR-0283"
+      ]
+    },
+    {
+      "index": 309,
+      "id": "SHJ-O160",
+      "name": "장기",
+      "faction": "원소 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O160.png",
+      "character_ids": [
+        "CHR-0287"
+      ]
+    },
+    {
+      "index": 310,
+      "id": "SHJ-O161",
+      "name": "한맹",
+      "faction": "원소 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O161.png",
+      "character_ids": [
+        "CHR-0290"
+      ]
+    },
+    {
+      "index": 311,
+      "id": "SHJ-O162",
+      "name": "마연",
+      "faction": "원소 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O162.png",
+      "character_ids": [
+        "CHR-0276"
+      ]
+    },
+    {
+      "index": 312,
+      "id": "SHJ-O163",
+      "name": "진림",
+      "faction": "원소 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O163.png",
+      "character_ids": [
+        "CHR-0289"
+      ]
+    },
+    {
+      "index": 313,
+      "id": "SHJ-O164",
+      "name": "원담",
+      "faction": "원소 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O164.png",
+      "character_ids": [
+        "CHR-0284"
+      ]
+    },
+    {
+      "index": 314,
+      "id": "SHJ-O165",
+      "name": "원희",
+      "faction": "원소 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O165.png",
+      "character_ids": [
+        "CHR-0286"
+      ]
+    },
+    {
+      "index": 315,
+      "id": "SHJ-O166",
+      "name": "원상",
+      "faction": "원소 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O166.png",
+      "character_ids": [
+        "CHR-0285"
+      ]
+    },
+    {
+      "index": 316,
+      "id": "SHJ-O167",
+      "name": "곽원",
+      "faction": "원소 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O167.png",
+      "character_ids": [
+        "CHR-0274"
+      ]
+    },
+    {
+      "index": 317,
+      "id": "SHJ-O168",
+      "name": "저곡",
+      "faction": "원소 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O168.png",
+      "character_ids": [
+        "CHR-0288"
+      ]
+    },
+    {
+      "index": 318,
+      "id": "SHJ-O169",
+      "name": "한복",
+      "faction": "원소 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O169.png",
+      "character_ids": [
+        "CHR-0291"
+      ]
+    },
+    {
+      "index": 319,
+      "id": "SHJ-O170",
+      "name": "국의의 부장",
+      "faction": "원소 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O170.png",
+      "character_ids": [
+        "CHR-0275"
+      ]
+    },
+    {
+      "index": 320,
+      "id": "SHJ-O171",
+      "name": "기령",
+      "faction": "원술 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O171.png",
+      "character_ids": [
+        "CHR-0294"
+      ]
+    },
+    {
+      "index": 321,
+      "id": "SHJ-O172",
+      "name": "장훈",
+      "faction": "원술 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O172.png",
+      "character_ids": [
+        "CHR-0298"
+      ]
+    },
+    {
+      "index": 322,
+      "id": "SHJ-O173",
+      "name": "교유",
+      "faction": "원술 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O173.png",
+      "character_ids": [
+        "CHR-0293"
+      ]
+    },
+    {
+      "index": 323,
+      "id": "SHJ-O174",
+      "name": "뇌박",
+      "faction": "원술 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O174.png",
+      "character_ids": [
+        "CHR-0295"
+      ]
+    },
+    {
+      "index": 324,
+      "id": "SHJ-O175",
+      "name": "진란",
+      "faction": "원술 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O175.png",
+      "character_ids": [
+        "CHR-0299"
+      ]
+    },
+    {
+      "index": 325,
+      "id": "SHJ-O176",
+      "name": "양대장",
+      "faction": "원술 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O176.png",
+      "character_ids": [
+        "CHR-0296"
+      ]
+    },
+    {
+      "index": 326,
+      "id": "SHJ-O177",
+      "name": "양홍",
+      "faction": "원술 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O177.png",
+      "character_ids": [
+        "CHR-0297"
+      ]
+    },
+    {
+      "index": 327,
+      "id": "SHJ-O178",
+      "name": "이유",
+      "faction": "동탁·여포 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O178.png",
+      "character_ids": [
+        "CHR-0311"
+      ]
+    },
+    {
+      "index": 328,
+      "id": "SHJ-O179",
+      "name": "화웅",
+      "faction": "동탁·여포 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O179.png",
+      "character_ids": [
+        "CHR-0317"
+      ]
+    },
+    {
+      "index": 329,
+      "id": "SHJ-O180",
+      "name": "이각",
+      "faction": "동탁·여포 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O180.png",
+      "character_ids": [
+        "CHR-0308"
+      ]
+    },
+    {
+      "index": 330,
+      "id": "SHJ-O181",
+      "name": "곽사",
+      "faction": "동탁·여포 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O181.png",
+      "character_ids": [
+        "CHR-0300"
+      ]
+    },
+    {
+      "index": 331,
+      "id": "SHJ-O182",
+      "name": "장제(동탁·여포)",
+      "faction": "동탁·여포 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O182.png",
+      "character_ids": [
+        "CHR-0312"
+      ]
+    },
+    {
+      "index": 332,
+      "id": "SHJ-O183",
+      "name": "번조",
+      "faction": "동탁·여포 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O183.png",
+      "character_ids": [
+        "CHR-0301"
+      ]
+    },
+    {
+      "index": 333,
+      "id": "SHJ-O184",
+      "name": "서영",
+      "faction": "동탁·여포 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O184.png",
+      "character_ids": [
+        "CHR-0302"
+      ]
+    },
+    {
+      "index": 334,
+      "id": "SHJ-O185",
+      "name": "우보",
+      "faction": "동탁·여포 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O185.png",
+      "character_ids": [
+        "CHR-0306"
+      ]
+    },
+    {
+      "index": 335,
+      "id": "SHJ-O186",
+      "name": "호진",
+      "faction": "동탁·여포 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O186.png",
+      "character_ids": [
+        "CHR-0316"
+      ]
+    },
+    {
+      "index": 336,
+      "id": "SHJ-O187",
+      "name": "이숙",
+      "faction": "동탁·여포 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O187.png",
+      "character_ids": [
+        "CHR-0310"
+      ]
+    },
+    {
+      "index": 337,
+      "id": "SHJ-O188",
+      "name": "왕방",
+      "faction": "동탁·여포 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O188.png",
+      "character_ids": [
+        "CHR-0305"
+      ]
+    },
+    {
+      "index": 338,
+      "id": "SHJ-O189",
+      "name": "이몽",
+      "faction": "동탁·여포 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O189.png",
+      "character_ids": [
+        "CHR-0309"
+      ]
+    },
+    {
+      "index": 339,
+      "id": "SHJ-O190",
+      "name": "장횡(동탁·여포)",
+      "faction": "동탁·여포 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O190.png",
+      "character_ids": [
+        "CHR-0313"
+      ]
+    },
+    {
+      "index": 340,
+      "id": "SHJ-O191",
+      "name": "후성",
+      "faction": "동탁·여포 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O191.png",
+      "character_ids": [
+        "CHR-0318"
+      ]
+    },
+    {
+      "index": 341,
+      "id": "SHJ-O192",
+      "name": "송헌",
+      "faction": "동탁·여포 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O192.png",
+      "character_ids": []
+    },
+    {
+      "index": 342,
+      "id": "SHJ-O193",
+      "name": "위속",
+      "faction": "동탁·여포 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O193.png",
+      "character_ids": []
+    },
+    {
+      "index": 343,
+      "id": "SHJ-O194",
+      "name": "조성",
+      "faction": "동탁·여포 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O194.png",
+      "character_ids": [
+        "CHR-0314"
+      ]
+    },
+    {
+      "index": 344,
+      "id": "SHJ-O195",
+      "name": "성렴",
+      "faction": "동탁·여포 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O195.png",
+      "character_ids": [
+        "CHR-0303"
+      ]
+    },
+    {
+      "index": 345,
+      "id": "SHJ-O196",
+      "name": "위월",
+      "faction": "동탁·여포 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O196.png",
+      "character_ids": [
+        "CHR-0307"
+      ]
+    },
+    {
+      "index": 346,
+      "id": "SHJ-O197",
+      "name": "추씨",
+      "faction": "동탁·여포 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O197.png",
+      "character_ids": [
+        "CHR-0315"
+      ]
+    },
+    {
+      "index": 347,
+      "id": "SHJ-O198",
+      "name": "채모",
+      "faction": "유표 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O198.png",
+      "character_ids": [
+        "CHR-0330"
+      ]
+    },
+    {
+      "index": 348,
+      "id": "SHJ-O199",
+      "name": "장윤",
+      "faction": "유표 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O199.png",
+      "character_ids": [
+        "CHR-0329"
+      ]
+    },
+    {
+      "index": 349,
+      "id": "SHJ-O200",
+      "name": "괴량",
+      "faction": "유표 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O200.png",
+      "character_ids": [
+        "CHR-0319"
+      ]
+    },
+    {
+      "index": 350,
+      "id": "SHJ-O201",
+      "name": "괴월",
+      "faction": "유표 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O201.png",
+      "character_ids": [
+        "CHR-0320"
+      ]
+    },
+    {
+      "index": 351,
+      "id": "SHJ-O202",
+      "name": "한숭",
+      "faction": "유표 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O202.png",
+      "character_ids": [
+        "CHR-0331"
+      ]
+    },
+    {
+      "index": 352,
+      "id": "SHJ-O203",
+      "name": "부손",
+      "faction": "유표 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O203.png",
+      "character_ids": [
+        "CHR-0322"
+      ]
+    },
+    {
+      "index": 353,
+      "id": "SHJ-O204",
+      "name": "유선(유표)",
+      "faction": "유표 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O204.png",
+      "character_ids": [
+        "CHR-0326"
+      ]
+    },
+    {
+      "index": 354,
+      "id": "SHJ-O205",
+      "name": "등의",
+      "faction": "유표 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O205.png",
+      "character_ids": [
+        "CHR-0321"
+      ]
+    },
+    {
+      "index": 355,
+      "id": "SHJ-O206",
+      "name": "왕위",
+      "faction": "유표 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O206.png",
+      "character_ids": [
+        "CHR-0324"
+      ]
+    },
+    {
+      "index": 356,
+      "id": "SHJ-O207",
+      "name": "유기",
+      "faction": "유표 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O207.png",
+      "character_ids": [
+        "CHR-0325"
+      ]
+    },
+    {
+      "index": 357,
+      "id": "SHJ-O208",
+      "name": "유종",
+      "faction": "유표 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O208.png",
+      "character_ids": [
+        "CHR-0327"
+      ]
+    },
+    {
+      "index": 358,
+      "id": "SHJ-O209",
+      "name": "황사",
+      "faction": "유표 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O209.png",
+      "character_ids": [
+        "CHR-0332"
+      ]
+    },
+    {
+      "index": 359,
+      "id": "SHJ-O210",
+      "name": "이규",
+      "faction": "유표 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O210.png",
+      "character_ids": [
+        "CHR-0328"
+      ]
+    },
+    {
+      "index": 360,
+      "id": "SHJ-O211",
+      "name": "소비",
+      "faction": "유표 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O211.png",
+      "character_ids": [
+        "CHR-0323"
+      ]
+    },
+    {
+      "index": 361,
+      "id": "SHJ-O212",
+      "name": "유괴",
+      "faction": "유장·익주 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O212.png",
+      "character_ids": [
+        "CHR-0342"
+      ]
+    },
+    {
+      "index": 362,
+      "id": "SHJ-O213",
+      "name": "냉포",
+      "faction": "유장·익주 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O213.png",
+      "character_ids": [
+        "CHR-0334"
+      ]
+    },
+    {
+      "index": 363,
+      "id": "SHJ-O214",
+      "name": "등현",
+      "faction": "유장·익주 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O214.png",
+      "character_ids": [
+        "CHR-0337"
+      ]
+    },
+    {
+      "index": 364,
+      "id": "SHJ-O215",
+      "name": "양회",
+      "faction": "유장·익주 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O215.png",
+      "character_ids": [
+        "CHR-0339"
+      ]
+    },
+    {
+      "index": 365,
+      "id": "SHJ-O216",
+      "name": "고패",
+      "faction": "유장·익주 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O216.png",
+      "character_ids": [
+        "CHR-0333"
+      ]
+    },
+    {
+      "index": 366,
+      "id": "SHJ-O217",
+      "name": "왕루",
+      "faction": "유장·익주 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O217.png",
+      "character_ids": [
+        "CHR-0341"
+      ]
+    },
+    {
+      "index": 367,
+      "id": "SHJ-O218",
+      "name": "진복",
+      "faction": "유장·익주 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O218.png",
+      "character_ids": [
+        "CHR-0343"
+      ]
+    },
+    {
+      "index": 368,
+      "id": "SHJ-O219",
+      "name": "두경",
+      "faction": "유장·익주 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O219.png",
+      "character_ids": [
+        "CHR-0336"
+      ]
+    },
+    {
+      "index": 369,
+      "id": "SHJ-O220",
+      "name": "오란",
+      "faction": "유장·익주 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O220.png",
+      "character_ids": [
+        "CHR-0340"
+      ]
+    },
+    {
+      "index": 370,
+      "id": "SHJ-O221",
+      "name": "뇌동",
+      "faction": "유장·익주 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O221.png",
+      "character_ids": [
+        "CHR-0335"
+      ]
+    },
+    {
+      "index": 371,
+      "id": "SHJ-O222",
+      "name": "마한",
+      "faction": "유장·익주 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O222.png",
+      "character_ids": [
+        "CHR-0338"
+      ]
+    },
+    {
+      "index": 372,
+      "id": "SHJ-O223",
+      "name": "마휴",
+      "faction": "서량 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O223.png",
+      "character_ids": [
+        "CHR-0346"
+      ]
+    },
+    {
+      "index": 373,
+      "id": "SHJ-O224",
+      "name": "마철",
+      "faction": "서량 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O224.png",
+      "character_ids": [
+        "CHR-0345"
+      ]
+    },
+    {
+      "index": 374,
+      "id": "SHJ-O225",
+      "name": "마완",
+      "faction": "서량 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O225.png",
+      "character_ids": [
+        "CHR-0344"
+      ]
+    },
+    {
+      "index": 375,
+      "id": "SHJ-O226",
+      "name": "양추",
+      "faction": "서량 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O226.png",
+      "character_ids": [
+        "CHR-0348"
+      ]
+    },
+    {
+      "index": 376,
+      "id": "SHJ-O227",
+      "name": "후선",
+      "faction": "서량 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O227.png",
+      "character_ids": [
+        "CHR-0353"
+      ]
+    },
+    {
+      "index": 377,
+      "id": "SHJ-O228",
+      "name": "정은",
+      "faction": "서량 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O228.png",
+      "character_ids": [
+        "CHR-0352"
+      ]
+    },
+    {
+      "index": 378,
+      "id": "SHJ-O229",
+      "name": "이감",
+      "faction": "서량 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O229.png",
+      "character_ids": [
+        "CHR-0350"
+      ]
+    },
+    {
+      "index": 379,
+      "id": "SHJ-O230",
+      "name": "성의",
+      "faction": "서량 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O230.png",
+      "character_ids": [
+        "CHR-0347"
+      ]
+    },
+    {
+      "index": 380,
+      "id": "SHJ-O231",
+      "name": "장횡(서량)",
+      "faction": "서량 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O231.png",
+      "character_ids": [
+        "CHR-0351"
+      ]
+    },
+    {
+      "index": 381,
+      "id": "SHJ-O232",
+      "name": "양흥",
+      "faction": "서량 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O232.png",
+      "character_ids": [
+        "CHR-0349"
+      ]
+    },
+    {
+      "index": 382,
+      "id": "SHJ-O233",
+      "name": "엄강",
+      "faction": "공손찬 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O233.png",
+      "character_ids": [
+        "CHR-0359"
+      ]
+    },
+    {
+      "index": 383,
+      "id": "SHJ-O234",
+      "name": "전해",
+      "faction": "공손찬 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O234.png",
+      "character_ids": [
+        "CHR-0361"
+      ]
+    },
+    {
+      "index": 384,
+      "id": "SHJ-O235",
+      "name": "선우보",
+      "faction": "공손찬 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O235.png",
+      "character_ids": [
+        "CHR-0358"
+      ]
+    },
+    {
+      "index": 385,
+      "id": "SHJ-O236",
+      "name": "관정",
+      "faction": "공손찬 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O236.png",
+      "character_ids": [
+        "CHR-0356"
+      ]
+    },
+    {
+      "index": 386,
+      "id": "SHJ-O237",
+      "name": "추단",
+      "faction": "공손찬 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O237.png",
+      "character_ids": [
+        "CHR-0362"
+      ]
+    },
+    {
+      "index": 387,
+      "id": "SHJ-O238",
+      "name": "공손월",
+      "faction": "공손찬 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O238.png",
+      "character_ids": [
+        "CHR-0355"
+      ]
+    },
+    {
+      "index": 388,
+      "id": "SHJ-O239",
+      "name": "공손범",
+      "faction": "공손찬 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O239.png",
+      "character_ids": [
+        "CHR-0354"
+      ]
+    },
+    {
+      "index": 389,
+      "id": "SHJ-O240",
+      "name": "단경",
+      "faction": "공손찬 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O240.png",
+      "character_ids": [
+        "CHR-0357"
+      ]
+    },
+    {
+      "index": 390,
+      "id": "SHJ-O241",
+      "name": "왕문",
+      "faction": "공손찬 진영",
+      "path": "res://assets/portraits/seonghanji/SHJ-O241.png",
+      "character_ids": [
+        "CHR-0360"
+      ]
+    },
+    {
+      "index": 391,
+      "id": "SHJ-O242",
+      "name": "장막",
+      "faction": "기타 군웅",
+      "path": "res://assets/portraits/seonghanji/SHJ-O242.png",
+      "character_ids": [
+        "CHR-0367"
+      ]
+    },
+    {
+      "index": 392,
+      "id": "SHJ-O243",
+      "name": "장초",
+      "faction": "기타 군웅",
+      "path": "res://assets/portraits/seonghanji/SHJ-O243.png",
+      "character_ids": [
+        "CHR-0368"
+      ]
+    },
+    {
+      "index": 393,
+      "id": "SHJ-O244",
+      "name": "교모",
+      "faction": "기타 군웅",
+      "path": "res://assets/portraits/seonghanji/SHJ-O244.png",
+      "character_ids": [
+        "CHR-0364"
+      ]
+    },
+    {
+      "index": 394,
+      "id": "SHJ-O245",
+      "name": "포신",
+      "faction": "기타 군웅",
+      "path": "res://assets/portraits/seonghanji/SHJ-O245.png",
+      "character_ids": [
+        "CHR-0370"
+      ]
+    },
+    {
+      "index": 395,
+      "id": "SHJ-O246",
+      "name": "왕광",
+      "faction": "기타 군웅",
+      "path": "res://assets/portraits/seonghanji/SHJ-O246.png",
+      "character_ids": [
+        "CHR-0366"
+      ]
+    },
+    {
+      "index": 396,
+      "id": "SHJ-O247",
+      "name": "엄백호",
+      "faction": "기타 군웅",
+      "path": "res://assets/portraits/seonghanji/SHJ-O247.png",
+      "character_ids": [
+        "CHR-0365"
+      ]
+    },
+    {
+      "index": 397,
+      "id": "SHJ-O248",
+      "name": "착융",
+      "faction": "기타 군웅",
+      "path": "res://assets/portraits/seonghanji/SHJ-O248.png",
+      "character_ids": [
+        "CHR-0369"
+      ]
+    },
+    {
+      "index": 398,
+      "id": "SHJ-O249",
+      "name": "관해",
+      "faction": "기타 군웅",
+      "path": "res://assets/portraits/seonghanji/SHJ-O249.png",
+      "character_ids": [
+        "CHR-0363"
+      ]
+    },
+    {
+      "index": 399,
+      "id": "SHJ-F001",
+      "name": "고국천왕",
+      "faction": "동이권 — 고구려",
+      "path": "res://assets/portraits/seonghanji/SHJ-F001.png",
+      "character_ids": [
+        "CHR-0400"
+      ]
+    },
+    {
+      "index": 400,
+      "id": "SHJ-F002",
+      "name": "을파소",
+      "faction": "동이권 — 고구려",
+      "path": "res://assets/portraits/seonghanji/SHJ-F002.png",
+      "character_ids": [
+        "CHR-0401"
+      ]
+    },
+    {
+      "index": 401,
+      "id": "SHJ-F003",
+      "name": "안류",
+      "faction": "동이권 — 고구려",
+      "path": "res://assets/portraits/seonghanji/SHJ-F003.png",
+      "character_ids": [
+        "CHR-0402"
+      ]
+    },
+    {
+      "index": 402,
+      "id": "SHJ-F004",
+      "name": "좌가려",
+      "faction": "동이권 — 고구려",
+      "path": "res://assets/portraits/seonghanji/SHJ-F004.png",
+      "character_ids": []
+    },
+    {
+      "index": 403,
+      "id": "SHJ-F005",
+      "name": "어비류",
+      "faction": "동이권 — 고구려",
+      "path": "res://assets/portraits/seonghanji/SHJ-F005.png",
+      "character_ids": []
+    },
+    {
+      "index": 404,
+      "id": "SHJ-F006",
+      "name": "우씨왕후",
+      "faction": "동이권 — 고구려",
+      "path": "res://assets/portraits/seonghanji/SHJ-F006.png",
+      "character_ids": [
+        "CHR-0404"
+      ]
+    },
+    {
+      "index": 405,
+      "id": "SHJ-F007",
+      "name": "발기",
+      "faction": "동이권 — 고구려",
+      "path": "res://assets/portraits/seonghanji/SHJ-F007.png",
+      "character_ids": [
+        "CHR-0405"
+      ]
+    },
+    {
+      "index": 406,
+      "id": "SHJ-F008",
+      "name": "산상왕",
+      "faction": "동이권 — 고구려",
+      "path": "res://assets/portraits/seonghanji/SHJ-F008.png",
+      "character_ids": [
+        "CHR-0406"
+      ]
+    },
+    {
+      "index": 407,
+      "id": "SHJ-F009",
+      "name": "계수",
+      "faction": "동이권 — 고구려",
+      "path": "res://assets/portraits/seonghanji/SHJ-F009.png",
+      "character_ids": [
+        "CHR-0407"
+      ]
+    },
+    {
+      "index": 408,
+      "id": "SHJ-F010",
+      "name": "명림어수",
+      "faction": "동이권 — 고구려",
+      "path": "res://assets/portraits/seonghanji/SHJ-F010.png",
+      "character_ids": [
+        "CHR-0408"
+      ]
+    },
+    {
+      "index": 409,
+      "id": "SHJ-F011",
+      "name": "동천왕",
+      "faction": "동이권 — 고구려",
+      "path": "res://assets/portraits/seonghanji/SHJ-F011.png",
+      "character_ids": [
+        "CHR-0409"
+      ]
+    },
+    {
+      "index": 410,
+      "id": "SHJ-F012",
+      "name": "득래",
+      "faction": "동이권 — 고구려",
+      "path": "res://assets/portraits/seonghanji/SHJ-F012.png",
+      "character_ids": [
+        "CHR-0410"
+      ]
+    },
+    {
+      "index": 411,
+      "id": "SHJ-F013",
+      "name": "밀우",
+      "faction": "동이권 — 고구려",
+      "path": "res://assets/portraits/seonghanji/SHJ-F013.png",
+      "character_ids": [
+        "CHR-0411"
+      ]
+    },
+    {
+      "index": 412,
+      "id": "SHJ-F014",
+      "name": "유유",
+      "faction": "동이권 — 고구려",
+      "path": "res://assets/portraits/seonghanji/SHJ-F014.png",
+      "character_ids": [
+        "CHR-0412"
+      ]
+    },
+    {
+      "index": 413,
+      "id": "SHJ-F015",
+      "name": "명림홀도",
+      "faction": "동이권 — 고구려",
+      "path": "res://assets/portraits/seonghanji/SHJ-F015.png",
+      "character_ids": [
+        "CHR-0413"
+      ]
+    },
+    {
+      "index": 414,
+      "id": "SHJ-F016",
+      "name": "중천왕",
+      "faction": "동이권 — 고구려",
+      "path": "res://assets/portraits/seonghanji/SHJ-F016.png",
+      "character_ids": [
+        "CHR-0414"
+      ]
+    },
+    {
+      "index": 415,
+      "id": "SHJ-F017",
+      "name": "초고왕",
+      "faction": "동이권 — 백제",
+      "path": "res://assets/portraits/seonghanji/SHJ-F017.png",
+      "character_ids": [
+        "CHR-0415"
+      ]
+    },
+    {
+      "index": 416,
+      "id": "SHJ-F018",
+      "name": "구수왕",
+      "faction": "동이권 — 백제",
+      "path": "res://assets/portraits/seonghanji/SHJ-F018.png",
+      "character_ids": [
+        "CHR-0416"
+      ]
+    },
+    {
+      "index": 417,
+      "id": "SHJ-F019",
+      "name": "사반왕",
+      "faction": "동이권 — 백제",
+      "path": "res://assets/portraits/seonghanji/SHJ-F019.png",
+      "character_ids": [
+        "CHR-0417"
+      ]
+    },
+    {
+      "index": 418,
+      "id": "SHJ-F020",
+      "name": "고이왕",
+      "faction": "동이권 — 백제",
+      "path": "res://assets/portraits/seonghanji/SHJ-F020.png",
+      "character_ids": [
+        "CHR-0418"
+      ]
+    },
+    {
+      "index": 419,
+      "id": "SHJ-F021",
+      "name": "진충",
+      "faction": "동이권 — 백제",
+      "path": "res://assets/portraits/seonghanji/SHJ-F021.png",
+      "character_ids": [
+        "CHR-0419"
+      ]
+    },
+    {
+      "index": 420,
+      "id": "SHJ-F022",
+      "name": "진물",
+      "faction": "동이권 — 백제",
+      "path": "res://assets/portraits/seonghanji/SHJ-F022.png",
+      "character_ids": [
+        "CHR-0420"
+      ]
+    },
+    {
+      "index": 421,
+      "id": "SHJ-F023",
+      "name": "우수",
+      "faction": "동이권 — 백제",
+      "path": "res://assets/portraits/seonghanji/SHJ-F023.png",
+      "character_ids": [
+        "CHR-0421"
+      ]
+    },
+    {
+      "index": 422,
+      "id": "SHJ-F024",
+      "name": "진가",
+      "faction": "동이권 — 백제",
+      "path": "res://assets/portraits/seonghanji/SHJ-F024.png",
+      "character_ids": [
+        "CHR-0422"
+      ]
+    },
+    {
+      "index": 423,
+      "id": "SHJ-F025",
+      "name": "고수",
+      "faction": "동이권 — 백제",
+      "path": "res://assets/portraits/seonghanji/SHJ-F025.png",
+      "character_ids": [
+        "CHR-0423"
+      ]
+    },
+    {
+      "index": 424,
+      "id": "SHJ-F026",
+      "name": "곤노",
+      "faction": "동이권 — 백제",
+      "path": "res://assets/portraits/seonghanji/SHJ-F026.png",
+      "character_ids": [
+        "CHR-0424"
+      ]
+    },
+    {
+      "index": 425,
+      "id": "SHJ-F027",
+      "name": "유기",
+      "faction": "동이권 — 백제",
+      "path": "res://assets/portraits/seonghanji/SHJ-F027.png",
+      "character_ids": [
+        "CHR-0425"
+      ]
+    },
+    {
+      "index": 426,
+      "id": "SHJ-F028",
+      "name": "우두",
+      "faction": "동이권 — 백제",
+      "path": "res://assets/portraits/seonghanji/SHJ-F028.png",
+      "character_ids": [
+        "CHR-0426"
+      ]
+    },
+    {
+      "index": 427,
+      "id": "SHJ-F029",
+      "name": "구력거",
+      "faction": "북적권 — 오환",
+      "path": "res://assets/portraits/seonghanji/SHJ-F029.png",
+      "character_ids": [
+        "CHR-0427"
+      ]
+    },
+    {
+      "index": 428,
+      "id": "SHJ-F030",
+      "name": "누반",
+      "faction": "북적권 — 오환",
+      "path": "res://assets/portraits/seonghanji/SHJ-F030.png",
+      "character_ids": [
+        "CHR-0428"
+      ]
+    },
+    {
+      "index": 429,
+      "id": "SHJ-F031",
+      "name": "소복연",
+      "faction": "북적권 — 오환",
+      "path": "res://assets/portraits/seonghanji/SHJ-F031.png",
+      "character_ids": [
+        "CHR-0429"
+      ]
+    },
+    {
+      "index": 430,
+      "id": "SHJ-F032",
+      "name": "오연",
+      "faction": "북적권 — 오환",
+      "path": "res://assets/portraits/seonghanji/SHJ-F032.png",
+      "character_ids": [
+        "CHR-0430"
+      ]
+    },
+    {
+      "index": 431,
+      "id": "SHJ-F033",
+      "name": "난루",
+      "faction": "북적권 — 오환",
+      "path": "res://assets/portraits/seonghanji/SHJ-F033.png",
+      "character_ids": [
+        "CHR-0431"
+      ]
+    },
+    {
+      "index": 432,
+      "id": "SHJ-F034",
+      "name": "능신저지",
+      "faction": "북적권 — 오환",
+      "path": "res://assets/portraits/seonghanji/SHJ-F034.png",
+      "character_ids": [
+        "CHR-0432"
+      ]
+    },
+    {
+      "index": 433,
+      "id": "SHJ-F035",
+      "name": "보부로",
+      "faction": "북적권 — 오환",
+      "path": "res://assets/portraits/seonghanji/SHJ-F035.png",
+      "character_ids": [
+        "CHR-0433"
+      ]
+    },
+    {
+      "index": 434,
+      "id": "SHJ-F036",
+      "name": "장순",
+      "faction": "북적권 — 오환",
+      "path": "res://assets/portraits/seonghanji/SHJ-F036.png",
+      "character_ids": [
+        "CHR-0434"
+      ]
+    },
+    {
+      "index": 435,
+      "id": "SHJ-F037",
+      "name": "장거",
+      "faction": "북적권 — 오환",
+      "path": "res://assets/portraits/seonghanji/SHJ-F037.png",
+      "character_ids": [
+        "CHR-0435"
+      ]
+    },
+    {
+      "index": 436,
+      "id": "SHJ-F038",
+      "name": "염유",
+      "faction": "북적권 — 오환",
+      "path": "res://assets/portraits/seonghanji/SHJ-F038.png",
+      "character_ids": [
+        "CHR-0436"
+      ]
+    },
+    {
+      "index": 437,
+      "id": "SHJ-F039",
+      "name": "보도근",
+      "faction": "북적권 — 선비",
+      "path": "res://assets/portraits/seonghanji/SHJ-F039.png",
+      "character_ids": [
+        "CHR-0437"
+      ]
+    },
+    {
+      "index": 438,
+      "id": "SHJ-F040",
+      "name": "부라한",
+      "faction": "북적권 — 선비",
+      "path": "res://assets/portraits/seonghanji/SHJ-F040.png",
+      "character_ids": [
+        "CHR-0438"
+      ]
+    },
+    {
+      "index": 439,
+      "id": "SHJ-F041",
+      "name": "설귀니",
+      "faction": "북적권 — 선비",
+      "path": "res://assets/portraits/seonghanji/SHJ-F041.png",
+      "character_ids": [
+        "CHR-0439"
+      ]
+    },
+    {
+      "index": 440,
+      "id": "SHJ-F042",
+      "name": "소리",
+      "faction": "북적권 — 선비",
+      "path": "res://assets/portraits/seonghanji/SHJ-F042.png",
+      "character_ids": []
+    },
+    {
+      "index": 441,
+      "id": "SHJ-F043",
+      "name": "미가",
+      "faction": "북적권 — 선비",
+      "path": "res://assets/portraits/seonghanji/SHJ-F043.png",
+      "character_ids": []
+    },
+    {
+      "index": 442,
+      "id": "SHJ-F044",
+      "name": "궐기",
+      "faction": "북적권 — 선비",
+      "path": "res://assets/portraits/seonghanji/SHJ-F044.png",
+      "character_ids": []
+    },
+    {
+      "index": 443,
+      "id": "SHJ-F045",
+      "name": "한룡",
+      "faction": "북적권 — 선비",
+      "path": "res://assets/portraits/seonghanji/SHJ-F045.png",
+      "character_ids": [
+        "CHR-0441"
+      ]
+    },
+    {
+      "index": 444,
+      "id": "SHJ-F046",
+      "name": "어부라",
+      "faction": "북적권 — 흉노",
+      "path": "res://assets/portraits/seonghanji/SHJ-F046.png",
+      "character_ids": [
+        "CHR-0442"
+      ]
+    },
+    {
+      "index": 445,
+      "id": "SHJ-F047",
+      "name": "호주천",
+      "faction": "북적권 — 흉노",
+      "path": "res://assets/portraits/seonghanji/SHJ-F047.png",
+      "character_ids": [
+        "CHR-0443"
+      ]
+    },
+    {
+      "index": 446,
+      "id": "SHJ-F048",
+      "name": "거비",
+      "faction": "북적권 — 흉노",
+      "path": "res://assets/portraits/seonghanji/SHJ-F048.png",
+      "character_ids": [
+        "CHR-0444"
+      ]
+    },
+    {
+      "index": 447,
+      "id": "SHJ-F049",
+      "name": "유표(흉노)",
+      "faction": "북적권 — 흉노",
+      "path": "res://assets/portraits/seonghanji/SHJ-F049.png",
+      "character_ids": [
+        "CHR-0445"
+      ]
+    },
+    {
+      "index": 448,
+      "id": "SHJ-F050",
+      "name": "북궁백옥",
+      "faction": "북적권 — 강·저",
+      "path": "res://assets/portraits/seonghanji/SHJ-F050.png",
+      "character_ids": []
+    },
+    {
+      "index": 449,
+      "id": "SHJ-F051",
+      "name": "이문후",
+      "faction": "북적권 — 강·저",
+      "path": "res://assets/portraits/seonghanji/SHJ-F051.png",
+      "character_ids": []
+    },
+    {
+      "index": 450,
+      "id": "SHJ-F052",
+      "name": "아하소과",
+      "faction": "북적권 — 강·저",
+      "path": "res://assets/portraits/seonghanji/SHJ-F052.png",
+      "character_ids": [
+        "CHR-0447"
+      ]
+    },
+    {
+      "index": 451,
+      "id": "SHJ-F053",
+      "name": "치무대",
+      "faction": "북적권 — 강·저",
+      "path": "res://assets/portraits/seonghanji/SHJ-F053.png",
+      "character_ids": [
+        "CHR-0448"
+      ]
+    },
+    {
+      "index": 452,
+      "id": "SHJ-F054",
+      "name": "미당",
+      "faction": "북적권 — 강·저",
+      "path": "res://assets/portraits/seonghanji/SHJ-F054.png",
+      "character_ids": [
+        "CHR-0449"
+      ]
+    },
+    {
+      "index": 453,
+      "id": "SHJ-F055",
+      "name": "철리길",
+      "faction": "북적권 — 강·저",
+      "path": "res://assets/portraits/seonghanji/SHJ-F055.png",
+      "character_ids": []
+    },
+    {
+      "index": 454,
+      "id": "SHJ-F056",
+      "name": "월길",
+      "faction": "북적권 — 강·저",
+      "path": "res://assets/portraits/seonghanji/SHJ-F056.png",
+      "character_ids": []
+    },
+    {
+      "index": 455,
+      "id": "SHJ-F057",
+      "name": "아귀",
+      "faction": "북적권 — 강·저",
+      "path": "res://assets/portraits/seonghanji/SHJ-F057.png",
+      "character_ids": [
+        "CHR-0451"
+      ]
+    },
+    {
+      "index": 456,
+      "id": "SHJ-F058",
+      "name": "천만",
+      "faction": "북적권 — 강·저",
+      "path": "res://assets/portraits/seonghanji/SHJ-F058.png",
+      "character_ids": [
+        "CHR-0452"
+      ]
+    },
+    {
+      "index": 457,
+      "id": "SHJ-F059",
+      "name": "강단",
+      "faction": "북적권 — 강·저",
+      "path": "res://assets/portraits/seonghanji/SHJ-F059.png",
+      "character_ids": [
+        "CHR-0453"
+      ]
+    },
+    {
+      "index": 458,
+      "id": "SHJ-F060",
+      "name": "옹개",
+      "faction": "남만권 — 남중(내부 이민족)",
+      "path": "res://assets/portraits/seonghanji/SHJ-F060.png",
+      "character_ids": [
+        "CHR-0454"
+      ]
+    },
+    {
+      "index": 459,
+      "id": "SHJ-F061",
+      "name": "고정",
+      "faction": "남만권 — 남중(내부 이민족)",
+      "path": "res://assets/portraits/seonghanji/SHJ-F061.png",
+      "character_ids": [
+        "CHR-0455"
+      ]
+    },
+    {
+      "index": 460,
+      "id": "SHJ-F062",
+      "name": "주포",
+      "faction": "남만권 — 남중(내부 이민족)",
+      "path": "res://assets/portraits/seonghanji/SHJ-F062.png",
+      "character_ids": [
+        "CHR-0456"
+      ]
+    },
+    {
+      "index": 461,
+      "id": "SHJ-F063",
+      "name": "사마가",
+      "faction": "남만권 — 남중(내부 이민족)",
+      "path": "res://assets/portraits/seonghanji/SHJ-F063.png",
+      "character_ids": [
+        "CHR-0457"
+      ]
+    },
+    {
+      "index": 462,
+      "id": "SHJ-F064",
+      "name": "파조",
+      "faction": "서융 — 서역 제국",
+      "path": "res://assets/portraits/seonghanji/SHJ-F064.png",
+      "character_ids": [
+        "CHR-0459"
+      ]
+    },
+    {
+      "index": 463,
+      "id": "SHJ-F065",
+      "name": "선선왕",
+      "faction": "서융 — 서역 제국",
+      "path": "res://assets/portraits/seonghanji/SHJ-F065.png",
+      "character_ids": [
+        "CHR-0460"
+      ]
+    },
+    {
+      "index": 464,
+      "id": "SHJ-F066",
+      "name": "구자왕",
+      "faction": "서융 — 서역 제국",
+      "path": "res://assets/portraits/seonghanji/SHJ-F066.png",
+      "character_ids": [
+        "CHR-0461"
+      ]
+    },
+    {
+      "index": 465,
+      "id": "SHJ-F067",
+      "name": "우전왕",
+      "faction": "서융 — 서역 제국",
+      "path": "res://assets/portraits/seonghanji/SHJ-F067.png",
+      "character_ids": [
+        "CHR-0462"
+      ]
+    },
+    {
+      "index": 466,
+      "id": "SHJ-F068",
+      "name": "언기왕",
+      "faction": "서융 — 서역 제국",
+      "path": "res://assets/portraits/seonghanji/SHJ-F068.png",
+      "character_ids": []
+    },
+    {
+      "index": 467,
+      "id": "SHJ-F069",
+      "name": "소륵왕",
+      "faction": "서융 — 서역 제국",
+      "path": "res://assets/portraits/seonghanji/SHJ-F069.png",
+      "character_ids": []
+    },
+    {
+      "index": 468,
+      "id": "SHJ-F070",
+      "name": "차사왕",
+      "faction": "서융 — 서역 제국",
+      "path": "res://assets/portraits/seonghanji/SHJ-F070.png",
+      "character_ids": []
+    },
+    {
+      "index": 469,
+      "id": "SHJ-F071",
+      "name": "호상(무명)",
+      "faction": "서융 — 서역 제국",
+      "path": "res://assets/portraits/seonghanji/SHJ-F071.png",
+      "character_ids": [
+        "CHR-0464"
+      ]
+    },
+    {
+      "index": 470,
+      "id": "SHJ-F072",
+      "name": "비잔",
+      "faction": "산월 — 오의 내부 이민족",
+      "path": "res://assets/portraits/seonghanji/SHJ-F072.png",
+      "character_ids": [
+        "CHR-0465"
+      ]
+    },
+    {
+      "index": 471,
+      "id": "SHJ-F073",
+      "name": "반림",
+      "faction": "산월 — 오의 내부 이민족",
+      "path": "res://assets/portraits/seonghanji/SHJ-F073.png",
+      "character_ids": [
+        "CHR-0466"
+      ]
+    },
+    {
+      "index": 472,
+      "id": "SHJ-F074",
+      "name": "우돌",
+      "faction": "산월 — 오의 내부 이민족",
+      "path": "res://assets/portraits/seonghanji/SHJ-F074.png",
+      "character_ids": [
+        "CHR-0467"
+      ]
+    },
+    {
+      "index": 473,
+      "id": "SHJ-F075",
+      "name": "팽기",
+      "faction": "산월 — 오의 내부 이민족",
+      "path": "res://assets/portraits/seonghanji/SHJ-F075.png",
+      "character_ids": [
+        "CHR-0468"
+      ]
+    },
+    {
+      "index": 474,
+      "id": "SHJ-F076",
+      "name": "팽식",
+      "faction": "산월 — 오의 내부 이민족",
+      "path": "res://assets/portraits/seonghanji/SHJ-F076.png",
+      "character_ids": []
+    },
+    {
+      "index": 475,
+      "id": "SHJ-F077",
+      "name": "진복",
+      "faction": "산월 — 오의 내부 이민족",
+      "path": "res://assets/portraits/seonghanji/SHJ-F077.png",
+      "character_ids": []
+    },
+    {
+      "index": 476,
+      "id": "SHJ-F078",
+      "name": "조자",
+      "faction": "산월 — 오의 내부 이민족",
+      "path": "res://assets/portraits/seonghanji/SHJ-F078.png",
+      "character_ids": []
+    },
+    {
+      "index": 477,
+      "id": "SHJ-F079",
+      "name": "두호",
+      "faction": "파저·판순만이",
+      "path": "res://assets/portraits/seonghanji/SHJ-F079.png",
+      "character_ids": [
+        "CHR-0470"
+      ]
+    },
+    {
+      "index": 478,
+      "id": "SHJ-F080",
+      "name": "박호",
+      "faction": "파저·판순만이",
+      "path": "res://assets/portraits/seonghanji/SHJ-F080.png",
+      "character_ids": [
+        "CHR-0471"
+      ]
+    },
+    {
+      "index": 479,
+      "id": "SHJ-F081",
+      "name": "원약",
+      "faction": "파저·판순만이",
+      "path": "res://assets/portraits/seonghanji/SHJ-F081.png",
+      "character_ids": [
+        "CHR-0472"
+      ]
+    },
+    {
+      "index": 480,
+      "id": "SHJ-F082",
+      "name": "이건기첩",
+      "faction": "노수호·하서",
+      "path": "res://assets/portraits/seonghanji/SHJ-F082.png",
+      "character_ids": [
+        "CHR-0473"
+      ]
+    },
+    {
+      "index": 481,
+      "id": "SHJ-F083",
+      "name": "치원다",
+      "faction": "노수호·하서",
+      "path": "res://assets/portraits/seonghanji/SHJ-F083.png",
+      "character_ids": [
+        "CHR-0474"
+      ]
+    },
+    {
+      "index": 482,
+      "id": "SHJ-F084",
+      "name": "위구태",
+      "faction": "부여·예·읍루",
+      "path": "res://assets/portraits/seonghanji/SHJ-F084.png",
+      "character_ids": [
+        "CHR-0475"
+      ]
+    },
+    {
+      "index": 483,
+      "id": "SHJ-F085",
+      "name": "간위거",
+      "faction": "부여·예·읍루",
+      "path": "res://assets/portraits/seonghanji/SHJ-F085.png",
+      "character_ids": [
+        "CHR-0476"
+      ]
+    },
+    {
+      "index": 484,
+      "id": "SHJ-F086",
+      "name": "마여",
+      "faction": "부여·예·읍루",
+      "path": "res://assets/portraits/seonghanji/SHJ-F086.png",
+      "character_ids": []
+    },
+    {
+      "index": 485,
+      "id": "SHJ-F087",
+      "name": "의려",
+      "faction": "부여·예·읍루",
+      "path": "res://assets/portraits/seonghanji/SHJ-F087.png",
+      "character_ids": []
+    },
+    {
+      "index": 486,
+      "id": "SHJ-F088",
+      "name": "불내예왕",
+      "faction": "부여·예·읍루",
+      "path": "res://assets/portraits/seonghanji/SHJ-F088.png",
+      "character_ids": [
+        "CHR-0478"
+      ]
+    },
+    {
+      "index": 487,
+      "id": "SHJ-F089",
+      "name": "읍루수장",
+      "faction": "부여·예·읍루",
+      "path": "res://assets/portraits/seonghanji/SHJ-F089.png",
+      "character_ids": [
+        "CHR-0479"
+      ]
+    },
+    {
+      "index": 488,
+      "id": "SHJ-F090",
+      "name": "진론",
+      "faction": "서방권 — 중국 도래 기록·지식인",
+      "path": "res://assets/portraits/seonghanji/SHJ-F090-western-v2.png",
+      "character_ids": [
+        "CHR-0480"
+      ]
+    },
+    {
+      "index": 489,
+      "id": "SHJ-F091",
+      "name": "강승회",
+      "faction": "서방권 — 중국 도래 기록·지식인",
+      "path": "res://assets/portraits/seonghanji/SHJ-F091-western-v2.png",
+      "character_ids": [
+        "CHR-0481"
+      ]
+    },
+    {
+      "index": 490,
+      "id": "SHJ-F092",
+      "name": "지겸",
+      "faction": "서방권 — 중국 도래 기록·지식인",
+      "path": "res://assets/portraits/seonghanji/SHJ-F092-western-v2.png",
+      "character_ids": [
+        "CHR-0482"
+      ]
+    },
+    {
+      "index": 491,
+      "id": "SHJ-F093",
+      "name": "안세고",
+      "faction": "서방권 — 중국 도래 기록·지식인",
+      "path": "res://assets/portraits/seonghanji/SHJ-F093-western-v2.png",
+      "character_ids": [
+        "CHR-0483"
+      ]
+    },
+    {
+      "index": 492,
+      "id": "SHJ-F094",
+      "name": "지루가참",
+      "faction": "서방권 — 중국 도래 기록·지식인",
+      "path": "res://assets/portraits/seonghanji/SHJ-F094-western-v2.png",
+      "character_ids": [
+        "CHR-0484"
+      ]
+    },
+    {
+      "index": 493,
+      "id": "SHJ-F095",
+      "name": "갈레노스",
+      "faction": "서방권 — 중국 도래 기록·지식인",
+      "path": "res://assets/portraits/seonghanji/SHJ-F095-western-v2.png",
+      "character_ids": [
+        "CHR-0485"
+      ]
+    },
+    {
+      "index": 494,
+      "id": "SHJ-F096",
+      "name": "파피니아누스",
+      "faction": "서방권 — 중국 도래 기록·지식인",
+      "path": "res://assets/portraits/seonghanji/SHJ-F096-western-v2.png",
+      "character_ids": [
+        "CHR-0486"
+      ]
+    },
+    {
+      "index": 495,
+      "id": "SHJ-F097",
+      "name": "울피아누스",
+      "faction": "서방권 — 중국 도래 기록·지식인",
+      "path": "res://assets/portraits/seonghanji/SHJ-F097-western-v2.png",
+      "character_ids": [
+        "CHR-0487"
+      ]
+    },
+    {
+      "index": 496,
+      "id": "SHJ-F098",
+      "name": "카시우스 디오",
+      "faction": "서방권 — 중국 도래 기록·지식인",
+      "path": "res://assets/portraits/seonghanji/SHJ-F098-western-v2.png",
+      "character_ids": [
+        "CHR-0488"
+      ]
+    },
+    {
+      "index": 497,
+      "id": "SHJ-F099",
+      "name": "플로티노스",
+      "faction": "서방권 — 중국 도래 기록·지식인",
+      "path": "res://assets/portraits/seonghanji/SHJ-F099-western-v2.png",
+      "character_ids": [
+        "CHR-0489"
+      ]
+    },
+    {
+      "index": 498,
+      "id": "SHJ-F100",
+      "name": "포르피리오스",
+      "faction": "서방권 — 중국 도래 기록·지식인",
+      "path": "res://assets/portraits/seonghanji/SHJ-F100-western-v2.png",
+      "character_ids": [
+        "CHR-0490"
+      ]
+    },
+    {
+      "index": 499,
+      "id": "SHJ-F101",
+      "name": "오리게네스",
+      "faction": "서방권 — 중국 도래 기록·지식인",
+      "path": "res://assets/portraits/seonghanji/SHJ-F101-western-v2.png",
+      "character_ids": [
+        "CHR-0491"
+      ]
+    },
+    {
+      "index": 500,
+      "id": "SHJ-F102",
+      "name": "나가르주나",
+      "faction": "서방권 — 중국 도래 기록·지식인",
+      "path": "res://assets/portraits/seonghanji/SHJ-F102-western-v2.png",
+      "character_ids": [
+        "CHR-0492"
+      ]
+    }
+  ]
+}
