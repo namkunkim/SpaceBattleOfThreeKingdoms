@@ -329,3 +329,22 @@
 - 이 문서는 플레이6·12·1 개별 문서(2026-10-17 작성)를 대체한다. 그 세 파일은 삭제했다.
 - 플레이3 문서는 지형·미니맵·구현 인수 조건과 기존 참조(`PLAN-REFERENCE-MOTION-ONLY.md`, `REVIEW-VIDEO-POC.md`, `SESSION-HANDOFF.md`, `CHECKLIST-OPEN.md`) 때문에 유지한다. 그 문서의 함대 조작·움직임 부분(§2·§3)은 이 문서 §2~§5에 통합했다.
 - 구현 시 M1~M10은 한 번에 묶지 않는다. 한 리뷰 항목씩 진행하고, 다른 모델 5-b 리뷰 전에는 main에 병합하지 않는다.
+
+## 9. 코드 반영 현황 (2026-10-18, 브랜치 `claude/fleet-motion-impl`)
+
+범위 결정: 기동·표현만. 코어(선회 9°/초, 교전·탐지·피해 수치)는 PoC 값으로 바꾸지 않았다.
+
+| 항목 | 상태 | 위치 |
+|---|---|---|
+| M2 함선 k = 진형 k번 자리, 재배정·빈자리 메우기 제거 | 반영 | `fleet_renderer.gd` `_reform`, `_kill_one` |
+| M3 동시 추종, 흔들림·회피 변위·난수 높이 편차 제거 | 반영 | `_follow`, `_build_slots` |
+| 접적 시 함선이 조준 중인 적 함대를 향함(진형은 그대로) | 반영 | `_follow` (`firing_at`/`target_id` 기준) |
+| M7 이동 중 함수 축 간격 늘림(최대 1.6배), 정지 시 복귀 | 반영 | `_follow` `STRETCH` |
+| 격침 대상: 최근 피격 → 조준 적에 가장 가까운 함선(난수 없음) | 반영 | `_pick_victim`, `_dying` |
+| M1 도착 진형 미리보기(전 슬롯, 도착 방향 반영) | 반영 | `tactical_overlay.gd` `_dest_rings`, `face_to` |
+| M5 선택 함대 "진형 · 상태" 줄 | 반영 | `tactical_overlay.gd` `_plate` |
+| M9 링·지휘 범위는 선택 함대만 | 기존 구현 확인 | `tactical_overlay.gd` |
+| M10 이동 완료 알림 | 반영 | `FleetBattle3D.gd` `_note_arrivals` |
+| 제자리 반전, 접적 평행 이동 속도(코어), 묶음 진형 | 미반영 | 코어 이동·Q60 그룹 규칙 변경이 필요해 별도 결정 |
+
+검증: `fleet_follow`(갱신) 외 7종 헤드리스 PASS. PC 화면·태블릿·5-b 리뷰는 미실시이며 main 병합 전에 필요하다.

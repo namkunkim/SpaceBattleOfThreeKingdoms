@@ -35,6 +35,8 @@ class FleetView:
 	var under_fire := false          # 아군 전용: 적이 겨누고 있다(회피 연출)
 	var has_move := false
 	var move_to := Vector2.ZERO
+	var face_set := false   # 도착 방향 지정(M1 도착 진형 미리보기가 이 방향으로 놓인다)
+	var face_to := 0.0
 	var missile_cd := 0.0
 	var fighter_cd := 0.0
 	var defense := false
@@ -162,6 +164,8 @@ func apply(proj: Dictionary) -> Array[FleetView]:
 		f.lv = s.lv
 		f.has_move = s.has_move
 		f.move_to = s.move_to
+		f.face_set = bool(s.get("face_set", false))
+		f.face_to = float(s.get("face_to", 0.0))
 		f.missile_cd = s.missile_cd_s
 		f.fighter_cd = s.fighter_cd_s
 		f.defense = s.defense

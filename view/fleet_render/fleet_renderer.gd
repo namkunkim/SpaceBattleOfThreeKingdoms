@@ -45,11 +45,10 @@ const WORLD_AABB := AABB(Vector3(-120, -6, -120), Vector3(240, 12, 240))   # 함
 const SIM_STEP := 0.0     # 추종 갱신 주기: 매 프레임(30Hz로 묶으면 75Hz 화면에서 함선이 2프레임 멈췄다 점프한다). 정지한 전대는 갱신하지 않는다
 const TAU_MIN := 0.3             # 함선별 추종 시간 상수(초). 모든 함선이 같다: 다르면 지연이 짧은 함선부터 차례로 출발해 보인다
 const TAU_MAX := 0.3
-const EVADE_SWAY := 0.9             # 레이저를 맞받는 전대의 좌우 회피 흔들림 진폭(연출 전용, 코어 회피 Q72와 무관하게 표시만)
-const EVADE_RATE := 2.4             # 회피 흔들림 각속도(rad/초)
-const SWAY := 0.22               # 이동 중 개체 흔들림 진폭(3D 단위)
-const MOVE_EPS := 0.3            # 이 속도(3D 단위/초) 이상이면 속도 방향을 보고, 아니면 전대 방향을 본다
-const REFORM_MIN := 0.6          # 진형 전환 때 함선이 슬롯을 향해 수렴하는 최소 tau 배율
+const STRETCH := 0.6             # 이동 중 함수 축 방향 간격 늘림(최대, 정지하면 1로 돌아온다. PoC M7)
+const MOVE_EPS := 0.3            # 이 속도(3D 단위/초) 이상이면 항적을 켠다
+const YAW_RATE := PI             # 함선 선회 속도(rad/초): 180°를 1초에(PoC FLIP_TIME)
+const SPEED_REF := 62.0          # 기준 이동 속도(월드 단위/초, 전술 오버레이의 62와 같다)
 
 const C_ALLY_BEAM := Color(0.42, 0.9, 1.0, 1.0)
 const C_FOE_BEAM := Color(1.0, 0.52, 0.28, 1.0)
@@ -69,15 +68,10 @@ class Slot:
 	var vel := Vector3.ZERO
 	var yaw := 0.0               # 월드 yaw(모델 기준)
 	var tau := 0.5
-	var phase := 0.0
 	var trail := 0.0             # 항적 세기 0~1(속도에 따라)
 	var trail_sent := 0.0        # 마지막으로 MultiMesh에 쓴 항적 값(변화가 작으면 다시 쓰지 않는다)
 	var scl := Vector3.ONE       # 선체 배율(함종·기함)
 	var gsz := 0.4               # 엔진광 크기
-	var cph := 1.0               # 흔들림 위상의 cos/sin(갱신마다 삼각함수를 부르지 않으려고 미리 계산)
-	var sph := 0.0
-	var cph2 := 1.0
-	var sph2 := 0.0
 	var half_len := 0.4
 	var rank := 0.0
 	var alive := true
@@ -99,7 +93,9 @@ class FleetVis:
 	var die_acc := 0.0
 	var lod := -1
 	var formation := -1
-	var evade := false           # 이번 갱신에 적의 사격을 받는 중(회피 흔들림 연출)
+	var aim := false              # 조준 중인 적 함대가 있다(함선이 그쪽을 본다)
+	var aim_pos := Vector3.ZERO   # 조준 중인 적 함대의 월드 위치(3D)
+	var stretch := 1.0            # 이동 중 함수 축 간격 배율
 	var rtotal := 0.0            # 진형 전환 표시 총 시간(초, 0이면 즉시)
 	var rk := 1.0                # 전환 진행률 0~1(코어 form_left_s 기준, 표시 전용)
 	var rest := 0                # 연속으로 목표에 닿아 있던 갱신 횟수(3 이상이면 갱신 생략)
@@ -341,8 +337,9 @@ func _assign_class(pts: Array, flag: bool, seed_v: int) -> Array:
 	return out
 
 # ------------------------------------------------------------ 대형 추종 (뷰 전용)
-# 함선마다 슬롯 목표를 tau(0.25~0.95초) 지연으로 따라간다. 선회하면 바깥쪽 슬롯의 목표가 더 빨리 움직여 안쪽보다 뒤처졌다 부채꼴로 펼쳐지고,
-# 진형이 바뀌면 슬롯이 재배정되어 함선이 새 자리로 흘러간다. 코어 상태·전투 난수에 닿지 않고 추종 갱신에는 난수가 없다(tau·위상은 전대 id 시드).
+# 함선은 모두 같은 시간 상수로 자기 슬롯을 따라간다(동시 출발·평행 진로). 흔들림·난수 편차·회피 변위는 없다.
+# 함선 방향은 전대 방향을 공유하고, 조준 중인 적 함대가 있으면 모두 그쪽을 본다(진형 배치는 그대로).
+# 이동 중에는 슬롯 간격을 함수 축으로 늘리고(STRETCH) 정지하면 되돌린다. 코어 상태·전투 난수에 닿지 않는다.
 func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 	if dt <= 0.0:
 		return
@@ -353,22 +350,24 @@ func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 	v.acc = 0.0
 	var fpos := src.to3(sq.pos)
 	var frot := -float(sq.heading) - PI * 0.5
-	var moved := fpos.distance_squared_to(v.last_pos) > 1e-8 or absf(frot - v.last_rot) > 1e-5
 	var fvel := (fpos - v.last_pos) / step if v.last_pos.x < 1e8 else Vector3.ZERO   # 전대 속도: 지수 추종의 정상 지연(속도×tau)을 목표에 미리 더해 상쇄한다
+	var moved := fpos.distance_squared_to(v.last_pos) > 1e-8 or absf(frot - v.last_rot) > 1e-5
 	v.last_pos = fpos
 	v.last_rot = frot
-	if not moved and not v.evade and v.rest >= 3:
+	var st_goal := 1.0 + STRETCH * clampf(fvel.length() / (SPEED_REF * src.unit_scale()), 0.0, 1.0)
+	var st_prev := v.stretch
+	v.stretch += (st_goal - v.stretch) * (1.0 - exp(-step / 0.4))
+	if absf(v.stretch - 1.0) < 0.002 and st_goal == 1.0:
+		v.stretch = 1.0
+	var stretching := v.stretch != st_prev
+	if not moved and not stretching and v.rest >= 3 and not v.aim:
 		return
 	var fb := Basis(Vector3.UP, frot)
 	var h_fleet := -float(sq.heading) - PI   # 전대 방향의 모델 yaw
-	var ca := cos(clock * 0.9)
-	var sa := sin(clock * 0.9)
-	var cb := cos(clock * 0.7)
-	var sb := sin(clock * 0.7)
-	var sw := SWAY if moved else 0.0
 	var maxerr := 0.0
 	var maxtr := 0.0
-	var yk := 1.0 - exp(-step / 0.35)
+	var maxyaw := 0.0
+	var ym := YAW_RATE * step
 	var eps2 := MOVE_EPS * MOVE_EPS
 	var inv := 1.0 / step
 	var gl := v.glow.multimesh
@@ -377,66 +376,47 @@ func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 		gi += 1
 		if not s.alive:
 			continue
-		var t := fpos + fb * s.home + fvel * s.tau
-		var hv := (t - s.pos) * (inv * step / (s.tau + step))   # 흔들림을 뺀 추종 속도: 선체 방향은 이것만 본다
-		if sw > 0.0:
-			t.x += sw * (sa * s.cph + ca * s.sph)
-			t.z += sw * (cb * s.cph2 - sb * s.sph2)
-		if v.evade:
-			t += fb * Vector3(0.0, 0.0, EVADE_SWAY * sin(clock * EVADE_RATE + s.phase))   # 전대 좌우축(모델 로컬 z)으로 흔든다
+		var t := fpos + fb * Vector3(s.home.x, s.home.y, s.home.z * v.stretch) + fvel * s.tau
 		var d := (t - s.pos) * (step / (s.tau + step))   # 지수 추종의 유리 근사(안정, 오버슈트 없음)
 		s.pos += d
 		s.vel = d * inv
-		var e2 := (t - s.pos).length_squared()
-		maxerr = maxf(maxerr, e2)
-		# 흔들림이 섞인 속도로 방향을 정하면 느린 전대(특히 배속)에서 흔들림 방향을 따라 선체가 제자리에서 돈다
-		var sp2 := hv.length_squared()
+		maxerr = maxf(maxerr, (t - s.pos).length_squared())
 		var want := h_fleet
-		if sp2 > eps2:
-			want = -atan2(hv.z, hv.x) - PI
-		s.yaw = lerp_angle(s.yaw, want, yk)
+		if v.aim:
+			want = -atan2(v.aim_pos.z - s.pos.z, v.aim_pos.x - s.pos.x) - PI
+		var dy := wrapf(want - s.yaw, -PI, PI)
+		s.yaw += clampf(dy, -ym, ym)
+		maxyaw = maxf(maxyaw, absf(wrapf(want - s.yaw, -PI, PI)))
 		var c := cos(s.yaw)
 		var sn := sin(s.yaw)
 		var mm: MultiMesh = v.mmis[s.cls].multimesh
 		mm.set_instance_transform(s.idx, _xform_cs(s, c, sn))
-		s.trail += (smoothstep(MOVE_EPS, 2.5, sqrt(sp2)) - s.trail) * 0.3
+		s.trail += (smoothstep(MOVE_EPS, 2.5, s.vel.length()) - s.trail) * 0.3
 		maxtr = maxf(maxtr, s.trail)
 		if absf(s.trail - s.trail_sent) > 0.02:
 			s.trail_sent = s.trail
 			mm.set_instance_custom_data(s.idx, Color(s.trail, 0.0, 0.0, 0.0))
 		# 엔진광은 선미(전방의 반대)에: 전방 = (-cos yaw, 0, sin yaw)
 		gl.set_instance_transform(gi, Transform3D(Basis.from_scale(Vector3.ONE * s.gsz), s.pos + Vector3(c, 0.0, -sn) * (s.half_len * 0.98)))
-	v.rest = v.rest + 1 if (maxerr < 0.0004 and maxtr < 0.02) else 0
+	v.rest = v.rest + 1 if (maxerr < 0.0004 and maxtr < 0.02 and maxyaw < 0.002) else 0
 
-# 진형이 바뀌면 새 슬롯을 앞쪽 순서대로 기존 함선에 다시 배정한다(함종 구성은 그대로).
+# 진형이 바뀌면 함선 k는 새 진형의 k번 자리로 간다(재배정·빈자리 메우기 없음. 격침된 자리는 비어 있다).
 func _reform(v: FleetVis, sq: Dictionary) -> void:
 	v.formation = sq.formation
 	v.rest = 0
 	v.rtotal = float(sq.get("form_left_s", 0.0)) if sq.get("form_to", "") != "" else 0.0
 	v.rk = 0.0 if v.rtotal > 0.0 else 1.0
-	var alive: Array = v.slots.filter(func(x): return x.alive)
-	var n := alive.size()
+	var n := v.slots.size()
 	if n == 0:
 		return
 	var pts := formation_points(sq.formation, n)
 	var S := src.unit_scale()
-	var order_new := range(n)
-	order_new.sort_custom(func(a, b): return pts[a].x > pts[b].x)
-	var order_old := range(n)
-	order_old.sort_custom(func(a, b): return alive[a].rank < alive[b].rank)
-	var minf_ := 1e9
-	var maxf_ := -1e9
-	for p in pts:
-		minf_ = minf(minf_, p.x)
-		maxf_ = maxf(maxf_, p.x)
-	var span := maxf(1.0, maxf_ - minf_)
 	for i in n:
-		var s: Slot = alive[order_old[i]]
-		var p: Vector3 = pts[order_new[i]]
+		var s: Slot = v.slots[i]
+		var p: Vector3 = pts[i]
 		s.from = s.home   # 지금 보이는 위치에서 새 목표로(전환 중 재명령·취소도 부드럽게)
 		s.goal = Vector3(p.z * S, p.y, -p.x * S)
 		s.home = s.goal if v.rtotal <= 0.0 else s.from
-		s.rank = (maxf_ - p.x) / span
 
 # 전환 중에는 코어 남은 시간(form_left_s)에 맞춰 슬롯을 현재 모양에서 목표 모양으로 진행시킨다(5초, 팔진 2.5초 - 투영 값 그대로, 표시 전용).
 func _form_progress(v: FleetVis, sq: Dictionary) -> void:
@@ -492,13 +472,8 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 		s.flag = cls[i].get("flag", false)
 		var p: Vector3 = pts[i]
 		# 함대 로컬 공간: 전방 = -Z, 측면 = +X (POC _build_fleet_3d와 같은 축)
-		s.home = Vector3(p.z * S, p.y + jr.randf_range(-0.06, 0.06), -p.x * S)
-		s.tau = lerpf(TAU_MIN, TAU_MAX, jr.randf())
-		s.phase = jr.randf() * TAU
-		s.cph = cos(s.phase)
-		s.sph = sin(s.phase)
-		s.cph2 = cos(s.phase * 1.3)
-		s.sph2 = sin(s.phase * 1.3)
+		s.home = Vector3(p.z * S, p.y, -p.x * S)
+		s.tau = TAU_MIN
 		var L: float = CLASS_LEN[s.cls] * HULL_STRETCH.x * (1.8 if s.flag else 1.0)
 		s.half_len = L * 0.5
 		s.scl = HULL_STRETCH * ((CLASS_LEN[s.cls] / MODEL_LEN) * (1.8 if s.flag else 1.0))
@@ -509,7 +484,7 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 	var fpos := src.to3(sq.pos)
 	var frot := -float(sq.heading) - PI * 0.5
 	for s in v.slots:
-		s.pos = _target(s, fpos, frot, 0.0)
+		s.pos = _target(s, fpos, frot)
 		s.yaw = -float(sq.heading) - PI
 	v.last_pos = fpos
 	v.last_rot = frot
@@ -577,12 +552,9 @@ func _fwd(s: Slot) -> Vector3:
 func _glow_xform(s: Slot, sz: float) -> Transform3D:
 	return Transform3D(Basis.from_scale(Vector3.ONE * sz), s.pos - _fwd(s) * (s.half_len * 0.98))
 
-# 슬롯 목표(월드): 전대 위치 + 전대 회전 x 슬롯 (+ 이동 중 개체 흔들림)
-func _target(s: Slot, fpos: Vector3, frot: float, sway: float) -> Vector3:
-	var t := fpos + Basis(Vector3.UP, frot) * s.home
-	if sway > 0.0:
-		t += Vector3(sin(clock * 0.9 + s.phase), 0.0, cos(clock * 0.7 + s.phase * 1.3)) * (SWAY * sway)
-	return t
+# 슬롯 목표(월드): 전대 위치 + 전대 회전 x 슬롯
+func _target(s: Slot, fpos: Vector3, frot: float) -> Vector3:
+	return fpos + Basis(Vector3.UP, frot) * s.home
 
 func _hide_slot(v: FleetVis, s: Slot) -> void:
 	s.alive = false
@@ -650,13 +622,13 @@ func update(dt: float) -> void:
 		for side in mats:
 			for m in side:
 				(m as ShaderMaterial).set_shader_parameter("detail", detail)
-	var shot_at := {}
-	for sq in sqs:
-		if not sq.dead and sq.firing_at >= 0:
-			shot_at[sq.firing_at] = true
 	for sq in sqs:
 		var v: FleetVis = vis[sq.id]
-		v.evade = (shot_at.has(sq.id) or sq.get("under_fire", false)) and not sq.dead
+		var aim_id: int = sq.firing_at if sq.firing_at >= 0 else sq.target_id
+		var foe: Dictionary = by_id.get(aim_id, {})
+		v.aim = not sq.dead and not foe.is_empty() and not foe.dead
+		if v.aim:
+			v.aim_pos = src.to3(foe.pos)
 		v.node.visible = sq.contact != "lost"   # 상실 접촉은 마지막 위치에 모델 없이 표식만 남는다
 		if sq.formation != v.formation:
 			_reform(v, sq)
@@ -725,24 +697,25 @@ func _flash(v: FleetVis, s: Slot) -> void:
 	s.flash_until = clock + 0.08
 	v.mmis[s.cls].multimesh.set_instance_color(s.idx, C_FLASH)
 
-func _pick_victim(v: FleetVis) -> Slot:
+# 격침 대상: 최근 피격 함선, 없으면 조준 중인 적에게 가장 가까운 함선(없으면 앞쪽 슬롯). 난수 없음, 빈자리는 메우지 않는다.
+func _pick_victim(v: FleetVis, allow_flag := false) -> Slot:
 	var best: Slot = null
 	var bt := clock - 0.8
 	for s in v.slots:
-		if s.alive and not s.flag and s.hit_t > bt:
+		if s.alive and (allow_flag or not s.flag) and s.hit_t > bt:
 			bt = s.hit_t
 			best = s
 	if best:
 		return best
-	# 최근 피격이 없으면 전열(rank 작은 쪽)에서 우선 고른다. 앞줄이 먼저 깎이고 뒤 함선이 메운다.
-	var alive := v.slots.filter(func(s): return s.alive and not s.flag and s.rank < 0.45)
-	if alive.is_empty():
-		alive = v.slots.filter(func(s): return s.alive and not s.flag)
-	if alive.is_empty():
-		alive = v.slots.filter(func(s): return s.alive)
-	if alive.is_empty():
-		return null
-	return alive[rng.randi() % alive.size()]
+	var bd := 1e18
+	for s in v.slots:
+		if not s.alive or (s.flag and not allow_flag):
+			continue
+		var d: float = s.pos.distance_squared_to(v.aim_pos) if v.aim else s.rank * 1e3
+		if d < bd:
+			bd = d
+			best = s
+	return best
 
 func _kill_one(v: FleetVis) -> void:
 	fx_event.emit("ship_kill")
@@ -751,31 +724,8 @@ func _kill_one(v: FleetVis) -> void:
 		return
 	var w := slot_world(v, s)
 	_hide_slot(v, s)
-	_close_ranks(v, s.home)
 	explode(w, s.half_len * 2.0, v.side)
 	_spawn_wreck(v, s, w)
-
-# 빈자리 메우기: 구멍 바로 뒤의 가장 가까운 함선이 그 자리로 올라오고, 그 함선의 옛 자리가 새 구멍이 된다. 최대 5번 이어 꼬리까지 당긴다.
-# 기함은 제자리를 지킨다. 함선은 _follow의 추종으로 천천히 올라온다(뷰 전용, 난수 없음).
-func _close_ranks(v: FleetVis, gap: Vector3) -> void:
-	var hole := gap
-	var reach := src.unit_scale() * GAP_FWD * 2.2
-	for hop in 5:
-		var best: Slot = null
-		var bd := 1e9
-		for s in v.slots:
-			if not s.alive or s.flag or s.home.z <= hole.z + 0.05:
-				continue
-			var d := Vector2(s.home.x - hole.x, (s.home.z - hole.z) * 0.5).length()
-			if d < bd:
-				bd = d
-				best = s
-		if best == null or bd > reach:
-			break
-		var h := best.home
-		best.home = hole
-		hole = h
-	v.rest = 0
 
 func _dying(v: FleetVis, dt: float) -> void:
 	if not v.dying:
@@ -788,8 +738,7 @@ func _dying(v: FleetVis, dt: float) -> void:
 	v.die_acc += dt * maxf(6.0, v.slots.size() / 1.6)
 	while v.die_acc >= 1.0 and v.alive_n > 0:
 		v.die_acc -= 1.0
-		var alive := v.slots.filter(func(s): return s.alive)
-		var s: Slot = alive[rng.randi() % alive.size()]
+		var s: Slot = _pick_victim(v, true)
 		var w := slot_world(v, s)
 		_hide_slot(v, s)
 		explode(w, s.half_len * (3.2 if s.flag else 2.0), v.side)

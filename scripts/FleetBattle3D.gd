@@ -427,8 +427,23 @@ func _sync() -> void:
 # 사건을 모두 처리하고 화면 모델을 맞춘다.
 func _pump() -> void:
 	_sync()
+	_note_arrivals()
 	for e in sim.drain_events_for(0):
 		_on_event(e)
+
+# 이동 명령 완료 알림(M10, 표시 전용): 이동 명령이 사라졌을 때 목적지 근처면 "○○ 함대 이동 완료"를 교신 기록에 남긴다.
+var _had_move := {}
+var _last_dest := {}
+func _note_arrivals() -> void:
+	for f in fleets:
+		if f.side != 0 or f.dead:
+			continue
+		var was: bool = _had_move.get(f.id, false)
+		_had_move[f.id] = f.has_move
+		if f.has_move:
+			_last_dest[f.id] = f.move_to
+		elif was and not placing and f.target == null and f.pos.distance_to(_last_dest.get(f.id, Vector2(1e9, 1e9))) < 40.0:
+			add_log("%s 함대 이동 완료" % f.fname, "", f)
 
 # 플레이어 명령(input/ 이 만든 사전)을 코어에 넘긴다. 즉시 적용되고 명령 기록에 남는다.
 func issue(cmd: Dictionary) -> void:
