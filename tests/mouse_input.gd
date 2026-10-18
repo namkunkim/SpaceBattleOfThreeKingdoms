@@ -52,32 +52,18 @@ func _run() -> void:
 	_btn(MOUSE_BUTTON_RIGHT, dst, true)
 	_btn(MOUSE_BUTTON_RIGHT, dst, false)
 	await _settle()
-	# 3. 오른쪽 끌기 = 미리보기 후 이동
+	# 3. 오른쪽 끌기 = 누른 곳으로 이동, 끈 방향이 도착 방향(PoC)
 	TestPoke.fleet(battle, f, {"has_move": false})
 	var a := Vector2(700.0, 500.0)
 	_btn(MOUSE_BUTTON_RIGHT, a, true)
 	_move(a, dst, MOUSE_BUTTON_MASK_RIGHT)
 	await _settle()
-	if not TestCheck.ok(self, not battle.presentation.touch.order.is_empty(), "right drag preview"): return
+	if not TestCheck.ok(self, not battle.presentation.touch.face_preview.is_empty(), "right drag preview"): return
 	_btn(MOUSE_BUTTON_RIGHT, dst, false)
 	await _settle()
-	if not TestCheck.ok(self, f.has_move and f.move_to.distance_to(battle.s2w(dst)) < 60.0, "right drag move"): return
-	# 4. 오른쪽 끌기를 적 위에 놓아 공격
-	TestPoke.foe_beside(battle, f, Vector2(380.0, -40.0))
-	battle.update_sim(0.3)
-	await _settle()
-	if battle.alive(1).is_empty():
-		print("(적 없음: 공격 항목 건너뜀)")
-		print("MOUSE_INPUT_PASS")
-		quit(0)
-		return
-	var foe = battle.alive(1)[0]
-	var fp: Vector2 = battle.w2s(foe.pos)
-	_btn(MOUSE_BUTTON_RIGHT, a, true)
-	_move(a, fp, MOUSE_BUTTON_MASK_RIGHT)
-	_btn(MOUSE_BUTTON_RIGHT, fp, false)
-	await _settle()
-	if not TestCheck.ok(self, f.target == foe, "right drag attack"): return
+	var want: float = (battle.s2w(dst) - battle.s2w(a)).angle()
+	if not TestCheck.ok(self, f.has_move and f.move_to.distance_to(battle.s2w(a)) < 60.0, "right drag: 목적지 = 누른 곳"): return
+	if not TestCheck.ok(self, f.face_set and absf(BattleRules.ang_diff(f.face_to, want)) < 0.05, "right drag: 도착 방향 = 끈 방향"): return
 	# 5. 가운데 끌기 = 화면 이동
 	var cam0: Vector2 = battle.cam_pos
 	var e0 := Vector2(800, 560)

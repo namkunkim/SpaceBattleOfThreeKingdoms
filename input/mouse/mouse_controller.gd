@@ -2,16 +2,14 @@ class_name MouseController
 extends Node
 
 # PC 마우스 컨트롤(터치와 분리). 왼쪽 = 선택·범위 선택(BattleInput), 오른쪽 = 명령.
-# 오른쪽 클릭 = 이동(적이면 공격), 오른쪽 끌기 = 명령 미리보기 후 놓은 곳으로 이동·공격. 화면 이동은 가운데 버튼 끌기·방향키.
-# 터치의 끌기 미리보기(TouchController.order)를 가상 포인터 MI로 재사용한다.
+# 오른쪽 클릭 = 이동(적이면 공격), 오른쪽 끌기 = 누른 곳이 목적지, 끄는 방향이 도착 방향(PoC §7.3). 화면 이동은 가운데 버튼 끌기·방향키.
 
-const MI := -2
 const MOVE := 14.0   # 클릭과 끌기의 경계(터치 TAP_MOVE와 같다)
 
 var battle: Node
 var touch: TouchController
 var _right := false      # 오른쪽 버튼 누름 중
-var _dragging := false   # 터치 미리보기에 위임 중
+var _dragging := false   # 오른쪽 끌기로 도착 방향을 정하는 중
 var _start := Vector2.ZERO
 
 func setup(b: Node, t: TouchController) -> void:
@@ -42,24 +40,18 @@ func _motion(p: Vector2) -> void:
 	if not _dragging:
 		if p.distance_to(_start) <= MOVE or battle.my_sel().is_empty():
 			return
-		# 오른쪽 끌기 시작: 선택의 첫 전대에서 그리는 명령 미리보기
 		_dragging = true
-		touch.touches[MI] = {"start": _start, "pos": _start}
-		touch.mode = "order"
-		touch.origin_fleet = battle.my_sel()[0]
-	var d := InputEventScreenDrag.new()
-	d.index = MI
-	d.position = p
-	touch._drag(d)
+	touch.face_preview = {"p0": battle.s2w(_start), "p1": battle.s2w(p)}
 
 func _release(p: Vector2) -> void:
 	_right = false
 	if _dragging:
 		_dragging = false
-		var t := InputEventScreenTouch.new()
-		t.index = MI
-		t.position = p
-		touch._touch(t)
+		var q: Vector2 = touch.face_preview.p0
+		var d: Vector2 = battle.s2w(p) - q
+		touch.face_preview = {}
+		if not battle.my_sel().is_empty():
+			battle.order_move(q, false, rad_to_deg(d.angle()))   # 누른 곳으로 이동, 끈 방향으로 도착 방향
 		return
 	if battle.my_sel().is_empty():   # 끌지 않은 오른쪽 클릭: 이동 / 적이면 공격
 		return

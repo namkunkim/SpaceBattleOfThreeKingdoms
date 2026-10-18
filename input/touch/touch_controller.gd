@@ -25,6 +25,7 @@ var origin_fleet = null
 var press_t := 0.0
 var pinch_d := 0.0
 var pinch_c := Vector2.ZERO
+var face_preview := {}     # 마우스 오른쪽 끌기 미리보기(PoC): {p0: 목적지(전장), p1: 끌고 있는 지점(전장)}. MouseController가 채운다
 var order := {}            # 끌기 명령 미리보기: {from: Vector2(px 화면), to, target, cancel}
 var _consumed_index := -1
 

@@ -140,6 +140,8 @@ func _draw() -> void:
 		UiDraw.text(self, sp + Vector2(0, -6), ft.text, "serif_bold", 16, Color(ft.color, a), HORIZONTAL_ALIGNMENT_CENTER, 0.0, 4)
 	if touch and not touch.order.is_empty() and touch.order.from_fleet:
 		_touch_order(touch.order)
+	if touch and not touch.face_preview.is_empty():
+		_face_preview(touch.face_preview)
 	if not battle.drag.is_empty() and battle.drag.mode == "box":
 		var r := Rect2(battle.drag.s, Vector2.ZERO).expand(battle.drag.c)
 		draw_rect(r, Color(UiTheme.GOLD_HI, 0.06))
@@ -293,7 +295,25 @@ func _orders(f) -> void:
 		UiDraw.text(self, box.position + Vector2(9, 15.5), label, "semibold", 12, UiTheme.GOLD_HI)
 
 # 목적지의 도착 진형 미리보기(M1): 함선 슬롯마다 작은 고리를 진형 배치로 놓는다(참고 영상). 도착 방향을 지정했으면 그 방향으로 놓는다. 많으면 일부만 그린다.
-func _dest_rings(f, dir: Vector2) -> void:
+# 마우스 오른쪽 끌기: 목적지 고리와 도착 방향 화살표, 선택 첫 함대의 도착 진형 미리보기(PoC)
+func _face_preview(o: Dictionary) -> void:
+	var a: Vector2 = battle.w2s(o.p0)
+	var b: Vector2 = battle.w2s(o.p1)
+	var dir: Vector2 = (o.p1 - o.p0).normalized()
+	if dir == Vector2.ZERO:
+		return
+	var col := UiTheme.GOLD_HI
+	UiDraw.dashed_poly(self, PackedVector2Array([a, b]), Color(col, 0.9), 2.0, 10.0, 6.0, -t * 40.0)
+	UiDraw.diamond(self, a, 5.0, col)
+	var tip: Vector2 = battle.w2s(o.p0 + dir * 70.0)
+	var l: Vector2 = battle.w2s(o.p0 + dir * 40.0 + dir.orthogonal() * 16.0)
+	var r: Vector2 = battle.w2s(o.p0 + dir * 40.0 - dir.orthogonal() * 16.0)
+	draw_colored_polygon(PackedVector2Array([tip, l, r]), Color(col, 0.85))
+	var sel: Array = battle.my_sel()
+	if not sel.is_empty():
+		_dest_rings(sel[0], dir, o.p0)
+
+func _dest_rings(f, dir: Vector2, center := Vector2.INF) -> void:
 	if renderer == null or not renderer.vis.has(f.id):
 		return
 	var v: FleetRenderer.FleetVis = renderer.vis[f.id]
@@ -306,7 +326,7 @@ func _dest_rings(f, dir: Vector2) -> void:
 		if not v.slots[i].alive:
 			continue
 		var p: Vector3 = pts[i]
-		var c: Vector2 = f.move_to + dir * p.x + side * p.z
+		var c: Vector2 = (f.move_to if center == Vector2.INF else center) + dir * p.x + side * p.z
 		draw_polyline(_ground_ring(c, 4.5, 10), col, 1.2, true)
 
 func _reticle(c: Vector2, col: Color) -> void:
