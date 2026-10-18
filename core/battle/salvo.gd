@@ -24,6 +24,9 @@ func _init(s: BattleSim, combat: Dictionary) -> void:
 # ============================================================ 편성
 # 전대 정의 d({composition, formation_id, command, start_morale_bp, ...})로 salvo 상태를 채운다.
 func init_fleet(f: FleetState, d: Dictionary) -> void:
+	var ad: Dictionary = C.get("air_defense", {})
+	var counter_default := bool(ad.get("player_counter_launch" if f.side == 0 else "enemy_counter_launch", false))
+	f.counter_launch = bool(d.get("counter_launch", counter_default))
 	f.formation_id = d.get("formation_id", C.default_formation)
 	f.cmd_stat = int(d.get("command", 0))
 	f.traits = d.get("traits", [])
@@ -325,12 +328,30 @@ func evasion_bp(tgt: FleetState, cat: String) -> int:
 		return 0
 	return mini(int(ev.max_bp), int(tgt.speed * float(ev.bp_per_speed)))
 
+# Q110: 현재 남은 함선 대비 유효 방공 함선 비율. 수치는 proposed 데이터에서 읽는다.
+func air_defense_bp(tgt: FleetState, cat: String) -> int:
+	var ad: Dictionary = C.get("air_defense", {})
+	if not ad.get("categories", []).has(cat):
+		return 0
+	var n := present_ships(tgt)
+	if n <= 0:
+		return 0
+	var power := 0.0
+	for t in ad.weights_bp:
+		if not tgt.stages.has(t):
+			continue
+		if t == C.fast_craft.ship_type_id and tgt.equip != ad.fast_craft_equipment:
+			continue
+		power += effective_of(tgt, t) * float(ad.weights_bp[t])
+	return mini(int(ad.max_bp), int(power / n))
+
 # 명중률(bp) [§4.3]: clamp(범주 기본값 + (사격측 화력 − 표적 방어) , 최소, 최대), 지휘 범위 밖이면 −10%p
 func hit_bp(f: FleetState, tgt: FleetState, cat: String) -> int:
 	var fire: int = int(C.formations[_form_id(f)].fire_bp)
 	var defense: int = int(C.formations[_form_id(tgt)].defense_bp) + int(C.sector.defense_bp[sector(f.pos, tgt)])
 	var h: Dictionary = C.hit
 	defense += evasion_bp(tgt, cat)   # Q72: 방어항 1개로 더한다(같은 클램프 안, 이중 계산 없음)
+	defense += air_defense_bp(tgt, cat)
 	var acc := clampi(int(C.weapons[cat].base_accuracy_bp) + fire - defense + (sim.skills.add(f, "hit_bp") if sim.skills else 0), int(h.min_bp), int(h.max_bp))
 	if not f.in_cmd:
 		acc = maxi(int(h.min_bp), acc - int(h.out_of_command_bp))
@@ -590,27 +611,40 @@ func step() -> void:
 	var shots: Array[Dictionary] = []
 	for f in st.fleets:
 		if f.dead or f.max_hull == 0:
+			f.counter_pending = false
 			continue
 		_recover(f)
 		_transition_step(f)
 		if f.mstate == "retreat":
+			f.counter_pending = false
 			continue   # 퇴각 중인 전대는 공격하지 못한다(§4.6)
 		for cat in C.categories:
-			if st.tick < f.next_fire[cat]:
+			if st.tick < f.next_fire[cat] and not (cat == "fighter" and f.counter_pending):
 				continue
 			var pick := _pick_target(f, cat)
 			if pick.tgt == null:
+				if cat == "fighter":
+					f.counter_pending = false
 				_set_supp(f, cat, "")
 				continue
 			var q: Array = pick.q
 			var why := _shortage(f, cat)
 			if why != "":
+				if cat == "fighter":
+					f.counter_pending = false
 				_set_supp(f, cat, why)
 				continue
 			_set_supp(f, cat, "")
 			_consume(f, cat)
 			f.next_fire[cat] = st.tick + BattleRules.ticks(float(C.period_s), st.hz) + _stagger(f, cat)
-			shots.append(_plan_shot(f, cat, pick.tgt, q))
+			var shot := _plan_shot(f, cat, pick.tgt, q)
+			if cat == "fighter":
+				shot["counter"] = f.counter_pending
+				f.counter_pending = false
+				f.fighter_fired_tick = st.tick
+				if shot.counter:
+					sim.emit("say", f.id, -1, f.pos, "fighter" if f.side == 0 else "ai_fighter")
+			shots.append(shot)
 	# 같은 틱의 피해는 위에서 모두 피해 전 스냅숏으로 계산했다. 이제 표적별로 적용한다.
 	for s in shots:
 		_resolve(s)
@@ -674,6 +708,10 @@ func _resolve(s: Dictionary) -> void:
 		var loss := apply_hull(f, tgt, dmg, s.band, s.sector, s.eid)
 		if sim.morale:
 			sim.morale.hit(tgt, loss, s.wband, s.sector)
+	# 피해 적용 후 생존·퇴각을 확인한다. 대응은 다음 틱의 정상 사격 절차를 거친다.
+	if s.cat == "fighter" and not s.get("counter", false) and tgt.counter_launch and not tgt.dead and tgt.mstate != "retreat" and tgt.fighter_fired_tick != sim.st.tick:
+		if not platforms(tgt, "fighter").is_empty() and _shortage(tgt, "fighter") == "" and _pick_target(tgt, "fighter").tgt != null:
+			tgt.counter_pending = true
 
 # ============================================================ 피해 적용
 # 선체 → 손실 척 수(누적 단조) → 맞은 방향 배분 → 손상 단계 → 표시 척 수

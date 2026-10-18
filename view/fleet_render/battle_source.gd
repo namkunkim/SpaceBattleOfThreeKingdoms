@@ -32,6 +32,7 @@ func _sq(f) -> Dictionary:
 		"target_id": f.target.id if f.target else -1,
 		"firing_at": f.fire_t.id if (f.fire_t and not f.fire_t.dead) else -1,
 		"under_fire": f.under_fire,
+		"counter_launch": f.counter_launch,
 		"formation": f.shape,
 		"form_to": f.form_to, "form_left_s": f.form_left_s,   # 전환 진행 표시용(렌더러가 목표 모양으로 진행)
 		"formation_name": form_name(f),
@@ -200,6 +201,8 @@ func _salvo_rules() -> Dictionary:
 
 # 지금 규칙에 있는 명령(진형·태세 탭 구성). salvo 규칙에는 방어진형이 없다(미사일·함재기는 일제사격 당기기).
 func has_command(id: String) -> bool:
+	if id == "counter_launch":
+		return battle.sim.salvo != null
 	if battle.sim.salvo:
 		return id != "def"
 	return true

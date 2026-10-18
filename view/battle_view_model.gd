@@ -48,6 +48,7 @@ class FleetView:
 	var range_r := 300.0
 	var charges := {}                 # 미사일·함재기 남은 횟수(salvo 규칙의 아군만). charges_max가 0이면 그 무기가 없다
 	var charges_max := {}
+	var counter_launch := false
 	var supply := {}                  # 보급 상태·메뉴(아군만. 보급함 전대는 supply.menu가 있다)
 	var ranges := {}                  # 무기 범주별 최대 사거리(salvo 규칙의 아군만 값이 있다)
 	var skills := {}                  # 장수 특기 {slots, fx}(P8a 투영, 아군만. 적 접촉에는 없다)
@@ -210,6 +211,7 @@ func apply(proj: Dictionary) -> Array[FleetView]:
 		f.skills = s.get("skills", {})
 		f.charges = s.get("charges", {})
 		f.charges_max = s.get("charges_max", {})
+		f.counter_launch = bool(s.get("counter_launch", false))
 		f.supply = s.get("supply", {})
 		f.target = by_id.get(s.target_id) if s.target_id >= 0 else null
 		f.fire_t = by_id.get(s.firing_at) if s.firing_at >= 0 else null

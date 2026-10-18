@@ -542,6 +542,19 @@ func apply(c: Dictionary) -> void:
 			for f in s:
 				f.defense = true
 			emit("say", L.id, -1, L.pos, "ai_def")
+		"counter_launch":
+			if salvo == null:
+				_reject(L, "unknown_command", side)
+				return
+			var on := false
+			for f in s:
+				if not f.counter_launch:
+					on = true
+			on = bool(c.get("args", {}).get("on", on))
+			for f in s:
+				f.counter_launch = on
+				if not on:
+					f.counter_pending = false
 		"missile", "fighter", "volley":
 			if salvo:
 				var why := ""

@@ -28,9 +28,10 @@ const CMD_INFO := {
 	"all": {"label": "전체 선택", "icon": "all", "desc": "살아 있는 아군 함대를 모두 선택합니다."},
 	"missile": {"label": "미사일", "icon": "missile", "tone": "hot"},
 	"fighter": {"label": "함재기", "icon": "fighter", "tone": "hot"},
+	"counter_launch": {"label": "자동 대응", "icon": "fighter", "tone": "hot", "key": "", "cost": 0},
 }
 # 탭 3개(Q22). 진형 탭은 코어 진형(M5·M10)이 붙기 전까지 방어진형 하나뿐이다.
-const TABS := [["태세", ["stop", "charge", "rally", "retreat", "all"]], ["진형", ["def"]], ["무장", ["missile", "fighter"]]]
+const TABS := [["태세", ["stop", "charge", "rally", "retreat", "all"]], ["진형", ["def"]], ["무장", ["missile", "fighter", "counter_launch"]]]
 const SUPPLY_TABS := ["보급", "수리"]   # P7: 보급함 함대를 선택했을 때만 보이는 탭 3·4
 const INFO_L1 := 88.0
 const INFO_L2 := 282.0   # 펼침: 함종 구성·상태 칩 + 전대 세부 정보 6줄
@@ -1187,6 +1188,12 @@ func _refresh_cmds() -> void:
 		var cool := 0.0
 		var cd_max := 0.0
 		b.count_text = ""
+		if id == "counter_launch":
+			var enabled := 0
+			for f in s:
+				if f.counter_launch:
+					enabled += 1
+			b.count_text = "꺼짐" if enabled == 0 else ("켜짐" if enabled == s.size() else "혼합")
 		if not s.is_empty() and (id == "missile" or id == "fighter") and src.rules().set != "poc":
 			# Q69: 재사용 대기 대신 남은 횟수. 선택 함대의 합 / 최대. 최대 0 = 그 무기가 없는 함대(함재기)
 			var cat := "artillery" if id == "missile" else "fighter"

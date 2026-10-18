@@ -17,5 +17,27 @@ func _run() -> void:
 	if not TestCheck.ok(self, RuleText.cost_rule(r).contains("40%") and RuleText.cmd(r, "charge").desc.contains("40%"), "charge"): return
 	if not TestCheck.ok(self, not src.has_command("def") and src.has_command("missile") and src.has_command("fighter"), "commands"): return
 	if not TestCheck.ok(self, RuleText.evasion_rule(r) == "이동 중인 함대는 전열·요격 명중률 최대 −5%p", "evasion rule %s" % RuleText.evasion_rule(r)): return
+	var deck = battle.presentation.hud
+	deck.begin_battle()
+	await process_frame
+	battle.selected.assign([battle.alive(0)[0]])
+	deck._set_tab(2)
+	deck._refresh_cmds()
+	var toggle = null
+	for b in deck.cmd_buttons:
+		if b.cmd.id == "counter_launch":
+			toggle = b
+	if not TestCheck.ok(self, toggle != null and toggle.count_text == "꺼짐" and not toggle.blocked, "무장 탭 자동 대응 기본 꺼짐"): return
+	var selected_id: int = battle.my_sel()[0].id
+	toggle.pressed.emit()
+	battle.sim.step()
+	battle._sync()
+	deck._refresh_cmds()
+	if not TestCheck.ok(self, battle.sim.st.by_id(selected_id).counter_launch and toggle.count_text == "켜짐", "버튼 → 명령 → 코어 → 화면 켜짐"): return
+	toggle.pressed.emit()
+	battle.sim.step()
+	battle._sync()
+	deck._refresh_cmds()
+	if not TestCheck.ok(self, not battle.sim.st.by_id(selected_id).counter_launch and toggle.count_text == "꺼짐", "다시 누르면 해제"): return
 	print("RULE_TEXT_SALVO_PASS")
 	quit(0)

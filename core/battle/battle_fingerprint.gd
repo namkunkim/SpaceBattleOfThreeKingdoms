@@ -18,6 +18,7 @@ static func of(st: BattleState, detect: Detection = null, extra := "") -> String
 	for f in st.fleets:
 		if f.max_hull > 0:
 			var sg := PackedStringArray()
+			parts.append("ad%d:%d,%d,%d" % [f.id, int(f.counter_launch), int(f.counter_pending), f.fighter_fired_tick])
 			for t in f.stages:
 				sg.append(",".join(PackedStringArray((f.stages[t] as Array).map(func(n): return str(n)))))
 			var nf := PackedStringArray()

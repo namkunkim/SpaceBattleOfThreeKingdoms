@@ -56,6 +56,8 @@ static func defense_rule(r: Dictionary) -> String:
 # 명령 설명: {desc, fx:[[이름, 값, 좋음?]], foot}
 static func cmd(r: Dictionary, id: String) -> Dictionary:
 	match id:
+		"counter_launch":
+			return {"desc": "선택 함대의 피격 시 함재기 자동 대응을 켜거나 끕니다. 혼합 선택은 모두 켭니다. 대응마다 발진 1회를 쓰며, 대응끼리는 연쇄하지 않습니다.", "foot": "아군 기본 꺼짐 · 일반 주기 사격은 계속됩니다"}
 		"def":
 			if not r.has("defense"):
 				return {"desc": "방어진형은 없습니다. 진형 탭의 방원진을 쓰십시오."}

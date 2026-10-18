@@ -132,6 +132,22 @@ def main():
                 "out_of_command_bp": 1000,
                 "out_of_command_status": "proposed (§4.3: 지휘 범위 밖 명중률 −10%p)",
             },
+            "air_defense": {
+                "categories": [
+                    "fighter",
+                    "artillery"
+                ],
+                "weights_bp": {
+                    "SHP-07": 4000,
+                    "SHP-01": 2000,
+                    "SHP-08": 3000
+                },
+                "fast_craft_equipment": "FAST-EQ-INTERCEPT",
+                "max_bp": 1500,
+                "player_counter_launch": False,
+                "enemy_counter_launch": True,
+                "status": "proposed (Q110: ratio-based air defense; Q111: per-fleet counter launch, player opt-in, enemy automatic)"
+            },
             "evasion": {
                 "categories": ["line_fire", "intercept"],
                 "bp_per_speed": 130,
