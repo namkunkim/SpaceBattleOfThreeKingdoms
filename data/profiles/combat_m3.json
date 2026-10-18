@@ -586,6 +586,7 @@
    "face_tolerance_deg": 1,
    "max_waypoints": 5,
    "flip_over_deg": 90,
+   "bundle_gap": 30,
    "flip_s": 1,
    "contact_r": 600,
    "contact_fast_deg": 45,

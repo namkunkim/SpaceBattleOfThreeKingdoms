@@ -522,6 +522,8 @@ func apply(c: Dictionary) -> void:
 			if ok == 0:
 				_reject(L, why, side)
 				return
+			if s.size() > 1:
+				_bundle_layout(s, str(c.get("args", {}).get("id", "")))
 			emit("say", L.id, -1, L.pos, "formation")
 		"def":
 			if salvo:
@@ -869,6 +871,23 @@ func _turn(f: FleetState, a: float, rate_deg := -1.0) -> void:
 	var m: float = (deg_to_rad(float(salvo.C.movement.turn_deg_per_s) if rate_deg < 0.0 else rate_deg) if salvo else float(R.turn_rate)) * dt
 	var dh := BattleRules.ang_diff(f.heading, a)
 	f.heading += dh if absf(dh) < m else signf(dh) * m
+
+# 묶음 진형(PoC E, Q109): 함대 여럿에 진형을 주면 함대 위치도 그 진형 모양으로 평행 재배치한다(방향 유지, 가장 느린 속도로 동시 도착)
+func _bundle_layout(s: Array, fid: String) -> void:
+	var kind: int = BattleRules.FORM_SHAPE[maxi(0, salvo.formation_ids().find(fid))]
+	var pos: Dictionary = BundleLayout.slots(s, kind, float(salvo.C.movement.bundle_gap), R.edge, rs.world)
+	var cap := 1e9
+	for f in s:
+		cap = minf(cap, f.speed)
+	var grp: int = st.tick * 1000 + int(s[0].id) + 1
+	for f in s:
+		f.target_id = -1
+		f.has_move = true
+		_clear_path(f)
+		f.move_to = pos[f.id]
+		f.strafe = true
+		f.speed_cap = cap
+		f.move_grp = grp
 
 # 제자리 반전(PoC): 방향 차이가 flip_over_deg를 넘으면 기준 방향을 180° 뒤집고 배치를 점대칭으로 뒤집는다.
 # 함선 위치는 그대로이고 함대는 flip_s초 멈춘다. 남은 차이는 기존 선회로 맞춘다.
