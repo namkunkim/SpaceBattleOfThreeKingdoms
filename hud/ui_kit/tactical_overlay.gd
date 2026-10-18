@@ -298,11 +298,13 @@ func _dest_rings(f, dir: Vector2) -> void:
 		return
 	var v: FleetRenderer.FleetVis = renderer.vis[f.id]
 	var sq := renderer.src.squadron(f.id)
-	var pts := renderer.formation_points(sq.formation, v.alive_n)
+	var pts := renderer.formation_points(sq.formation, v.slots.size())   # 도착 배치와 같게: 격침된 자리는 비워 둔다
 	var side := dir.rotated(PI * 0.5)
 	var step := maxi(1, pts.size() / 120)
 	var col := Color(UiTheme.GOLD_HI, 0.5)
 	for i in range(0, pts.size(), step):
+		if not v.slots[i].alive:
+			continue
 		var p: Vector3 = pts[i]
 		var c: Vector2 = f.move_to + dir * p.x + side * p.z
 		draw_polyline(_ground_ring(c, 4.5, 10), col, 1.2, true)

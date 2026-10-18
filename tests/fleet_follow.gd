@@ -62,6 +62,23 @@ func _run() -> void:
 		r._follow(v, mv, 0.05)
 	_check(v.stretch == 1.0, "정지 후 간격 복귀")
 	sq.pos = mv.pos
+	# B2. 조준 중에는 모든 함선이 같은 방향(함대 중심 → 적), 조준이 풀리면 함대 방향으로 돌아온다
+	var foe_pos := r.src.to3(sq.pos + Vector2(500.0, 500.0))
+	v.aim = true
+	v.aim_pos = foe_pos
+	for i in 100:
+		r._follow(v, sq, 0.05)
+	var ay: float = v.slots[0].yaw
+	var aim_same := true
+	for s in v.slots:
+		aim_same = aim_same and is_equal_approx(s.yaw, ay)
+	var fh := -float(sq.heading) - PI
+	_check(aim_same and absf(wrapf(ay - fh, -PI, PI)) > 0.3, "조준 중 같은 방향(함대 방향과 다름)")
+	v.aim = false
+	v.rest = 0
+	for i in 100:
+		r._follow(v, sq, 0.05)
+	_check(absf(wrapf(v.slots[0].yaw - fh, -PI, PI)) < 0.01, "조준 해제 뒤 함대 방향 복귀")
 	# C. 진형 전환: 슬롯이 바뀌고 새 자리로 수렴한다
 	var old_home: Vector3 = v.slots[0].home
 	var moved_homes := 0

@@ -447,6 +447,8 @@ func _note_arrivals() -> void:
 
 # 플레이어 명령(input/ 이 만든 사전)을 코어에 넘긴다. 즉시 적용되고 명령 기록에 남는다.
 func issue(cmd: Dictionary) -> void:
+	for id in cmd.get("ids", []):
+		_had_move.erase(id)   # 사용자 명령으로 꺼진 이동은 "완료"로 알리지 않는다(M10)
 	if placing:   # 초기 배치(Q70): 이동 = 배치(틱 0 전용 place 명령, 허용 반경은 코어가 자른다), 진형만 그대로, 나머지는 확정 뒤
 		match cmd.kind:
 			"move":

@@ -412,9 +412,16 @@ func _reform(v: FleetVis, sq: Dictionary) -> void:
 		return
 	var pts := formation_points(sq.formation, n)
 	var S := src.unit_scale()
+	var minf_ := 1e9
+	var maxf_ := -1e9
+	for p in pts:
+		minf_ = minf(minf_, p.x)
+		maxf_ = maxf(maxf_, p.x)
+	var span := maxf(1.0, maxf_ - minf_)
 	for i in n:
 		var s: Slot = v.slots[i]
 		var p: Vector3 = pts[i]
+		s.rank = (maxf_ - p.x) / span   # 앞줄 = 0(일제사격 출발점·격침 순서가 새 진형 기준이 되게)
 		s.from = s.home   # 지금 보이는 위치에서 새 목표로(전환 중 재명령·취소도 부드럽게)
 		s.goal = Vector3(p.z * S, p.y, -p.x * S)
 		s.home = s.goal if v.rtotal <= 0.0 else s.from
@@ -627,7 +634,10 @@ func update(dt: float) -> void:
 		var v: FleetVis = vis[sq.id]
 		var aim_id: int = sq.firing_at if sq.firing_at >= 0 else sq.target_id
 		var foe: Dictionary = by_id.get(aim_id, {})
+		var was_aim := v.aim
 		v.aim = not sq.dead and not foe.is_empty() and not foe.dead
+		if was_aim != v.aim:
+			v.rest = 0   # 조준이 바뀌면 정지 전대도 함선 방향을 다시 맞춘다
 		if v.aim:
 			v.aim_pos = src.to3(foe.pos)
 		v.node.visible = sq.contact != "lost"   # 상실 접촉은 마지막 위치에 모델 없이 표식만 남는다
