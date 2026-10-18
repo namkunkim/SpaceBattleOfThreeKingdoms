@@ -338,7 +338,7 @@ func _assign_class(pts: Array, flag: bool, seed_v: int) -> Array:
 
 # ------------------------------------------------------------ 대형 추종 (뷰 전용)
 # 함선은 모두 같은 시간 상수로 자기 슬롯을 따라간다(동시 출발·평행 진로). 흔들림·난수 편차·회피 변위는 없다.
-# 함선 방향은 전대 방향을 공유하고, 조준 중인 적 함대가 있으면 모두 그쪽을 본다(진형 배치는 그대로).
+# 함선 방향은 전대 방향을 공유하고, 조준 중인 적 함대가 있으면 모두 같은 방향(함대 중심 → 적 중심)을 본다(진형 배치는 그대로).
 # 이동 중에는 슬롯 간격을 함수 축으로 늘리고(STRETCH) 정지하면 되돌린다. 코어 상태·전투 난수에 닿지 않는다.
 func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 	if dt <= 0.0:
@@ -368,6 +368,7 @@ func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 	var maxtr := 0.0
 	var maxyaw := 0.0
 	var ym := YAW_RATE * step
+	var aim_yaw := -atan2(v.aim_pos.z - fpos.z, v.aim_pos.x - fpos.x) - PI   # 조준 중이면 함대 중심에서 적 함대 중심 쪽(함선 전부 같은 방향)
 	var eps2 := MOVE_EPS * MOVE_EPS
 	var inv := 1.0 / step
 	var gl := v.glow.multimesh
@@ -383,7 +384,7 @@ func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 		maxerr = maxf(maxerr, (t - s.pos).length_squared())
 		var want := h_fleet
 		if v.aim:
-			want = -atan2(v.aim_pos.z - s.pos.z, v.aim_pos.x - s.pos.x) - PI
+			want = aim_yaw
 		var dy := wrapf(want - s.yaw, -PI, PI)
 		s.yaw += clampf(dy, -ym, ym)
 		maxyaw = maxf(maxyaw, absf(wrapf(want - s.yaw, -PI, PI)))
