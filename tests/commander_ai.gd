@@ -120,7 +120,7 @@ func _run() -> void:
 	if not TestCheck.ok(self, base_s.salvo.hold_distance(ally) and not base_s.salvo.hold_distance(carrier), "유비 SQ-02 강습모함 없음, 조조 중군 SQ-01 있음"): return
 	var Dc: float = base_s.cai._desired(base_s, carrier, A.factions.cao_cao, Pa, float(Pa.bias))
 	# 원거리 유지(ai.standoff): 일정상 강습 단계여도 돌격(강습 특기) 전에는 교전 거리 170, 돌격 중에만 강습 100으로 붙는다
-	if not TestCheck.ok(self, is_equal_approx(Dc, 170.0) and base_s.cai._due, "강습 단계 강습모함 함대는 돌격 전엔 교전 거리 170: %.0f" % Dc): return
+	if not TestCheck.ok(self, is_equal_approx(Dc, 170.0) and base_s.cai._phase(base_s, carrier, Pa, float(Pa.bias)) == 2, "강습 단계 강습모함 함대는 돌격 전엔 교전 거리 170: %.0f" % Dc): return
 	carrier.charge = 1
 	Dc = base_s.cai._desired(base_s, carrier, A.factions.cao_cao, Pa, float(Pa.bias))
 	carrier.charge = 0
@@ -183,6 +183,29 @@ func _run() -> void:
 	ne.ai_seen = 0
 	nt.cai.think(nt)
 	if not TestCheck.ok(self, ne.has_move and ne.move_to.distance_to(na2.pos) >= 239.0, "적 AI도 강습 특기가 아니면 목표 거리까지 물러난다 %s" % str(ne.move_to)): return
+	# 4d3. Q110 리뷰 회귀: 아군 SQ-02 대 조조 SQ-02, 거리 dist에서 한 번 생각
+	var q110 := func(pid: String, dist: float, sec: float, carrier_on: bool, skill_on: bool) -> FleetState:
+		var w := _rc(1, false)
+		_park(w, ["RC-LIU-SQ-02", "RC-CAO-SQ-02"])
+		var wa := _f(w, "RC-LIU-SQ-02")
+		wa.pos = Vector2(800, 450)
+		_f(w, "RC-CAO-SQ-02").pos = Vector2(800 + dist, 450)
+		if carrier_on:
+			wa.stages["SHP-01"] = [1, 0, 0]
+		if skill_on:
+			wa.fx.append({"id": "T-ASSAULT", "src": wa.id, "until": 1 << 40, "e": {"assault_bp": 3000}, "r": 0.0})
+		w.first_hit_tick = 0
+		w.st.tick = int(sec * w.st.hz)
+		w.apply(BattleSim.command(0, [wa.id], "posture", -1, Vector2.ZERO, {"id": pid}))
+		w.cai.think(w)
+		return wa
+	# (1) 강습모함 없는 신중 함대가 강습 특기 중이면 물러나지 않고(kite 표적 -1 아님) 그 자리에서 쏜다
+	var k1: FleetState = q110.call("cautious", 130.0, 900.0, false, true)
+	if not TestCheck.ok(self, k1.target_id >= 0 and (not k1.has_move or k1.move_to.distance_to(k1.pos) < 1.0), "강습 특기 중 강습모함 없는 함대는 제자리 사격: 표적 %d 이동 %s" % [k1.target_id, str(k1.move_to)]): return
+	# (2) 강습 단계(균형 1080초 이후)면 균형 방침도 성향값과 무관하게 돌격한다
+	if not TestCheck.ok(self, (q110.call("balanced", 130.0, 1100.0, true, false) as FleetState).charge > 0, "강습 단계 균형 방침도 돌격(Q110)"): return
+	# (3) 강습 단계 돌격은 교전 거리 유지 폭(170+slack 20) 안이면 된다
+	if not TestCheck.ok(self, (q110.call("aggressive", 185.0, 900.0, true, false) as FleetState).charge > 0, "거리 185(170±20 안)에서도 강습 단계 돌격"): return
 	# 4e. 인물 위임(기본값): 지휘관 성향(정본 §4)으로 방침이 정해진다. 관우·조인(절의)은 신중, 조조(야심)는 적극, 황개는 계략 중시
 	var cai: CommanderAi = base_s.cai
 	if not TestCheck.ok(self, cai.posture_of(_f(base_s, "RC-LIU-SQ-02")) == "cautious" and cai.posture_of(_f(base_s, "RC-CAO-SQ-02")) == "cautious" and cai.posture_of(_f(base_s, "RC-CAO-SQ-01")) == "aggressive" and cai.posture_of(_f(base_s, "RC-SUN-SQ-03")) == "scheming" and cai.posture_of(_f(base_s, "RC-LIU-SQ-01")) == "balanced", "성향 → 방침"): return

@@ -1,25 +1,15 @@
 # 인계: 적 AI 원거리 유지·강습 근접·집중 사격 (2026-10-18)
 
-## 이어서 할 프롬프트
-
-```
-feature/enemy-ai-standoff 작업을 이어서 해줘.
-worktree: C:\WorkSpace\SpaceBattleOfThreeKingdoms\.claude\worktrees\enemy-ai-standoff (main e921d7d에서 분기, 아직 커밋 없음)
-인계 문서: docs/battle-core/HANDOFF-ENEMY-AI-STANDOFF.md
-
-1. 전체 헤드리스 테스트 결과를 확인한다($TEMP/eai_suite.txt, 로그 $TEMP/eai_<test>.log).
-   boundary rc=1은 기존 실패(2026-10 기준)라 main에서도 실패하는지 확인만 한다. 그 밖의 실패는 원인을 고친다.
-2. 레벨별 효과를 잰다: tests/autoresolve.gd --difficulty 입문/표준/상급/극한으로 standoff on/off(data/profiles/ai_m7.json ai.standoff.enabled) 승률·손실 비교.
-3. 커밋 3파일 + 이 문서만(--import가 바꾼 *.import 파일은 커밋하지 않는다). feature/enemy-ai-standoff를 푸시한다.
-   Q108 충돌은 해소됐다(Q110: 적 AI도 물러날 수 있다). 테스트가 통과하면 main 병합·푸시까지 한다.
-```
+## 상태
+- main 병합 완료(fb50cfd, feature/enemy-ai-standoff). 이어서 할 작업은 아래 "남은 일"뿐이다.
+- 리뷰 수정(2026-10-19, claude/q110-review-fix): 아래 "리뷰 수정" 참고.
 
 ## 사용자 요구
 - 각 함대는 원거리 무기(레이저포·레일건·양자어뢰·미사일·전투기)로 교전할 때 적과 거리를 두고 공격한다.
 - 전투기·강습 특기를 쓰는 동안만 적 함대와 근거리에서 교전한다.
 - 적 AI 레벨을 높인다(집중 사격 등). 먼저 HTML PoC에서 해 봤고, 이번 작업은 Godot 적용이다.
 
-## 바꾼 것 (worktree, 미커밋)
+## 바꾼 것 (fb50cfd)
 - `docs/battle-core/BATTLE_DECISIONS.md`: Q110 추가, Q108 대체 표시.
 - `core/battle/ai/commander_ai.gd`
   - `_std()`: `ai.standoff.enabled`.
@@ -30,6 +20,13 @@ worktree: C:\WorkSpace\SpaceBattleOfThreeKingdoms\.claude\worktrees\enemy-ai-sta
   - `_focus_of`: 진영 집중 표적은 확인 접촉 중 전력 구간이 최저인 것이다. 같으면 아군과의 거리 합이 작은 쪽, 그다음 ID가 작은 쪽. `_pick`에서 사고 깊이가 `focus.min_depth`(3, 상급·극한) 이상이면 점수에 `focus.mul`(0.6)을 곱한다.
 - `data/profiles/ai_m7.json`: `standoff`, `focus` 항목 추가(제안값).
 - `tests/commander_ai.gd`: 새 규칙에 맞게 3곳 수정, 집중 표적 검사 1개 추가. 이 테스트와 hold_distance는 통과했다.
+
+## 리뷰 수정 (2026-10-19)
+- `_close`: `assault_bp`는 가산 키(값 3000, `assault.gd`는 `skills.add`)라 `mul(...) > BP`가 늘 false였다. `skills.add(f, "assault_bp") > 0`으로 고쳤다.
+- kite 분기: 원거리 유지 규칙이면 kite(표적 -1로 물러남)로 떨어지지 않는다. 강습 특기 중인데 강습모함이 없어 근접 목표가 없는 함대는 물러나지 않고 그 자리에서 쏜다.
+- 강습 단계 돌격(사용자 결정 (a)): `due`(원거리 유지 + 근접 중 아님 + 일정상 강습 단계)이면 방침(`P.charge`)과 성향값(`charge_bias`) 검사를 모두 건너뛴다. 돌격 거리 한계는 교전 거리 + `slack`(190)까지 넓힌다.
+- `_due` 인스턴스 상태를 없앴다. 단계 계산은 `_phase()`(0 포화·1 교전·2 강습)로 빼고, `due`는 `_charge` 인자로 넘긴다.
+- 회귀 검사: `tests/commander_ai.gd` 4d3 (1)~(3).
 
 ## 결정
 - **Q110(사용자 2026-10-18): 적 AI는 물러날 수 있다.** Q108의 "물러나지 않기"를 대체했고, `BATTLE_DECISIONS.md`에 반영했다. Q68 일정 변경(강습모함은 돌격해야 100까지 붙는다)도 Q110에 적었다.
