@@ -1,0 +1,19 @@
+{
+  "scenario_id": "RED-CLIFFS-CROSS-COUNTER-DRILL",
+  "title": "적벽 모의전 · 크로스 카운터",
+  "seed": 20824,
+  "move_mul": 25.0,
+  "turn_mul": 2.0,
+  "period_s": 4.0,
+  "duration_s": 65.0,
+  "fleets": [
+    {"name": "주유", "role": "연합 교차기동 함대", "position": [350, 800], "destination": [1350, 500], "heading_deg": -16.7},
+    {"name": "조조", "role": "조조 반격 함대", "position": [1350, 350], "destination": [350, 650], "heading_deg": 163.3}
+  ],
+  "composition": [
+    {"ship_type_id": "SHP-03", "count": 12},
+    {"ship_type_id": "SHP-04", "count": 36},
+    {"ship_type_id": "SHP-07", "count": 12}
+  ],
+  "note": "적벽의 별도 모의전. 양측 각 60척, 같은 능력치. 대각선으로 엇갈리는 항로를 통과한 뒤 서로를 향해 선회·반격한다. 관찰용으로 사격 주기는 4초, 교전 거리 정지 제한은 해제한다. 정규 적벽 데이터는 변경하지 않는다."
+}
