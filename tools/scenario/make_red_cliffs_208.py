@@ -14,6 +14,23 @@ EQ = {e["id"]: e["unit_cost"] for e in SETUP["ship_types"][7]["mission_equipment
 SHIP_SCALE = 3   # 함종별 척 수 배율(2026-10-09 사용자 결정: 3배 확대). 아래 편성표는 1배 값이다
 LIMIT_SCALE = SHIP_SCALE   # 지휘 한도도 같은 배율로 올려 한도 초과 구간을 1배 때와 같게 둔다(combat_m3 command.limit_*)
 
+# 2026-10-24 함대 규모 리뷰 반영: 총예산은 Q82대로 유지하고 마지막 함대 감액을 후군에 분산한다.
+# 역할은 제독 자동 재배정과 무관한 전대 ID에 붙인다. 아군 편성은 기존 MIX를 유지한다.
+AUTO_ORGANIZATION = {
+    "rear_squadron_ids": [f"RC-CAO-SQ-{i:02}" for i in range(6, 15)],
+    "role_by_squadron": {
+        "RC-CAO-SQ-02": "vanguard", "RC-CAO-SQ-03": "artillery",
+        "RC-CAO-SQ-06": "fast_escort",
+        **{f"RC-CAO-SQ-{i:02}": "rear" for i in range(7, 15)},
+    },
+    "role_mixes": {
+        "vanguard": ["SHP-04", "SHP-01", "SHP-04", "SHP-07", "SHP-04", "SHP-03", "SHP-04", "SHP-07", "SHP-01", "SHP-04", "SHP-05", "SHP-06"],
+        "artillery": ["SHP-03", "SHP-04", "SHP-03", "SHP-07", "SHP-03", "SHP-04", "SHP-03", "SHP-07", "SHP-04", "SHP-05", "SHP-01", "SHP-06"],
+        "fast_escort": ["SHP-07", "SHP-01", "SHP-07", "SHP-04", "SHP-07", "SHP-03", "SHP-07", "SHP-04", "SHP-01", "SHP-07", "SHP-05", "SHP-06"],
+        "rear": ["SHP-04", "SHP-03", "SHP-04", "SHP-07", "SHP-05", "SHP-04", "SHP-03", "SHP-07", "SHP-05", "SHP-04", "SHP-03", "SHP-01", "SHP-06"],
+    },
+}
+
 
 def C(t, n, eq=None):
     d = {"ship_type_id": t, "count": n * SHIP_SCALE}
@@ -423,7 +440,7 @@ if __name__ == "__main__":
             "ratio_note": "인원 기준 조조:연합은 약 4.4~4.8배, 본편 정본의 동원 국력 기준은 2.20배(101 대 46). 상급 난이도를 정본 2.20배에 맞춘다. 연합 안의 손권:유비는 인원 기준 3:2를 따른다(정본 동원 국력은 31:15)."},
         "difficulty_policy": {
             "scope": "시나리오 모드 전용. 캠페인 전투는 ai-design.md §9(자원 보너스 없음)를 따른다.",
-            "cao_scale_rule": "조조군 함대는 squadrons 순서대로 앞에서부터 difficulty_profiles.*.cao_fleets개를 배치한다(Q82). 자동 편성(Q80·Q81)은 마지막 배치 함대만 지휘 한도 × cao_last_fill_bp까지 채운다. cao_cost_at_limits = 그때의 조조 비용 합(target_cost_ratio × 연합 한도 합).",
+            "cao_scale_rule": "조조군 함대는 squadrons 순서대로 앞에서부터 difficulty_profiles.*.cao_fleets개를 배치한다(Q82). 마지막 함대의 cao_last_fill_bp로 총예산을 정하고 auto_organization.rear_squadron_ids의 출전 후군에 지휘 한도 비례로 분산한다. cao_cost_at_limits = 조조 목표 비용 합(target_cost_ratio × 연합 한도 합).",
             "alliance_rule": "연합 편성은 모든 난이도에서 같다.",
             "morale_rule": "조조군 전대의 시작 사기는 morale_group(northern, jing_navy)별 값을 쓴다. 연합은 10000bp.",
             "ai_rule": "AI 수준은 ai-design.md §9 표의 사고 깊이·실수율·반응 지연을 따른다. 정보는 모든 난이도에서 같은 안개다. 극한의 완전 정보는 쓰지 않는다."},
@@ -435,6 +452,7 @@ if __name__ == "__main__":
             {"id": "cao_cao", "name": "조조군", "control": "ai", "supreme_commander": "조조", "not_deployed": NOT_DEPLOYED["cao_cao"]}],
         "squadrons": SQUADRONS,
         "realtime_rules": {
+            "auto_organization": AUTO_ORGANIZATION,
             "source": "EXPERIENCE-DESIGN.md §1~§4, §8 세트 RX (밸런스 2차, 2026-10-03)",
             "deploy_rule": "조조군 전대는 deploy_delay_s(초) 동안 배치 위치에서 대기한 뒤 출발한다. 선봉 0, 주력 180, 후군 360",
             "range_band_hold": {"barrage_hold_s_after_first_hit": 720, "barrage_distance": 240, "engagement_hold_s": 360, "engagement_distance": 170, "assault_distance": 100, "note": "양측 AI가 첫 명중 뒤 12분은 포화 거리, 다음 6분은 교전 거리를 유지한다"},

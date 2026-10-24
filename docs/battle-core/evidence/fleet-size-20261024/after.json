@@ -1,0 +1,2694 @@
+{
+	"극한": {
+		"ally_cost": 4022,
+		"budget": 8615,
+		"enemy_cost": 8608,
+		"rows": [
+			{
+				"composition": [
+					{
+						"count": 5,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 10,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 21,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 10,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 18,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 611,
+				"id": "RC-LIU-SQ-01",
+				"limit": 612,
+				"name": "유비",
+				"ships": 74,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 25,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 690,
+				"id": "RC-LIU-SQ-02",
+				"limit": 690,
+				"name": "관우",
+				"ships": 68,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 24,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 671,
+				"id": "RC-LIU-SQ-03",
+				"limit": 672,
+				"name": "마초",
+				"ships": 66,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 25,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-07"
+					}
+				],
+				"cost": 695,
+				"id": "RC-SUN-SQ-01",
+				"limit": 696,
+				"name": "주유",
+				"ships": 68,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 24,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 3,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 684,
+				"id": "RC-SUN-SQ-02",
+				"limit": 684,
+				"name": "손책",
+				"ships": 69,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 24,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-TORPEDO",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 671,
+				"id": "RC-SUN-SQ-03",
+				"limit": 672,
+				"name": "손견",
+				"ships": 66,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 25,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-07"
+					}
+				],
+				"cost": 695,
+				"id": "RC-CAO-SQ-01",
+				"limit": 696,
+				"name": "조조",
+				"ships": 68,
+				"wait": 180.0
+			},
+			{
+				"composition": [
+					{
+						"count": 11,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 27,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 11,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 3,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 696,
+				"id": "RC-CAO-SQ-02",
+				"limit": 696,
+				"name": "사마의",
+				"ships": 67,
+				"wait": 0.0
+			},
+			{
+				"composition": [
+					{
+						"count": 5,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 21,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 16,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 11,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 666,
+				"id": "RC-CAO-SQ-03",
+				"limit": 666,
+				"name": "하후연",
+				"ships": 64,
+				"wait": 180.0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 23,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					}
+				],
+				"cost": 659,
+				"id": "RC-CAO-SQ-04",
+				"limit": 660,
+				"name": "서황",
+				"ships": 64,
+				"wait": 0.0
+			},
+			{
+				"composition": [
+					{
+						"count": 5,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 24,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 653,
+				"id": "RC-CAO-SQ-05",
+				"limit": 654,
+				"name": "장합",
+				"ships": 65,
+				"wait": 180.0
+			},
+			{
+				"composition": [
+					{
+						"count": 10,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 10,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 26,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-INTERCEPT",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 609,
+				"id": "RC-CAO-SQ-06",
+				"limit": 654,
+				"name": "조인",
+				"ships": 62,
+				"wait": 360.0
+			},
+			{
+				"composition": [
+					{
+						"count": 4,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 14,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 19,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 4,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 2,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 605,
+				"id": "RC-CAO-SQ-07",
+				"limit": 648,
+				"name": "하후돈",
+				"ships": 61,
+				"wait": 360.0
+			},
+			{
+				"composition": [
+					{
+						"count": 4,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 19,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 4,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 2,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 593,
+				"id": "RC-CAO-SQ-08",
+				"limit": 636,
+				"name": "전예",
+				"ships": 60,
+				"wait": 360.0
+			},
+			{
+				"composition": [
+					{
+						"count": 4,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 18,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 4,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 10,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 588,
+				"id": "RC-CAO-SQ-09",
+				"limit": 630,
+				"name": "조진",
+				"ships": 59,
+				"wait": 360.0
+			},
+			{
+				"composition": [
+					{
+						"count": 4,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 18,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 4,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 581,
+				"id": "RC-CAO-SQ-10",
+				"limit": 624,
+				"name": "방덕",
+				"ships": 58,
+				"wait": 360.0
+			},
+			{
+				"composition": [
+					{
+						"count": 4,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 18,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 8,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 4,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-07"
+					}
+				],
+				"cost": 571,
+				"id": "RC-CAO-SQ-11",
+				"limit": 612,
+				"name": "문빙",
+				"ships": 56,
+				"wait": 360.0
+			},
+			{
+				"composition": [
+					{
+						"count": 4,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 18,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 8,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 4,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-07"
+					}
+				],
+				"cost": 571,
+				"id": "RC-CAO-SQ-12",
+				"limit": 612,
+				"name": "학소",
+				"ships": 56,
+				"wait": 360.0
+			},
+			{
+				"composition": [
+					{
+						"count": 4,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 17,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 8,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 4,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 8,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 3,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 560,
+				"id": "RC-CAO-SQ-13",
+				"limit": 600,
+				"name": "이전",
+				"ships": 57,
+				"wait": 360.0
+			},
+			{
+				"composition": [
+					{
+						"count": 4,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 17,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 8,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 4,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-07"
+					}
+				],
+				"cost": 561,
+				"id": "RC-CAO-SQ-14",
+				"limit": 600,
+				"name": "조휴",
+				"ships": 55,
+				"wait": 360.0
+			}
+		]
+	},
+	"상급": {
+		"ally_cost": 4022,
+		"budget": 8615,
+		"enemy_cost": 8608,
+		"rows": [
+			{
+				"composition": [
+					{
+						"count": 5,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 10,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 21,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 10,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 18,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 611,
+				"id": "RC-LIU-SQ-01",
+				"limit": 612,
+				"name": "유비",
+				"ships": 74,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 25,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 690,
+				"id": "RC-LIU-SQ-02",
+				"limit": 690,
+				"name": "관우",
+				"ships": 68,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 24,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 671,
+				"id": "RC-LIU-SQ-03",
+				"limit": 672,
+				"name": "마초",
+				"ships": 66,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 25,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-07"
+					}
+				],
+				"cost": 695,
+				"id": "RC-SUN-SQ-01",
+				"limit": 696,
+				"name": "주유",
+				"ships": 68,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 24,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 3,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 684,
+				"id": "RC-SUN-SQ-02",
+				"limit": 684,
+				"name": "손책",
+				"ships": 69,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 24,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-TORPEDO",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 671,
+				"id": "RC-SUN-SQ-03",
+				"limit": 672,
+				"name": "손견",
+				"ships": 66,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 25,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-07"
+					}
+				],
+				"cost": 695,
+				"id": "RC-CAO-SQ-01",
+				"limit": 696,
+				"name": "조조",
+				"ships": 68,
+				"wait": 180.0
+			},
+			{
+				"composition": [
+					{
+						"count": 11,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 27,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 11,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 3,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 696,
+				"id": "RC-CAO-SQ-02",
+				"limit": 696,
+				"name": "사마의",
+				"ships": 67,
+				"wait": 0.0
+			},
+			{
+				"composition": [
+					{
+						"count": 5,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 21,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 16,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 11,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 666,
+				"id": "RC-CAO-SQ-03",
+				"limit": 666,
+				"name": "하후연",
+				"ships": 64,
+				"wait": 180.0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 23,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					}
+				],
+				"cost": 659,
+				"id": "RC-CAO-SQ-04",
+				"limit": 660,
+				"name": "서황",
+				"ships": 64,
+				"wait": 0.0
+			},
+			{
+				"composition": [
+					{
+						"count": 5,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 24,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 653,
+				"id": "RC-CAO-SQ-05",
+				"limit": 654,
+				"name": "장합",
+				"ships": 65,
+				"wait": 180.0
+			},
+			{
+				"composition": [
+					{
+						"count": 10,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 10,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 26,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-INTERCEPT",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 609,
+				"id": "RC-CAO-SQ-06",
+				"limit": 654,
+				"name": "조인",
+				"ships": 62,
+				"wait": 360.0
+			},
+			{
+				"composition": [
+					{
+						"count": 4,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 14,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 19,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 4,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 2,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 605,
+				"id": "RC-CAO-SQ-07",
+				"limit": 648,
+				"name": "하후돈",
+				"ships": 61,
+				"wait": 360.0
+			},
+			{
+				"composition": [
+					{
+						"count": 4,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 19,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 4,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 2,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 593,
+				"id": "RC-CAO-SQ-08",
+				"limit": 636,
+				"name": "전예",
+				"ships": 60,
+				"wait": 360.0
+			},
+			{
+				"composition": [
+					{
+						"count": 4,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 18,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 4,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 10,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 588,
+				"id": "RC-CAO-SQ-09",
+				"limit": 630,
+				"name": "조진",
+				"ships": 59,
+				"wait": 360.0
+			},
+			{
+				"composition": [
+					{
+						"count": 4,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 18,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 4,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 581,
+				"id": "RC-CAO-SQ-10",
+				"limit": 624,
+				"name": "방덕",
+				"ships": 58,
+				"wait": 360.0
+			},
+			{
+				"composition": [
+					{
+						"count": 4,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 18,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 8,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 4,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-07"
+					}
+				],
+				"cost": 571,
+				"id": "RC-CAO-SQ-11",
+				"limit": 612,
+				"name": "문빙",
+				"ships": 56,
+				"wait": 360.0
+			},
+			{
+				"composition": [
+					{
+						"count": 4,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 18,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 8,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 4,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-07"
+					}
+				],
+				"cost": 571,
+				"id": "RC-CAO-SQ-12",
+				"limit": 612,
+				"name": "학소",
+				"ships": 56,
+				"wait": 360.0
+			},
+			{
+				"composition": [
+					{
+						"count": 4,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 17,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 8,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 4,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 8,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 3,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 560,
+				"id": "RC-CAO-SQ-13",
+				"limit": 600,
+				"name": "이전",
+				"ships": 57,
+				"wait": 360.0
+			},
+			{
+				"composition": [
+					{
+						"count": 4,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 17,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 8,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 4,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-07"
+					}
+				],
+				"cost": 561,
+				"id": "RC-CAO-SQ-14",
+				"limit": 600,
+				"name": "조휴",
+				"ships": 55,
+				"wait": 360.0
+			}
+		]
+	},
+	"입문": {
+		"ally_cost": 4022,
+		"budget": 5918,
+		"enemy_cost": 5914,
+		"rows": [
+			{
+				"composition": [
+					{
+						"count": 5,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 10,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 21,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 10,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 18,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 611,
+				"id": "RC-LIU-SQ-01",
+				"limit": 612,
+				"name": "유비",
+				"ships": 74,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 25,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 690,
+				"id": "RC-LIU-SQ-02",
+				"limit": 690,
+				"name": "관우",
+				"ships": 68,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 24,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 671,
+				"id": "RC-LIU-SQ-03",
+				"limit": 672,
+				"name": "마초",
+				"ships": 66,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 25,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-07"
+					}
+				],
+				"cost": 695,
+				"id": "RC-SUN-SQ-01",
+				"limit": 696,
+				"name": "주유",
+				"ships": 68,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 24,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 3,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 684,
+				"id": "RC-SUN-SQ-02",
+				"limit": 684,
+				"name": "손책",
+				"ships": 69,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 24,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-TORPEDO",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 671,
+				"id": "RC-SUN-SQ-03",
+				"limit": 672,
+				"name": "손견",
+				"ships": 66,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 25,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-07"
+					}
+				],
+				"cost": 695,
+				"id": "RC-CAO-SQ-01",
+				"limit": 696,
+				"name": "조조",
+				"ships": 68,
+				"wait": 180.0
+			},
+			{
+				"composition": [
+					{
+						"count": 11,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 27,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 11,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 3,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 696,
+				"id": "RC-CAO-SQ-02",
+				"limit": 696,
+				"name": "사마의",
+				"ships": 67,
+				"wait": 0.0
+			},
+			{
+				"composition": [
+					{
+						"count": 5,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 21,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 16,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 11,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 666,
+				"id": "RC-CAO-SQ-03",
+				"limit": 666,
+				"name": "하후연",
+				"ships": 64,
+				"wait": 180.0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 23,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					}
+				],
+				"cost": 659,
+				"id": "RC-CAO-SQ-04",
+				"limit": 660,
+				"name": "서황",
+				"ships": 64,
+				"wait": 0.0
+			},
+			{
+				"composition": [
+					{
+						"count": 5,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 24,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 653,
+				"id": "RC-CAO-SQ-05",
+				"limit": 654,
+				"name": "장합",
+				"ships": 65,
+				"wait": 180.0
+			},
+			{
+				"composition": [
+					{
+						"count": 11,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 11,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 27,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 3,
+						"mission_equipment_id": "FAST-EQ-INTERCEPT",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 648,
+				"id": "RC-CAO-SQ-06",
+				"limit": 654,
+				"name": "조인",
+				"ships": 67,
+				"wait": 360.0
+			},
+			{
+				"composition": [
+					{
+						"count": 4,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 15,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 20,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 10,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 4,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 10,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 2,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 642,
+				"id": "RC-CAO-SQ-07",
+				"limit": 648,
+				"name": "하후돈",
+				"ships": 65,
+				"wait": 360.0
+			},
+			{
+				"composition": [
+					{
+						"count": 4,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 14,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 20,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 10,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 4,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 10,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 2,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 630,
+				"id": "RC-CAO-SQ-08",
+				"limit": 636,
+				"name": "전예",
+				"ships": 64,
+				"wait": 360.0
+			},
+			{
+				"composition": [
+					{
+						"count": 4,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 14,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 19,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 10,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 10,
+						"ship_type_id": "SHP-07"
+					}
+				],
+				"cost": 625,
+				"id": "RC-CAO-SQ-09",
+				"limit": 630,
+				"name": "조진",
+				"ships": 62,
+				"wait": 360.0
+			}
+		]
+	},
+	"표준": {
+		"ally_cost": 4022,
+		"budget": 6401,
+		"enemy_cost": 6396,
+		"rows": [
+			{
+				"composition": [
+					{
+						"count": 5,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 10,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 21,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 10,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 18,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 611,
+				"id": "RC-LIU-SQ-01",
+				"limit": 612,
+				"name": "유비",
+				"ships": 74,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 25,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 690,
+				"id": "RC-LIU-SQ-02",
+				"limit": 690,
+				"name": "관우",
+				"ships": 68,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 24,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 671,
+				"id": "RC-LIU-SQ-03",
+				"limit": 672,
+				"name": "마초",
+				"ships": 66,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 25,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-07"
+					}
+				],
+				"cost": 695,
+				"id": "RC-SUN-SQ-01",
+				"limit": 696,
+				"name": "주유",
+				"ships": 68,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 24,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 3,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 684,
+				"id": "RC-SUN-SQ-02",
+				"limit": 684,
+				"name": "손책",
+				"ships": 69,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 24,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-TORPEDO",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 671,
+				"id": "RC-SUN-SQ-03",
+				"limit": 672,
+				"name": "손견",
+				"ships": 66,
+				"wait": 0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 25,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-07"
+					}
+				],
+				"cost": 695,
+				"id": "RC-CAO-SQ-01",
+				"limit": 696,
+				"name": "조조",
+				"ships": 68,
+				"wait": 180.0
+			},
+			{
+				"composition": [
+					{
+						"count": 11,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 27,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 11,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 3,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 696,
+				"id": "RC-CAO-SQ-02",
+				"limit": 696,
+				"name": "사마의",
+				"ships": 67,
+				"wait": 0.0
+			},
+			{
+				"composition": [
+					{
+						"count": 5,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 21,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 16,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 11,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 666,
+				"id": "RC-CAO-SQ-03",
+				"limit": 666,
+				"name": "하후연",
+				"ships": 64,
+				"wait": 180.0
+			},
+			{
+				"composition": [
+					{
+						"count": 6,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 23,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					}
+				],
+				"cost": 659,
+				"id": "RC-CAO-SQ-04",
+				"limit": 660,
+				"name": "서황",
+				"ships": 64,
+				"wait": 0.0
+			},
+			{
+				"composition": [
+					{
+						"count": 5,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 24,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 6,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 12,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 653,
+				"id": "RC-CAO-SQ-05",
+				"limit": 654,
+				"name": "장합",
+				"ships": 65,
+				"wait": 180.0
+			},
+			{
+				"composition": [
+					{
+						"count": 10,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 10,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 5,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 27,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 3,
+						"mission_equipment_id": "FAST-EQ-INTERCEPT",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 620,
+				"id": "RC-CAO-SQ-06",
+				"limit": 654,
+				"name": "조인",
+				"ships": 65,
+				"wait": 360.0
+			},
+			{
+				"composition": [
+					{
+						"count": 4,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 14,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 19,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 4,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 11,
+						"ship_type_id": "SHP-07"
+					}
+				],
+				"cost": 615,
+				"id": "RC-CAO-SQ-07",
+				"limit": 648,
+				"name": "하후돈",
+				"ships": 61,
+				"wait": 360.0
+			},
+			{
+				"composition": [
+					{
+						"count": 4,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 14,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 19,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 4,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 1,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 603,
+				"id": "RC-CAO-SQ-08",
+				"limit": 636,
+				"name": "전예",
+				"ships": 60,
+				"wait": 360.0
+			},
+			{
+				"composition": [
+					{
+						"count": 4,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 19,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 4,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 10,
+						"ship_type_id": "SHP-07"
+					}
+				],
+				"cost": 596,
+				"id": "RC-CAO-SQ-09",
+				"limit": 630,
+				"name": "조진",
+				"ships": 59,
+				"wait": 360.0
+			},
+			{
+				"composition": [
+					{
+						"count": 4,
+						"ship_type_id": "SHP-01"
+					},
+					{
+						"count": 13,
+						"ship_type_id": "SHP-03"
+					},
+					{
+						"count": 19,
+						"ship_type_id": "SHP-04"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-05"
+					},
+					{
+						"count": 4,
+						"ship_type_id": "SHP-06"
+					},
+					{
+						"count": 9,
+						"ship_type_id": "SHP-07"
+					},
+					{
+						"count": 2,
+						"mission_equipment_id": "FAST-EQ-RECON",
+						"ship_type_id": "SHP-08"
+					}
+				],
+				"cost": 593,
+				"id": "RC-CAO-SQ-10",
+				"limit": 624,
+				"name": "방덕",
+				"ships": 60,
+				"wait": 360.0
+			}
+		]
+	}
+}

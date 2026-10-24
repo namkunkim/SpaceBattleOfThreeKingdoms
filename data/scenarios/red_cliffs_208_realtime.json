@@ -48,7 +48,7 @@
  },
  "difficulty_policy": {
   "scope": "시나리오 모드 전용. 캠페인 전투는 ai-design.md §9(자원 보너스 없음)를 따른다.",
-  "cao_scale_rule": "조조군 함대는 squadrons 순서대로 앞에서부터 difficulty_profiles.*.cao_fleets개를 배치한다(Q82). 자동 편성(Q80·Q81)은 마지막 배치 함대만 지휘 한도 × cao_last_fill_bp까지 채운다. cao_cost_at_limits = 그때의 조조 비용 합(target_cost_ratio × 연합 한도 합).",
+  "cao_scale_rule": "조조군 함대는 squadrons 순서대로 앞에서부터 difficulty_profiles.*.cao_fleets개를 배치한다(Q82). 마지막 함대의 cao_last_fill_bp로 총예산을 정하고 auto_organization.rear_squadron_ids의 출전 후군에 지휘 한도 비례로 분산한다. cao_cost_at_limits = 조조 목표 비용 합(target_cost_ratio × 연합 한도 합).",
   "alliance_rule": "연합 편성은 모든 난이도에서 같다.",
   "morale_rule": "조조군 전대의 시작 사기는 morale_group(northern, jing_navy)별 값을 쓴다. 연합은 10000bp.",
   "ai_rule": "AI 수준은 ai-design.md §9 표의 사고 깊이·실수율·반응 지연을 따른다. 정보는 모든 난이도에서 같은 안개다. 극한의 완전 정보는 쓰지 않는다."
@@ -3313,6 +3313,91 @@
   }
  ],
  "realtime_rules": {
+  "auto_organization": {
+   "rear_squadron_ids": [
+    "RC-CAO-SQ-06",
+    "RC-CAO-SQ-07",
+    "RC-CAO-SQ-08",
+    "RC-CAO-SQ-09",
+    "RC-CAO-SQ-10",
+    "RC-CAO-SQ-11",
+    "RC-CAO-SQ-12",
+    "RC-CAO-SQ-13",
+    "RC-CAO-SQ-14"
+   ],
+   "role_by_squadron": {
+    "RC-CAO-SQ-02": "vanguard",
+    "RC-CAO-SQ-03": "artillery",
+    "RC-CAO-SQ-06": "fast_escort",
+    "RC-CAO-SQ-07": "rear",
+    "RC-CAO-SQ-08": "rear",
+    "RC-CAO-SQ-09": "rear",
+    "RC-CAO-SQ-10": "rear",
+    "RC-CAO-SQ-11": "rear",
+    "RC-CAO-SQ-12": "rear",
+    "RC-CAO-SQ-13": "rear",
+    "RC-CAO-SQ-14": "rear"
+   },
+   "role_mixes": {
+    "vanguard": [
+     "SHP-04",
+     "SHP-01",
+     "SHP-04",
+     "SHP-07",
+     "SHP-04",
+     "SHP-03",
+     "SHP-04",
+     "SHP-07",
+     "SHP-01",
+     "SHP-04",
+     "SHP-05",
+     "SHP-06"
+    ],
+    "artillery": [
+     "SHP-03",
+     "SHP-04",
+     "SHP-03",
+     "SHP-07",
+     "SHP-03",
+     "SHP-04",
+     "SHP-03",
+     "SHP-07",
+     "SHP-04",
+     "SHP-05",
+     "SHP-01",
+     "SHP-06"
+    ],
+    "fast_escort": [
+     "SHP-07",
+     "SHP-01",
+     "SHP-07",
+     "SHP-04",
+     "SHP-07",
+     "SHP-03",
+     "SHP-07",
+     "SHP-04",
+     "SHP-01",
+     "SHP-07",
+     "SHP-05",
+     "SHP-06"
+    ],
+    "rear": [
+     "SHP-04",
+     "SHP-03",
+     "SHP-04",
+     "SHP-07",
+     "SHP-05",
+     "SHP-04",
+     "SHP-03",
+     "SHP-07",
+     "SHP-05",
+     "SHP-04",
+     "SHP-03",
+     "SHP-01",
+     "SHP-06"
+    ]
+   }
+  },
   "source": "EXPERIENCE-DESIGN.md §1~§4, §8 세트 RX (밸런스 2차, 2026-10-03)",
   "deploy_rule": "조조군 전대는 deploy_delay_s(초) 동안 배치 위치에서 대기한 뒤 출발한다. 선봉 0, 주력 180, 후군 360",
   "range_band_hold": {

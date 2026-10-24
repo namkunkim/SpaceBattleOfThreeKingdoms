@@ -259,7 +259,7 @@ static func _officers(scn: Dictionary, faction_id: String) -> Dictionary:
 # faction_id의 출전 함대를 꽉 채운 사본. 다른 세력·끈 함대는 그대로. 손권·조조 AI도 같은 함수(Q81).
 # 장수: 제독(기함은 고정) → 부제독 → 함대마다 참모 강습·공성·보급, 각각 남은 장수 중 통솔·통솔·무력·지력·정치 최고(같으면 ID 순).
 # 함선: 지휘 한도 (limit_base + limit_per_command × 제독 통솔)까지 MIX 순환 탐욕, 남는 점수는 고속정.
-#   프로필 함대에 fill_bp가 있으면(조조 마지막 함대, Q82) 한도 × fill_bp까지.
+#   fill_bp로 정한 총예산은 유지하고, 시나리오 정책이 있으면 후군에 비례 분산한다.
 #   시나리오 편성의 RECON 정찰 고속정(P10b·R5)은 먼저 예약하고 나머지를 채운다(한도를 넘지 않는 만큼).
 # only(전대 ID 배열)가 있으면 그 함대만 채우고, 나머지 출전 함대의 장수는 쓰지 않는다(repair).
 static func auto_fill(org: Dictionary, faction_id: String, scn: Dictionary, profile: Dictionary, only := []) -> Dictionary:
@@ -273,15 +273,12 @@ static func auto_fill(org: Dictionary, faction_id: String, scn: Dictionary, prof
 			if fl.faction_id == faction_id and fl.on and not only.has(fl.squadron_id):
 				for id in _people(fl):
 					used[id] = true
-	var fill := {}
 	var equip := {}
 	var scouts := {}   # 전대 ID → 시나리오 편성의 RECON 정찰 고속정 수(예약)
 	for sq in scn.squadrons:
 		for c in sq.composition:
 			if c.ship_type_id == FILLER and c.get("mission_equipment_id", "") == "FAST-EQ-RECON":
 				scouts[sq.id] = scouts.get(sq.id, 0) + int(c.count)
-	for d in profile.ally + profile.foe:
-		fill[d.squadron_id] = int(d.get("fill_bp", BattleRules.BP))
 	for fl in on:
 		for c in fl.composition:
 			if c.ship_type_id == FILLER and c.has("mission_equipment_id"):
@@ -313,14 +310,15 @@ static func auto_fill(org: Dictionary, faction_id: String, scn: Dictionary, prof
 				fl.staff.append({"post": post, "id": id})
 	for fl in on:
 		fl.skill_slots = default_slots(fl, profile)
-	var K: Dictionary = profile.combat.command
 	var costs := {}
 	for t in profile.combat.ship_types:
 		costs[t] = int(profile.combat.ship_types[t].cost)
+	var caps := auto_caps(res, faction_id, scn, profile)
 	for fl in on:
 		if not pool.has(fl.admiral):
 			continue   # 제독 없음·기함 제독이 가용 장수 밖: validate가 거부한다
-		var cap := (int(K.limit_base) + int(K.limit_per_command) * int(pool[fl.admiral].command)) * int(fill.get(fl.squadron_id, BattleRules.BP)) / BattleRules.BP
+		var cap: int = caps[fl.squadron_id]
+		var mix := auto_mix(fl.squadron_id, scn)
 		var n := {}
 		var spent := 0
 		var keep: int = mini(scouts.get(fl.squadron_id, 0), cap / costs[FILLER])
@@ -329,8 +327,8 @@ static func auto_fill(org: Dictionary, faction_id: String, scn: Dictionary, prof
 			spent = keep * costs[FILLER]
 		var i := 0
 		var miss := 0
-		while miss < MIX.size():
-			var t: String = MIX[i % MIX.size()]
+		while miss < mix.size():
+			var t: String = mix[i % mix.size()]
 			i += 1
 			if spent + costs[t] <= cap:
 				n[t] = n.get(t, 0) + 1
@@ -349,6 +347,45 @@ static func auto_fill(org: Dictionary, faction_id: String, scn: Dictionary, prof
 				c.mission_equipment_id = equip.get(fl.squadron_id, FILLER_EQUIP)
 			fl.composition.append(c)
 	return res
+
+# 함종 역할과 예산 분산은 적벽 시나리오의 명시적 정책이다. 다른 세력·시나리오는 기존 MIX를 쓴다.
+static func auto_mix(squadron_id: String, scn: Dictionary) -> Array:
+	var policy: Dictionary = scn.get("realtime_rules", {}).get("auto_organization", {})
+	var role: String = str(policy.get("role_by_squadron", {}).get(squadron_id, ""))
+	var mix: Array = policy.get("role_mixes", {}).get(role, [])
+	return MIX if mix.is_empty() else mix
+
+# 편성된 제독의 실제 지휘 한도를 기준으로 원래 fill_bp 예산 합을 보존한다.
+# 누적 정수 배분으로 반올림 잔여도 후군에 포함한다. 출전하지 않는 함대는 예산을 받지 않는다.
+static func auto_caps(org: Dictionary, faction_id: String, scn: Dictionary, profile: Dictionary) -> Dictionary:
+	var fills := {}
+	for d in profile.ally + profile.foe:
+		fills[d.squadron_id] = int(d.get("fill_bp", BattleRules.BP))
+	var policy: Dictionary = scn.get("realtime_rules", {}).get("auto_organization", {})
+	var rear_ids: Array = policy.get("rear_squadron_ids", [])
+	var caps := {}
+	var rear := []
+	var rear_budget := 0
+	var rear_limit := 0
+	for fl in org.fleets:
+		if fl.faction_id != faction_id or not fl.on:
+			continue
+		var lim := limit_of(fl, scn, profile)
+		var cap: int = lim * int(fills.get(fl.squadron_id, BattleRules.BP)) / BattleRules.BP
+		caps[fl.squadron_id] = cap
+		if rear_ids.has(fl.squadron_id):
+			rear.append({"id": fl.squadron_id, "limit": lim})
+			rear_budget += cap
+			rear_limit += lim
+	if rear_limit > 0:
+		var cumulative := 0
+		var assigned := 0
+		for fl in rear:
+			cumulative += int(fl.limit)
+			var next: int = rear_budget * cumulative / rear_limit
+			caps[fl.id] = next - assigned
+			assigned = next
+	return caps
 
 # 함대 비용 합과 지휘 한도(편성 화면·테스트용)
 static func cost_of(fl: Dictionary, profile: Dictionary) -> int:

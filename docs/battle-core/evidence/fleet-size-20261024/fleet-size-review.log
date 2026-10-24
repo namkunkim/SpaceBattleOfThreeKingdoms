@@ -1,0 +1,7 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+FLEET_SIZE 입문 costs=4022/5914 ships=[68, 67, 64, 64, 65, 67, 65, 64, 62]
+FLEET_SIZE 표준 costs=4022/6396 ships=[68, 67, 64, 64, 65, 65, 61, 60, 59, 60]
+FLEET_SIZE 상급 costs=4022/8608 ships=[68, 67, 64, 64, 65, 62, 61, 60, 59, 58, 56, 56, 57, 55]
+FLEET_SIZE 극한 costs=4022/8608 ships=[68, 67, 64, 64, 65, 62, 61, 60, 59, 58, 56, 56, 57, 55]
+FLEET_SIZE_REVIEW_PASS
