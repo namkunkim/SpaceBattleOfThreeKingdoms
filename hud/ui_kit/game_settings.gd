@@ -8,6 +8,7 @@ const PATH := "user://settings.cfg"
 const UI_SCALES := [0.9, 1.0, 1.15, 1.3]
 
 static var ui_scale := 1.0
+static var language := "ko"
 static var fullscreen := false
 static var glow := true
 static var auto_fast := true
@@ -35,7 +36,10 @@ static func load_cfg() -> void:
 		# 처음 실행: 모바일은 터치 목표 크기에 맞춰 UI 크기를 고른다(§7.2).
 		ui_scale = TouchMetrics.default_ui_scale(UI_SCALES)
 		ship_density = default_density()
+		GameLocale.set_language(language)
 		return
+	language = GameLocale.normalize(str(cf.get_value("display", "language", "ko")))
+	GameLocale.set_language(language)
 	ui_scale = float(cf.get_value("display", "ui_scale", 1.0))
 	fullscreen = bool(cf.get_value("display", "fullscreen", false))
 	glow = bool(cf.get_value("display", "glow", true))
@@ -59,6 +63,7 @@ static func default_density() -> int:
 static func save_cfg() -> void:
 	var cf := ConfigFile.new()
 	cf.set_value("display", "ui_scale", ui_scale)
+	cf.set_value("display", "language", language)
 	cf.set_value("display", "fullscreen", fullscreen)
 	cf.set_value("display", "glow", glow)
 	cf.set_value("play", "auto_fast", auto_fast)
@@ -83,8 +88,10 @@ static func mark_prologue_seen() -> void:
 
 static func apply(win: Window) -> void:
 	load_cfg()
+	GameLocale.set_language(language)
 	if win == null:
 		return
+	win.title = GameLocale.text("성한지 — 적벽")
 	win.content_scale_factor = ui_scale
 	if DisplayServer.get_name() != "headless":
 		var want := Window.MODE_FULLSCREEN if fullscreen else Window.MODE_WINDOWED

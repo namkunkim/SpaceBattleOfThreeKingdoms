@@ -62,7 +62,7 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	GameSettings.apply(get_window())
 	if DisplayServer.get_name() != "headless":
-		get_window().title = "성한지 — 적벽"
+		get_window().title = GameLocale.text("성한지 — 적벽")
 	world = read_world()
 	var link := _link()
 	if link:

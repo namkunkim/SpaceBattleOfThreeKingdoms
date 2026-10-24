@@ -44,6 +44,7 @@ static func font(name: String) -> Font:
 		"bold": f = load(FONT_DIR + "Pretendard-Bold.otf")
 		"serif": f = load(FONT_DIR + "NotoSerifKR-SemiBold.otf")
 		"serif_bold": f = load(FONT_DIR + "NotoSerifKR-Bold.otf")
+		"cjk": f = load(FONT_DIR + "NotoSansCJKsc-Regular.otf")
 		"eyebrow":
 			var v := FontVariation.new()
 			v.base_font = font("semibold")
@@ -56,6 +57,11 @@ static func font(name: String) -> Font:
 			f = v
 		_: f = font("regular")
 	if f is FontFile:
+		# Bundle CJK glyphs so exports do not depend on installed system fonts.
+		if name in ["regular", "medium", "semibold", "bold"]:
+			f.fallbacks = [font("cjk")]
+		elif name in ["serif", "serif_bold"]:
+			f.fallbacks = [font("cjk")]
 		(f as FontFile).antialiasing = TextServer.FONT_ANTIALIASING_GRAY
 		(f as FontFile).hinting = TextServer.HINTING_LIGHT
 		(f as FontFile).subpixel_positioning = TextServer.SUBPIXEL_POSITIONING_AUTO

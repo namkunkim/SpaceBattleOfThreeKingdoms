@@ -80,7 +80,9 @@ func _init(d: Control) -> void:
 	var sub := _label("적벽 208 · 유비군 · 손권군·조조군은 자동 편성", "Muted")
 	sub.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(sub)
-	head.add_child(_label("브리핑  ›  편성  ›  전투", "Muted"))
+	var breadcrumb := _label("브리핑  ›  편성  ›  전투", "Muted")
+	breadcrumb.custom_minimum_size.x = 190
+	head.add_child(breadcrumb)
 	head.add_child(_button("뒤로", 120, func(): deck.show_screen("brief")))
 	# 3열
 	var cols := HBoxContainer.new()
@@ -341,7 +343,7 @@ func choose_skill(i: int, slot: int, k: String) -> String:
 func _skill_tip(k: String) -> String:
 	var d: Dictionary = skill_defs.get(k, {})
 	return "" if d.is_empty() else "%s (%s · %s)
-%s" % [d.name, skill_kind(k), "즉시" if int(d.duration_s) == 0 else "%d초" % int(d.duration_s), d.text]
+%s" % [d.name, skill_kind(k), "즉시" if int(d.duration_s) == 0 else "%d초" % int(d.duration_s), str(d.text).replace("{trait}", "「%s」" % d.name)]
 
 func _fill_skills() -> void:
 	if skill_box == null or sel < 0 or skill_defs.is_empty():
@@ -568,10 +570,11 @@ func _fill_detail() -> void:
 		b.add_theme_font_size_override("font_size", 13)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.disabled = lock
-		b.tooltip_text = "기함 제독은 바꿀 수 없습니다" if lock else ""
+		b.tooltip_text = ("기함 제독은 바꿀 수 없습니다" + "\n" if lock else "") + b.text
 		if picked.get("fleet", -2) == sel and picked.role == r[0]:
 			b.theme_type_variation = "PrimaryButton"
 		slots.add_child(b)
+		_hold_tip(b)
 	if not skill_defs.is_empty():
 		detail.add_child(_label("장 수 특 기  —  칸을 누르면 이 함대 장수의 특기 중에서 고릅니다 · 길게 누르면 설명", "Eyebrow"))
 		skill_box = VBoxContainer.new()
@@ -643,8 +646,15 @@ func _fill_pool() -> void:
 		if org.fleets[i].on:
 			for id in Organization.people(org.fleets[i]):
 				used[id] = true
-	var q := search.text.strip_edges()
-	var ids := officers.keys().filter(func(id): return not used.has(id) and (q == "" or q in str(officers[id].name) or q in " ".join(officers[id].get("traits", []))))
+	var q := search.text.strip_edges().to_lower()
+	var ids := officers.keys().filter(func(id):
+		if used.has(id):
+			return false
+		var officer: Dictionary = officers[id]
+		var traits: Array = officer.get("traits", [])
+		var localized_traits := traits.map(func(trait_name): return GameLocale.text(str(trait_name)))
+		var searchable := "%s %s %s %s" % [officer.name, GameLocale.text(str(officer.name)), " ".join(traits), " ".join(localized_traits)]
+		return q == "" or q in searchable.to_lower())
 	ids.sort_custom(func(a, b): return int(officers[a].command) > int(officers[b].command) or (int(officers[a].command) == int(officers[b].command) and a < b))
 	for id in ids:
 		var b := _button(_card(id), 0, press.bind(-1, "", id))
@@ -652,6 +662,7 @@ func _fill_pool() -> void:
 		if picked.get("fleet", -2) == -1 and picked.id == id:
 			b.theme_type_variation = "PrimaryButton"
 		pool_box.add_child(b)
+		_hold_tip(b)
 	if ids.is_empty():
 		pool_box.add_child(_label("미배치 장수가 없습니다. 함대를 대기로 돌리면 그 장수가 여기로 옵니다.", "Muted", UiTheme.INK_3))
 	_sum()
@@ -730,14 +741,18 @@ func _label(text: String, variation: String, color := Color(0, 0, 0, 0)) -> Labe
 	l.text = text
 	l.theme_type_variation = variation
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Translated descriptions must not expand the three columns off the screen.
+	if variation != "Title":
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	if color.a > 0.0:
 		l.add_theme_color_override("font_color", color)
-		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	return l
 
 func _button(text: String, w: float, cb: Callable) -> Button:
 	var b := Button.new()
 	b.text = text
+	b.clip_text = true
+	b.tooltip_text = text
 	b.custom_minimum_size = Vector2(w, BTN_H)
 	b.focus_mode = Control.FOCUS_NONE
 	b.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND

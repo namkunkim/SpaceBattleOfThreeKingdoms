@@ -172,7 +172,7 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 	_build_sound()
 	battle.battle_event.connect(_on_event)
 	GameSettings.apply(get_window())
-	get_window().title = "성한지 — 적벽"
+	get_window().title = GameLocale.text("성한지 — 적벽")
 	# 천하 지도에서 출격했으면 타이틀을 건너뛴다(WORLD-MAP-LINK §2). 서막(첫 진입 한 번, 브리핑 전)이 있으면 그것부터
 	if battle.has_method("routed") and battle.routed():
 		if has_method("open_prologue_or_brief"):
@@ -599,18 +599,7 @@ func _draw_cut(c: Control) -> void:
 		y += 23.0
 
 func _wrap(s: String, width: float, font_name: String, size: int) -> PackedStringArray:
-	var out := PackedStringArray()
-	var cur := ""
-	for word in s.split(" "):
-		var trial := word if cur == "" else cur + " " + word
-		if UiDraw.text_w(trial, font_name, size) > width and cur != "":
-			out.append(cur)
-			cur = word
-		else:
-			cur = trial
-	if cur != "":
-		out.append(cur)
-	return out
+	return UiDraw.wrap_text(s, width, font_name, size)
 
 func _cutin_fleet(f, line: String) -> void:
 	if f == null:

@@ -147,18 +147,7 @@ func _not_deployed(c: Control, o: Vector2, fac: Dictionary) -> void:
 	UiDraw.text(c, o + Vector2(0, 14), "불참: " + ", ".join(names), "regular", 11, UiTheme.INK_4)
 
 func _wrap(s: String, width: float) -> PackedStringArray:
-	var out := PackedStringArray()
-	var line := ""
-	for w in s.split(" "):
-		var t := (line + " " + w).strip_edges()
-		if UiDraw.text_w(t, "regular", 12) > width and line != "":
-			out.append(line)
-			line = w
-		else:
-			line = t
-	if line != "":
-		out.append(line)
-	return out
+	return UiDraw.wrap_text(s, width, "regular", 12)
 
 func _card(c: Control, r: Rect2, s: Dictionary, key: String, flag: bool) -> void:
 	var fi := Factions.of(key)
@@ -173,7 +162,7 @@ func _card(c: Control, r: Rect2, s: Dictionary, key: String, flag: bool) -> void
 		UiDraw.faction_seal(c, pr, key, str(cmd.get("name", "?")).left(1))
 	UiDraw.text(c, r.position + Vector2(60, 20), str(s.name), "serif_bold", 14, UiTheme.INK)
 	if flag:
-		UiDraw.text(c, r.position + Vector2(66 + UiDraw.text_w(str(s.name), "serif_bold", 14), 19), "旗艦", "serif_bold", 11, UiTheme.GOLD_HI)
+		UiDraw.text(c, r.position + Vector2(66 + UiDraw.text_w(str(s.name), "serif_bold", 14), 19), "기함", "serif_bold", 11, UiTheme.GOLD_HI)
 	UiDraw.text(c, Vector2(r.end.x - 10, r.position.y + 20), "%d척" % ScenarioRoster.ship_count(s), "semibold", 13, UiTheme.INK, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
 	var staff := PackedStringArray()
 	for p in s.get("staff", []):

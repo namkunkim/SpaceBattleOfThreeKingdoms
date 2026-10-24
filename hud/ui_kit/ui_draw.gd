@@ -107,6 +107,7 @@ static func diamond(ci: CanvasItem, c: Vector2, r: float, color: Color, filled :
 		ci.draw_polyline(pts, color, 1.2, true)
 
 static func text(ci: CanvasItem, pos: Vector2, s: String, font_name: String, size: int, color: Color, align := HORIZONTAL_ALIGNMENT_LEFT, width := -1.0, outline := 0) -> void:
+	s = GameLocale.text(s)
 	var f := UiTheme.font(font_name)
 	var p := pos
 	var al := align
@@ -122,7 +123,34 @@ static func text(ci: CanvasItem, pos: Vector2, s: String, font_name: String, siz
 	ci.draw_string(f, p, s, al, wd, size, color)
 
 static func text_w(s: String, font_name: String, size: int) -> float:
-	return UiTheme.font(font_name).get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
+	return UiTheme.font(font_name).get_string_size(GameLocale.text(s), HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
+
+static func wrap_text(source: String, width: float, font_name: String, font_size: int) -> PackedStringArray:
+	# Translate the complete sentence before line breaking, including CJK text
+	# without spaces. Measuring Korean prefixes cannot localize the full sentence.
+	var text_value := GameLocale.text(source)
+	var font_value := UiTheme.font(font_name)
+	var lines := PackedStringArray()
+	var line := ""
+	for character in text_value:
+		if character == "\n":
+			lines.append(line)
+			line = ""
+			continue
+		var trial := line + character
+		if not line.is_empty() and font_value.get_string_size(trial, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > width:
+			var space := line.rfind(" ")
+			if space > 0:
+				lines.append(line.left(space))
+				line = line.substr(space + 1) + character
+			else:
+				lines.append(line)
+				line = character
+		else:
+			line = trial
+	if not line.is_empty():
+		lines.append(line)
+	return lines
 
 const DASH_MAX_SEG := 3000.0   # 이보다 긴 한 구간은 파선으로 쪼개지 않는다
 

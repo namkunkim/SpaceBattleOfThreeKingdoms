@@ -12,6 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: 번역 누락과 자리표시자 검사
+        run: python3 tools/audit-localization.py --check
+
       - name: 도구 설치 (Godot, JDK 17, Android SDK, 키스토어)
         run: |
           sudo env HOME="$HOME" bash tools/cloud-setup.sh
@@ -22,6 +25,11 @@ jobs:
           godot --headless --import
           godot --headless --script tests/core_rules.gd | tee /tmp/core.log
           grep -q CORE_RULES_PASS /tmp/core.log
+
+      - name: 언어 설정과 전체 화면 문구 검사
+        run: |
+          godot --headless --script tests/localization.gd
+          godot --headless --script tests/localization_coverage.gd
 
       - name: 디버그 APK 내보내기
         env:

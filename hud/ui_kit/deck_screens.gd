@@ -182,7 +182,7 @@ class PrologueScreen extends Control:
 			var p := Vector2(cx + (i - (n - 1) * 0.5) * 22.0, cy + 172)
 			UiDraw.diamond(self, p, 4.0 if i == page else 3.0, UiTheme.GOLD_HI if i == page else Color(UiTheme.GOLD, 0.55 if i < page else 0.2))
 		UiDraw.text(self, Vector2(cx, vs.y - 74), "화면을 누르거나 Space로 다음", "regular", 13, UiTheme.INK_3, HORIZONTAL_ALIGNMENT_CENTER, 0.0)
-		UiDraw.text(self, Vector2(118, 96), "序 幕", "serif_wide", 16, UiTheme.GOLD)
+		UiDraw.text(self, Vector2(118, 96), "서 막", "serif_wide", 16, UiTheme.GOLD)
 
 # ------------------------------------------------------------ 브리핑
 class BriefScreen extends Control:
@@ -331,7 +331,7 @@ class PauseScreen extends Control:
 		draw_rect(Rect2(Vector2.ZERO, size), Color(0.01, 0.015, 0.03, 0.72))
 	func _draw_panel(c: Control) -> void:
 		var b: Node = deck.battle
-		UiDraw.text(c, Vector2(36, 50), "S Y S T E M", "eyebrow", 11, UiTheme.GOLD)
+		UiDraw.text(c, Vector2(36, 50), "시 스 템", "eyebrow", 11, UiTheme.GOLD)
 		UiDraw.text(c, Vector2(36, 98), "작전 일시정지", "serif_bold", 32, UiTheme.INK)
 		var tt := int(b.G.t)
 		UiDraw.text(c, Vector2(c.size.x - 36, 98), "교전 %02d:%02d" % [tt / 60, tt % 60], "serif", 18, UiTheme.INK_3, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
@@ -377,6 +377,7 @@ class SettingsScreen extends Control:
 	var vol_sliders := {}
 	var pending_density := 1
 	var pending_scale := 1.0
+	var language_picker: OptionButton
 	var tabs: Array = []
 	var pages: Array = []
 	func _init(d: Control, back: String) -> void:
@@ -407,6 +408,14 @@ class SettingsScreen extends Control:
 			p.add_child(vb)
 			pages.append(vb)
 		# 화면
+		var language_row := _row(pages[0], "언어")
+		language_picker = OptionButton.new()
+		language_picker.name = "LanguagePicker"
+		language_picker.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+		language_picker.custom_minimum_size = Vector2(300, 44)
+		for language_name in GameLocale.NAMES:
+			language_picker.add_item(language_name)
+		language_row.add_child(language_picker)
 		var row := _row(pages[0], "UI 크기")
 		for sc in GameSettings.UI_SCALES:
 			var b := _choice("%d%%" % roundi(sc * 100.0), row)
@@ -434,7 +443,7 @@ class SettingsScreen extends Control:
 				pending_slow = i
 				_sync())
 			slow_btns.append(b)
-		pages[1].add_child(UiTheme.label("선택하면: 명령하거나 5초 동안 입력이 없으면 풀림 · 조작 중에만: 누르고 있거나 끄는 동안", "Muted"))
+		_hint(pages[1], "선택하면: 명령하거나 5초 동안 입력이 없으면 풀림 · 조작 중에만: 누르고 있거나 끄는 동안")
 		vib_chk = _check(pages[1], "진동 (경보·결정·아군 손실·길게 누르기)")
 		motion_chk = _check(pages[1], "동작 줄이기 (타이틀·서막·브리핑 뒤 카메라 멈춤)")
 		# 소리
@@ -450,7 +459,7 @@ class SettingsScreen extends Control:
 			sl.value_changed.connect(func(v: float): _preview_volume(it[0], v))
 			r.add_child(sl)
 			vol_sliders[it[0]] = sl
-		pages[2].add_child(UiTheme.label("지금은 임시 합성음입니다. 경보·결정·아군 손실은 화면 표시와 진동을 함께 냅니다.", "Muted"))
+		_hint(pages[2], "지금은 임시 합성음입니다. 경보·결정·아군 손실은 화면 표시와 진동을 함께 냅니다.")
 		var hint := UiTheme.label("설정은 이 기기에 저장됩니다.", "Muted")
 		hint.position = Vector2(36, 580 - 30 - 36)
 		p.add_child(hint)
@@ -478,6 +487,10 @@ class SettingsScreen extends Control:
 		row.add_child(lbl)
 		parent.add_child(row)
 		return row
+	func _hint(parent: Control, text: String) -> void:
+		var label := UiTheme.label(text, "Muted")
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		parent.add_child(label)
 	func _choice(text: String, row: Control) -> Button:
 		var b := Button.new()
 		b.text = text
@@ -529,6 +542,7 @@ class SettingsScreen extends Control:
 	func on_show() -> void:
 		GameSettings.load_cfg()
 		pending_scale = GameSettings.ui_scale
+		language_picker.select(GameLocale.CODES.find(GameSettings.language))
 		full_chk.button_pressed = GameSettings.fullscreen
 		glow_chk.button_pressed = GameSettings.glow
 		fast_chk.button_pressed = GameSettings.auto_fast
@@ -547,6 +561,7 @@ class SettingsScreen extends Control:
 		UiSound.apply_volume()
 		deck.show_screen(back_to)
 	func _save() -> void:
+		GameSettings.language = GameLocale.CODES[language_picker.selected]
 		GameSettings.ui_scale = pending_scale
 		GameSettings.fullscreen = full_chk.button_pressed
 		GameSettings.glow = glow_chk.button_pressed

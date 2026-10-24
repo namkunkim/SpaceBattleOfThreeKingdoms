@@ -30,7 +30,7 @@ func label_rect(f) -> Rect2:
 func _draw() -> void:
 	if b == null or b.G.is_empty():
 		return
-	var font := ThemeDB.fallback_font
+	var font := UiTheme.font("regular")
 	# 지휘 범위
 	var ef = b.flag(1)
 	var pf = b.flag(0)
@@ -67,8 +67,9 @@ func _draw() -> void:
 	for t in b.floats:
 		var sp: Vector2 = b.w2s(t.pos)
 		var a := minf(1.0, t.t * 1.5)
-		draw_string_outline(font, sp + Vector2(-20.0, 0.0), t.text, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, 3, Color(0, 0, 0, 0.7 * a))
-		draw_string(font, sp + Vector2(-20.0, 0.0), t.text, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(t.color, a))
+		var caption := GameLocale.text(t.text)
+		draw_string_outline(font, sp + Vector2(-20.0, 0.0), caption, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, 3, Color(0, 0, 0, 0.7 * a))
+		draw_string(font, sp + Vector2(-20.0, 0.0), caption, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(t.color, a))
 	if not b.drag.is_empty() and b.drag.mode == "box":
 		var r := Rect2(b.drag.s, Vector2.ZERO).expand(b.drag.c)
 		draw_rect(r, Color(0.37, 0.88, 0.81, 0.08))
@@ -109,9 +110,10 @@ func _draw_label(f, font: Font) -> void:
 		draw_rect(Rect2(r.position + Vector2(36, 26), Vector2(58, 4)), Color("07100d"))
 		draw_rect(Rect2(r.position + Vector2(37, 27), Vector2(56.0 * (1.0 - f.missile_cd / 18.0), 2)), Color("3b5a8a") if f.missile_cd > 0.0 else Color("8fb6ff"))
 	if f.speech_t > 0.0 and f.speech != "":
-		var w := font.get_string_size(f.speech, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x + 14.0
+		var speech := GameLocale.text(f.speech)
+		var w := font.get_string_size(speech, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x + 14.0
 		var bx := r.position.x - 2.0
 		var by := r.position.y - 24.0
 		draw_rect(Rect2(bx, by, w, 19), Color(0.96, 0.97, 0.96, 0.95))
 		draw_colored_polygon(PackedVector2Array([Vector2(bx + 10, by + 19), Vector2(bx + 16, by + 19), Vector2(bx + 10, by + 25)]), Color(0.96, 0.97, 0.96, 0.95))
-		draw_string(font, Vector2(bx + 7, by + 14), f.speech, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("10201c"))
+		draw_string(font, Vector2(bx + 7, by + 14), speech, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("10201c"))
