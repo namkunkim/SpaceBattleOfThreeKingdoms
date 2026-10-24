@@ -18,6 +18,9 @@ func setup(b: Node, t: TouchController) -> void:
 
 # 누름은 HUD가 먼저 받도록 _unhandled_input, 끌기·놓기는 _input
 func _unhandled_input(e: InputEvent) -> void:
+	if battle != null and e is InputEventMouseButton and e.button_index == MOUSE_BUTTON_RIGHT and e.pressed:
+		battle.trace.write(battle, "right_press", {"screen": e.position, "state": battle.G.state,
+			"selected": battle.selected.map(func(f): return f.id), "emulated": e.device == InputEvent.DEVICE_ID_EMULATION})
 	if battle == null or battle.G.state != "play" or e.device == InputEvent.DEVICE_ID_EMULATION:
 		return
 	if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_RIGHT and not battle.my_sel().is_empty():
@@ -44,6 +47,8 @@ func _motion(p: Vector2) -> void:
 	touch.face_preview = {"p0": battle.s2w(_start), "p1": battle.s2w(p)}
 
 func _release(p: Vector2) -> void:
+	battle.trace.write(battle, "right_release", {"screen": p, "start": _start, "dragging": _dragging,
+		"world": battle.s2w(p), "selected": battle.selected.map(func(f): return f.id)})
 	_right = false
 	if _dragging:
 		_dragging = false

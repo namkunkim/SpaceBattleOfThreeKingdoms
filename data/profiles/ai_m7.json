@@ -37,9 +37,10 @@
   "delegate_level": {"think_depth": 2, "mistake_bp": 500, "reaction_s": 0},
   "reaction": {"crisis_bias": -0.3, "foe_weak_bias": 0.3, "foe_weak_band": 2, "charge_bias": 0.5, "charge_dist_share": 1.0},
   "slack": 20,
+  "charge_opportunity": {"min_exchange_s": 20, "min_morale_bp": 7500, "min_ship_share": 0.7, "max_target_band": 2},
   "hold_clamp": [0.5, 1.5],
   "score": {"base": 0.55, "span": 0.6, "estimated_mul": 1.25},
-  "standoff": {"enabled": true, "note": "원거리 유지(제안값, feature/enemy-ai-standoff). 레이저포·레일건·양자어뢰·미사일·전투기는 목표 거리(포화 → 교전)에서 쏘고, 너무 가까우면 쏘면서 물러난다(적 AI 포함, Q108 '적은 물러나지 않는다'를 덮는다). 강습 거리로 붙는 건 돌격 중이거나 강습 특기(assault_bp) 효과 중일 때뿐이고, 일정상 강습 단계에 온 강습모함 함대는 방침과 무관하게 돌격할 수 있다"},
+  "standoff": {"enabled": true, "note": "평소 포화·교전 거리를 유지하고 너무 가까우면 사격하며 물러난다. 시간 경과만으로 돌격하지 않는다. charge_opportunity 조건을 모두 만족해 돌격을 발동하거나 강습 특기 효과가 있는 동안만 근접한다."},
   "focus": {"min_depth": 3, "mul": 0.6, "note": "집중 사격(제안값). 사고 깊이 3 이상(상급·극한)은 진영이 함께 고른 표적(확인 접촉 중 전력 구간 최저 → 아군과의 거리 합 최소)의 표적 점수에 이 배율을 곱한다"},
   "decisions": {
    "crisis": {"effect_s": 120, "bias_mod": 0.5, "rearm_gap_bp": 500},

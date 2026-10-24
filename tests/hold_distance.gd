@@ -83,7 +83,7 @@ func _run() -> void:
 		c.step()
 		c.drain_events()
 		dc = minf(dc, carr.pos.distance_to(zc.pos))
-	if not TestCheck.ok(self, dc < HOLD - 10.0, "돌격 함대는 유지 거리 안까지 붙는다: %.1f" % dc): return
+	if not TestCheck.ok(self, dc < HOLD - 1.0, "돌격 효과가 지속되는 동안 유지 거리 안까지 붙는다: %.1f" % dc): return
 
 	# --- 3. 그룹 동반 정지 / 4. 아군 겹침 ---
 	var g := _mk([F.def("본대", 100, 800, gun, true), F.def("A1", 400, 400, gun), F.def("A2", 400, 500, gun)], [F.def("적기함", 1500, 100, gun, true), F.def("Z", 600, 400, gun)])

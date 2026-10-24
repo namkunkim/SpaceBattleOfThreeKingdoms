@@ -144,7 +144,6 @@ func _think_fleet(sim: BattleSim, f: FleetState, side: int, foes: Array[Dictiona
 				_do(sim, f, "ai_move", -1, f.home)
 		return
 	var D := _desired(sim, f, F, P, a)
-	var due := _std() and not _close(sim, f) and _phase(sim, f, P, a) == 2   # 강습 단계: 원거리 유지 규칙에서 방침·성향과 무관하게 돌격한다(Q110)
 	if f.side == 1 and sim.detect != null and best.state != "confirmed":
 		D = minf(D, sim.detect.view_range(f))   # 적 AI는 자기 가시 범위 안까지 다가간다. 아직 확인 못 한 표적이면 보일 때까지 더 붙는다(PoC D, Q108)
 	var slack := float(A.slack)
@@ -171,7 +170,7 @@ func _think_fleet(sim: BattleSim, f: FleetState, side: int, foes: Array[Dictiona
 		_do(sim, f, "ai_target", best.id if D <= chase_r + 1.0 and d <= f.range_r else -1)
 		if f.has_move:
 			_do(sim, f, "ai_move", -1, f.pos)
-	_charge(sim, f, P, a, d, due)
+	_charge(sim, f, P, a, d, best)
 	if sim.assault:
 		sim.assault.ai_try(f, best)   # 강습 거리에서 진형이 열렸으면 강습(M9)
 
@@ -295,18 +294,24 @@ func _retreat(sim: BattleSim, f: FleetState, P: Dictionary) -> void:
 		sim.apply(BattleSim.command(f.side, [f.id], "retreat"))   # 질서 퇴각: 탈출 지점으로(§5.3)
 		stats.retreat += 1
 
-# due(원거리 유지 규칙의 강습 단계)면 방침·성향값과 무관하게 돌격하고, 교전 거리 유지 폭(slack) 끝까지 돌격 거리로 본다(Q110)
-func _charge(sim: BattleSim, f: FleetState, P: Dictionary, a: float, d: float, due := false) -> void:
-	if not (bool(P.charge) or due) or f.charge > 0 or (not due and a < float(A.reaction.charge_bias)) or f.mstate != "stable":
+# 경과 시간만으로 돌격하지 않는다. 확인된 약한 적을 마무리할 여력이 있을 때만 스킬을 쓴다.
+func _charge(sim: BattleSim, f: FleetState, _P: Dictionary, _a: float, d: float, best: Dictionary) -> void:
+	var cfg: Dictionary = A.get("charge_opportunity", {})
+	if cfg.is_empty() or f.charge > 0 or f.mstate != "stable" or best.state != "confirmed":
 		return
-	var lim := float(sim.rs.rt("range_band_hold.engagement_distance")) * float(A.reaction.charge_dist_share)
-	if due:
-		lim = maxf(lim, float(sim.rs.rt("range_band_hold.engagement_distance")) + float(A.slack))
+	if sim.first_hit_tick < 0 or sim.st.tick - sim.first_hit_tick < BattleRules.ticks(float(cfg.min_exchange_s), sim.st.hz):
+		return
+	if f.morale_bp < int(cfg.min_morale_bp) or float(f.ships) < float(f.max_ships) * float(cfg.min_ship_share) or int(best.band) > int(cfg.max_target_band):
+		return
+	var lim := float(sim.rs.rt("range_band_hold.engagement_distance")) + float(A.slack)
 	if d > lim:
 		return
 	if sim.salvo.charge_block(f) != "":
 		return
 	sim.apply(BattleSim.command(f.side, [f.id], "charge"))
+	sim.emit("ai_charge_decision", f.id, int(best.id), f.pos, {"target_band": best.band,
+		"morale_bp": f.morale_bp, "ship_share": float(f.ships) / f.max_ships,
+		"distance": d, "exchange_s": float(sim.st.tick - sim.first_hit_tick) / sim.st.hz})
 	stats.charge += 1
 
 # 연환 대형 유지(§4.11, 제안값): 조조의 밀집 전대는 가장 가까운 밀집 아군과 120~180 간격을 유지하려 한다.

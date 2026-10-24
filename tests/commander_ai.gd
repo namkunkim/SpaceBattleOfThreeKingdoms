@@ -167,7 +167,7 @@ func _run() -> void:
 			n.cai.think(n)
 			if not TestCheck.ok(self, na.charge == 0, "강습모함 없는 적극 함대는 돌격하지 않는다"): return
 		out[pid] = {"charge": a.charge > 0, "kite": kite_to.distance_to(c.pos), "retreat": a2.retreat_order}
-	if not TestCheck.ok(self, out.aggressive.charge and not out.balanced.charge and not out.cautious.charge and not out.scheming.charge, "돌격은 적극만: %s" % str(out)): return
+	if not TestCheck.ok(self, not out.aggressive.charge and not out.balanced.charge and not out.cautious.charge and not out.scheming.charge, "온전한 적에게는 시간·성향만으로 돌격하지 않는다: %s" % str(out)): return
 	if not TestCheck.ok(self, out.cautious.kite >= 239.0 and out.scheming.kite >= 239.0 and out.balanced.kite >= 169.0, "거리 130에서 신중·계략은 240, 균형은 교전 거리 170까지 쏘면서 물러난다(ai.standoff): %s" % str(out)): return
 	if not TestCheck.ok(self, out.cautious.retreat and out.scheming.retreat and not out.aggressive.retreat and not out.balanced.retreat, "사기 3500: 신중·계략만 질서 퇴각: %s" % str(out)): return
 	# 4d2. 원거리 유지(ai.standoff): 적 AI도 강습 특기 중이 아니면 물러난다(PoC D·Q108의 '물러나지 않는다'를 덮는다). 신중 방침은 240까지
@@ -202,10 +202,9 @@ func _run() -> void:
 	# (1) 강습모함 없는 신중 함대가 강습 특기 중이면 물러나지 않고(kite 표적 -1 아님) 그 자리에서 쏜다
 	var k1: FleetState = q110.call("cautious", 130.0, 900.0, false, true)
 	if not TestCheck.ok(self, k1.target_id >= 0 and (not k1.has_move or k1.move_to.distance_to(k1.pos) < 1.0), "강습 특기 중 강습모함 없는 함대는 제자리 사격: 표적 %d 이동 %s" % [k1.target_id, str(k1.move_to)]): return
-	# (2) 강습 단계(균형 1080초 이후)면 균형 방침도 성향값과 무관하게 돌격한다
-	if not TestCheck.ok(self, (q110.call("balanced", 130.0, 1100.0, true, false) as FleetState).charge > 0, "강습 단계 균형 방침도 돌격(Q110)"): return
-	# (3) 강습 단계 돌격은 교전 거리 유지 폭(170+slack 20) 안이면 된다
-	if not TestCheck.ok(self, (q110.call("aggressive", 185.0, 900.0, true, false) as FleetState).charge > 0, "거리 185(170±20 안)에서도 강습 단계 돌격"): return
+	# 시간 경과와 강습모함 보유만으로는 균형·적극 방침 모두 돌격하지 않는다.
+	if not TestCheck.ok(self, (q110.call("balanced", 130.0, 1100.0, true, false) as FleetState).charge == 0, "강습 일정이 지나도 온전한 적에게 균형 방침 돌격 없음"): return
+	if not TestCheck.ok(self, (q110.call("aggressive", 185.0, 900.0, true, false) as FleetState).charge == 0, "가까운 온전한 적에게 적극 방침도 자동 돌격 없음"): return
 	# 4e. 인물 위임(기본값): 지휘관 성향(정본 §4)으로 방침이 정해진다. 관우·조인(절의)은 신중, 조조(야심)는 적극, 황개는 계략 중시
 	var cai: CommanderAi = base_s.cai
 	if not TestCheck.ok(self, cai.posture_of(_f(base_s, "RC-LIU-SQ-02")) == "cautious" and cai.posture_of(_f(base_s, "RC-CAO-SQ-02")) == "cautious" and cai.posture_of(_f(base_s, "RC-CAO-SQ-01")) == "aggressive" and cai.posture_of(_f(base_s, "RC-SUN-SQ-03")) == "scheming" and cai.posture_of(_f(base_s, "RC-LIU-SQ-01")) == "balanced", "성향 → 방침"): return

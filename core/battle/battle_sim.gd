@@ -1015,14 +1015,12 @@ func _fleet_phase(timers: bool) -> void:
 		var has_dest := false
 		var dest := Vector2.ZERO
 		var chase_r: float = f.range_r * R.chase_range_share
+		if salvo and assault and f.charge <= 0:
+			chase_r = maxf(chase_r, float(rs.rt("range_band_hold.engagement_distance", 170.0)))
 		if salvo and f.charge > 0:
 			chase_r = float(salvo.C.bands.assault_r)   # 돌격은 강습 거리까지 붙는다
-		if tgt:
-			var tp := known_pos(f, tgt)
-			if f.pos.distance_to(tp) > chase_r:
-				has_dest = true
-				dest = tp
-		elif f.has_move:
+		# AI의 거리 유지/후퇴 이동은 사격 표적과 함께 존재한다. 이동 목적지를 추격으로 덮지 않는다.
+		if f.has_move:
 			if f.pos.distance_to(f.move_to) < R.arrive_r:
 				if f.route.is_empty():
 					f.has_move = false
@@ -1033,6 +1031,11 @@ func _fleet_phase(timers: bool) -> void:
 			if f.has_move:
 				has_dest = true
 				dest = f.move_to
+		elif tgt:
+			var tp := known_pos(f, tgt)
+			if f.pos.distance_to(tp) > chase_r:
+				has_dest = true
+				dest = tp
 		var frozen := f.flip_wait > 0
 		var cfoe: FleetState = sight_foe(f, float(salvo.C.movement.contact_r)) if salvo else null   # 접적: 가까이 보이는 적 함대가 있다
 		var old_pos := f.pos
@@ -1114,15 +1117,16 @@ func _fleet_phase(timers: bool) -> void:
 				f.flank_msg = T.FLANK_MSG_S
 				emit("flank", f.id, ft.id, ft.pos, fm)
 
-# Q68·R1: 강습모함이 없는 함대는 적 함대의 유지 거리(engagement_distance) 안으로 들어가는 걸음을 하지 못한다.
+# 평소에는 강습모함 유무와 무관하게 교전 거리(engagement_distance)를 지킨다.
 # 위치를 밀어내지 않고(튕김 방지, _separate 주석) 걸음만 막는다. 이미 안쪽이면 거리를 줄이는 걸음만 막는다.
-# 예외: 화공 운용 함대(황개)의 투항·발동 접근. 강습모함 보유 함대는 겹칠 수 있다(돌격·기함 진입).
+# 예외: 실제 돌격·강습 특기, 퇴각, 화공 작전 접근, 플레이어가 직접 지휘하는 뇌격 운용 함대.
 # 막는 적이 없으면 Vector2.INF, 있으면 아군이 아는 그 적의 위치(확인·추정 접촉만, 미탐지 적은 공개 경계라 멈추지 않는다 - M1)
 func _hold_blocker(f: FleetState, old: Vector2) -> Vector2:
-	if f.charge > 0 or (morale and morale.fleeing(f)) or not salvo.hold_distance(f):
+	var close_skill := skills != null and skills.add(f, "assault_bp") > 0 and not salvo.hold_distance(f)
+	if assault == null or f.charge > 0 or close_skill or (morale and morale.fleeing(f)):
 		return Vector2.INF
-	# 뇌격 운용 함대는 근접 공격 병종이라 유지 거리를 적용하지 않는다(M3, 기존 임무장비→범주 데이터)
-	if str(salvo.C.fast_craft.equipment_category.get(f.equip, "")) == "torpedo":
+	# 수동 뇌격 접근은 명시적 조작으로 허용한다. 위임·적 AI는 돌격 없이 자동 근접하지 않는다.
+	if f.side == 0 and f.control == "direct" and str(salvo.C.fast_craft.equipment_category.get(f.equip, "")) == "torpedo":
 		return Vector2.INF
 	# 화공 예외는 투항(feign)과 발동 창(open) 안의 접근뿐이다. 서신 전(idle)·창 밖은 면제하지 않는다
 	if chain and f.side == 0 and f.sq_id == chain.host_sq and (chain.mode == "feign" or (chain.mode == "open" and chain.window_open())):

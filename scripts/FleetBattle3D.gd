@@ -50,7 +50,7 @@ const REJECT := {
 	"fighter_no_target": "함재기 작전 반경 안에 적이 없습니다", "fighter_reload": "함재기 정비 중",
 	"missile_charges": "미사일 남은 횟수가 없습니다. 보급함 영역에서 정지해 보급하세요", "fighter_charges": "함재기 남은 횟수가 없습니다. 보급함 영역에서 정지해 보급하세요",
 	"missile_none": "미사일을 쏠 포격함이 없습니다", "fighter_none": "강습모함이 없어 함재기를 쓸 수 없습니다",
-	"hold_distance": "교전 거리 유지: 강습모함이 없는 함대는 적에게 더 다가가지 않습니다",
+	"hold_distance": "교전 거리 유지: 돌격·강습 특기 발동 중에만 근접할 수 있습니다",
 	"charge_none": "강습모함이 없어 돌격할 수 없습니다",
 	"no_selection": "먼저 아군 함대를 선택하세요",
 	"supply_none": "보급함이 있는 함대가 아닙니다", "supply_target": "보급 대상으로 지정할 수 없는 함대입니다",
@@ -93,6 +93,7 @@ var _saved_title := ""
 var sim: BattleSim
 var clock := TickClock.new()
 var battle_seed := 0
+var trace = preload("res://scripts/battle_trace.gd").new()
 var _sim_acc_clock := TickClock.new()   # update_sim(dt)용(속도 ×1 고정)
 
 # ---- 화면 모델과 표현 ----
@@ -201,6 +202,10 @@ func init_game() -> void:
 	if profile_patch.is_valid() and not profile.is_empty():
 		profile_patch.call(profile)
 	sim = BattleSim.new(battle_seed, BattleRules.TICK_HZ, profile)
+	# 플레이어 유비군은 처음부터 직접 지휘한다. 손권군·적군은 기존 위임 AI를 쓴다.
+	for f in sim.st.fleets:
+		if f.side == 0 and f.faction == "liu_bei":
+			f.control = "direct"
 	ALLY_DEF = profile.ally.map(_with_portrait)
 	FOE_DEF = profile.foe.filter(func(d): return int(d.wait) == 0).map(_with_portrait)
 	clock = TickClock.new()
@@ -211,6 +216,7 @@ func init_game() -> void:
 	marker = {}
 	drag = {}
 	G = {"t": 0.0, "cp": 3.0, "ecp": 3.0, "reinf": false, "state": "brief", "speed": 1, "slow": 1.0, "killed": 0.0, "lost": 0.0, "panel_t": 0.0, "over": false, "end_t": -1.0, "end_win": false, "end_text": ""}
+	trace.start(self)
 	sim.drain_events()
 	_sync()
 	_assign_default_groups()
@@ -345,6 +351,7 @@ func _show_end() -> void:
 
 # ============================================================ 시간
 func _process(delta: float) -> void:
+	trace.sample(self)
 	now_t += delta
 	var dt := minf(0.05, delta)
 	if G.state == "play":
@@ -431,6 +438,7 @@ func _pump() -> void:
 	_sync()
 	_note_arrivals()
 	for e in sim.drain_events_for(0):
+		trace.event(self, e)
 		_on_event(e)
 
 # 이동 명령 완료 알림(M10, 표시 전용): 이동 명령이 사라졌을 때 목적지 근처면 "○○ 함대 이동 완료"를 교신 기록에 남긴다.
@@ -449,6 +457,7 @@ func _note_arrivals() -> void:
 
 # 플레이어 명령(input/ 이 만든 사전)을 코어에 넘긴다. 즉시 적용되고 명령 기록에 남는다.
 func issue(cmd: Dictionary) -> void:
+	trace.write(self, "command_request", {"command": cmd, "ui_state": G.state, "placing": placing, "fleets": trace.fleets(sim)})
 	for id in cmd.get("ids", []):
 		_had_move.erase(id)   # 사용자 명령으로 꺼진 이동은 "완료"로 알리지 않는다(M10)
 	if placing:   # 초기 배치(Q70): 이동 = 배치(틱 0 전용 place 명령, 허용 반경은 코어가 자른다), 진형만 그대로, 나머지는 확정 뒤
@@ -460,9 +469,11 @@ func issue(cmd: Dictionary) -> void:
 			"formation", "place", "posture", "delegate":
 				pass
 			_:
+				trace.write(self, "command_blocked", {"command": cmd, "reason": "placing"})
 				toast("배치를 확정한 뒤에 지시할 수 있습니다")
 				return
 	sim.issue(BattleSim.command(0, cmd.ids, cmd.kind, cmd.get("target_id", -1), cmd.get("point", Vector2.ZERO), cmd.get("args", {})))
+	trace.write(self, "command_applied", {"command": cmd, "fleets": trace.fleets(sim)})
 	_pump()
 	if cmd.kind == "place":   # 정지 중이라 보간할 틱이 없다: 새 위치로 바로 옮겨 그린다
 		for f in fleets:
