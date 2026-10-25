@@ -45,6 +45,8 @@ func setup(d: Control, s: BattleSource) -> void:
 	deck.battle.battle_event.connect(_on_event)
 
 func auto_enabled() -> bool:
+	if deck and deck.battle.pc_preset != "" and deck.battle.pc_preset != "baseline":
+		return false   # Experimental PC sessions use real x1 time; never save over user settings.
 	return GameSettings.auto_fast
 
 # 배속 버튼(×1·×2·×4). 건너뛰기를 멈추고, 조용한 구간이면 그 구간 동안 자동 ×4를 끈다.

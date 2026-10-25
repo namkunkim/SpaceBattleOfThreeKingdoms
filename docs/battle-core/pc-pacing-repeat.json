@@ -1,0 +1,108 @@
+{
+	"meta": {
+		"difficulty": "표준",
+		"game_speed": 1,
+		"human_playtest": false,
+		"physical_obstacles": false,
+		"policy": "Liu Bei direct control; advance to public map centre then attack known contacts every 5s; Sun delegated"
+	},
+	"runs": [
+		{
+			"army_end": [
+				5222,
+				6231
+			],
+			"burst_shots": {
+				"1": 2,
+				"10": 4,
+				"5": 4
+			},
+			"combat_s": 237.35,
+			"config": {
+				"move_mul": 30.0,
+				"physical_obstacles": false,
+				"preset": "terrain",
+				"turn_mul": 15.0,
+				"world": [
+					6800.0,
+					4600.0
+				],
+				"zones": 10
+			},
+			"curve": [
+				[
+					30.0,
+					10000,
+					7692
+				],
+				[
+					60.0,
+					9794,
+					7637
+				],
+				[
+					90.0,
+					9528,
+					7637
+				],
+				[
+					120.0,
+					9528,
+					7436
+				],
+				[
+					150.0,
+					9528,
+					7047
+				],
+				[
+					180.0,
+					9528,
+					7005
+				],
+				[
+					210.0,
+					9528,
+					6211
+				],
+				[
+					240.0,
+					8380,
+					6027
+				],
+				[
+					270.0,
+					8214,
+					5805
+				]
+			],
+			"fingerprint": "123dc4c7552ae07582f19cfd20f0adaafea072ea021890d8ae50a325d59a6387",
+			"first_crisis_s": -1.0,
+			"first_fire_s": 58.4,
+			"first_hit_s": 59.6,
+			"morale_after_hit": {
+				"1": [
+					9794,
+					7637
+				],
+				"10": [
+					9794,
+					7637
+				],
+				"5": [
+					9794,
+					7637
+				]
+			},
+			"morale_at_first_hit": [
+				9794,
+				7637
+			],
+			"preset": "terrain",
+			"reason": "liu_flagship_lost",
+			"seed": 20824,
+			"t": 296.95,
+			"win": false
+		}
+	]
+}

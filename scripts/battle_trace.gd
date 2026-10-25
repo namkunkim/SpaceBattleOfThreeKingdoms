@@ -34,6 +34,7 @@ func start(host: Node) -> void:
 	write(host, "session_start", {"profile": host.sim.profile_id, "profile_path": host.profile_def,
 		"seed": host.battle_seed, "difficulty": host.difficulty, "hz": host.sim.st.hz,
 		"move_mul": host.move_mul, "turn_mul": host.turn_mul, "world": host.sim.rs.world,
+		"pc_preset": host.pc_preset,
 		"engine": Engine.get_version_info().string, "fleet_state": fleets(host.sim)})
 
 func fleets(sim: BattleSim) -> Array:
