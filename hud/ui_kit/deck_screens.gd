@@ -630,7 +630,7 @@ class ResultScreen extends Control:
 		UiDraw.text(self, Vector2(cx, 254), b.G.end_text, "serif", 16, Color(UiTheme.INK_2, k), HORIZONTAL_ALIGNMENT_CENTER, 0.0)
 		var tt := int(b.G.t)
 		var alive_a := 0
-		for f in b.fleets:
+		for f in b.vm.result_fleets:
 			if f.side == 0 and not f.dead:
 				alive_a += 1
 		var stats := [["격침한 적 함정", "%d" % roundi(b.G.killed)], ["잃은 아군 함정", "%d" % roundi(b.G.lost)], ["교전 시간", "%d:%02d" % [tt / 60, tt % 60]], ["생존 함대", "%d / %d" % [alive_a, b.ALLY_DEF.size()]]]
@@ -643,23 +643,24 @@ class ResultScreen extends Control:
 			UiDraw.text(self, r.position + Vector2(0, 72), stats[i][1], "serif_bold", 28, UiTheme.INK, HORIZONTAL_ALIGNMENT_CENTER, cw)
 		_column(Vector2(cx - 430, 420), 0)
 		_column(Vector2(cx + 20, 420), 1)
+	func fleet_count_text(f: Dictionary) -> String:
+		var count := "%d척" % int(f.ships)
+		var status: String = {"sunk": "격침", "surrender": "항복", "escaped": "탈출"}.get(f.out, "궤멸" if f.dead else "")
+		return count if status == "" else count + " · " + status
 	func _column(o: Vector2, side: int) -> void:
 		var b: Node = deck.battle
 		UiDraw.text(self, o, "손 유 연 합 함 대" if side == 0 else "조 조 군", "eyebrow", 11, UiTheme.GOLD)
 		var y := o.y + 14.0
 		var i := 0
-		for f in b.fleets:
+		for f in b.vm.result_fleets:
 			if f.side != side:
 				continue
 			var col := i % 2
 			var r := Rect2(o.x + col * 208, y + (i / 2) * 46, 200, 40)
 			draw_rect(r, Color(0.05, 0.08, 0.12, 0.85) if side == 0 else Color(0.11, 0.05, 0.04, 0.85))
 			draw_texture_rect(b._portrait_tex(f.portrait), Rect2(r.position + Vector2(4, 4), Vector2(32, 32)), false, Color(1, 1, 1, 0.35) if f.dead else Color.WHITE)
-			UiDraw.text(self, r.position + Vector2(44, 17), f.fname, "serif_bold", 13, UiTheme.INK_4 if f.dead else UiTheme.INK)
-			if f.dead:
-				UiDraw.text(self, Vector2(r.end.x - 8, r.position.y + 17), "궤멸", "medium", 11, UiTheme.FOE, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
-			else:
-				UiDraw.text(self, Vector2(r.end.x - 8, r.position.y + 17), "%d척" % ceili(f.ships), "medium", 11, UiTheme.INK_2, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
+			UiDraw.text(self, r.position + Vector2(44, 17), f.name, "serif_bold", 13, UiTheme.INK_4 if f.dead else UiTheme.INK)
+			UiDraw.text(self, Vector2(r.end.x - 8, r.position.y + 17), fleet_count_text(f), "medium", 11, UiTheme.FOE if f.dead else UiTheme.INK_2, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
 			draw_rect(Rect2(r.position + Vector2(44, 26), Vector2(148, 4)), UiTheme.SLOT)
-			draw_rect(Rect2(r.position + Vector2(44, 26), Vector2(148 * f.ships / f.max_ships, 4)), UiTheme.side_color(side) if side == 1 else UiTheme.LIFE)
+			draw_rect(Rect2(r.position + Vector2(44, 26), Vector2(148.0 * f.ships / maxf(1.0, f.max_ships), 4)), UiTheme.side_color(side) if side == 1 else UiTheme.LIFE)
 			i += 1

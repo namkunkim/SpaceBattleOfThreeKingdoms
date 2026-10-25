@@ -65,7 +65,7 @@ static func build(sim: BattleSim, side: int) -> Dictionary:
 		"killed_milli": st.killed if side == 0 else st.lost,
 		"lost_milli": st.lost if side == 0 else st.killed,
 		"outcome": {"over": st.over, "win": st.win if side == 0 else (st.over and not st.win), "reason": st.end_reason, "end_tick": st.end_tick,
-			"limited": bool(st.result.get("limited", false)), "result": st.result},
+			"limited": bool(st.result.get("limited", false)), "result": st.result, "roster": result_roster(sim)},
 		"squadrons": sqs,
 		"missiles": ms,
 		"swarms": sw,
@@ -86,6 +86,22 @@ static func build(sim: BattleSim, side: int) -> Dictionary:
 	if sim.chain:
 		d.chain_op = sim.chain.view(side)   # M9 화공: 상태·의심·기류 창(공개), 운용 진영에는 자산·불붙은 전대
 	return d
+
+# 결산 전용. 전투 중에는 미탐지 적의 존재·정확한 척 수를 공개하지 않는다.
+# 전투 종료 후에는 접촉용 CONTACT_SHIPS가 아니라 모든 출전 전대의 실제 잔존 수를 전달한다.
+static func result_roster(sim: BattleSim) -> Array[Dictionary]:
+	var rows: Array[Dictionary] = []
+	if not sim.st.over:
+		return rows
+	for f in sim.st.fleets:
+		var left := sim.salvo.present_ships(f) if sim.salvo else ceili(float(f.ships) / BattleRules.MILLI)
+		if f.out == "sunk":
+			left = 0
+		rows.append({"id": f.id, "side": f.side, "name": f.name, "portrait": f.portrait,
+			"ships": left,
+			"max_ships": sim.salvo.total0(f) if sim.salvo else ceili(float(f.max_ships) / BattleRules.MILLI),
+			"dead": f.dead, "out": f.out})
+	return rows
 
 # 적 접촉의 공개 형태. 확인: 이름·역할·초상·방향과 전력 구간. 추정·상실: 위치(마지막으로 안 곳)와 오차 반경, 신뢰도뿐이다.
 # 함종·척 수·선체·사기·표적·진형은 어느 상태에서도 공개하지 않는다.

@@ -98,11 +98,14 @@ var reinf := false
 var killed := 0.0
 var lost := 0.0
 var outcome := {}
+var result_fleets: Array[Dictionary] = []   # 종료 후에만 공개되는 실제 결산. 전투 중 접촉 객체와 분리한다.
 var _missile_map := {}
 var alpha := 1.0              # 틱 사이 보간 비율(0~1). 표현 구동기가 프레임마다 정한다
 var _last_tick := -1
 
 func reset() -> void:
+	result_fleets.clear()
+	outcome = {}
 	fleets.clear()
 	missiles.clear()
 	swarms.clear()
@@ -128,6 +131,7 @@ func apply(proj: Dictionary) -> Array[FleetView]:
 	killed = proj.killed_milli / 1000.0
 	lost = proj.lost_milli / 1000.0
 	outcome = proj.outcome
+	result_fleets.assign(outcome.get("roster", []))
 	var shown_contacts := {}
 	for s in proj.squadrons:
 		if s.has("contact"):
