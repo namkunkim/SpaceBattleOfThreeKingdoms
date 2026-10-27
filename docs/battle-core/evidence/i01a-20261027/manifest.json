@@ -1,0 +1,26 @@
+{
+  "stage_root": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01a-stage-20261027-implementation-spec",
+  "purpose": "temporary artifact; target copy permission still required",
+  "files": [
+    {
+      "relative_path": "core/battle/operation_profile.gd",
+      "sha256": "4963f178877f3657a6def8580ed2deaf2f612960e1198c2ee04e7a7309722f0e",
+      "bytes": 15669
+    },
+    {
+      "relative_path": "tests/i01_operation_config.gd",
+      "sha256": "daf611b6568b20f76bd9784f34b2eddb767251a6f02df43507b289cc3cd4cdd4",
+      "bytes": 9176
+    },
+    {
+      "relative_path": "tests/fixtures/i01/valid_definition.json",
+      "sha256": "15c8849e51b0f81f3d6103c04a5e7c9a6cc62593fcf56bf01ed9dc4d064dbe17",
+      "bytes": 2529
+    },
+    {
+      "relative_path": "tests/fixtures/i01/invalid_definitions.json",
+      "sha256": "ce434ffbba64137e33de05e7df343c8bac100bb8943dc6cd4629b40e03120cda",
+      "bytes": 750
+    }
+  ]
+}
