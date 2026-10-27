@@ -1,0 +1,10 @@
+[
+  {"id": "duplicate_node", "mutation": "duplicate_node", "expected": "DUPLICATE_ID"},
+  {"id": "unknown_endpoint", "mutation": "unknown_endpoint", "expected": "UNKNOWN_NODE"},
+  {"id": "negative_size", "mutation": "negative_size", "expected": "INVALID_GEOMETRY"},
+  {"id": "unsupported_version", "mutation": "unsupported_version", "expected": "UNSUPPORTED_VERSION"},
+  {"id": "missing_definition", "mutation": "missing_definition", "expected": "MISSING_DEFINITION"},
+  {"id": "fractional_seed", "mutation": "fractional_seed", "expected": "INVALID_SEED"},
+  {"id": "nonzero_origin", "mutation": "nonzero_origin", "expected": "UNSUPPORTED_ORIGIN"},
+  {"id": "physical_obstacle", "mutation": "physical_obstacle", "expected": "UNSUPPORTED_FEATURE"}
+]

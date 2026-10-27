@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "rules_version": "i01a-fixture-v1",
+  "canonical_version": "i01a-canonical-v1",
+  "definition_id": "FX-G",
+  "profile_id": "i01a-synthetic",
+  "coordinate_space": "source",
+  "synthetic": true,
+  "bounds": [0, 0, 1000, 600],
+  "target_size": [2000, 1200],
+  "move_mul": 2,
+  "turn_mul": 3,
+  "envelope": {"radius": 20, "safety": 5, "unit": "source-coordinate", "kind": "synthetic-circle"},
+  "nodes": [
+    {"id": "E", "kind": "entry", "position": [50, 300]},
+    {"id": "J", "kind": "junction", "position": [200, 300]},
+    {"id": "A", "kind": "facility", "position": [400, 180]},
+    {"id": "B", "kind": "facility", "position": [400, 420]},
+    {"id": "C", "kind": "facility", "position": [800, 300]},
+    {"id": "D", "kind": "facility", "position": [650, 420]},
+    {"id": "R", "kind": "entry", "position": [950, 300]}
+  ],
+  "edges": [
+    {"id": "E-J", "from": "E", "to": "J", "bidirectional": true},
+    {"id": "J-A", "from": "J", "to": "A", "bidirectional": true},
+    {"id": "A-C", "from": "A", "to": "C", "bidirectional": true},
+    {"id": "J-B", "from": "J", "to": "B", "bidirectional": true},
+    {"id": "B-D", "from": "B", "to": "D", "bidirectional": true},
+    {"id": "D-C", "from": "D", "to": "C", "bidirectional": true},
+    {"id": "A-B", "from": "A", "to": "B", "bidirectional": true},
+    {"id": "R-C", "from": "R", "to": "C", "bidirectional": true},
+    {"id": "R-D", "from": "R", "to": "D", "bidirectional": true}
+  ],
+  "required_routes": [["E", "A"], ["A", "E"], ["E", "B"], ["B", "E"], ["E", "C"], ["C", "E"], ["E", "D"], ["D", "E"], ["R", "C"], ["R", "D"]],
+  "regions": [
+    {"id": "supply-A", "node": "A", "radius": 60, "unit": "source-coordinate", "shape": "circle", "admission": "center-in-world/intersect-free-centers"},
+    {"id": "supply-B", "node": "B", "radius": 60, "unit": "source-coordinate", "shape": "circle", "admission": "center-in-world/intersect-free-centers"},
+    {"id": "exit-E", "node": "E", "radius": 60, "unit": "source-coordinate", "shape": "circle", "admission": "center-in-world/intersect-free-centers"},
+    {"id": "entry-R", "node": "R", "radius": 60, "unit": "source-coordinate", "shape": "circle", "admission": "center-in-world/intersect-free-centers"}
+  ],
+  "effect_zones": [{"id": "NEB-1", "type": "nebula", "rect": [300, 50, 100, 50], "effects": {"movement_cost_bp": 13333}}],
+  "kinematics": {"speed": 10, "turn_deg_per_s": 9, "evasion_per_speed": 8},
+  "features": {"runtime": "deferred", "save": "deferred", "physical_obstacles": false}
+}
