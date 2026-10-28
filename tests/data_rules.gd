@@ -99,6 +99,7 @@ func _run() -> void:
 			if not TestCheck.ok(self, rules.has(k), "%s 프로필에 규칙 키 없음: %s (%s)" % [entry[0], k, used[k]]): return
 		for k in rules:
 			if not TestCheck.ok(self, used.has(k) or k in ["world_w", "world_h"], "%s 프로필의 안 쓰는 규칙 키: %s" % [entry[0], k]): return
+	if not _chase_fallback(): return
 	# --- 3. POC 프로필: 편성이 데이터에서 온다 ---
 	if not TestCheck.ok(self, poc.ally.size() == 6 and poc.foe.size() == 7 and poc.reinf.size() == 2, "poc fleets"): return
 	var sim0 := BattleSim.new(1)
@@ -175,6 +176,41 @@ func _run() -> void:
 	if not TestCheck.ok(self, other.fingerprint() != BattleSim.new(5, 10, foes["표준"]).fingerprint(), "difficulty changes state"): return
 	print("DATA_RULES_PASS keys=%d core=%d proposed=%d first_move=%d" % [used.size(), core.size(), prop.size(), first_move])
 	quit(0)
+
+# 시나리오 교전 거리 우선, 누락 시 POC 정본의 추격 기본값 170 유지.
+# 실제 이동 분기를 한 번 실행한다. fallback을 지우면 169에서도 추격하므로 실패한다.
+func _chase_fallback() -> bool:
+	if not TestCheck.ok(self, PocSetup.profile().rules.chase_engagement_fallback_r == 170, "chase fallback data = 170"): return false
+	var missing := [
+		{},
+		{"scenario_id": "no-realtime"},
+		{"realtime_rules": {}},
+		{"realtime_rules": {"range_band_hold": {}}},
+	]
+	var cases := []
+	for i in missing.size():
+		cases.append({"label": "missing-%d-inside" % i, "scenario": missing[i], "distance": 169.0, "moves": false})
+		cases.append({"label": "missing-%d-outside" % i, "scenario": missing[i], "distance": 171.0, "moves": true})
+	cases.append({"label": "override-150", "scenario": {"realtime_rules": {"range_band_hold": {"engagement_distance": 150}}}, "distance": 160.0, "moves": true})
+	cases.append({"label": "override-200", "scenario": {"realtime_rules": {"range_band_hold": {"engagement_distance": 200}}}, "distance": 180.0, "moves": false})
+	for c in cases:
+		var s := SalvoFixture.sim(
+			[SalvoFixture.def("chaser", 400, 450, [["SHP-04", 1]], true)],
+			[SalvoFixture.def("target", 400 + float(c.distance), 450, [["SHP-04", 1]], true)])
+		s.rs.scenario = c.scenario.duplicate(true)
+		s.assault = AssaultCore.new(s, s.salvo.C.assault)
+		# 별도 위치 차단은 hold_distance.gd가 검사한다. 누락 데이터에서도 추격 임계만 고립한다.
+		s._hold_d2 = 0.0
+		var f: FleetState = s.st.fleets[0]
+		var target: FleetState = s.st.fleets[1]
+		f.target_id = target.id
+		f.heading = 0.0
+		if not TestCheck.ok(self, s.salvo != null and s.assault != null and f.charge == 0 and s.sight_target(f) == target and f.range_r * s.R.chase_range_share < float(c.distance), "chase branch setup " + c.label): return false
+		var start := f.pos
+		s._fleet_phase(false)
+		var moved := f.pos.x > start.x and is_equal_approx(f.pos.y, start.y)
+		if not TestCheck.ok(self, moved == c.moves and f.moving == c.moves and (bool(c.moves) or f.pos == start), "chase fallback/override " + c.label): return false
+	return true
 
 # P8a 특기 스키마(REVIEW-P8-0 F-12): 필수 키, 기술 ID 참조, 술어·requires·효과 키 허용 목록, 슬롯 기본값 직책명.
 # 코어(skills.gd)가 해석하는 키만 허용한다. 슬롯 수·사용 횟수는 데이터에만 있다(코어 리터럴 검사는 1번이 한다)

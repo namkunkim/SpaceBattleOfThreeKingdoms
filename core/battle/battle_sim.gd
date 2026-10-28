@@ -1016,7 +1016,7 @@ func _fleet_phase(timers: bool) -> void:
 		var dest := Vector2.ZERO
 		var chase_r: float = f.range_r * R.chase_range_share
 		if salvo and assault and f.charge <= 0:
-			chase_r = maxf(chase_r, float(rs.rt("range_band_hold.engagement_distance", 170.0)))
+			chase_r = maxf(chase_r, float(rs.rt("range_band_hold.engagement_distance", R.chase_engagement_fallback_r)))
 		if salvo and f.charge > 0:
 			chase_r = float(salvo.C.bands.assault_r)   # 돌격은 강습 거리까지 붙는다
 		# AI의 거리 유지/후퇴 이동은 사격 표적과 함께 존재한다. 이동 목적지를 추격으로 덮지 않는다.

@@ -1,0 +1,122 @@
+{
+  "version": "i01b-p0-source-freeze-v1",
+  "observed_head": "8292805143f4561a4f5258d40b7b94adf4ff5802",
+  "sources": [
+    {
+      "path": "core/battle/battle_sim.gd",
+      "sha256": "670916af166c1f67fd58f6ab3007782a598a7a8f6fea72024042e1945beb967a"
+    },
+    {
+      "path": "core/battle/battle_state.gd",
+      "sha256": "0c7f4589156e642ade356e0785c3096bb305ac1e2328607e9973e173d1ed9e5b"
+    },
+    {
+      "path": "core/battle/fleet_state.gd",
+      "sha256": "00b39729582cea9f7b66fecd5396c44bdc4b0fa0b2f57516bc4d94cf12d04d6e"
+    },
+    {
+      "path": "core/battle/rule_set.gd",
+      "sha256": "43c8a2a313c5d3a625a4aa9b925ae7c5b153d8cbd8147763f2f7b60fe93c364d"
+    },
+    {
+      "path": "core/battle/battle_rng.gd",
+      "sha256": "f5f42abd399bed12d10e8385dc83a1fed6450881fe060fdab8734b5a93e3def6"
+    },
+    {
+      "path": "core/battle/tick_clock.gd",
+      "sha256": "dfb9cd4a070995d9aca44f77bf08cab18ae87eb4c678a341ccddc34c5a7ff74e"
+    },
+    {
+      "path": "core/battle/salvo.gd",
+      "sha256": "c80ede4aa4d9c6aa75cd99f9af3672645f0a03e87d170d295bbe9f716b022090"
+    },
+    {
+      "path": "core/battle/morale.gd",
+      "sha256": "0bfbe6ca0f85557b59bfed737bca65ad6e352aa328c837ad747f2dd759773af4"
+    },
+    {
+      "path": "core/battle/victory.gd",
+      "sha256": "73f87d6ecb1727171ca9ff3dfb6c0515b49699d5c34f05d502569944c317b74a"
+    },
+    {
+      "path": "core/battle/terrain.gd",
+      "sha256": "9af7390a225398e4b31b6698c8d71ad8fcf877d8a296c750421892b5c997069d"
+    },
+    {
+      "path": "core/battle/ai/commander_ai.gd",
+      "sha256": "a5ecb379d4258a46eeb78f91697c366adbd6a04d9164fca5f1c7c7983c5a2ae5"
+    },
+    {
+      "path": "core/battle/ai/poc_enemy_ai.gd",
+      "sha256": "74113ab7cd332a7519bccfee092fe2ca09efb2fc3e6ac989ada8faff2fbb9885"
+    },
+    {
+      "path": "core/battle/decisions.gd",
+      "sha256": "18c9c52d46fbf16a798e1a9451adc0b0ba9b91fb920fb1f8882307a6351d9d7d"
+    },
+    {
+      "path": "core/battle/detection.gd",
+      "sha256": "df34cee4a225683d6bc1c9005dc7760c365ce3a61ae68e106449cb2e7154253b"
+    },
+    {
+      "path": "core/battle/supply.gd",
+      "sha256": "1f762bfea77abb57795c87af619e2d6b48210377cc6e04b9463d021be6e2d5be"
+    },
+    {
+      "path": "core/battle/stratagem.gd",
+      "sha256": "f7d45eb4c31118e44fe4e8ee1ee31778c99f0a933bd1b49d49afd935f8447581"
+    },
+    {
+      "path": "core/battle/command.gd",
+      "sha256": "02415d2f2f7c91a8617ca27123895feb03d3df658c7ad00cb615188bb0009b31"
+    },
+    {
+      "path": "core/battle/assault.gd",
+      "sha256": "a98747df1ac2505b03557962c78ff5e3dae41af6c1d021a8dd679dcd8f83954f"
+    },
+    {
+      "path": "core/battle/skills.gd",
+      "sha256": "0d2bf2bfd81cb6f026e025f008774725f7c87d53e0d857697501172bafb21b3d"
+    },
+    {
+      "path": "scripts/FleetBattle3D.gd",
+      "sha256": "b8e119f99bddea8ecca7091158f193591dec9fdd0ab3bcb6a9df11ef180dd040"
+    },
+    {
+      "path": "core/battle/battle_fingerprint.gd",
+      "sha256": "4f658a2ab2e0012568fcd7a14342457c90a82f02d58980b99039f73acd133890"
+    }
+  ],
+  "preserved_files": [
+    {
+      "path": "core/battle/battle_sim.gd",
+      "sha256": "670916af166c1f67fd58f6ab3007782a598a7a8f6fea72024042e1945beb967a",
+      "bytes": 49068
+    },
+    {
+      "path": "data/profiles/poc_corridor.json",
+      "sha256": "bb7c2dbaa8c258dc8b43f16894502a72cb66a22d2058b5d5314816a0488e9d8e",
+      "bytes": 5047
+    },
+    {
+      "path": "tests/data_rules.gd",
+      "sha256": "e21db4b23e9814bb89cae2fc5f5e8f5751b6dcdb952fb3da01cc68da8af670d3",
+      "bytes": 16924
+    },
+    {
+      "path": "docs/battle-core/CHECKLIST-OPEN.md",
+      "sha256": "bf57778d93488ca546b237838ff8ab5b61b2ec93c4cb690954ecf8ceb581db20",
+      "bytes": 114560
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/DATA-RULES-BASELINE-FIX-20261028.md",
+      "sha256": "cd66eee88a7d30697d64b1583656c5c2dd54f82d7684284abff98b024063ec95",
+      "bytes": 4632
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/REVIEW-DATA-RULES-BASELINE-20261027.md",
+      "sha256": "b92f9baf0354be6ff2d740d34193c73298cad71e2586b815b4d40b171b64174b",
+      "bytes": 6922
+    }
+  ]
+}
