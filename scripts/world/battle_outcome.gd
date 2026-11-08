@@ -24,16 +24,29 @@ var mode := ""
 var difficulty := ""
 
 static func from_sim(sim: BattleSim, brief: BattleBrief) -> BattleOutcome:
-	var o := BattleOutcome.new()
+	return from_facts(facts_from_sim(sim), brief)
+
+# Capture the legacy simulation result while its owner still has exclusive access.
+static func facts_from_sim(sim: BattleSim) -> Dictionary:
 	var st := sim.st
+	return {
+		"win": st.win,
+		"reason": st.end_reason,
+		"t_s": st.clock_s(),
+		"result": st.result.duplicate(true),
+		"fingerprint": sim.fingerprint(),
+	}
+
+static func from_facts(facts: Dictionary, brief: BattleBrief) -> BattleOutcome:
+	var o := BattleOutcome.new()
 	o.seed = brief.seed if brief else 0
 	o.mode = brief.mode if brief else ""
 	o.difficulty = brief.difficulty if brief else ""
-	o.win = st.win
-	o.reason = st.end_reason
-	o.t_s = st.clock_s()
-	o.fingerprint = sim.fingerprint()
-	var r: Dictionary = st.result
+	o.win = facts.win
+	o.reason = facts.reason
+	o.t_s = facts.t_s
+	o.fingerprint = facts.fingerprint
+	var r: Dictionary = facts.result
 	o.limited = bool(r.get("limited", false))
 	o.kind = ("alliance_limited" if o.limited else "alliance_win") if o.win else "cao_win"
 	if not r.is_empty():
