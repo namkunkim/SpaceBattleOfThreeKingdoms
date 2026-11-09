@@ -1,0 +1,7 @@
+rejected bootstrap hang bootstrap deadline
+rejected barrier hang barrier deadline
+rejected owned drain hang owned drain deadline
+rejected final journal hang final journal deadline
+accepted bounded controller diagnostics including stderr
+rejected combined diagnostics overflow and retained exactly 16 bytes
+synthetic only; no process or Windows Job

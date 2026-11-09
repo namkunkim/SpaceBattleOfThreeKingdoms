@@ -1,0 +1,29 @@
+{
+  "label": "api",
+  "command": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+    "--log-file",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt1\\api.engine.log",
+    "-s",
+    "tests/p02_worker_adapter.gd"
+  ],
+  "expected_exit": 0,
+  "error": null,
+  "output": null,
+  "expected_diagnostics": null,
+  "actual_exit": 1,
+  "diagnostics": {
+    "script_errors": 1,
+    "errors": 1,
+    "warnings": 0
+  },
+  "log_shas": {
+    "api.stdout": "83cf0b082206af2aa236c83064fbcfa76be1e00a4aa3558574b2f65965d9481c",
+    "api.stderr": "434590ed274b55a1704dad625b663d74f362747ffc7844dc3409418d14b80bfd",
+    "api.engine.log": "05635c8bc4c078a4281f2ce999d0c6aa5e17101495b6a38455689737660fa9a1"
+  },
+  "pass": false
+}

@@ -1,0 +1,74 @@
+[
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\project.godot",
+    "Hash": "0B5A634A44442B90154187431C83DA3B755E36A261EB04A29F9A709C529F3FC2"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\scripts\\FleetBattle3D.gd",
+    "Hash": "604B79308D9B3DBAB84DCED32456A4F41B28686C8EEC748073D3816892CFFC5C"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\scripts\\world\\auto_resolver.gd",
+    "Hash": "85EC124DF59C0C50CEE616565E88BCDD978588F28BAF36180F8EC2C92EEBD9EB"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\operation_private_state.gd",
+    "Hash": "AC59A7547469C705D33854742E9503B08422770B01956A47861B45735AB8C1C6"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\operation_runtime_adapter.gd",
+    "Hash": "0C0CAD3E6E4E15887DCD75F9D5B57DBBE2690BFDCAFD1CAAC163909B5421173A"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\operation_replay.gd",
+    "Hash": "90A3146F6B1257AB3705DF773AEF90428447FD971FF4ECB5501DD029D4684127"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\battle_sim.gd",
+    "Hash": "670916AF166C1F67FD58F6AB3007782A598A7A8F6FEA72024042E1945BEB967A"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\scenario_profile.gd",
+    "Hash": "A8871BA03F7E37B85C51B70C534CF5073E5E3A3E757569855EEFBBB3155234A0"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\decisions.gd",
+    "Hash": "18C9C52D46FBF16A798E1A9451ADC0B0BA9B91FB920FB1F8882307A6351D9D7D"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\operation_service_state.gd",
+    "Hash": "18F1381A330D6F33163CC94F678FA624F8500DD415F5D35EE4A4B4BFD5EE44A0"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\data\\profiles\\red_cliffs_rt.json",
+    "Hash": "1C9FA315648E47A53B17B2E0EF9C5492DA64122E98B462A789B7B35790E31E38"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\data\\scenarios\\red_cliffs_208_realtime.json",
+    "Hash": "0D702495A1AC94E255B44948BA8EBB625D4CDAE2F1605658D05EC47911EDB208"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\docs\\battle-core\\CHECKLIST-OPEN.md",
+    "Hash": "EFFF61990048AD074206326D19041AD205C7AA55F730A77B192D8BBB4630F99E"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-progress-20261108\\P03-CHECKLIST-REVISION-20261108.md",
+    "Hash": "6AFE79D0DCBD8B2095CFFD6025ACFD063CD8E714708C9647AE1781FB489ECFB1"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-progress-20261108\\HANDOFF-20261108.md",
+    "Hash": "AC620A5D8E992C67D5B72CA8EA41416FACDE66D2D52709D46DFC87701B1213B5"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-active-unsupported-20261108\\RESULT.md",
+    "Hash": "6432AD7195E5AFEFBDBE370FFEB3521D35B590444ECDD49A04C22597B4DDA467"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-active-unsupported-20261108\\REVIEW-CLOSEOUT.md",
+    "Hash": "22598AB7181126071875F476C193D22699A55D7F22D7A8C3BF1E46222F008F52"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-active-unsupported-20261108\\attempt-02\\input-before.json",
+    "Hash": "0C4F133DB3C38CDEC6A91FB2C13B0F35774BCEB7469DD6D27A7C2580C1C7CCE0"
+  }
+]

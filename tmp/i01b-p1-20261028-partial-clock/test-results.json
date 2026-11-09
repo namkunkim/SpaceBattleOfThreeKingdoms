@@ -1,0 +1,42 @@
+{
+  "head": "8292805143f4561a4f5258d40b7b94adf4ff5802",
+  "new_runner": {
+    "test": "tests/i01b_logical_clock.gd",
+    "exit_code": 0,
+    "cases": 60,
+    "seeds": 10,
+    "speeds": 3,
+    "pause_variants": 2,
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-p1-20261028-partial-clock/logs/i01b_logical_clock.log",
+    "log_sha256": "abe6b954a3691267cf440e75f449885e2740a5af5b83acb494d1329bf1b0df95",
+    "runner_sha256": "febcbc625a32814b21ac60a10fcba389928921044711fecb95a2ada6ddaf8925",
+    "exit_evidence": "functions.exec cell67 completed: chunk08a1d8 exit_code0, wall_time_seconds1.8499307"
+  },
+  "core_rules": {
+    "test": "tests/core_rules.gd",
+    "exit_code": null,
+    "status": "PASS_MARKER_PRESENT_EXIT_NOT_RETURNED",
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-p1-20261028-partial-clock/logs/core_rules.log",
+    "log_sha256": "f5edd78c23b68d37e1b7609e43fb2ee24a2e6612d10ffe500adaaac205b849d8",
+    "first_attempt": "cell68 not found on terminate; log exists with CORE_RULES_PASS, exit result not delivered",
+    "second_attempt": "simple require_escalated call: no cell/session/result returned for243.0s, parent interrupt returned aborted by user; no raw stdout/exit captured",
+    "resume_attempts": {
+      "relative_default_exit": 1,
+      "relative_default_output": "Invalid project path specified: \".\", aborting.",
+      "absolute_escalated_result": null,
+      "absolute_escalated_status": "No cell/session/approval/exit returned for153.1s; parent interrupt returned aborted by user",
+      "absolute_default_exit": 1,
+      "absolute_default_output": "Invalid project path specified: \"C:/Users/nk782/.codex/worktrees/i01a-operation-config/SpaceBattleOfThreeKingdoms\", aborting.",
+      "classification": "Engine aborted before test script; no new core_rules test exit evidence",
+      "target_write_permission": "Parent coordinator directly confirmed explicit target AccessDenied during document copy; core path errors are separate observations",
+      "additional_engine_retry": "Forbidden after final absolute default attempt"
+    }
+  },
+  "overall_gate": "INCOMPLETE_CORE_EXIT_EVIDENCE",
+  "preexisting_six_unchanged": true,
+  "godot_processes_observed": 0,
+  "independent_review": "Accepted: new runner and actual partial-clock60 cases; full planned gate incomplete because core_rules exit evidence not returned",
+  "original_A04": "NOT_READY",
+  "original_A05": "NOT_READY",
+  "original_A06": "NOT_READY"
+}

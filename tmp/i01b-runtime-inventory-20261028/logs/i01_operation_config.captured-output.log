@@ -1,0 +1,6 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+I01A_ADDITIONAL_REGRESSIONS=17
+I01A_CONFIGURATION_BUILDS=60 NAMED_REJECTIONS=24 CHECKS=326
+ORIGINAL_I01_A04_A05_A06=NOT_READY; no host/runtime/save/gameplay validation
+I01A_OPERATION_CONFIG_PASS a01 a02 a03 a04 a05 a06

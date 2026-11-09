@@ -1,0 +1,8 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: [FleetBattle3D] invalid_brief_difficulty at brief.difficulty
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] init_game (res://scripts/FleetBattle3D.gd:180)
+       [1] _ready (res://scripts/FleetBattle3D.gd:151)
+P02_DIFFICULTY_DONE 4 0

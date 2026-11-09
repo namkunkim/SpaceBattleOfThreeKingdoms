@@ -1,0 +1,545 @@
+{
+  "count": 77,
+  "outside_count": 0,
+  "files": [
+    {
+      "path": "artifacts/localization/en-battle.png.import",
+      "creation_utc": "2026-11-01T06:28:05.129103+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/en-brief.png.import",
+      "creation_utc": "2026-11-01T06:28:05.026742+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/en-formation.png.import",
+      "creation_utc": "2026-11-01T06:28:05.049314+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/en-organization.png.import",
+      "creation_utc": "2026-11-01T06:28:05.213892+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/en-prologue.png.import",
+      "creation_utc": "2026-11-01T06:28:05.178257+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/en-result.png.import",
+      "creation_utc": "2026-11-01T06:28:05.288165+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/en-title.png.import",
+      "creation_utc": "2026-11-01T06:28:05.593005+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/en-world-result.png.import",
+      "creation_utc": "2026-11-01T06:28:05.641741+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/en-world-z0.png.import",
+      "creation_utc": "2026-11-01T06:28:05.685781+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/en-world-z2.png.import",
+      "creation_utc": "2026-11-01T06:28:05.733479+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/en-world-z3.png.import",
+      "creation_utc": "2026-11-01T06:28:05.778677+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/ja-battle.png.import",
+      "creation_utc": "2026-11-01T06:28:05.970820+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/ja-brief.png.import",
+      "creation_utc": "2026-11-01T06:28:06.170885+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/ja-formation.png.import",
+      "creation_utc": "2026-11-01T06:28:06.186422+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/ja-organization.png.import",
+      "creation_utc": "2026-11-01T06:28:06.162355+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/ja-prologue.png.import",
+      "creation_utc": "2026-11-01T06:28:06.193971+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/ja-result.png.import",
+      "creation_utc": "2026-11-01T06:28:06.316242+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/ja-title.png.import",
+      "creation_utc": "2026-11-01T06:28:06.602831+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/ja-world-result.png.import",
+      "creation_utc": "2026-11-01T06:28:06.703614+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/ja-world-z0.png.import",
+      "creation_utc": "2026-11-01T06:28:03.867717+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/ja-world-z2.png.import",
+      "creation_utc": "2026-11-01T06:28:03.883299+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/ja-world-z3.png.import",
+      "creation_utc": "2026-11-01T06:28:03.849123+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/zh_CN-battle.png.import",
+      "creation_utc": "2026-11-01T06:28:03.897694+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/zh_CN-brief.png.import",
+      "creation_utc": "2026-11-01T06:28:03.806576+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/zh_CN-formation.png.import",
+      "creation_utc": "2026-11-01T06:28:03.795038+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/zh_CN-organization.png.import",
+      "creation_utc": "2026-11-01T06:28:04.233256+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/zh_CN-prologue.png.import",
+      "creation_utc": "2026-11-01T06:28:04.224720+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/zh_CN-result.png.import",
+      "creation_utc": "2026-11-01T06:28:04.342700+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/zh_CN-title.png.import",
+      "creation_utc": "2026-11-01T06:28:04.408908+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/zh_CN-world-result.png.import",
+      "creation_utc": "2026-11-01T06:28:04.451035+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/zh_CN-world-z0.png.import",
+      "creation_utc": "2026-11-01T06:28:04.431987+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/zh_CN-world-z2.png.import",
+      "creation_utc": "2026-11-01T06:28:04.765008+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "artifacts/localization/zh_CN-world-z3.png.import",
+      "creation_utc": "2026-11-01T06:28:04.760007+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "core/battle/operation_profile.gd.uid",
+      "creation_utc": "2026-11-01T06:27:55.420850+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "core/battle/operation_service_state.gd.uid",
+      "creation_utc": "2026-11-01T06:27:55.450999+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tests/bundle_layout_data.gd.uid",
+      "creation_utc": "2026-11-01T06:27:57.627324+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tests/fleet_size_review.gd.uid",
+      "creation_utc": "2026-11-01T06:27:57.680708+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tests/group_formation.gd.uid",
+      "creation_utc": "2026-11-01T06:27:57.704649+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tests/i01_operation_config.gd.uid",
+      "creation_utc": "2026-11-01T06:27:57.820125+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tests/i01b_logical_clock.gd.uid",
+      "creation_utc": "2026-11-01T06:27:57.726450+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tests/i01b_runtime_inventory.gd.uid",
+      "creation_utc": "2026-11-01T06:27:57.776410+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tests/i01b_service_state.gd.uid",
+      "creation_utc": "2026-11-01T06:27:57.796525+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tests/localization_coverage.gd.uid",
+      "creation_utc": "2026-11-01T06:27:57.839248+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tests/result_roster.gd.uid",
+      "creation_utc": "2026-11-01T06:27:57.870070+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/data-rules-fix-20261027-chase-fallback/core/battle/battle_sim.gd.uid",
+      "creation_utc": "2026-11-01T06:27:57.950952+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/data-rules-fix-20261027-chase-fallback/tests/data_rules.gd.uid",
+      "creation_utc": "2026-11-01T06:27:58.327467+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01a-stage-20261027-implementation-spec/core/battle/operation_profile.gd.uid",
+      "creation_utc": "2026-11-01T06:27:58.454782+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01a-stage-20261027-implementation-spec/tests/i01_operation_config.gd.uid",
+      "creation_utc": "2026-11-01T06:27:58.515568+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-followup-20261028/baseline/bundle_before.gd.uid",
+      "creation_utc": "2026-11-01T06:27:59.064351+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-followup-20261028/exact_compare.gd.uid",
+      "creation_utc": "2026-11-01T06:27:59.598895+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-followup-20261028/invalid_loader.gd.uid",
+      "creation_utc": "2026-11-01T06:27:59.703926+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-next-20261031/probe.gd.uid",
+      "creation_utc": "2026-11-01T06:28:00.179518+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-p0-20261028-state-inventory/hash-negative-source/core/battle/ai/commander_ai.gd.uid",
+      "creation_utc": "2026-11-01T06:28:00.304957+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-p0-20261028-state-inventory/hash-negative-source/core/battle/ai/poc_enemy_ai.gd.uid",
+      "creation_utc": "2026-11-01T06:28:00.347359+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-p0-20261028-state-inventory/hash-negative-source/core/battle/assault.gd.uid",
+      "creation_utc": "2026-11-01T06:28:00.391574+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-p0-20261028-state-inventory/hash-negative-source/core/battle/battle_fingerprint.gd.uid",
+      "creation_utc": "2026-11-01T06:28:00.431821+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-p0-20261028-state-inventory/hash-negative-source/core/battle/battle_rng.gd.uid",
+      "creation_utc": "2026-11-01T06:28:00.467390+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-p0-20261028-state-inventory/hash-negative-source/core/battle/battle_sim.gd.uid",
+      "creation_utc": "2026-11-01T06:28:00.518160+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-p0-20261028-state-inventory/hash-negative-source/core/battle/battle_state.gd.uid",
+      "creation_utc": "2026-11-01T06:28:00.554333+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-p0-20261028-state-inventory/hash-negative-source/core/battle/command.gd.uid",
+      "creation_utc": "2026-11-01T06:28:00.595457+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-p0-20261028-state-inventory/hash-negative-source/core/battle/decisions.gd.uid",
+      "creation_utc": "2026-11-01T06:28:00.631187+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-p0-20261028-state-inventory/hash-negative-source/core/battle/detection.gd.uid",
+      "creation_utc": "2026-11-01T06:28:00.665866+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-p0-20261028-state-inventory/hash-negative-source/core/battle/fleet_state.gd.uid",
+      "creation_utc": "2026-11-01T06:28:00.705060+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-p0-20261028-state-inventory/hash-negative-source/core/battle/morale.gd.uid",
+      "creation_utc": "2026-11-01T06:28:00.735670+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-p0-20261028-state-inventory/hash-negative-source/core/battle/rule_set.gd.uid",
+      "creation_utc": "2026-11-01T06:28:00.771276+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-p0-20261028-state-inventory/hash-negative-source/core/battle/salvo.gd.uid",
+      "creation_utc": "2026-11-01T06:28:00.817406+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-p0-20261028-state-inventory/hash-negative-source/core/battle/skills.gd.uid",
+      "creation_utc": "2026-11-01T06:28:00.854148+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-p0-20261028-state-inventory/hash-negative-source/core/battle/stratagem.gd.uid",
+      "creation_utc": "2026-11-01T06:28:00.883765+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-p0-20261028-state-inventory/hash-negative-source/core/battle/supply.gd.uid",
+      "creation_utc": "2026-11-01T06:28:00.917407+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-p0-20261028-state-inventory/hash-negative-source/core/battle/terrain.gd.uid",
+      "creation_utc": "2026-11-01T06:28:00.950144+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-p0-20261028-state-inventory/hash-negative-source/core/battle/tick_clock.gd.uid",
+      "creation_utc": "2026-11-01T06:28:00.985807+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-p0-20261028-state-inventory/hash-negative-source/core/battle/victory.gd.uid",
+      "creation_utc": "2026-11-01T06:28:01.010405+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-p0-20261028-state-inventory/hash-negative-source/scripts/FleetBattle3D.gd.uid",
+      "creation_utc": "2026-11-01T06:28:01.040640+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/i01b-p1-20261028-partial-clock/tests/i01b_logical_clock.gd.uid",
+      "creation_utc": "2026-11-01T06:28:01.297710+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/session-requirements-html-20261031/desktop-first.png.import",
+      "creation_utc": "2026-11-01T06:28:04.534845+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/session-requirements-html-20261031/desktop.png.import",
+      "creation_utc": "2026-11-01T06:28:04.565978+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    },
+    {
+      "path": "tmp/session-requirements-html-20261031/mobile-320.png.import",
+      "creation_utc": "2026-11-01T06:28:04.547894+00:00",
+      "within_import": true,
+      "sha_matches": true,
+      "original_absent": true
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "tmp/p02-sixth-20261108/PLAN-v2.md": {
+    "bytes": 7290,
+    "sha256": "493adbb5f88432d18628e45ee2ee78a774e9c9caafa8c0f7513e56a75a98085f"
+  },
+  "tmp/p02-sixth-20261108/REVIEW-PLAN-V2-INDEPENDENT.md": {
+    "bytes": 3567,
+    "sha256": "5a9b2e254240d68022959afeb1884ea11b02c103a81f5c21ea918ae7ed59cb84"
+  },
+  "tmp/p02-sixth-20261108/run-v4.py": {
+    "bytes": 6835,
+    "sha256": "b0310fa6f1bf2c672fd7ec1fa22bc4ecd09c8caa2148bd6ba21079f81c4c60ef"
+  },
+  "tmp/p02-sixth-20261108/returning-settings.cfg": {
+    "bytes": 30,
+    "sha256": "c8b752aba9f5015889c00c5a45db9fef916af2a1e1be3e68d49b8121b2db721b"
+  },
+  "tmp/p02-sixth-20261108/native-oracle.json": {
+    "bytes": 2915,
+    "sha256": "204bce6ac85a14d559774b5e08ea5a8c73701d2f0d91d21320364355c136e943"
+  },
+  "tmp/p02-sixth-20261108/trace-oracle-v4.json": {
+    "bytes": 6482,
+    "sha256": "98912c262c2605497762ed60ac557172144a846c74a5038305010122b2dcd3de"
+  },
+  "tmp/p02-sixth-20261108/verify-trace-v4.py": {
+    "bytes": 1387,
+    "sha256": "6b28306dc53eaf5a772279c5b690e70641a8eca43c9ee50804f4d39b1a6a109a"
+  },
+  "tmp/p02-sixth-20261108/before-attempt-03/common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-26-05-30584-2500872.jsonl": {
+    "bytes": 9741,
+    "sha256": "abe897734154fe3d121b5b1feaea2957f98040295115b04581d78c626737dc53"
+  },
+  "tmp/p02-sixth-20261108/before-attempt-03/common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-26-07-30584-4110135.jsonl": {
+    "bytes": 3229,
+    "sha256": "22b2e71d0fbbd3e6f10918c6ddbdb95eb10e36c9a269f12ca52892fb87b6d73e"
+  }
+}

@@ -1,0 +1,80 @@
+[
+  {
+    "test": "core_rules",
+    "script": "tests/core_rules.gd",
+    "script_sha256": "f05bb7af048626b9823cdd169f4f72c1025dd1073426bed5e8bb7b133b84bbb7",
+    "exit_code": 0,
+    "started": "2026-10-28T23:23:34.7558970+09:00",
+    "ended": "2026-10-28T23:23:37.4592364+09:00",
+    "captured_output": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\nCORE_RULES_PASS",
+    "captured_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\core_rules.captured-output.log",
+    "captured_sha256": "e3851d9bbb3ea4d93e5ee74c397a8872c9d340c0a3acbd68b4863dcbc4f444d8",
+    "engine_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\core_rules.log",
+    "engine_sha256": "f840d3c0784ee9beff94eea1b3de8aed303664f88fa73b47ccc06b422dfaa4d8"
+  },
+  {
+    "test": "data_rules",
+    "script": "tests/data_rules.gd",
+    "script_sha256": "e21db4b23e9814bb89cae2fc5f5e8f5751b6dcdb952fb3da01cc68da8af670d3",
+    "exit_code": 0,
+    "started": "2026-10-28T23:23:37.4781301+09:00",
+    "ended": "2026-10-28T23:23:54.2749092+09:00",
+    "captured_output": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\nQ82 입문 함대 9 비율 1.470\nQ82 표준 함대 10 비율 1.590\nQ82 상급 함대 14 비율 2.140\nQ82 극한 함대 14 비율 2.140\nspecial_skills 19 by_officer 148\nDATA_RULES_PASS keys=80 core=28 proposed=28 first_move=1814\nWARNING: 280 ObjectDB instances were leaked at exit (run with `--verbose` for details).\n   at: cleanup (core/object/object.cpp:2536)\nERROR: 18 resources still in use at exit (run with --verbose for details).\n   at: clear (core/io/resource.cpp:822)",
+    "captured_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\data_rules.captured-output.log",
+    "captured_sha256": "1d2ba559122d1fdd2952f929837a253354bd87289ed90f5dcb99b5bee71328ab",
+    "engine_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\data_rules.log",
+    "engine_sha256": "6b08d1876d6725798108a76e12d0c6eab8b5961cb8466477f1014e1a594ba829"
+  },
+  {
+    "test": "i01_operation_config",
+    "script": "tests/i01_operation_config.gd",
+    "script_sha256": "daf611b6568b20f76bd9784f34b2eddb767251a6f02df43507b289cc3cd4cdd4",
+    "exit_code": 0,
+    "started": "2026-10-28T23:23:54.2809297+09:00",
+    "ended": "2026-10-28T23:23:54.9739266+09:00",
+    "captured_output": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\nI01A_ADDITIONAL_REGRESSIONS=17\nI01A_CONFIGURATION_BUILDS=60 NAMED_REJECTIONS=24 CHECKS=326\nORIGINAL_I01_A04_A05_A06=NOT_READY; no host/runtime/save/gameplay validation\nI01A_OPERATION_CONFIG_PASS a01 a02 a03 a04 a05 a06",
+    "captured_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\i01_operation_config.captured-output.log",
+    "captured_sha256": "baecee868f04a5edcd8b99c3306794b207719da702aa3d716f5748db45f06f99",
+    "engine_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\i01_operation_config.log",
+    "engine_sha256": "e4abb51256f8f8dc88db6aa95ddcc57d1612deb8207b155319cf6eb7bcb22bbf"
+  },
+  {
+    "test": "i01b_logical_clock",
+    "script": "tests/i01b_logical_clock.gd",
+    "script_sha256": "febcbc625a32814b21ac60a10fcba389928921044711fecb95a2ada6ddaf8925",
+    "exit_code": 0,
+    "started": "2026-10-28T23:23:54.9786753+09:00",
+    "ended": "2026-10-28T23:23:55.7340285+09:00",
+    "captured_output": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\nI01B_P1_PARTIAL_CLOCK_PASS cases=60 seeds=10 speeds=3 pause_variants=2 trace=50,100,150 tick=2 end_ms=150\nORIGINAL_I01_A04_A05_A06=NOT_READY; no host/replay adapters, checkpoint restore, or product geometry validation",
+    "captured_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\i01b_logical_clock.captured-output.log",
+    "captured_sha256": "43e93cc17d1ce5eea302306991ffa035d8ccccae4ca47b6e5b884406e80cb1a7",
+    "engine_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\i01b_logical_clock.log",
+    "engine_sha256": "58ddc2dc76aa1a559a65aa76788349496b2358644b424399bc4ccf71de2380c2"
+  },
+  {
+    "test": "detection_rules",
+    "script": "tests/detection_rules.gd",
+    "script_sha256": "d1a4766bc39406d8785007cac424132a7bf4c835d5c8b900f2adaeebf4c0e10c",
+    "exit_code": 0,
+    "started": "2026-10-28T23:23:55.7389946+09:00",
+    "ended": "2026-10-28T23:24:36.2526551+09:00",
+    "captured_output": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\nDETECTION_RULES_PASS\nWARNING: 285 ObjectDB instances were leaked at exit (run with `--verbose` for details).\n   at: cleanup (core/object/object.cpp:2536)\nERROR: 18 resources still in use at exit (run with --verbose for details).\n   at: clear (core/io/resource.cpp:822)",
+    "captured_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\detection_rules.captured-output.log",
+    "captured_sha256": "9e12d1c9471cb859bb7fe8c12c56c160ba647c4d237c297023f6d6a82a1fff92",
+    "engine_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\detection_rules.log",
+    "engine_sha256": "4fb41698c9e3d977a828df94523687cf662705b2f603121ee345285035d41032"
+  },
+  {
+    "test": "supply_rules",
+    "script": "tests/supply_rules.gd",
+    "script_sha256": "54bbd2fe1a15b50e15d66c62821e1fe2dfdefc5d8d2dcb7e63b64514ec3d63d7",
+    "exit_code": 0,
+    "started": "2026-10-28T23:24:36.2579725+09:00",
+    "ended": "2026-10-28T23:24:52.1156541+09:00",
+    "captured_output": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\nSUPPLY_RULES_PASS\nWARNING: 244 ObjectDB instances were leaked at exit (run with `--verbose` for details).\n   at: cleanup (core/object/object.cpp:2536)\nERROR: 18 resources still in use at exit (run with --verbose for details).\n   at: clear (core/io/resource.cpp:822)",
+    "captured_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\supply_rules.captured-output.log",
+    "captured_sha256": "1fe0af6088c9f4317d902bf281ac40d90a67191b5580405bc75e72284ab537cb",
+    "engine_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\supply_rules.log",
+    "engine_sha256": "1dd6ccc818c7d15b987fb8bee3049f4f2022302499d074331b80df6eb94e1e2d"
+  }
+]

@@ -1,0 +1,18 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: TEST_FAIL core에 규칙 수치 리터럴:
+res://core/battle/bundle_layout.gd:15  8  <- 1, 8: # 봉시·안행: 양익을 대칭으로 배치
+res://core/battle/bundle_layout.gd:17  0.9  <- p = Vector2(absf(side) * (0.9 if kind == 8 else -0.9), side)
+res://core/battle/bundle_layout.gd:17  8  <- p = Vector2(absf(side) * (0.9 if kind == 8 else -0.9), side)
+res://core/battle/bundle_layout.gd:17  0.9  <- p = Vector2(absf(side) * (0.9 if kind == 8 else -0.9), side)
+res://core/battle/bundle_layout.gd:24  0.45  <- p = Vector2(side * side / span * 0.45, side)
+res://core/battle/bundle_layout.gd:29  9  <- elif kind == 3 or kind == 9:
+res://core/battle/bundle_layout.gd:34  6  <- if kind == 6:
+res://core/battle/bundle_layout.gd:35  0.7  <- p.x -= p.y * 0.7
+res://core/battle/bundle_layout.gd:36  7  <- elif kind == 7:
+res://core/battle/bundle_layout.gd:37  0.25  <- p.y += 0.25 if row % 2 else -0.25
+res://core/battle/bundle_layout.gd:37  0.25  <- p.y += 0.25 if row % 2 else -0.25
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] ok (res://tests/lib/check.gd:8)
+       [1] _run (res://tests/data_rules.gd:88)

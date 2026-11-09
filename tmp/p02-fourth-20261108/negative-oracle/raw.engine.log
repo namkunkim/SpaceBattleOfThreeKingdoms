@@ -1,0 +1,31 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+VIEWER_ROW E01 PASS {"filtered":4,"opposing_id":2,"raw":4,"side":0}
+VIEWER_ROW E02 PASS {"filtered":4,"opposing_id":1,"raw":4,"side":1}
+VIEWER_FAIL exact event type/order/value for side 0
+VIEWER_ROW E03 FAIL {"filtered":2,"opposing_id":2,"raw":4,"side":0}
+VIEWER_FAIL exact event type/order/value for side 1
+VIEWER_ROW E04 FAIL {"filtered":2,"opposing_id":1,"raw":4,"side":1}
+VIEWER_FAIL exact event type/order/value for side 0
+VIEWER_FAIL exact event type/order/value for side 1
+VIEWER_ROW E05 FAIL {"after_side0":5,"after_side1":2,"before":2,"contacts":1}
+VIEWER_FAIL exact event type/order/value for side 1
+VIEWER_ROW E06 FAIL {"filtered":7,"masked_losses":1,"masked_salvos":2,"raw":10}
+VIEWER_FAIL exact event type/order/value for side 0
+VIEWER_FAIL exact event type/order/value for side 1
+VIEWER_ROW E07 FAIL {}
+VIEWER_ROW E08 PASS {}
+VIEWER_FAIL exact event type/order/value for side 0
+VIEWER_ROW E09 FAIL {"type":"bool","value":false}
+VIEWER_FAIL exact event type/order/value for side 0
+VIEWER_ROW E10 FAIL {"type":"float","value":0.0}
+VIEWER_FAIL exact event type/order/value for side 0
+VIEWER_ROW E11 FAIL {"type":"String","value":"0"}
+VIEWER_FAIL exact event type/order/value for side 0
+VIEWER_ROW E12 FAIL {"type":"int","value":-1}
+VIEWER_FAIL exact event type/order/value for side 1
+VIEWER_ROW E13 FAIL {}
+VIEWER_FAIL exact event type/order/value for side 1
+VIEWER_FAIL real nested payload in both queue and output
+VIEWER_ROW E14 FAIL {}
+P02_VIEWER_EVENTS_FAIL rows=14 assertions=147

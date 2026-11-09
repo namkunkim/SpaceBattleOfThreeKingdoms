@@ -1,0 +1,21 @@
+{
+  "branch": "codex/feature-i01b-not_remove",
+  "head": "fb660cea69207fd332e26128643007694910a253",
+  "index": [],
+  "inputs": {
+    "core/battle/skills.gd": "0d2bf2bfd81cb6f026e025f008774725f7c87d53e0d857697501172bafb21b3d",
+    "core/battle/battle_sim.gd": "670916af166c1f67fd58f6ab3007782a598a7a8f6fea72024042e1945beb967a",
+    "core/battle/fleet_state.gd": "00b39729582cea9f7b66fecd5396c44bdc4b0fa0b2f57516bc4d94cf12d04d6e",
+    "core/battle/battle_projection.gd": "04c146b3f7aabc67a9119f604ff839eab8f2efa69be9b45d654556679c969f30",
+    "core/battle/ai/commander_ai.gd": "a5ecb379d4258a46eeb78f91697c366adbd6a04d9164fca5f1c7c7983c5a2ae5",
+    "core/battle/salvo.gd": "c80ede4aa4d9c6aa75cd99f9af3672645f0a03e87d170d295bbe9f716b022090",
+    "core/battle/operation_private_state.gd": "c555099934bdd0a80f4f4d89100e435e621db6f2f0fe5b98c2be9b2d63619a6e",
+    "core/battle/detection.gd": "df34cee4a225683d6bc1c9005dc7760c365ce3a61ae68e106449cb2e7154253b",
+    "core/battle/morale.gd": "0bfbe6ca0f85557b59bfed737bca65ad6e352aa328c837ad747f2dd759773af4",
+    "core/battle/assault.gd": "a98747df1ac2505b03557962c78ff5e3dae41af6c1d021a8dd679dcd8f83954f",
+    "core/battle/stratagem.gd": "f7d45eb4c31118e44fe4e8ee1ee31778c99f0a933bd1b49d49afd935f8447581",
+    "docs/battle-core/REVIEW-P8A.md": "f9047f36ac9227ed8db09e8bec820c1f6b370cceea360980c23be259f7f96f3a",
+    "docs/battle-core/pc-campaign-design/D04-STATE.md": "d8272a2159d4384558b83b7db8952913e82242ee2cf41cd08315bb036553886d",
+    "tests/special_skills.gd": "4e3ba25de6ec695abf58b2a611cea396a07a810a99b78ccb02492ed639071168"
+  }
+}

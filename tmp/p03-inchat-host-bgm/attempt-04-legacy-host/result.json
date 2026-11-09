@@ -1,0 +1,89 @@
+{
+  "diagnostic_gate": "PASS",
+  "product_gate": "NOT_RUN",
+  "observation": "CLEAN",
+  "mode": "legacy-host",
+  "actual_exit": 0,
+  "timeout": false,
+  "job": {
+    "active": 0,
+    "total": 3,
+    "terminated": 0
+  },
+  "launcher_pid": 37064,
+  "engine": {
+    "driver": "Dummy",
+    "mode": "legacy-host",
+    "path": "C:/Tools/Godot/Godot_v4.7.2-stable_win64.exe",
+    "pid": 27288
+  },
+  "events": [
+    {
+      "event": "engine",
+      "fields": {
+        "driver": "Dummy",
+        "mode": "legacy-host",
+        "path": "C:/Tools/Godot/Godot_v4.7.2-stable_win64.exe",
+        "pid": 27288
+      }
+    },
+    {
+      "event": "before_frame",
+      "fields": {
+        "bgm": true,
+        "canonical": true,
+        "clock_ms": 0,
+        "fingerprint": "c65540dbac9f03d8d0abecd7c03bdad03acd253d01b9d8243a786e3c81b972a7",
+        "has_playback": true,
+        "has_playback_after_disable": true,
+        "playing": true,
+        "playing_after_disable": false,
+        "seed": 20261109,
+        "tick": 0
+      }
+    },
+    {
+      "event": "manual_frame",
+      "fields": {
+        "acc": 0.25,
+        "playing": false,
+        "tick": 1
+      }
+    },
+    {
+      "event": "stopped",
+      "fields": {
+        "playing": false,
+        "tree_attached": true
+      }
+    },
+    {
+      "event": "cleared",
+      "fields": {
+        "stream_null": true,
+        "tree_attached": true
+      }
+    },
+    {
+      "event": "freed",
+      "fields": {
+        "freed": true,
+        "root_children": 1
+      }
+    },
+    {
+      "event": "probe_result",
+      "fields": {
+        "ok": true
+      }
+    }
+  ],
+  "diagnostics": [],
+  "leaked_instances": [],
+  "resources_still_in_use": [],
+  "input_count": 2783,
+  "source_stable": true,
+  "project_stable": true,
+  "head_index_stable": true,
+  "status_unchanged": true
+}

@@ -1,0 +1,90 @@
+{
+  "C:\\Python314\\python.exe": {
+    "size": 106208,
+    "sha256": "03168c01b7b7491423350e82c26fee71f35b43694d1319d3c668bda6903a0c38"
+  },
+  "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64.exe": {
+    "size": 180858888,
+    "sha256": "ab1824f85bfd8e0e4128182c000c4003a3e042245b2967848d089b2a04b22424"
+  },
+  "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe": {
+    "size": 198152,
+    "sha256": "c8f0a6bc45a19b33541501e57f6f7cd972ab18453743266339d495cbbe846643"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\assets\\audio\\music\\stars_stripes.ogg": {
+    "size": 2053947,
+    "sha256": "c7f8efe0f59318c2ae725080d45cffb71fe73b90818f02bdff4c7f6bd6d8a364"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\assets\\audio\\music\\stars_stripes.ogg.import": {
+    "size": 414,
+    "sha256": "168d814805d827e2ba0c7239b042adebdd9d84f85a63b5a16f520a05298538f0"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\ui_sound.gd": {
+    "size": 9855,
+    "sha256": "9128b51e464ddfb4537ed10c74c8cbc8b483f6a849c5dc651967e9944bb5f731"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-command-suffix-20261107\\windows_job.py": {
+    "size": 4907,
+    "sha256": "6c8333ae38b148777d2f1b78bd1c02321f89602054d3f5daa75beb4f4526580f"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-host-clock-ui-20261108\\.godot\\imported\\stars_stripes.ogg-b59abb1eef986334bd1d3b3ab6e47e07.md5": {
+    "size": 91,
+    "sha256": "f682a417ee0782d302f8437cb0bb818197986a49a3da8749b0359c8ba13be930"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-host-clock-ui-20261108\\.godot\\imported\\stars_stripes.ogg-b59abb1eef986334bd1d3b3ab6e47e07.oggvorbisstr": {
+    "size": 2147963,
+    "sha256": "8e8d916b1fad127cd6e8ac0edda2ef0008f1455d0ce483679a09bd4eb4e1d57a"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-inchat-host-bgm\\bgm_probe.gd": {
+    "size": 2287,
+    "sha256": "a6a66680985ab0b11f6f87d4990233ca389d65bfecd52fa9c42466713c4ca913"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-inchat-host-bgm\\PLAN.md": {
+    "size": 5065,
+    "sha256": "be02fa756d60a0b0bfe4aa296535706c24224f1254ee816fc038b0acdafbdb00"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-inchat-host-bgm\\REVIEW-PLAN-6SOL.md": {
+    "size": 3143,
+    "sha256": "0e67fb7cc8740fb93d3d9deb52e3fa5051b5ddd96cd3d4db2324a2ffce25fd33"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-inchat-host-bgm\\run_gate.py": {
+    "size": 8937,
+    "sha256": "a35c5a4a5e71fc948417d0f777c8241f427369f7e4f2a4eddfaadc7885cb8607"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-inchat-host-clock\\attempt-04\\result.json": {
+    "size": 1626,
+    "sha256": "2ba61073a1052336dc55d736bc70eef5b46b0ce6e02457c3fed17485810314da"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-inchat-host-clock\\attempt-04\\stderr.txt": {
+    "size": 882,
+    "sha256": "f1e4061a7a45011aff50c550490477c50aaba6144e635b19a56752ca19e0949d"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-inchat-host-clock\\attempt-04\\stdout.txt": {
+    "size": 87831,
+    "sha256": "99db47ecb52c2b421115e44e4fd28b8458cecbcf17e1ce9f812e2af3c89eba75"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-inchat-host-clock\\attempt-05\\result.json": {
+    "size": 1627,
+    "sha256": "59390b646862987b993bbb8cbe909787c2b62cbada9aaa41c8b384bcef1da45a"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-inchat-host-clock\\attempt-05\\stderr.txt": {
+    "size": 882,
+    "sha256": "6c8fa91d3621307288169f362679981abb51d9969f2746ed17c45b0551a2a9ce"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-inchat-host-clock\\attempt-05\\stdout.txt": {
+    "size": 87824,
+    "sha256": "f8ca610b0768e492924f3b3134b880e040642a598f20b5b44f7ac8ec8bf8fc93"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-inchat-host-clock\\attempt-06\\result.json": {
+    "size": 963,
+    "sha256": "823d3a44021ea334285bd9c38b05b6d273671127cc72fa21e9b15c57b203f405"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-inchat-host-clock\\attempt-06\\stderr.txt": {
+    "size": 666,
+    "sha256": "8e79d845052d42f559fb5251f76e083c8d84864795bed2cd3cb8c76bf49d8330"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-inchat-host-clock\\attempt-06\\stdout.txt": {
+    "size": 86598,
+    "sha256": "7bdf4a7bb31dbc5d6c395a268c8fda092d31024d387e0e6c11ef6fd7b36ccaa9"
+  }
+}

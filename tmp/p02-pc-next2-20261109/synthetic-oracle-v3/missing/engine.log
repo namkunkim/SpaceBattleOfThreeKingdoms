@@ -1,0 +1,29 @@
+P02_RETURN_ASSERT arguments PASS
+P02_RETURN_ASSERT battle PASS
+P02_RETURN_ASSERT phase PASS
+P02_RETURN_ASSERT button PASS
+P02_RETURN_ASSERT map-uncached PASS
+P02_RETURN_ASSERT hide-map PASS
+P02_RETURN_ASSERT reject-1-scene PASS
+P02_RETURN_ASSERT reject-1-ui PASS
+P02_RETURN_ASSERT reject-1-settings PASS
+P02_RETURN_ASSERT reject-1-brief PASS
+P02_RETURN_ASSERT reject-1-queue PASS
+P02_RETURN_ASSERT reject-2-scene PASS
+P02_RETURN_ASSERT reject-2-ui PASS
+P02_RETURN_ASSERT reject-2-settings PASS
+P02_RETURN_ASSERT reject-2-brief PASS
+P02_RETURN_ASSERT reject-2-queue PASS
+P02_RETURN_ASSERT restore-map PASS
+P02_RETURN_ASSERT accept-scene PASS
+P02_RETURN_ASSERT accept-queue PASS
+P02_RETURN_ASSERT accept-settings PASS
+P02_RETURN_ASSERT accept-view PASS
+P02_RETURN_ASSERT accept-facts PASS
+P02_RETURN_DONE 23 0
+ERROR: Cannot open file 'res://scenes/WorldMap.tscn'.
+ERROR: Cannot open file 'res://scenes/WorldMap.tscn'.
+ERROR: Failed loading resource: res://scenes/WorldMap.tscn.
+ERROR: Failed loading resource: res://scenes/WorldMap.tscn.
+WARNING: WORLD_RETURN_REJECTED error=19
+WARNING: WORLD_RETURN_REJECTED error=19

@@ -1,0 +1,83 @@
+{
+  "argv": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+    "--script",
+    "res://tmp/p03-parallel-cursor-20261108/remaining-cursor-drain/probe.gd"
+  ],
+  "actual_exit": 0,
+  "timeout_exit": null,
+  "timed_out": false,
+  "launch_error": null,
+  "accounting": {
+    "active": 0,
+    "total": 2
+  },
+  "launcher_pid": 111,
+  "elapsed": 0.13627479993738234,
+  "input_count": 8,
+  "input_stable": false,
+  "input_after_errors": [],
+  "outside_status_delta": [],
+  "preservation_errors": [
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\remaining-cursor-drain\\integrated-gate-fixture-v2\\new.txt",
+      "reason": "new protected entry lacks approved pattern or provenance"
+    }
+  ],
+  "permitted_external": [],
+  "engine_identity_matches": true,
+  "diagnostics": {
+    "script_error": 0,
+    "error": 0,
+    "warning": 0,
+    "objectdb": 0,
+    "leak": 0,
+    "resources": 0
+  },
+  "exact_markers": true,
+  "result": {
+    "engine_pid": 222,
+    "engine_path": "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64.exe",
+    "ok": true,
+    "ids": [
+      "correct_pending_and_suffix:1",
+      "correct_pending_and_suffix:2",
+      "correct_pending_and_suffix:3",
+      "correct_pending_and_suffix:4",
+      "correct_pending_and_suffix:5",
+      "correct_pending_and_suffix:6",
+      "correct_pending_and_suffix:7",
+      "correct_pending_and_suffix:8",
+      "duplicate_pending_in_suffix:1",
+      "duplicate_pending_in_suffix:2",
+      "duplicate_pending_in_suffix:3",
+      "duplicate_pending_in_suffix:4",
+      "duplicate_pending_in_suffix:5",
+      "duplicate_pending_in_suffix:6",
+      "duplicate_pending_in_suffix:7",
+      "duplicate_pending_in_suffix:8",
+      "reordered_or_omitted_suffix:1",
+      "reordered_or_omitted_suffix:2",
+      "reordered_or_omitted_suffix:3",
+      "reordered_or_omitted_suffix:4",
+      "reordered_or_omitted_suffix:5",
+      "reordered_or_omitted_suffix:6",
+      "reordered_or_omitted_suffix:7",
+      "reordered_or_omitted_suffix:8",
+      "consumer_outlives_restore:1",
+      "consumer_outlives_restore:2",
+      "consumer_outlives_restore:3",
+      "consumer_outlives_restore:4",
+      "consumer_outlives_restore:5",
+      "consumer_outlives_restore:6",
+      "consumer_outlives_restore:7",
+      "consumer_outlives_restore:8"
+    ],
+    "checks": 32
+  },
+  "hard_stop": true,
+  "gate_passed": false
+}

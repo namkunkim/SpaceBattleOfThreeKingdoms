@@ -1,0 +1,10 @@
+{
+  "exit": 0,
+  "timeout": false,
+  "inputs_unchanged": true,
+  "user_after": {
+    "battle_traces/battle-2026-11-08T17-34-44-28696-4546965.jsonl": "946109be870e987783801b4e3d50ea3cad1b3f774103cf9e31eac6ebb1527043",
+    "battle_traces/battle-2026-11-08T17-34-50-28696-9730885.jsonl": "a4123bfbabc7a41dc6a7e61c5756e49cbe46b8bc341ae2c4013cbbf4f4a33826",
+    "logs/godot.log": "595ea898c1cb59abd6d9824bbb4a90e117bbb78aa4a8fafc7d5c0308d31f2569"
+  }
+}

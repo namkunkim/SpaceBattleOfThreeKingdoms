@@ -1,0 +1,26 @@
+{
+  "result": "FAILED_BEFORE_REJECTION_LAUNCH",
+  "attempt": 1,
+  "runner_exit": 1,
+  "expected_import_exit": 0,
+  "actual_import_exit": 0,
+  "job_active_at_cleanup": 0,
+  "reject_processes_launched": 0,
+  "postcheck": {
+    "approved_inputs": 11,
+    "closure_source": 1480,
+    "protected": 4,
+    "head": "0be09755b70378286105972f35ac5b7031715664",
+    "index_sha256": "6980BAD4DF2570C03E76CD964AEC5BB0B71EC5CBDEF69F4B022E4DF1A2ACA57A"
+  },
+  "guard_match": {
+    "name": ".godot/editor/FleetBattle3D.tscn-folding-6fc9f3aa03723dcea84c2d7516fcefec.cfg",
+    "sha256": "9b34a7fc95b0f9cd640941851bbb0ebc8777e0666f5560e828143047b26c7c93"
+  },
+  "logs": {
+    "before/import/engine.os.tsv": "467366514533e19d06c39c14e34a5bef32b9f25e9bfe1eb06b680e81bcefa15d",
+    "before/import/engine.log": "4a4f98d1cb901c1199b98ddffeea74d7a649343f2a0176ced0c4eb898d5a5490",
+    "before/import/command.json": "2d614002673a6be00f47834f26dab45dfb1284b7863bad50351806f4e0984757",
+    "before/post-import.json": "5483b321521d097ac224ae08bc2fb25d6c4d1432271c9aa0027cf16a85799c8b"
+  }
+}

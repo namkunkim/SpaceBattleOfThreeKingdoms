@@ -1,0 +1,35 @@
+
+InputObject                                                         SideIndicator
+-----------                                                         -------------
+?? tmp/p03-parallel-state-20261108/EXEC-END-GIT.txt                 =>
+?? tmp/p03-parallel-state-20261108/READONLY-MANIFEST.sha256         =>
+?? tmp/p03-parallel-state-20261108/attempt-01.exit                  =>
+?? tmp/p03-parallel-state-20261108/attempt-01.stderr                =>
+?? tmp/p03-parallel-state-20261108/attempt-01.stdout                =>
+?? tmp/p03-parallel-state-20261108/cases/duplicate/fleet_state.gd   =>
+?? tmp/p03-parallel-state-20261108/cases/ignored/battle_state.gd    =>
+?? tmp/p03-parallel-state-20261108/cases/nested/battle_state.gd     =>
+?? tmp/p03-parallel-state-20261108/cases/omission/battle_state.gd   =>
+?? tmp/p03-parallel-state-20261108/cases/rename/fleet_state.gd      =>
+?? tmp/p03-parallel-state-20261108/oracle-approved.json             =>
+?? tmp/p03-parallel-state-20261108/prepare.exit                     =>
+?? tmp/p03-parallel-state-20261108/prepare.stderr                   =>
+?? tmp/p03-parallel-state-20261108/readonly-manifest.json           =>
+?? tmp/p03-parallel-state-20261108/runs/attempt-01/baseline.stderr  =>
+?? tmp/p03-parallel-state-20261108/runs/attempt-01/baseline.stdout  =>
+?? tmp/p03-parallel-state-20261108/runs/attempt-01/duplicate.stderr =>
+?? tmp/p03-parallel-state-20261108/runs/attempt-01/duplicate.stdout =>
+?? tmp/p03-parallel-state-20261108/runs/attempt-01/ignored.stderr   =>
+?? tmp/p03-parallel-state-20261108/runs/attempt-01/ignored.stdout   =>
+?? tmp/p03-parallel-state-20261108/runs/attempt-01/missing.stderr   =>
+?? tmp/p03-parallel-state-20261108/runs/attempt-01/missing.stdout   =>
+?? tmp/p03-parallel-state-20261108/runs/attempt-01/nested.stderr    =>
+?? tmp/p03-parallel-state-20261108/runs/attempt-01/nested.stdout    =>
+?? tmp/p03-parallel-state-20261108/runs/attempt-01/omission.stderr  =>
+?? tmp/p03-parallel-state-20261108/runs/attempt-01/omission.stdout  =>
+?? tmp/p03-parallel-state-20261108/runs/attempt-01/rename.stderr    =>
+?? tmp/p03-parallel-state-20261108/runs/attempt-01/rename.stdout    =>
+?? tmp/p03-parallel-state-20261108/runs/attempt-01/suite.json       =>
+?? tmp/p03-parallel-state-20261108/setup-attempt-01.txt             =>
+
+

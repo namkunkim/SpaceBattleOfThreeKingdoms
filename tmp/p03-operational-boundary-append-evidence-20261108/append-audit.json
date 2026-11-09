@@ -1,0 +1,22 @@
+{
+  "utc": "2026-11-08T09:16:07.865844+00:00",
+  "writer_check": "Both pre-append files matched the previous recorded post-append SHA, and were reread immediately before writing. No intervening write observed.",
+  "files": {
+    "tmp/p03-progress-20261108/P03-CHECKLIST-REVISION-20261108.md": {
+      "before": "86b8bf012931005d898520c9dc8a76695ff3ba6c2549020f6662cbaaa3083830",
+      "after": "3af86b5b12d4fb00068ca5f8e603bdbe5019687ba25e4767e377b48f83d5eee5",
+      "append_sha256": "44ac291c051544f01f0e83b749b7a1334e932d567ed234c1e827510cca8020ce",
+      "prefix_preserved": true
+    },
+    "tmp/p03-progress-20261108/HANDOFF-20261108.md": {
+      "before": "952ac0573c229cbb87ecdad71f86b78b99dcb59d7ca87eafb4b7545a95f0a7a6",
+      "after": "81478540e7ea95618c2e92df02aa689ab072b020f9c59931108046e057f49d43",
+      "append_sha256": "d5b939e54f8434087fb4a131a27d1b955dfc1745996a86a0a0833043d0376f28",
+      "prefix_preserved": true
+    }
+  },
+  "evidence_sha256": {
+    "p03-parallel-active-20261108/owner-operational-boundary/FINDINGS.md": "345bbcb6b6df9485bf90b0638495fcb90fada6f22fc874f4c212065985a82e47",
+    "p03-parallel-active-20261108/owner-operational-boundary/REVIEW-CLOSEOUT.md": "6284c24544676981fefdd4fc49504f197e9ddbb91cd7ec5f4bde197f12495c80"
+  }
+}

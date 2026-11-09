@@ -1,0 +1,67 @@
+{
+  "target_root": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+  "head": "8292805143f4561a4f5258d40b7b94adf4ff5802",
+  "copied_count": 12,
+  "files": [
+    {
+      "path": "core/battle/battle_sim.gd",
+      "sha256": "670916af166c1f67fd58f6ab3007782a598a7a8f6fea72024042e1945beb967a",
+      "bytes": 49068
+    },
+    {
+      "path": "data/profiles/poc_corridor.json",
+      "sha256": "bb7c2dbaa8c258dc8b43f16894502a72cb66a22d2058b5d5314816a0488e9d8e",
+      "bytes": 5047
+    },
+    {
+      "path": "tests/data_rules.gd",
+      "sha256": "e21db4b23e9814bb89cae2fc5f5e8f5751b6dcdb952fb3da01cc68da8af670d3",
+      "bytes": 16924
+    },
+    {
+      "path": "docs/battle-core/CHECKLIST-OPEN.md",
+      "sha256": "0cbafa53d9c454ab9368772383610881e520778bc345fd064259f632930389cf",
+      "bytes": 115373
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/DATA-RULES-BASELINE-FIX-20261028.md",
+      "sha256": "cd66eee88a7d30697d64b1583656c5c2dd54f82d7684284abff98b024063ec95",
+      "bytes": 4632
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/REVIEW-DATA-RULES-BASELINE-20261027.md",
+      "sha256": "b92f9baf0354be6ff2d740d34193c73298cad71e2586b815b4d40b171b64174b",
+      "bytes": 6922
+    },
+    {
+      "path": "tests/i01b_logical_clock.gd",
+      "sha256": "febcbc625a32814b21ac60a10fcba389928921044711fecb95a2ada6ddaf8925",
+      "bytes": 3812
+    },
+    {
+      "path": "tools/scenario/audit_i01b_contract.ps1",
+      "sha256": "e31d52fb7f1e4974001a7113b919518f484cdaedd8f759dc8e2b59375ab4e263",
+      "bytes": 6088
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/I01B-PREPARATION-20261028.md",
+      "sha256": "ae919d992bc9c083d8008677b999d5b149189f59e8840c9b5d46e848621ac26b",
+      "bytes": 7152
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/REVIEW-I01B-P0-20261028.md",
+      "sha256": "183d77ad8502a4e746528cdc0fb6d6273b872efe389275cb864bbe50b888dadd",
+      "bytes": 5148
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/I01B-P1-RESULT-20261028.md",
+      "sha256": "67c4ffb46fec0b00ff4cad37ad57b78848d9935caeb5e113929744104d84a834",
+      "bytes": 3878
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/REVIEW-I01B-P1-20261028.md",
+      "sha256": "6ed7fe733c2c2648c89be0157b92405c1138fdc61f37c7d3afa8a1af1ef60483",
+      "bytes": 5253
+    }
+  ]
+}

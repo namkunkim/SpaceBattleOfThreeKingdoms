@@ -1,0 +1,19 @@
+{
+  "label": "attempt3-api",
+  "command": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+    "--log-file",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-first-integration-20261105\\attempt3-api-engine.log",
+    "-s",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-first-integration-20261105\\attempt3-api-runner.gd"
+  ],
+  "actual_exit": 0,
+  "script_errors": 0,
+  "errors": 0,
+  "warnings": 0,
+  "log_sha256": "9be87160389ce04ef3fd8d05c5fedcd8887ce232df1ecc08de01845327920c78",
+  "engine_log_sha256": "61449bc66d177851e3325d5401d85bc17a95a87692235173d79aecf2361f6c6f"
+}

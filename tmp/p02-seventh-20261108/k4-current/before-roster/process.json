@@ -1,0 +1,11 @@
+{
+  "exit": 0,
+  "timeout": false,
+  "inputs_unchanged": true,
+  "user_after": {
+    "settings.cfg": "c8b752aba9f5015889c00c5a45db9fef916af2a1e1be3e68d49b8121b2db721b",
+    "battle_traces/battle-2026-11-08T17-30-48-26052-8289082.jsonl": "019402a1a4ba74a0a68833e0962ae4a80145479bb1e58e7384b6d1886aca340f",
+    "battle_traces/battle-2026-11-08T17-30-54-26052-14164417.jsonl": "d39b2d3360ac41f6f6ad899fa13de9a2af7ecea121231cc65eb972874348eaa9",
+    "logs/godot.log": "503fd4c60bc8782d3538afe82b6f36c1f64bfa705d253651b4ae6c83e9e34c47"
+  }
+}

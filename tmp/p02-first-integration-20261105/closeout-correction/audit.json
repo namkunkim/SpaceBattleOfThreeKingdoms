@@ -1,0 +1,121 @@
+{
+  "stage": "correction package awaiting independent closeout",
+  "review": "tmp/p02-first-integration-20261105/REVIEW-5B-NON-ASTRA-20261107.md",
+  "review_sha256": "e700be1a8451db0cac2a744d920ee059208d3a723e49d9616bb340563c8b29d9",
+  "implementation_model": "gpt-6.1-sol",
+  "review_model": "gpt-6.1-terra",
+  "review_session": "01a1b5b5-7f97-7232-a17a-5aefa63cbc20",
+  "historical_review_model": "gpt-6-astra",
+  "historical_review_role": "history",
+  "implementation_review": "no blocking counterexample found in scope; documents and closeout returned for correction",
+  "baseline_count": 3960,
+  "baseline_delta": [
+    "core/battle/operation_private_state.gd",
+    "docs/battle-core/pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.md",
+    "docs/battle-core/CHECKLIST-OPEN.md"
+  ],
+  "source_count": 35,
+  "source_mismatches": [],
+  "quarantine_count": 77,
+  "quarantine_mismatches": [],
+  "quarantine_originals_present": [],
+  "attempt3_input_count": 42,
+  "attempt3_input_mismatches": [],
+  "pre_review_manifest_count": 235,
+  "code_sha256": {
+    "core/battle/operation_runtime_adapter.gd": "0c0cad3e6e4e15887dcd75f9d5b57dbbe2690bfdcafd1caac163909b5421173a",
+    "core/battle/operation_private_state.gd": "dd47ceebaad2c5139bd8012deb841815cf0707c2231de202a00756913c0fa427",
+    "tests/autoresolve.gd": "a6c3ee903e2365569a31aa0194acb426d87c5856a74a9c7dcaaedeaeea18b5b8",
+    "tests/p02_headless_adapter.gd": "e44e964ed76f4d7d2edab8ebffa238672c70717670b6d82738120c72dfea9583"
+  },
+  "prior_archive_sha256": {
+    "tmp/i01b-p2c-delivery-20261101.zip": "99a4a1adca1bdc3bf7e56baa9112c1625ab6c6371bfaafa0482b3471903a2971",
+    "tmp/i01b-active-replace-delivery-20261104.zip": "87a090a8d891391473fd9dfa9627dcd4430af234359e06d0b78e9e7b5f005eae",
+    "tmp/p02-first-headless-delivery-20261107.zip": "fdef242798df7da319552afacab9cce6c2a4aaf6628c0a2a617d51d934079b24"
+  },
+  "html_sha256": "9653d4913deff9e2cdb7d5c7db768b29ee2dd53aa80cd67a260378b48263dc1d",
+  "cache_sha256": "0eb214ebcc65cd2ca7b9d98dc83f61a9c170ca75b1b23acf4c3c58fdfb550ab1",
+  "before_git_actual_exit": 2,
+  "before_diagnostics": [
+    33,
+    35
+  ],
+  "final_git_actual_exit": 2,
+  "final_diagnostics": [
+    33
+  ],
+  "git_wrapper_exit1": "excluded; wrapper status differs from direct subprocess",
+  "overall_git_diff_check_pass": false,
+  "changed_documents": [
+    {
+      "path": "docs/battle-core/pc-campaign-design/P02-FIRST-HEADLESS-RESULT-20261107.md",
+      "before_sha256": "6369e4f09622f0a73dc0cc382acc12e8b19d615088e4181951f1d1d56580dade",
+      "after_sha256": "8209b04e26510602fd76d5b29caf8b4100949555e032a9223d98418597fd0081",
+      "inverse_sha256": "6369e4f09622f0a73dc0cc382acc12e8b19d615088e4181951f1d1d56580dade",
+      "lines": [
+        1,
+        3,
+        47,
+        49,
+        51
+      ]
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/P02-FIRST-HEADLESS-CHECKLIST-20261107.md",
+      "before_sha256": "fbe81cef4b7825372c41e05a24fa6c5a2e922ced724cff81bb0550957be61587",
+      "after_sha256": "dc0bc3827850ee9299fb374ca62014314824833d4777d591a5c5e58a390a4451",
+      "inverse_sha256": "fbe81cef4b7825372c41e05a24fa6c5a2e922ced724cff81bb0550957be61587",
+      "lines": [
+        3,
+        10,
+        11,
+        13,
+        20
+      ]
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/SESSION-HANDOFF-P02-FIRST-HEADLESS-20261107.md",
+      "before_sha256": "77160bb8ef9f2cf694b348c347ec38c94fe859ba417a1c516699a8c8635ef03b",
+      "after_sha256": "dd51b699525073e64af03d8409a016b3d2bbf0ba5330050b069e94fbe32af621",
+      "inverse_sha256": "77160bb8ef9f2cf694b348c347ec38c94fe859ba417a1c516699a8c8635ef03b",
+      "lines": [
+        3,
+        21,
+        34,
+        36
+      ]
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.md",
+      "before_sha256": "6d63f3535c55d6fba8058fa2d6aa414e6c9ccf019a2b01fdf2b2190f011f4cf0",
+      "after_sha256": "584da2da0c907a32d43e406b96031e99586a026a0d4227124dba875b0631dafa",
+      "inverse_sha256": "6d63f3535c55d6fba8058fa2d6aa414e6c9ccf019a2b01fdf2b2190f011f4cf0",
+      "lines": [
+        5,
+        74,
+        103,
+        107,
+        109
+      ]
+    },
+    {
+      "path": "docs/battle-core/CHECKLIST-OPEN.md",
+      "before_sha256": "edc6771c38c844e14bd585da05089905f179c9b87adea639c0ef55bdf7c5eab6",
+      "after_sha256": "a1cf47d1120857e27a82828c902e15be7df5d4d546c2a44273c617362719a3f0",
+      "inverse_sha256": "edc6771c38c844e14bd585da05089905f179c9b87adea639c0ef55bdf7c5eab6",
+      "lines": [
+        35
+      ]
+    }
+  ],
+  "engine_reexecution": false,
+  "branch": "codex/feature-i01b-not_remove",
+  "head": "fb660cea69207fd332e26128643007694910a253",
+  "index": [],
+  "scope": "P02 limited headless opt-in correction; entire P02/I01/I01b/A04-A06 NOT_READY; external save schema UNCLASSIFIED",
+  "known_deviations": [
+    "--no-chain/--no-m9/--wind unknown_option classification",
+    "no new CLI supply-completion E2E",
+    "no disk fault injection/concurrent-writer guarantee"
+  ]
+}

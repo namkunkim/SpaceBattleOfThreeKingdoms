@@ -1,0 +1,28 @@
+--- v1/i01b_service_state.gd
++++ v2/i01b_service_state.gd
+@@ -151,7 +151,10 @@
+ 	var fleets_ref: Array = b.st.fleets.duplicate()
+ 	_k6_c_stream("c-source-native", a, label)
+ 	var answer := Service.restore_into_prepared_target(b, packet)
+-	_k6_c_stream("c-target-restore", b, label)
++	if a.detect != null:
++		print("K6_C_RESTORE ", JSON.stringify({"seed":a.st.seed_id,"phase":label,"ok":answer.get("ok",false)}))
++		if answer.get("ok", false):
++			_k6_c_stream("c-target-restore", b, label)
+ 	_check(answer.ok, label + " restore " + str(answer.get("error", "")))
+ 	_check(_same(outside, _outside(b)), label + " external state unchanged")
+ 	_check(_same(source_before, _all(a)) and _same(packet_before, packet), label + " source and packet unchanged")
+@@ -411,5 +414,12 @@
+ 	for side in 2:
+ 		var rows: Array = []
+ 		for id in sim.detect.contacts[side]:
+-			rows.append({"id": id, "typed_payload": var_to_bytes(sim.detect.contacts[side][id]).hex_encode()})
++			var rec: Dictionary = sim.detect.contacts[side][id]
++			rows.append({"id": id, "typed_payload": var_to_bytes(rec).hex_encode(), "fields":_k6_c_fields(rec)})
+ 		print("K6_CAPTURE ", stream, " ", JSON.stringify({"case": "detection", "seed": sim.st.seed_id, "phase": label, "side": side, "records": rows}))
++
++func _k6_c_fields(rec: Dictionary) -> Dictionary:
++	var p: Vector2 = rec.pos
++	return {"seen": rec.seen, "state": rec.state, "conf_bp": rec.conf_bp,
++		"pos": [p.x, p.y], "err_r": rec.err_r,
++		"types": [typeof(rec.seen), typeof(rec.state), typeof(rec.conf_bp), typeof(rec.pos), typeof(rec.err_r)]}

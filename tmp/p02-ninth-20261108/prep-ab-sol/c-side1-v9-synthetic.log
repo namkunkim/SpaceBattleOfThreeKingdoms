@@ -1,0 +1,12 @@
+accepted exact fixture, three phase-local external states, varying receipt metadata
+rejected mandatory fixture file missing [Errno 2] No such file or directory: 'C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\tmpy6shpwxg\\missing.json'
+rejected mandatory independent approval missing independently approved fixture pin SHA
+rejected self-consistent candidate pin bytes replaced fixture pin not approved
+rejected forged selected contact ID fixture-selected contact ID: unexpected value
+rejected joint candidate fixture swap packet context drift from independent fixture expectation
+rejected wrong phase target external position altered wrong-position-control: target external-state mutation
+rejected external position altered consistently before and after wrong-position-control: target external-state mutation
+rejected target selected state drift between phases repaired: target state changed between restore phases
+rejected mistyped restore success restore did not return true
+rejected mandatory wrong-position phase missing restore phases: exact fields
+synthetic only; no actual producer or engine

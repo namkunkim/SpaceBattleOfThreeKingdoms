@@ -1,0 +1,19 @@
+{
+  "processes": 1,
+  "cases": [
+    {
+      "label": "world_link",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 1,
+        "WARNING": 1
+      },
+      "rejects": [],
+      "output_sha256": null,
+      "pass_process": true
+    }
+  ],
+  "freeze_changes": []
+}

@@ -1,0 +1,11 @@
+# P02 표시용 사건 회수 독립 구현 5-b 재심
+
+2026-11-08. **제한 private owner 표시용 사건 회수 한정 수용.** 계획 SHA `b57713b931567f8be7e6bc9e1c958fed74de3bd3ddb28b4d46c5718ca20725a8`, 보완 계획 SHA `0ea44ae8141cc7201ae5dee11099d5cc8ecffd7150c5ef1f5ca7d4a7ac84d207`. 앞선 반려 기록은 유지하며, 동결 위반 기준선 대신 격리 재구성 증거를 심사했다. 제품 host나 전체 P02의 수용이 아니다.
+
+- 생산 메서드는 guard 및 exact integer side 검증 뒤 native `drain_events_for`를 한 번 호출하고 결과를 깊이 복사한다. native의 현재 contacts 기준 필터와 숨긴 사건까지 소진하는 단일 공유 큐가 유지된다. raw drain과 observe가 남아 권한 보안 경계는 아니다. runner는 별도 typed native와 양 side 및 안개 유무, side 교환·raw 대체 반례, drain 시점 contact, 자연 발생 2건 salvo actor와 1건 ship_lost other 마스킹을 대조했다. 오류와 busy 시 큐 보존 및 후속 drain, 반환 nested payload 사본, pending command·clock·projection 불변도 검사했다. viewer 원문은 14행 148 assertions PASS다.
+- 격리 사본 각 4218개 파일을 독립적으로 바이트 수/SHA 재계산해 불일치 0, 두 입력 목록의 유일한 차이는 owner다. 원본 owner 역제거와 최초 SHA 일치, canonical class/resource/cache 및 Godot 4.7.2, 양쪽 격리 res://·user:// 탐침을 확인했다. 7개 원문 회귀 각각 전후 14 프로세스 exit 0이며 결과와 고정 OUT은 격리 프로젝트에 있다. worker 59 checks는 동일하고 관측 프레임 수는 59와 57이다. 탐침 첫 parse 실패 exit 1도 보존됐다. 기본 17 프로세스 및 14 논리 행과 별도로 신규 프로세스는 회귀 14, 탐침 3이다.
+- 격리 BattleFlow 전후 종료 진단은 모두 161 ObjectDB/22 resources로 같고 stdout의 차이는 trace 경로·시간이다. 이전 실작업트리 변경 후 153/18은 10/28 역사 로그와 일치하는 별도 관측이며 변경 직전과 같다고 주장하지 않는다. WorldLink의 최초 timeout과 별도 기준 재실행 154/20, 첫 진단 후처리 false 판정과 수정 결과도 보존됐다. 기존 전체 diff-check는 기존 33행 후행 공백으로 exit 2다.
+- 새 집계기는 참조 5 stage의 freeze를 검사하며 격리 before 누락과 기존 오염 baseline 삽입은 각각 실패했다. 이전 baseline-regressions의 gate.py 변동은 이력으로 남고 정본에서 제외된다. 8820개 작업트리 보호 목록의 전후 기록은 동일했고 현재 파일을 독립 재해시해 불일치 0이다. 다만 이전 i01b 원문 실행은 원경로에 실제 썼으며 당시 SHA 일치는 바이트 일치만 입증한다. 새 격리 실행은 그 경로를 쓰지 않았다. 이는 실행 중 원자적 파일 스냅샷의 보장은 아니다.
+- session_meta와 turn_context 원문에서 구현 `/root/p02_fourth_impl`, session `01a1b98e-1791-7240-83e8-f5b99d1231be`, 모델 `gpt-6.1-sol`, 심사 `/root/p02_fourth_review`, session `01a1b98a-81ff-77d3-8285-f06e2f74be16`, 모델 `gpt-6.1-terra` 및 공통 parent `01a1ac09-125c-71d0-b13b-721727506c85`를 확인했다. 심사자는 구현하지 않았다.
+
+실제 FleetBattle3D 연결·초기 배치와 명령, clock·controls·trace 및 실패 시 세션 보존, WorldMap·BattleOutcome·제품 replay, K01~08 공동 인수, OS/엔진 장애·동시 호출·Android/성능은 미검증이다. 전체 P02/I01/I01b/A04~A06 NOT_READY, 외부 save schema UNCLASSIFIED. 문서·전달물 마감과 커밋·병합·배포는 별도다.

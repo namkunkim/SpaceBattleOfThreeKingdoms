@@ -1,0 +1,532 @@
+[
+  {
+    "Algorithm": "SHA256",
+    "Hash": "46B6FE191166EC3DCDB620F51C3CCD391A9080F52289517AE804BF86CECC1EA3",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\operation_private_state.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "0C0CAD3E6E4E15887DCD75F9D5B57DBBE2690BFDCAFD1CAAC163909B5421173A",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\operation_runtime_adapter.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "DFB9CD4A070995D9ACA44F77BF08CAB18AE87EB4C678A341CCDDC34C5A7FF74E",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\tick_clock.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "A5ECB379D4258A46EEB78F91697C366ADBD6A04D9164FCA5F1C7C7983C5A2AE5",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\ai\\commander_ai.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "74113AB7CD332A7519BCCFEE092FE2CA09EFB2FC3E6AC989ADA8FAFF2FBB9885",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\ai\\poc_enemy_ai.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "A98747DF1AC2505B03557962C78FF5E3DAE41AF6C1D021A8DD679DCD8F83954F",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\assault.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "4F658A2AB2E0012568FCD7A14342457C90A82F02D58980B99039F73ACD133890",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\battle_fingerprint.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "04C146B3F7AABC67A9119F604FF839EAB8F2EFA69BE9B45D654556679C969F30",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\battle_projection.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "F5F42ABD399BED12D10E8385DC83A1FED6450881FE060FDAB8734B5A93E3DEF6",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\battle_rng.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "670916AF166C1F67FD58F6AB3007782A598A7A8F6FEA72024042E1945BEB967A",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\battle_sim.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "0C7F4589156E642ADE356E0785C3096BB305AC1E2328607E9973E173D1ED9E5B",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\battle_state.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "D9CD27A4688AD58A36F5B82A0B524C437536EF11EF9A18008DB36B1D308DB148",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\bundle_layout.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "02415D2F2F7C91A8617CA27123895FEB03D3DF658C7AD00CB615188BB0009B31",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\command.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "18C9C52D46FBF16A798E1A9451ADC0B0BA9B91FB920FB1F8882307A6351D9D7D",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\decisions.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "DF34CEE4A225683D6BC1C9005DC7760C365CE3A61AE68E106449CB2E7154253B",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\detection.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "00B39729582CEA9F7B66FECD5396C44BDC4B0FA0B2F57516BC4D94CF12D04D6E",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\fleet_state.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "0BFBE6CA0F85557B59BFED737BCA65AD6E352AA328C837AD747F2DD759773AF4",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\morale.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "46B6FE191166EC3DCDB620F51C3CCD391A9080F52289517AE804BF86CECC1EA3",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\operation_private_state.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "4963F178877F3657A6DEF8580ED2DEAF2F612960E1198C2EE04E7A7309722F0E",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\operation_profile.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "90A3146F6B1257AB3705DF773AEF90428447FD971FF4ECB5501DD029D4684127",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\operation_replay.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "0C0CAD3E6E4E15887DCD75F9D5B57DBBE2690BFDCAFD1CAAC163909B5421173A",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\operation_runtime_adapter.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "18F1381A330D6F33163CC94F678FA624F8500DD415F5D35EE4A4B4BFD5EE44A0",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\operation_service_state.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "726D30B1A0F95DD7C91089401695B1810DE43726C351FCC12003ECEC2CD20E44",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\organization.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "FB780A9D3C7A6C7B6EBBC6C6681585F47045587E90CD147C9A17700C01F87BFC",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\poc_setup.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "EC1F0A55D28D9AAC8C56D59B209FA0DA52583C6EE802941551D335D98971C412",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\profile_loader.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "43C8A2A313C5D3A625A4AA9B925AE7C5B153D8CBD8147763F2F7B60FE93C364D",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\rule_set.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "1BFFB26DAEDDED5749D2885671F26FAB1683F02A948212E75B49B9A07A83C6EA",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\rules.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "C80EDE4AA4D9C6AA75CD99F9AF3672645F0A03E87D170D295BBE9F716B022090",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\salvo.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "A8871BA03F7E37B85C51B70C534CF5073E5E3A3E757569855EEFBBB3155234A0",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\scenario_profile.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "0D2BF2BFD81CB6F026E025F008774725F7C87D53E0D857697501172BAFB21B3D",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\skills.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "F7D45EB4C31118E44FE4E8EE1EE31778C99F0A933BD1B49D49AFD935F8447581",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\stratagem.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "1F762BFEA77ABB57795C87AF619E2D6B48210377CC6E04B9463D021BE6E2D5BE",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\supply.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "9AF7390A225398E4B31B6698C8D71AD8FCF877D8A296C750421892B5C997069D",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\terrain.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "DFB9CD4A070995D9ACA44F77BF08CAB18AE87EB4C678A341CCDDC34C5A7FF74E",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\tick_clock.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "73F87D6ECB1727171CA9FF3DFB6C0515B49699D5C34F05D502569944C317B74A",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\victory.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "39896D2BB19E5E8EF7B8B5B10944952A6961A89B14678B4C37ED98AAC17062AB",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\docs\\battle-core\\pc-campaign-design\\P02-PROGRESS-CHECKLIST.md"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "06C16944F56CBA91E4AFE426D17E605EE0995EFCC5D7CB286F9B8ECE39311F38",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\session_guard.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "9128B51E464DDFB4537ED10C74C8CBC8B483F6A849C5DC651967E9944BB5F731",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\ui_sound.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "E8E45FD6F540999ECC100B9683EACEC8CE3ADF431D56F42B223799F540D60AFC",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\battle_hud.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "42ECE01D837E41487E8898AA386FA0F95AA54D53CF38D803E008D8AB215BABE9",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\fleet_labels.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "B4740DCA06E391670E7AB60BD4C968A6466FE58407EF2677034E917DD61C3907",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\radar.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "5DBAFEEF1CF2BA6842C7F66AA9605427D1350424E5F5442AA364BB9E7F94CFAC",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\battle_pacing.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "F563C07FDE667A9D121E3D63D99024F29BC1EACDF6AC4F31332EF8AF3B80237F",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\catalog_translation.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "BB81EB1855FF0C13708648597905411663223758CCD9A54BA73DA1CAB0565CF6",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\command_deck.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "79F325B86E0347E714F1159CB45F09FADCC36FBAB479D7A121A20C20CE411BA1",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\commanders.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "38494F9EFB13F1E29C9AAF405166C69A919140B11AE139A319E3A6F1B3420C0B",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\decision_card.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "73DC364AF79B43AFACA9FA1F9EB2DEDFB747A6B56E2EF70B7EF046DEFCDEFE6B",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\deck_screens.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "D1F01D552B430CD32FAB64EB2E1936E35BEB354EE920F9BA5974BA7C0A966834",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\deck_widgets.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "62CD4A95C882611250C5A7789DD00B850ECB13DE790828B72D4819417925DF2C",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\edge_pulse.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "AB8EC69EECF81B96FED0BABA13C7554C04D16404BAD76FEB24DA272CC47CF8FA",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\factions.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "F6B6A6FECFBAC1F1179ED3F7E5C4B1543653607DD0E359FDC498F77AAE183DB7",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\formation_guide.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "D84E8340DE2AC4000C2ABB07460554C3D10B41D539A966ABA8D104444B6B86B6",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\formation_tab.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "B602CE2D754F8AEA582A5E9D5A7D4FF6199F56786E0FA98747B86DEBB410AFF1",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\game_locale.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "65EF3C5D0840C74FEDB8AFE49C7D49F61590A324BB375AB74AEA5EE270FF7DEA",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\game_settings.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "A96B76FD2CD2F947D66DA48B668B21405C8C2BC63DA126274D2D926E3A5D00DC",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\order_undo.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "E30C317C09CD195B590E9F53D86DAE0387F4B7D35E281B38331833D84BA11799",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\org_screen.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "B6719146F920BCF3AA47A0B9138E2A6D76EC28DE0E78F927FF50562C03A16C6A",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\ornate_style.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "11CAA4CE2810376FCD42C448216ADCBC1E5B94BFDCEC1580A920FB294E3F4E17",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\presentation.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "9FF388F2D6DFAF6CB598AFFA6A1CF830EE8349D9BD7D508D3A525A25117EEB53",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\prologue_text.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "53C3B3C63D2A14CA340DC70C99A4B706FC988924165C374726BF964D14514F02",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\quick_alert.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "A3CA4F8745BAE7CEFEC04E20E53B2492BAC1ACC9E6987E8E1958011EE3CD073B",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\radar_scope.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "BA38CDD7837179A52D765D4F465A3AA7723B9A79BF3E54822655DEA362D4255E",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\roster_screen.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "209A9958AC4954716D81405694738A1CBD19D31972DE1EA33B47B84E084AAB5E",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\rule_text.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "8BB8B09BC4422DD4C19B65E638251C7BE89F95B6B3FC816F9626F42F855ED57B",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\screen_kit.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "06C16944F56CBA91E4AFE426D17E605EE0995EFCC5D7CB286F9B8ECE39311F38",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\session_guard.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "4A76CDBB5D768957FFE388E1C8607AC302F85FC1B313D617B756E9AA833385DE",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\skill_bar.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "EE0C6C3B267626D1043A1AD19EC3D64BD94BB9BBA3B17E9A94483CDBB2519A35",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\squadron_strip.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "A46B8EF9D90DF89CF8049EE02E3EFB04D589F011F898568D07D7BA3813D3A0E4",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\supply_menu.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "1070FC1B282AD89AFBB6E94022BCB442E8E672F7491B2A496B9B5AE4341434B1",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\tactical_overlay.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "B3EF101C5AFA314FA4C048F67F0E092A920D7D1A164B2AAFCFB0C7328A65093B",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\ui_draw.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "9128B51E464DDFB4537ED10C74C8CBC8B483F6A849C5DC651967E9944BB5F731",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\ui_sound.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "4127B0548DA626EA32CF1C11744DCD23F4660BD3F813A894886F2244BBA2BF46",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud\\ui_kit\\ui_theme.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "B227C6877F18B18079C5F04D561D6D8AB4D67069AFA483C80D608914CA4956AB",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\input\\battle_commands.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "B54A4B6CED538B0DF26160F7CE6FBA7E1126FAC3FD259F30BFA7B3A5954306C9",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\input\\battle_input.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "6CCDDEB6A68DA159B2C42522BA4C098468C53DAE9CC360F6BF9558DEB66A387C",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\input\\mouse\\mouse_controller.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "6C4CD57AFC32B5152E5EDC6621254FBDED6A3B77D76CB665F60958BF8B4718F6",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\input\\selection_set.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "0C7FB6FF9271EB2DE540A6C6ACA40A8DFF4938C2FDD3BA1F805B0B280E4E5538",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\input\\touch\\hold_tip.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "BDD0F1C4CC5AB93640078270CECC4ECDDBD65133589BC6E955DF8352745D15DE",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\input\\touch\\safe_area.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "ADB386D047C5B429E536BDE852A57938F9060908E515EECDE82866E2D49DAB31",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\input\\touch\\touch_controller.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "31B706C7A292960C87F53F3B62B852055BCC08A7A48DD42CA2FDC47999F24982",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\input\\touch\\touch_metrics.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "01E805C3176C10AD6F04A216B9CEA60BE57366CF92EA4048856F2F25E618203B",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\scenes\\FleetBattle3D.tscn"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "B80F77BBE44A4380BAF32114AA44A42D8D31BF407BBF5A4B97ECBCCBA04182AC",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\scenes\\WorldMap.tscn"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "604B79308D9B3DBAB84DCED32456A4F41B28686C8EEC748073D3816892CFFC5C",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\scripts\\FleetBattle3D.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "85EC124DF59C0C50CEE616565E88BCDD978588F28BAF36180F8EC2C92EEBD9EB",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\scripts\\world\\auto_resolver.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "76BB319B96A1835087FF48F3C8CA268549A9906D2F658F605065ADF74FAF5E8F",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\scripts\\battle_trace.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "604B79308D9B3DBAB84DCED32456A4F41B28686C8EEC748073D3816892CFFC5C",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\scripts\\FleetBattle3D.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "F24585CE1EC065D9654AD05220748284DE1BB2D0BD75A342FDE84321F4FCE798",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\scripts\\world_link.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "85EC124DF59C0C50CEE616565E88BCDD978588F28BAF36180F8EC2C92EEBD9EB",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\scripts\\world\\auto_resolver.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "2E501F7CEF55504244993BACD63D9F9A7DE05F34CB78DB7D848DD93C9104A5F6",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\scripts\\world\\battle_brief.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "1586EC11745640A1AA8B6D9C7FDFACD515553AC8E4BE634394C552C03843D162",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\scripts\\world\\battle_outcome.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "B1E6D796A1D3CED93D6A619BDC46389AD1AC128393AE6FC9A4DB7493FF3D549E",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\scripts\\world\\epilogue_text.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "6DC9D0E844881DE10B321A42A5A60FD98A7DEB2E7454FB8CEE13B51CD569DEA8",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\P02-P03-OWNERSHIP-20261109.md"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "7D7DBB01B0CE63063ACE13F2D135D988D77A3C8247742F6247027AF8B7D813AE",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-product-restore-readiness-20261109\\PLAN.md"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "161EB5B6E0CC30E867E89694028FBD866A4D954115C21775A066D8E810111C5E",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-product-restore-readiness-20261109\\REVIEW-PLAN-6SOL.md"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "917E1019637B19CA269B11996052E7FE64FE0C8FEA5C8F1417B78BDACED3B604",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\view\\battle_view_3d.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "E40B067A8F9AF61A85F5FBF88B4297962F770B0191442EDE543B69B0F49BCE07",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\view\\battle_view_model.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "BB63326E15828A85C42D77510C6E5D5F29B6F6227089E6D847CA52833729281C",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\view\\camera_rig.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "15B9F140C63D67365E69E959190794A17D59991716DE0BDE5100C200EE0736AC",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\view\\fleet_render\\battle_source.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "328C339D0F29370AACC52AB084CDB553FBBA439F1B227046D26DAD5C2548A15F",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\view\\fleet_render\\beam_pool.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "ECA2D9CE26D25892C422D536F4A2E37D613995A4E9E03F704FE3170DC1A61F1B",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\view\\fleet_render\\fleet_renderer.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "97E91B289ADE90206E59B58E8B89CA956A75EE46770D6B814D3696DB25ACD108",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\view\\fleet_render\\fleet_role_layout.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "BDCF0B5C577FBC70029E742A118271C9BD94270527BC43797C26C448EBB50C9B",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\view\\fleet_render\\fx_pool.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "66F65A3B5AEBD187276E672A82D3AF7109218E0059B28913F711A531479DB938",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\view\\fleet_render\\scenario_roster.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "1601CFDEF97358CAAB8C2340FF94ABD5FEBEFC454F8FAC2E9D5B37E2DB1938D8",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\view\\fx_layer.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "A92610391129F36D1CD24B51438FC9B87C63BF91608B1FCE626E8505DA9F7ED4",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\view\\world\\world_canvas.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "E969BFE7E58434F465B6E006A8925A5E36F944BD62931503C5472693B0ECF055",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\view\\world\\world_map_screen.gd"
+  }
+]

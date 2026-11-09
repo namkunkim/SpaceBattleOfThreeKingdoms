@@ -1,0 +1,111 @@
+{
+  "created_utc": "2026-11-01T12:15:21.353882+00:00",
+  "scope": "RESTRICTED_PRIVATE_RUNTIME_NOT_CHECKPOINT",
+  "overall": "NOT_READY",
+  "external_save_schema": "UNCLASSIFIED",
+  "main_attempts": 5,
+  "main_limit": 6,
+  "separate_probes": 2,
+  "attempt5": {
+    "actual_exit": 0,
+    "cases": 70,
+    "checks": 11553,
+    "rejections": 45,
+    "failed": false,
+    "named_empty_form": {
+      "empty_form_first": "fleet_empty_form",
+      "empty_form_last": "fleet_empty_form"
+    },
+    "case_counts": {
+      "projectile": 10,
+      "resource": 10,
+      "memory": 10,
+      "pending": 10,
+      "post": 10,
+      "damaged": 10,
+      "terrain": 10
+    },
+    "script_error_count": 0,
+    "error_line_count": 0,
+    "leak_line_count": 0,
+    "helper_sha256": "a1376b70c22dcf371120d44999a38b68d141bc2306d9339f1e2294e6744196ca",
+    "test_sha256": "bd12cdad427ec672373ab844329bd6846e109f4d088ae007181eb24f4489403b"
+  },
+  "rerun_regressions": [
+    {
+      "script": "res://tests/core_rules.gd",
+      "actual_exit": 0,
+      "name": "core_rules",
+      "engine_sha256": "f840d3c0784ee9beff94eea1b3de8aed303664f88fa73b47ccc06b422dfaa4d8",
+      "captured_sha256": "f5edd78c23b68d37e1b7609e43fb2ee24a2e6612d10ffe500adaaac205b849d8",
+      "script_sha256": "f05bb7af048626b9823cdd169f4f72c1025dd1073426bed5e8bb7b133b84bbb7",
+      "script_error_count": 0,
+      "engine_text": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\nCORE_RULES_PASS\n"
+    },
+    {
+      "script": "res://tests/data_rules.gd",
+      "actual_exit": 0,
+      "name": "data_rules",
+      "engine_sha256": "cfd0056cfeed1a7752a902eec13a68a910d4fdc61e743d62e43614ddef312884",
+      "captured_sha256": "6f9afa0b0e7293b977239c8a49835e226e9777c8afb52fcd11fabd6703a1bef7",
+      "script_sha256": "e21db4b23e9814bb89cae2fc5f5e8f5751b6dcdb952fb3da01cc68da8af670d3",
+      "script_error_count": 0,
+      "engine_text": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\nQ82 입문 함대 9 비율 1.470\nQ82 표준 함대 10 비율 1.590\nQ82 상급 함대 14 비율 2.140\nQ82 극한 함대 14 비율 2.140\nspecial_skills 19 by_officer 148\nDATA_RULES_PASS keys=80 core=30 proposed=28 first_move=1814\n"
+    },
+    {
+      "script": "res://tmp/i01b-p2c-resume-20261101/attempt5-regression-i01b_service_state.gd",
+      "actual_exit": 0,
+      "name": "i01b_service_state",
+      "engine_sha256": "911a6fb9a9f9b889528c87d20dac99f64295d67f27bbc03d5e008e55f79f9672",
+      "captured_sha256": "affea346dfbc00028c3a80cb69c9fd09e0f91a6c16254a76d49ccc358e46d26e",
+      "script_sha256": "565e9bf57f3bddb4e94719af6570e80693d9bacbb8d113bb08c6180ffdef8ebe",
+      "script_error_count": 0,
+      "engine_text": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\nI01B_P2B_SERVICE_STATE_PASS cases=40 seeds=10 checks=2202 rejections=33 PARTIAL_NOT_CHECKPOINT NOT_READY\n"
+    }
+  ],
+  "carried_canonical_regressions": [
+    {
+      "name": "i01_operation_config",
+      "actual_exit": 0,
+      "script": "tests/i01_operation_config.gd",
+      "script_sha256": "daf611b6568b20f76bd9784f34b2eddb767251a6f02df43507b289cc3cd4cdd4",
+      "script_unchanged_from_session_freeze": null,
+      "engine_log_sha256": "e4abb51256f8f8dc88db6aa95ddcc57d1612deb8207b155319cf6eb7bcb22bbf",
+      "basis": "historical canonical exit0; predecessor source35 and inputs7/current cache unchanged; scoped guard changes only new helper"
+    },
+    {
+      "name": "i01b_logical_clock",
+      "actual_exit": 0,
+      "script": "tests/i01b_logical_clock.gd",
+      "script_sha256": "febcbc625a32814b21ac60a10fcba389928921044711fecb95a2ada6ddaf8925",
+      "script_unchanged_from_session_freeze": null,
+      "engine_log_sha256": "58ddc2dc76aa1a559a65aa76788349496b2358644b424399bc4ccf71de2380c2",
+      "basis": "historical canonical exit0; predecessor source35 and inputs7/current cache unchanged; scoped guard changes only new helper"
+    },
+    {
+      "name": "detection_rules",
+      "actual_exit": 0,
+      "script": "tests/detection_rules.gd",
+      "script_sha256": "d1a4766bc39406d8785007cac424132a7bf4c835d5c8b900f2adaeebf4c0e10c",
+      "script_unchanged_from_session_freeze": null,
+      "engine_log_sha256": "4fb41698c9e3d977a828df94523687cf662705b2f603121ee345285035d41032",
+      "basis": "historical canonical exit0; predecessor source35 and inputs7/current cache unchanged; scoped guard changes only new helper"
+    },
+    {
+      "name": "supply_rules",
+      "actual_exit": 0,
+      "script": "tests/supply_rules.gd",
+      "script_sha256": "54bbd2fe1a15b50e15d66c62821e1fe2dfdefc5d8d2dcb7e63b64514ec3d63d7",
+      "script_unchanged_from_session_freeze": null,
+      "engine_log_sha256": "1dd6ccc818c7d15b987fb8bee3049f4f2022302499d074331b80df6eb94e1e2d",
+      "basis": "historical canonical exit0; predecessor source35 and inputs7/current cache unchanged; scoped guard changes only new helper"
+    }
+  ],
+  "excluded_success_evidence": [
+    "attempt2",
+    "attempt3",
+    "pre-canonical regression logs"
+  ],
+  "preservation": "pre-final-review-preservation-audit.json",
+  "pending": "independent final 5b acceptance and stage6 documents/archive"
+}

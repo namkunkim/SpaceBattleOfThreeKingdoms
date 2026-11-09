@@ -1,0 +1,11 @@
+{
+  "PYTHON-JOB-NOWINDOW-CANDIDATE-REVIEW.md": "cf3a95ceca2044cc2256544c1851ba93d41624e4e5ce2f3fe018f0d85a0234cd",
+  "variant-abi-review/PYTHON-JOB-NOWINDOW-MANIFEST.json": "466e28f1544738abcc12d89aaf7fb694061e1bb7f4957eea7cc05fda3372c0c3",
+  "variant-abi-review/owned_job_python_nowindow_candidate.py": "6e4b901e096d16cd6a39be86292ba53bb49466894136b1862072be2a7ee89ce1",
+  "variant-abi-review/owned_job_python_nowindow_candidate.diff": "999589bdd55786386028444c143018358f19f709596723a904bb98fd9cd6677b",
+  "variant-abi-review/diagnostic_owner_nowindow_candidate.py": "4a70ac1ed8eb085c93c1ca5f94ec4cfefff1a5e815f1c4d08eea912bee51ea04",
+  "variant-abi-review/python_job_nowindow_supervisor_candidate.py": "3df4ce345721fc3bf802620b7d86703f2b77e08e86cc0c3e8fe77ad75a42671d",
+  "variant-abi-review/python_job_nowindow_external_candidate.py": "b366b6d50253edf06d46368601acdc05c310ce4efb93bbe01f8391230f5b9533",
+  "variant-abi-review/owned-job-nowindow-synthetic.py": "b1460a7c89c9d4184f6c60405a77f2f1527b7cb12447bce9560e14982f96b38c",
+  "variant-abi-review/owned-job-nowindow-synthetic.log": "261b76a301c8629e3d239e1a786c8325a7e5c60ae582fd5177d5cc4fa4a5d469"
+}

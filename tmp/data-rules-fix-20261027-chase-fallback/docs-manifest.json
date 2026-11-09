@@ -1,0 +1,24 @@
+{
+  "target_root": "C:\\Users\\nk782\\.codex\\worktrees\\i01a-operation-config\\SpaceBattleOfThreeKingdoms",
+  "staging_root": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/data-rules-fix-20261027-chase-fallback",
+  "files": [
+    {
+      "path": "docs/battle-core/CHECKLIST-OPEN.md",
+      "before_sha256": "c1c08ab57f93470a1de92bead4611a1f00091a1d45470fd3f221e46ea8171566",
+      "after_sha256": "bf57778d93488ca546b237838ff8ab5b61b2ec93c4cb690954ecf8ceb581db20",
+      "bytes": 114560
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/DATA-RULES-BASELINE-FIX-20261028.md",
+      "before_sha256": null,
+      "after_sha256": "cd66eee88a7d30697d64b1583656c5c2dd54f82d7684284abff98b024063ec95",
+      "bytes": 4632
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/REVIEW-DATA-RULES-BASELINE-20261027.md",
+      "before_sha256": null,
+      "after_sha256": "b92f9baf0354be6ff2d740d34193c73298cad71e2586b815b4d40b171b64174b",
+      "bytes": 6922
+    }
+  ]
+}

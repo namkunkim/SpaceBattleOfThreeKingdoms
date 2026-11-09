@@ -1,0 +1,15 @@
+{
+  "actual_exit": 1,
+  "attempt": 2,
+  "limit": 6,
+  "status": "FAIL; timeout expected aggregation type",
+  "script_errors": 0,
+  "assertion_errors": 2,
+  "cases": 8,
+  "checks": 13417,
+  "api_rejections": 32,
+  "policy_microcases": 9,
+  "timeout_cases": 2,
+  "canonical_class_guard": "",
+  "cli_or_regressions_started": false
+}

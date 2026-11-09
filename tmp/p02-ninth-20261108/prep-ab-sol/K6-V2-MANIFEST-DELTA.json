@@ -1,0 +1,119 @@
+{
+  "status": "REVIEW_ONLY_NON_EXECUTABLE",
+  "k6_consumed": false,
+  "references": {
+    "tmp/p02-eighth-resume-8d838216ccfc/K6-EXECUTION-CONTRACT.md": "0e6a6ea344a000832f49d9c2c2300c9e00f73602772a83e4e6db24f6c3455c30",
+    "tmp/p02-eighth-resume-8d838216ccfc/prepared/rejection_v2.gd": "57263ad08aa9188705d8c0cc4d84898b4e004163921d06c1aa12d68655bd8975",
+    "tmp/p02-eighth-resume-8d838216ccfc/prepared/MANIFEST-V5-REVIEW-ONLY.json": "79f3534bc0d415630ecaea71dbe204d9502425e9f498c386f8ad3319c42610a5",
+    "tmp/p02-eighth-resume-8d838216ccfc/prepared/runner_v5.py": "2a20f39dcbd945e665c50abc1e17b3fc6a770fdd8674b5623b2004f8b3c3a06a",
+    "tmp/p02-eighth-resume-8d838216ccfc/prepared/owned_job_v3.py": "49740a782f476af4fda134c5aa101b8900ed98b6aea6b495fed9e16965f1b3a4",
+    "tests/p02_headless_adapter.gd": "e44e964ed76f4d7d2edab8ebffa238672c70717670b6d82738120c72dfea9583",
+    "tests/i01b_service_state.gd": "d11615fa541a7064e10bfd2eb648253192baae0ee98e2adf609ad954b4967e66",
+    "tests/world_link.gd": "2058f703db8eb86e03f7c4470d9b06c2364565299b7fa5eecd984390591f8080",
+    "input/battle_input.gd": "b54a4b6ced538b0df26160f7ce6fba7e1126fac3fd259f30bfa7b3a5954306c9",
+    "tests/autoresolve.gd": "05c26d4e74f74523028ac5e6d7fd39a76c575be4d2c68edc8cc9388b46cfc697"
+  },
+  "row09": {
+    "success": [
+      {
+        "mode": "direct",
+        "seed": -1,
+        "ok": true,
+        "keys": [
+          "ok",
+          "sim"
+        ],
+        "hz": 10,
+        "reinf_same_reference": true,
+        "instrumented_counts": [
+          1,
+          1,
+          0,
+          0
+        ]
+      },
+      {
+        "mode": "direct",
+        "seed": 4294967296,
+        "ok": true,
+        "keys": [
+          "ok",
+          "sim"
+        ],
+        "hz": 10,
+        "reinf_same_reference": true,
+        "instrumented_counts": [
+          1,
+          1,
+          0,
+          0
+        ]
+      },
+      {
+        "mode": "auto",
+        "seed": -1,
+        "ok": true,
+        "keys": [
+          "ok",
+          "sim"
+        ],
+        "hz": 10,
+        "reinf_same_reference": true,
+        "instrumented_counts": [
+          1,
+          1,
+          0,
+          0
+        ]
+      },
+      {
+        "mode": "auto",
+        "seed": 4294967296,
+        "ok": true,
+        "keys": [
+          "ok",
+          "sim"
+        ],
+        "hz": 10,
+        "reinf_same_reference": true,
+        "instrumented_counts": [
+          1,
+          1,
+          0,
+          0
+        ]
+      }
+    ],
+    "rejection": [
+      {
+        "mode": "invalid",
+        "expected": "prepared/rejection_v2.gd::unsupported()",
+        "instrumented_counts": [
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "mode": "",
+        "expected": "prepared/rejection_v2.gd::unsupported()",
+        "instrumented_counts": [
+          1,
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "checks_uninstrumented": 10,
+    "checks_instrumented": 14
+  },
+  "blockers": [
+    "independent Q/C/B code and fixture not frozen",
+    "GUI attribution unproved",
+    "actual engine and nested Job unmeasured",
+    "global deadline supervisor absent",
+    "immutable final manifest absent"
+  ]
+}

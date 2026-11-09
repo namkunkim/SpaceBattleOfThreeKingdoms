@@ -1,0 +1,16 @@
+{
+  "path": "docs\\battle-core\\pc-campaign-design\\P02-PROGRESS-CHECKLIST.md",
+  "before_sha256": "828c2f5a8992c19ce89b239620601a6effdf021f8db4dac79526285f6ca6f34e",
+  "after_sha256": "3f556ac90f209c291313f8c5a33cd9ed0d3120a02b950e46a7f63a5c01ea031d",
+  "diff_sha256": "0deb1fde3a5edc3f2ab7d7018e1ec59633e31a9163bbf31725f514162d9a4ff0",
+  "zip_sha256": "df72060b8db835b40e3f1e52124bd49f3807af37b0283558a2c21a47a26d35a7",
+  "verified_links": [
+    "P02-PREP-ERROR-RESULT-20261108.md",
+    "P02-PREP-ERROR-CHECKLIST-20261108.md",
+    "SESSION-HANDOFF-P02-PREP-ERROR-20261108.md",
+    "../../../tmp/p02-seventh-20261108/REVIEW-5B-INDEPENDENT.md",
+    "../../../tmp/p02-seventh-20261108/closeout/P02-PREP-ERROR-DELIVERY-20261108.zip",
+    "../../../tmp/p02-seventh-20261108/closeout/REVIEW-CLOSEOUT-INDEPENDENT.md"
+  ],
+  "reverse_hunk_matches": true
+}

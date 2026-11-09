@@ -1,0 +1,498 @@
+{
+  "patch_sha256": "0f1adc97a1b4a014e285522d75a22ef45a90100bce4fd810626d3f4c03d29ae3",
+  "apply_exit": 0,
+  "diff_check_exit": 0,
+  "godot": "C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe",
+  "isolated_project": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/patch-repo",
+  "isolated_appdata": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/isolated-appdata",
+  "import": {
+    "exit": 0,
+    "args": "--headless --path patch-repo --editor --import --quit",
+    "log": "import.log",
+    "diagnostic": "safe save failed"
+  },
+  "fixtures": [
+    {
+      "sha256": "8B18598D76F124231FE8FA5EA24DD9168B52F5D93D3532AC5B1CB95482AF6E81",
+      "bytes": 13612,
+      "isolated_path": "patch-repo/tmp/p02-third-20261108/oracle.native",
+      "source": "tmp/p02-third-20261108/oracle.native"
+    },
+    {
+      "sha256": "B62AD402C586992C9B2B84E3A4140C3E16240BE0CD29B33589AB308BB35BD29E",
+      "bytes": 3417,
+      "isolated_path": "patch-repo/tmp/p02-third-20261108/matrix/commands-shape.json",
+      "source": "tmp/p02-third-20261108/matrix/commands-shape.json"
+    },
+    {
+      "sha256": "E81CE96E825EBA12E9A66A57CF629FCFD88F444FCB63DCD6A2BA81D881CD0953",
+      "bytes": 4040,
+      "isolated_path": "patch-repo/tmp/p02-third-20261108/matrix/commands.json",
+      "source": "tmp/p02-third-20261108/matrix/commands.json"
+    },
+    {
+      "sha256": "79D0BB88A76C91BE472198F5CF1F35C1123274213879F05CB6067A7CA05FF4A9",
+      "bytes": 4001,
+      "isolated_path": "patch-repo/tmp/p02-third-20261108/matrix/defaults.json",
+      "source": "tmp/p02-third-20261108/matrix/defaults.json"
+    },
+    {
+      "sha256": "E4FC182A198399610E51724BF8E4DB52A303B3BB487E575D819C4B5B5376CBED",
+      "bytes": 30379,
+      "isolated_path": "patch-repo/tmp/p02-third-20261108/matrix/delegate.json",
+      "source": "tmp/p02-third-20261108/matrix/delegate.json"
+    },
+    {
+      "sha256": "342D9DD2E6740B149F22751D8003F4B4FC72CA1320FA296EB9EE96CE5915953F",
+      "bytes": 30375,
+      "isolated_path": "patch-repo/tmp/p02-third-20261108/matrix/direct.json",
+      "source": "tmp/p02-third-20261108/matrix/direct.json"
+    },
+    {
+      "sha256": "A31F040F6D5FAE77A0C080C84AD2864C04EEC4F9721BFC8282848E7FC3D16CA9",
+      "bytes": 30598,
+      "isolated_path": "patch-repo/tmp/p02-third-20261108/matrix/late.json",
+      "source": "tmp/p02-third-20261108/matrix/late.json"
+    },
+    {
+      "sha256": "8F7D0953372E63EBE2119423923A213E96DC78D46E0629FCD6521C4F481F42D6",
+      "bytes": 3421,
+      "isolated_path": "patch-repo/tmp/p02-third-20261108/matrix/limit.json",
+      "source": "tmp/p02-third-20261108/matrix/limit.json"
+    },
+    {
+      "sha256": "55B18980161FB540113410F52BB817B19F6C1412F5D3B0B74DC2FDB892006AB1",
+      "bytes": 30383,
+      "isolated_path": "patch-repo/tmp/p02-third-20261108/matrix/natural.json",
+      "source": "tmp/p02-third-20261108/matrix/natural.json"
+    },
+    {
+      "sha256": "DB81AEA236E9EDB0A9ED39138265F22E9A9E3794D5B23D8DE6AD1F23DAE84B5C",
+      "bytes": 3417,
+      "isolated_path": "patch-repo/tmp/p02-third-20261108/matrix/one-tick.json",
+      "source": "tmp/p02-third-20261108/matrix/one-tick.json"
+    },
+    {
+      "sha256": "4C374AA892DD1C77D5C047F50C8197FD060EFC650B973CA6CA07332FB1732407",
+      "bytes": 3836,
+      "isolated_path": "patch-repo/tmp/p02-third-20261108/matrix/order.json",
+      "source": "tmp/p02-third-20261108/matrix/order.json"
+    },
+    {
+      "sha256": "42D0C8558C6E3F493618D572D43DDB99D36056A23383E1EA11FA286733A112F2",
+      "bytes": 3420,
+      "isolated_path": "patch-repo/tmp/p02-third-20261108/matrix/policy.json",
+      "source": "tmp/p02-third-20261108/matrix/policy.json"
+    },
+    {
+      "sha256": "0BF5A70EC28636FC44847D48A2A9581D8A8BAB628EBACEA88BDF4560CED32F99",
+      "bytes": 3832,
+      "isolated_path": "patch-repo/tmp/p02-third-20261108/matrix/removed.json",
+      "source": "tmp/p02-third-20261108/matrix/removed.json"
+    },
+    {
+      "sha256": "C5C1E0A5A01C7C515CF17906AF6C33C1BC8A752E33A6821C36737C32C4BE9449",
+      "bytes": 4040,
+      "isolated_path": "patch-repo/tmp/p02-third-20261108/matrix/reordered.json",
+      "source": "tmp/p02-third-20261108/matrix/reordered.json"
+    },
+    {
+      "sha256": "8D6313818F48B2A8A15E7AFD3E33319135EF9ADA4FA0F386296D39AEA4F93A38",
+      "bytes": 3747628,
+      "isolated_path": "patch-repo/tmp/p02-third-20261108/matrix/rows.json",
+      "source": "tmp/p02-third-20261108/matrix/rows.json"
+    }
+  ],
+  "clean_path_failures": [
+    "p02_headless_adapter.clean-missing-path.log",
+    "p02_replay_adapter.clean-missing-path.log"
+  ],
+  "isolated_output": "patch-repo/tmp/p02-first-integration-20261105/attempt1-observations.json",
+  "suite_args": "--headless --path patch-repo -s tests/<name>.gd --quit-after 1200",
+  "suite_exit": {
+    "p02_worker_adapter": 0,
+    "p02_replay_adapter": 0,
+    "p02_headless_adapter": 0,
+    "i01_operation_config": 0,
+    "p02_viewer_events": 0,
+    "i01b_logical_clock": 0
+  },
+  "cli_exit": {
+    "worker": 0,
+    "headless": 0,
+    "replay": 0
+  },
+  "log_patterns": [
+    "*.fixture-overlay.log",
+    "cli-*.log"
+  ],
+  "candidate_tree": "b54d9b37f3775c57860d3dfca9f4df572cba4cf7",
+  "caller_source_manifest": "tmp/p02-sixth-20261108/closeout-v2/delivery-manifest.json",
+  "caller_sha256": [
+    {
+      "path": "hud/ui_kit/command_deck.gd",
+      "sha256_raw": "bb81eb1855ff0c13708648597905411663223758ccd9a54ba73da1cab0565cf6"
+    },
+    {
+      "path": "hud/ui_kit/org_screen.gd",
+      "sha256_raw": "e30c317c09cd195b590e9f53d86dae0387f4b7d35e281b38331833d84ba11799"
+    }
+  ],
+  "host": {
+    "organization_ui": {
+      "exit": 0,
+      "script": "tests/organization_ui.gd",
+      "log": "organization_ui.log"
+    },
+    "battle_flow": {
+      "exit": 0,
+      "script": "tests/battle_flow.gd",
+      "log": "battle_flow.log"
+    },
+    "atomic": {
+      "first_missing_parent_log": "product-host-atomic-v4.missing-parent.log",
+      "fails": 0,
+      "checks": 546,
+      "exit": 0,
+      "fixtures": [
+        {
+          "path": "tmp/p02-sixth-20261108/product-host-atomic-v4.gd",
+          "sha256": "4AEDE059BEAD77B652F0EB5748D7D1EEAF353D424F4853958768723E88F80033"
+        },
+        {
+          "path": "tmp/p02-sixth-20261108/product-host-common-v2.gd",
+          "sha256": "96A14D5977246CEAC86664783FE820744240C3B17EF820F81442EC78847BE23C"
+        }
+      ],
+      "user_args": "-- C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/product-host-atomic-v4.json",
+      "rows": 10,
+      "script": "res://tmp/p02-sixth-20261108/product-host-atomic-v4.gd",
+      "log": "product-host-atomic-v4.log"
+    },
+    "args": "--headless --path patch-repo --script <script> --quit-after 3600",
+    "isolated_localappdata": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/isolated-localappdata"
+  },
+  "pre_caller_checks": "Initial CLI/suites ran before adding accepted P02 callers command_deck.gd and org_screen.gd. Final CLI/suites below reran on tree b54d9b37f3775c57860d3dfca9f4df572cba4cf7; host checks also use that tree.",
+  "final_processes": [
+    {
+      "case": "cli-headless",
+      "pass_markers": [
+        "OPERATION_HEADLESS_PASS {\"ally_alive\":1,\"clock_ms\":150,\"commands\":3,\"end_ms\":150,\"end_tick\":2,\"foe_alive\":0,\"fp\":\"7d492b366451cf1a2232b4ab49971d4885e82126d210c76613a5d86131ea20a3\",\"killed\":0.949,\"lost\":0.003,\"over\":true,\"reason\":\"annihilation\",\"reinf_t\":-1.0,\"t\":0.15,\"tick\":2,\"win\":true}"
+      ],
+      "exit": 0,
+      "args": [
+        "--headless",
+        "--path",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/patch-repo",
+        "-s",
+        "tests/autoresolve.gd",
+        "--quit-after",
+        "1200",
+        "--",
+        "--operation-input",
+        "res://tests/fixtures/p02/poc.json",
+        "--out",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/final-cli-headless.json"
+      ],
+      "log": "final-cli-headless.log"
+    },
+    {
+      "case": "cli-worker",
+      "pass_markers": [
+        "OPERATION_HEADLESS_PASS {\"ally_alive\":1,\"clock_ms\":1600,\"commands\":0,\"end_ms\":1600,\"end_tick\":16,\"foe_alive\":0,\"fp\":\"12c9cea0994651210fdfbc0deb6aeda64118bfb8b838ffe68fc5ac837b017be5\",\"killed\":0.513,\"lost\":0.185,\"over\":true,\"reason\":\"annihilation\",\"reinf_t\":-1.0,\"t\":1.6,\"tick\":16,\"win\":true}"
+      ],
+      "exit": 0,
+      "args": [
+        "--headless",
+        "--path",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/patch-repo",
+        "-s",
+        "tests/autoresolve.gd",
+        "--quit-after",
+        "1200",
+        "--",
+        "--operation-worker",
+        "res://tests/fixtures/p02/worker-poc.json",
+        "--out",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/final-cli-worker.json"
+      ],
+      "log": "final-cli-worker.log"
+    },
+    {
+      "case": "cli-replay",
+      "pass_markers": [
+        "OPERATION_HEADLESS_PASS {\"ally_alive\":1,\"clock_ms\":300,\"commands\":3,\"end_ms\":-1,\"end_tick\":-1,\"foe_alive\":1,\"fp\":\"ba2afb9901cc2ef074bf2f2e5d2b7f20c518caa61fe78a2d74cffe4d3a7ceb09\",\"killed\":0.0,\"lost\":0.0,\"over\":false,\"reason\":\"timeout\",\"reinf_t\":-1.0,\"t\":0.3,\"tick\":3,\"win\":false}"
+      ],
+      "exit": 0,
+      "args": [
+        "--headless",
+        "--path",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/patch-repo",
+        "-s",
+        "tests/autoresolve.gd",
+        "--quit-after",
+        "1200",
+        "--",
+        "--operation-replay",
+        "res://tests/fixtures/p02/replay-commands.json",
+        "--out",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/final-cli-replay.json"
+      ],
+      "log": "final-cli-replay.log"
+    },
+    {
+      "case": "p02_worker_adapter",
+      "pass_markers": [
+        "P02_WORKER_CHECKS 59 running_frames_observed=89"
+      ],
+      "exit": 0,
+      "args": [
+        "--headless",
+        "--path",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/patch-repo",
+        "-s",
+        "tests/p02_worker_adapter.gd",
+        "--quit-after",
+        "1200"
+      ],
+      "log": "final-p02_worker_adapter.log"
+    },
+    {
+      "case": "p02_replay_adapter",
+      "pass_markers": [
+        "P02_REPLAY_PASS cases=14 assertions=101"
+      ],
+      "exit": 0,
+      "args": [
+        "--headless",
+        "--path",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/patch-repo",
+        "-s",
+        "tests/p02_replay_adapter.gd",
+        "--quit-after",
+        "1200"
+      ],
+      "log": "final-p02_replay_adapter.log"
+    },
+    {
+      "case": "p02_headless_adapter",
+      "pass_markers": [
+        "P02_ADAPTER_PASS cases=8 checks=13417 rejections=32 natural=7 timeout=1"
+      ],
+      "exit": 0,
+      "args": [
+        "--headless",
+        "--path",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/patch-repo",
+        "-s",
+        "tests/p02_headless_adapter.gd",
+        "--quit-after",
+        "1200"
+      ],
+      "log": "final-p02_headless_adapter.log"
+    },
+    {
+      "case": "i01b_logical_clock",
+      "pass_markers": [
+        "I01B_P1_PARTIAL_CLOCK_PASS cases=60 seeds=10 speeds=3 pause_variants=2 trace=50,100,150 tick=2 end_ms=150"
+      ],
+      "exit": 0,
+      "args": [
+        "--headless",
+        "--path",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/patch-repo",
+        "-s",
+        "tests/i01b_logical_clock.gd",
+        "--quit-after",
+        "1200"
+      ],
+      "log": "final-i01b_logical_clock.log"
+    },
+    {
+      "case": "i01_operation_config",
+      "pass_markers": [
+        "I01A_OPERATION_CONFIG_PASS a01 a02 a03 a04 a05 a06"
+      ],
+      "exit": 0,
+      "args": [
+        "--headless",
+        "--path",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/patch-repo",
+        "-s",
+        "tests/i01_operation_config.gd",
+        "--quit-after",
+        "1200"
+      ],
+      "log": "final-i01_operation_config.log"
+    },
+    {
+      "case": "p02_viewer_events",
+      "pass_markers": [
+        "P02_VIEWER_EVENTS_PASS rows=14 assertions=148"
+      ],
+      "exit": 0,
+      "args": [
+        "--headless",
+        "--path",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/patch-repo",
+        "-s",
+        "tests/p02_viewer_events.gd",
+        "--quit-after",
+        "1200"
+      ],
+      "log": "final-p02_viewer_events.log"
+    }
+  ],
+  "diagnostics": [
+    {
+      "exit_leaks": [],
+      "error": [],
+      "script_error": [],
+      "sha256": "B780E117EC7E58A4E69A10D8BC7ABB38C03894F8654C30D4C4ABEF8A55BD2982",
+      "log": "final-cli-headless.log"
+    },
+    {
+      "exit_leaks": [],
+      "error": [],
+      "script_error": [],
+      "sha256": "8F933DA21414AFC0BBEB88248193755A72E33A6E500797C2C011A90B878DAE48",
+      "log": "final-cli-worker.log"
+    },
+    {
+      "exit_leaks": [],
+      "error": [],
+      "script_error": [],
+      "sha256": "CA405570F5589F28F7BF19FDAA0FC1DB1A1747FB425885D1A7DC1F3DDB4329AC",
+      "log": "final-cli-replay.log"
+    },
+    {
+      "exit_leaks": [],
+      "error": [],
+      "script_error": [],
+      "sha256": "BA4B4939E42B039919CC54CF14D0553F2DA654D3F83F8C9A0F657308F2F35D8D",
+      "log": "final-p02_worker_adapter.log"
+    },
+    {
+      "exit_leaks": [],
+      "error": [],
+      "script_error": [],
+      "sha256": "B280956957A0224A3894A2007D8CAA1C173EA908BFBECFD9BFB26B58AB7C5A70",
+      "log": "final-p02_replay_adapter.log"
+    },
+    {
+      "exit_leaks": [],
+      "error": [],
+      "script_error": [],
+      "sha256": "9BE87160389CE04EF3FD8D05C5FEDCD8887CE232DF1ECC08DE01845327920C78",
+      "log": "final-p02_headless_adapter.log"
+    },
+    {
+      "exit_leaks": [],
+      "error": [],
+      "script_error": [],
+      "sha256": "ABE6B954A3691267CF440E75F449885E2740A5AF5B83ACB494D1329BF1B0DF95",
+      "log": "final-i01b_logical_clock.log"
+    },
+    {
+      "exit_leaks": [],
+      "error": [],
+      "script_error": [],
+      "sha256": "8B1672C088E0B03D24A90BDCFF4B90352D6F9BF3FADC39D3A5F753FC1F46C076",
+      "log": "final-i01_operation_config.log"
+    },
+    {
+      "exit_leaks": [],
+      "error": [],
+      "script_error": [],
+      "sha256": "6F82769EE1A8DF142023C3C683E08442835167902DD9CFDBDC6F38EC4DFC4921",
+      "log": "final-p02_viewer_events.log"
+    },
+    {
+      "exit_leaks": [
+        "WARNING: 161 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 22 resources still in use at exit (run with --verbose for details)."
+      ],
+      "error": [
+        "ERROR: 22 resources still in use at exit (run with --verbose for details)."
+      ],
+      "script_error": [],
+      "sha256": "5E44BB100182598EAD3F4CF97E16D2D345485358C07C735981A1C404ECA541BD",
+      "log": "battle_flow.log"
+    },
+    {
+      "exit_leaks": [
+        "WARNING: 507 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 18 resources still in use at exit (run with --verbose for details)."
+      ],
+      "error": [
+        "ERROR: 알 수 없는 난이도: 없는 난이도",
+        "ERROR: 알 수 없는 난이도: 없는 난이도",
+        "ERROR: 시나리오를 읽지 못해 시험 전장으로 엽니다 (res://data/profiles/red_cliffs_rt.json, 없는 난이도)",
+        "ERROR: 18 resources still in use at exit (run with --verbose for details)."
+      ],
+      "script_error": [],
+      "sha256": "AB4119E9A98E40E9B6D376FD8045429ED2BB46202F7C6B0CF7197B59DF8D192B",
+      "log": "organization_ui.log"
+    },
+    {
+      "exit_leaks": [
+        "WARNING: 351 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 18 resources still in use at exit (run with --verbose for details)."
+      ],
+      "error": [
+        "ERROR: [FleetBattle3D] invalid_candidate_profile at profile",
+        "ERROR: [FleetBattle3D] invalid_candidate_profile at profile.ally",
+        "ERROR: [FleetBattle3D] invalid_candidate_profile at profile",
+        "ERROR: [FleetBattle3D] invalid_candidate_profile at profile",
+        "ERROR: [FleetBattle3D] invalid_candidate_profile at profile",
+        "ERROR: [FleetBattle3D] invalid_candidate_profile at profile",
+        "ERROR: [FleetBattle3D] invalid_candidate_profile at profile",
+        "ERROR: [FleetBattle3D] invalid_candidate_profile at profile",
+        "ERROR: [FleetBattle3D] invalid_candidate_profile at profile",
+        "ERROR: [FleetBattle3D] invalid_candidate_profile at profile",
+        "ERROR: 18 resources still in use at exit (run with --verbose for details)."
+      ],
+      "script_error": [],
+      "sha256": "5F0FF3CBE06E94BA47968160B319B2D41463428BB8906BBE37C23570A7889DDE",
+      "log": "product-host-atomic-v4.log"
+    },
+    {
+      "exit_leaks": [],
+      "error": [
+        "ERROR: Failed to load script \"res://tmp/p02-sixth-20261108/product-host-atomic-v4.gd\" with error \"Parse error\"."
+      ],
+      "script_error": [
+        "SCRIPT ERROR: Parse Error: Could not resolve super class path \"res://tmp/p02-sixth-20261108/product-host-common-v2.gd\"."
+      ],
+      "sha256": "081FE6E8A58271D4BDA1FEDFEDE5572BA621657442B5CDC96F2A02FDF2C33BDE",
+      "log": "product-host-atomic-v4.missing-parent.log"
+    },
+    {
+      "exit_leaks": [],
+      "error": [
+        "ERROR: Safe save failed. This may be a permissions problem, but also may happen because you are running a paranoid antivirus. If this is the case, please switch to Windows Defender or disable the 'safe save' option in editor settings. This makes it work, but increases the risk of file corruption in a crash."
+      ],
+      "script_error": [],
+      "sha256": "C032FE1A527546C05BA96230F6E100BF5DFFE6C27B1FF1B6B4965637CFF0164B",
+      "log": "import.log"
+    },
+    {
+      "exit_leaks": [],
+      "error": [],
+      "script_error": [
+        "SCRIPT ERROR: Cannot call method 'store_string' on a null value."
+      ],
+      "sha256": "C07C61EDF81A8F001FA9722FBD4198CE2221AF66B8F8F71E90DCD360C3C4B93D",
+      "log": "p02_headless_adapter.clean-missing-path.log"
+    },
+    {
+      "exit_leaks": [],
+      "error": [],
+      "script_error": [
+        "SCRIPT ERROR: Cannot call method 'get_var' on a null value."
+      ],
+      "sha256": "69DB1D56F71B74749B5D3940807DDA9F5EF15421635BE6FDCEDBE37BD32EB580",
+      "log": "p02_replay_adapter.clean-missing-path.log"
+    }
+  ]
+}

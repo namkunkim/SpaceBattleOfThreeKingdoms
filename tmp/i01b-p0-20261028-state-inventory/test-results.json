@@ -1,0 +1,19 @@
+{
+  "normal_exit": 0,
+  "normal_marker": "I01B_P0_INVENTORY_PASS modules=19 fields=283 anchors=14",
+  "source_count": 21,
+  "modules": 19,
+  "fields_checked": 283,
+  "unsupported": 0,
+  "nested_missile": 10,
+  "nested_swarm": 8,
+  "anchors": 14,
+  "negative_exit": 1,
+  "negative_reason": "SOURCE_HASH_MISMATCH core/battle/battle_state.gd",
+  "negative_output_absent": true,
+  "freeze_unchanged": true,
+  "preexisting_six_unchanged": true,
+  "head": "8292805143f4561a4f5258d40b7b94adf4ff5802",
+  "freeze_sha256": "423fd845aabf984f977de6da6c204e234a471cdc9844cedd4b084cf8fdcfac55",
+  "inventory_sha256": "c2500ca2d61b8b08b37c00d36db29684c0cc67f90447b9179f80da1484be30e1"
+}

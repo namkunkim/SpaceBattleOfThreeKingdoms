@@ -1,0 +1,69 @@
+diff --git "a/C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\auto_resolver.gd.before.txt" b/scripts/world/auto_resolver.gd
+index 222abd4..605db79 100644
+--- "a/C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\auto_resolver.gd.before.txt"
++++ b/scripts/world/auto_resolver.gd
+@@ -75,22 +75,61 @@ func start() -> bool:
+ 	if not _prepare():
+ 		return false
+ 	_thread = Thread.new()
+-	_thread.start(_loop)
++	_thread.start(_run_legacy)
+ 	return true
+ 
++func _run_legacy() -> Variant:
++	_loop()
++	if _cancel:
++		return null
++	return BattleOutcome.facts_from_sim(sim)
++
+ # 주 스레드에서 매 프레임 부른다. 끝났으면 결과를 만들고 true.
+ func poll() -> bool:
+ 	if outcome:
+ 		return true
+ 	if _thread == null or _thread.is_alive():
+ 		return false
+-	_thread.wait_to_finish()
++	var facts: Variant = _thread.wait_to_finish()
+ 	_thread = null
+ 	if _cancel:
+ 		return false
+-	outcome = BattleOutcome.from_sim(sim, brief)
++	if _valid_legacy_facts(facts):
++		outcome = BattleOutcome.from_facts(facts, brief)
++	else:
++		# After join the live legacy simulation is safe to read again.
++		outcome = BattleOutcome.from_sim(sim, brief)
+ 	return true
+ 
++static func _valid_legacy_facts(facts: Variant) -> bool:
++	if not facts is Dictionary or facts.size() != 5:
++		return false
++	if not facts.get("win") is bool or not facts.get("reason") is String or not facts.get("fingerprint") is String:
++		return false
++	if not facts.get("t_s") is float or not is_finite(facts.t_s) or not facts.get("result") is Dictionary:
++		return false
++	var result: Dictionary = facts.result
++	var cost: Variant = result.get("cost", {})
++	var morale: Variant = result.get("army_morale_bp", [0, 0])
++	var commanders: Variant = result.get("commanders", {})
++	if not result.get("limited", false) is bool or not cost is Dictionary or not commanders is Dictionary:
++		return false
++	if not morale is Array or morale.size() < 2:
++		return false
++	for i in 2:
++		if not _legacy_number(morale[i]):
++			return false
++	for side in ["alliance", "foe"]:
++		var side_cost: Variant = cost.get(side, {})
++		if not side_cost is Dictionary or not commanders.get(side, "") is String:
++			return false
++		if not _legacy_number(side_cost.get("original", 0)) or not _legacy_number(side_cost.get("remaining", 0)):
++			return false
++	return true
++
++static func _legacy_number(value: Variant) -> bool:
++	return value is int or (value is float and is_finite(value))
++
+ func cancel() -> void:
+ 	_cancel = true
+ 	if _thread:

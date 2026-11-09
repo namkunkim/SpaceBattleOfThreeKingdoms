@@ -1,0 +1,42 @@
+{
+  "pass": true,
+  "actual_exit": 0,
+  "timed_out": false,
+  "elapsed_seconds": 15.642537800129503,
+  "launcher_pid": 20916,
+  "job": {
+    "active": 0,
+    "total": 3,
+    "terminated": 0
+  },
+  "engine": {
+    "path": "C:/Tools/Godot/Godot_v4.7.2-stable_win64.exe",
+    "pid": 37104
+  },
+  "diagnostics": [
+    "ERROR: [FleetBattle3D] invalid_candidate_profile at profile.ally",
+    "ERROR: [FleetBattle3D] invalid_candidate_profile at profile.ally"
+  ],
+  "checks": [
+    {
+      "name": "same_initial_host_state",
+      "pass": true
+    },
+    {
+      "name": "actual_first_frame_phase_fork",
+      "pass": true
+    },
+    {
+      "name": "prepare_rejection_preserves_prior_host",
+      "pass": true
+    },
+    {
+      "name": "clean_teardown_and_exact_gate",
+      "pass": true
+    }
+  ],
+  "source_input_count": 2766,
+  "source_sha_unchanged": true,
+  "project_sha_unchanged": true,
+  "head_index_unchanged": true
+}

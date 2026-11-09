@@ -1,0 +1,256 @@
+{
+	"event_count": 19,
+	"events": [
+		{
+			"kind": "spawn",
+			"other": -1,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 0,
+			"value": null
+		},
+		{
+			"kind": "spawn",
+			"other": -1,
+			"pos": "(0.0, 0.0)",
+			"sq": 2,
+			"tick": 0,
+			"value": null
+		},
+		{
+			"kind": "contact",
+			"other": -1,
+			"pos": "(550.0, 500.0)",
+			"sq": 2,
+			"tick": 1,
+			"value": {
+				"state": "confirmed",
+				"was": "none"
+			}
+		},
+		{
+			"kind": "salvo",
+			"other": 1,
+			"pos": "(400.0, 500.0)",
+			"sq": 2,
+			"tick": 21,
+			"value": {
+				"acc": 6500,
+				"band": "engagement",
+				"cat": "artillery",
+				"dmg": 531,
+				"hit": false,
+				"n": 40.0,
+				"sector": "front"
+			}
+		},
+		{
+			"kind": "salvo",
+			"other": 2,
+			"pos": "(546.9383, 500.0)",
+			"sq": 1,
+			"tick": 25,
+			"value": {
+				"acc": 7000,
+				"band": "engagement",
+				"cat": "artillery",
+				"dmg": 98,
+				"hit": false,
+				"n": 1.0,
+				"sector": "front"
+			}
+		},
+		{
+			"kind": "salvo",
+			"other": 2,
+			"pos": "(528.7203, 500.0)",
+			"sq": 1,
+			"tick": 141,
+			"value": {
+				"acc": 7296,
+				"band": "engagement",
+				"cat": "line_fire",
+				"dmg": 226,
+				"hit": true,
+				"n": 2.0,
+				"sector": "front"
+			}
+		},
+		{
+			"kind": "ship_lost",
+			"other": 1,
+			"pos": "(528.7203, 500.0)",
+			"sq": 2,
+			"tick": 141,
+			"value": 1
+		},
+		{
+			"kind": "salvo",
+			"other": 2,
+			"pos": "(519.925, 500.0)",
+			"sq": 1,
+			"tick": 423,
+			"value": {
+				"acc": 7500,
+				"band": "engagement",
+				"cat": "fighter",
+				"dmg": 80,
+				"hit": true,
+				"n": 1.0,
+				"sector": "front"
+			}
+		},
+		{
+			"kind": "ship_lost",
+			"other": 1,
+			"pos": "(519.925, 500.0)",
+			"sq": 2,
+			"tick": 423,
+			"value": 1
+		},
+		{
+			"kind": "salvo",
+			"other": 1,
+			"pos": "(400.0, 500.0)",
+			"sq": 2,
+			"tick": 621,
+			"value": {
+				"acc": 6500,
+				"band": "engagement",
+				"cat": "artillery",
+				"dmg": 516,
+				"hit": false,
+				"n": 37.8,
+				"sector": "front"
+			}
+		},
+		{
+			"kind": "salvo",
+			"other": 2,
+			"pos": "(519.925, 500.0)",
+			"sq": 1,
+			"tick": 625,
+			"value": {
+				"acc": 7000,
+				"band": "engagement",
+				"cat": "artillery",
+				"dmg": 98,
+				"hit": true,
+				"n": 1.0,
+				"sector": "front"
+			}
+		},
+		{
+			"kind": "salvo",
+			"other": 2,
+			"pos": "(519.925, 500.0)",
+			"sq": 1,
+			"tick": 741,
+			"value": {
+				"acc": 7500,
+				"band": "engagement",
+				"cat": "line_fire",
+				"dmg": 226,
+				"hit": true,
+				"n": 2.0,
+				"sector": "front"
+			}
+		},
+		{
+			"kind": "ship_lost",
+			"other": 1,
+			"pos": "(519.925, 500.0)",
+			"sq": 2,
+			"tick": 741,
+			"value": 2
+		},
+		{
+			"kind": "salvo",
+			"other": 2,
+			"pos": "(519.925, 500.0)",
+			"sq": 1,
+			"tick": 1023,
+			"value": {
+				"acc": 7500,
+				"band": "engagement",
+				"cat": "fighter",
+				"dmg": 80,
+				"hit": true,
+				"n": 1.0,
+				"sector": "front"
+			}
+		},
+		{
+			"kind": "ship_lost",
+			"other": 1,
+			"pos": "(519.925, 500.0)",
+			"sq": 2,
+			"tick": 1023,
+			"value": 1
+		},
+		{
+			"kind": "salvo",
+			"other": 1,
+			"pos": "(400.0, 500.0)",
+			"sq": 2,
+			"tick": 1221,
+			"value": {
+				"acc": 6500,
+				"band": "engagement",
+				"cat": "artillery",
+				"dmg": 494,
+				"hit": true,
+				"n": 34.6,
+				"sector": "front"
+			}
+		},
+		{
+			"kind": "ship_lost",
+			"other": 2,
+			"pos": "(400.0, 500.0)",
+			"sq": 1,
+			"tick": 1221,
+			"value": 3
+		},
+		{
+			"kind": "destroyed",
+			"other": 2,
+			"pos": "(400.0, 500.0)",
+			"sq": 1,
+			"tick": 1221,
+			"value": null
+		},
+		{
+			"kind": "battle_end",
+			"other": -1,
+			"pos": "(0.0, 0.0)",
+			"sq": -1,
+			"tick": 1221,
+			"value": "flagship_lost"
+		}
+	],
+	"meta": {
+		"format": "p02/restricted-headless/1",
+		"input_file_sha256": "6d8a038cf638d233f1cf466151f99ecc88a7ece288ef308314ab5155f7af520d",
+		"input_sha256": "09a25a4716b1bdf226470125b8382720aa6862be58b0d784ed241cd62e7654a8",
+		"transform": "identity/no-transform"
+	},
+	"ok": true,
+	"summary": {
+		"ally_alive": 0,
+		"clock_ms": 122050,
+		"commands": 0,
+		"end_ms": 122050,
+		"end_tick": 1221,
+		"foe_alive": 1,
+		"fp": "48222b4de3b21a10c2ede016027686153c3cb6873db60c0ba212859cc08a44b8",
+		"killed": 5.072,
+		"lost": 3.952,
+		"over": true,
+		"reason": "flagship_lost",
+		"reinf_t": -1.0,
+		"t": 122.05,
+		"tick": 1221,
+		"win": false
+	}
+}

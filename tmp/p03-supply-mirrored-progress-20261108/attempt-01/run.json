@@ -1,0 +1,75 @@
+{
+  "executed": true,
+  "argv": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+    "--script",
+    "res://tmp/p03-supply-mirrored-progress-20261108/mirrored_progress.gd"
+  ],
+  "cwd": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+  "engine_version": "4.7.2.stable.official.ed1daf0bf",
+  "actual_exit": 0,
+  "launcher_pid": 15668,
+  "engine_identity_matches": true,
+  "launcher_primary_thread": 14384,
+  "launch_error": null,
+  "job_accounting": {
+    "active": 0,
+    "total": 2,
+    "terminated": 0
+  },
+  "timed_out": false,
+  "elapsed_seconds": 1.4310356001369655,
+  "input_stable": true,
+  "input_count": 46,
+  "timeout_probe": null,
+  "timeout_probe_passed": false,
+  "cleanup": null,
+  "diagnostics": {
+    "script_error": 0,
+    "error": 0,
+    "warning": 0,
+    "objectdb": 0,
+    "resources_at_exit": 0
+  },
+  "runner": {
+    "cases": [
+      "mirror_prog_01_actual_A_B_control",
+      "mirror_prog_02_two_paths_one_value",
+      "mirror_prog_03_restore_and_classify",
+      "mirror_prog_04_one_step_effect"
+    ],
+    "checks": 1238,
+    "details": {
+      "before_stock": 8,
+      "cost": 1,
+      "first_tick": 600,
+      "mixed_next": {
+        "event_count": 1,
+        "healed_mod": 2,
+        "stages": [
+          2,
+          2,
+          0,
+          0,
+          0
+        ],
+        "stock": 6,
+        "supplied": 2,
+        "tick": 601
+      },
+      "need": 6000000,
+      "rate": 10000,
+      "restore": {
+        "ok": true
+      }
+    },
+    "engine_path": "C:/Tools/Godot/Godot_v4.7.2-stable_win64.exe",
+    "engine_pid": 6440,
+    "observation": "ACCEPTED_EARLY_COMPLETION",
+    "ok": true
+  },
+  "gate_passed": true
+}

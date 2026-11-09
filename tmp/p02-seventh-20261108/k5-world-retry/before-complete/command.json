@@ -1,0 +1,19 @@
+{
+  "args": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-seventh-20261108\\k4-current\\before",
+    "--script",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-seventh-20261108\\k5-world-product.gd",
+    "--",
+    "complete",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-seventh-20261108\\k5-world-retry\\before-complete\\result.json"
+  ],
+  "env": {
+    "APPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-seventh-20261108\\k5-world-retry\\before-complete\\roaming",
+    "LOCALAPPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-seventh-20261108\\k5-world-retry\\before-complete\\local",
+    "XDG_DATA_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-seventh-20261108\\k5-world-retry\\before-complete\\roaming"
+  },
+  "returning_settings_sha256": "c8b752aba9f5015889c00c5a45db9fef916af2a1e1be3e68d49b8121b2db721b"
+}

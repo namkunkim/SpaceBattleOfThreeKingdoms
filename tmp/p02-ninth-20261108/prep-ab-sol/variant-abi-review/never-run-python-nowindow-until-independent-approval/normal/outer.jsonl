@@ -1,0 +1,2 @@
+{"event":"case-start","stage":"case-before-release"}
+{"event":"owned-cleanup","stage":"case-running","drained":false,"reason":null,"exit":125}

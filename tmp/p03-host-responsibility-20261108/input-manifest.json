@@ -1,0 +1,75 @@
+{
+  "head": "fb660cea69207fd332e26128643007694910a253",
+  "branch": "codex/feature-i01b-not_remove",
+  "index": [],
+  "files": [
+    {
+      "path": "scripts/FleetBattle3D.gd",
+      "sha256": "34908bf325ae06aca22a4ee8f90172cd4dfa91c05b79c054c70a547e245f316a"
+    },
+    {
+      "path": "core/battle/tick_clock.gd",
+      "sha256": "dfb9cd4a070995d9aca44f77bf08cab18ae87eb4c678a341ccddc34c5a7ff74e"
+    },
+    {
+      "path": "view/battle_view_model.gd",
+      "sha256": "e40b067a8f9af61a85f5fbf88b4297962f770b0191442ede543b69b0f49bce07"
+    },
+    {
+      "path": "scripts/battle_trace.gd",
+      "sha256": "76bb319b96a1835087ff48f3c8ca268549a9906d2f658f605065adf74faf5e8f"
+    },
+    {
+      "path": "hud/ui_kit/command_deck.gd",
+      "sha256": "bb81eb1855ff0c13708648597905411663223758ccd9a54ba73da1cab0565cf6"
+    },
+    {
+      "path": "hud/ui_kit/org_screen.gd",
+      "sha256": "e30c317c09cd195b590e9f53d86dae0387f4b7d35e281b38331833d84ba11799"
+    },
+    {
+      "path": "scripts/world_link.gd",
+      "sha256": "f24585ce1ec065d9654ad05220748284de1bb2d0bd75a342fde84321f4fce798"
+    },
+    {
+      "path": "scripts/world/battle_outcome.gd",
+      "sha256": "1586ec11745640a1aa8b6d9c7fdfacd515553ac8e4be634394c552c03843d162"
+    },
+    {
+      "path": "core/battle/battle_sim.gd",
+      "sha256": "670916af166c1f67fd58f6ab3007782a598a7a8f6fea72024042e1945beb967a"
+    },
+    {
+      "path": "core/battle/operation_private_state.gd",
+      "sha256": "c555099934bdd0a80f4f4d89100e435e621db6f2f0fe5b98c2be9b2d63619a6e"
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/I01-READINESS-DECISION-20261026.md",
+      "sha256": "49c0c3fc49eb1a14815584cc0b45fecd402b2b1f3e28668e7179c965a1815a50"
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/P02-HOST-PREP-RESULT-20261108.md",
+      "sha256": "e7b06597c83275915db76907399ae8846d983a10d2d8930d4aee36c40ea5fcdf"
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/SESSION-HANDOFF-P02-HOST-PREP-20261108.md",
+      "sha256": "1563dc233371dfbf46e8f10eb1d4fb059683edd97ba2d81a2d66e2a412b4ee8c"
+    },
+    {
+      "path": "tmp/p02-sixth-20261108/closeout-v2/REVIEW-CLOSEOUT-INDEPENDENT.md",
+      "sha256": "6dbe27bed7352638312230e29086c0ac11d58933eed47670667ed80053ddc65d"
+    },
+    {
+      "path": "tmp/p03-progress-20261108/REPLAY-SUFFIX-RESPONSIBILITY.md",
+      "sha256": "b3b6c61741c1688a350fb072722dd5b2aed8f5e48f0f4c86a68abeca24e50095"
+    },
+    {
+      "path": "tmp/p03-host-responsibility-20261108/PLAN.md",
+      "sha256": "ed2dea70db44e6d67c8521d667c3dd62c87e6590b21b08a5a38f7aa93d601919"
+    },
+    {
+      "path": "tmp/p03-host-responsibility-20261108/REVIEW-PLAN.md",
+      "sha256": "c5fc6443d769ee39a23ce10bf9d0adf55734434a6a17bcfb481e97be85adf072"
+    }
+  ]
+}

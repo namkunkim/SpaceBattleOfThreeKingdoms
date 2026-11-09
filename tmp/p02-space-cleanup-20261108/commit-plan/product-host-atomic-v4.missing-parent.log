@@ -1,0 +1,6 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Could not resolve super class path "res://tmp/p02-sixth-20261108/product-host-common-v2.gd".
+   at: GDScript::reload (res://tmp/p02-sixth-20261108/product-host-atomic-v4.gd:1)
+ERROR: Failed to load script "res://tmp/p02-sixth-20261108/product-host-atomic-v4.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)

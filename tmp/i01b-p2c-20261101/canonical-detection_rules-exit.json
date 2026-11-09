@@ -1,0 +1,5 @@
+{
+  "name": "detection_rules",
+  "actual_exit": 0,
+  "script": "tests/detection_rules.gd"
+}

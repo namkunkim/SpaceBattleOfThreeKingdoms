@@ -1,0 +1,17 @@
+{
+  "exit": 0,
+  "timeout": false,
+  "inputs_unchanged": true,
+  "user_after": {
+    "settings.cfg": "dc8b198fe72c2657ba41f105387080eaceea12dbda917f1d9528a529166bdfb4",
+    "battle_traces/battle-2026-11-08T17-28-13-30216-5755351.jsonl": "f4f4fdc4139035ce6ff00b42396d2e101280ddb51129a25c568b145acab74861",
+    "battle_traces/battle-2026-11-08T17-28-21-30216-13196927.jsonl": "9884c11cd65f4fec33cd3516eca3e5732284a09e81fae8b708188775698f86ad",
+    "battle_traces/battle-2026-11-08T17-28-21-30216-13348076.jsonl": "b54e44bed5949ba3598a8ec12722cf5ec3d02a3c22ff9f2cbbd462b89b973a3d",
+    "battle_traces/battle-2026-11-08T17-28-21-30216-13421689.jsonl": "c7e41afe0f6b25680eda5b5d9252fc0c5aad7f4d2d2c97bab21fe36e70432680",
+    "battle_traces/battle-2026-11-08T17-28-21-30216-13546362.jsonl": "c982b3dc5bdbf9404a9d44522ab7bb4922c750fe0addae35355cfeff2c512dda",
+    "battle_traces/battle-2026-11-08T17-28-21-30216-13744634.jsonl": "61d119f6aa12f48f7e58ab6b95a073b21f48effc509c77c10737b96dee649110",
+    "battle_traces/battle-2026-11-08T17-28-21-30216-13843985.jsonl": "ea876a3170f0cf8537fa423b5a3a8d853759867bc70047f7d71ad8f21b49eb11",
+    "battle_traces/battle-2026-11-08T17-28-26-30216-18289257.jsonl": "135de4a4199ed3d9393fe2b9df25d9a3eb9ee4dfc7a20f50ee2ed924ca70a33e",
+    "logs/godot.log": "6b7afda9ced7ba6d1eabf03b197f5050d098a1122b2e8065efacf6654fb153c1"
+  }
+}

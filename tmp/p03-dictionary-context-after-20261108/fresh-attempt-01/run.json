@@ -1,0 +1,48 @@
+{
+  "executed": true,
+  "argv": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+    "--script",
+    "res://tmp/p03-dictionary-context-after-20261108/fresh-attempt-01/regression.gd"
+  ],
+  "cwd": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+  "engine_version": "4.7.2.stable.official.ed1daf0bf",
+  "actual_exit": 124,
+  "launcher_pid": 17140,
+  "engine_identity_matches": false,
+  "launcher_primary_thread": 25948,
+  "launch_error": null,
+  "job_accounting": {
+    "active": 0,
+    "total": 2,
+    "terminated": 0
+  },
+  "timed_out": true,
+  "elapsed_seconds": 30.03497020015493,
+  "input_stable": true,
+  "input_count": 48,
+  "timeout_probe": null,
+  "timeout_probe_passed": false,
+  "cleanup": {
+    "ok": true,
+    "win32_error": null,
+    "launcher_reaped": {
+      "ended": true,
+      "wait_status": 0
+    },
+    "engine_reaped": null
+  },
+  "diagnostics": {
+    "script_error": 0,
+    "error": 0,
+    "warning": 0,
+    "objectdb": 0,
+    "resources_at_exit": 0
+  },
+  "runner": null,
+  "legacy_marker_matches": false,
+  "gate_passed": false
+}

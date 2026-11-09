@@ -1,0 +1,222 @@
+[
+  {
+    "relative_path": "core/battle/operation_profile.gd.uid",
+    "sha256": "F90489AC9D18DF92372C27F388E6D4C3E0C8FF94A54BFD5483CCB3F9EA1DEAB4",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\core\\battle\\operation_profile.gd.uid"
+  },
+  {
+    "relative_path": "docs/battle-core/evidence/p10b-20261016/pc-org.png.import",
+    "sha256": "1454A7840CFD3D7387941CB6706ACA53C7D0653441EEF0E3EF9543E4CD677F03",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\evidence\\p10b-20261016\\pc-org.png.import"
+  },
+  {
+    "relative_path": "docs/battle-core/evidence/p10b-20261016/pc-recon.png.import",
+    "sha256": "AF92873E1ACACC8990851C6B4AB9EB62A8039AD43CE0C502C65A2C7C2E5C5116",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\evidence\\p10b-20261016\\pc-recon.png.import"
+  },
+  {
+    "relative_path": "docs/battle-core/reference-assets/DHTK6i7ZR-8/left-wing-20m00s.jpg.import",
+    "sha256": "3D9B52C3F762AA18CE32A7628520AD67C729DC84539E80619B4C0F2D14E65F95",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\reference-assets\\DHTK6i7ZR-8\\left-wing-20m00s.jpg.import"
+  },
+  {
+    "relative_path": "docs/battle-core/reference-assets/DHTK6i7ZR-8/melee-headings-17m00s.jpg.import",
+    "sha256": "7035E32FBB4F936E4CE4DA97D0A635766657D11BB8A8F6809D21C2A9D9CD73A7",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\reference-assets\\DHTK6i7ZR-8\\melee-headings-17m00s.jpg.import"
+  },
+  {
+    "relative_path": "docs/battle-core/reference-assets/DHTK6i7ZR-8/move-marker-03m00s.jpg.import",
+    "sha256": "FC71F2E46480F96B73B3E086CD6A92ADBB360A937FDD52E0AA4F65BF2E62760E",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\reference-assets\\DHTK6i7ZR-8\\move-marker-03m00s.jpg.import"
+  },
+  {
+    "relative_path": "docs/battle-core/reference-assets/DHTK6i7ZR-8/rings-ahead-08m00s.jpg.import",
+    "sha256": "C8AB0ABB6162D8C06C81FFA0F21CB15F5EEB98638AF26FFEC97020F34D959EA5",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\reference-assets\\DHTK6i7ZR-8\\rings-ahead-08m00s.jpg.import"
+  },
+  {
+    "relative_path": "docs/battle-core/reference-assets/HGh5vL6y79I/asteroids-23m00s.jpg.import",
+    "sha256": "299715CEA47D6E446969FE6CF086B10592D11E447D4EE32941A94D54CC086479",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\reference-assets\\HGh5vL6y79I\\asteroids-23m00s.jpg.import"
+  },
+  {
+    "relative_path": "docs/battle-core/reference-assets/HGh5vL6y79I/crescent-07m30s.jpg.import",
+    "sha256": "FF869497C126A6E1036472AFF3BF0697BA7231525B6D096DEFE908D4001CE83D",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\reference-assets\\HGh5vL6y79I\\crescent-07m30s.jpg.import"
+  },
+  {
+    "relative_path": "docs/battle-core/reference-assets/HGh5vL6y79I/order-done-log-19m00s.jpg.import",
+    "sha256": "37DE9DD0856493393783074CF731559ADD20B818852014F44FAF0778D71C9F70",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\reference-assets\\HGh5vL6y79I\\order-done-log-19m00s.jpg.import"
+  },
+  {
+    "relative_path": "docs/battle-core/reference-assets/JzDUgHrVivQ/briefing-01m30s.jpg.import",
+    "sha256": "28DA2AF52DA0E6DC3042BD8437C0E4748B940AD678BF3CF7247659D8855FC689",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\reference-assets\\JzDUgHrVivQ\\briefing-01m30s.jpg.import"
+  },
+  {
+    "relative_path": "docs/battle-core/reference-assets/JzDUgHrVivQ/rings-12m00s.jpg.import",
+    "sha256": "260752A837FBF22CA7118958722841D40B17A038E56DF098C15C814B43072076",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\reference-assets\\JzDUgHrVivQ\\rings-12m00s.jpg.import"
+  },
+  {
+    "relative_path": "docs/battle-core/reference-assets/JzDUgHrVivQ/ship-rows-16m40s.jpg.import",
+    "sha256": "8588762A8C47BE2D0DB89AB6FFC116CAFE11AB1E4B6DE2053C0778E0B7486E08",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\reference-assets\\JzDUgHrVivQ\\ship-rows-16m40s.jpg.import"
+  },
+  {
+    "relative_path": "docs/battle-core/reference-assets/JzDUgHrVivQ/split-07m30s.jpg.import",
+    "sha256": "18BF37B34DBDC3FD50C6970FBA67487B3D5D1B458962D78CBD1E7C9ECF116225",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\reference-assets\\JzDUgHrVivQ\\split-07m30s.jpg.import"
+  },
+  {
+    "relative_path": "docs/battle-core/reference-assets/JzDUgHrVivQ/wing-select-09m00s.jpg.import",
+    "sha256": "3B58483A56F0EA1CBD551E2BCA4035B50ADE6A7DB8021E5F2B5AC5D486CAFEDC",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\reference-assets\\JzDUgHrVivQ\\wing-select-09m00s.jpg.import"
+  },
+  {
+    "relative_path": "docs/battle-core/reference-assets/b-7crU8CS18/arc-06m30s.jpg.import",
+    "sha256": "1C1CC3C410D02E381B5C1EA5211E39A153567D679B816F0DB4360F243FF75454",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\reference-assets\\b-7crU8CS18\\arc-06m30s.jpg.import"
+  },
+  {
+    "relative_path": "docs/battle-core/reference-assets/b-7crU8CS18/column-marker-11m40s.jpg.import",
+    "sha256": "F54F3CEC588363C98D03B0E22359B68D10E307F3C92CB525188DF889DB911AF2",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\reference-assets\\b-7crU8CS18\\column-marker-11m40s.jpg.import"
+  },
+  {
+    "relative_path": "docs/battle-core/reference-assets/b-7crU8CS18/echelon-03m45s.jpg.import",
+    "sha256": "D83F8D772E962D863F279B3BB3071E3B91F4E25CFFFC9E19F4B4D626151D82AD",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\reference-assets\\b-7crU8CS18\\echelon-03m45s.jpg.import"
+  },
+  {
+    "relative_path": "docs/battle-core/reference-assets/b-7crU8CS18/reform-13m50s.jpg.import",
+    "sha256": "195A1136A8C0106FCC89D6CC055E603CBD19B1EA36B0C753DA04F2E8A021E6F1",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\reference-assets\\b-7crU8CS18\\reform-13m50s.jpg.import"
+  },
+  {
+    "relative_path": "docs/battle-core/reference-assets/b-7crU8CS18/slot-preview-11m30s.jpg.import",
+    "sha256": "C6C3F27C7B83D67778AC99BA8DA4F6D5F43C75F26DE6F9620E4C8571C6BFA63B",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\reference-assets\\b-7crU8CS18\\slot-preview-11m30s.jpg.import"
+  },
+  {
+    "relative_path": "docs/battle-core/reference-assets/q9AyxvhML04/arrived-13m30s.jpg.import",
+    "sha256": "57EBA80EACE049BB827B5460F3905E0474E0FDAC577893A89F9CB19176986EB4",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\reference-assets\\q9AyxvhML04\\arrived-13m30s.jpg.import"
+  },
+  {
+    "relative_path": "docs/battle-core/reference-assets/q9AyxvhML04/retreat-09m00s.jpg.import",
+    "sha256": "3DAF4D3E79608605FA67F85649F836409220358EA9A831522013C1162BE98344",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\reference-assets\\q9AyxvhML04\\retreat-09m00s.jpg.import"
+  },
+  {
+    "relative_path": "docs/battle-core/reference-assets/q9AyxvhML04/rotate-formation-06m00s.jpg.import",
+    "sha256": "A51217BA9388FD6FDFD10974D0C78D368D8DA053A60A0B3C50855C03AF2E9C26",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\reference-assets\\q9AyxvhML04\\rotate-formation-06m00s.jpg.import"
+  },
+  {
+    "relative_path": "docs/battle-core/reference-assets/q9AyxvhML04/slot-preview-12m50s.jpg.import",
+    "sha256": "AE21E6F6AD431EED4050938D37256AD1C61D6E8AE79A85A060BAB88C736AEA9B",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\reference-assets\\q9AyxvhML04\\slot-preview-12m50s.jpg.import"
+  },
+  {
+    "relative_path": "docs/battle-core/reference-assets/q9AyxvhML04/slot-preview-14m00s.jpg.import",
+    "sha256": "E7E4EF98AB9AF33C3126D573BACF5207E124F7840EF28DD7F034D04E5C7E7E93",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\battle-core\\reference-assets\\q9AyxvhML04\\slot-preview-14m00s.jpg.import"
+  },
+  {
+    "relative_path": "docs/ui/evidence/fleet-role-layout/formation-battle-close.png.import",
+    "sha256": "E32E438DF679DCF599C10E0492C6CFF71FD572FB7CEC2C028CD71D1DE925E891",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\ui\\evidence\\fleet-role-layout\\formation-battle-close.png.import"
+  },
+  {
+    "relative_path": "docs/ui/evidence/fleet-role-layout/formation-battle-overview.png.import",
+    "sha256": "C0DF8D3FBBFC64A95B03F69C3641ED1C9F422B4D2FDBACDE117032490159E003",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\ui\\evidence\\fleet-role-layout\\formation-battle-overview.png.import"
+  },
+  {
+    "relative_path": "docs/ui/evidence/fleet-role-layout/formation-guide-portrait.png.import",
+    "sha256": "3E03BD4F910EB38FBCCD61902EBC74DB9E55B98AA6854448BDBC9E02FC251753",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\ui\\evidence\\fleet-role-layout\\formation-guide-portrait.png.import"
+  },
+  {
+    "relative_path": "docs/ui/evidence/fleet-role-layout/formation-guide.png.import",
+    "sha256": "C0CDA6197ADCCA1CA71D514384F24875C493BA49B56560466C650B8A4D5A5FA4",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\docs\\ui\\evidence\\fleet-role-layout\\formation-guide.png.import"
+  },
+  {
+    "relative_path": "hud/ui_kit/formation_guide.gd.uid",
+    "sha256": "78F12F38447816E33D4F6D583783A3C6007FD18524CDCB98D920CC3649E39185",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\hud\\ui_kit\\formation_guide.gd.uid"
+  },
+  {
+    "relative_path": "scripts/battle_trace.gd.uid",
+    "sha256": "B1B450ED431ACB57A68F6C5439A5BFB0B9A00FE0291782AD3D47482431AB88D2",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\scripts\\battle_trace.gd.uid"
+  },
+  {
+    "relative_path": "tests/air_defense.gd.uid",
+    "sha256": "1BD381DA95ED0416605F8A877BEAD0CCF39BF1F0CEB70F8E94F92DC5000D1B30",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\tests\\air_defense.gd.uid"
+  },
+  {
+    "relative_path": "tests/battle_trace.gd.uid",
+    "sha256": "AB5697661022453BE8E279436DFB48FABE7643DEAF1D8CF3C8BF473E1FC166EB",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\tests\\battle_trace.gd.uid"
+  },
+  {
+    "relative_path": "tests/capture_poc_apply.gd.uid",
+    "sha256": "29CEB3A0335ED88E103F852A0677CC3C762B57B83D6ADD60094446AC56DA5C96",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\tests\\capture_poc_apply.gd.uid"
+  },
+  {
+    "relative_path": "tests/fleet_size_review.gd.uid",
+    "sha256": "BBEA5D288EB33F6C7B1975FFB628199DF822AA2B687077C716312163571E2487",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\tests\\fleet_size_review.gd.uid"
+  },
+  {
+    "relative_path": "tests/formation_guide_ui.gd.uid",
+    "sha256": "9C37AAA496E31C2BE1756B68A4920D33A5BFCE5A24567D4B4342237235416C03",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\tests\\formation_guide_ui.gd.uid"
+  },
+  {
+    "relative_path": "tests/formation_role_layout.gd.uid",
+    "sha256": "2D2FA67444E09587CA742178CD3DB843659FAAF17C5C30C7321524EDEA5FBA5F",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\tests\\formation_role_layout.gd.uid"
+  },
+  {
+    "relative_path": "tests/i01_operation_config.gd.uid",
+    "sha256": "2C5B80CBE6C5A84A6E3FCA71C9999140B30A9B390527BB057189ACA0FAB76EB4",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\tests\\i01_operation_config.gd.uid"
+  },
+  {
+    "relative_path": "tests/localization_coverage.gd.uid",
+    "sha256": "045A4187F008EF03FAC186C8CE1DE0D8C5FFFC8A591C8027954C33CBC1D72E7B",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\tests\\localization_coverage.gd.uid"
+  },
+  {
+    "relative_path": "tests/result_roster.gd.uid",
+    "sha256": "6B64282B7DE9A81E7E28EA5B940573FC24A3E32DD47F76CE0F8F2244F9F5373D",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\tests\\result_roster.gd.uid"
+  },
+  {
+    "relative_path": "tests/standoff_control.gd.uid",
+    "sha256": "AD91E5BFCA648E51CC184AE9A1CE288698260BF57D3577472933E459FB1B11E6",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\tests\\standoff_control.gd.uid"
+  },
+  {
+    "relative_path": "tests/weapon_salvo_fx.gd.uid",
+    "sha256": "8C14B67A449188DDDDF3F165CC6F9BB72609B5783A41E3A794363A1A1953CC2E",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\tests\\weapon_salvo_fx.gd.uid"
+  },
+  {
+    "relative_path": "tools/scenario/cross_counter_drill.gd.uid",
+    "sha256": "A6C4E8244A820C75B9114346F410DC41C2D4455845A5FD23655DFC69F4E434E7",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\tools\\scenario\\cross_counter_drill.gd.uid"
+  },
+  {
+    "relative_path": "view/fleet_render/fleet_role_layout.gd.uid",
+    "sha256": "2C3E2A30D936B66500BBC3FC667D86A919C0D1A2C8CA335380CA3A7B435F3934",
+    "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506\\view\\fleet_render\\fleet_role_layout.gd.uid"
+  }
+]

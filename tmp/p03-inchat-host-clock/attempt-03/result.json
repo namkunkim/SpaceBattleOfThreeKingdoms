@@ -1,0 +1,44 @@
+{
+  "pass": false,
+  "actual_exit": 0,
+  "timed_out": false,
+  "elapsed_seconds": 11.272900399984792,
+  "launcher_pid": 26364,
+  "job": {
+    "active": 1,
+    "total": 3,
+    "terminated": 0
+  },
+  "engine": {
+    "path": "C:/Tools/Godot/Godot_v4.7.2-stable_win64.exe",
+    "pid": 32752
+  },
+  "diagnostics": [
+    "ERROR: [FleetBattle3D] invalid_candidate_profile at profile.ally",
+    "ERROR: [FleetBattle3D] invalid_candidate_profile at profile.ally",
+    "WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+    "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+  ],
+  "checks": [
+    {
+      "name": "same_initial_host_state",
+      "pass": true
+    },
+    {
+      "name": "actual_first_frame_phase_fork",
+      "pass": true
+    },
+    {
+      "name": "prepare_rejection_preserves_prior_host",
+      "pass": true
+    },
+    {
+      "name": "clean_teardown_and_exact_gate",
+      "pass": true
+    }
+  ],
+  "source_input_count": 2764,
+  "source_sha_unchanged": true,
+  "project_sha_unchanged": true,
+  "head_index_unchanged": true
+}

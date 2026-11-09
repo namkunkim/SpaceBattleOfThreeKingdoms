@@ -1,0 +1,170 @@
+[
+  {
+    "case": "cli-headless",
+    "pass_markers": [
+      "OPERATION_HEADLESS_PASS {\"ally_alive\":1,\"clock_ms\":150,\"commands\":3,\"end_ms\":150,\"end_tick\":2,\"foe_alive\":0,\"fp\":\"7d492b366451cf1a2232b4ab49971d4885e82126d210c76613a5d86131ea20a3\",\"killed\":0.949,\"lost\":0.003,\"over\":true,\"reason\":\"annihilation\",\"reinf_t\":-1.0,\"t\":0.15,\"tick\":2,\"win\":true}"
+    ],
+    "exit": 0,
+    "args": [
+      "--headless",
+      "--path",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/patch-repo",
+      "-s",
+      "tests/autoresolve.gd",
+      "--quit-after",
+      "1200",
+      "--",
+      "--operation-input",
+      "res://tests/fixtures/p02/poc.json",
+      "--out",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/final-cli-headless.json"
+    ],
+    "log": "final-cli-headless.log"
+  },
+  {
+    "case": "cli-worker",
+    "pass_markers": [
+      "OPERATION_HEADLESS_PASS {\"ally_alive\":1,\"clock_ms\":1600,\"commands\":0,\"end_ms\":1600,\"end_tick\":16,\"foe_alive\":0,\"fp\":\"12c9cea0994651210fdfbc0deb6aeda64118bfb8b838ffe68fc5ac837b017be5\",\"killed\":0.513,\"lost\":0.185,\"over\":true,\"reason\":\"annihilation\",\"reinf_t\":-1.0,\"t\":1.6,\"tick\":16,\"win\":true}"
+    ],
+    "exit": 0,
+    "args": [
+      "--headless",
+      "--path",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/patch-repo",
+      "-s",
+      "tests/autoresolve.gd",
+      "--quit-after",
+      "1200",
+      "--",
+      "--operation-worker",
+      "res://tests/fixtures/p02/worker-poc.json",
+      "--out",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/final-cli-worker.json"
+    ],
+    "log": "final-cli-worker.log"
+  },
+  {
+    "case": "cli-replay",
+    "pass_markers": [
+      "OPERATION_HEADLESS_PASS {\"ally_alive\":1,\"clock_ms\":300,\"commands\":3,\"end_ms\":-1,\"end_tick\":-1,\"foe_alive\":1,\"fp\":\"ba2afb9901cc2ef074bf2f2e5d2b7f20c518caa61fe78a2d74cffe4d3a7ceb09\",\"killed\":0.0,\"lost\":0.0,\"over\":false,\"reason\":\"timeout\",\"reinf_t\":-1.0,\"t\":0.3,\"tick\":3,\"win\":false}"
+    ],
+    "exit": 0,
+    "args": [
+      "--headless",
+      "--path",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/patch-repo",
+      "-s",
+      "tests/autoresolve.gd",
+      "--quit-after",
+      "1200",
+      "--",
+      "--operation-replay",
+      "res://tests/fixtures/p02/replay-commands.json",
+      "--out",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/final-cli-replay.json"
+    ],
+    "log": "final-cli-replay.log"
+  },
+  {
+    "case": "p02_worker_adapter",
+    "pass_markers": [
+      "P02_WORKER_CHECKS 59 running_frames_observed=89"
+    ],
+    "exit": 0,
+    "args": [
+      "--headless",
+      "--path",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/patch-repo",
+      "-s",
+      "tests/p02_worker_adapter.gd",
+      "--quit-after",
+      "1200"
+    ],
+    "log": "final-p02_worker_adapter.log"
+  },
+  {
+    "case": "p02_replay_adapter",
+    "pass_markers": [
+      "P02_REPLAY_PASS cases=14 assertions=101"
+    ],
+    "exit": 0,
+    "args": [
+      "--headless",
+      "--path",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/patch-repo",
+      "-s",
+      "tests/p02_replay_adapter.gd",
+      "--quit-after",
+      "1200"
+    ],
+    "log": "final-p02_replay_adapter.log"
+  },
+  {
+    "case": "p02_headless_adapter",
+    "pass_markers": [
+      "P02_ADAPTER_PASS cases=8 checks=13417 rejections=32 natural=7 timeout=1"
+    ],
+    "exit": 0,
+    "args": [
+      "--headless",
+      "--path",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/patch-repo",
+      "-s",
+      "tests/p02_headless_adapter.gd",
+      "--quit-after",
+      "1200"
+    ],
+    "log": "final-p02_headless_adapter.log"
+  },
+  {
+    "case": "i01b_logical_clock",
+    "pass_markers": [
+      "I01B_P1_PARTIAL_CLOCK_PASS cases=60 seeds=10 speeds=3 pause_variants=2 trace=50,100,150 tick=2 end_ms=150"
+    ],
+    "exit": 0,
+    "args": [
+      "--headless",
+      "--path",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/patch-repo",
+      "-s",
+      "tests/i01b_logical_clock.gd",
+      "--quit-after",
+      "1200"
+    ],
+    "log": "final-i01b_logical_clock.log"
+  },
+  {
+    "case": "i01_operation_config",
+    "pass_markers": [
+      "I01A_OPERATION_CONFIG_PASS a01 a02 a03 a04 a05 a06"
+    ],
+    "exit": 0,
+    "args": [
+      "--headless",
+      "--path",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/patch-repo",
+      "-s",
+      "tests/i01_operation_config.gd",
+      "--quit-after",
+      "1200"
+    ],
+    "log": "final-i01_operation_config.log"
+  },
+  {
+    "case": "p02_viewer_events",
+    "pass_markers": [
+      "P02_VIEWER_EVENTS_PASS rows=14 assertions=148"
+    ],
+    "exit": 0,
+    "args": [
+      "--headless",
+      "--path",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-space-cleanup-20261108\\commit-plan/patch-repo",
+      "-s",
+      "tests/p02_viewer_events.gd",
+      "--quit-after",
+      "1200"
+    ],
+    "log": "final-p02_viewer_events.log"
+  }
+]

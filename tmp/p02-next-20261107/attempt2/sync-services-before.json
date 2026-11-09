@@ -1,0 +1,544 @@
+{
+	"event_count": 55,
+	"events": [
+		{
+			"kind": "spawn",
+			"other": -1,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 0,
+			"value": null
+		},
+		{
+			"kind": "spawn",
+			"other": -1,
+			"pos": "(0.0, 0.0)",
+			"sq": 2,
+			"tick": 0,
+			"value": null
+		},
+		{
+			"kind": "rejected",
+			"other": 0,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 0,
+			"value": "missile_no_target"
+		},
+		{
+			"kind": "rejected",
+			"other": 0,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 0,
+			"value": "fighter_no_target"
+		},
+		{
+			"kind": "contact",
+			"other": -1,
+			"pos": "(550.0, 500.0)",
+			"sq": 2,
+			"tick": 1,
+			"value": {
+				"state": "confirmed",
+				"was": "none"
+			}
+		},
+		{
+			"kind": "salvo",
+			"other": 1,
+			"pos": "(400.0, 500.0)",
+			"sq": 2,
+			"tick": 21,
+			"value": {
+				"acc": 6500,
+				"band": "engagement",
+				"cat": "artillery",
+				"dmg": 531,
+				"hit": false,
+				"n": 40.0,
+				"sector": "front"
+			}
+		},
+		{
+			"kind": "salvo",
+			"other": 2,
+			"pos": "(546.9383, 500.0)",
+			"sq": 1,
+			"tick": 25,
+			"value": {
+				"acc": 7000,
+				"band": "engagement",
+				"cat": "artillery",
+				"dmg": 98,
+				"hit": false,
+				"n": 1.0,
+				"sector": "front"
+			}
+		},
+		{
+			"kind": "say",
+			"other": 2,
+			"pos": "(400.0, 500.0)",
+			"sq": 1,
+			"tick": 50,
+			"value": "attack"
+		},
+		{
+			"kind": "say",
+			"other": -1,
+			"pos": "(400.0, 500.0)",
+			"sq": 1,
+			"tick": 50,
+			"value": "missile"
+		},
+		{
+			"kind": "say",
+			"other": -1,
+			"pos": "(400.0, 500.0)",
+			"sq": 1,
+			"tick": 50,
+			"value": "fighter"
+		},
+		{
+			"kind": "salvo",
+			"other": 2,
+			"pos": "(542.8553, 500.0)",
+			"sq": 1,
+			"tick": 51,
+			"value": {
+				"acc": 7000,
+				"band": "engagement",
+				"cat": "artillery",
+				"dmg": 98,
+				"hit": true,
+				"n": 1.0,
+				"sector": "front"
+			}
+		},
+		{
+			"kind": "salvo",
+			"other": 2,
+			"pos": "(542.8553, 500.0)",
+			"sq": 1,
+			"tick": 51,
+			"value": {
+				"acc": 7500,
+				"band": "engagement",
+				"cat": "fighter",
+				"dmg": 80,
+				"hit": true,
+				"n": 1.0,
+				"sector": "front"
+			}
+		},
+		{
+			"kind": "ship_lost",
+			"other": 1,
+			"pos": "(542.8553, 500.0)",
+			"sq": 2,
+			"tick": 51,
+			"value": 1
+		},
+		{
+			"kind": "say",
+			"other": 2,
+			"pos": "(400.0, 500.0)",
+			"sq": 1,
+			"tick": 100,
+			"value": "attack"
+		},
+		{
+			"kind": "say",
+			"other": -1,
+			"pos": "(400.0, 500.0)",
+			"sq": 1,
+			"tick": 100,
+			"value": "missile"
+		},
+		{
+			"kind": "say",
+			"other": -1,
+			"pos": "(400.0, 500.0)",
+			"sq": 1,
+			"tick": 100,
+			"value": "fighter"
+		},
+		{
+			"kind": "salvo",
+			"other": 2,
+			"pos": "(535.0032, 500.0)",
+			"sq": 1,
+			"tick": 101,
+			"value": {
+				"acc": 7000,
+				"band": "engagement",
+				"cat": "artillery",
+				"dmg": 98,
+				"hit": true,
+				"n": 1.0,
+				"sector": "front"
+			}
+		},
+		{
+			"kind": "salvo",
+			"other": 2,
+			"pos": "(535.0032, 500.0)",
+			"sq": 1,
+			"tick": 101,
+			"value": {
+				"acc": 7500,
+				"band": "engagement",
+				"cat": "fighter",
+				"dmg": 80,
+				"hit": false,
+				"n": 1.0,
+				"sector": "front"
+			}
+		},
+		{
+			"kind": "salvo",
+			"other": 2,
+			"pos": "(528.7203, 500.0)",
+			"sq": 1,
+			"tick": 141,
+			"value": {
+				"acc": 7296,
+				"band": "engagement",
+				"cat": "line_fire",
+				"dmg": 226,
+				"hit": false,
+				"n": 2.0,
+				"sector": "front"
+			}
+		},
+		{
+			"kind": "say",
+			"other": 2,
+			"pos": "(400.0, 500.0)",
+			"sq": 1,
+			"tick": 150,
+			"value": "attack"
+		},
+		{
+			"kind": "rejected",
+			"other": 0,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 150,
+			"value": "missile_charges"
+		},
+		{
+			"kind": "say",
+			"other": -1,
+			"pos": "(400.0, 500.0)",
+			"sq": 1,
+			"tick": 150,
+			"value": "fighter"
+		},
+		{
+			"kind": "salvo",
+			"other": 2,
+			"pos": "(527.1503, 500.0)",
+			"sq": 1,
+			"tick": 151,
+			"value": {
+				"acc": 7500,
+				"band": "engagement",
+				"cat": "fighter",
+				"dmg": 80,
+				"hit": true,
+				"n": 1.0,
+				"sector": "front"
+			}
+		},
+		{
+			"kind": "ship_lost",
+			"other": 1,
+			"pos": "(527.1503, 500.0)",
+			"sq": 2,
+			"tick": 151,
+			"value": 1
+		},
+		{
+			"kind": "say",
+			"other": 2,
+			"pos": "(400.0, 500.0)",
+			"sq": 1,
+			"tick": 200,
+			"value": "attack"
+		},
+		{
+			"kind": "rejected",
+			"other": 0,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 200,
+			"value": "missile_charges"
+		},
+		{
+			"kind": "rejected",
+			"other": 0,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 200,
+			"value": "fighter_charges"
+		},
+		{
+			"kind": "say",
+			"other": 2,
+			"pos": "(400.0, 500.0)",
+			"sq": 1,
+			"tick": 250,
+			"value": "attack"
+		},
+		{
+			"kind": "rejected",
+			"other": 0,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 250,
+			"value": "missile_charges"
+		},
+		{
+			"kind": "rejected",
+			"other": 0,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 250,
+			"value": "fighter_charges"
+		},
+		{
+			"kind": "say",
+			"other": 2,
+			"pos": "(400.0, 500.0)",
+			"sq": 1,
+			"tick": 300,
+			"value": "attack"
+		},
+		{
+			"kind": "rejected",
+			"other": 0,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 300,
+			"value": "missile_charges"
+		},
+		{
+			"kind": "rejected",
+			"other": 0,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 300,
+			"value": "fighter_charges"
+		},
+		{
+			"kind": "say",
+			"other": 2,
+			"pos": "(400.0, 500.0)",
+			"sq": 1,
+			"tick": 350,
+			"value": "attack"
+		},
+		{
+			"kind": "rejected",
+			"other": 0,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 350,
+			"value": "missile_charges"
+		},
+		{
+			"kind": "rejected",
+			"other": 0,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 350,
+			"value": "fighter_charges"
+		},
+		{
+			"kind": "say",
+			"other": 2,
+			"pos": "(400.0, 500.0)",
+			"sq": 1,
+			"tick": 400,
+			"value": "attack"
+		},
+		{
+			"kind": "rejected",
+			"other": 0,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 400,
+			"value": "missile_charges"
+		},
+		{
+			"kind": "rejected",
+			"other": 0,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 400,
+			"value": "fighter_charges"
+		},
+		{
+			"kind": "say",
+			"other": 2,
+			"pos": "(400.0, 500.0)",
+			"sq": 1,
+			"tick": 450,
+			"value": "attack"
+		},
+		{
+			"kind": "rejected",
+			"other": 0,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 450,
+			"value": "missile_charges"
+		},
+		{
+			"kind": "rejected",
+			"other": 0,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 450,
+			"value": "fighter_charges"
+		},
+		{
+			"kind": "say",
+			"other": 2,
+			"pos": "(400.0, 500.0)",
+			"sq": 1,
+			"tick": 500,
+			"value": "attack"
+		},
+		{
+			"kind": "rejected",
+			"other": 0,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 500,
+			"value": "missile_charges"
+		},
+		{
+			"kind": "rejected",
+			"other": 0,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 500,
+			"value": "fighter_charges"
+		},
+		{
+			"kind": "say",
+			"other": 2,
+			"pos": "(400.0, 500.0)",
+			"sq": 1,
+			"tick": 550,
+			"value": "attack"
+		},
+		{
+			"kind": "rejected",
+			"other": 0,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 550,
+			"value": "missile_charges"
+		},
+		{
+			"kind": "rejected",
+			"other": 0,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 550,
+			"value": "fighter_charges"
+		},
+		{
+			"kind": "say",
+			"other": 2,
+			"pos": "(400.0, 500.0)",
+			"sq": 1,
+			"tick": 600,
+			"value": "attack"
+		},
+		{
+			"kind": "rejected",
+			"other": 0,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 600,
+			"value": "missile_charges"
+		},
+		{
+			"kind": "rejected",
+			"other": 0,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 600,
+			"value": "fighter_charges"
+		},
+		{
+			"kind": "salvo",
+			"other": 1,
+			"pos": "(400.0, 500.0)",
+			"sq": 2,
+			"tick": 621,
+			"value": {
+				"acc": 6500,
+				"band": "engagement",
+				"cat": "artillery",
+				"dmg": 516,
+				"hit": true,
+				"n": 37.8,
+				"sector": "front"
+			}
+		},
+		{
+			"kind": "ship_lost",
+			"other": 2,
+			"pos": "(400.0, 500.0)",
+			"sq": 1,
+			"tick": 621,
+			"value": 4
+		},
+		{
+			"kind": "destroyed",
+			"other": 2,
+			"pos": "(400.0, 500.0)",
+			"sq": 1,
+			"tick": 621,
+			"value": null
+		},
+		{
+			"kind": "battle_end",
+			"other": -1,
+			"pos": "(0.0, 0.0)",
+			"sq": -1,
+			"tick": 621,
+			"value": "flagship_lost"
+		}
+	],
+	"meta": {
+		"format": "p02/restricted-headless/1",
+		"input_file_sha256": "8c4e4dcbb1632aa46ed65d04b8d3f6d41d4f5982d2984d126b902fe3f475c879",
+		"input_sha256": "29377d03b9b3bcdddf1a438b80d9e358de77554ab28e26d240b53ee4ccdcf9a6",
+		"transform": "identity/no-transform"
+	},
+	"ok": true,
+	"summary": {
+		"ally_alive": 0,
+		"clock_ms": 62050,
+		"commands": 38,
+		"end_ms": 62050,
+		"end_tick": 621,
+		"foe_alive": 1,
+		"fp": "c9269aad4791bbd2e2658b524dc092c9bdd8fe806f71ab53175611a044256d24",
+		"killed": 2.543,
+		"lost": 4.0,
+		"over": true,
+		"reason": "flagship_lost",
+		"reinf_t": -1.0,
+		"t": 62.05,
+		"tick": 621,
+		"win": false
+	}
+}

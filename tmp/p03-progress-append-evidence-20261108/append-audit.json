@@ -1,0 +1,25 @@
+{
+  "utc": "2026-11-08T09:13:08.126139+00:00",
+  "writer_coordination": "Root reported no other known progress author. Both pre-append hashes match prior P03 record and were checked again immediately before append.",
+  "files": {
+    "tmp/p03-progress-20261108/P03-CHECKLIST-REVISION-20261108.md": {
+      "before": "6afe79d0dcbd8b2095cffd6025acfd063cd8e714708c9647ae1781fb489ecfb1",
+      "after": "86b8bf012931005d898520c9dc8a76695ff3ba6c2549020f6662cbaaa3083830",
+      "append_sha256": "9f2ed477d93a3dba11e56ac30c745da94f83fa13b50813ebebf615e2588d9f44",
+      "prefix_preserved": true
+    },
+    "tmp/p03-progress-20261108/HANDOFF-20261108.md": {
+      "before": "ac620a5d8e992c67d5b72ca8ea41416facde66d2d52709d46dfc87701b1213b5",
+      "after": "952ac0573c229cbb87ecdad71f86b78b99dcb59d7ca87eafb4b7545a95f0a7a6",
+      "append_sha256": "bb2c6af52d62015cc03dbb513340245b12b7e9b56ec0c924b56399bd0acf23a9",
+      "prefix_preserved": true
+    }
+  },
+  "evidence_sha256": {
+    "p03-parallel-active-20261108/owner-contract/cycle-02/RESULT.md": "2a91e87f28b255d3aa7d30ec641a8d7807ee1ae913a514d35f98a8b5f4744189",
+    "p03-parallel-active-20261108/owner-contract/cycle-02/REVIEW-5B.md": "2574392b6fcad7d79c6697a23116d1dd5df22efefdde5f9aa9ad40c0a479f8b2",
+    "p03-parallel-active-20261108/owner-contract/cycle-02/REVIEW-CLOSEOUT.md": "12ec3206725a51f8bcd31ed5773780a3712fa056ef9a8fd71aa46b0db33616a0",
+    "p03-product-resume-20261108/DETECTION-UI-CLOSEOUT.md": "3fb9390c7a4662fd4a3a4f6e3cd7be11600cd2d35bd5aa7332487cf4988b1a99",
+    "p03-product-resume-20261108/REFERENCE-LIFETIME.md": "25dc7fc2a479ea214dc7e3f12b68cc8e2ac5bec4140ce90cc4f551355d5465cf"
+  }
+}

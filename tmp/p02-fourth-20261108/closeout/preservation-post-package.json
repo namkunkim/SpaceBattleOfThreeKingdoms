@@ -1,0 +1,21 @@
+{
+  "protected_count": 17343,
+  "existing_owned_doc_delta": [
+    "docs/battle-core/CHECKLIST-OPEN.md",
+    "docs/battle-core/pc-campaign-design/P02-PROGRESS-CHECKLIST.md",
+    "docs/battle-core/pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.md"
+  ],
+  "new_owned": [
+    "docs/battle-core/pc-campaign-design/P02-VIEWER-EVENTS-CHECKLIST-20261108.md",
+    "docs/battle-core/pc-campaign-design/P02-VIEWER-EVENTS-RESULT-20261108.md",
+    "docs/battle-core/pc-campaign-design/SESSION-HANDOFF-P02-VIEWER-EVENTS-20261108.md",
+    "tmp/P02-VIEWER-EVENTS-DELIVERY-20261108.zip"
+  ],
+  "branch_head_index_match": true,
+  "p03_protected": 687,
+  "prior_zips_protected": 12,
+  "workspace_diff_check_actual_exit": 2,
+  "workspace_diff_check_baseline_match": true,
+  "document_reverse_match": true,
+  "owner_reverse_match": true
+}

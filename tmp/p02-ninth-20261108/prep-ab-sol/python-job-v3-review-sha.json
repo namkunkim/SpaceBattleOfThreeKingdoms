@@ -1,0 +1,9 @@
+{
+  "PYTHON-JOB-QUALIFICATION-V3-REVIEW.md": "911a7a91d451e2d7bdf178b7a40b67009e5b36f3e29f299d22a4154820b24433",
+  "variant-abi-review/PYTHON-JOB-QUALIFICATION-MANIFEST-v3.json": "c21667f759e34191b7b71f44ba436850deaec040ad8d6984cf8ee908325bcf42",
+  "variant-abi-review/python_job_external_watchdog_v3.py": "620616fe5056079d6488c58e3383b344fba9b5f88d807fbb9b2c0e45880a536d",
+  "variant-abi-review/python_job_qualification_v3.py": "c15456bc3b87bb20a832f44076fc13aa163f9feded1d4a25fe0696a17e68882b",
+  "variant-abi-review/python_job_diagnostics_v3.py": "b40ef54e9d4399bf10d9830feb0e14dcece8232e96d9b1d91f25f37261725dd8",
+  "variant-abi-review/python-job-watchdog-v3-synthetic.py": "6303fcb9e2297dee86bed36c97abf7d27c3d3e5086e791025445d38b11d50d76",
+  "variant-abi-review/python-job-watchdog-v3-synthetic.log": "6a5596f59f37c4fa880c951d911415fa27f6170d349074d57f050d584058e72d"
+}

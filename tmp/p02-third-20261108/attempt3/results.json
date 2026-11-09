@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "processes": 1,
+  "exit": 0,
+  "historical_exit_lines_match": true,
+  "attempt2_stderr_bytes_match": true,
+  "diagnostics": {
+    "SCRIPT ERROR": 0,
+    "ERROR": 1,
+    "WARNING": 1
+  },
+  "hash_stability": true,
+  "validated_attempt2_processes": 74,
+  "validated_attempt2_comparisons": 36,
+  "k6_total_actual_processes": 150
+}

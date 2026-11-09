@@ -1,0 +1,19 @@
+{
+  "args": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-eighth-20261108\\candidate-k1\\instrumented-k4",
+    "--script",
+    "res://_p02_gate_k4_injected.gd",
+    "--"
+  ],
+  "env": {
+    "APPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-eighth-20261108\\gate-k4\\instrumented-injected\\roaming",
+    "LOCALAPPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-eighth-20261108\\gate-k4\\instrumented-injected\\local",
+    "XDG_DATA_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-eighth-20261108\\gate-k4\\instrumented-injected\\roaming",
+    "SBTK_SAFE_INSETS": "0,0,0,0"
+  },
+  "probe_sha": "5241c8f08b151ee8437b4fedd8923033bd6bd2e72042cdd377883c2677daa358",
+  "user_before": {}
+}

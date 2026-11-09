@@ -1,0 +1,40 @@
+{
+  "changed": 8,
+  "outside": [],
+  "status_after": 33800,
+  "status_before": 33792,
+  "changes": [
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/reinf-ms/attempt-02/fixture/run.json",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/reinf-ms/attempt-02/fixture/stderr.bin",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/reinf-ms/attempt-02/fixture/stdout.bin",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/reinf-ms/attempt-02/forced_failure/run.json",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/reinf-ms/attempt-02/forced_failure/stderr.bin",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/reinf-ms/attempt-02/forced_failure/stdout.bin",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/reinf-ms/attempt-02/git-before.z",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/reinf-ms/attempt-02/input-after.json",
+      "SideIndicator": "=>"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "scripts/world/auto_resolver.gd": {
+    "bytes": 2801,
+    "sha256": "3619547e309b613ef60ec6994a6c08c5ca7a8559ad86d577033c85ccdf4f4221"
+  },
+  "tests/autoresolve.gd": {
+    "bytes": 25115,
+    "sha256": "a6c3ee903e2365569a31aa0194acb426d87c5856a74a9c7dcaaedeaeea18b5b8"
+  },
+  ".godot/global_script_class_cache.cfg": {
+    "bytes": 12738,
+    "sha256": "0eb214ebcc65cd2ca7b9d98dc83f61a9c170ca75b1b23acf4c3c58fdfb550ab1"
+  },
+  "docs/battle-core/CHECKLIST-OPEN.md": {
+    "bytes": 119749,
+    "sha256": "a1cf47d1120857e27a82828c902e15be7df5d4d546c2a44273c617362719a3f0"
+  },
+  "docs/battle-core/pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.md": {
+    "bytes": 18790,
+    "sha256": "584da2da0c907a32d43e406b96031e99586a026a0d4227124dba875b0631dafa"
+  }
+}

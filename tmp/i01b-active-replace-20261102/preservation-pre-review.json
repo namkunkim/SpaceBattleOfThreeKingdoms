@@ -1,0 +1,43 @@
+{
+  "created_utc": "2026-11-04T14:12:57.399550+00:00",
+  "before_count": 3879,
+  "changed": [
+    {
+      "path": "core/battle/operation_private_state.gd",
+      "before": "a1376b70c22dcf371120d44999a38b68d141bc2306d9339f1e2294e6744196ca",
+      "current": "6be2adeb64bec7c9a89040cab5c9558219e063272df1a9e5fd00cf1dd9111441"
+    }
+  ],
+  "missing": [],
+  "source_count": 35,
+  "source_changed": [],
+  "quarantine_count": 77,
+  "quarantine_failures": [],
+  "prior_p2c_payload_count": 254,
+  "prior_payload_changed": [
+    {
+      "path": "core/battle/operation_private_state.gd",
+      "current": "6be2adeb64bec7c9a89040cab5c9558219e063272df1a9e5fd00cf1dd9111441"
+    }
+  ],
+  "prior_zip_sha256": "99a4a1adca1bdc3bf7e56baa9112c1625ab6c6371bfaafa0482b3471903a2971",
+  "final_inputs_count": 42,
+  "input_mismatches": [],
+  "owned_whitespace": [
+    {
+      "path": "core/battle/operation_private_state.gd",
+      "sha256": "6be2adeb64bec7c9a89040cab5c9558219e063272df1a9e5fd00cf1dd9111441",
+      "trailing_whitespace": []
+    },
+    {
+      "path": "tests/i01b_active_replace.gd",
+      "sha256": "e76bc22ef569ccbf969fddc92691f20d1556dab963102a85aec7c4c2d0631759",
+      "trailing_whitespace": []
+    }
+  ],
+  "index": "",
+  "editor_import": false,
+  "main_attempts": 2,
+  "main_limit": 6,
+  "previous_p2c_main_attempts": 5
+}

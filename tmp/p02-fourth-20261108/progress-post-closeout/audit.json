@@ -1,0 +1,109 @@
+{
+  "path": "docs/battle-core/pc-campaign-design/P02-PROGRESS-CHECKLIST.md",
+  "before_sha256": "b749cf8dfaebd837ddbaafb7397e82f9f765fd8e1ce2f7b8062b2e200b9aaf6e",
+  "after_sha256": "98c88509a2513d700320707c411d8a2c9105ed61f35ed19c903a49ef2efb4ba7",
+  "reverse_matches": true,
+  "links": [
+    {
+      "target": "SESSION-REQUIREMENTS-CHECKLIST-20261031.md",
+      "exists": true
+    },
+    {
+      "target": "P02-FIRST-HEADLESS-RESULT-20261107.md",
+      "exists": true
+    },
+    {
+      "target": "../../../tmp/p02-first-integration-20261105/REVIEW-5B-NON-ASTRA-20261107.md",
+      "exists": true
+    },
+    {
+      "target": "../../../tmp/p02-first-integration-20261105/REVIEW-CLOSEOUT-NON-ASTRA-20261107.md",
+      "exists": true
+    },
+    {
+      "target": "P02-WORKER-RESULT-20261107.md",
+      "exists": true
+    },
+    {
+      "target": "../../../tmp/p02-next-20261107/attempt3/results.json",
+      "exists": true
+    },
+    {
+      "target": "../../../tmp/p02-next-20261107/REVIEW-5B-INDEPENDENT.md",
+      "exists": true
+    },
+    {
+      "target": "../../../tmp/p02-next-20261107/closeout/REVIEW-CLOSEOUT-INDEPENDENT-20261108.md",
+      "exists": true
+    },
+    {
+      "target": "../../../tmp/p02-third-20261108/PLAN.md",
+      "exists": true
+    },
+    {
+      "target": "../../../tmp/p02-third-20261108/REVIEW-PLAN-INDEPENDENT.md",
+      "exists": true
+    },
+    {
+      "target": "P02-REPLAY-RESULT-20261108.md",
+      "exists": true
+    },
+    {
+      "target": "../../../tmp/p02-third-20261108/REVIEW-5B-INDEPENDENT.md",
+      "exists": true
+    },
+    {
+      "target": "P02-REPLAY-CHECKLIST-20261108.md",
+      "exists": true
+    },
+    {
+      "target": "SESSION-HANDOFF-P02-REPLAY-20261108.md",
+      "exists": true
+    },
+    {
+      "target": "../../../tmp/P02-REPLAY-DELIVERY-20261108.zip",
+      "exists": true
+    },
+    {
+      "target": "../../../tmp/p02-third-20261108/closeout/REVIEW-CLOSEOUT-INDEPENDENT.md",
+      "exists": true
+    },
+    {
+      "target": "P02-VIEWER-EVENTS-RESULT-20261108.md",
+      "exists": true
+    },
+    {
+      "target": "P02-VIEWER-EVENTS-CHECKLIST-20261108.md",
+      "exists": true
+    },
+    {
+      "target": "SESSION-HANDOFF-P02-VIEWER-EVENTS-20261108.md",
+      "exists": true
+    },
+    {
+      "target": "../../../tmp/p02-fourth-20261108/REVIEW-5B-REBASELINE-INDEPENDENT.md",
+      "exists": true
+    },
+    {
+      "target": "../../../tmp/P02-VIEWER-EVENTS-DELIVERY-20261108.zip",
+      "exists": true
+    },
+    {
+      "target": "../../../tmp/p02-fourth-20261108/closeout/REVIEW-CLOSEOUT-INDEPENDENT.md",
+      "exists": true
+    },
+    {
+      "target": "P02-WORKER-RESULT-20261107.md",
+      "exists": true
+    },
+    {
+      "target": "../../../tmp/p02-third-20261108/baseline-context.json",
+      "exists": true
+    }
+  ],
+  "zip_sha256_before_after": "634912cc31a7115ca4fb5534ff12f2add4cbfc4c6f48697bf5dc781a2175fb2a",
+  "zip_progress_matches_before": true,
+  "closeout_sha256": "d97854c8014a614a354e4da54a06314fc1553e8582bfe0b69a3d8fb0376ccc2d",
+  "diff_sha256": "fbf684e99a598e1b0199850d1ae2e2d6108a30d40579ad1e3e8a10e3b686d116",
+  "scoped_diff_check_exit": 1
+}

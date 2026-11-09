@@ -1,0 +1,108 @@
+{
+  "status": "REVIEW_ONLY_NON_EXECUTABLE",
+  "scratch": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\never-run-v3-until-independently-approved",
+  "v5_broker": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-eighth-resume-8d838216ccfc\\prepared\\owned_job_v3.py",
+  "hashes": {
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe": "c8f0a6bc45a19b33541501e57f6f7cd972ab18453743266339d495cbbe846643",
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64.exe": "ab1824f85bfd8e0e4128182c000c4003a3e042245b2967848d089b2a04b22424",
+    "C:\\Python314\\python.exe": "03168c01b7b7491423350e82c26fee71f35b43694d1319d3c668bda6903a0c38",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-eighth-resume-8d838216ccfc\\prepared\\owned_job_v3.py": "49740a782f476af4fda134c5aa101b8900ed98b6aea6b495fed9e16965f1b3a4",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\abi_owned_runner_v3.py": "a97490e99029e9e46a2ff91ba3e233553ebad4420f907093ab27112e4de85381",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\abi_bounded_monitor_v2.py": "de8431d055f5036a249586ac8cd8fc95aa588829f1448bfcc099c8263ee7cc89",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\abi_oracle_v2.py": "5fe93c8965c16cbd3ab2413307a7a3ad51d6897e4603b22210ebcd6fb27e94f7",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\abi_oracle.py": "1a5a1523d401ea6edfc98e41954577a0a507603789c477ef30c9acf836510237",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\minimal-v3\\project.godot": "ac9a9b4e9ca4a75f9cb8000d511bc6e1311e3066e052e8cd21e471163933f73c",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\minimal-v3\\probe.gd": "8692e11f5daab396da998c426bd75be1fa7e5e486e8dd954cfcfcfb2f588b066",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\c_side1_semantics_v8.py": "694f410424817d3579c1daa72572a5492b73f892c5ca12b99791f4309943281b",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\legacy_autoresolve_oracle.py": "7c7d41ed9e02ec83335499262edef24b295df5e7a8b5ced7a1d30489e9d72f78"
+  },
+  "protected_hashes": {
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\.git\\HEAD": "e601c5587bb915e30b13a368a32ac4cedd4cb8f76461af02d7762ace881c4f77",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\.git\\index": "6980bad4df2570c03e76cd964aec5bb0b71ec5cbdef69f4b022e4df1a2aca57a",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\project.godot": "0b5a634a44442b90154187431c83da3b755e36a261eb04a29f9a709c529f3fc2",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core\\battle\\operation_private_state.gd": "46b6fe191166ec3dcdb620f51c3ccd391a9080f52289517ae804bf86cecc1ea3",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tests\\p02_worker_adapter.gd": "393b20d8e72eb86d13ab7ee10d5d36d97a592e9c03b2e4664f380e34c4f3237e"
+  },
+  "images": [
+    "C:\\Python314\\python.exe",
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64.exe"
+  ],
+  "stage_inputs": {
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\minimal-v3\\project.godot": "project.godot",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\minimal-v3\\probe.gd": "probe.gd"
+  },
+  "engine_argv": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\never-run-v3-until-independently-approved\\project",
+    "--script",
+    "res://probe.gd"
+  ],
+  "broker_argv": [
+    "C:\\Python314\\python.exe",
+    "-I",
+    "-B",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-eighth-resume-8d838216ccfc\\prepared\\owned_job_v3.py",
+    "--broker"
+  ],
+  "controller_argv_template": [
+    "C:\\Python314\\python.exe",
+    "-I",
+    "-B",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\abi_owned_runner_v3.py",
+    "controller",
+    "{manifest}",
+    "{approval_sha256}"
+  ],
+  "supervisor_argv_template": [
+    "C:\\Python314\\python.exe",
+    "-I",
+    "-B",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\abi_owned_runner_v3.py",
+    "supervisor",
+    "{manifest}",
+    "{approval_sha256}"
+  ],
+  "env": {
+    "APPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\never-run-v3-until-independently-approved\\roaming",
+    "LOCALAPPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\never-run-v3-until-independently-approved\\local",
+    "XDG_DATA_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\never-run-v3-until-independently-approved\\roaming",
+    "XDG_CONFIG_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\never-run-v3-until-independently-approved\\config",
+    "XDG_CACHE_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\never-run-v3-until-independently-approved\\cache",
+    "TEMP": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\never-run-v3-until-independently-approved\\temp",
+    "TMP": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\never-run-v3-until-independently-approved\\temp",
+    "SystemRoot": "C:\\Windows",
+    "WINDIR": "C:\\Windows"
+  },
+  "scratch_directories": [
+    "local",
+    "roaming",
+    "config",
+    "cache",
+    "temp"
+  ],
+  "allowed_scratch_paths": [
+    "local",
+    "roaming",
+    "config",
+    "cache",
+    "temp",
+    "project",
+    "project/project.godot",
+    "project/probe.gd",
+    "logs",
+    "logs/stdout.txt",
+    "logs/stderr.txt",
+    "logs/inner.jsonl",
+    "logs/outer.jsonl",
+    "roaming/Godot",
+    "roaming/Godot/app_userdata",
+    "roaming/Godot/app_userdata/P02VariantAbiNonProduct"
+  ],
+  "outer_hard_seconds": 35,
+  "inner_engine_seconds": 20,
+  "owned_drain_seconds": 5,
+  "shared_output_cap_bytes": 262144
+}

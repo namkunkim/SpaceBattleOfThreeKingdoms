@@ -1,0 +1,15 @@
+{
+  "client_date": "2026-11-07 Asia/Seoul",
+  "archive": "tmp/p02-first-headless-delivery-20261107.zip",
+  "zip_bytes": 1041449,
+  "zip_sha256": "fdef242798df7da319552afacab9cce6c2a4aaf6628c0a2a617d51d934079b24",
+  "entry_count": 253,
+  "crc_failures": 0,
+  "entry_sha_mismatches": 0,
+  "entry_size_mismatches": 0,
+  "entry_list_exact": true,
+  "archive_contents_sha256": "362648977ed6c13bbe03d04a12f51ec4c6be370cc57355265d38615e2afc3d5a",
+  "final_audit_sha256": "0d0189d54693627a394c56d31b885995dfceb6ec6837b2e8e3a9d95b17c5ff70",
+  "record_manifest_sha256": "a5ec676d2f184f798d982578e6b9b04ed70c3daaacf2c91be82201668be34dbd",
+  "independent_closeout": "later external record; not retroactively included in this ZIP"
+}

@@ -1,0 +1,25 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-eighth-20261108/gate-k4/instrumented-injected/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T18-13-48-23844-6991000.jsonl
+ASSERT direct-normal true
+ASSERT direct-old-guard-no-entry true
+OBS direct-fail [[1, 0, 0, 0], {
+"error": "unsupported_mode",
+"ok": false,
+"path": "mode"
+}, -27182818, ["schema_version", "profile_id", "difficulty", "rules", "ally", "foe", "reinf", "combat", "scenario", &"ai", &"organization"]]
+ASSERT direct-factory-reject true
+ASSERT direct-active-unchanged true
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-eighth-20261108/gate-k4/instrumented-injected/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T18-13-52-23844-10993558.jsonl
+ASSERT direct-retry true
+ASSERT direct-initial-reject true
+ASSERT direct-initial-return true
+OBS auto-fail [[1, 0, 0, 0], {
+"error": "unsupported_mode",
+"ok": false,
+"path": "mode"
+}, -27182818, ["schema_version", "profile_id", "difficulty", "rules", "ally", "foe", "reinf", "combat", "scenario", &"ai", &"organization"]]
+ASSERT auto-factory-reject true
+ASSERT auto-browse true
+ASSERT auto-retry-start true
+ASSERT auto-retry-join-result false

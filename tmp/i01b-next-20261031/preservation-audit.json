@@ -1,0 +1,47 @@
+{
+  "baseline_count": 3594,
+  "changed": [],
+  "missing": [],
+  "head": "fb660cea69207fd332e26128643007694910a253",
+  "branch": "codex/feature-i01b-not_remove",
+  "index": [],
+  "diff_check_exit": 0,
+  "tracked_worktree_diff": [
+    "data/fleet-role-layout.md",
+    "docs/battle-core/CHECKLIST-OPEN.md",
+    "docs/battle-core/VIDEO-LOGH7-FLEET-MOTION.md",
+    "docs/poc/fleet-motion-ref/index.html",
+    "docs/ui/FLEET-ROLE-LAYOUT.md",
+    "docs/ui/FORMATION-TAB-SPEC.md",
+    "docs/ui/fleet-formations.fragment.html",
+    "docs/ui/fleet-formations.html",
+    "export_presets.cfg",
+    "hud/ui_kit/formation_guide.gd",
+    "project.godot",
+    "tests/formation_guide_ui.gd",
+    "\"\\355\\224\\214\\353\\240\\210\\354\\235\\264_\\354\\241\\260\\354\\236\\221\\353\\262\\225.md\""
+  ],
+  "new_code": [
+    "core/battle/operation_service_state.gd",
+    "tests/i01b_service_state.gd"
+  ],
+  "initial_diff_check_exit": 2,
+  "own_line_eol_fix": "New checklist insertion changed CRLF to LF only for its own line; pre-existing bytes retained",
+  "own_new_files": [
+    {
+      "path": "core/battle/operation_service_state.gd",
+      "sha256": "18f1381a330d6f33163cc94f678fa624f8500dd415f5d35ee4a4b4bfd5ee44a0",
+      "trailing_whitespace_lines": 0
+    },
+    {
+      "path": "tests/i01b_service_state.gd",
+      "sha256": "d11615fa541a7064e10bfd2eb648253192baae0ee98e2adf609ad954b4967e66",
+      "trailing_whitespace_lines": 0
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/I01B-P2B-CHECKLIST-20261031.md",
+      "sha256": "8619dd2da0543922da6c73f083247e98a5ce1965b3c4b4ff86c33efa00de354d",
+      "trailing_whitespace_lines": 0
+    }
+  ]
+}

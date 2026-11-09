@@ -1,0 +1,79 @@
+{
+  "baseline": {
+    "command": [
+      "C:\\Python314\\python.exe",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-state-20261108\\readonly_gate.py",
+      "--case",
+      "baseline"
+    ],
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "match": true
+  },
+  "omission": {
+    "command": [
+      "C:\\Python314\\python.exe",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-state-20261108\\readonly_gate.py",
+      "--case",
+      "omission"
+    ],
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "match": true
+  },
+  "rename": {
+    "command": [
+      "C:\\Python314\\python.exe",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-state-20261108\\readonly_gate.py",
+      "--case",
+      "rename"
+    ],
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "match": true
+  },
+  "missing": {
+    "command": [
+      "C:\\Python314\\python.exe",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-state-20261108\\readonly_gate.py",
+      "--case",
+      "missing"
+    ],
+    "expected_exit": 2,
+    "actual_exit": 2,
+    "match": true
+  },
+  "nested": {
+    "command": [
+      "C:\\Python314\\python.exe",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-state-20261108\\readonly_gate.py",
+      "--case",
+      "nested"
+    ],
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "match": true
+  },
+  "ignored": {
+    "command": [
+      "C:\\Python314\\python.exe",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-state-20261108\\readonly_gate.py",
+      "--case",
+      "ignored"
+    ],
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "match": true
+  },
+  "duplicate": {
+    "command": [
+      "C:\\Python314\\python.exe",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-state-20261108\\readonly_gate.py",
+      "--case",
+      "duplicate"
+    ],
+    "expected_exit": 2,
+    "actual_exit": 2,
+    "match": true
+  }
+}

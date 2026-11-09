@@ -1,0 +1,49 @@
+ERROR: 프로필 파일이 없다: res://data/profiles/p02_sixth_missing.json
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] read_json (res://core/battle/profile_loader.gd:8)
+       [1] load_profile (res://core/battle/scenario_profile.gd:17)
+       [2] load_auto (res://core/battle/organization.gd:462)
+       [3] _prepare_game (res://scripts/FleetBattle3D.gd:276)
+       [4] init_game (res://scripts/FleetBattle3D.gd:178)
+       [5] _ready (res://scripts/FleetBattle3D.gd:151)
+       [6] _run (res://tmp/p02-seventh-20261108/fixed-trace-probe-v2.gd:12)
+ERROR: 프로필 파일이 없다: res://data/profiles/p02_sixth_missing.json
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] read_json (res://core/battle/profile_loader.gd:8)
+       [1] load_profile (res://core/battle/scenario_profile.gd:17)
+       [2] _prepare_game (res://scripts/FleetBattle3D.gd:287)
+       [3] init_game (res://scripts/FleetBattle3D.gd:178)
+       [4] _ready (res://scripts/FleetBattle3D.gd:151)
+       [5] _run (res://tmp/p02-seventh-20261108/fixed-trace-probe-v2.gd:12)
+ERROR: 시나리오를 읽지 못해 시험 전장으로 엽니다 (res://data/profiles/p02_sixth_missing.json, 표준)
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _publish_game (res://scripts/FleetBattle3D.gd:330)
+       [1] init_game (res://scripts/FleetBattle3D.gd:183)
+       [2] _ready (res://scripts/FleetBattle3D.gd:151)
+       [3] _run (res://tmp/p02-seventh-20261108/fixed-trace-probe-v2.gd:12)
+ERROR: 프로필 파일이 없다: res://data/profiles/p02_sixth_missing.json
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] read_json (res://core/battle/profile_loader.gd:8)
+       [1] load_profile (res://core/battle/scenario_profile.gd:17)
+       [2] load_auto (res://core/battle/organization.gd:462)
+       [3] _prepare_game (res://scripts/FleetBattle3D.gd:276)
+       [4] init_game (res://scripts/FleetBattle3D.gd:178)
+       [5] _run (res://tmp/p02-seventh-20261108/fixed-trace-probe-v2.gd:18)
+ERROR: 프로필 파일이 없다: res://data/profiles/p02_sixth_missing.json
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] read_json (res://core/battle/profile_loader.gd:8)
+       [1] load_profile (res://core/battle/scenario_profile.gd:17)
+       [2] _prepare_game (res://scripts/FleetBattle3D.gd:287)
+       [3] init_game (res://scripts/FleetBattle3D.gd:178)
+       [4] _run (res://tmp/p02-seventh-20261108/fixed-trace-probe-v2.gd:18)
+ERROR: 시나리오를 읽지 못해 시험 전장으로 엽니다 (res://data/profiles/p02_sixth_missing.json, 표준)
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _publish_game (res://scripts/FleetBattle3D.gd:330)
+       [1] init_game (res://scripts/FleetBattle3D.gd:183)
+       [2] _run (res://tmp/p02-seventh-20261108/fixed-trace-probe-v2.gd:18)

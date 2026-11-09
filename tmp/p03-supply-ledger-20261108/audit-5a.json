@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "inputs": 13,
+  "sha_drift": [],
+  "link_count": 8,
+  "missing_links": [],
+  "trailing_whitespace": [],
+  "counts": [
+    7,
+    10,
+    4,
+    3
+  ],
+  "refs": {
+    "branch": "codex/feature-i01b-not_remove",
+    "head": "fb660cea69207fd332e26128643007694910a253",
+    "index": []
+  },
+  "runtime_executed": false
+}

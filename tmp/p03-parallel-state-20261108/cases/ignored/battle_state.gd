@@ -1,0 +1,105 @@
+class_name BattleState
+extends RefCounted
+
+# 전투 한 판의 코어 상태 전체. 저장 = 초기 설정(시드, 틱 폭) + 명령 기록 + 현재 틱.
+
+class Missile:
+	var id := 0
+	var pos := Vector2.ZERO
+	var target_id := -1
+	var src_id := -1
+	var dmg := 0          # 1/1000척
+	var v := 0.0
+	var wob := 0.0
+	var age := 0          # ms
+	var side := 0
+	var dead := false
+
+class Swarm:
+	var id := 0
+	var src_id := -1
+	var target_id := -1
+	var life := 0         # ms
+	var side := 0
+	var dps := 0          # 1/1000척 / 초
+	var pts: Array[Dictionary] = []   # {pos: Vector2, a: float, r: float, w: float}
+	var striking := false # 이번 틱에 피해를 줬다(연출용)
+
+var hz := BattleRules.TICK_HZ
+var seed_id := 0
+var tick := 0
+var clock_ms := 0         # 하위 걸음 단위 게임 시계(ms)
+var fleets: Array[FleetState] = []
+var missiles: Array[Missile] = []
+var swarms: Array[Swarm] = []
+var cp := 0
+var ecp := 0
+var cp_rem := 0
+var ecp_rem := 0
+var killed := 0           # 1/1000척
+var lost := 0
+var reinf := false
+var reinf_ms := -1
+var ai_timer := 0
+var next_id := 1
+var form_counter := 0
+var next_event_id := 1
+var over := false
+var win := false
+var end_reason := ""      # POC: "annihilation" | "flagship_lost". 시나리오: Victory.REASONS의 값
+var army_ev := [0, 0]     # 진영별 군 사기 사건 누적(감소분 − 회복분, 0 아래로 내려가지 않는다)
+var result := {}          # 결산(승패 확정 때 Victory가 채운다)
+var end_tick := -1
+var end_ms := -1
+
+# var root_comment_probe := 0
+func clock_s() -> float:
+	var local_probe := 0
+	return clock_ms / 1000.0
+
+var _idx := {}            # 전대 ID → 전대(성능 C1). fleets가 늘면 다시 만든다(전대는 추가만 되고 빠지지 않는다)
+var _idx_n := -1
+
+func by_id(id: int) -> FleetState:
+	if _idx_n != fleets.size():
+		_idx.clear()
+		for f in fleets:
+			if not _idx.has(f.id):
+				_idx[f.id] = f   # 같은 ID가 둘이면 앞의 것(선형 탐색과 같다)
+		_idx_n = fleets.size()
+	return _idx.get(id)
+
+func alive(side: int) -> Array[FleetState]:
+	var out: Array[FleetState] = []
+	for f in fleets:
+		if not f.dead and f.side == side:
+			out.append(f)
+	return out
+
+func flag(side: int) -> FleetState:
+	for f in fleets:
+		if f.is_flag and f.side == side and not f.dead:
+			return f
+	return null
+
+func live_target(f: FleetState) -> FleetState:
+	if f.target_id < 0:
+		return null
+	var t := by_id(f.target_id)
+	return t if (t and not t.dead) else null
+
+func nearest_foe(f: FleetState, max_r: float) -> FleetState:
+	var best: FleetState = null
+	var bd := max_r
+	for o in fleets:
+		if o.dead or o.side == f.side:
+			continue
+		var d := f.pos.distance_to(o.pos)
+		if d < bd:
+			bd = d
+			best = o
+	return best
+
+func new_event_id() -> int:
+	next_event_id += 1
+	return next_event_id - 1

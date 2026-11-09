@@ -1,0 +1,137 @@
+[
+  {
+    "path": "워크플로우-플레이북.md",
+    "sha256": "498A3F3663BEAA520E866AF3D77544F4770AAA436F9722F81DDA97173A20CC34",
+    "bytes": 22446
+  },
+  {
+    "path": "CLAUDE.md",
+    "sha256": "5003162D2BABE5249D6AC8C2788897EB06E0FD69333387AEF534235400EB2FF6",
+    "bytes": 2791
+  },
+  {
+    "path": "docs/battle-core/SESSION-HANDOFF.md",
+    "sha256": "73BDDA929B76064EACC7A5290B02DD34121FF34B255918C491DF24ECE51CB515",
+    "bytes": 71779
+  },
+  {
+    "path": "docs/battle-core/CHECKLIST-OPEN.md",
+    "sha256": "4CE0C1FC724F10837621C3BD717DE5CED29AC69C85EB2C090824EE20726BCE61",
+    "bytes": 122545
+  },
+  {
+    "path": "docs/battle-core/pc-campaign-design/H2-DECISION.md",
+    "sha256": "FFF580FC061237C070BAE26D6251E2B09EC894D479ABAD25E6FA72E3914EE9AB",
+    "bytes": 7934
+  },
+  {
+    "path": "docs/battle-core/pc-campaign-design/D04-STATE.md",
+    "sha256": "D8272A2159D4384558B83B7DB8952913E82242EE2CF41CD08315BB036553886D",
+    "bytes": 26449
+  },
+  {
+    "path": "docs/battle-core/pc-campaign-design/I01-READINESS-DECISION-20261026.md",
+    "sha256": "49C0C3FC49EB1A14815584CC0B45FECD402B2B1F3E28668E7179C965A1815A50",
+    "bytes": 25397
+  },
+  {
+    "path": "docs/battle-core/pc-campaign-design/I01-ACCEPTANCE-PREREG-20261026.md",
+    "sha256": "106FEAEDFA7121BFE89B16072F66A380FE948494A343AF27496F7D1B36517211",
+    "bytes": 21832
+  },
+  {
+    "path": "core/battle/battle_sim.gd",
+    "sha256": "670916AF166C1F67FD58F6AB3007782A598A7A8F6FEA72024042E1945BEB967A",
+    "bytes": 49068
+  },
+  {
+    "path": "core/battle/operation_private_state.gd",
+    "sha256": "AC59A7547469C705D33854742E9503B08422770B01956A47861B45735AB8C1C6",
+    "bytes": 27768
+  },
+  {
+    "path": "core/battle/operation_replay.gd",
+    "sha256": "90A3146F6B1257AB3705DF773AEF90428447FD971FF4ECB5501DD029D4684127",
+    "bytes": 5677
+  },
+  {
+    "path": "core/battle/operation_runtime_adapter.gd",
+    "sha256": "0C0CAD3E6E4E15887DCD75F9D5B57DBBE2690BFDCAFD1CAAC163909B5421173A",
+    "bytes": 4989
+  },
+  {
+    "path": "core/battle/operation_service_state.gd",
+    "sha256": "18F1381A330D6F33163CC94F678FA624F8500DD415F5D35EE4A4B4BFD5EE44A0",
+    "bytes": 10958
+  },
+  {
+    "path": "scripts/FleetBattle3D.gd",
+    "sha256": "604B79308D9B3DBAB84DCED32456A4F41B28686C8EEC748073D3816892CFFC5C",
+    "bytes": 37542
+  },
+  {
+    "path": "scripts/world/auto_resolver.gd",
+    "sha256": "85EC124DF59C0C50CEE616565E88BCDD978588F28BAF36180F8EC2C92EEBD9EB",
+    "bytes": 8058
+  },
+  {
+    "path": "scripts/world/battle_outcome.gd",
+    "sha256": "1586EC11745640A1AA8B6D9C7FDFACD515553AC8E4BE634394C552C03843D162",
+    "bytes": 5417
+  },
+  {
+    "path": "tests/autoresolve.gd",
+    "sha256": "05C26D4E74F74523028AC5E6D7FD39A76C575BE4D2C68EDC8CC9388B46CFC697",
+    "bytes": 28887
+  },
+  {
+    "path": "project.godot",
+    "sha256": "0B5A634A44442B90154187431C83DA3B755E36A261EB04A29F9A709C529F3FC2",
+    "bytes": 984
+  },
+  {
+    "path": "tmp/p03-command-suffix-20261107/command_suffix.gd",
+    "sha256": "0268A42032D7FE56BE33332ABC60FAB50D372E85D1E0E07B06948565CC8F9A80",
+    "bytes": 14241
+  },
+  {
+    "path": "tmp/p03-command-suffix-20261107/RESULT.md",
+    "sha256": "B055030565E2D5DAC0215BF5F8236BC94DC10FE5869BF21561977FC6820EEC3A",
+    "bytes": 2901
+  },
+  {
+    "path": "tmp/p03-progress-20261108/P03-CHECKLIST-REVISION-20261108.md",
+    "sha256": "6AFE79D0DCBD8B2095CFFD6025ACFD063CD8E714708C9647AE1781FB489ECFB1",
+    "bytes": 11174
+  },
+  {
+    "path": "tmp/p03-progress-20261108/HANDOFF-20261108.md",
+    "sha256": "AC620A5D8E992C67D5B72CA8EA41416FACDE66D2D52709D46DFC87701B1213B5",
+    "bytes": 2923
+  },
+  {
+    "path": "tmp/p03-progress-20261108/NEXT-HOST-RESPONSIBILITY.md",
+    "sha256": "980B2D3093B46A107C94D5F639651B6E40398C5BCE016CFE89EBE2C4BDDBE362",
+    "bytes": 1283
+  },
+  {
+    "path": "tmp/p03-progress-20261108/REPLAY-SUFFIX-RESPONSIBILITY.md",
+    "sha256": "B3B6C61741C1688A350FB072722DD5B2AED8F5E48F0F4C86A68ABECA24E50095",
+    "bytes": 7073
+  },
+  {
+    "path": "tmp/p03-parallel-cursor-20261108/PLAN-REPLAY-PARTIAL-20261108.md",
+    "sha256": "186D68D56785176DBF19AEC9A4CD3A851623759E8F073B876400D7963B92786A",
+    "bytes": 13767
+  },
+  {
+    "path": "tmp/p03-parallel-cursor-20261108/RESULT-HANDOFF-V2-20261108.md",
+    "sha256": "4DA92332B0ACD173E6B3267CCB83AC30BB488055FEFC18974E6EB0E9E123CFAA",
+    "bytes": 2764
+  },
+  {
+    "path": "tmp/p03-parallel-cursor-20261108/REVIEW-5B-V2-20261108.md",
+    "sha256": "869200E035C9784B5C5AF086AA903590D40E835E9CE425222AC1CDDAAB731897",
+    "bytes": 2469
+  }
+]

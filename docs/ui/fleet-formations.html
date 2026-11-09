@@ -1788,8 +1788,9 @@ html&gt;body{padding:0}&lt;/style&gt;
 &lt;/script&gt;
 &lt;div id=&quot;fleet-formation-board&quot;&gt;
   &lt;h2&gt;함종별 함대 배치 · 7개 진형&lt;/h2&gt;
-  &lt;div class=&quot;viz-controls&quot;&gt;&lt;label class=&quot;form-label&quot;&gt;진형 보기 &lt;select class=&quot;form-select&quot; id=&quot;formation-choice&quot;&gt;&lt;option value=&quot;all&quot;&gt;전체 비교&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;&lt;span class=&quot;text-small text-muted&quot;&gt;동일한 예시 편성 56척 · 위쪽이 전방 ↑ · 실제 게임 배치 기준&lt;/span&gt;&lt;/div&gt;
+  &lt;div class=&quot;viz-controls&quot;&gt;&lt;label class=&quot;form-label&quot;&gt;진형 보기 &lt;select class=&quot;form-select&quot; id=&quot;formation-choice&quot;&gt;&lt;option value=&quot;all&quot;&gt;전체 비교&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;&lt;button class=&quot;btn&quot; id=&quot;ship-show-all&quot; type=&quot;button&quot;&gt;전체 표시&lt;/button&gt;&lt;span class=&quot;text-small text-muted&quot;&gt;동일한 예시 편성 56척 · 위쪽이 전방 ↑ · 실제 게임 배치 기준&lt;/span&gt;&lt;/div&gt;
   &lt;div id=&quot;ship-key&quot; class=&quot;viz-row&quot; aria-label=&quot;함종 범례&quot;&gt;&lt;/div&gt;
+  &lt;div id=&quot;ship-selection-status&quot; class=&quot;text-small&quot; aria-live=&quot;polite&quot;&gt;함종을 클릭하면 위치를 강조합니다.&lt;/div&gt;
   &lt;div id=&quot;formation-panels&quot; aria-live=&quot;polite&quot;&gt;&lt;/div&gt;&lt;p class=&quot;text-small text-muted&quot;&gt;¹ 고속정은 게임과 동일하게 요격함 이미지를 작게 표시했습니다.&lt;/p&gt;
 &lt;/div&gt;
 &lt;style&gt;
@@ -1815,8 +1816,12 @@ html&gt;body{padding:0}&lt;/style&gt;
  const names=[&#x27;어린진&#x27;,&#x27;학익진&#x27;,&#x27;방원진&#x27;,&#x27;안행진&#x27;,&#x27;봉시진&#x27;,&#x27;장사진&#x27;,&#x27;팔진&#x27;];
  const intents=[&#x27;중앙 돌파 · 전열함이 앞을 열고 화력선이 뒤를 지원&#x27;,&#x27;양익 포위 · 양 날개의 요격함·고속정이 포위 전개&#x27;,&#x27;종심 방어 · 모함·보급함을 안쪽에 두고 외곽 호위&#x27;,&#x27;사격 전개 · 포격함·공성함의 사격 간격 확보&#x27;,&#x27;축차 투입 · 전열 선봉과 후속 강습 전력의 돌파&#x27;,&#x27;종렬 항진 · 좁은 대열에서 전방 초계와 후미 지원&#x27;,&#x27;가변 대응 · 전열·화력·호위 전력을 구역별 분산&#x27;];
  const types=[[&#x27;강습모함&#x27;,&#x27;중앙 후방 · 강습정 운용&#x27;,6,&#x27;--viz-series-4&#x27;],[&#x27;공성함&#x27;,&#x27;후방 · 관통 사격&#x27;,2,&#x27;--viz-series-2&#x27;],[&#x27;포격함&#x27;,&#x27;중후방 · 장거리 포화&#x27;,1,&#x27;--viz-series-2&#x27;],[&#x27;전열함&#x27;,&#x27;전방 · 정면 교전&#x27;,0,&#x27;--viz-series-1&#x27;],[&#x27;보급함&#x27;,&#x27;후방 안쪽 · 수리·보급&#x27;,3,&#x27;--viz-series-4&#x27;],[&#x27;전자전함&#x27;,&#x27;전열 뒤 · 탐지·교란&#x27;,4,&#x27;--viz-series-5&#x27;],[&#x27;요격함&#x27;,&#x27;양익 외곽 · 요격·호위&#x27;,5,&#x27;--viz-series-3&#x27;],[&#x27;고속정&#x27;,&#x27;전방 양익 · 정찰·기습&#x27;,5,&#x27;--viz-series-6&#x27;]];
- const key=root.querySelector(&#x27;#ship-key&#x27;), panels=root.querySelector(&#x27;#formation-panels&#x27;), choice=root.querySelector(&#x27;#formation-choice&#x27;);
- types.forEach((t,i)=&gt;{const item=document.createElement(&#x27;div&#x27;);item.className=&#x27;key-item&#x27;;item.style.setProperty(&#x27;--ship-color&#x27;,`var(${t[3]})`);item.innerHTML=`&lt;i class=&quot;swatch&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;img src=&quot;${data.textures[t[2]]}&quot; alt=&quot;&quot;&gt;&lt;div&gt;&lt;span&gt;${t[0]}${i===7?&#x27; ¹&#x27;:&#x27;&#x27;}&lt;/span&gt;&lt;span class=&quot;text-small text-muted&quot;&gt;${t[1]}&lt;/span&gt;&lt;/div&gt;`;key.appendChild(item)});
+ const key=root.querySelector(&#x27;#ship-key&#x27;), panels=root.querySelector(&#x27;#formation-panels&#x27;), choice=root.querySelector(&#x27;#formation-choice&#x27;), reset=root.querySelector(&#x27;#ship-show-all&#x27;), status=root.querySelector(&#x27;#ship-selection-status&#x27;);
+ let selectedType=-1;
+ const legendButtons=[];
+ function saveState(){window.openai?.setWidgetState({modelContent:{formation:choice.value,shipType:selectedType},privateContent:null}).catch(()=&gt;{});}
+ types.forEach((t,i)=&gt;{const button=document.createElement(&#x27;button&#x27;);button.className=&#x27;btn&#x27;;button.type=&#x27;button&#x27;;button.setAttribute(&#x27;aria-pressed&#x27;,&#x27;false&#x27;);const item=document.createElement(&#x27;span&#x27;);item.className=&#x27;key-item&#x27;;item.style.setProperty(&#x27;--ship-color&#x27;,`var(${t[3]})`);item.innerHTML=`&lt;i class=&quot;swatch&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;img src=&quot;${data.textures[t[2]]}&quot; alt=&quot;&quot;&gt;&lt;span&gt;&lt;span&gt;${t[0]}${i===7?&#x27; ¹&#x27;:&#x27;&#x27;}&lt;/span&gt;&lt;span class=&quot;text-small text-muted&quot;&gt;${t[1]}&lt;/span&gt;&lt;/span&gt;`;button.appendChild(item);button.addEventListener(&#x27;click&#x27;,()=&gt;{selectedType=selectedType===i?-1:i;render();saveState()});legendButtons.push(button);key.appendChild(button)});
+ reset.addEventListener(&#x27;click&#x27;,()=&gt;{selectedType=-1;render();saveState()});
  names.forEach((name,i)=&gt;{const opt=document.createElement(&#x27;option&#x27;);opt.value=String(i);opt.textContent=name+&#x27; 크게 보기&#x27;;choice.appendChild(opt)});
  const NS=&#x27;http://www.w3.org/2000/svg&#x27;;
  function el(tag,attrs,parent){const e=document.createElementNS(NS,tag);Object.entries(attrs).forEach(([k,v])=&gt;e.setAttribute(k,v));parent.appendChild(e);return e;}
@@ -1835,19 +1840,23 @@ html&gt;body{padding:0}&lt;/style&gt;
   records.forEach(p=&gt;{
    const i=Number(p.t.slice(-2))-1,t=types[i],x=w/2+(p.l-midx)*scale,y=(h+24)/2-(p.f-midy)*scale;
    const factor=[1.12,1.04,0.98,1,0.92,0.82,0.72,0.48][i],len=length*factor;
-   const g=el(&#x27;g&#x27;,{transform:`translate(${x} ${y})`,class:&#x27;ship-mark&#x27;,&#x27;data-tooltip&#x27;:t[0]+&#x27; · &#x27;+t[1]},svg);
+   const g=el(&#x27;g&#x27;,{transform:`translate(${x} ${y})`,class:&#x27;ship-mark&#x27;,&#x27;data-ship-type&#x27;:i,opacity:selectedType&lt;0||selectedType===i?1:0.18,&#x27;data-tooltip&#x27;:t[0]+&#x27; · &#x27;+t[1]},svg);
+   if(selectedType===i)el(&#x27;rect&#x27;,{x:-len/8-4,y:-len/2-4,width:len/4+8,height:len+8,fill:&#x27;none&#x27;,stroke:`var(${t[3]})`,&#x27;stroke-width&#x27;:2},g);
    el(&#x27;circle&#x27;,{cx:0,cy:len/2+4,r:i===7?1.7:2.3,fill:`var(${t[3]})`},g);
    el(&#x27;image&#x27;,{href:data.textures[t[2]],x:-len/2,y:-len/8,width:len,height:len/4,transform:&#x27;rotate(90)&#x27;,preserveAspectRatio:&#x27;xMidYMid meet&#x27;},g);
   });
  }
  let observers=[]; function render(){ observers.forEach(o=&gt;o.disconnect());observers=[];
+  legendButtons.forEach((button,i)=&gt;button.setAttribute(&#x27;aria-pressed&#x27;,String(selectedType===i)));reset.disabled=selectedType&lt;0;
+  status.textContent=selectedType&lt;0?&#x27;함종을 클릭하면 위치를 강조합니다.&#x27;:`${types[selectedType][0]} ${[6,4,8,14,4,4,10,6][selectedType]}척 강조 · 다시 클릭하거나 전체 표시로 해제`;
   panels.classList.toggle(&#x27;single&#x27;,choice.value!==&#x27;all&#x27;);panels.replaceChildren();
   const indices=choice.value===&#x27;all&#x27;?names.map((_,i)=&gt;i):[Number(choice.value)];
   indices.forEach(i=&gt;{const section=document.createElement(&#x27;section&#x27;);const heading=document.createElement(&#x27;h3&#x27;);heading.textContent=names[i];const intent=document.createElement(&#x27;p&#x27;);intent.className=&#x27;intent text-small&#x27;;intent.textContent=intents[i];section.append(heading,intent);const svg=el(&#x27;svg&#x27;,{class:&#x27;formation-plot&#x27;,role:&#x27;img&#x27;,&#x27;aria-label&#x27;:names[i]+&#x27; 함종별 배치&#x27;},section);panels.append(section);const ro=new ResizeObserver(()=&gt;draw(svg,i,choice.value!==&#x27;all&#x27;));observers.push(ro);ro.observe(svg);draw(svg,i,choice.value!==&#x27;all&#x27;);});
  }
- const saved=window.openai?.widgetState?.modelContent?.formation;if(saved===&#x27;all&#x27;||names[Number(saved)])choice.value=saved;
- choice.addEventListener(&#x27;change&#x27;,()=&gt;{render();window.openai?.setWidgetState({modelContent:{formation:choice.value},privateContent:null}).catch(()=&gt;{});});
- window.addEventListener(&#x27;openai:set_globals&#x27;,e=&gt;{const s=e.detail?.globals?.widgetState?.modelContent?.formation;if(s===&#x27;all&#x27;||names[Number(s)]){choice.value=s;render()}});
+ function restore(state){const saved=state?.formation;if(saved===&#x27;all&#x27;||names[Number(saved)])choice.value=saved;selectedType=Number.isInteger(state?.shipType)&amp;&amp;state.shipType&gt;=0&amp;&amp;state.shipType&lt;8?state.shipType:-1;}
+ restore(window.openai?.widgetState?.modelContent);
+ choice.addEventListener(&#x27;change&#x27;,()=&gt;{render();saveState()});
+ window.addEventListener(&#x27;openai:set_globals&#x27;,e=&gt;{restore(e.detail?.globals?.widgetState?.modelContent);render()});
  render();
 })();
 &lt;/script&gt;

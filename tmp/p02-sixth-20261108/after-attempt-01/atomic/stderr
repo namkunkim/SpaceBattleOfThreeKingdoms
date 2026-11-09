@@ -1,0 +1,64 @@
+ERROR: [FleetBattle3D] invalid_candidate_profile at profile
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] init_game (res://scripts/FleetBattle3D.gd:176)
+       [1] _run (res://tmp/p02-sixth-20261108/product-host-atomic-v2.gd:95)
+ERROR: [FleetBattle3D] invalid_candidate_profile at profile.ally
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] init_game (res://scripts/FleetBattle3D.gd:176)
+       [1] _run (res://tmp/p02-sixth-20261108/product-host-atomic-v2.gd:95)
+ERROR: [FleetBattle3D] invalid_candidate_profile at profile
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] init_game (res://scripts/FleetBattle3D.gd:176)
+       [1] begin_battle (res://hud/ui_kit/command_deck.gd:264)
+       [2] _run (res://tmp/p02-sixth-20261108/product-host-atomic-v2.gd:98)
+ERROR: [FleetBattle3D] invalid_candidate_profile at profile
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] init_game (res://scripts/FleetBattle3D.gd:176)
+       [1] begin_battle (res://hud/ui_kit/command_deck.gd:264)
+       [2] _run (res://tmp/p02-sixth-20261108/product-host-atomic-v2.gd:101)
+ERROR: [FleetBattle3D] invalid_candidate_profile at profile
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] init_game (res://scripts/FleetBattle3D.gd:176)
+       [1] restart (res://hud/ui_kit/command_deck.gd:276)
+       [2] _run (res://tmp/p02-sixth-20261108/product-host-atomic-v2.gd:103)
+ERROR: [FleetBattle3D] invalid_candidate_profile at profile
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] init_game (res://scripts/FleetBattle3D.gd:176)
+       [1] to_title (res://hud/ui_kit/command_deck.gd:292)
+       [2] _run (res://tmp/p02-sixth-20261108/product-host-atomic-v2.gd:106)
+ERROR: [FleetBattle3D] invalid_candidate_profile at profile
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] init_game (res://scripts/FleetBattle3D.gd:176)
+       [1] open_org (res://hud/ui_kit/org_screen.gd:170)
+       [2] _run (res://tmp/p02-sixth-20261108/product-host-atomic-v2.gd:108)
+ERROR: [FleetBattle3D] invalid_candidate_profile at profile
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] init_game (res://scripts/FleetBattle3D.gd:176)
+       [1] begin_battle (res://hud/ui_kit/command_deck.gd:264)
+       [2] start_auto (res://hud/ui_kit/org_screen.gd:154)
+       [3] <anonymous lambda> (res://hud/ui_kit/deck_screens.gd:227)
+       [4] _run (res://tmp/p02-sixth-20261108/product-host-atomic-v2.gd:112)
+ERROR: [FleetBattle3D] invalid_candidate_profile at profile
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] init_game (res://scripts/FleetBattle3D.gd:176)
+       [1] _restart (res://scripts/FleetBattle3D.gd:330)
+       [2] _run (res://tmp/p02-sixth-20261108/product-host-atomic-v2.gd:114)
+ERROR: [FleetBattle3D] invalid_candidate_profile at profile
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] init_game (res://scripts/FleetBattle3D.gd:176)
+       [1] _ready (res://scripts/FleetBattle3D.gd:148)
+       [2] _run (res://tmp/p02-sixth-20261108/product-host-atomic-v2.gd:117)
+WARNING: 351 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 18 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

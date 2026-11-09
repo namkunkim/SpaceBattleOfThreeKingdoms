@@ -1,0 +1,201 @@
+{
+  "head": "0be09755b70378286105972f35ac5b7031715664",
+  "files": {
+    "C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe": {
+      "size": 198152,
+      "sha256": "c8f0a6bc45a19b33541501e57f6f7cd972ab18453743266339d495cbbe846643"
+    },
+    "C:/Tools/Godot/Godot_v4.7.2-stable_win64.exe": {
+      "size": 180858888,
+      "sha256": "ab1824f85bfd8e0e4128182c000c4003a3e042245b2967848d089b2a04b22424"
+    },
+    "C:/Python314/python.exe": {
+      "size": 106208,
+      "sha256": "03168c01b7b7491423350e82c26fee71f35b43694d1319d3c668bda6903a0c38"
+    },
+    "C:/Program Files/WindowsApps/OpenAI.CodexPrimaryRuntime.v26-1105-1297-0_26.1105.1297.0_x64__3k8sg7r9htsxt/dependencies/native/powershell/pwsh.exe": {
+      "size": 301360,
+      "sha256": "2a6769a3330dc1084d0154bfde7d164ab750ca7f700f313f9d417c1be78b2233"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-parallel-state-20261108/PLAN-C1-REWIND.md": {
+      "size": 6410,
+      "sha256": "cb7ba283d4beb9ca99f270ea36e04f82b591d54fc8c9285bb5bd4346ab538c2d"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-parallel-state-20261108/REVIEW-PLAN-C1-REWIND.md": {
+      "size": 1465,
+      "sha256": "2afe7b848b346d402ee00751537636ef3ee92aeaf008cb077b930c6e10c77591"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-parallel-state-20261108/c1-rewind/run_gate.py": {
+      "size": 7264,
+      "sha256": "41b07134189c9d57ac4ec303c5f33e5b6c4140252b24bea1155b28dd46368df6"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-parallel-state-20261108/c1-rewind/windows_job.py": {
+      "size": 4907,
+      "sha256": "6c8333ae38b148777d2f1b78bd1c02321f89602054d3f5daa75beb4f4526580f"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-parallel-state-20261108/c1-rewind/c1_rewind.gd": {
+      "size": 9595,
+      "sha256": "b1a5ef13068115d6a3fd87ee0df44e0a087ec280f1309efeb0ec41e90788b593"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-parallel-state-20261108/c1-rewind/.gdignore": {
+      "size": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-parallel-state-20261108/projectile-target/GUARD-REVISION-PROPOSAL.md": {
+      "size": 1688,
+      "sha256": "425c835c6acfc99a61d5f6a8ea9b87f5d991c3ca2306a90014b4fb75ded3f1c9"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-parallel-state-20261108/projectile-target/REVIEW-GUARD-REVISION.md": {
+      "size": 1602,
+      "sha256": "ab79c7b5464d1e1b4248abc672492f46fe9221e582ae772611f4f6b86dcb4947"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/project.godot": {
+      "size": 984,
+      "sha256": "0b5a634a44442b90154187431c83da3b755e36a261eb04a29f9a709c529f3fc2"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/.godot/global_script_class_cache.cfg": {
+      "size": 12738,
+      "sha256": "0eb214ebcc65cd2ca7b9d98dc83f61a9c170ca75b1b23acf4c3c58fdfb550ab1"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/data/bundle-layout.json": {
+      "size": 1358,
+      "sha256": "b8b373c9d7a91c0e58f75202eb6bce28509aa0c122ce93471e4fe09d889a53e2"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/data/profiles/poc_corridor.json": {
+      "size": 5047,
+      "sha256": "bb7c2dbaa8c258dc8b43f16894502a72cb66a22d2058b5d5314816a0488e9d8e"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/data/profiles/combat_m3.json": {
+      "size": 25404,
+      "sha256": "78d89e8c65f9d5fc4ab7324cc99b9f9ab0578157149f3f58036959d21131aa4c"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/ai/commander_ai.gd": {
+      "size": 16866,
+      "sha256": "a5ecb379d4258a46eeb78f91697c366adbd6a04d9164fca5f1c7c7983c5a2ae5"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/ai/poc_enemy_ai.gd": {
+      "size": 3564,
+      "sha256": "74113ab7cd332a7519bccfee092fe2ca09efb2fc3e6ac989ada8faff2fbb9885"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/assault.gd": {
+      "size": 6600,
+      "sha256": "a98747df1ac2505b03557962c78ff5e3dae41af6c1d021a8dd679dcd8f83954f"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/battle_fingerprint.gd": {
+      "size": 3065,
+      "sha256": "4f658a2ab2e0012568fcd7a14342457c90a82f02d58980b99039f73acd133890"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/battle_projection.gd": {
+      "size": 9853,
+      "sha256": "04c146b3f7aabc67a9119f604ff839eab8f2efa69be9b45d654556679c969f30"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/battle_rng.gd": {
+      "size": 1240,
+      "sha256": "f5f42abd399bed12d10e8385dc83a1fed6450881fe060fdab8734b5a93e3def6"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/battle_sim.gd": {
+      "size": 49068,
+      "sha256": "670916af166c1f67fd58f6ab3007782a598a7a8f6fea72024042e1945beb967a"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/battle_state.gd": {
+      "size": 2848,
+      "sha256": "0c7f4589156e642ade356e0785c3096bb305ac1e2328607e9973e173d1ed9e5b"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/bundle_layout.gd": {
+      "size": 6024,
+      "sha256": "d9cd27a4688ad58a36f5b82a0b524c437536ef11ef9a18008db36b1d308db148"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/command.gd": {
+      "size": 5158,
+      "sha256": "02415d2f2f7c91a8617ca27123895feb03d3df658c7ad00cb615188bb0009b31"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/decisions.gd": {
+      "size": 6410,
+      "sha256": "18c9c52d46fbf16a798e1a9451adc0b0ba9b91fb920fb1f8882307a6351d9d7d"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/detection.gd": {
+      "size": 8774,
+      "sha256": "df34cee4a225683d6bc1c9005dc7760c365ce3a61ae68e106449cb2e7154253b"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/fleet_state.gd": {
+      "size": 9299,
+      "sha256": "00b39729582cea9f7b66fecd5396c44bdc4b0fa0b2f57516bc4d94cf12d04d6e"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/morale.gd": {
+      "size": 8453,
+      "sha256": "0bfbe6ca0f85557b59bfed737bca65ad6e352aa328c837ad747f2dd759773af4"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/operation_private_state.gd": {
+      "size": 27843,
+      "sha256": "46b6fe191166ec3dcdb620f51c3ccd391a9080f52289517ae804bf86cecc1ea3"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/operation_profile.gd": {
+      "size": 15669,
+      "sha256": "4963f178877f3657a6def8580ed2deaf2f612960e1198c2ee04e7a7309722f0e"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/operation_replay.gd": {
+      "size": 5677,
+      "sha256": "90a3146f6b1257ab3705df773aef90428447fd971ff4ecb5501dd029d4684127"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/operation_runtime_adapter.gd": {
+      "size": 4989,
+      "sha256": "0c0cad3e6e4e15887dcd75f9d5b57dbbe2690bfdcafd1caac163909b5421173a"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/operation_service_state.gd": {
+      "size": 10958,
+      "sha256": "18f1381a330d6f33163cc94f678fa624f8500dd415f5d35ee4a4b4bfd5ee44a0"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/organization.gd": {
+      "size": 23523,
+      "sha256": "726d30b1a0f95dd7c91089401695b1810de43726c351fcc12003ecec2cd20e44"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/poc_setup.gd": {
+      "size": 605,
+      "sha256": "fb780a9d3c7a6c7b6ebbc6c6681585f47045587e90cd147c9a17700c01f87bfc"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/profile_loader.gd": {
+      "size": 490,
+      "sha256": "ec1f0a55d28d9aac8c56d59b209fa0da52583c6ee802941551d335d98971c412"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/rule_set.gd": {
+      "size": 4248,
+      "sha256": "43c8a2a313c5d3a625a4aa9b925ae7c5b153d8cbd8147763f2f7b60fe93c364d"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/rules.gd": {
+      "size": 4545,
+      "sha256": "1bffb26daedded5749d2885671f26fab1683f02a948212e75b49b9a07a83c6ea"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/salvo.gd": {
+      "size": 35528,
+      "sha256": "c80ede4aa4d9c6aa75cd99f9af3672645f0a03e87d170d295bbe9f716b022090"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/scenario_profile.gd": {
+      "size": 7522,
+      "sha256": "a8871ba03f7e37b85c51b70c534cf5073e5e3a3e757569855eefbbb3155234a0"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/skills.gd": {
+      "size": 19069,
+      "sha256": "0d2bf2bfd81cb6f026e025f008774725f7c87d53e0d857697501172bafb21b3d"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/stratagem.gd": {
+      "size": 22388,
+      "sha256": "f7d45eb4c31118e44fe4e8ee1ee31778c99f0a933bd1b49d49afd935f8447581"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/supply.gd": {
+      "size": 15569,
+      "sha256": "1f762bfea77abb57795c87af619e2d6b48210377cc6e04b9463d021be6e2d5be"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/terrain.gd": {
+      "size": 2262,
+      "sha256": "9af7390a225398e4b31b6698c8d71ad8fcf877d8a296c750421892b5c997069d"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/tick_clock.gd": {
+      "size": 1189,
+      "sha256": "dfb9cd4a070995d9aca44f77bf08cab18ae87eb4c678a341ccddc34c5a7ff74e"
+    },
+    "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/victory.gd": {
+      "size": 8668,
+      "sha256": "73f87d6ecb1727171ca9ff3dfb6c0515b49699d5c34f05d502569944c317b74a"
+    }
+  }
+}

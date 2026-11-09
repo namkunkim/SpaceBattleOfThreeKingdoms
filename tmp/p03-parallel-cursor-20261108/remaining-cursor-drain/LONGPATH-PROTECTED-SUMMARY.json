@@ -1,0 +1,107 @@
+{
+  "roots": {
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\assets": {
+      "entries": 1291,
+      "files": 1258
+    },
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\core": {
+      "entries": 63,
+      "files": 60
+    },
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\data": {
+      "entries": 33,
+      "files": 28
+    },
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\docs\\battle-core\\pc-campaign-design": {
+      "entries": 86,
+      "files": 85
+    },
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\feature_profiles": {
+      "entries": 1,
+      "files": 0
+    },
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\hud": {
+      "entries": 70,
+      "files": 68
+    },
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\input": {
+      "entries": 19,
+      "files": 16
+    },
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\scenes": {
+      "entries": 3,
+      "files": 2
+    },
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\script_templates": {
+      "entries": 1,
+      "files": 0
+    },
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\scripts": {
+      "entries": 16,
+      "files": 14
+    },
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tests": {
+      "entries": 181,
+      "files": 176
+    },
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\text_editor_themes": {
+      "entries": 1,
+      "files": 0
+    },
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-eighth-20261108": {
+      "entries": 16046,
+      "files": 15515
+    },
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-eighth-20261108\\gate-k1\\before-world-clean\\roaming\\Godot\\app_userdata\\SpaceBattleOfThreeKingdoms\\battle_traces": {
+      "entries": 2,
+      "files": 1
+    },
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-eighth-20261108\\gate-k1\\before-world-returning\\roaming\\Godot\\app_userdata\\SpaceBattleOfThreeKingdoms\\battle_traces": {
+      "entries": 2,
+      "files": 1
+    },
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108": {
+      "entries": 17410,
+      "files": 17036
+    },
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-first-integration-20261105": {
+      "entries": 291,
+      "files": 273
+    },
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fourth-20261108": {
+      "entries": 8876,
+      "files": 8711
+    },
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107": {
+      "entries": 599,
+      "files": 589
+    },
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-seventh-20261108": {
+      "entries": 27660,
+      "files": 26206
+    },
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-sixth-20261108": {
+      "entries": 9198,
+      "files": 8852
+    },
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-third-20261108": {
+      "entries": 691,
+      "files": 679
+    },
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tools": {
+      "entries": 49,
+      "files": 40
+    },
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\view": {
+      "entries": 37,
+      "files": 34
+    }
+  },
+  "errors": {
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-first-headless-delivery-20261107-correction.zip": "[WinError 267] 디렉터리 이름이 올바르지 않습니다: 'C:\\\\WorkSpace\\\\SpaceBattleOfThreeKingdoms\\\\tmp\\\\p02-first-headless-delivery-20261107-correction.zip'",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-first-headless-delivery-20261107.zip": "[WinError 267] 디렉터리 이름이 올바르지 않습니다: 'C:\\\\WorkSpace\\\\SpaceBattleOfThreeKingdoms\\\\tmp\\\\p02-first-headless-delivery-20261107.zip'",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\P02-REPLAY-DELIVERY-20261108.zip": "[WinError 267] 디렉터리 이름이 올바르지 않습니다: 'C:\\\\WorkSpace\\\\SpaceBattleOfThreeKingdoms\\\\tmp\\\\P02-REPLAY-DELIVERY-20261108.zip'",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\P02-VIEWER-EVENTS-DELIVERY-20261108.zip": "[WinError 267] 디렉터리 이름이 올바르지 않습니다: 'C:\\\\WorkSpace\\\\SpaceBattleOfThreeKingdoms\\\\tmp\\\\P02-VIEWER-EVENTS-DELIVERY-20261108.zip'",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\P02-WORKER-DELIVERY-20261107.zip": "[WinError 267] 디렉터리 이름이 올바르지 않습니다: 'C:\\\\WorkSpace\\\\SpaceBattleOfThreeKingdoms\\\\tmp\\\\P02-WORKER-DELIVERY-20261107.zip'"
+  }
+}

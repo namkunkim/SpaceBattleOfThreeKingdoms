@@ -1,0 +1,24 @@
+{
+  "label": "attempt3-success-poc",
+  "command": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+    "--log-file",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-first-integration-20261105\\attempt3-success-poc-engine.log",
+    "-s",
+    "tests/autoresolve.gd",
+    "--",
+    "--operation-input",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tests\\fixtures\\p02\\poc.json",
+    "--out",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-first-integration-20261105\\attempt3-cli-inputs\\poc-result.json"
+  ],
+  "actual_exit": 0,
+  "script_errors": 0,
+  "errors": 0,
+  "warnings": 0,
+  "log_sha256": "b780e117ec7e58a4e69a10d8bc7abb38c03894f8654c30d4c4abef8a55bd2982",
+  "engine_log_sha256": "e8d968172c7e1f8605431e6fea1fc8994141b4ab0a189478d3b4624cb6a8c319"
+}

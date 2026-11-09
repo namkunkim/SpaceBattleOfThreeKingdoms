@@ -1,0 +1,12 @@
+{
+  "name": "P03-VIEWER-CHECKPOINT-DELIVERY-20261108.zip",
+  "sha256": "d34fcad1f8c420fae3819f158f04624570c6cd96042b426a3b5eb2eb7792b6e2",
+  "bytes": 955870,
+  "entries": 28,
+  "payload_count": 27,
+  "manifest_sha256": "59606093312a8acfcb2a26558e8d9a559020a986e95b6826a83b35159c9dc7bd",
+  "crc_failure": null,
+  "duplicates": 0,
+  "entry_mismatches": 0,
+  "independent_closeout_in_archive": false
+}

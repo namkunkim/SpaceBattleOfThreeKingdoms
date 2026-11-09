@@ -1,0 +1,11 @@
+q 2164 valid
+rejected q same omissions q frozen case/tick/phase/side sequence
+rejected q duplicate q[2164]: duplicate capture key
+rejected q swapped $[0].case: value mismatch
+rejected q malformed variant invalid Variant byte hex
+c 80 valid
+rejected c same omissions c frozen case/tick/phase/side sequence
+rejected c duplicate c[80]: duplicate capture key
+rejected c swapped $[0].seed: value mismatch
+rejected c malformed variant invalid Variant byte hex
+synthetic only; no GDScript launched

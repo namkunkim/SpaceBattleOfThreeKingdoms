@@ -1,0 +1,31 @@
+--- docs/battle-core/pc-campaign-design/SESSION-HANDOFF-P02-FIRST-HEADLESS-20261107.md
++++ docs/battle-core/pc-campaign-design/SESSION-HANDOFF-P02-FIRST-HEADLESS-20261107.md
+@@ -1,6 +1,6 @@
+ # P02 첫 실제 headless 연결 — 최신 인계
+ 
+-2026-11-07 KST. [결과](P02-FIRST-HEADLESS-RESULT-20261107.md)·[체크리스트](P02-FIRST-HEADLESS-CHECKLIST-20261107.md)·[독립5b](../../../tmp/p02-first-integration-20261105/REVIEW-5B-ACCEPT-20261107.md)를 먼저 읽는다. 이번 조각은 실제 CLI opt-in 제한 수용이며 전체 P02/I01/I01b/A04~A06 NOT_READY, 외부 save schema UNCLASSIFIED다. 독립 마감 상태는 [closeout 판정](../../../tmp/p02-first-integration-20261105/REVIEW-CLOSEOUT-20261107.md)이 정본이다.
++2026-11-07 KST. [결과](P02-FIRST-HEADLESS-RESULT-20261107.md)·[체크리스트](P02-FIRST-HEADLESS-CHECKLIST-20261107.md)를 먼저 읽는다. 이번 조각은 실제 CLI opt-in 연결을 구현·검사했으며 전체 P02/I01/I01b/A04~A06 NOT_READY, 외부 save schema UNCLASSIFIED다. [비-Astra 독립 5b](../../../tmp/p02-first-integration-20261105/REVIEW-5B-NON-ASTRA-20261107.md)는 구현 범위에서 차단 반례를 발견하지 못했고, 문서·마감 정정본 재심사를 기다린다.
+ 
+ 원본 `C:/WorkSpace/SpaceBattleOfThreeKingdoms`, branch `codex/feature-i01b-not_remove`, HEAD `fb660cea69207fd332e26128643007694910a253`, index 빈 상태를 유지했다. 재개 시 실제 상태·워크플로우-플레이북/CLAUDE·부모/하위 AGENTS를 다시 확인한다. 기존 tracked/untracked 변경을 폐기하거나 새 worktree/branch·커밋/푸시/병합을 만들지 않는다. HTML 기능/다운로드 QA·브라우저/localStorage 변경 중지는 계속된다. 사용량 제한은 즉시 보고하고 반복하지 않는다.
+ 
+@@ -18,7 +18,7 @@
+ 
+ attempt3 API actual exit0·정상matrix8/13417체크·정책P9·timeoutT2·API거부32. 실제CLI거부14 각exit1·성공2 exit0·legacy전후1쌍 exact JSON 바이트 동일, API32+CLI14=명명46. CLI는17논리항목/18프로세스, API runner1/회귀2와 구분한다. private70/11553/45·core actual exit0, 정본 합계21프로세스 SCRIPT ERROR/ERROR0. matrix natural7/timeout1과 POC조기종료2개의 중간체크포인트 부재는 원문 관측이다. tick×100으로 실제 clock/end를 재구성하지 않는다.
+ 
+-실제CLI services는 contact/salvo/ship_lost/종료 사건을 확인했지만 supply 완료 사건 E2E는 미검증이다. --no-chain/--no-m9/--wind 혼합은 conflicting_option 대신 unknown_option으로 명시 거부되는 비차단 편차로 수용했다. 이3개를 실제CLI14에 포함하지 않았다. disk write/flush/verify fault injection 및 OS writer 경합 원자성은 지원/실증하지 않았다.
++실제CLI services는 contact/salvo/ship_lost/종료 사건을 확인했지만 supply 완료 사건 E2E는 미검증이다. --no-chain/--no-m9/--wind 혼합은 conflicting_option 대신 unknown_option으로 명시 거부되는 분류 편차가 관측됐다. 이3개를 실제CLI14에 포함하지 않았다. disk write/flush/verify fault injection 및 OS writer 경합 원자성은 지원/실증하지 않았다.
+ 
+ 최종 코드 SHA는 다음과 같다.
+ 
+@@ -31,9 +31,9 @@
+ 
+ 정본 cache `0eb214ebcc65cd2ca7b9d98dc83f61a9c170ca75b1b23acf4c3c58fdfb550ab1` 불변, editor import 없음. source snapshot은 .txt로 보관했고 실제 resource_path guard를 통과했다. 기존 snapshot/오염 cache 이력이나 P2c 무효 attempt를 지우지 않았다.
+ 
+-baseline3960·source35·격리77과 HTML/과거ZIP2·기존검사 보존은 [최종 감사](../../../tmp/p02-first-integration-20261105/final-delivery-audit.json)를 따른다. clean tracked autoresolve와 상위 문서의 사전 원문/SHA·허용 diff/역제거 증거도 있다. 과거3879/3660이나 심사전manifest235를 현재 최종 분모와 혼합하지 않는다. 전체 diff-check는 기존 P2c 상위행으로 actual exit2이며 새 소유 코드공백0과 분리한다. 이번 data_rules 미실행이고 기존 ObjectDB/resources/TRACE 진단은 남는다.
++baseline3960·source35·격리77과 HTML/과거ZIP2·기존검사 보존은 [최종 감사](../../../tmp/p02-first-integration-20261105/closeout-correction/audit.json)를 따른다. clean tracked autoresolve와 상위 문서의 사전 원문/SHA·허용 diff/역제거 증거도 있다. 과거3879/3660이나 심사전manifest235를 현재 최종 분모와 혼합하지 않는다. 정정 전 전체 diff-check는 P2c 33행과 P02 35행을 진단했다. P02 35행만 정정했고 기존 P2c 33행은 전체 게이트 미통과로 남아 있다. 이번 data_rules 미실행이고 기존 ObjectDB/resources/TRACE 진단은 남는다.
+ 
+-새 [P02 압축](../../../tmp/p02-first-headless-delivery-20261107.zip)의 목록·CRC·SHA는 [archive-verification.json](../../../tmp/p02-first-integration-20261105/archive-verification.json), payload는 [record-manifest.json](../../../tmp/p02-first-integration-20261105/record-manifest.json)을 따른다. 과거 P2c ZIP SHA `99a4a1adca1bdc3bf7e56baa9112c1625ab6c6371bfaafa0482b3471903a2971`, 활성교체 ZIP SHA `87a090a8d891391473fd9dfa9627dcd4430af234359e06d0b78e9e7b5f005eae`는 유지한다. 새 문서나 코드를 과거 ZIP에 소급 포함하지 않는다. 최종 closeout은 ZIP 작성 뒤의 외부 독립 판정이며 압축 당시 포함 목록과 구분한다.
++새 [P02 압축](../../../tmp/p02-first-headless-delivery-20261107-correction.zip)의 목록·CRC·SHA는 [archive-verification.json](../../../tmp/p02-first-integration-20261105/closeout-correction/archive-verification.json), payload는 [record-manifest.json](../../../tmp/p02-first-integration-20261105/closeout-correction/manifest.json)을 따른다. 과거 P2c ZIP SHA `99a4a1adca1bdc3bf7e56baa9112c1625ab6c6371bfaafa0482b3471903a2971`, 활성교체 ZIP SHA `87a090a8d891391473fd9dfa9627dcd4430af234359e06d0b78e9e7b5f005eae`는 유지한다. 새 문서나 코드를 과거 ZIP에 소급 포함하지 않는다. 최종 closeout은 ZIP 작성 뒤의 외부 독립 판정이며 압축 당시 포함 목록과 구분한다.
+ 
+ ## 다음 작은 조각
+ 

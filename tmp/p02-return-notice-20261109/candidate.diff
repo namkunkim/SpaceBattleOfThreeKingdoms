@@ -1,0 +1,185 @@
+--- a/scripts/world_link.gd
++++ b/scripts/world_link.gd
+@@ -33,7 +33,7 @@
+ 	return error
+ 
+ # 전장에서 천하로 돌아온다. o가 null이면 전투를 끝내지 않고 나온 것이다.
+-func back_to_world(o: BattleOutcome) -> void:
++func back_to_world(o: BattleOutcome) -> Error:
+ 	var previous_brief := brief
+ 	var previous_outcome := outcome
+ 	outcome = o
+@@ -43,6 +43,7 @@
+ 		brief = previous_brief
+ 		outcome = previous_outcome
+ 		push_warning("WORLD_RETURN_REJECTED error=%d" % error)
++	return error
+ 
+ # 천하 지도가 결과를 한 번 가져간다.
+ func take_outcome() -> BattleOutcome:
+--- a/scripts/FleetBattle3D.gd
++++ b/scripts/FleetBattle3D.gd
+@@ -245,6 +245,16 @@
+ 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+ 	content.add_child(hint)
+ 	if initial:
++		var return_notice: Label
++		if in_world:
++			const screens := preload("res://hud/ui_kit/deck_screens.gd")
++			return_notice = screens.world_return_notice()
++			var notice_slot := Control.new()
++			notice_slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
++			notice_slot.custom_minimum_size.y = 42
++			content.add_child(notice_slot)
++			notice_slot.add_child(return_notice)
++			return_notice.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+ 		var exit := Button.new()
+ 		exit.name = "ExitBattlePrepareError"
+ 		exit.theme_type_variation = "PrimaryButton"
+@@ -253,8 +263,10 @@
+ 		exit.add_theme_stylebox_override("focus", UiTheme.flat(Color.TRANSPARENT, UiTheme.GOLD_HI, 2, 4))
+ 		content.add_child(exit)
+ 		if in_world:
+-			var link := get_node("/root/WorldLink")
+-			exit.pressed.connect(func(): link.back_to_world(null))
++			exit.pressed.connect(func():
++				if back_to_world() != OK:
++					return_notice.show()
++			)
+ 		else:
+ 			exit.pressed.connect(_quit)
+ 		exit.grab_focus()
+@@ -429,11 +441,12 @@
+ 	return link != null and link.routed()
+ 
+ # 천하 지도로 돌아간다. 전투가 끝났으면 결과(BattleOutcome)를, 아니면 결과 없이.
+-func back_to_world() -> void:
++func back_to_world() -> Error:
+ 	var link := get_node_or_null("/root/WorldLink")
+ 	if link == null:
+-		return
+-	link.back_to_world(BattleOutcome.from_sim(sim, link.brief) if sim.st.over else null)
++		return ERR_UNAVAILABLE
++	var outcome := BattleOutcome.from_sim(sim, link.brief) if sim != null and sim.st.over else null
++	return link.back_to_world(outcome)
+ 
+ func _toggle_menu() -> void:
+ 	if G.state == "play":
+--- a/hud/ui_kit/command_deck.gd
++++ b/hud/ui_kit/command_deck.gd
+@@ -285,9 +285,11 @@
+ func title_label() -> String:
+ 	return "천하로" if battle.has_method("routed") and battle.routed() else "타이틀로"
+ 
+-func to_title() -> void:
++func to_title(return_notice: Label = null) -> void:
+ 	if battle.has_method("routed") and battle.routed():
+-		battle.back_to_world()
++		var error: Error = battle.back_to_world()
++		if error != OK and return_notice != null:
++			return_notice.show()
+ 		return
+ 	if not battle.init_game().ok:
+ 		return
+--- a/hud/ui_kit/deck_screens.gd
++++ b/hud/ui_kit/deck_screens.gd
+@@ -4,16 +4,26 @@
+ # 타이틀·서막·브리핑 뒤에는 실제 3D 전장이 그대로 보인다(POC "brief" 상태의 카메라 흔들림).
+ 
+ const W := preload("res://hud/ui_kit/deck_widgets.gd")
++
++const WORLD_RETURN_NOTICE := "천하로 돌아가지 못했습니다. 다시 눌러 주세요."
++
++static func world_return_notice() -> Label:
++	var notice := UiTheme.label(WORLD_RETURN_NOTICE, "Body", 16, UiTheme.WARN)
++	notice.name = "WorldReturnNotice"
++	notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
++	notice.mouse_filter = Control.MOUSE_FILTER_IGNORE
++	notice.hide()
++	return notice
+ 
+ static func build_all(deck: Control) -> Dictionary:
+ 	var out := {
+ 		"title": TitleScreen.new(deck),
+ 		"prologue": PrologueScreen.new(deck),
+ 		"brief": BriefScreen.new(deck),
+-		"pause": PauseScreen.new(deck),
++		"pause": PauseScreen.new(deck, world_return_notice()),
+ 		"settings": SettingsScreen.new(deck, "title"),
+ 		"settings_pause": SettingsScreen.new(deck, "pause"),
+-		"result": ResultScreen.new(deck),
++		"result": ResultScreen.new(deck, world_return_notice()),
+ 		"roster": preload("res://hud/ui_kit/roster_screen.gd").new(deck),
+ 		"org": preload("res://hud/ui_kit/org_screen.gd").new(deck),
+ 		"formation_guide": preload("res://hud/ui_kit/formation_guide.gd").new(deck),
+@@ -305,7 +315,8 @@
+ class PauseScreen extends Control:
+ 	var deck: Control
+ 	var title_btn: Button
+-	func _init(d: Control) -> void:
++	var return_notice: Label
++	func _init(d: Control, notice: Label) -> void:
+ 		deck = d
+ 		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+ 		mouse_filter = Control.MOUSE_FILTER_STOP
+@@ -315,7 +326,11 @@
+ 		col.position = Vector2(36, 150)
+ 		col.add_theme_constant_override("separation", 2)
+ 		p.add_child(col)
+-		var specs := [["계속", func(): deck.resume()], ["설정", func(): deck.show_screen("settings_pause")], ["처음부터", func(): deck.restart()], ["타이틀로", func(): deck.to_title()], ["종료", func(): deck.get_tree().quit()]]
++		return_notice = notice
++		return_notice.position = Vector2(36, 436)
++		return_notice.size = Vector2(344, 32)
++		p.add_child(return_notice)
++		var specs := [["계속", func(): deck.resume()], ["설정", func(): deck.show_screen("settings_pause")], ["처음부터", func(): deck.restart()], ["타이틀로", func(): deck.to_title(return_notice)], ["종료", func(): deck.get_tree().quit()]]
+ 		for i in specs.size():
+ 			var b := ScreenKit.menu_button(specs[i][0], i == 0)
+ 			b.custom_minimum_size = Vector2(300, 56 if i == 0 else 52)
+@@ -356,6 +371,7 @@
+ 			UiDraw.diamond(c, Vector2(x + 5, c.size.y - 49), 4.0, UiTheme.GOLD)
+ 			UiDraw.text(c, Vector2(x + 18, c.size.y - 44), "자리를 비워 자동으로 멈췄습니다. 전황은 그대로입니다.", "regular", 13, UiTheme.INK_2)
+ 	func on_show() -> void:
++		return_notice.hide()
+ 		if title_btn:
+ 			title_btn.text = deck.title_label()
+ 		queue_redraw()
+@@ -585,7 +601,8 @@
+ 	var deck: Control
+ 	var t := 0.0
+ 	var title_btn: Button
+-	func _init(d: Control) -> void:
++	var return_notice: Label
++	func _init(d: Control, notice: Label) -> void:
+ 		deck = d
+ 		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+ 		mouse_filter = Control.MOUSE_FILTER_STOP
+@@ -602,19 +619,28 @@
+ 		title.text = "타이틀로"
+ 		title.custom_minimum_size = Vector2(150, 54)
+ 		title.focus_mode = Control.FOCUS_NONE
+-		title.pressed.connect(func(): deck.to_title())
++		title.pressed.connect(func(): deck.to_title(return_notice))
+ 		hb.add_child(title)
+ 		title_btn = title
+ 		var again := ScreenKit.menu_button("다시 출격", true)
+ 		again.custom_minimum_size = Vector2(240, 54)
+ 		again.pressed.connect(func(): deck.restart())
+ 		hb.add_child(again)
++		return_notice = notice
++		return_notice.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
++		add_child(return_notice)
++		return_notice.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
++		return_notice.offset_left = -230
++		return_notice.offset_right = 230
++		return_notice.offset_top = -48
++		return_notice.offset_bottom = -8
+ 	func _process(delta: float) -> void:
+ 		delta = UiDraw.real_dt(delta)
+ 		t += delta
+ 		queue_redraw()
+ 	func on_show() -> void:
+ 		t = 0.0
++		return_notice.hide()
+ 		title_btn.text = deck.title_label()
+ 	func _draw() -> void:
+ 		var b: Node = deck.battle

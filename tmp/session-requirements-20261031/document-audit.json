@@ -1,0 +1,156 @@
+{
+  "date": "2026-10-31 KST",
+  "scope": "documents only",
+  "independent_review": "accepted",
+  "reviewed_corrections": [
+    "W03 implementation review uses a different model",
+    "P2c usage-limit interruption is not a code failure; formal files absent"
+  ],
+  "head": "fb660cea69207fd332e26128643007694910a253",
+  "branch": "codex/feature-i01b-not_remove",
+  "main": "8292805143f4561a4f5258d40b7b94adf4ff5802",
+  "index": [],
+  "requirements_count": 41,
+  "duplicate_ids": [],
+  "status_counts": [
+    {
+      "Name": "미완료",
+      "Count": 9
+    },
+    {
+      "Name": "상시준수",
+      "Count": 9
+    },
+    {
+      "Name": "완료",
+      "Count": 23
+    }
+  ],
+  "links": [
+    {
+      "target": "../CHECKLIST-OPEN.md",
+      "exists": true
+    },
+    {
+      "target": "../../../tmp/i01b-feature-push-20261029/final-push-audit.json",
+      "exists": true
+    },
+    {
+      "target": "../../../tmp/i01b-next-20261031/final-delivery-audit.json",
+      "exists": true
+    },
+    {
+      "target": "../../../워크플로우-플레이북.md",
+      "exists": true
+    },
+    {
+      "target": "../../../CLAUDE.md",
+      "exists": true
+    },
+    {
+      "target": "../CHECKLIST-OPEN.md",
+      "exists": true
+    },
+    {
+      "target": "I01B-P2B-CHECKLIST-20261031.md",
+      "exists": true
+    },
+    {
+      "target": "H0-DECISION.md",
+      "exists": true
+    },
+    {
+      "target": "H1-DECISION.md",
+      "exists": true
+    },
+    {
+      "target": "H1-POLICY-DECISION.md",
+      "exists": true
+    },
+    {
+      "target": "H1-EVENT-DECISION.md",
+      "exists": true
+    },
+    {
+      "target": "H2-DECISION.md",
+      "exists": true
+    },
+    {
+      "target": "I01A-IMPLEMENTATION-RESULT-20261027.md",
+      "exists": true
+    },
+    {
+      "target": "DATA-RULES-BASELINE-FIX-20261028.md",
+      "exists": true
+    },
+    {
+      "target": "I01B-PREPARATION-20261028.md",
+      "exists": true
+    },
+    {
+      "target": "I01B-P1-RESULT-20261028.md",
+      "exists": true
+    },
+    {
+      "target": "DATA-RULES-GEOMETRY-RESULT-20261028.md",
+      "exists": true
+    },
+    {
+      "target": "I01B-P2A-RESULT-20261028.md",
+      "exists": true
+    },
+    {
+      "target": "I01B-P2B-RESULT-20261031.md",
+      "exists": true
+    },
+    {
+      "target": "I01B-P2B-CHECKLIST-20261031.md",
+      "exists": true
+    },
+    {
+      "target": "REVIEW-I01B-P2B-20261031.md",
+      "exists": true
+    },
+    {
+      "target": "../../../tmp/i01b-feature-push-20261029/final-push-audit.json",
+      "exists": true
+    },
+    {
+      "target": "I01B-FEATURE-REPRO-20261029.md",
+      "exists": true
+    },
+    {
+      "target": "I01-ACCEPTANCE-PREREG-20261026.md",
+      "exists": true
+    },
+    {
+      "target": "I01-READINESS-DECISION-20261026.md",
+      "exists": true
+    }
+  ],
+  "missing_links": 0,
+  "own_trailing_whitespace": 0,
+  "main_before_sha": "b86c6c7329b118089a82de542a81ec92caf2d115e38dac8a0d29ea1b4beb962b",
+  "main_restored_sha": "b86c6c7329b118089a82de542a81ec92caf2d115e38dac8a0d29ea1b4beb962b",
+  "main_one_line_only": true,
+  "code": [
+    {
+      "path": "core/battle/operation_service_state.gd",
+      "before": "18f1381a330d6f33163cc94f678fa624f8500dd415f5d35ee4a4b4bfd5ee44a0",
+      "after": "18f1381a330d6f33163cc94f678fa624f8500dd415f5d35ee4a4b4bfd5ee44a0",
+      "unchanged": true
+    },
+    {
+      "path": "tests/i01b_service_state.gd",
+      "before": "d11615fa541a7064e10bfd2eb648253192baae0ee98e2adf609ad954b4967e66",
+      "after": "d11615fa541a7064e10bfd2eb648253192baae0ee98e2adf609ad954b4967e66",
+      "unchanged": true
+    }
+  ],
+  "p2c_plan_exists": false,
+  "p2c_checklist_exists": false,
+  "diff_check_exit": 0,
+  "code_tests_executed": false,
+  "git_refs_modified": false,
+  "requirements_sha": "f8afbb472c579aef5f4815a8d2b5e530c43a43a1be826d0c7fd05ebb5e630a14"
+}

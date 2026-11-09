@@ -1,0 +1,8 @@
+# Q/C 검토용 독립 판정 보강과 남은 경계
+
+`capture-refinement-review/SHA.json`은 이전 Q/C 오버레이와 새 v2 바이트·diff를 따로 고정한다. 기존 산출물은 보존했다. 제품·Godot 파싱·Job·GUI는 실행하지 않았다.
+
+- Q는 기존 raw native public projection의 ordered roster/ID·유형·좌표를 별도 출력한다. `independent_qc_oracle.py`는 Python으로 attack5의 cadence·target filter·최단 거리 tie order·fleet IDs·명령 종류·인수 구조를 산출하고 제품 command fields/type tags와 대조한다. 기존 GDScript reference와 제품의 typed Variant bytes 비교도 남는다. 이 Python 경로는 BattleSim이나 제품 정책 함수를 호출하지 않는다. 다만 기대 roster는 같은 규칙의 native BattleSim에서 나온다. float32 거리 산술을 모델링했으며 엔진 빌드의 실제 연산 차이·좌표 precision은 미검증이다. 고정 tick 2,164는 수용된 historical fixtures의 정확성에 의존하며 다른 lane의 valid tick count를 증명하지 않는다.
+- C는 successful restore receipt를 별도 기록한다. False면 대상 캡처를 하지 않으며 수집기는 restore false와 누락 모두 거부한다. 양쪽 side에서 native expected/target actual의 원시 Variant bytes와 타입·구조를 기록한다. 두 fleet의 spawn 순서에서 side 0의 foe ID 2, side 1의 ally ID 1을 독립 유도한다. Side 0은 수용 P2B record 원문 20개에서 seed/phase별 typed 값을 읽어 실제 양측과 비교한다. Side 1은 ID 1 외의 ID를 거부하되 []와 [1] 중 정확 기대를 역사 증거에서 얻을 수 없어 독립값 미완료다. 동일 GDScript encoder의 공통 오류나 raw bytes 해석 오류를 전부 배제하지 않는다.
+- B의 실제 WorldMap .tscn은 이름 있는 루트만 제공한다. Header/Card/CTA/Result의 버튼 및 중간 컨테이너는 view/world/world_map_screen.gd에서 `Button.new()` 또는 ScreenKit으로 생성해 `name`을 지정하지 않은 채 add_child한다. 전장 ResultScreen의 두 버튼도 동적이다. 이 원문만으로는 절대 NodePath를 이름까지 사전 동결할 수 없다. 기존 constructor 참조/child index 오버레이는 보조 진단으로만 유지한다. 기대 경로를 제품 runtime에서 추출하는 접근을 승인 oracle로 제안하지 않는다. 새 안정 이름을 제품에 추가하면 후보 세 파일 경계가 바뀌므로 별도 계약 없이는 하지 않는다. 109는 실측되지 않았다. B는 현재 미완료다.
+- Sky documented API의 귀속 가능성은 미증명이다. 행 15/16과 K6 전체는 대기한다. HEAD lane은 활성 P03 private +9와 결합된 제품의 검증이 아니다.

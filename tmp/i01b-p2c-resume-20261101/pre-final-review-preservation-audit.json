@@ -1,0 +1,80 @@
+{
+  "created_utc": "2026-11-01T12:14:57.119121+00:00",
+  "baseline_count": 3660,
+  "baseline_missing": [],
+  "baseline_changed": [
+    {
+      "path": "docs/battle-core/CHECKLIST-OPEN.md",
+      "before": "a7e209c8404b18a9411551c1a3adf51481d0bc61347826e1f4e40fa0dfecd8eb",
+      "current": "58dbc9637705991ca5799bd599f9bb8d43f13fabee97fe4f862b3e4cafa47f0f"
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.html",
+      "before": "e1cdfe0332c68dba3c38d21f0e0e4be29dc7b3171fb24c98a6a253a999487875",
+      "current": "9653d4913deff9e2cdb7d5c7db768b29ee2dd53aa80cd67a260378b48263dc1d"
+    }
+  ],
+  "source_count": 35,
+  "source_changed": [],
+  "session_initial_changed": [
+    {
+      "path": "core/battle/operation_private_state.gd",
+      "before": "d8f977b7d3a89da3071e8be96d140a44b4db4e89b20944666cb18df294f28074",
+      "current": "a1376b70c22dcf371120d44999a38b68d141bc2306d9339f1e2294e6744196ca"
+    },
+    {
+      "path": "tests/i01b_private_state.gd",
+      "before": "b49662172df74adee0494840cd0a88b42249aabe4d0348e8259fa77421eb9501",
+      "current": "bd12cdad427ec672373ab844329bd6846e109f4d088ae007181eb24f4489403b"
+    }
+  ],
+  "session_initial_missing": [],
+  "quarantine_failures": [],
+  "attempt5_inputs": [
+    {
+      "path": "core/battle/operation_private_state.gd",
+      "sha256": "a1376b70c22dcf371120d44999a38b68d141bc2306d9339f1e2294e6744196ca",
+      "matches": true
+    },
+    {
+      "path": "tests/i01b_private_state.gd",
+      "sha256": "bd12cdad427ec672373ab844329bd6846e109f4d088ae007181eb24f4489403b",
+      "matches": true
+    },
+    {
+      "path": "data/profiles/poc_corridor.json",
+      "sha256": "bb7c2dbaa8c258dc8b43f16894502a72cb66a22d2058b5d5314816a0488e9d8e",
+      "matches": true
+    },
+    {
+      "path": "data/profiles/combat_m3.json",
+      "sha256": "78d89e8c65f9d5fc4ab7324cc99b9f9ab0578157149f3f58036959d21131aa4c",
+      "matches": true
+    },
+    {
+      "path": "data/bundle-layout.json",
+      "sha256": "b8b373c9d7a91c0e58f75202eb6bce28509aa0c122ce93471e4fe09d889a53e2",
+      "matches": true
+    },
+    {
+      "path": ".godot/global_script_class_cache.cfg",
+      "sha256": "0eb214ebcc65cd2ca7b9d98dc83f61a9c170ca75b1b23acf4c3c58fdfb550ab1",
+      "matches": true
+    },
+    {
+      "path": "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+      "sha256": "c8f0a6bc45a19b33541501e57f6f7cd972ab18453743266339d495cbbe846643",
+      "matches": true
+    }
+  ],
+  "quarantine_count": 77,
+  "known_allowed_baseline_changes": "CHECKLIST-OPEN one added handoff line (inverse SHA proven); HTML P01 status/acceptance and dated handoff display only (functional JS/CSS identical)",
+  "session_owned_code_changes": [
+    "core/battle/operation_private_state.gd",
+    "tests/i01b_private_state.gd"
+  ],
+  "editor_import_executed_this_session": false,
+  "main_runner_attempts": 5,
+  "main_runner_limit": 6,
+  "separate_diagnostic_probes": 2
+}

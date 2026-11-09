@@ -1,0 +1,6 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+P02_WORKER_OBSERVATION {"event_kinds":{"battle_end":1,"destroyed":1,"missile_hit":6,"missile_launch":1,"say":1,"spawn":2},"fixture":"poc","summary":{"ally_alive":1,"clock_ms":1600,"commands":0,"end_ms":1600,"end_tick":16,"foe_alive":0,"fp":"12c9cea0994651210fdfbc0deb6aeda64118bfb8b838ffe68fc5ac837b017be5","killed":0.513,"lost":0.185,"over":true,"reason":"annihilation","reinf_t":-1.0,"t":1.6,"tick":16,"win":true}}
+P02_WORKER_OBSERVATION {"event_kinds":{"battle_end":1,"contact":1,"destroyed":1,"salvo":9,"ship_lost":5,"spawn":2},"fixture":"services","summary":{"ally_alive":0,"clock_ms":122050,"commands":0,"end_ms":122050,"end_tick":1221,"foe_alive":1,"fp":"48222b4de3b21a10c2ede016027686153c3cb6873db60c0ba212859cc08a44b8","killed":5.072,"lost":3.952,"over":true,"reason":"flagship_lost","reinf_t":-1.0,"t":122.05,"tick":1221,"win":false}}
+P02_WORKER_OBSERVATION {"event_kinds":{"spawn":2},"fixture":"timeout-poc","summary":{"ally_alive":1,"clock_ms":100,"commands":0,"end_ms":-1,"end_tick":-1,"foe_alive":1,"fp":"9fdf6a72d46f042e120540564c931233c8c83d3c042752ff743aa4483c4bd602","killed":0.0,"lost":0.0,"over":false,"reason":"timeout","reinf_t":-1.0,"t":0.1,"tick":1,"win":false}}
+P02_WORKER_CHECKS 59 running_frames_observed=57

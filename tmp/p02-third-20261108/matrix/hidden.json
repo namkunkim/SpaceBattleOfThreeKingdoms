@@ -1,0 +1,995 @@
+{
+  "format": "p02/restricted-fresh-replay/1",
+  "input": {
+    "mode": "operation",
+    "format": "p02/restricted-headless/1",
+    "profile": {
+      "profile_id": "p02-explicit-services",
+      "rules": {
+        "world_w": 3400,
+        "world_h": 2300,
+        "ship_gap": 20,
+        "edge": 40,
+        "cmd_r": 560,
+        "missile_r": 480,
+        "fighter_r": 380,
+        "range_r": 300,
+        "max_visible_n": 28,
+        "cp_max_bp": 100000,
+        "cp_start_bp": 30000,
+        "cp_regen_s": 4.5,
+        "ecp_regen_s": 5.5,
+        "missile_cost_bp": 20000,
+        "fighter_cost_bp": 30000,
+        "charge_cost_bp": 30000,
+        "missile_cd_s": 18,
+        "fighter_cd_s": 26,
+        "charge_s": 10,
+        "flank_msg_s": 3,
+        "ai_period_ms": 550,
+        "reinf_ms": 95000,
+        "swarm_life_ms": 9050,
+        "swarm_return_ms": 1000,
+        "missile_count_n": 6,
+        "missile_hit_r": 22,
+        "swarm_points_n": 22,
+        "swarm_hit_r": 120,
+        "base_speed": 62,
+        "turn_rate": 1.7,
+        "flank_front_deg": 60,
+        "flank_side_deg": 120,
+        "flank_side_mul": 1.3,
+        "flank_rear_mul": 1.6,
+        "level_step": 0.07,
+        "level_max_n": 20,
+        "xp_base_n": 20,
+        "xp_per_lv_n": 12,
+        "charge_power_mul": 1.35,
+        "out_cmd_power_mul": 0.75,
+        "defense_power_mul": 0.7,
+        "defense_damage_taken_mul": 0.6,
+        "defense_speed_mul": 0.5,
+        "charge_speed_mul": 1.4,
+        "missile_dmg_share": 0.03,
+        "fighter_dps_share": 0.009,
+        "fire_share": 0.011,
+        "kill_below_milli_n": 500,
+        "charge_seek_r": 900,
+        "retreat_seek_r": 2000,
+        "retreat_dist": 420,
+        "retreat_margin": 60,
+        "rally_radius": 120,
+        "arrive_r": 10,
+        "chase_range_share": 0.8,
+        "chase_engagement_fallback_r": 170,
+        "settle_speed_share": 0.7,
+        "min_turn_cos": 0.3,
+        "arrive_k_ref": 2.0,
+        "swarm_goal_k_ref": 2.2,
+        "swarm_back_k_ref": 2.0,
+        "missile_v0": 260,
+        "missile_v_rand": 60,
+        "missile_wob": 2.4,
+        "missile_wob_decay_s": 0.6,
+        "missile_accel": 120,
+        "swarm_r0": 20,
+        "swarm_r_rand": 50,
+        "swarm_w0": 1.5,
+        "swarm_w_rand": 2.0,
+        "ai_flag_engage_r": 750,
+        "ai_flag_home_r": 30,
+        "ai_engage_r": 700,
+        "ai_retarget_bp": 1500,
+        "ai_score_base": 0.55,
+        "ai_score_span": 0.6,
+        "ai_defend_share": 0.3,
+        "ai_missile_bp": 3000,
+        "ai_fighter_bp": 1800,
+        "ai_advance_speed": 4.0,
+        "formation_loose_mul": 1.35,
+        "place_radius_ratio": 0.15
+      },
+      "ally": [
+        {
+          "name": "A",
+          "role": "A",
+          "ships": 4,
+          "lv": 1,
+          "x": 400,
+          "y": 500,
+          "p": 0,
+          "flag": true,
+          "composition": [
+            {
+              "ship_type_id": "SHP-01",
+              "count": 1
+            },
+            {
+              "ship_type_id": "SHP-03",
+              "count": 1
+            },
+            {
+              "ship_type_id": "SHP-04",
+              "count": 2
+            }
+          ],
+          "formation_id": "FRM-01",
+          "command": 70,
+          "start_morale_bp": 10000
+        }
+      ],
+      "foe": [
+        {
+          "name": "B",
+          "role": "B",
+          "ships": 40,
+          "lv": 1,
+          "x": 2500,
+          "y": 500,
+          "p": 0,
+          "flag": true,
+          "composition": [
+            {
+              "ship_type_id": "SHP-02",
+              "count": 40
+            }
+          ],
+          "formation_id": "FRM-01",
+          "command": 70,
+          "start_morale_bp": 10000
+        }
+      ],
+      "reinf": [],
+      "combat": {
+        "damage_mode": "sqrt",
+        "damage_mode_note": "fixed | sqrt | linear. \uc81c\uc548\uc11c K1(Q45): \uae30\ubcf8 sqrt. M3\uc5d0\uc11c \uc138 \ubc29\uc2dd\uc744 \uac19\uc740 \uc870\uac74\uc73c\ub85c \ube44\uad50\ud55c\ub2e4(docs/core/M3-NOTES.md).",
+        "categories": [
+          "artillery",
+          "line_fire",
+          "intercept",
+          "torpedo",
+          "fighter"
+        ],
+        "charges": {
+          "base": 3,
+          "categories": [
+            "artillery",
+            "fighter"
+          ],
+          "commands": {
+            "missile": "artillery",
+            "fighter": "fighter"
+          },
+          "refill_rounding": "round_half_up",
+          "status": "BATTLE_DECISIONS Q69 \ud655\uc815(2026-10-10): 3\ud68c\uac00 \ud0c4\uc57d\uc744 \ub300\uccb4, \uc77c\uc81c\uc0ac\uaca9 1\uc8fc\uae30 = 1\ud68c. \ubcf4\ucda9 \ud69f\uc218 = round(base \u00d7 \ubcf4\uae09\ud568 \ucc98\ub9ac\ub7c9 bp / 10000) \u2192 3/2/1(\uae30\uc9c0\ub294 3). \uad6c\uccb4 \ud69f\uc218\ub294 \uae30\ubcf8\uac12(\ubbf8\uacb0 \uc138\ubd80)"
+        },
+        "period_s": 60,
+        "period_source": "\uc81c\uc548\uc11c \u00a74.3 Q46. 10~15\ucd08 \ub300\uc548\uc740 M3 \uce21\uc815\uc5d0\uc11c \ube44\uad50(P12)",
+        "weapons": {
+          "artillery": {
+            "base_accuracy_bp": 6500,
+            "base_damage": 140,
+            "platforms": {
+              "SHP-02": {
+                "range": 150,
+                "arc_deg": 80
+              },
+              "SHP-03": {
+                "range": 260,
+                "arc_deg": 90
+              }
+            },
+            "equipment": {},
+            "ammo_per_platform": 0,
+            "special_per_platform": 0,
+            "shot": {
+              "ammo": 0,
+              "energy": 0,
+              "heat": 0,
+              "carrier_sorties": 0,
+              "special": 0
+            }
+          },
+          "line_fire": {
+            "base_accuracy_bp": 7000,
+            "base_damage": 100,
+            "platforms": {
+              "SHP-04": {
+                "range": 180,
+                "arc_deg": 120
+              }
+            },
+            "equipment": {},
+            "ammo_per_platform": 10,
+            "special_per_platform": 0,
+            "shot": {
+              "ammo": 1,
+              "energy": 8,
+              "heat": 20,
+              "carrier_sorties": 0,
+              "special": 0
+            }
+          },
+          "intercept": {
+            "base_accuracy_bp": 8000,
+            "base_damage": 70,
+            "platforms": {
+              "SHP-07": {
+                "range": 210,
+                "arc_deg": 180
+              }
+            },
+            "equipment": {
+              "FAST-EQ-INTERCEPT": {
+                "range": 200,
+                "arc_deg": 200
+              }
+            },
+            "ammo_per_platform": 8,
+            "special_per_platform": 0,
+            "shot": {
+              "ammo": 1,
+              "energy": 4,
+              "heat": 15,
+              "carrier_sorties": 0,
+              "special": 0
+            }
+          },
+          "torpedo": {
+            "base_accuracy_bp": 6000,
+            "base_damage": 180,
+            "platforms": {},
+            "equipment": {
+              "FAST-EQ-TORPEDO": {
+                "range": 170,
+                "arc_deg": 70
+              }
+            },
+            "ammo_per_platform": 0,
+            "special_per_platform": 2,
+            "shot": {
+              "ammo": 0,
+              "energy": 3,
+              "heat": 20,
+              "carrier_sorties": 0,
+              "special": 1
+            }
+          },
+          "fighter": {
+            "base_accuracy_bp": 7000,
+            "base_damage": 100,
+            "platforms": {
+              "SHP-01": {
+                "range": 190,
+                "arc_deg": 120
+              }
+            },
+            "equipment": {},
+            "ammo_per_platform": 0,
+            "special_per_platform": 0,
+            "shot": {
+              "ammo": 0,
+              "energy": 0,
+              "heat": 0,
+              "carrier_sorties": 0,
+              "special": 0
+            }
+          }
+        },
+        "carrier": {
+          "platform_key": "fighter@SHP-01",
+          "ship_type_id": "SHP-01",
+          "category": "fighter"
+        },
+        "ship_types": {
+          "SHP-01": {
+            "cost": 18,
+            "speed_per_turn": 120,
+            "phase": {
+              "contact": 0.7,
+              "barrage": 0.6,
+              "engagement": 0.8,
+              "assault": 2.0,
+              "resolution": 1.0
+            }
+          },
+          "SHP-02": {
+            "cost": 14,
+            "speed_per_turn": 90,
+            "phase": {
+              "contact": 0.5,
+              "barrage": 1.2,
+              "engagement": 0.6,
+              "assault": 0.8,
+              "resolution": 0.5
+            }
+          },
+          "SHP-03": {
+            "cost": 12,
+            "speed_per_turn": 130,
+            "phase": {
+              "contact": 0.9,
+              "barrage": 1.8,
+              "engagement": 0.7,
+              "assault": 0.5,
+              "resolution": 0.8
+            }
+          },
+          "SHP-04": {
+            "cost": 10,
+            "speed_per_turn": 140,
+            "phase": {
+              "contact": 0.8,
+              "barrage": 1.0,
+              "engagement": 1.6,
+              "assault": 0.9,
+              "resolution": 1.1
+            }
+          },
+          "SHP-05": {
+            "cost": 8,
+            "speed_per_turn": 70,
+            "phase": {
+              "contact": 0.4,
+              "barrage": 0.4,
+              "engagement": 0.5,
+              "assault": 0.4,
+              "resolution": 0.0
+            }
+          },
+          "SHP-06": {
+            "cost": 9,
+            "speed_per_turn": 80,
+            "phase": {
+              "contact": 1.9,
+              "barrage": 1.1,
+              "engagement": 0.9,
+              "assault": 0.7,
+              "resolution": 0.6
+            }
+          },
+          "SHP-07": {
+            "cost": 7,
+            "speed_per_turn": 180,
+            "phase": {
+              "contact": 1.5,
+              "barrage": 0.8,
+              "engagement": 1.4,
+              "assault": 1.3,
+              "resolution": 0.9
+            }
+          },
+          "SHP-08": {
+            "cost": 2,
+            "speed_per_turn": 220,
+            "phase": {
+              "contact": 1.7,
+              "barrage": 0.5,
+              "engagement": 0.8,
+              "assault": 1.5,
+              "resolution": 0.4
+            }
+          }
+        },
+        "fast_craft": {
+          "ship_type_id": "SHP-08",
+          "equipment_category": {
+            "FAST-EQ-INTERCEPT": "intercept",
+            "FAST-EQ-TORPEDO": "torpedo"
+          },
+          "hull_excludes_equipment": true
+        },
+        "formations": {
+          "FRM-01": {
+            "name": "\uc5b4\ub9b0\uc9c4",
+            "mobility_bp": 500,
+            "detection_bp": 0,
+            "fire_bp": 1000,
+            "defense_bp": -500,
+            "phase": {
+              "contact": 1.0,
+              "barrage": 0.9,
+              "engagement": 1.3,
+              "assault": 1.1,
+              "resolution": 1.0
+            },
+            "required_command": 60
+          },
+          "FRM-02": {
+            "name": "\ud559\uc775\uc9c4",
+            "mobility_bp": -500,
+            "detection_bp": 500,
+            "fire_bp": 500,
+            "defense_bp": 1000,
+            "phase": {
+              "contact": 1.1,
+              "barrage": 1.1,
+              "engagement": 1.2,
+              "assault": 0.9,
+              "resolution": 1.2
+            },
+            "required_command": 75
+          },
+          "FRM-03": {
+            "name": "\ubc29\uc6d0\uc9c4",
+            "mobility_bp": -1000,
+            "detection_bp": 0,
+            "fire_bp": -500,
+            "defense_bp": 1500,
+            "phase": {
+              "contact": 1.0,
+              "barrage": 1.0,
+              "engagement": 1.1,
+              "assault": 1.2,
+              "resolution": 0.9
+            },
+            "required_command": 55
+          },
+          "FRM-04": {
+            "name": "\uc548\ud589\uc9c4",
+            "mobility_bp": 0,
+            "detection_bp": 500,
+            "fire_bp": 1500,
+            "defense_bp": -500,
+            "phase": {
+              "contact": 1.0,
+              "barrage": 1.4,
+              "engagement": 0.8,
+              "assault": 0.7,
+              "resolution": 1.0
+            },
+            "required_command": 65
+          },
+          "FRM-05": {
+            "name": "\ubd09\uc2dc\uc9c4",
+            "mobility_bp": 1000,
+            "detection_bp": -500,
+            "fire_bp": 1000,
+            "defense_bp": -1000,
+            "phase": {
+              "contact": 0.9,
+              "barrage": 0.7,
+              "engagement": 1.1,
+              "assault": 1.4,
+              "resolution": 1.1
+            },
+            "required_command": 70
+          },
+          "FRM-06": {
+            "name": "\uc7a5\uc0ac\uc9c4",
+            "mobility_bp": 1500,
+            "detection_bp": -1000,
+            "fire_bp": -500,
+            "defense_bp": -1000,
+            "phase": {
+              "contact": 0.8,
+              "barrage": 0.6,
+              "engagement": 0.7,
+              "assault": 0.8,
+              "resolution": 0.9
+            },
+            "required_command": 40
+          },
+          "FRM-07": {
+            "name": "\ud314\uc9c4",
+            "mobility_bp": 0,
+            "detection_bp": 1000,
+            "fire_bp": 1000,
+            "defense_bp": 1000,
+            "phase": {
+              "contact": 1.2,
+              "barrage": 1.2,
+              "engagement": 1.2,
+              "assault": 1.0,
+              "resolution": 1.2
+            },
+            "required_command": 90
+          }
+        },
+        "default_formation": "FRM-01",
+        "sector": {
+          "front_deg": 60.0,
+          "rear_deg": 120.0,
+          "defense_bp": {
+            "front": 1000,
+            "flank": 0,
+            "rear": -1500,
+            "indeterminate": 0
+          },
+          "source": "\ubcf8\ud3b8 formation-rules, \uc138\uc158 Q33. \uacbd\uacc4\ub294 \uc815\uba74 \u226460\u00b0, \ud6c4\uba74 \u2265120\u00b0(POC\ub294 <60\u00b0\uc600\ub2e4)"
+        },
+        "hit": {
+          "min_bp": 1000,
+          "max_bp": 9500,
+          "out_of_command_bp": 1000,
+          "out_of_command_status": "proposed (\u00a74.3: \uc9c0\ud718 \ubc94\uc704 \ubc16 \uba85\uc911\ub960 \u221210%p)"
+        },
+        "air_defense": {
+          "categories": [
+            "fighter",
+            "artillery"
+          ],
+          "weights_bp": {
+            "SHP-07": 4000,
+            "SHP-01": 2000,
+            "SHP-08": 3000
+          },
+          "fast_craft_equipment": "FAST-EQ-INTERCEPT",
+          "max_bp": 1500,
+          "player_counter_launch": false,
+          "enemy_counter_launch": true,
+          "status": "proposed (Q112: ratio-based air defense; Q111: per-fleet counter launch, player opt-in, enemy automatic)"
+        },
+        "evasion": {
+          "categories": [
+            "line_fire",
+            "intercept"
+          ],
+          "bp_per_speed": 130,
+          "max_bp": 500,
+          "status": "proposed (Q72: \ub808\uc774\uc800 \ud68c\ud53c = \uba85\uc911\ub960 \ubc29\uc5b4\ud56d 1\uac1c. \ubcf8\ud3b8\uc5d0 \ud68c\ud53c \uac1c\ub150\uc774 \uc5c6\uc5b4 \uc218\uce58 \uc815\ubcf8 \uc5c6\uc74c, \uc774\ub3d9 \uc911 \uc804\ub300 \uc18d\ub3c4(px/\ucd08, \uc9c4\ud615 \uae30\ub3d9 \ud3ec\ud568) x bp_per_speed\ub97c max_bp\ub85c \ub9c9\ub294\ub2e4. \uc815\uc9c0\u00b7\ubcf4\uae09 \uc911 0. \ubbf8\uc0ac\uc77c\u00b7\ud568\uc7ac\uae30\u00b7\ub1cc\uaca9 \uc81c\uc678)"
+        },
+        "hull": {
+          "points_per_cost": 10,
+          "bands_bp": {
+            "operational_min": 7500,
+            "moderate_damage_min": 4000,
+            "heavy_damage_min": 1,
+            "destroyed": 0
+          }
+        },
+        "damage": {
+          "morale_base": 0.6,
+          "morale_div_bp": 25000,
+          "morale_note": "\uc0ac\uae30 \uacc4\uc218 = 0.6 + \uc0ac\uae30bp / 25000 (\u00a74.3, \uc815\ubcf8 \uc2dd\uc758 bp \ud658\uc0b0)",
+          "commander": {
+            "pivot": 70,
+            "spread": 30,
+            "span": 0.2,
+            "status": "proposed",
+            "stat_by_band": {
+              "contact": [
+                "intellect"
+              ],
+              "barrage": [
+                "intellect"
+              ],
+              "engagement": [
+                "command"
+              ],
+              "assault": [
+                "might"
+              ],
+              "resolution": [
+                "command",
+                "might"
+              ]
+            },
+            "note": "\u00a74.3 \u00b120%. \uac70\ub9ac\ub300\ubcc4 \ub2a5\ub825\uce58: \uc811\uc801\u00b7\ud3ec\ud654 \uc9c0\ub825, \uad50\uc804 \ud1b5\uc194, \uac15\uc2b5 \ubb34\ub825, \uacb0\ucc29 \ud1b5\uc194\u00b7\ubb34\ub825(\ud3c9\uade0). \ub2a5\ub825\uce58\uac00 \ub370\uc774\ud130\uc5d0 \uc5c6\ub294 \uc804\ub300\ub294 \ud1b5\uc194\ub85c \ub300\uc2e0\ud55c\ub2e4(M4, REVIEW-M3 \ud6c4\uc18d)"
+          },
+          "formation_damage_mul": {
+            "FRM-06": 0.9,
+            "status": "proposed",
+            "note": "\u00a74.3 \uc7a5\uc0ac\uc9c4 \u00d70.9. \uc0c1\uc131 \u00d71.2\uc640 \uc804\ud658 \uc911 \u00d70.8\uc740 combat.formation_rules"
+          },
+          "terrain_mul": 1.0
+        },
+        "loss": {
+          "exposed_share_bp": 6000,
+          "source": "\u00a74.4 \uc138\uc158 Q5\u00b7Q6 (\uc81c\uc548\uac12): \ub9de\uc740 \ubc29\ud5a5\uc758 \ub178\ucd9c \ud568\uc885 60%, \ub098\uba38\uc9c0 40%",
+          "exposure": {
+            "FRM-01": {
+              "front": [
+                "SHP-04"
+              ],
+              "flank": [
+                "SHP-07",
+                "SHP-03",
+                "SHP-08"
+              ],
+              "rear": [
+                "SHP-05",
+                "SHP-01"
+              ]
+            },
+            "FRM-02": {
+              "front": [
+                "SHP-04",
+                "SHP-07"
+              ],
+              "flank": [
+                "SHP-04",
+                "SHP-08"
+              ],
+              "rear": [
+                "SHP-03",
+                "SHP-05"
+              ]
+            },
+            "FRM-03": {
+              "front": [
+                "SHP-04"
+              ],
+              "flank": [
+                "SHP-04"
+              ],
+              "rear": [
+                "SHP-04",
+                "SHP-07"
+              ]
+            },
+            "FRM-04": {
+              "front": [
+                "SHP-03",
+                "SHP-04"
+              ],
+              "flank": [
+                "SHP-03",
+                "SHP-08"
+              ],
+              "rear": [
+                "SHP-05",
+                "SHP-02"
+              ]
+            },
+            "FRM-05": {
+              "front": [
+                "SHP-01",
+                "SHP-04"
+              ],
+              "flank": [
+                "SHP-07",
+                "SHP-08"
+              ],
+              "rear": [
+                "SHP-05",
+                "SHP-03"
+              ]
+            },
+            "FRM-06": {
+              "front": [
+                "SHP-04"
+              ],
+              "flank": [
+                "SHP-03",
+                "SHP-05",
+                "SHP-01"
+              ],
+              "rear": [
+                "SHP-05"
+              ]
+            },
+            "FRM-07": {
+              "front": [
+                "SHP-04"
+              ],
+              "flank": [
+                "SHP-04",
+                "SHP-07"
+              ],
+              "rear": [
+                "SHP-04"
+              ]
+            }
+          },
+          "exposure_note": "\u00a74.4 \uc9c4\ud615\ubcc4 \ub178\ucd9c \ud568\uc885 \ud45c \uc804\uccb4(\uc81c\uc548\uac12, M5). \uc804\ud658 \uc911\uc5d0\ub294 \uc774\uc804 \uc9c4\ud615\uc758 \ud45c\ub97c \uc4f4\ub2e4"
+        },
+        "stage": {
+          "names": [
+            "intact",
+            "light",
+            "moderate",
+            "heavy",
+            "sunk"
+          ],
+          "power": [
+            1.0,
+            0.9,
+            0.65,
+            0.0,
+            0.0
+          ],
+          "heavy_share_bp": {
+            "contact": 8000,
+            "barrage": 5000,
+            "engagement": 6000,
+            "assault": 7500,
+            "resolution": 5500
+          },
+          "heavy_share_source": "\uc815\ubcf8 ship-specs.md \u00a73.7 (\u00a74.5)",
+          "hull_floor": [
+            {
+              "below_bp": 7500,
+              "moderate_share_bp": 2500
+            },
+            {
+              "below_bp": 4000,
+              "moderate_share_bp": 5000
+            }
+          ]
+        },
+        "resources": {
+          "energy_base": 80,
+          "energy_per_ship": 12,
+          "heat_base": 100,
+          "heat_per_ship": 8,
+          "recovery_period_s": 60,
+          "energy_recover_bp": 2000,
+          "heat_cool_base": 30,
+          "heat_cool_per_ship": 2,
+          "heat_cool_status": "proposed (K5, Q49: 30 + \ucc99 \uc218 \u00d7 2)",
+          "suppression_reasons": {
+            "ammo": "\ud0c4\uc57d \ubd80\uc871",
+            "energy": "\uc5d0\ub108\uc9c0 \ubd80\uc871",
+            "overheat": "\uacfc\uc5f4 \ud55c\uacc4",
+            "carrier_not_returned": "\ud568\uc7ac\uae30 \ubbf8\ubcf5\uadc0",
+            "special": "\ud2b9\uc218 \uc790\uc6d0 \ubd80\uc871"
+          }
+        },
+        "bands": {
+          "assault_r": 80,
+          "assault_status": "proposed (\u00a74.2)",
+          "artillery_default_r": 260,
+          "line_fire_default_r": 180,
+          "note": "\uad50\uc804 \uac70\ub9ac\ub300 = \uc804\uc5f4 \uc0ac\uaca9 \uc0ac\uac70\ub9ac \uc548, \ud3ec\ud654 = \ud3ec\uaca9 \uc0ac\uac70\ub9ac \uc548(\u00a74.2). \ud568\uc885\uc774 \uc5c6\uc73c\uba74 \uae30\ubcf8 \uc0ac\uac70\ub9ac\ub97c \uc4f4\ub2e4"
+        },
+        "movement": {
+          "turn_div": 60,
+          "turn_deg_per_s": 9,
+          "strafe_speed_bp": 6000,
+          "face_tolerance_deg": 1,
+          "max_waypoints": 5,
+          "flip_over_deg": 90,
+          "bundle_gap": 30,
+          "flip_s": 1,
+          "contact_r": 600,
+          "contact_fast_deg": 45,
+          "status": "proposed (turn_deg_per_s\u00b7strafe_speed_bp: \u00a74.2 \uc81c\uc790\ub9ac \uc120\ud68c 180\u00b0\uc5d0 20\ucd08, \ud3c9\ud589 \uc774\ub3d9\uc740 \uc804\uc9c4 \uc18d\ub3c4\uc758 60%. \uc815\ubcf8\uc5d0 \uc218\uce58 \uc5c6\uc74c)",
+          "note": "\uc804\ub300 \uc18d\ub3c4 = \ud3b8\uc131\uc5d0\uc11c \uac00\uc7a5 \ub290\ub9b0 \ud568\uc885\uc758 \ud134\ub2f9 \uc18d\ub3c4 / 60 (px/\ucd08) \u00d7 (100 + \uc9c4\ud615 \uae30\ub3d9%) / 100 (\u00a74.2). \uacbd\uc720\uc810\uc740 \ucd5c\ub300 max_waypoints(\uacbd\uc720 + \ubaa9\uc801\uc9c0)"
+        },
+        "formation_rules": {
+          "transition_s": 5,
+          "untrained_transition_s": 5,
+          "transition_damage_mul": 0.8,
+          "defense_id": "FRM-03",
+          "defense_note": "POC \ubc29\uc5b4\uc9c4\ud615 \ubc84\ud2bc\uc740 \uc0ad\uc81c\ud588\ub2e4(\u00a79 POC \ucc98\ubd84). \uac19\uc740 \uc5ed\ud560\uc740 \ubc29\uc6d0\uc9c4\uc774 \ub9e1\uace0, \uc801 AI\uac00 \uc120\uccb4\uac00 \uc904\uba74 \uc774 \uc9c4\ud615\uc73c\ub85c \ubc14\uafbc\ub2e4",
+          "master_id": "FRM-07",
+          "master_min_command": 90,
+          "master_trait": "\uc2e0\uae30\ubb18\uc0b0",
+          "master_transition_div": 2,
+          "status": "\uc804\ud658 5\ucd08(\ud1b5\uc194 \ubbf8\ub2ec\ub3c4 5\ucd08)\u00b7\uc804\ud658 \uc911 \u00d70.8. \ud314\uc9c4 \uc804\ud658 \uc808\ubc18\uc740 proposed(\u00a74.7)",
+          "affinity": {
+            "FRM-02": "FRM-01",
+            "FRM-01": "FRM-03",
+            "FRM-03": "FRM-05",
+            "FRM-05": "FRM-04",
+            "FRM-04": "FRM-02"
+          },
+          "affinity_mul": 1.2,
+          "affinity_band": "engagement",
+          "terrain": {
+            "base_route": {
+              "name": "\uae30\uc800 \ud56d\ub85c",
+              "banned": [
+                "FRM-02",
+                "FRM-04"
+              ]
+            },
+            "mid_corridor": {
+              "name": "\uc911\ud68c\ub791",
+              "only": [
+                "FRM-03",
+                "FRM-05",
+                "FRM-06"
+              ]
+            },
+            "great_corridor": {
+              "name": "\ub300\ud68c\ub791",
+              "forced": "FRM-06"
+            },
+            "source": "\uc815\ubcf8 ship-specs \u00a75.3. \uc801\ubcbd \uc804\uc7a5\uc740 \uac1c\ud65c\uc774\ub77c \uc2dc\ub098\ub9ac\uc624 battlefield_class\uac00 \uc5c6\uc73c\uba74 \uc81c\ud55c \uc5c6\uc74c"
+          }
+        },
+        "charge": {
+          "heat_share_bp": 4000,
+          "min_morale_bp": 6000,
+          "status": "proposed (Q28\u00b7Q42: \uc5f4 40% + \uc0ac\uae30 \uc548\uc815 \uc870\uac74)"
+        },
+        "first_volley_stagger_s": {
+          "value": 0,
+          "status": "proposed",
+          "note": "M3 \ub9ac\ubdf0 \ud6c4\ubcf4(\u00a74.3): \uc804\ub300\uac00 \uccab \uc77c\uc81c\ub97c \uc3dc \ub4a4 \ub2e4\uc74c \uc8fc\uae30\uc5d0 0~N\ucd08\ub97c \ub354\ud574 \uc5c7\uac08\ub9b0\ub2e4. 0\uc774\uba74 \ub048\ub2e4. M4\uc5d0\uc11c 0\uacfc 15\ub97c \uac19\uc740 \uc2dc\ub4dc\ub85c \uc7b0\ub2e4"
+        },
+        "start": {
+          "face_nearest_foe": true,
+          "phase_stagger": true,
+          "note": "\ucd08\uae30 \ubc29\ud5a5\uc740 \uac00\uc7a5 \uac00\uae4c\uc6b4 \uc801 \uc804\ub300\ub97c \ud5a5\ud55c\ub2e4(\u00a74.2). \uc8fc\uae30 \uc2dc\uc791 \ud2f1\uc740 \uc804\ub300 ID\uc5d0\uc11c \uc720\ub3c4\ud574 \uc5c7\uac08\ub9b0\ub2e4(\u00a74.3)"
+        },
+        "detection": {
+          "ship_sensor": {
+            "SHP-01": 3,
+            "SHP-02": 1,
+            "SHP-03": 1,
+            "SHP-04": 1,
+            "SHP-05": 2,
+            "SHP-06": 8,
+            "SHP-07": 2,
+            "SHP-08": 0
+          },
+          "ship_ew": {
+            "SHP-01": 1,
+            "SHP-02": 0,
+            "SHP-03": 0,
+            "SHP-04": 0,
+            "SHP-05": 1,
+            "SHP-06": 3,
+            "SHP-07": 0,
+            "SHP-08": 0
+          },
+          "equip_sensor": {
+            "FAST-EQ-INTERCEPT": 1,
+            "FAST-EQ-TORPEDO": 0,
+            "FAST-EQ-RECON": 6,
+            "FAST-EQ-RESCUE": 2
+          },
+          "equip_ew": {
+            "FAST-EQ-INTERCEPT": 0,
+            "FAST-EQ-TORPEDO": 0,
+            "FAST-EQ-RECON": 1,
+            "FAST-EQ-RESCUE": 1
+          },
+          "intellect_bands": [
+            {
+              "min": 0,
+              "max": 49,
+              "sensor_points": 0
+            },
+            {
+              "min": 50,
+              "max": 69,
+              "sensor_points": 6
+            },
+            {
+              "min": 70,
+              "max": 84,
+              "sensor_points": 12
+            },
+            {
+              "min": 85,
+              "max": 94,
+              "sensor_points": 16
+            },
+            {
+              "min": 95,
+              "max": 100,
+              "sensor_points": 20
+            }
+          ],
+          "distance_units_per_point": 25,
+          "ship_points_div": 3,
+          "confirmed": 30,
+          "confirmed_status": "proposed (\ubcf8\ud3b8 37. M6 \uce21\uc815: 37\uc774\uba74 \ud45c\uc900 \uc870\uc870\uac00 \ud655\uc778 \ub4f1\uae09\uc744 \uac70\uc758 \ubabb \ubc1b\ub294\ub2e4 \u2014 attack 32%, none 0%. 30\uc774\uba74 100%. EXPERIENCE-DESIGN \u00a78 3\uc548)",
+          "estimated": 15,
+          "turn_s": 60,
+          "memory_s": 180,
+          "lost_s": 60,
+          "confidence_bp": 5000,
+          "confidence_loss_bp_per_turn": 1000,
+          "confidence_min_bp": 1500,
+          "error_radius": 30,
+          "error_radius_per_turn": 25,
+          "eval_period_s": 1,
+          "strength_bands": 4,
+          "view_r": 150,
+          "radar_r": 300,
+          "sensor_bp_clamp": [
+            -6000,
+            3000
+          ],
+          "no_contact_patrol": {
+            "offset": [
+              -60,
+              40
+            ],
+            "source": "\ubcf8\ud3b8 red-cliffs-ai-rules.json cao_cao.no_contact_action=patrol. \uc811\ucd09\uc774 \uc5c6\uace0 \ud22c\uc785 \ub300\uae30\uac00 \ub05d\ub09c \uc870\uc870\uad70 \uc804\ub300\ub294 \uc774 \ubc29\ud5a5\uc73c\ub85c \uc804\uc9c4\ud55c\ub2e4"
+          },
+          "eval_status": "proposed (\ud3c9\uac00 \uc8fc\uae30 1\ucd08\ub294 \uc2e4\uc2dc\uac04 \ud658\uc0b0. \ubcf8\ud3b8\uc740 \ud134\ub9c8\ub2e4 \ud55c \ubc88. strength_bands: \ud655\uc778 \uc811\ucd09\uc5d0 \uacf5\uac1c\ud558\ub294 \uc804\ub825 \uad6c\uac04 \uc218)",
+          "source": "\ubcf8\ud3b8 red-cliffs-sensor-ew-rules.json, red-cliffs-fog-of-war-rules.json. \uc2e0\ub8b0\ub3c4 \uc2dc\uc791\uac12\uc740 \uc2dc\ub098\ub9ac\uc624 realtime_rules.fog_override\uac00 \ub36e\ub294\ub2e4"
+        },
+        "supply": {
+          "ship_type_id": "SHP-05",
+          "ship_radius": 140,
+          "capacity_per_ship": 1,
+          "base_radius": 180,
+          "base_capacity": 4,
+          "bases": [
+            {
+              "id": "RC-BASE-LIU-01",
+              "faction_id": "liu_bei",
+              "position": [
+                120,
+                780
+              ]
+            },
+            {
+              "id": "RC-BASE-SUN-01",
+              "faction_id": "sun_quan",
+              "position": [
+                300,
+                440
+              ]
+            },
+            {
+              "id": "RC-BASE-CAO-01",
+              "faction_id": "cao_cao",
+              "position": [
+                1460,
+                180
+              ]
+            }
+          ],
+          "mutual": [
+            [
+              "liu_bei",
+              "sun_quan"
+            ]
+          ],
+          "per_ship": {
+            "ammo": 12,
+            "materials": 4
+          },
+          "throughput_bp": {
+            "operational": 10000,
+            "moderate_damage": 5000,
+            "heavy_damage": 2500
+          },
+          "materials_per_refill": 1,
+          "charge_cost": {
+            "ammo_per_charge": 2,
+            "materials_per_cycle": 1,
+            "status": "proposed (Q69 \uc0ac\uc6a9\uc790 \uacb0\uc815: \ud69f\uc218 \ubcf4\ucda9 1\ud68c\ub2f9 \ubcf4\uae09\ud568 \uc7ac\uace0 \uc18c\ubaa8. \uae30\ubcf8\uac12 = \ud69f\uc218 1\ud68c\ub2f9 \ud0c4\uc57d 2 + \ubcf4\ucda9 \ud55c \uc8fc\uae30\ub9c8\ub2e4 \ubb3c\uc790 1. \ubcf4\uae09\ud568 1\ucc99 \uc7ac\uace0(\ud0c4\uc57d 12\u00b7\ubb3c\uc790 4)\ub85c 3\ud68c\uc9dc\ub9ac \ubcf4\ucda9 2\ubc88 \uc815\ub3c4. \uae30\uc9c0\ub294 \uc7ac\uace0 \ubb34\ud55c)"
+          },
+          "self_supply": false,
+          "priority": [
+            "ammo_ratio_asc",
+            "still_since_asc",
+            "squadron_id_asc"
+          ],
+          "priority_note": "\ubcf8\ud3b8\uc740 \ub0a8\uc740 \uc5f0\ub8cc \ube44\uc728 \u2192 \ub4e4\uc5b4\uc628 \ud134 \u2192 \uc804\ub300 ID. \uc5f0\ub8cc\uac00 \uc5c6\uc5b4 \ud0c4\uc57d \ube44\uc728\ub85c \uc62e\uacbc\ub2e4(\u00a74.13)",
+          "stationary_s": 60,
+          "still_eps_px_s": 0.5,
+          "repair": {
+            "materials": 1,
+            "light_recover_s": 120
+          },
+          "status": "proposed (Q48: \ubcf8\ud3b8 1\ud134 \uc815\uc9c0 \u2192 60\ucd08. \uc190\uc0c1\ub41c \ubcf4\uae09\ud568 \uc804\ub300\uc758 \ucc98\ub9ac\ub7c9 50%\u00b725%\ub294 \ubcf8\ud3b8\uc758 \ud134\ub2f9 \uc2ac\ub86f \ud06c\ub808\ub527 \ub300\uc2e0 \uc9c4\ud589 \uc18d\ub3c4\ub85c \uc62e\uacbc\ub2e4(60\ucd08 \u2192 120\ucd08\u00b7240\ucd08). \uc815\uc9c0\ub294 \ucd08\ub2f9 \uc774\ub3d9 still_eps_px_s px \uc774\ud558(\ud2f1 \ud3ed\uc73c\ub85c \ud658\uc0b0). \uae30\uc9c0\ub294 \uc7ac\uace0 \ubb34\ud55c\u00b7\uc218\ub9ac \ubb3c\uc790 \uc5c6\uc74c. \uc218\ub9ac: \uc8fc\uae30\ub9c8\ub2e4 \ubb3c\uc790 1\ub85c \uc911\ud30c 1\ucc99 \u2192 \uacbd\ud30c, \uacbd\ud30c\ub294 \ub9c8\uc9c0\ub9c9 \ud53c\uaca9 \ub4a4 120\ucd08\uba74 \ubb34\uc190\uc0c1(P16))",
+          "source": "\ubcf8\ud3b8 red-cliffs-fast-craft-rules.json supply_contract\u00b7supply_inventory_contract(\uc7ac\uace0 \uc190\uc2e4 floor(\uc7ac\uace0 \u00d7 (N \u2212 d) / N), \uc804\ub7c9 \ubcf4\ucda9\ub9cc, \uac19\uc740 \uc138\ub825 \uae30\uc9c0\uc5d0\uc11c \uc7ac\uc801\uc7ac)"
+        }
+      }
+    },
+    "seed": 0,
+    "hz": 10,
+    "initial_controls": [
+      "delegate",
+      "delegate"
+    ],
+    "policy": "none",
+    "max_ticks": 1
+  },
+  "commands": [
+    {
+      "tick": 0,
+      "side": 0,
+      "ids": [
+        1
+      ],
+      "kind": "attack",
+      "target_id": 2,
+      "point": [
+        0,
+        0
+      ],
+      "args": {}
+    }
+  ]
+}

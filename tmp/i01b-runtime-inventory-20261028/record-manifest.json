@@ -1,0 +1,142 @@
+{
+  "finalized_kst_date": "2026-10-29",
+  "evidence_original_date": "2026-10-28",
+  "manifest_excludes_self": true,
+  "files": [
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\docs\\battle-core\\CHECKLIST-OPEN.md",
+      "sha256": "9554a7eaa884769e35782ed1ea69a3775c0a03f33522312e7eb0f9f5a0621765",
+      "bytes": 116727
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\docs\\battle-core\\pc-campaign-design\\I01B-P2A-RESULT-20261028.md",
+      "sha256": "ef9acc497e86c7636bfb20ea03c3021e9455705e31595227cbb8be8d318ceaac",
+      "bytes": 7327
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\docs\\battle-core\\pc-campaign-design\\REVIEW-I01B-P2A-20261028.md",
+      "sha256": "b405ac8bb9eecf1d589c2f0585dfe3ce31d95950d6c33cba403ed272acf25848",
+      "bytes": 4522
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tests\\i01b_runtime_inventory.gd",
+      "sha256": "a83438ff50d9eb38f5b120c0b81db04e59cad9e0a1099387d26b08ff824a2484",
+      "bytes": 11026
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\before.json",
+      "sha256": "0e9874237837d3f7f33fe236617a2cdd69e2daf822b59f87470771939d58f466",
+      "bytes": 220157
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\checklist-before-p2a-record.md",
+      "sha256": "a2c38e1d267aa5349f07291343c9896294c4d895b5b7632fe5c0c0f85d77ac9a",
+      "bytes": 116306
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\checklist-one-line-proof.json",
+      "sha256": "d7535ca5097833ad1a7a0a105ccf407985fa8442c50763d1ddecf55dce4bdf1e",
+      "bytes": 732
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\final-delivery-audit.json",
+      "sha256": "08486731144042cae1276c6f1a18861b977cc4624dc25167e7ee33a0758b3cb4",
+      "bytes": 1983
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\core_rules.captured-output.log",
+      "sha256": "e3851d9bbb3ea4d93e5ee74c397a8872c9d340c0a3acbd68b4863dcbc4f444d8",
+      "bytes": 88
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\core_rules.log",
+      "sha256": "f840d3c0784ee9beff94eea1b3de8aed303664f88fa73b47ccc06b422dfaa4d8",
+      "bytes": 89
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\data_rules.captured-output.log",
+      "sha256": "1d2ba559122d1fdd2952f929837a253354bd87289ed90f5dcb99b5bee71328ab",
+      "bytes": 548
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\data_rules.log",
+      "sha256": "6b08d1876d6725798108a76e12d0c6eab8b5961cb8466477f1014e1a594ba829",
+      "bytes": 301
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\detection_rules.captured-output.log",
+      "sha256": "9e12d1c9471cb859bb7fe8c12c56c160ba647c4d237c297023f6d6a82a1fff92",
+      "bytes": 341
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\detection_rules.log",
+      "sha256": "4fb41698c9e3d977a828df94523687cf662705b2f603121ee345285035d41032",
+      "bytes": 94
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\i01_operation_config.captured-output.log",
+      "sha256": "baecee868f04a5edcd8b99c3306794b207719da702aa3d716f5748db45f06f99",
+      "bytes": 291
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\i01_operation_config.log",
+      "sha256": "e4abb51256f8f8dc88db6aa95ddcc57d1612deb8207b155319cf6eb7bcb22bbf",
+      "bytes": 292
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\i01b_logical_clock.captured-output.log",
+      "sha256": "43e93cc17d1ce5eea302306991ffa035d8ccccae4ca47b6e5b884406e80cb1a7",
+      "bytes": 290
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\i01b_logical_clock.log",
+      "sha256": "58ddc2dc76aa1a559a65aa76788349496b2358644b424399bc4ccf71de2380c2",
+      "bytes": 291
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\inventory-attempt1.log",
+      "sha256": "81e765e0a68e7c76aa46c99724b0ba068ab36cbd202ee0e1014777e75afed152",
+      "bytes": 226
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\supply_rules.captured-output.log",
+      "sha256": "1fe0af6088c9f4317d902bf281ac40d90a67191b5580405bc75e72284ab537cb",
+      "bytes": 338
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\logs\\supply_rules.log",
+      "sha256": "1dd6ccc818c7d15b987fb8bee3049f4f2022302499d074331b80df6eb94e1e2d",
+      "bytes": 91
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\observations.json",
+      "sha256": "f450c63953955c022b3512811a4b5fee0ac7371aeb93f0d1bb8ab7dacafe7de6",
+      "bytes": 2689202
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\PLAN.md",
+      "sha256": "b5fee00965be67ff5b55342e9ea8d36aa22cda091948cfa18ea07ff5c230bdce",
+      "bytes": 2100
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\preservation-audit.json",
+      "sha256": "6b3dd71f9a0966963a60d936c64c642ce63bcbfe1c2c9438d777f031b74f03be",
+      "bytes": 974
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\regression-results.json",
+      "sha256": "f27944811a4404a0c7264cef1a53654a02873c3dd4fef11e9ad2ef6ea8560663",
+      "bytes": 6630
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\run-gates.ps1",
+      "sha256": "29e379ed68e349ae51c0f1e4f2ff1d976d82dea158e765b3315feaa5f4dd1a2a",
+      "bytes": 1439
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-runtime-inventory-20261028\\test-results.json",
+      "sha256": "0903e181593872e3042b64f93e123d11b2c1fa98f3b0b9805c0d49afade7eba4",
+      "bytes": 11162
+    }
+  ]
+}

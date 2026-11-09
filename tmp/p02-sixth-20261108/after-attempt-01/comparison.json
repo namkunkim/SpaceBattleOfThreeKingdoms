@@ -1,0 +1,93 @@
+{
+  "accepted": true,
+  "processes": {
+    "atomic": {
+      "pass": true,
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": [
+        "ERROR: [FleetBattle3D] invalid_candidate_profile at profile",
+        "ERROR: [FleetBattle3D] invalid_candidate_profile at profile.ally",
+        "ERROR: [FleetBattle3D] invalid_candidate_profile at profile",
+        "ERROR: [FleetBattle3D] invalid_candidate_profile at profile",
+        "ERROR: [FleetBattle3D] invalid_candidate_profile at profile",
+        "ERROR: [FleetBattle3D] invalid_candidate_profile at profile",
+        "ERROR: [FleetBattle3D] invalid_candidate_profile at profile",
+        "ERROR: [FleetBattle3D] invalid_candidate_profile at profile",
+        "ERROR: [FleetBattle3D] invalid_candidate_profile at profile",
+        "ERROR: [FleetBattle3D] invalid_candidate_profile at profile"
+      ],
+      "leaks": [
+        "WARNING: 351 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 18 resources still in use at exit (run with --verbose for details)."
+      ],
+      "marker": "SIXTH_ATOMIC rows=10 checks=546 fails=0"
+    },
+    "battle-flow": {
+      "pass": true,
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": [],
+      "leaks": [
+        "WARNING: 165 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 24 resources still in use at exit (run with --verbose for details)."
+      ],
+      "marker": "BATTLE_FLOW_PASS"
+    },
+    "common": {
+      "pass": true,
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": [
+        "ERROR: 프로필 파일이 없다: res://data/profiles/p02_sixth_missing.json",
+        "ERROR: 프로필 파일이 없다: res://data/profiles/p02_sixth_missing.json",
+        "ERROR: 시나리오를 읽지 못해 시험 전장으로 엽니다 (res://data/profiles/p02_sixth_missing.json, 표준)"
+      ],
+      "leaks": [
+        "WARNING: 322 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 20 resources still in use at exit (run with --verbose for details)."
+      ],
+      "marker": "SIXTH_COMMON rows=8 checks=27 fails=0"
+    },
+    "organization": {
+      "pass": true,
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": [
+        "ERROR: 알 수 없는 난이도: 없는 난이도",
+        "ERROR: 알 수 없는 난이도: 없는 난이도",
+        "ERROR: 시나리오를 읽지 못해 시험 전장으로 엽니다 (res://data/profiles/red_cliffs_rt.json, 없는 난이도)"
+      ],
+      "leaks": [
+        "WARNING: 511 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 20 resources still in use at exit (run with --verbose for details)."
+      ],
+      "marker": "ORGANIZATION_UI_PASS"
+    },
+    "world-clean": {
+      "pass": true,
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": [
+        "ERROR: TEST_FAIL 천하에서 오면 브리핑부터 (prologue)"
+      ],
+      "leaks": [
+        "WARNING: 154 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 20 resources still in use at exit (run with --verbose for details)."
+      ],
+      "marker": "WORLD_LINK_FAIL 1"
+    },
+    "world-returning": {
+      "pass": true,
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": [],
+      "leaks": [
+        "WARNING: 154 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 20 resources still in use at exit (run with --verbose for details)."
+      ],
+      "marker": "WORLD_LINK_PASS"
+    }
+  },
+  "common_differences": []
+}

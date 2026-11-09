@@ -1,0 +1,28 @@
+{
+  "entries": [
+    {
+      "source": "C:\\Users\\nk782\\.codex\\sessions\\2026\\11\\01\\rollout-2026-11-01T15-16-01-01a195c0-2a7d-75e0-9e71-3e703d4856cc.jsonl",
+      "session_meta.source.subagent.thread_spawn.agent_path": "/root/p2c_continue",
+      "turn_context.model": [
+        "gpt-6.1-sol"
+      ]
+    },
+    {
+      "source": "C:\\Users\\nk782\\.codex\\sessions\\2026\\11\\01\\rollout-2026-11-01T21-07-51-01a19702-481b-7433-8624-33e936f50384.jsonl",
+      "session_meta.source.subagent.thread_spawn.agent_path": null,
+      "turn_context.model": [
+        "gpt-6.1-sol"
+      ]
+    },
+    {
+      "source": "C:\\Users\\nk782\\.codex\\sessions\\2026\\11\\01\\rollout-2026-11-01T21-08-07-01a19702-8698-79d0-b9cf-f3eea3c7055c.jsonl",
+      "session_meta.source.subagent.thread_spawn.agent_path": "/root/independent_review",
+      "turn_context.model": [
+        "gpt-6-astra"
+      ]
+    }
+  ],
+  "current_executor_source_note": "audit_execution live spawn inherits gpt-6.1-sol; its local rollout retained parent session_meta, so model is directly recorded but agent_path is unavailable in that file",
+  "independent_reviewer_dispatch": "gpt-6-astra",
+  "metadata_only": true
+}

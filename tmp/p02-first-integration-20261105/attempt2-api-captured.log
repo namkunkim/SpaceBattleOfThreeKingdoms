@@ -1,0 +1,15 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: P02_ADAPTER_FAIL timeout raw one step
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] check (res://tmp/p02-first-integration-20261105/attempt2-api-runner.gd:23)
+       [1] timeout_case (res://tmp/p02-first-integration-20261105/attempt2-api-runner.gd:190)
+       [2] _run (res://tmp/p02-first-integration-20261105/attempt2-api-runner.gd:354)
+ERROR: P02_ADAPTER_FAIL timeout raw one step
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] check (res://tmp/p02-first-integration-20261105/attempt2-api-runner.gd:23)
+       [1] timeout_case (res://tmp/p02-first-integration-20261105/attempt2-api-runner.gd:190)
+       [2] _run (res://tmp/p02-first-integration-20261105/attempt2-api-runner.gd:354)
+P02_ADAPTER_FAIL cases=8 checks=13417 rejections=32 natural=7 timeout=1

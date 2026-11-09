@@ -1,0 +1,13 @@
+{
+  "archive": "tmp/P02-VIEWER-EVENTS-DELIVERY-20261108.zip",
+  "bytes": 3336707,
+  "sha256": "634912cc31a7115ca4fb5534ff12f2add4cbfc4c6f48697bf5dc781a2175fb2a",
+  "manifest": {
+    "bytes": 52759,
+    "sha256": "b981db3ad6dae03034e309cb601abc6fb1d310c742b6de2838b4d503f437d155"
+  },
+  "member_count_including_manifest": 280,
+  "member_byte_hash_matches": 280,
+  "crc": true,
+  "unique_exact_member_set": true
+}

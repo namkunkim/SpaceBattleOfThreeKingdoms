@@ -1,0 +1,11 @@
+--- v5/owned_job_v3.py
++++ candidate/owned_job_python_nowindow_candidate.py
+@@ -32,7 +32,7 @@
+     if not argv or not Path(argv[0]).is_absolute():
+         return 124
+     # Inherits the Job and output streams. No breakaway flag is set.
+-    return subprocess.call(argv, stdin=subprocess.DEVNULL)
++    return subprocess.call(argv, stdin=subprocess.DEVNULL, creationflags=subprocess.CREATE_NO_WINDOW)
+ 
+ class OwnedJob:
+     def __init__(self):

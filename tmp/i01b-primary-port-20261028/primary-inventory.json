@@ -1,0 +1,2578 @@
+{
+  "version": "i01b-p0-inventory-v1",
+  "baseline_head": "8292805143f4561a4f5258d40b7b94adf4ff5802",
+  "freeze_sha256": "423fd845aabf984f977de6da6c204e234a471cdc9844cedd4b084cf8fdcfac55",
+  "status": "DECLARATIONS_OBSERVED",
+  "module_count": 19,
+  "field_count": 283,
+  "files": [
+    {
+      "path": "core/battle/battle_sim.gd",
+      "class_name": "BattleSim",
+      "sha256": "670916af166c1f67fd58f6ab3007782a598a7a8f6fea72024042e1945beb967a",
+      "fields": [
+        {
+          "owner": "BattleSim",
+          "name": "profile_id",
+          "line": 11,
+          "declaration_text": "var profile_id := \"\"",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "rs",
+          "line": 12,
+          "declaration_text": "var rs: RuleSet",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "R",
+          "line": 13,
+          "declaration_text": "var R: Dictionary          # rs.v (규칙 수치, 프로필 JSON)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "st",
+          "line": 14,
+          "declaration_text": "var st: BattleState",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "rng",
+          "line": 15,
+          "declaration_text": "var rng: BattleRng",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "dt",
+          "line": 16,
+          "declaration_text": "var dt := BattleRules.TICK_S",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "command_log",
+          "line": 17,
+          "declaration_text": "var command_log: Array[Dictionary] = []",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "_queue",
+          "line": 18,
+          "declaration_text": "var _queue: Array[Dictionary] = []",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "_events",
+          "line": 19,
+          "declaration_text": "var _events: Array[Dictionary] = []",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "_ai",
+          "line": 20,
+          "declaration_text": "var _ai := PocEnemyAi.new()",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "T",
+          "line": 22,
+          "declaration_text": "var T := {}",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "sub_ms",
+          "line": 23,
+          "declaration_text": "var sub_ms := 0              # 틱마다 정해진다(_tick)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "_reinf_def",
+          "line": 24,
+          "declaration_text": "var _reinf_def: Array = []",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "morale",
+          "line": 25,
+          "declaration_text": "var morale: MoraleCore = null   # M4 사기. 시나리오 프로필(salvo + realtime_rules)에서만 켜진다",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "victory",
+          "line": 26,
+          "declaration_text": "var victory: Victory = null     # M4 승패(§4.12). 없으면 POC 종료 조건(기함 상실·섬멸)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "salvo",
+          "line": 27,
+          "declaration_text": "var salvo: SalvoCombat = null   # M3 사격·피해 규칙. combat 사전이 있는 프로필에서만 켜진다(없으면 POC 규칙)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "terrain",
+          "line": 28,
+          "declaration_text": "var terrain: BattleTerrain = null   # M6 지형. combat.terrain이 있을 때",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "cai",
+          "line": 29,
+          "declaration_text": "var cai: CommanderAi = null     # M7 지휘관 AI. 프로필에 ai 수치가 있을 때(적벽)만. 없으면 POC AI",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "decisions",
+          "line": 30,
+          "declaration_text": "var decisions: DecisionBoard = null   # M7 결정 카드(시나리오 realtime_rules.decision_cards가 있을 때)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "first_hit_tick",
+          "line": 31,
+          "declaration_text": "var first_hit_tick := -1        # 첫 명중 틱(양측이 아는 공개 사실). AI의 거리대 일정이 이 시각에서 센다",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "detect",
+          "line": 32,
+          "declaration_text": "var detect: Detection = null    # M6 탐지·전쟁 안개. combat.detection이 있을 때만 켜진다(없으면 완전 정보)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "supply",
+          "line": 33,
+          "declaration_text": "var supply: SupplyCore = null   # M8 보급과 수리. combat.supply가 있을 때만 켜진다",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "chain",
+          "line": 34,
+          "declaration_text": "var chain: ChainOp = null       # M9 화공·위장 항복. 시나리오 chain_operation과 combat.stratagem이 있을 때",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "cmd",
+          "line": 35,
+          "declaration_text": "var cmd: CommandCore = null     # M9 장수 사상·지휘 승계·혼선. 시나리오와 combat.command가 있을 때",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "assault",
+          "line": 36,
+          "declaration_text": "var assault: AssaultCore = null # M9 강습(부대 강습·기함 진입). 시나리오와 combat.assault가 있을 때",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "skills",
+          "line": 37,
+          "declaration_text": "var skills: SkillCore = null    # P8a 장수 특기. 시나리오 realtime_rules.special_skills가 있을 때(슬롯은 편성 apply가 넣는다)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "_hold_d2",
+          "line": 1161,
+          "declaration_text": "var _hold_d2 := -1.0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleSim",
+          "name": "endless",
+          "line": 1213,
+          "declaration_text": "var endless := false   # 시험용: true면 승패가 나도 전투를 끝내지 않는다(적 없는 조작 시험)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        }
+      ]
+    },
+    {
+      "path": "core/battle/battle_state.gd",
+      "class_name": "BattleState",
+      "sha256": "0c7f4589156e642ade356e0785c3096bb305ac1e2328607e9973e173d1ed9e5b",
+      "fields": [
+        {
+          "owner": "BattleState.Missile",
+          "name": "id",
+          "line": 7,
+          "declaration_text": "\tvar id := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState.Missile",
+          "name": "pos",
+          "line": 8,
+          "declaration_text": "\tvar pos := Vector2.ZERO",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState.Missile",
+          "name": "target_id",
+          "line": 9,
+          "declaration_text": "\tvar target_id := -1",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState.Missile",
+          "name": "src_id",
+          "line": 10,
+          "declaration_text": "\tvar src_id := -1",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState.Missile",
+          "name": "dmg",
+          "line": 11,
+          "declaration_text": "\tvar dmg := 0          # 1/1000척",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState.Missile",
+          "name": "v",
+          "line": 12,
+          "declaration_text": "\tvar v := 0.0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState.Missile",
+          "name": "wob",
+          "line": 13,
+          "declaration_text": "\tvar wob := 0.0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState.Missile",
+          "name": "age",
+          "line": 14,
+          "declaration_text": "\tvar age := 0          # ms",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState.Missile",
+          "name": "side",
+          "line": 15,
+          "declaration_text": "\tvar side := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState.Missile",
+          "name": "dead",
+          "line": 16,
+          "declaration_text": "\tvar dead := false",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState.Swarm",
+          "name": "id",
+          "line": 19,
+          "declaration_text": "\tvar id := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState.Swarm",
+          "name": "src_id",
+          "line": 20,
+          "declaration_text": "\tvar src_id := -1",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState.Swarm",
+          "name": "target_id",
+          "line": 21,
+          "declaration_text": "\tvar target_id := -1",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState.Swarm",
+          "name": "life",
+          "line": 22,
+          "declaration_text": "\tvar life := 0         # ms",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState.Swarm",
+          "name": "side",
+          "line": 23,
+          "declaration_text": "\tvar side := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState.Swarm",
+          "name": "dps",
+          "line": 24,
+          "declaration_text": "\tvar dps := 0          # 1/1000척 / 초",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState.Swarm",
+          "name": "pts",
+          "line": 25,
+          "declaration_text": "\tvar pts: Array[Dictionary] = []   # {pos: Vector2, a: float, r: float, w: float}",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState.Swarm",
+          "name": "striking",
+          "line": 26,
+          "declaration_text": "\tvar striking := false # 이번 틱에 피해를 줬다(연출용)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "hz",
+          "line": 28,
+          "declaration_text": "var hz := BattleRules.TICK_HZ",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "seed_id",
+          "line": 29,
+          "declaration_text": "var seed_id := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "tick",
+          "line": 30,
+          "declaration_text": "var tick := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "clock_ms",
+          "line": 31,
+          "declaration_text": "var clock_ms := 0         # 하위 걸음 단위 게임 시계(ms)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "fleets",
+          "line": 32,
+          "declaration_text": "var fleets: Array[FleetState] = []",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "missiles",
+          "line": 33,
+          "declaration_text": "var missiles: Array[Missile] = []",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "swarms",
+          "line": 34,
+          "declaration_text": "var swarms: Array[Swarm] = []",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "cp",
+          "line": 35,
+          "declaration_text": "var cp := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "ecp",
+          "line": 36,
+          "declaration_text": "var ecp := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "cp_rem",
+          "line": 37,
+          "declaration_text": "var cp_rem := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "ecp_rem",
+          "line": 38,
+          "declaration_text": "var ecp_rem := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "killed",
+          "line": 39,
+          "declaration_text": "var killed := 0           # 1/1000척",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "lost",
+          "line": 40,
+          "declaration_text": "var lost := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "reinf",
+          "line": 41,
+          "declaration_text": "var reinf := false",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "reinf_ms",
+          "line": 42,
+          "declaration_text": "var reinf_ms := -1",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "ai_timer",
+          "line": 43,
+          "declaration_text": "var ai_timer := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "next_id",
+          "line": 44,
+          "declaration_text": "var next_id := 1",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "form_counter",
+          "line": 45,
+          "declaration_text": "var form_counter := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "next_event_id",
+          "line": 46,
+          "declaration_text": "var next_event_id := 1",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "over",
+          "line": 47,
+          "declaration_text": "var over := false",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "win",
+          "line": 48,
+          "declaration_text": "var win := false",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "end_reason",
+          "line": 49,
+          "declaration_text": "var end_reason := \"\"      # POC: \"annihilation\" | \"flagship_lost\". 시나리오: Victory.REASONS의 값",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "army_ev",
+          "line": 50,
+          "declaration_text": "var army_ev := [0, 0]     # 진영별 군 사기 사건 누적(감소분 − 회복분, 0 아래로 내려가지 않는다)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "result",
+          "line": 51,
+          "declaration_text": "var result := {}          # 결산(승패 확정 때 Victory가 채운다)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "end_tick",
+          "line": 52,
+          "declaration_text": "var end_tick := -1",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "end_ms",
+          "line": 53,
+          "declaration_text": "var end_ms := -1",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "_idx",
+          "line": 58,
+          "declaration_text": "var _idx := {}            # 전대 ID → 전대(성능 C1). fleets가 늘면 다시 만든다(전대는 추가만 되고 빠지지 않는다)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "BattleState",
+          "name": "_idx_n",
+          "line": 59,
+          "declaration_text": "var _idx_n := -1",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        }
+      ]
+    },
+    {
+      "path": "core/battle/fleet_state.gd",
+      "class_name": "FleetState",
+      "sha256": "00b39729582cea9f7b66fecd5396c44bdc4b0fa0b2f57516bc4d94cf12d04d6e",
+      "fields": [
+        {
+          "owner": "FleetState",
+          "name": "id",
+          "line": 7,
+          "declaration_text": "var id := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "side",
+          "line": 8,
+          "declaration_text": "var side := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "name",
+          "line": 9,
+          "declaration_text": "var name := \"\"",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "role",
+          "line": 10,
+          "declaration_text": "var role := \"\"",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "portrait",
+          "line": 11,
+          "declaration_text": "var portrait := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "form_id",
+          "line": 12,
+          "declaration_text": "var form_id := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "form",
+          "line": 13,
+          "declaration_text": "var form: Array[Vector2] = []",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "ships",
+          "line": 14,
+          "declaration_text": "var ships := 0            # 1/1000척",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "max_ships",
+          "line": 15,
+          "declaration_text": "var max_ships := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "shown",
+          "line": 16,
+          "declaration_text": "var shown := 0            # 손실 사건을 낸 척 수까지 내려간 값(1/1000척, 1000 단위로 줄어든다)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "lv",
+          "line": 17,
+          "declaration_text": "var lv := 1",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "xp",
+          "line": 18,
+          "declaration_text": "var xp := 0               # 1/1000척(가한 피해)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "pos",
+          "line": 19,
+          "declaration_text": "var pos := Vector2.ZERO",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "heading",
+          "line": 20,
+          "declaration_text": "var heading := 0.0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "target_id",
+          "line": 21,
+          "declaration_text": "var target_id := -1",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "has_move",
+          "line": 22,
+          "declaration_text": "var has_move := false",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "move_to",
+          "line": 23,
+          "declaration_text": "var move_to := Vector2.ZERO",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "missile_cd",
+          "line": 24,
+          "declaration_text": "var missile_cd := 0       # 틱",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "fighter_cd",
+          "line": 25,
+          "declaration_text": "var fighter_cd := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "counter_launch",
+          "line": 26,
+          "declaration_text": "var counter_launch := false # 피격 시 함재기 자동 대응. 일반 주기 사격과 별개",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "counter_pending",
+          "line": 27,
+          "declaration_text": "var counter_pending := false",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "fighter_fired_tick",
+          "line": 28,
+          "declaration_text": "var fighter_fired_tick := -1",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "charge",
+          "line": 29,
+          "declaration_text": "var charge := 0           # 돌격 남은 틱",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "flank_msg",
+          "line": 30,
+          "declaration_text": "var flank_msg := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "defense",
+          "line": 31,
+          "declaration_text": "var defense := false",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "dead",
+          "line": 32,
+          "declaration_text": "var dead := false",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "fire_id",
+          "line": 33,
+          "declaration_text": "var fire_id := -1         # 이번 틱에 쏜 표적",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "in_cmd",
+          "line": 34,
+          "declaration_text": "var in_cmd := true",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "spd",
+          "line": 35,
+          "declaration_text": "var spd := 1.0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "wait",
+          "line": 36,
+          "declaration_text": "var wait := 0             # 적 AI 대기 틱",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "is_flag",
+          "line": 37,
+          "declaration_text": "var is_flag := false",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "home",
+          "line": 38,
+          "declaration_text": "var home := Vector2.ZERO",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "spawn",
+          "line": 39,
+          "declaration_text": "var spawn := Vector2.ZERO  # 생성기가 정한 시작 위치. 초기 배치(place) 허용 반경의 중심이다(home은 배치 때 따라 움직인다)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "range_r",
+          "line": 40,
+          "declaration_text": "var range_r := 0.0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "ranges",
+          "line": 41,
+          "declaration_text": "var ranges := {}          # 무기 범주별 최대 사거리 {범주: 거리}. 쏠 플랫폼이 없는 범주는 키가 없다(아군 표시용)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "sq_id",
+          "line": 42,
+          "declaration_text": "var sq_id := \"\"           # 시나리오 전대 ID (POC 프로필은 빈 문자열)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "morale_group",
+          "line": 43,
+          "declaration_text": "var morale_group := \"\"",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "start_morale_bp",
+          "line": 44,
+          "declaration_text": "var start_morale_bp := 0  # 시작 사기",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "faction",
+          "line": 45,
+          "declaration_text": "var faction := \"\"         # 시나리오 세력 ID (liu_bei, sun_quan, cao_cao)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "commander_id",
+          "line": 46,
+          "declaration_text": "var commander_id := \"\"",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "cmd_stat",
+          "line": 49,
+          "declaration_text": "var cmd_stat := 0         # 지휘관 통솔",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "morale_bp",
+          "line": 50,
+          "declaration_text": "var morale_bp := 10000    # 전대 사기(bp). 명중·이탈·역병으로 줄고 사건으로만 늘어난다(M4)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "stats",
+          "line": 51,
+          "declaration_text": "var stats: Dictionary = {}    # 지휘관 능력치 {command, might, intellect}",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "formation_id",
+          "line": 52,
+          "declaration_text": "var formation_id := \"\"",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "equip",
+          "line": 53,
+          "declaration_text": "var equip := \"\"           # 고속정 임무장비",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "comp0",
+          "line": 54,
+          "declaration_text": "var comp0: Dictionary = {}    # 함종 → 처음 척 수(상수)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "stages",
+          "line": 55,
+          "declaration_text": "var stages: Dictionary = {}   # 함종 → [무손상, 경파, 중파, 대파, 격침] 척 수",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "hull",
+          "line": 56,
+          "declaration_text": "var hull := 0                 # 선체 점수",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "max_hull",
+          "line": 57,
+          "declaration_text": "var max_hull := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "lost_ships",
+          "line": 58,
+          "declaration_text": "var lost_ships := 0           # 이탈(대파·격침)한 척 수의 누계",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "loss_total",
+          "line": 59,
+          "declaration_text": "var loss_total := 0           # 이탈 배분에 쓴 척 수(60/40 배분 카운터)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "loss_exposed",
+          "line": 60,
+          "declaration_text": "var loss_exposed := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "ammo",
+          "line": 61,
+          "declaration_text": "var ammo: Dictionary = {}     # 범주 → 남은 탄약(뇌격은 특수 충전)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "energy_m",
+          "line": 62,
+          "declaration_text": "var energy_m := 0             # 1/1000",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "energy_rem",
+          "line": 63,
+          "declaration_text": "var energy_rem := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "heat_m",
+          "line": 64,
+          "declaration_text": "var heat_m := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "heat_rem",
+          "line": 65,
+          "declaration_text": "var heat_rem := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "wch",
+          "line": 66,
+          "declaration_text": "var wch: Dictionary = {}       # 범주 → 남은 사용 횟수(Q69: 미사일·함재기. 탄약·에너지·열 대신 센다)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "wmax",
+          "line": 67,
+          "declaration_text": "var wmax: Dictionary = {}      # 범주 → 편성 때 최대 횟수(표시용. 0이면 그 무기가 없다)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "next_fire",
+          "line": 68,
+          "declaration_text": "var next_fire: Dictionary = {}   # 범주 → 다음 일제사격 틱",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "supp",
+          "line": 69,
+          "declaration_text": "var supp: Dictionary = {}        # 범주 → 보류 사유(없으면 \"\")",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "moving",
+          "line": 70,
+          "declaration_text": "var moving := false           # 이번 틱에 이동 중이다(레이저 회피 Q72). 위치에서 파생되는 값이라 지문에 넣지 않는다",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "speed",
+          "line": 71,
+          "declaration_text": "var speed := 0.0              # px/초",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "mstate",
+          "line": 74,
+          "declaration_text": "var mstate := \"stable\"        # 사기 상태: stable(6000+) | shaken(3000~5999) | retreat(1~2999). 항복(0)은 out == \"surrender\"",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "out",
+          "line": 75,
+          "declaration_text": "var out := \"\"                 # 전투에서 빠진 사유: \"\" | \"sunk\" | \"surrender\" | \"escaped\". 빠지면 dead도 참이다",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "retreat_order",
+          "line": 76,
+          "declaration_text": "var retreat_order := false    # 플레이어가 후퇴 명령을 내렸다(탈출 지점으로 이동)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "retreat_counted",
+          "line": 77,
+          "declaration_text": "var retreat_counted := false  # 퇴각·항복 사건을 군 사기에 한 번 반영했다",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "loss_mul_until",
+          "line": 78,
+          "declaration_text": "var loss_mul_until := -1      # 이 틱 전까지 사기 감소 배율(결집 효과)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "loss_mul_bp",
+          "line": 79,
+          "declaration_text": "var loss_mul_bp := 10000",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "cost0",
+          "line": 80,
+          "declaration_text": "var cost0 := 0               # 처음 코스트(함종 비용 합, 임무장비 제외)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "chain_sunk",
+          "line": 81,
+          "declaration_text": "var chain_sunk := false      # 연쇄 폭발로 격침됐다(M9)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "died_pos",
+          "line": 82,
+          "declaration_text": "var died_pos := Vector2.ZERO",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "arrived",
+          "line": 83,
+          "declaration_text": "var arrived := false         # 자기 탈출 지점 반경에 한 번 닿았다(전대 간격 때문에 한 점에 모두 서 있을 수 없어 래치한다)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "fired",
+          "line": 84,
+          "declaration_text": "var fired: Dictionary = {}   # 범주 → 첫 일제를 쐈다(첫 일제 엇갈림용)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "form_to",
+          "line": 87,
+          "declaration_text": "var form_to := \"\"             # 전환 중인 목표 진형. \"\"이면 전환 없음. formation_id는 전환이 끝날 때까지 이전 진형이다(§4.7)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "form_left",
+          "line": 88,
+          "declaration_text": "var form_left := 0            # 전환 남은 틱",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "route",
+          "line": 89,
+          "declaration_text": "var route: Array[Vector2] = []   # move_to 다음에 지날 경유점·목적지(§4.2)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "strafe",
+          "line": 90,
+          "declaration_text": "var strafe := false           # 평행 이동: 선회 없이 방향을 유지한 채 옆으로 이동",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "face_set",
+          "line": 91,
+          "declaration_text": "var face_set := false         # 도착 방향 지정",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "speed_cap",
+          "line": 92,
+          "declaration_text": "var speed_cap := 0.0          # 그룹 이동 속도 상한(0 = 없음). 함께 이동하는 함대 중 가장 느린 속도",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "move_grp",
+          "line": 93,
+          "declaration_text": "var move_grp := 0             # 그룹 이동 묶음 번호(0 = 단독). 유지 거리 정지 때 그룹이 함께 선다. 지문에는 넣지 않는다",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "face_to",
+          "line": 94,
+          "declaration_text": "var face_to := 0.0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "flip",
+          "line": 95,
+          "declaration_text": "var flip := false            # 제자리 반전으로 진형 배치가 점대칭으로 뒤집힌 상태(함선 위치는 그대로)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "flip_wait",
+          "line": 96,
+          "declaration_text": "var flip_wait := 0           # 제자리 반전 남은 틱(그동안 함대는 멈춘다)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "traits",
+          "line": 97,
+          "declaration_text": "var traits: Array = []        # 지휘관 특성(팔진 조건)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "shape_to",
+          "line": 98,
+          "declaration_text": "var shape_to := -1            # 전환 중이면 목표 진형의 배치도 번호(표시 전용, 없으면 shape와 같다)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "form_t",
+          "line": 99,
+          "declaration_text": "var form_t: Array[Vector2] = []   # 목표 배치 오프셋(표시 전용)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "shape",
+          "line": 100,
+          "declaration_text": "var shape := -1               # 배치도 번호(BattleRules.formation_offsets의 kind). -1이면 POC(form_id)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "control",
+          "line": 103,
+          "declaration_text": "var control := \"delegate\"     # \"delegate\"(기본, 지휘관 AI가 이동·표적을 정한다) | \"direct\"(플레이어가 명령해 AI가 손대지 않는다, §5.4). 적 진영은 항상 AI",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "posture",
+          "line": 104,
+          "declaration_text": "var posture := \"delegated\"    # 전투 방침: aggressive | balanced | cautious | scheming | delegated(지휘관 성향에서 고른다)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "bias_mod",
+          "line": 105,
+          "declaration_text": "var bias_mod := 0.0           # 결정 카드가 건 일시 가중(전황 반응과 같은 축). bias_until 틱까지",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "bias_until",
+          "line": 106,
+          "declaration_text": "var bias_until := -1",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "pursue_id",
+          "line": 107,
+          "declaration_text": "var pursue_id := -1           # 결정 카드로 정한 추격 표적. pursue_until 틱까지",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "pursue_until",
+          "line": 108,
+          "declaration_text": "var pursue_until := -1",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "ai_seen",
+          "line": 109,
+          "declaration_text": "var ai_seen := -1             # 처음 접촉을 안 틱(난이도 반응 지연의 기준). 접촉이 없어지면 -1",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "hit_tick",
+          "line": 112,
+          "declaration_text": "var hit_tick := -1            # 마지막으로 명중을 받은 틱(경파 자연 회복의 기준)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "healed_wound",
+          "line": 113,
+          "declaration_text": "var healed_wound := 0         # 경파 자연 회복으로 무손상이 된 척 수 누계. _wound가 손상 목표에서 뺀다(REVIEW-M8 F-1)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "healed_mod",
+          "line": 114,
+          "declaration_text": "var healed_mod := 0           # 수리로 중파 → 경파가 된 척 수 누계. _wound가 중파 하한에서 뺀다",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "sup_src",
+          "line": 115,
+          "declaration_text": "var sup_src := \"\"             # 배정된 공급원 키(기지 ID 또는 \"f<전대 ID>\"). \"\"이면 배정 없음",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "sup_prog",
+          "line": 116,
+          "declaration_text": "var sup_prog := 0             # 이번 주기 진행(bp·틱). 처리량만큼 쌓인다",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "sup_since",
+          "line": 117,
+          "declaration_text": "var sup_since := -1           # 정지를 시작한 틱(처리 순서). 움직이면 -1",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "sup_still",
+          "line": 118,
+          "declaration_text": "var sup_still := false        # 이번 틱에 정지해 있었다",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "sup_pos",
+          "line": 119,
+          "declaration_text": "var sup_pos := Vector2.ZERO   # 지난 보급 판정 때 위치",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "sup_n",
+          "line": 120,
+          "declaration_text": "var sup_n := 0                # 보급함 전대: 지난번 보급함 수(재고 손실 계산)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "sup_ammo",
+          "line": 121,
+          "declaration_text": "var sup_ammo := 0             # 보급함 전대 재고: 탄약 단위",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "sup_mat",
+          "line": 122,
+          "declaration_text": "var sup_mat := 0              # 보급함 전대 재고: 물자",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "sup_hold",
+          "line": 123,
+          "declaration_text": "var sup_hold := false         # P7 수동: 이 보급함 전대의 자동 보급을 멈춤",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "sup_first",
+          "line": 124,
+          "declaration_text": "var sup_first := -1           # P7 수동: 이 보급함 전대가 먼저 처리할 손님 전대 ID(끝나면 -1)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "supplied",
+          "line": 125,
+          "declaration_text": "var supplied := 0             # 끝낸 보급 주기 수(통계)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "level",
+          "line": 128,
+          "declaration_text": "var level := 1                # 지휘관 레벨(승계 순서. 데이터에 없으면 1)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "vice",
+          "line": 129,
+          "declaration_text": "var vice: Dictionary = {}     # 전대 부지휘관 정의 {id, name, command, might, intellect, traits}. 없으면 빈 사전",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "staff",
+          "line": 130,
+          "declaration_text": "var staff: Array = []         # 전대 참모 정의 목록",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "cmdr_state",
+          "line": 131,
+          "declaration_text": "var cmdr_state := \"unhurt\"    # 전대 지휘관 상태: unhurt | light | severe | killed | captured (악화 방향으로만, G8-04)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "cmdr_sub",
+          "line": 132,
+          "declaration_text": "var cmdr_sub := \"\"            # 지휘관이 지휘 불능이라 능력치를 이은 사람(부지휘관 → 첫 참모). \"\"이면 없음",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "confuse_until",
+          "line": 133,
+          "declaration_text": "var confuse_until := -1       # 이 틱 전까지 명령 혼선(승계). 지휘 공백이면 아주 큰 값",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "fr_hits",
+          "line": 134,
+          "declaration_text": "var fr_hits: Array[int] = []  # 최근 측면·후면 명중 틱(강습 진형 붕괴 판정)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "assault_cd",
+          "line": 135,
+          "declaration_text": "var assault_cd := 0           # 이 틱부터 다시 강습할 수 있다",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "boarded",
+          "line": 136,
+          "declaration_text": "var boarded := false          # 기함 진입을 당해 지휘관 보정이 사라졌다",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "skill_slots",
+          "line": 139,
+          "declaration_text": "var skill_slots: Array = []   # 기술 ID(빈칸 \"\") — 편성에서 오고 전투 중 바뀌지 않는다",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "skill_used",
+          "line": 140,
+          "declaration_text": "var skill_used := {}          # 기술 ID → 발동 횟수. (함대, 기술 ID) 쌍당 전투당 uses_per_battle회(Q92)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "FleetState",
+          "name": "fx",
+          "line": 141,
+          "declaration_text": "var fx: Array = []            # 이 함대에 걸린 기간 효과 [{id, src, until, e}]. until 틱에 풀린다",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        }
+      ]
+    },
+    {
+      "path": "core/battle/rule_set.gd",
+      "class_name": "RuleSet",
+      "sha256": "43c8a2a313c5d3a625a4aa9b925ae7c5b153d8cbd8147763f2f7b60fe93c364d",
+      "fields": [
+        {
+          "owner": "RuleSet",
+          "name": "v",
+          "line": 8,
+          "declaration_text": "var v := {}",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "RuleSet",
+          "name": "world",
+          "line": 9,
+          "declaration_text": "var world := Vector2.ZERO",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "RuleSet",
+          "name": "scenario",
+          "line": 12,
+          "declaration_text": "var scenario := {}",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "RuleSet",
+          "name": "c",
+          "line": 14,
+          "declaration_text": "var c := {}",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        }
+      ]
+    },
+    {
+      "path": "core/battle/battle_rng.gd",
+      "class_name": "BattleRng",
+      "sha256": "f5f42abd399bed12d10e8385dc83a1fed6450881fe060fdab8734b5a93e3def6",
+      "fields": [
+        {
+          "owner": "BattleRng",
+          "name": "profile_id",
+          "line": 9,
+          "declaration_text": "var profile_id := \"\"",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        }
+      ]
+    },
+    {
+      "path": "core/battle/tick_clock.gd",
+      "class_name": "TickClock",
+      "sha256": "dfb9cd4a070995d9aca44f77bf08cab18ae87eb4c678a341ccddc34c5a7ff74e",
+      "fields": [
+        {
+          "owner": "TickClock",
+          "name": "hz",
+          "line": 11,
+          "declaration_text": "var hz := BattleRules.TICK_HZ",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "TickClock",
+          "name": "speed",
+          "line": 12,
+          "declaration_text": "var speed := 1.0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "TickClock",
+          "name": "acc",
+          "line": 13,
+          "declaration_text": "var acc := 0.0                   # 누적 시간(틱 단위, 소수)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "TickClock",
+          "name": "dropped",
+          "line": 14,
+          "declaration_text": "var dropped := 0.0               # 상한 때문에 버린 틱 수(진단용)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        }
+      ]
+    },
+    {
+      "path": "core/battle/salvo.gd",
+      "class_name": "SalvoCombat",
+      "sha256": "c80ede4aa4d9c6aa75cd99f9af3672645f0a03e87d170d295bbe9f716b022090",
+      "fields": [
+        {
+          "owner": "SalvoCombat",
+          "name": "sim",
+          "line": 15,
+          "declaration_text": "var sim: BattleSim",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "SalvoCombat",
+          "name": "C",
+          "line": 16,
+          "declaration_text": "var C: Dictionary",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "SalvoCombat",
+          "name": "terr",
+          "line": 17,
+          "declaration_text": "var terr: BattleTerrain = null   # M6 지형 구역(사거리·사격각). 없으면 개활",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "SalvoCombat",
+          "name": "terrain_class",
+          "line": 18,
+          "declaration_text": "var terrain_class := \"\"   # 전장 지형 등급(C.formation_rules.terrain의 키). \"\"이면 개활이라 진형 제한 없음(§4.7)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        }
+      ]
+    },
+    {
+      "path": "core/battle/morale.gd",
+      "class_name": "MoraleCore",
+      "sha256": "0bfbe6ca0f85557b59bfed737bca65ad6e352aa328c837ad747f2dd759773af4",
+      "fields": [
+        {
+          "owner": "MoraleCore",
+          "name": "sim",
+          "line": 11,
+          "declaration_text": "var sim: BattleSim",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "MoraleCore",
+          "name": "M",
+          "line": 12,
+          "declaration_text": "var M: Dictionary",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "MoraleCore",
+          "name": "plague_ticks",
+          "line": 13,
+          "declaration_text": "var plague_ticks := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "MoraleCore",
+          "name": "crisis_sent",
+          "line": 14,
+          "declaration_text": "var crisis_sent := [false, false]",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "MoraleCore",
+          "name": "rally_uses",
+          "line": 15,
+          "declaration_text": "var rally_uses: Dictionary = {}     # 결집 ID → 남은 횟수",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "MoraleCore",
+          "name": "plague_bp_total",
+          "line": 16,
+          "declaration_text": "var plague_bp_total := 0            # 통계(역병으로 잃은 사기 합)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "MoraleCore",
+          "name": "recoveries",
+          "line": 17,
+          "declaration_text": "var recoveries := 0                 # 통계(사건 회복 횟수)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "MoraleCore",
+          "name": "_cost_total",
+          "line": 18,
+          "declaration_text": "var _cost_total := [0, 0]",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "MoraleCore",
+          "name": "_dispersed",
+          "line": 19,
+          "declaration_text": "var _dispersed: Array = []",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "MoraleCore",
+          "name": "_plague",
+          "line": 20,
+          "declaration_text": "var _plague: Dictionary = {}",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        }
+      ]
+    },
+    {
+      "path": "core/battle/victory.gd",
+      "class_name": "Victory",
+      "sha256": "73f87d6ecb1727171ca9ff3dfb6c0515b49699d5c34f05d502569944c317b74a",
+      "fields": [
+        {
+          "owner": "Victory",
+          "name": "sim",
+          "line": 15,
+          "declaration_text": "var sim: BattleSim",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "Victory",
+          "name": "V",
+          "line": 16,
+          "declaration_text": "var V: Dictionary",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "Victory",
+          "name": "period",
+          "line": 17,
+          "declaration_text": "var period := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "Victory",
+          "name": "anchor_faction",
+          "line": 18,
+          "declaration_text": "var anchor_faction := \"\"    # 플레이어(유비) 세력",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        }
+      ]
+    },
+    {
+      "path": "core/battle/terrain.gd",
+      "class_name": "BattleTerrain",
+      "sha256": "9af7390a225398e4b31b6698c8d71ad8fcf877d8a296c750421892b5c997069d",
+      "fields": [
+        {
+          "owner": "BattleTerrain",
+          "name": "zones",
+          "line": 9,
+          "declaration_text": "var zones: Array = []",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        }
+      ]
+    },
+    {
+      "path": "core/battle/ai/commander_ai.gd",
+      "class_name": "CommanderAi",
+      "sha256": "a5ecb379d4258a46eeb78f91697c366adbd6a04d9164fca5f1c7c7983c5a2ae5",
+      "fields": [
+        {
+          "owner": "CommanderAi",
+          "name": "A",
+          "line": 13,
+          "declaration_text": "var A: Dictionary",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "CommanderAi",
+          "name": "last_view",
+          "line": 14,
+          "declaration_text": "var last_view := [{}, {}]      # 진영별로 마지막에 읽은 공개 투영(테스트가 입력을 검사한다)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "CommanderAi",
+          "name": "last_known",
+          "line": 15,
+          "declaration_text": "var last_known := [[], []]     # 같은 순간 그 진영의 접촉표 ID(안개가 있을 때). 투영의 적은 이 안에만 있어야 한다",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "CommanderAi",
+          "name": "stats",
+          "line": 16,
+          "declaration_text": "var stats := {\"charge\": 0, \"retreat\": 0, \"formation\": 0}",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "CommanderAi",
+          "name": "_focus",
+          "line": 17,
+          "declaration_text": "var _focus := -1     # 이번 생각에서 그 진영이 함께 노리는 표적 ID(집중 사격). 없으면 -1",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        }
+      ]
+    },
+    {
+      "path": "core/battle/ai/poc_enemy_ai.gd",
+      "class_name": "PocEnemyAi",
+      "sha256": "74113ab7cd332a7519bccfee092fe2ca09efb2fc3e6ac989ada8faff2fbb9885",
+      "fields": []
+    },
+    {
+      "path": "core/battle/decisions.gd",
+      "class_name": "DecisionBoard",
+      "sha256": "18c9c52d46fbf16a798e1a9451adc0b0ba9b91fb920fb1f8882307a6351d9d7d",
+      "fields": [
+        {
+          "owner": "DecisionBoard",
+          "name": "sim",
+          "line": 10,
+          "declaration_text": "var sim: BattleSim",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "DecisionBoard",
+          "name": "cfg",
+          "line": 11,
+          "declaration_text": "var cfg: Dictionary          # realtime_rules.decision_cards",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "DecisionBoard",
+          "name": "A",
+          "line": 12,
+          "declaration_text": "var A: Dictionary            # ai.decisions",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "DecisionBoard",
+          "name": "cards",
+          "line": 13,
+          "declaration_text": "var cards: Array[Dictionary] = []   # {id, kind, ref, open_tick, deadline_tick, options, rec}",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "DecisionBoard",
+          "name": "done",
+          "line": 14,
+          "declaration_text": "var done: Array[Dictionary] = []    # 통계: {id, kind, open_tick, tick, option, by}",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "DecisionBoard",
+          "name": "_seq",
+          "line": 15,
+          "declaration_text": "var _seq := 1",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "DecisionBoard",
+          "name": "_crisis_armed",
+          "line": 16,
+          "declaration_text": "var _crisis_armed := true",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "DecisionBoard",
+          "name": "_seen_retreat",
+          "line": 17,
+          "declaration_text": "var _seen_retreat: Dictionary = {}",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        }
+      ]
+    },
+    {
+      "path": "core/battle/detection.gd",
+      "class_name": "Detection",
+      "sha256": "df34cee4a225683d6bc1c9005dc7760c365ce3a61ae68e106449cb2e7154253b",
+      "fields": [
+        {
+          "owner": "Detection",
+          "name": "sim",
+          "line": 12,
+          "declaration_text": "var sim: BattleSim",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "Detection",
+          "name": "D",
+          "line": 13,
+          "declaration_text": "var D: Dictionary",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "Detection",
+          "name": "terr",
+          "line": 14,
+          "declaration_text": "var terr: BattleTerrain",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "Detection",
+          "name": "contacts",
+          "line": 15,
+          "declaration_text": "var contacts: Array = [{}, {}]     # 진영 → {표적 ID: 접촉 기록}",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "Detection",
+          "name": "_period",
+          "line": 16,
+          "declaration_text": "var _period := 1",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "Detection",
+          "name": "_conf0",
+          "line": 17,
+          "declaration_text": "var _conf0 := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        }
+      ]
+    },
+    {
+      "path": "core/battle/supply.gd",
+      "class_name": "SupplyCore",
+      "sha256": "1f762bfea77abb57795c87af619e2d6b48210377cc6e04b9463d021be6e2d5be",
+      "fields": [
+        {
+          "owner": "SupplyCore",
+          "name": "sim",
+          "line": 16,
+          "declaration_text": "var sim: BattleSim",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "SupplyCore",
+          "name": "S",
+          "line": 17,
+          "declaration_text": "var S: Dictionary",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "SupplyCore",
+          "name": "ship",
+          "line": 18,
+          "declaration_text": "var ship := \"\"",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "SupplyCore",
+          "name": "need",
+          "line": 19,
+          "declaration_text": "var need := 0             # 한 주기의 bp·틱",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "SupplyCore",
+          "name": "light_ticks",
+          "line": 20,
+          "declaration_text": "var light_ticks := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "SupplyCore",
+          "name": "still_eps",
+          "line": 21,
+          "declaration_text": "var still_eps := 0.0     # 틱당 정지 판정 px = still_eps_px_s / hz",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "SupplyCore",
+          "name": "bases",
+          "line": 22,
+          "declaration_text": "var bases: Array = []     # {key, faction, side, pos}",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        }
+      ]
+    },
+    {
+      "path": "core/battle/stratagem.gd",
+      "class_name": "ChainOp",
+      "sha256": "f7d45eb4c31118e44fe4e8ee1ee31778c99f0a933bd1b49d49afd935f8447581",
+      "fields": [
+        {
+          "owner": "ChainOp",
+          "name": "sim",
+          "line": 15,
+          "declaration_text": "var sim: BattleSim",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "ChainOp",
+          "name": "O",
+          "line": 16,
+          "declaration_text": "var O: Dictionary     # realtime_rules.chain_operation",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "ChainOp",
+          "name": "X",
+          "line": 17,
+          "declaration_text": "var X: Dictionary     # combat.stratagem",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "ChainOp",
+          "name": "host_sq",
+          "line": 18,
+          "declaration_text": "var host_sq := \"\"",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "ChainOp",
+          "name": "charges",
+          "line": 19,
+          "declaration_text": "var charges := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "ChainOp",
+          "name": "letters",
+          "line": 20,
+          "declaration_text": "var letters := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "ChainOp",
+          "name": "mode",
+          "line": 21,
+          "declaration_text": "var mode := \"idle\"",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "ChainOp",
+          "name": "susp_m",
+          "line": 22,
+          "declaration_text": "var susp_m := 0       # 의심 × 1000. 음수는 고육계 여유(화면에는 0)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "ChainOp",
+          "name": "warned",
+          "line": 23,
+          "declaration_text": "var warned := {}",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "ChainOp",
+          "name": "win_off",
+          "line": 24,
+          "declaration_text": "var win_off := 0      # 첫 명중 뒤 창 시작까지 틱(시드)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "ChainOp",
+          "name": "win_start",
+          "line": 25,
+          "declaration_text": "var win_start := -1",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "ChainOp",
+          "name": "win_end",
+          "line": 26,
+          "declaration_text": "var win_end := -1",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "ChainOp",
+          "name": "_win_state",
+          "line": 27,
+          "declaration_text": "var _win_state := \"\"",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "ChainOp",
+          "name": "fires",
+          "line": 28,
+          "declaration_text": "var fires: Array[Dictionary] = []   # {host, next, last, power, n, burned, counter}",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "ChainOp",
+          "name": "_revert",
+          "line": 29,
+          "declaration_text": "var _revert: Array = []             # [틱, 전대 ID, 진형 ID] 긴급 분산 복귀",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "ChainOp",
+          "name": "_hazards",
+          "line": 30,
+          "declaration_text": "var _hazards: Array = []            # [만료 틱, 구역 ID]",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "ChainOp",
+          "name": "_zone_seq",
+          "line": 31,
+          "declaration_text": "var _zone_seq := 0",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "ChainOp",
+          "name": "sensor_until",
+          "line": 32,
+          "declaration_text": "var sensor_until := -1              # 조조 진영 센서 장애 끝 틱",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "ChainOp",
+          "name": "card_id",
+          "line": 33,
+          "declaration_text": "var card_id := -1",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "ChainOp",
+          "name": "stats",
+          "line": 34,
+          "declaration_text": "var stats := {\"letter_t\": -1.0, \"ignite_t\": -1.0, \"ignite_power\": 0.0, \"feigned\": false, \"susp_at_ignite\": 0.0, \"detected\": 0,",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        }
+      ]
+    },
+    {
+      "path": "core/battle/command.gd",
+      "class_name": "CommandCore",
+      "sha256": "02415d2f2f7c91a8617ca27123895feb03d3df658c7ad00cb615188bb0009b31",
+      "fields": [
+        {
+          "owner": "CommandCore",
+          "name": "sim",
+          "line": 19,
+          "declaration_text": "var sim: BattleSim",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "CommandCore",
+          "name": "K",
+          "line": 20,
+          "declaration_text": "var K: Dictionary            # combat.command",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "CommandCore",
+          "name": "S",
+          "line": 21,
+          "declaration_text": "var S: Dictionary            # realtime_rules.commander_succession",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "CommandCore",
+          "name": "stats",
+          "line": 22,
+          "declaration_text": "var stats := {\"succession\": 0, \"leaderless\": 0, \"severe\": 0, \"light\": 0}",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        }
+      ]
+    },
+    {
+      "path": "core/battle/assault.gd",
+      "class_name": "AssaultCore",
+      "sha256": "a98747df1ac2505b03557962c78ff5e3dae41af6c1d021a8dd679dcd8f83954f",
+      "fields": [
+        {
+          "owner": "AssaultCore",
+          "name": "sim",
+          "line": 13,
+          "declaration_text": "var sim: BattleSim",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "AssaultCore",
+          "name": "A",
+          "line": 14,
+          "declaration_text": "var A: Dictionary",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "AssaultCore",
+          "name": "stats",
+          "line": 15,
+          "declaration_text": "var stats := {\"unit\": [0, 0], \"flagship\": [0, 0], \"forced\": [0, 0]}   # [시도, 성공]",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        }
+      ]
+    },
+    {
+      "path": "core/battle/skills.gd",
+      "class_name": "SkillCore",
+      "sha256": "0d2bf2bfd81cb6f026e025f008774725f7c87d53e0d857697501172bafb21b3d",
+      "fields": [
+        {
+          "owner": "SkillCore",
+          "name": "sim",
+          "line": 21,
+          "declaration_text": "var sim: BattleSim",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "SkillCore",
+          "name": "K",
+          "line": 22,
+          "declaration_text": "var K: Dictionary",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "SkillCore",
+          "name": "defs",
+          "line": 23,
+          "declaration_text": "var defs := {}                  # 기술 ID → 정의",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "SkillCore",
+          "name": "side_fx",
+          "line": 24,
+          "declaration_text": "var side_fx: Array = [[], []]   # 진영 전체 효과(미주랑)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "SkillCore",
+          "name": "used_n",
+          "line": 25,
+          "declaration_text": "var used_n := 0                 # 전투 전체 발동 수(지문·통계)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "SkillCore",
+          "name": "stats",
+          "line": 26,
+          "declaration_text": "var stats := {}                 # 기술 ID → 발동 수",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        },
+        {
+          "owner": "SkillCore",
+          "name": "_views",
+          "line": 27,
+          "declaration_text": "var _views: Array = [{}, {}]    # ai_eval 중 진영별 공개 투영(Q96 술어 입력)",
+          "value_status": "source_text_only_not_runtime_default",
+          "save_policy": "UNCLASSIFIED"
+        }
+      ]
+    }
+  ],
+  "anchors": [
+    {
+      "id": "queue_entry",
+      "path": "core/battle/battle_sim.gd",
+      "matches": [
+        {
+          "line": 95,
+          "text": "func queue(cmd: Dictionary) -> void:"
+        }
+      ],
+      "status": "source_observation_not_runtime_gate"
+    },
+    {
+      "id": "queue_pending",
+      "path": "core/battle/battle_sim.gd",
+      "matches": [
+        {
+          "line": 96,
+          "text": "\t_queue.append(cmd)"
+        }
+      ],
+      "status": "source_observation_not_runtime_gate"
+    },
+    {
+      "id": "issue_entry",
+      "path": "core/battle/battle_sim.gd",
+      "matches": [
+        {
+          "line": 142,
+          "text": "func issue(cmd: Dictionary) -> void:"
+        }
+      ],
+      "status": "source_observation_not_runtime_gate"
+    },
+    {
+      "id": "issue_or_step_log",
+      "path": "core/battle/battle_sim.gd",
+      "matches": [
+        {
+          "line": 145,
+          "text": "\tcommand_log.append(c)"
+        },
+        {
+          "line": 178,
+          "text": "\t\tcommand_log.append(c)"
+        }
+      ],
+      "status": "source_observation_not_runtime_gate"
+    },
+    {
+      "id": "step_entry",
+      "path": "core/battle/battle_sim.gd",
+      "matches": [
+        {
+          "line": 172,
+          "text": "func step() -> void:"
+        }
+      ],
+      "status": "source_observation_not_runtime_gate"
+    },
+    {
+      "id": "step_take_queue",
+      "path": "core/battle/battle_sim.gd",
+      "matches": [
+        {
+          "line": 173,
+          "text": "\tvar cmds := _queue"
+        }
+      ],
+      "status": "source_observation_not_runtime_gate"
+    },
+    {
+      "id": "tick_increment",
+      "path": "core/battle/battle_sim.gd",
+      "matches": [
+        {
+          "line": 924,
+          "text": "\tst.tick += 1"
+        }
+      ],
+      "status": "source_observation_not_runtime_gate"
+    },
+    {
+      "id": "possible_substep_stop",
+      "path": "core/battle/battle_sim.gd",
+      "matches": [
+        {
+          "line": 941,
+          "text": "\t\tif st.over:"
+        }
+      ],
+      "status": "source_observation_not_runtime_gate"
+    },
+    {
+      "id": "clock_accumulates",
+      "path": "core/battle/battle_sim.gd",
+      "matches": [
+        {
+          "line": 950,
+          "text": "\tst.clock_ms += sub_ms"
+        }
+      ],
+      "status": "source_observation_not_runtime_gate"
+    },
+    {
+      "id": "post_step_quantization",
+      "path": "core/battle/battle_sim.gd",
+      "matches": [
+        {
+          "line": 946,
+          "text": "\t\tf.pos = BattleRules.quant_v(f.pos)"
+        }
+      ],
+      "status": "source_observation_not_runtime_gate"
+    },
+    {
+      "id": "pause_branch",
+      "path": "core/battle/tick_clock.gd",
+      "matches": [
+        {
+          "line": 21,
+          "text": "\tif speed <= 0.0:"
+        }
+      ],
+      "status": "source_observation_not_runtime_gate"
+    },
+    {
+      "id": "host_post_init_control",
+      "path": "scripts/FleetBattle3D.gd",
+      "matches": [
+        {
+          "line": 208,
+          "text": "\t\t\tf.control = \"direct\""
+        }
+      ],
+      "status": "source_observation_not_runtime_gate"
+    },
+    {
+      "id": "host_clock_adapter",
+      "path": "scripts/FleetBattle3D.gd",
+      "matches": [
+        {
+          "line": 360,
+          "text": "\t\tvar n := 0 if placing else clock.advance(delta)   # 초기 배치 중에는 틱이 멈춘다"
+        }
+      ],
+      "status": "source_observation_not_runtime_gate"
+    },
+    {
+      "id": "fingerprint_is_separate",
+      "path": "core/battle/battle_fingerprint.gd",
+      "matches": [
+        {
+          "line": 6,
+          "text": "static func of(st: BattleState, detect: Detection = null, extra := \"\") -> String:"
+        }
+      ],
+      "status": "source_observation_not_runtime_gate"
+    }
+  ],
+  "unsupported": [],
+  "limitations": [
+    "Exact frozen sources only; function locals excluded; two known nested classes only",
+    "Raw declaration line may start a multiline initializer; initializer is never evaluated",
+    "Dynamic Dictionary contents, units, reconstruction/save policy and native object state are not inventoried",
+    "No runtime, adapter, checkpoint, suffix, product geometry or complete snapshot contract is validated"
+  ],
+  "readiness": {
+    "original_A04": "NOT_READY",
+    "original_A06": "NOT_READY",
+    "original_A05": "NOT_READY"
+  }
+}

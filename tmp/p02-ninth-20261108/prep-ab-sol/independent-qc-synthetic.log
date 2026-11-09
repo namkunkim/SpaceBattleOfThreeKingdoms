@@ -1,0 +1,6 @@
+rejected shared wrong target $.target_id: value mismatch
+rejected shared wrong type $.types[4]: value mismatch
+rejected shared wrong contact C historical fixture contact field: seen
+rejected restore false $[0].ok: value mismatch
+rejected shared impossible opposing ID C invalid fixture opposing IDs
+synthetic only: two accepted and five rejected

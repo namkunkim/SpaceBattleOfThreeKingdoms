@@ -1,0 +1,8 @@
+{
+  "path": "docs/battle-core/CHECKLIST-OPEN.md",
+  "before_sha": "a7e209c8404b18a9411551c1a3adf51481d0bc61347826e1f4e40fa0dfecd8eb",
+  "after_sha": "58dbc9637705991ca5799bd599f9bb8d43f13fabee97fe4f862b3e4cafa47f0f",
+  "inverse_sha": "a7e209c8404b18a9411551c1a3adf51481d0bc61347826e1f4e40fa0dfecd8eb",
+  "one_line_only": true,
+  "added_line": "  - [ ] **I01b-P2c 제한 private runtime(2026-11-01):** 계획 독립 수용·신규 구성요소·정본 attempt4 70사례/11544체크/43거부 및 관련7회귀 exit0. 최종5-b·77개 import 부수파일 가역 보존 뒤 최종감사·결과묶음/6 마감은 미완료이며 사용자 요청으로 새 세션 이관. 전체 I01b/A04~A06 NOT_READY. [전용 체크리스트](pc-campaign-design/I01B-P2C-CHECKLIST-20261101.md) · [이관 자료](pc-campaign-design/SESSION-HANDOFF-I01B-P2C-20261101.md)."
+}

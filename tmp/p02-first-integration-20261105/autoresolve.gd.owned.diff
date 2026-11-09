@@ -1,0 +1,148 @@
+--- tests/autoresolve.gd.before
++++ tests/autoresolve.gd
+@@ -30,6 +30,9 @@
+ 	return a[i + 1] if i >= 0 and i + 1 < a.size() else def
+ 
+ func _run() -> void:
++	if "--operation-input" in OS.get_cmdline_user_args():
++		_run_operation_cli()
++		return
+ 	var runs := int(_arg("--runs", "200"))
+ 	var hz := int(_arg("--hz", str(BattleRules.TICK_HZ)))
+ 	var out_path := _arg("--out", "user://autoresolve.json")
+@@ -66,6 +69,135 @@
+ 		quit(1)
+ 		return
+ 	print("AUTORESOLVE_PASS")
++	quit(0)
++
++# Explicit fresh restricted input; the default legacy parser above is unchanged.
++static func _operation_options(args: PackedStringArray) -> Dictionary:
++	var adapter := preload("res://core/battle/operation_runtime_adapter.gd")
++	var values := {}
++	var legacy := ["--runs", "--hz", "--baseline", "--policies", "--profile", "--difficulty", "--cao-fleets", "--cao-fill", "--period", "--dmg-scale", "--stagger", "--org", "--no-skills", "--skill-off"]
++	var i := 0
++	while i < args.size():
++		var option := args[i]
++		if option in legacy: return adapter.fail("conflicting_option", option)
++		if option not in ["--operation-input", "--out"]: return adapter.fail("unknown_option", option)
++		if values.has(option): return adapter.fail("duplicate_option", option)
++		if i + 1 >= args.size() or args[i + 1].is_empty() or args[i + 1].begins_with("--"): return adapter.fail("missing_option_value", option)
++		values[option] = args[i + 1]
++		i += 2
++	for key in ["--operation-input", "--out"]:
++		if not values.has(key): return adapter.fail("missing_option", key)
++	return {"ok": true, "input": values["--operation-input"], "out": values["--out"]}
++
++static func _operation_output_error(path: String) -> String:
++	if FileAccess.file_exists(path) or DirAccess.dir_exists_absolute(path): return "output_exists"
++	if not DirAccess.dir_exists_absolute(path.get_base_dir()): return "output_parent_missing"
++	return ""
++
++# The caller owns and closes owner on every normal success/error return.
++# Policies see only the public side-0 projection, never private observations.
++static func _operation_policy_commands(policy: String, public_projection: Dictionary) -> Array:
++	if policy == "none": return []
++	var policy_view: Dictionary = public_projection.duplicate(true)
++	var squadrons: Array = []
++	for squadron in policy_view.squadrons:
++		if squadron.has("contact"):
++			if squadron.contact not in ["confirmed", "estimated"]: continue
++			# Detection.foes excludes dead targets on every public read. This
++			# local policy shape adds no hidden health/position to the DTO.
++			squadron["dead"] = false
++		squadrons.append(squadron)
++	policy_view.squadrons = squadrons
++	return policy_commands(policy, policy_view)
++
++static func run_operation(owner: OperationPrivateState, policy: String, max_ticks: int) -> Dictionary:
++	var events: Array = []
++	var read := owner.summary()
++	if not read.ok: return read
++	while not read.summary.over and read.summary.tick < max_ticks:
++		var projected := owner.read_projection(0)
++		if not projected.ok: return projected
++		for command in _operation_policy_commands(policy, projected.projection):
++			var queued := owner.queue(command)
++			if not queued.ok: return queued
++		var advanced := owner.advance()
++		if not advanced.ok: return advanced
++		var drained := owner.drain_events()
++		if not drained.ok: return drained
++		events.append_array(drained.events)
++		read = owner.summary()
++		if not read.ok: return read
++	return {"ok": true, "summary": read.summary, "events": events, "event_count": events.size()}
++
++func _operation_reject(result: Dictionary) -> void:
++	print("OPERATION_REJECT " + JSON.stringify(result))
++	quit(1)
++
++func _run_operation_cli() -> void:
++	var adapter := preload("res://core/battle/operation_runtime_adapter.gd")
++	var options := _operation_options(OS.get_cmdline_user_args())
++	if not options.ok:
++		_operation_reject(options)
++		return
++	var input_file := FileAccess.open(options.input, FileAccess.READ)
++	if input_file == null:
++		_operation_reject(adapter.fail("input_read_failed", "input"))
++		return
++	var text := input_file.get_as_text()
++	var read_error := input_file.get_error()
++	input_file.close()
++	if read_error not in [OK, ERR_FILE_EOF]:
++		_operation_reject(adapter.fail("input_read_failed", "input"))
++		return
++	var parser := JSON.new()
++	if parser.parse(text) != OK:
++		_operation_reject(adapter.fail("invalid_json", "input"))
++		return
++	var created := adapter.create(parser.data)
++	if not created.ok:
++		_operation_reject(created)
++		return
++	var owner: OperationPrivateState = created.owner
++	var output_error := _operation_output_error(options.out)
++	if output_error != "":
++		owner.close()
++		_operation_reject(adapter.fail(output_error, "out"))
++		return
++	var result := run_operation(owner, created.policy, created.max_ticks)
++	owner.close()
++	if not result.ok:
++		_operation_reject(result)
++		return
++	result["meta"] = created.meta
++	result.meta["input_file_sha256"] = FileAccess.get_sha256(options.input)
++	# Recheck before WRITE. This is single-process no-clobber, not an OS lock.
++	output_error = _operation_output_error(options.out)
++	if output_error != "":
++		_operation_reject(adapter.fail(output_error, "out"))
++		return
++	var output_text := JSON.stringify(result, "\t")
++	var output := FileAccess.open(options.out, FileAccess.WRITE)
++	if output == null:
++		_operation_reject(adapter.fail("output_open_failed", "out"))
++		return
++	output.store_string(output_text)
++	output.flush()
++	var write_error := output.get_error()
++	output.close()
++	if write_error != OK:
++		var failure := adapter.fail("output_write_failed", "out")
++		failure["partial_path"] = options.out
++		failure["file_error"] = write_error
++		failure["partial_bytes"] = FileAccess.get_file_as_bytes(options.out).size()
++		_operation_reject(failure)
++		return
++	if FileAccess.get_file_as_bytes(options.out).size() != output_text.to_utf8_buffer().size() or FileAccess.get_sha256(options.out) != output_text.sha256_text():
++		var failure := adapter.fail("output_verify_failed", "out")
++		failure["partial_path"] = options.out
++		failure["partial_bytes"] = FileAccess.get_file_as_bytes(options.out).size()
++		_operation_reject(failure)
++		return
++	print("OPERATION_HEADLESS_PASS " + JSON.stringify(result.summary))
+ 	quit(0)
+ 
+ # 정책은 공개 투영만 읽고 명령만 낸다(플레이어 입력과 같은 경로).

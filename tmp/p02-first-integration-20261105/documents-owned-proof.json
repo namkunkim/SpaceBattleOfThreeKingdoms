@@ -1,0 +1,16 @@
+[
+  {
+    "path": "docs/battle-core/CHECKLIST-OPEN.md",
+    "before_sha256": "77f6c71d8b6f52a496b24cad1164038611e421f05dda94396983ae0ebab54b10",
+    "after_sha256": "edc6771c38c844e14bd585da05089905f179c9b87adea639c0ef55bdf7c5eab6",
+    "inverse_sha256": "77f6c71d8b6f52a496b24cad1164038611e421f05dda94396983ae0ebab54b10",
+    "allowed_hunk": "one appended P02 subrow; existing bytes unchanged"
+  },
+  {
+    "path": "docs/battle-core/pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.md",
+    "before_sha256": "8c02f89e7adaab8e257f51016889442317c226dceb7d398f269176c64ee32660",
+    "after_sha256": "6d63f3535c55d6fba8058fa2d6aa414e6c9ccf019a2b01fdf2b2190f011f4cf0",
+    "inverse_sha256": "8c02f89e7adaab8e257f51016889442317c226dceb7d398f269176c64ee32660",
+    "allowed_hunk": "latest date/context, P02 remains incomplete row, new §9 record; old §8 preserved"
+  }
+]

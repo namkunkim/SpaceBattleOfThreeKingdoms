@@ -1,0 +1,3 @@
+mocked broker: sole console flag, unchanged DEVNULL stdin and inherited stdout/stderr, intact inert EOF
+mocked mismatch remained rejected and its owned HANDLE survived until drain verification
+synthetic only

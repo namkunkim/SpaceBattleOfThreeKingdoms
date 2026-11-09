@@ -1,0 +1,5 @@
+Exception: C:\WorkSpace\SpaceBattleOfThreeKingdoms\tmp\i01b-p0-20261028-state-inventory\tools\scenario\audit_i01b_contract.ps1:40
+Line |
+  40 |  …    if($hash -ne $entry[0].sha256){throw "SOURCE_HASH_MISMATCH $path"}
+     |                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | SOURCE_HASH_MISMATCH core/battle/battle_state.gd

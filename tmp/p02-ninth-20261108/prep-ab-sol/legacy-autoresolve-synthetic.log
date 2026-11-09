@@ -1,0 +1,7 @@
+rejected missing row
+rejected fingerprint mismatch
+rejected bool masquerading as count
+rejected int/real JSON token mismatch
+rejected wrong summary reasons
+rejected duplicate key
+synthetic only: one equal and six invalid

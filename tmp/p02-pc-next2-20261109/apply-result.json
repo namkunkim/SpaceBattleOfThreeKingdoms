@@ -1,0 +1,14 @@
+{
+  "started_utc": "2026-11-08T19:10:38.293016+00:00",
+  "review_sha": "91ae6269471cc09cbd3ae845c15f7491002ed94763761a63712813a86d3fb6e7",
+  "before": "a3658b7ce2a3b2ba7e28ec9002fc014592cf72a2b6fd09cb27c374a89c2e28f0",
+  "after_expected": "42f98746255011935166770bfd070ed60218a227f6051a166adaa3b6353bbb56",
+  "protected_source_paths": 1479,
+  "after_actual": "42f98746255011935166770bfd070ed60218a227f6051a166adaa3b6353bbb56",
+  "reverse_hunk_exact": true,
+  "post_verify": true,
+  "scoped_diff_check_exit": 0,
+  "scoped_diff_check_stdout": "",
+  "scoped_diff_check_stderr": "warning: in the working copy of 'scripts/world_link.gd', LF will be replaced by CRLF the next time Git touches it\n",
+  "completed_utc": "2026-11-08T19:10:39.483927+00:00"
+}

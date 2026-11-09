@@ -1,0 +1,73 @@
+{
+  "common": "d54d30c58bee617288d65c9e567ad4ac52ba041b1e0d9c87435ecb168820f6d0",
+  "processes": "e25a86d3a8fd49c2347e6794c78828c008919deba8ccd6f034eda48a4ba036a8",
+  "suite_evidence": {
+    "battle-flow": {
+      "pass": true,
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": [],
+      "leaks": [
+        "WARNING: 165 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 24 resources still in use at exit (run with --verbose for details)."
+      ],
+      "marker": "BATTLE_FLOW_PASS"
+    },
+    "common": {
+      "pass": true,
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": [
+        "ERROR: 프로필 파일이 없다: res://data/profiles/p02_sixth_missing.json",
+        "ERROR: 프로필 파일이 없다: res://data/profiles/p02_sixth_missing.json",
+        "ERROR: 시나리오를 읽지 못해 시험 전장으로 엽니다 (res://data/profiles/p02_sixth_missing.json, 표준)"
+      ],
+      "leaks": [
+        "WARNING: 318 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 18 resources still in use at exit (run with --verbose for details)."
+      ],
+      "marker": "SIXTH_COMMON rows=8 checks=27 fails=0"
+    },
+    "organization": {
+      "pass": true,
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": [
+        "ERROR: 알 수 없는 난이도: 없는 난이도",
+        "ERROR: 알 수 없는 난이도: 없는 난이도",
+        "ERROR: 시나리오를 읽지 못해 시험 전장으로 엽니다 (res://data/profiles/red_cliffs_rt.json, 없는 난이도)"
+      ],
+      "leaks": [
+        "WARNING: 507 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 18 resources still in use at exit (run with --verbose for details)."
+      ],
+      "marker": "ORGANIZATION_UI_PASS"
+    },
+    "world-clean": {
+      "pass": true,
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": [
+        "ERROR: TEST_FAIL 천하에서 오면 브리핑부터 (prologue)"
+      ],
+      "leaks": [
+        "WARNING: 154 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 20 resources still in use at exit (run with --verbose for details)."
+      ],
+      "marker": "WORLD_LINK_FAIL 1"
+    },
+    "world-returning": {
+      "pass": true,
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": [],
+      "leaks": [
+        "WARNING: 154 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+        "ERROR: 20 resources still in use at exit (run with --verbose for details)."
+      ],
+      "marker": "WORLD_LINK_PASS"
+    }
+  },
+  "inputs": "86cf9f12bcc8062c545f937e184ba03d34d964ba68df9a8cc84c215c88b3e24e",
+  "workspace_after": "a83df2dc4d697ae05268ceee1560eec3355d73a7f46c697a366e9e7c0bc0d8f3"
+}

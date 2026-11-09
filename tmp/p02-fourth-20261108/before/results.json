@@ -1,0 +1,64 @@
+{
+  "processes": 4,
+  "cases": [
+    {
+      "label": "sync",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": "52d827e1983de606a85b48d938e7049e61c59e1b7f2521d23dcdb8aa5a43414e",
+      "pass_process": true
+    },
+    {
+      "label": "worker",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": "aab27947d363880eda44d03d61e0a37e85eee6a5ddaa37ec93aa1a4564ad0e24",
+      "pass_process": true
+    },
+    {
+      "label": "replay",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": "25cdc7bf81088ab39493c6e6a087ffc3138f14a653db0187d1f8d1e93f6cd104",
+      "pass_process": true
+    },
+    {
+      "label": "unsupported",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "unsupported_input_representation",
+          "ok": false,
+          "path": "definition"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    }
+  ],
+  "freeze_changes": []
+}

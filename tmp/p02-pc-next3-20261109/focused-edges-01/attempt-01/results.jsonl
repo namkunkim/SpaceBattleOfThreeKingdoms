@@ -1,0 +1,12 @@
+{"side": "before", "lane": "import", "exit": 0, "diagnostics": {}}
+{"side": "before", "lane": "D05", "exit": 1, "diagnostics": {}}
+{"side": "before", "lane": "D08", "exit": 1, "diagnostics": {"ERROR: [FleetBattle3D] invalid_candidate_profile at profile": 1}}
+{"side": "before", "lane": "D11", "exit": 1, "diagnostics": {}}
+{"side": "before", "lane": "D12", "exit": 0, "diagnostics": {}}
+{"side": "before", "lane": "D13", "exit": 1, "diagnostics": {}}
+{"side": "after", "lane": "import", "exit": 0, "diagnostics": {}}
+{"side": "after", "lane": "D05", "exit": 0, "diagnostics": {}}
+{"side": "after", "lane": "D08", "exit": 0, "diagnostics": {"ERROR: [FleetBattle3D] invalid_candidate_profile at profile": 1}}
+{"side": "after", "lane": "D11", "exit": 0, "diagnostics": {}}
+{"side": "after", "lane": "D12", "exit": 0, "diagnostics": {}}
+{"side": "after", "lane": "D13", "exit": 0, "diagnostics": {"ERROR: [FleetBattle3D] invalid_brief_difficulty at brief.difficulty": 1}}

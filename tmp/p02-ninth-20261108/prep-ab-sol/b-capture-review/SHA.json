@@ -1,0 +1,21 @@
+{
+  "status": "REVIEW_ONLY_NON_EXECUTABLE",
+  "sources": {
+    "tests/world_link.gd": "2058f703db8eb86e03f7c4470d9b06c2364565299b7fa5eecd984390591f8080",
+    "view/world/world_map_screen.gd": "e969bfe7e58434f465b6e006a8925a5e36f944bd62931503c5472693b0ecf055",
+    "hud/ui_kit/deck_screens.gd": "73dc364af79b43afaca9fa1f9eb2dedfb747a6b56e2ef70b7ef046defcdefe6b",
+    "scripts/world/battle_brief.gd": "2e501f7cef55504244993bacd63d9f9a7de05f34cb78db7d848dd93c9104a5f6",
+    "data/scenarios/red_cliffs_208_realtime.json": "0d702495a1ac94e255b44948ba8ebb625d4cdae2f1605658d05ec47911edb208",
+    "input/touch/touch_metrics.gd": "31b706c7a292960c87f53f3b62b852055bcc08a7a48dd42ca2fdc47999f24982"
+  },
+  "overlay_sha256": "b233e7132011ed4ec339003d53a5a0a58db6812ed0239c5d5b7c2c6b22056ef7",
+  "normalized_diff_sha256": "2d6ea31910138aad48d883d77d6fffb5a12d575b1019b0e8b55b2833fcf5526a",
+  "constructor_paths_expected_per_stage": [
+    4,
+    10,
+    2,
+    6
+  ],
+  "devices": 3,
+  "expected_total_assertions_including_static": 109
+}

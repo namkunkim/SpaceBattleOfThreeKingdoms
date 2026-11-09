@@ -1,0 +1,30 @@
+{
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3\\original-outcome-oracle.json": {
+    "bytes": 29714,
+    "sha256": "07c709c0c9bcb33b9acc5ddb453f09ffd5487bee7dbddc5f1444ac528f2f3165"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-before-attempt-02\\product-outcome-common\\result.json": {
+    "bytes": 29714,
+    "sha256": "07c709c0c9bcb33b9acc5ddb453f09ffd5487bee7dbddc5f1444ac528f2f3165"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-before-attempt-02\\inputs.json": {
+    "bytes": 731065,
+    "sha256": "a10ab8fe85eb56bd2af181eb65fcea6c20e90f2f7a91fffd986b721c5671eb56"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-before-attempt-02\\processes.json": {
+    "bytes": 11579,
+    "sha256": "0a797c1089855103340083bb8ad1de268bf18334f52e30b3078a28fee04abc50"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3\\fixed-proof-inputs.json": {
+    "bytes": 826,
+    "sha256": "b7d3ed342924be9cf2d5259a2846a88153c7c386dabc073162cdd6d486b244c5"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3\\engine.json": {
+    "bytes": 205,
+    "sha256": "34413b995697c3e826c7e89ac858609898925b92f3cde537bcd837beca6c8f07"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-before-attempt-02-workspace.json": {
+    "bytes": 7890,
+    "sha256": "17aa4287f69ac7f15ba0dae533e617830526b9a16dce998dde10a88dba963931"
+  }
+}

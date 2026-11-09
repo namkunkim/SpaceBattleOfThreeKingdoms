@@ -1,0 +1,64 @@
+{
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\remaining-cursor-drain\\synthetic-gate-exit_failure": {
+    "type": "directory"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\remaining-cursor-drain\\synthetic-gate-exit_failure\\end-status-stderr.bin": {
+    "type": "file",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\remaining-cursor-drain\\synthetic-gate-exit_failure\\end-status.bin": {
+    "type": "file",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\remaining-cursor-drain\\synthetic-gate-exit_failure\\input-after.json": {
+    "type": "file",
+    "bytes": 1954,
+    "sha256": "4982fc5642adac030dc11a051b0da24887e96e75871a6995dfc1eb4ae3b22067"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\remaining-cursor-drain\\synthetic-gate-exit_failure\\input-before.json": {
+    "type": "file",
+    "bytes": 1954,
+    "sha256": "4982fc5642adac030dc11a051b0da24887e96e75871a6995dfc1eb4ae3b22067"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\remaining-cursor-drain\\synthetic-gate-exit_failure\\local": {
+    "type": "directory"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\remaining-cursor-drain\\synthetic-gate-exit_failure\\protected-before.json": {
+    "type": "file",
+    "bytes": 714,
+    "sha256": "8ac277d065cdbcaf4e3bcc833ba9c5b594b0c6f5719ac1c25552d1487317ba11"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\remaining-cursor-drain\\synthetic-gate-exit_failure\\reserved-output.json": {
+    "type": "file",
+    "bytes": 781,
+    "sha256": "0ad1fe4beaf1627414abe3dc7d60f9ca20e9b5392c6d9107729978199fae12e4"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\remaining-cursor-drain\\synthetic-gate-exit_failure\\roaming": {
+    "type": "directory"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\remaining-cursor-drain\\synthetic-gate-exit_failure\\start-status-stderr.bin": {
+    "type": "file",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\remaining-cursor-drain\\synthetic-gate-exit_failure\\start-status.bin": {
+    "type": "file",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\remaining-cursor-drain\\synthetic-gate-exit_failure\\stderr.bin": {
+    "type": "file",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\remaining-cursor-drain\\synthetic-gate-exit_failure\\stdout.bin": {
+    "type": "file",
+    "bytes": 2752,
+    "sha256": "0ee41bc8b4b6126333da9ddd49232cbfa1d07e8076509ef63fb47804654023c3"
+  },
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\remaining-cursor-drain\\synthetic-gate-exit_failure\\temp": {
+    "type": "directory"
+  }
+}

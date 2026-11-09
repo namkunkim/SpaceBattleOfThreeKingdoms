@@ -1,0 +1,33 @@
+{
+  "utc": "2026-11-07T11:16:40.564054+00:00",
+  "branch": "codex/feature-i01b-not_remove",
+  "head": "fb660cea69207fd332e26128643007694910a253",
+  "index_paths": [],
+  "baseline_count": 3965,
+  "changed": [
+    {
+      "path": "core/battle/operation_private_state.gd",
+      "old": "6be2adeb64bec7c9a89040cab5c9558219e063272df1a9e5fd00cf1dd9111441",
+      "current": "dd47ceebaad2c5139bd8012deb841815cf0707c2231de202a00756913c0fa427"
+    },
+    {
+      "path": "docs/battle-core/CHECKLIST-OPEN.md",
+      "old": "77f6c71d8b6f52a496b24cad1164038611e421f05dda94396983ae0ebab54b10",
+      "current": "a1cf47d1120857e27a82828c902e15be7df5d4d546c2a44273c617362719a3f0"
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.md",
+      "old": "8c02f89e7adaab8e257f51016889442317c226dceb7d398f269176c64ee32660",
+      "current": "a0627a21afa37ca30fa365a3d92691d614f8e607892fe7349c283eaab2a9b723"
+    },
+    {
+      "path": "tmp/p02-first-integration-20261105/PLAN.md",
+      "old": "f4e87fccb6bcc6140e0682d36b268708083469db5f654fa92780b773f4210c4c",
+      "current": "28e68d982c3e2241a97bdf9260948575625350fb332de4f57e457e081d045671"
+    }
+  ],
+  "missing": [],
+  "status_identical_during_hash": true,
+  "status_raw_sha256": "7f51c0eb2d81ca2628c69e5ef81a1ba1255a8a9e590b1a0bb9f0673c49fa7f6c",
+  "status_start_raw_sha256": "7f51c0eb2d81ca2628c69e5ef81a1ba1255a8a9e590b1a0bb9f0673c49fa7f6c"
+}

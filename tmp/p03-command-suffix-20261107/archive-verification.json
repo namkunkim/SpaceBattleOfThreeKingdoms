@@ -1,0 +1,12 @@
+{
+  "name": "P03-COMMAND-SUFFIX-DELIVERY-20261108.zip",
+  "sha256": "4ed7d32c1fb0054a252c7843686405ec1256fb957f2c7f144e78cb0ac1b39663",
+  "bytes": 430750,
+  "entries": 72,
+  "payload_count": 71,
+  "manifest_sha256": "4717a777023c64ef32e6bd96beda874e3d3215a38432444bc5fd360316bd4546",
+  "crc_failure": null,
+  "duplicates": 0,
+  "entry_mismatches": 0,
+  "independent_closeout_in_archive": false
+}

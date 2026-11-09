@@ -1,0 +1,9 @@
+# C side 1 v7 독립 심사
+
+판정: **합성 payload 결합 보강 수용, 실제 oracle·제품 완료·실행은 미승인.** `C-SIDE1-PAYLOAD-V7-HANDOFF.md` SHA `eff96263945f0fa3c4ce10a4a63bd1bbacfe69b227c75094e2448f6fda2c440e`, manifest `7a38a29ed3f6f1cb5cad90a3756fdbeac36bdc22fdd2190cd75757828b6e83d9`, verifier `b4a84d91a5f66aa74b283e801ba59064a7005f656ded84edb7cde9336b52674c` 직접 확인. 이번 심사 turn의 실제 metadata는 gpt-6.1-terra다. 제품/Godot/GUI/Job 실행 없음.
+
+v6에 비해 lane 원문 hash와 각 event의 run/PID/creation/producer identity·증가하는 monotonic 값, eval tick/geometry 대조, source packet→request→result→target state 해시 결합을 코드에서 확인했다. `restore_into_prepared_target` 실제 성공 반환은 `{"ok":true}`여서 성공 shape는 원문과 일치한다. 보존된 합성 로그는 9,600건 정상과 false result, request 치환, packet/state 변조, geometry/tick, 시간, process/sim identity 등 10건 거부를 기록한다. 각 반례는 합성 입력 범위에서 이전 공백을 줄이지만 실제 `_eval`과 producer의 진실성까지 검증하지 않는다.
+
+구체적 한계: (1) packet/state는 hex 재해시 및 상호 동일성만 검사하고 실제 Godot Variant로 decode하지 않는다. `records: []`는 별도 JSON 필드이므로 bytes에 contact가 있어도 해당 필드가 빈 값이면 형식상 통과할 수 있다. packet·state bytes에서 실제 side 1 contact/fixture/type을 독립 추출해 JSON과 결합해야 한다. (2) wrong-position packet은 기존 packet과 다르기만 하면 된다. 요청 대상 contact의 pos만 기대대로 바뀌었는지, 다른 필드와 타입이 보존됐는지 및 실제 비교 대조가 실행됐는지 입증하지 않는다. (3) source state를 두 capture 사이 전체 hash 동일로 요구하는데 실제 직렬화 범위에 합법적인 메타데이터나 순서 변화가 있으면 false negative가 가능하다. 실제 정의된 typed snapshot 범위·순서를 고정하고 의도된 불변 항목과 분리해 심사한다. (4) 유효한 hash와 timestamp도 producer가 두 입력을 함께 꾸몄을 때 진위 증거가 아니다. launcher의 독립 process/HANDLE·source closure receipt와 `_eval` 직전 삽입·정확한 실제 packet/result의 source diff 및 loss/overflow 검증이 필요하다.
+
+다음 유한 단계는 실제 producer를 제품 실행 없이 설계·독립 검토하고 decoder/typed snapshot과 위 누락·동시 위조·다른 필드 변경·허용되는 순서 변동 반례를 고정하는 것이다. 실제 fixture 관측은 단일 K6 안에서만 수행한다. GUI per-request 귀속, Job/OS-backed filesystem 격리 및 21행 최종 manifest는 여전히 미해결이므로 전체 K6 실행은 금지한다. 최초 제품 import에서 마지막 K6이 소진되며 K1~K5·기존 실패, P03 활성 변경과 원본은 보존한다. HEAD lane은 P03 결합 미검증이다.

@@ -1,0 +1,105 @@
+{
+  "head": "fb660cea69207fd332e26128643007694910a253",
+  "files": {
+    "c:/workspace/spacebattleofthreekingdoms/tmp/p03-parallel-state-20261108/priority-handoff.md": {
+      "path": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-parallel-state-20261108/PRIORITY-HANDOFF.md",
+      "sha256": "5fc813b2611c47cc8f4d6c50b73b823c4e6bad230fa5676868cac23f45364f1f",
+      "size": 9086
+    },
+    "c:/workspace/spacebattleofthreekingdoms/tmp/p03-parallel-state-20261108/review-priority-plan.md": {
+      "path": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-parallel-state-20261108/REVIEW-PRIORITY-PLAN.md",
+      "sha256": "7010c44c9d5c12dd31e6dc1e7f6c69c1faf39b0bf018095025beea93ef763dd0",
+      "size": 2044
+    },
+    "c:/workspace/spacebattleofthreekingdoms/tmp/p03-parallel-state-20261108/boundary-closure/boundary-matrix.json": {
+      "path": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-parallel-state-20261108/boundary-closure/boundary-matrix.json",
+      "sha256": "9e18e4604e0b369496ae21bdfaca14956e7555900698b5ee0d843b14319c8b1f",
+      "size": 19318
+    },
+    "c:/workspace/spacebattleofthreekingdoms/tmp/p03-parallel-state-20261108/boundary-closure/oracle.json": {
+      "path": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-parallel-state-20261108/boundary-closure/oracle.json",
+      "sha256": "90eca41328159d4c3acf4084cc08379a3ffbb361abe14c8e6ff41fe32090f21a",
+      "size": 657
+    },
+    "c:/workspace/spacebattleofthreekingdoms/tmp/p03-parallel-state-20261108/boundary-closure/a06-acceptance.md": {
+      "path": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-parallel-state-20261108/boundary-closure/A06-ACCEPTANCE.md",
+      "sha256": "3d5a1ca486d7abab56886823404d5213f53a8652b90843ac05a8deef3db6ae50",
+      "size": 2644
+    },
+    "c:/workspace/spacebattleofthreekingdoms/tmp/p03-parallel-state-20261108/boundary-closure/run_gate.py": {
+      "path": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-parallel-state-20261108/boundary-closure/run_gate.py",
+      "sha256": "543996eefb711905b786da472feea6a1262e4302ecffe0feba82e5e5e61badb0",
+      "size": 7570
+    },
+    "c:/python314/python.exe": {
+      "path": "C:/Python314/python.exe",
+      "sha256": "03168c01b7b7491423350e82c26fee71f35b43694d1319d3c668bda6903a0c38",
+      "size": 106208
+    },
+    "c:/workspace/spacebattleofthreekingdoms/tmp/p03-parallel-state-20261108/boundary-closure/cases/row_omission.json": {
+      "path": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-parallel-state-20261108/boundary-closure/cases/row_omission.json",
+      "sha256": "3f1fad3794bcd9ccfd74883f66e596af7db2d34f455ee3dc2bef802142b78d4b",
+      "size": 18325
+    },
+    "c:/workspace/spacebattleofthreekingdoms/tmp/p03-parallel-state-20261108/boundary-closure/cases/cursor_misclassification.json": {
+      "path": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-parallel-state-20261108/boundary-closure/cases/cursor_misclassification.json",
+      "sha256": "9f1bda3d059f567e15be41e4166be96c85c6e86f233e0a1e4bdc3d2ebc6c1210",
+      "size": 19842
+    },
+    "c:/workspace/spacebattleofthreekingdoms/tmp/p03-parallel-state-20261108/boundary-closure/cases/missing_anchor.json": {
+      "path": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-parallel-state-20261108/boundary-closure/cases/missing_anchor.json",
+      "sha256": "4f89934cfea13937824b7238a49a5e0926db3a4d7ba7ccb3f8af7713c4e60f4f",
+      "size": 19867
+    },
+    "c:/workspace/spacebattleofthreekingdoms/core/battle/battle_sim.gd": {
+      "path": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/battle_sim.gd",
+      "sha256": "670916af166c1f67fd58f6ab3007782a598a7a8f6fea72024042e1945beb967a",
+      "size": 49068
+    },
+    "c:/workspace/spacebattleofthreekingdoms/core/battle/operation_private_state.gd": {
+      "path": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/core/battle/operation_private_state.gd",
+      "sha256": "ac59a7547469c705d33854742e9503b08422770b01956a47861b45735ab8c1c6",
+      "size": 27768
+    },
+    "c:/workspace/spacebattleofthreekingdoms/docs/battle-core/pc-campaign-design/i01-readiness-decision-20261026.md": {
+      "path": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/docs/battle-core/pc-campaign-design/I01-READINESS-DECISION-20261026.md",
+      "sha256": "49c0c3fc49eb1a14815584cc0b45fecd402b2b1f3e28668e7179c965a1815a50",
+      "size": 25397
+    },
+    "c:/workspace/spacebattleofthreekingdoms/scripts/fleetbattle3d.gd": {
+      "path": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/scripts/FleetBattle3D.gd",
+      "sha256": "604b79308d9b3dbab84dced32456a4f41b28686c8eec748073d3816892cffc5c",
+      "size": 37542
+    },
+    "c:/workspace/spacebattleofthreekingdoms/tmp/p03-command-suffix-20261107/review-5b-attempt-05.md": {
+      "path": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-command-suffix-20261107/REVIEW-5B-attempt-05.md",
+      "sha256": "ed727f2af5dc224d3a49b9563c39c3c6eb4718984d4099e60170e4a76aaa5a7c",
+      "size": 2143
+    },
+    "c:/workspace/spacebattleofthreekingdoms/tmp/p03-parallel-active-20261108/owner-operational-boundary/review-closeout.md": {
+      "path": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-parallel-active-20261108/owner-operational-boundary/REVIEW-CLOSEOUT.md",
+      "sha256": "6284c24544676981fefdd4fc49504f197e9ddbb91cd7ec5f4bde197f12495c80",
+      "size": 1844
+    },
+    "c:/workspace/spacebattleofthreekingdoms/tmp/p03-parallel-cursor-20261108/remaining-cursor-drain/review-attempt-03-closeout-terra.md": {
+      "path": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-parallel-cursor-20261108/remaining-cursor-drain/REVIEW-ATTEMPT-03-CLOSEOUT-TERRA.md",
+      "sha256": "b48bf25f5c75e181f3381ff5cb4210dc729848781eaec39eeba0a873523d9dbc",
+      "size": 2204
+    },
+    "c:/workspace/spacebattleofthreekingdoms/tmp/p03-parallel-cursor-20261108/remaining-cursor-drain/lifecycle-readonly/lifecycle-ledger.md": {
+      "path": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-parallel-cursor-20261108/remaining-cursor-drain/lifecycle-readonly/LIFECYCLE-LEDGER.md",
+      "sha256": "c3fb0514bd055c5efa6c951f1e453af5c1f1d39e71b0e235dbaad015fa0ab217",
+      "size": 4872
+    },
+    "c:/workspace/spacebattleofthreekingdoms/tmp/p03-terminal-boundary-20261108/review-closeout.md": {
+      "path": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-terminal-boundary-20261108/REVIEW-CLOSEOUT.md",
+      "sha256": "69d76f5bccda5a9644038b8df1ea1afff440e9b0cf3522fe54cc3648b9e48630",
+      "size": 1229
+    },
+    "c:/workspace/spacebattleofthreekingdoms/tmp/p03-viewer-checkpoint-20261108/review-closeout.md": {
+      "path": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-viewer-checkpoint-20261108/REVIEW-CLOSEOUT.md",
+      "sha256": "1d4a3c971da7bf7f06cd34d50fe65152838fa8c1e65efa6f61a36d4e36e4cc3b",
+      "size": 1078
+    }
+  }
+}

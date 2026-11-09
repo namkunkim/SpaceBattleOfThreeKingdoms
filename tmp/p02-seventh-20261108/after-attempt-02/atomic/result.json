@@ -1,0 +1,330 @@
+{
+	"deck_begin_changed_org_reject": {
+		"assertions": 64,
+		"failures": 0,
+		"value": {
+			"result": {
+				"error": "invalid_candidate_profile",
+				"ok": false,
+				"path": "profile"
+			}
+		}
+	},
+	"deck_begin_nonbrief_reject": {
+		"assertions": 58,
+		"failures": 0,
+		"value": {
+			"result": {
+				"error": "invalid_candidate_profile",
+				"ok": false,
+				"path": "profile"
+			}
+		}
+	},
+	"deck_restart_reject": {
+		"assertions": 56,
+		"failures": 0,
+		"value": {
+			"result": null
+		}
+	},
+	"deck_unrouted_title_reject": {
+		"assertions": 57,
+		"failures": 0,
+		"value": {
+			"result": null
+		}
+	},
+	"host_ready_restart_guards": {
+		"assertions": 57,
+		"failures": 0,
+		"value": {
+			"result": null
+		}
+	},
+	"org_auto_reject": {
+		"assertions": 57,
+		"failures": 0,
+		"value": {
+			"result": null
+		}
+	},
+	"org_repair_reject": {
+		"assertions": 57,
+		"failures": 0,
+		"value": {
+			"result": null
+		}
+	},
+	"recover_publish_once": {
+		"assertions": 11,
+		"failures": 0,
+		"value": {
+			"close": {
+				"data": {
+					"reason": "restart"
+				},
+				"kind": "session_closed",
+				"mono_ms": 10866.0,
+				"seq": 2.0,
+				"sim_ms": 0.0,
+				"tick": 0.0,
+				"v": 1.0,
+				"wall_time": "2026-11-08T17:04:45"
+			},
+			"close_file": "user://battle_traces/battle-2026-11-08T17-04-44-17096-10504220.jsonl",
+			"start": {
+				"data": {
+					"difficulty": "표준",
+					"engine": "4.7.2-stable (official)",
+					"fleet_state": [
+						{
+							"cmdr_state": "unhurt",
+							"confuse_until": -1.0,
+							"control": "direct",
+							"dead": false,
+							"flip_wait": 0.0,
+							"forced_retreat": false,
+							"form_to": "",
+							"formation": "FRM-03",
+							"has_move": false,
+							"heading": -0.277,
+							"hull": 6110.0,
+							"id": 1.0,
+							"in_cmd": true,
+							"is_flag": true,
+							"morale_bp": 10000.0,
+							"move_to": [
+								0.0,
+								0.0
+							],
+							"mstate": "stable",
+							"name": "유비",
+							"out": "",
+							"pos": [
+								329.375,
+								792.222229003906
+							],
+							"posture": "delegated",
+							"retreat_order": false,
+							"ships_milli": 74000.0,
+							"speed": 157.5,
+							"sq": "RC-LIU-SQ-01",
+							"target_id": -1.0
+						},
+						{
+							"cmdr_state": "unhurt",
+							"confuse_until": -1.0,
+							"control": "direct",
+							"dead": false,
+							"flip_wait": 0.0,
+							"forced_retreat": false,
+							"form_to": "",
+							"formation": "FRM-01",
+							"has_move": false,
+							"heading": -0.289,
+							"hull": 6900.0,
+							"id": 2.0,
+							"in_cmd": true,
+							"is_flag": false,
+							"morale_bp": 10000.0,
+							"move_to": [
+								0.0,
+								0.0
+							],
+							"mstate": "stable",
+							"name": "관우",
+							"out": "",
+							"pos": [
+								456.875,
+								766.666687011719
+							],
+							"posture": "delegated",
+							"retreat_order": false,
+							"ships_milli": 68000.0,
+							"speed": 183.75,
+							"sq": "RC-LIU-SQ-02",
+							"target_id": -1.0
+						},
+						{
+							"cmdr_state": "unhurt",
+							"confuse_until": -1.0,
+							"control": "direct",
+							"dead": false,
+							"flip_wait": 0.0,
+							"forced_retreat": false,
+							"form_to": "",
+							"formation": "FRM-03",
+							"has_move": false,
+							"heading": -0.343,
+							"hull": 6710.0,
+							"id": 3.0,
+							"in_cmd": true,
+							"is_flag": false,
+							"morale_bp": 10000.0,
+							"move_to": [
+								0.0,
+								0.0
+							],
+							"mstate": "stable",
+							"name": "마초",
+							"out": "",
+							"pos": [
+								244.375,
+								894.444458007813
+							],
+							"posture": "delegated",
+							"retreat_order": false,
+							"ships_milli": 66000.0,
+							"speed": 157.5,
+							"sq": "RC-LIU-SQ-03",
+							"target_id": -1.0
+						},
+						{
+							"cmdr_state": "unhurt",
+							"confuse_until": -1.0,
+							"control": "delegate",
+							"dead": false,
+							"flip_wait": 0.0,
+							"forced_retreat": false,
+							"form_to": "",
+							"formation": "FRM-02",
+							"has_move": false,
+							"heading": -0.102,
+							"hull": 6950.0,
+							"id": 4.0,
+							"in_cmd": true,
+							"is_flag": false,
+							"morale_bp": 10000.0,
+							"move_to": [
+								0.0,
+								0.0
+							],
+							"mstate": "stable",
+							"name": "주유",
+							"out": "",
+							"pos": [
+								446.25,
+								600.555541992188
+							],
+							"posture": "delegated",
+							"retreat_order": false,
+							"ships_milli": 68000.0,
+							"speed": 166.25,
+							"sq": "RC-SUN-SQ-01",
+							"target_id": -1.0
+						},
+						{
+							"cmdr_state": "unhurt",
+							"confuse_until": -1.0,
+							"control": "delegate",
+							"dead": false,
+							"flip_wait": 0.0,
+							"forced_retreat": false,
+							"form_to": "",
+							"formation": "FRM-01",
+							"has_move": false,
+							"heading": 0.047,
+							"hull": 6840.0,
+							"id": 5.0,
+							"in_cmd": true,
+							"is_flag": false,
+							"morale_bp": 10000.0,
+							"move_to": [
+								0.0,
+								0.0
+							],
+							"mstate": "stable",
+							"name": "손책",
+							"out": "",
+							"pos": [
+								499.375,
+								472.777770996094
+							],
+							"posture": "delegated",
+							"retreat_order": false,
+							"ships_milli": 69000.0,
+							"speed": 183.75,
+							"sq": "RC-SUN-SQ-02",
+							"target_id": -1.0
+						},
+						{
+							"cmdr_state": "unhurt",
+							"confuse_until": -1.0,
+							"control": "delegate",
+							"dead": false,
+							"flip_wait": 0.0,
+							"forced_retreat": false,
+							"form_to": "",
+							"formation": "FRM-05",
+							"has_move": false,
+							"heading": 0.098,
+							"hull": 6710.0,
+							"id": 6.0,
+							"in_cmd": true,
+							"is_flag": false,
+							"morale_bp": 10000.0,
+							"move_to": [
+								0.0,
+								0.0
+							],
+							"mstate": "stable",
+							"name": "손견",
+							"out": "",
+							"pos": [
+								403.75,
+								421.666656494141
+							],
+							"posture": "delegated",
+							"retreat_order": false,
+							"ships_milli": 66000.0,
+							"speed": 192.5,
+							"sq": "RC-SUN-SQ-03",
+							"target_id": -1.0
+						}
+					],
+					"hz": 10.0,
+					"move_mul": 150.0,
+					"profile": "red-cliffs-208-rt",
+					"profile_path": "res://data/profiles/red_cliffs_rt.json",
+					"seed": 777.0,
+					"turn_mul": 15.0,
+					"world": [
+						1700.0,
+						1150.0
+					]
+				},
+				"kind": "session_start",
+				"mono_ms": 10910.0,
+				"seq": 1.0,
+				"sim_ms": 0.0,
+				"tick": 0.0,
+				"v": 1.0,
+				"wall_time": "2026-11-08T17:04:45"
+			},
+			"start_file": "user://battle_traces/battle-2026-11-08T17-04-45-17096-10909791.jsonl"
+		}
+	},
+	"reject_clear_profile": {
+		"assertions": 64,
+		"failures": 0,
+		"value": {
+			"result": {
+				"error": "invalid_candidate_profile",
+				"ok": false,
+				"path": "profile"
+			}
+		}
+	},
+	"reject_wrong_roster_type": {
+		"assertions": 64,
+		"failures": 0,
+		"value": {
+			"result": {
+				"error": "invalid_candidate_profile",
+				"ok": false,
+				"path": "profile.ally"
+			}
+		}
+	}
+}

@@ -1,0 +1,236 @@
+{
+  "scripts/FleetBattle3D.gd": {
+    "before_sha256": "b8e119f99bddea8ecca7091158f193591dec9fdd0ab3bcb6a9df11ef180dd040",
+    "after_sha256": "34908bf325ae06aca22a4ee8f90172cd4dfa91c05b79c054c70a547e245f316a",
+    "changed": [
+      {
+        "before": [
+          148,
+          148
+        ],
+        "after": [
+          148,
+          151
+        ],
+        "functions": [
+          "_ready"
+        ]
+      },
+      {
+        "before": [
+          169,
+          169
+        ],
+        "after": [
+          172,
+          227
+        ],
+        "functions": [
+          "_prepare_game",
+          "_publish_game",
+          "init_game"
+        ]
+      },
+      {
+        "before": [
+          175,
+          191
+        ],
+        "after": [
+          233,
+          240
+        ],
+        "functions": [
+          "_publish_game",
+          "init_game"
+        ]
+      },
+      {
+        "before": [
+          193,
+          197
+        ],
+        "after": [
+          242,
+          242
+        ],
+        "functions": [
+          "_publish_game",
+          "init_game"
+        ]
+      },
+      {
+        "before": [
+          201,
+          210
+        ],
+        "after": [
+          246,
+          245
+        ],
+        "functions": [
+          "init_game"
+        ]
+      },
+      {
+        "before": [
+          295,
+          295
+        ],
+        "after": [
+          330,
+          331
+        ],
+        "functions": [
+          "_restart"
+        ]
+      }
+    ],
+    "reverse_byte_match": true
+  },
+  "hud/ui_kit/command_deck.gd": {
+    "before_sha256": "d9fda5c9bb7bd78d6f13aaeed27904e8d830ba4a75c65770dd79d1d728f09a2c",
+    "after_sha256": "bb81eb1855ff0c13708648597905411663223758ccd9a54ba73da1cab0565cf6",
+    "changed": [
+      {
+        "before": [
+          261,
+          266
+        ],
+        "after": [
+          261,
+          266
+        ],
+        "functions": [
+          "begin_battle"
+        ]
+      },
+      {
+        "before": [
+          268,
+          268
+        ],
+        "after": [
+          268,
+          268
+        ],
+        "functions": [
+          "begin_battle"
+        ]
+      },
+      {
+        "before": [
+          273,
+          272
+        ],
+        "after": [
+          273,
+          273
+        ],
+        "functions": [
+          "begin_battle"
+        ]
+      },
+      {
+        "before": [
+          275,
+          275
+        ],
+        "after": [
+          276,
+          277
+        ],
+        "functions": [
+          "restart"
+        ]
+      },
+      {
+        "before": [
+          290,
+          290
+        ],
+        "after": [
+          292,
+          293
+        ],
+        "functions": [
+          "to_title"
+        ]
+      }
+    ],
+    "reverse_byte_match": true
+  },
+  "hud/ui_kit/org_screen.gd": {
+    "before_sha256": "38ff748aaabef547db99a531d34ad115e624fbdef416f49c20230d29e1d5d5b7",
+    "after_sha256": "e30c317c09cd195b590e9f53d86dae0387f4b7d35e281b38331833d84ba11799",
+    "changed": [
+      {
+        "before": [
+          137,
+          137
+        ],
+        "after": [
+          137,
+          137
+        ],
+        "functions": [
+          "_load"
+        ]
+      },
+      {
+        "before": [
+          139,
+          143
+        ],
+        "after": [
+          139,
+          149
+        ],
+        "functions": [
+          "_apply_load",
+          "_load"
+        ]
+      },
+      {
+        "before": [
+          147,
+          148
+        ],
+        "after": [
+          153,
+          157
+        ],
+        "functions": [
+          "start_auto"
+        ]
+      },
+      {
+        "before": [
+          153,
+          153
+        ],
+        "after": [
+          162,
+          172
+        ],
+        "functions": [
+          "open_org"
+        ]
+      },
+      {
+        "before": [
+          158,
+          165
+        ],
+        "after": [
+          177,
+          177
+        ],
+        "functions": [
+          "open_org"
+        ]
+      }
+    ],
+    "reverse_byte_match": true
+  }
+}

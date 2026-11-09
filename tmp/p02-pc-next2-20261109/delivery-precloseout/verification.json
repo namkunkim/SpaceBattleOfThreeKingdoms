@@ -1,0 +1,10 @@
+{
+  "archive_sha256": "2b94ac408ca45061c985c3a58ca508de70bf7fff926c6ca249d14dc62bb4ddb4",
+  "archive_bytes": 470616,
+  "manifest_sha256": "c044040e1485a6dd51798f314773fca9d28e9d7975ea9b03d8c6d81202260d66",
+  "payload_count": 168,
+  "zip_entries": 169,
+  "crc": "PASS",
+  "duplicates": 0,
+  "same_workspace_payload_bytes": true
+}

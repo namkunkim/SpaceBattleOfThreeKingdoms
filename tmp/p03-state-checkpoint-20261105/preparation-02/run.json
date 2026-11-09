@@ -1,0 +1,17 @@
+{
+  "argv": [
+    "C:\\Python314\\python.exe",
+    "-B",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-state-checkpoint-20261105\\inventory.py",
+    "collect",
+    "--root",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms"
+  ],
+  "cwd": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+  "python_version": "3.14.6 (tags/v3.14.6:c63aec6, Jun 10 2026, 10:26:10) [MSC v.1944 64 bit (AMD64)]",
+  "actual_exit": 0,
+  "input_stable": true,
+  "before_sha256": "a89e09baf2c17994f43bea6ca831ee4487754d5605eff8921ae5c1db2d24fcfe",
+  "after_sha256": "a89e09baf2c17994f43bea6ca831ee4487754d5605eff8921ae5c1db2d24fcfe",
+  "oracle_exact": true
+}

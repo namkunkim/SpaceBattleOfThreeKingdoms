@@ -1,0 +1,45 @@
+{
+  "status": "REVIEW_ONLY_NON_EXECUTABLE",
+  "hashes": {
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe": "c8f0a6bc45a19b33541501e57f6f7cd972ab18453743266339d495cbbe846643",
+    "C:\\Python314\\python.exe": "03168c01b7b7491423350e82c26fee71f35b43694d1319d3c668bda6903a0c38",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\minimal\\project.godot": "550a7ef228e8975125c26c08cc442c6b31a16c9de2d21e4a4e7a2b4735de62b8",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\minimal\\probe.gd": "b12fce573a3d6f728d5a05f0851c0bb9c0ccb52b286c4e00ed7ff2e101eb8331",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\abi_oracle.py": "1a5a1523d401ea6edfc98e41954577a0a507603789c477ef30c9acf836510237",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\c_side1_semantics_v8.py": "694f410424817d3579c1daa72572a5492b73f892c5ca12b99791f4309943281b",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\legacy_autoresolve_oracle.py": "7c7d41ed9e02ec83335499262edef24b295df5e7a8b5ced7a1d30489e9d72f78",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\NONPRODUCT-VARIANT-ABI-PLAN.md": "6fc12dabc9d3165295745a9f387e0d90d151476d5fe501ea95a35541f2fb4662"
+  },
+  "argv": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\never-run-until-independently-approved\\project",
+    "--script",
+    "res://probe.gd",
+    "--log-file",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\never-run-until-independently-approved\\logs\\engine.log"
+  ],
+  "cwd": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\never-run-until-independently-approved\\project",
+  "env_overrides": {
+    "APPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\never-run-until-independently-approved\\roaming",
+    "LOCALAPPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\never-run-until-independently-approved\\local",
+    "XDG_DATA_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\never-run-until-independently-approved\\roaming",
+    "XDG_CONFIG_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\never-run-until-independently-approved\\config",
+    "XDG_CACHE_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\never-run-until-independently-approved\\cache",
+    "TEMP": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\never-run-until-independently-approved\\temp",
+    "TMP": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\never-run-until-independently-approved\\temp"
+  },
+  "expected_exit": 0,
+  "expected_rows": 10,
+  "stdout": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\never-run-until-independently-approved\\logs\\stdout.txt",
+  "stderr": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\variant-abi-review\\never-run-until-independently-approved\\logs\\stderr.txt",
+  "deadline_seconds": 20,
+  "owned_cleanup_seconds": 5,
+  "max_output_bytes": 262144,
+  "execution_gates": [
+    "independent approval",
+    "source closure/managed filesystem enforcement and env whitelist",
+    "owned lifecycle runner and immutable raw evidence"
+  ]
+}

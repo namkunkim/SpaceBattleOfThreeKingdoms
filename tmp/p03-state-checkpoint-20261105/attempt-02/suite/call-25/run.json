@@ -1,0 +1,35 @@
+{
+  "label": "function-continuation",
+  "expected_exit": 0,
+  "actual_exit": 0,
+  "argv": [
+    "C:\\Python314\\python.exe",
+    "-B",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-state-checkpoint-20261105\\inventory.py",
+    "collect",
+    "--root",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-state-checkpoint-20261105\\attempt-02\\suite\\fixtures\\function-continuation"
+  ],
+  "cwd": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+  "python_version": "3.14.6 (tags/v3.14.6:c63aec6, Jun 10 2026, 10:26:10) [MSC v.1944 64 bit (AMD64)]",
+  "input_manifest_sha256_before": "a5f5344be270945c6084fc320a03d91d442f432418a386c2c177cfef31a3ebfa",
+  "input_manifest_sha256_after": "a5f5344be270945c6084fc320a03d91d442f432418a386c2c177cfef31a3ebfa",
+  "before": {
+    "C:\\Python314\\python.exe": "03168c01b7b7491423350e82c26fee71f35b43694d1319d3c668bda6903a0c38",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-state-checkpoint-20261105\\inventory.py": "a90f8b6f68dffcba37049f633bd3f9a355cc348e39686bd84a1eeacf89748c51",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-state-checkpoint-20261105\\test_inventory.py": "43494b2fd654ee28e336476a645f36d7701d93ceefb4dc4cdb0f8d1f146ff2d0",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-state-checkpoint-20261105\\oracle-20261107.json": "a7e2c3c30a4814d3d8896ea6614c53948faef6783df938cb468ea36b1a23f895",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-state-checkpoint-20261105\\oracle-candidate-v2.json": "9b7ff0b383f4fc94e4ddc17a798f28e1b02f1a1ebfac3884fe77337548d92a6f",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-state-checkpoint-20261105\\declaration-baseline.json": "864a40f9c6753f7805dda15226828c34263d9ce0390eb2969dd2e3a1351b6702",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-state-checkpoint-20261105\\attempt-02\\suite\\fixtures\\function-continuation\\core\\battle\\example.gd": "e6ea8a23b386915c6ed2788479e4fec4646c8b26d2cf1fcc086a91a5f154dee7"
+  },
+  "after": {
+    "C:\\Python314\\python.exe": "03168c01b7b7491423350e82c26fee71f35b43694d1319d3c668bda6903a0c38",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-state-checkpoint-20261105\\inventory.py": "a90f8b6f68dffcba37049f633bd3f9a355cc348e39686bd84a1eeacf89748c51",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-state-checkpoint-20261105\\test_inventory.py": "43494b2fd654ee28e336476a645f36d7701d93ceefb4dc4cdb0f8d1f146ff2d0",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-state-checkpoint-20261105\\oracle-20261107.json": "a7e2c3c30a4814d3d8896ea6614c53948faef6783df938cb468ea36b1a23f895",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-state-checkpoint-20261105\\oracle-candidate-v2.json": "9b7ff0b383f4fc94e4ddc17a798f28e1b02f1a1ebfac3884fe77337548d92a6f",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-state-checkpoint-20261105\\declaration-baseline.json": "864a40f9c6753f7805dda15226828c34263d9ce0390eb2969dd2e3a1351b6702",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-state-checkpoint-20261105\\attempt-02\\suite\\fixtures\\function-continuation\\core\\battle\\example.gd": "e6ea8a23b386915c6ed2788479e4fec4646c8b26d2cf1fcc086a91a5f154dee7"
+  }
+}

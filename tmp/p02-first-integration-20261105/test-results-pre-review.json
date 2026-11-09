@@ -1,0 +1,82 @@
+{
+  "stage": "P02 first headless opt-in; 5a facts, independent5b pending",
+  "attempts": [
+    {
+      "attempt": 1,
+      "actual_exit": 1,
+      "script_errors": 8112,
+      "assertion_errors": 1
+    },
+    {
+      "attempt": 2,
+      "actual_exit": 1,
+      "script_errors": 0,
+      "assertion_errors": 2
+    },
+    {
+      "attempt": 3,
+      "actual_exit": 0,
+      "script_errors": 0,
+      "assertion_errors": 0
+    }
+  ],
+  "limit": 6,
+  "matrix_cases": 8,
+  "checks": 13417,
+  "policy_microcases": 9,
+  "timeout_supplemental_cases": 2,
+  "api_negative": 32,
+  "cli_negative": 14,
+  "named_negative_total": 46,
+  "cli_success": 2,
+  "legacy_processes": 2,
+  "legacy_exact_equal": true,
+  "cli_inputs_preserved": true,
+  "cli_all_expected": true,
+  "regressions": [
+    {
+      "label": "attempt3-regression-private",
+      "command": [
+        "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+        "--log-file",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-first-integration-20261105\\attempt3-regression-private-engine.log",
+        "-s",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-first-integration-20261105\\attempt3-private-regression.gd"
+      ],
+      "actual_exit": 0,
+      "script_errors": 0,
+      "errors": 0,
+      "warnings": 0,
+      "log_sha256": "43bf093e407323bec867c56adb24d8454bf91d784d7d09292c8e8dcc0acbc0bc",
+      "engine_log_sha256": "ae8b26e63c2d157ff8703440d3c129c27ee7608ee0c94c01fd5183ec17ba1043"
+    },
+    {
+      "label": "attempt3-regression-core",
+      "command": [
+        "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+        "--log-file",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-first-integration-20261105\\attempt3-regression-core-engine.log",
+        "-s",
+        "tests/core_rules.gd"
+      ],
+      "actual_exit": 0,
+      "script_errors": 0,
+      "errors": 0,
+      "warnings": 0,
+      "log_sha256": "f5edd78c23b68d37e1b7609e43fb2ee24a2e6612d10ffe500adaaac205b849d8",
+      "engine_log_sha256": "f840d3c0784ee9beff94eea1b3de8aed303664f88fa73b47ccc06b422dfaa4d8"
+    }
+  ],
+  "known_parser_classification_deviation": [
+    "--no-chain",
+    "--no-m9",
+    "--wind"
+  ],
+  "deviation_result": "unknown_option rather than conflicting_option; both exit1/no fallback; source-review finding, no extra runtime claims"
+}

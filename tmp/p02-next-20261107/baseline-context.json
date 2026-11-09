@@ -1,0 +1,12 @@
+{
+  "head": 0,
+  "branch": 0,
+  "index": 0,
+  "index_tree": 0,
+  "status": 0,
+  "diff-check": 2,
+  "counts": {
+    "tracked": 2453,
+    "untracked": 4625
+  }
+}

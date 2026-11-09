@@ -1,0 +1,40 @@
+{
+  "outside": [],
+  "status_before": 40184,
+  "changes": [
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/c1-rewind/attempt-01/fixture/run.json",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/c1-rewind/attempt-01/fixture/stderr.bin",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/c1-rewind/attempt-01/fixture/stdout.bin",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/c1-rewind/attempt-01/forced_failure/run.json",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/c1-rewind/attempt-01/forced_failure/stderr.bin",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/c1-rewind/attempt-01/forced_failure/stdout.bin",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/c1-rewind/attempt-01/git-before.z",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/c1-rewind/attempt-01/input-after.json",
+      "SideIndicator": "=>"
+    }
+  ],
+  "changed": 8,
+  "status_after": 40192
+}

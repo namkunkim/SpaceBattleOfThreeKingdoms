@@ -1,0 +1,5 @@
+{
+  "name": "i01_operation_config",
+  "actual_exit": 0,
+  "script": "tests/i01_operation_config.gd"
+}

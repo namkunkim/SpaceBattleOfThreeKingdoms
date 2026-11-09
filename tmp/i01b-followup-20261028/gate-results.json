@@ -1,0 +1,56 @@
+[
+  {
+    "test": "core_rules",
+    "exit_code": 0,
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-followup-20261028/logs/core_rules.log",
+    "output_log": "tmp/i01b-followup-20261028/logs/core_rules-output.log"
+  },
+  {
+    "test": "i01b_logical_clock",
+    "exit_code": 0,
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-followup-20261028/logs/i01b_logical_clock.log",
+    "output_log": "tmp/i01b-followup-20261028/logs/i01b_logical_clock-output.log"
+  },
+  {
+    "test": "i01_operation_config",
+    "exit_code": 0,
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-followup-20261028/logs/i01_operation_config.log",
+    "output_log": "tmp/i01b-followup-20261028/logs/i01_operation_config-output.log"
+  },
+  {
+    "test": "data_rules",
+    "exit_code": 0,
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-followup-20261028/logs/data_rules.log",
+    "output_log": "tmp/i01b-followup-20261028/logs/data_rules-output.log"
+  },
+  {
+    "test": "hold_distance",
+    "exit_code": 0,
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-followup-20261028/logs/hold_distance.log",
+    "output_log": "tmp/i01b-followup-20261028/logs/hold_distance-output.log"
+  },
+  {
+    "test": "commander_ai",
+    "exit_code": 0,
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-followup-20261028/logs/commander_ai.log",
+    "output_log": "tmp/i01b-followup-20261028/logs/commander_ai-output.log"
+  },
+  {
+    "test": "battle_flow",
+    "exit_code": 0,
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-followup-20261028/logs/battle_flow.log",
+    "output_log": "tmp/i01b-followup-20261028/logs/battle_flow-output.log"
+  },
+  {
+    "test": "bundle_layout",
+    "exit_code": 0,
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-followup-20261028/logs/bundle_layout.log",
+    "output_log": "tmp/i01b-followup-20261028/logs/bundle_layout-output.log"
+  },
+  {
+    "test": "group_formation",
+    "exit_code": 0,
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-followup-20261028/logs/group_formation.log",
+    "output_log": "tmp/i01b-followup-20261028/logs/group_formation-output.log"
+  }
+]

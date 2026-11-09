@@ -1,0 +1,17 @@
+{
+  "docs/battle-core/pc-campaign-design/P02-PROGRESS-CHECKLIST.md": {
+    "before": "6fe7e83fdbc627ddd62897202bc542bdab915a017958d94a1568b48aadc5a30f",
+    "after": "ec3c428a6dfd1e07f1f041960a6327b2e26df0dc22c956f27ad397841c8ae433",
+    "reverse_verified": true
+  },
+  "docs/battle-core/pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.md": {
+    "before": "2dd3ef6251a01ea3c4fe2a11fa400e901beb0c193839164bee532beeb070d188",
+    "after": "7ce01b53092ce716fb8dd68962dd9acb3e694987af163fee53f3ef71689f698e",
+    "reverse_verified": true
+  },
+  "docs/battle-core/CHECKLIST-OPEN.md": {
+    "before": "56e74e9bb1b55de0008ce31034111ee71b840de4d3787dc8c17ecb909567a4d1",
+    "after": "d3338a2246572a99c8495ea2e69f9eedfc86977e75a68f9cb7462fc74623aea5",
+    "reverse_verified": true
+  }
+}

@@ -1,0 +1,67 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 - Build 32.0.101.8626 - Compatibility - Using Device: Intel - Intel(R) Arc(TM) 130V GPU (8GB)
+
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-seventh-20261108/gui-after-02-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-14-06-19236-4362645.jsonl
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-seventh-20261108/gui-after-02-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-14-08-19236-6065659.jsonl
+P02_7 {"enabled":true,"lane":"03-confirm","path":"/root/FleetBattle3D/@Node@758/CommandDeckLayer/@Control@764/@Control@1094/@Control@981/@MarginContainer@982/@VBoxContainer@983/@HBoxContainer@1016/@Button@1020","phase":"ready","rect":"[P: (1360.0, 824.0), S: (220.0, 56.0)]","repair_errors":0,"text":"확정 · 출격","visible":true}
+FPS 31.0 ships 411 state brief speed 1
+FPS 31.0 ships 411 state brief speed 1
+FPS 29.0 ships 411 state brief speed 1
+FPS 32.0 ships 411 state brief speed 1
+P02_7 {"code":1,"phase":"os-input","type":"mouse","x":1293.74987792969,"y":863.749938964844}
+FPS 27.0 ships 411 state brief speed 1
+P02_7 {"code":1,"phase":"os-input","type":"mouse","x":1503.74987792969,"y":848.749938964844}
+P02_7 {"differences":[],"lane":"03-confirm","path":"/root/FleetBattle3D/@Node@758/CommandDeckLayer/@Control@764/@Control@1094/@Control@981/@MarginContainer@982/@VBoxContainer@983/@HBoxContainer@1016/@Button@1020","phase":"button","warning":true}
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-seventh-20261108/gui-after-02-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-14-24-19236-22511569.jsonl
+P02_7 {"enabled":true,"lane":"04-auto","path":"/root/FleetBattle3D/@Node@758/CommandDeckLayer/@Control@764/@Control@1088/@Control@838/@HBoxContainer@839/@Button@843","phase":"ready","rect":"[P: (954.0, 712.0), S: (200.0, 54.0)]","repair_errors":0,"text":"자동 편성으로 시작","visible":true}
+FPS 30.0 ships 411 state brief speed 1
+FPS 30.0 ships 411 state brief speed 1
+P02_7 {"code":1,"phase":"os-input","type":"mouse","x":1066.24987792969,"y":742.499938964844}
+P02_7 {"differences":[],"lane":"04-auto","path":"/root/FleetBattle3D/@Node@758/CommandDeckLayer/@Control@764/@Control@1088/@Control@838/@HBoxContainer@839/@Button@843","phase":"button","warning":true}
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-seventh-20261108/gui-after-02-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-14-28-19236-26566649.jsonl
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-seventh-20261108/gui-after-02-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-14-29-19236-26719453.jsonl
+P02_7 {"enabled":true,"lane":"05-repair","path":"/root/FleetBattle3D/@Node@758/CommandDeckLayer/@Control@764/@Control@1088/@Control@838/@HBoxContainer@839/@Button@844","phase":"ready","rect":"[P: (1166.0, 712.0), S: (200.0, 54.0)]","repair_errors":2,"text":"편  성","visible":true}
+FPS 19.0 ships 411 state brief speed 1
+P02_7 {"code":1,"phase":"os-input","type":"mouse","x":1066.24987792969,"y":742.499938964844}
+FPS 31.0 ships 411 state brief speed 1
+P02_7 {"code":1,"phase":"os-input","type":"mouse","x":1077.49987792969,"y":743.749938964844}
+FPS 29.0 ships 411 state brief speed 1
+FPS 31.0 ships 411 state brief speed 1
+FPS 31.0 ships 411 state brief speed 1
+FPS 31.0 ships 411 state brief speed 1
+FPS 32.0 ships 411 state brief speed 1
+FPS 31.0 ships 411 state brief speed 1
+FPS 31.0 ships 411 state brief speed 1
+FPS 31.0 ships 411 state brief speed 1
+FPS 31.0 ships 411 state brief speed 1
+FPS 30.0 ships 411 state brief speed 1
+FPS 30.0 ships 411 state brief speed 1
+FPS 31.0 ships 411 state brief speed 1
+FPS 31.0 ships 411 state brief speed 1
+FPS 31.0 ships 411 state brief speed 1
+FPS 32.0 ships 411 state brief speed 1
+FPS 32.0 ships 411 state brief speed 1
+FPS 31.0 ships 411 state brief speed 1
+FPS 31.0 ships 411 state brief speed 1
+FPS 31.0 ships 411 state brief speed 1
+P02_7 {"code":1,"phase":"os-input","type":"mouse","x":1264.99987792969,"y":741.249938964844}
+P02_7 {"differences":[],"lane":"05-repair","path":"/root/FleetBattle3D/@Node@758/CommandDeckLayer/@Control@764/@Control@1088/@Control@838/@HBoxContainer@839/@Button@844","phase":"button","warning":true}
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-seventh-20261108/gui-after-02-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-15-11-19236-68994135.jsonl
+P02_7 {"enabled":true,"lane":"06-restart","path":"/root/FleetBattle3D/@Node@758/CommandDeckLayer/@Control@764/@Control@1092/@HBoxContainer@971/@Button@973","phase":"ready","rect":"[P: (762.0, 790.0), S: (240.0, 54.0)]","repair_errors":0,"text":"다시 출격","visible":true}
+FPS 30.0 ships 411 state brief speed 1
+FPS 31.0 ships 411 state brief speed 1
+P02_7 {"code":1,"phase":"os-input","type":"mouse","x":879.999938964844,"y":816.249938964844}
+P02_7 {"differences":[],"lane":"06-restart","path":"/root/FleetBattle3D/@Node@758/CommandDeckLayer/@Control@764/@Control@1092/@HBoxContainer@971/@Button@973","phase":"button","warning":true}
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-seventh-20261108/gui-after-02-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-15-14-19236-72607762.jsonl
+P02_7 {"enabled":true,"lane":"07-title","path":"/root/FleetBattle3D/@Node@758/CommandDeckLayer/@Control@764/@Control@1092/@HBoxContainer@971/@Button@972","phase":"ready","rect":"[P: (598.0, 790.0), S: (150.0, 54.0)]","repair_errors":0,"text":"타이틀로","visible":true}
+FPS 28.0 ships 411 state brief speed 1
+FPS 31.0 ships 411 state brief speed 1
+P02_7 {"code":1,"phase":"os-input","type":"mouse","x":669.999938964844,"y":816.249938964844}
+P02_7 {"differences":[],"lane":"07-title","path":"/root/FleetBattle3D/@Node@758/CommandDeckLayer/@Control@764/@Control@1092/@HBoxContainer@971/@Button@972","phase":"button","warning":true}
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-seventh-20261108/gui-after-02-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-15-18-19236-76207952.jsonl
+P02_7 {"enabled":true,"lane":"08-legacy","path":"/root/FleetBattle3D/@CanvasLayer@9/@Control@11/@ColorRect@69/@Panel@70/@Button@75","phase":"ready","rect":"[P: (670.0, 628.0), S: (140.0, 46.0)]","repair_errors":0,"text":"처음부터","visible":true}
+FPS 23.0 ships 411 state brief speed 1
+FPS 31.0 ships 411 state brief speed 1
+FPS 29.0 ships 411 state brief speed 1
+P02_7 {"code":1,"phase":"os-input","type":"mouse","x":739.999938964844,"y":652.499938964844}
+P02_7 {"differences":[],"lane":"08-legacy","path":"/root/FleetBattle3D/@CanvasLayer@9/@Control@11/@ColorRect@69/@Panel@70/@Button@75","phase":"button","warning":true}

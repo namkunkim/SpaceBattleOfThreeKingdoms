@@ -1,0 +1,9 @@
+{
+  "candidate_tree": "6165f3756ac21b1a6d1d8004b48e6b2cdb7fe5fa",
+  "engine": "4.7.2-stable (official)",
+  "exit": 0,
+  "checks": 19,
+  "passed": 19,
+  "diagnostics": 0,
+  "logs_sha256": "02DCD250C2B6A59DA0976100AB37D1768DB97DB24C363431EDA16BC5CEC65333"
+}

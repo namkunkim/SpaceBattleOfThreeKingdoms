@@ -1,0 +1,94 @@
+{
+  "files": [
+    {
+      "path": "docs/battle-core/CHECKLIST-OPEN.md",
+      "sha256": "77f6c71d8b6f52a496b24cad1164038611e421f05dda94396983ae0ebab54b10",
+      "bytes": 118979
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/I01B-ACTIVE-REPLACE-CHECKLIST-20261104.md",
+      "sha256": "3a55e2fc15bbba5b63b6a0c9f67ecf66775aa2aa834584cdc95730767246bdd1",
+      "bytes": 2955
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/I01B-P2C-CHECKLIST-20261101.md",
+      "sha256": "30c60fbc526cfdfcafc3e5133980f3996a6c3bf5700b21c5dfe9dcd3338889fc",
+      "bytes": 3543
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.md",
+      "sha256": "8c02f89e7adaab8e257f51016889442317c226dceb7d398f269176c64ee32660",
+      "bytes": 16889
+    },
+    {
+      "path": "tmp/i01b-checklist-confirmed-20261104/before.json",
+      "sha256": "0f14e5369855e0996dff657c1d5cb66d16bc9dbbd00e33333b1be0f09159800f",
+      "bytes": 861392
+    },
+    {
+      "path": "tmp/i01b-checklist-confirmed-20261104/CHECKLIST-OPEN.md.before.txt",
+      "sha256": "88d767679e218b545443cc59bf1cecbe12a69af5d072ebcfc189607f24746e7d",
+      "bytes": 118806
+    },
+    {
+      "path": "tmp/i01b-checklist-confirmed-20261104/CHECKLIST-OPEN.md.diff",
+      "sha256": "866beaaac41f82e8fd080cb9f333571381df73ba9c5ebb3ca4207c2d1518d8db",
+      "bytes": 5362
+    },
+    {
+      "path": "tmp/i01b-checklist-confirmed-20261104/diff-check-stderr.log",
+      "sha256": "9383227f23e362399d837fdb9c3c96bbd55d9aa7b4797dccb087af7227ca50c7",
+      "bytes": 951
+    },
+    {
+      "path": "tmp/i01b-checklist-confirmed-20261104/diff-check-stdout.log",
+      "sha256": "91be8367860019a1e276a52b8cd1f1542ff5439ce163f2f84cdd326e0ac08255",
+      "bytes": 809
+    },
+    {
+      "path": "tmp/i01b-checklist-confirmed-20261104/I01B-ACTIVE-REPLACE-CHECKLIST-20261104.md.before.txt",
+      "sha256": "d22f18b45430f40b46a30d273097e2452b2c79d11116674bf5a9b43bbb60340e",
+      "bytes": 2391
+    },
+    {
+      "path": "tmp/i01b-checklist-confirmed-20261104/I01B-ACTIVE-REPLACE-CHECKLIST-20261104.md.diff",
+      "sha256": "90a955057c3ed8225d0f5fd645d1585e71254ab244e6eb7a4d9d1da674c1813f",
+      "bytes": 1431
+    },
+    {
+      "path": "tmp/i01b-checklist-confirmed-20261104/I01B-P2C-CHECKLIST-20261101.md.before.txt",
+      "sha256": "6ba546f326b3d337b77b84beeec792b5c17394235e589d4e767af192b56c8b3a",
+      "bytes": 3110
+    },
+    {
+      "path": "tmp/i01b-checklist-confirmed-20261104/I01B-P2C-CHECKLIST-20261101.md.diff",
+      "sha256": "450d62f7e224158d984473dc07eb845704a448e04c0cba15f0533b49c7c7f3fc",
+      "bytes": 1584
+    },
+    {
+      "path": "tmp/i01b-checklist-confirmed-20261104/PLAN.md",
+      "sha256": "fdb3d2756184cfc5707307699c93b3707f0b17739733d6fe215b05ff9974210e",
+      "bytes": 1633
+    },
+    {
+      "path": "tmp/i01b-checklist-confirmed-20261104/SESSION-REQUIREMENTS-CHECKLIST-20261031.md.before.txt",
+      "sha256": "f8afbb472c579aef5f4815a8d2b5e530c43a43a1be826d0c7fd05ebb5e630a14",
+      "bytes": 14404
+    },
+    {
+      "path": "tmp/i01b-checklist-confirmed-20261104/SESSION-REQUIREMENTS-CHECKLIST-20261031.md.diff",
+      "sha256": "802847dd24362cd4cf628c1fc89785ed7c151ec867eee01a1b295d33afdfcb3e",
+      "bytes": 11966
+    },
+    {
+      "path": "tmp/i01b-checklist-confirmed-20261104/status-before.z",
+      "sha256": "1bb33e7b861bc4e253f88f6bc05d4d25e098163b3c8486cbdab467c5c3ad76bf",
+      "bytes": 319269
+    },
+    {
+      "path": "tmp/i01b-checklist-confirmed-20261104/validation-attempt1.json",
+      "sha256": "242aa7636cc8cfcfa61db6dc910f54a4229c29071aa8d8cc0949d177d3b9edce",
+      "bytes": 4527
+    }
+  ]
+}

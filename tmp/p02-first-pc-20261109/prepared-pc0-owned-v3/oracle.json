@@ -1,0 +1,75 @@
+{
+  "session": {
+    "profile": "red-cliffs-208-rt",
+    "profile_path": "res://data/profiles/red_cliffs_rt.json",
+    "seed": 777,
+    "difficulty": "입문",
+    "hz": 10
+  },
+  "flag_id": 1,
+  "roster": [
+    {
+      "side": 0,
+      "id": 1,
+      "sq": "RC-LIU-SQ-01",
+      "faction": "liu_bei",
+      "is_flag": true,
+      "control": "direct"
+    },
+    {
+      "side": 0,
+      "id": 2,
+      "sq": "RC-LIU-SQ-02",
+      "faction": "liu_bei",
+      "is_flag": false,
+      "control": "direct"
+    },
+    {
+      "side": 0,
+      "id": 3,
+      "sq": "RC-LIU-SQ-03",
+      "faction": "liu_bei",
+      "is_flag": false,
+      "control": "direct"
+    },
+    {
+      "side": 0,
+      "id": 4,
+      "sq": "RC-SUN-SQ-01",
+      "faction": "sun_quan",
+      "is_flag": false,
+      "control": "delegate"
+    },
+    {
+      "side": 0,
+      "id": 5,
+      "sq": "RC-SUN-SQ-02",
+      "faction": "sun_quan",
+      "is_flag": false,
+      "control": "delegate"
+    },
+    {
+      "side": 0,
+      "id": 6,
+      "sq": "RC-SUN-SQ-03",
+      "faction": "sun_quan",
+      "is_flag": false,
+      "control": "delegate"
+    }
+  ],
+  "deadline": {
+    "limit_s": 1200,
+    "period": 10,
+    "initial_tick": 0,
+    "initial_ms": 0,
+    "substep_ms": 50,
+    "first_tick": 12010,
+    "first_ms": 1200950,
+    "previous_tick": 12000,
+    "previous_ms": 1199950
+  },
+  "basis": {
+    "roster": "ScenarioProfile.load_profile filters scn.squadrons by control and retains iteration order; ally flagship is player_flag only. Organization.default_org enables all, auto_all edits personnel/composition, apply preserves list order. BattleSim.initialize spawns ally first; BattleState.next_id=1. FleetBattle3D sets Liu Bei side 0 direct, default FleetState control is delegate.",
+    "deadline": "BattleState initial tick/clock 0. BattleSim._tick increments tick, then 2×50ms _substep. The first substep increments clock before Victory.check, which runs at tick % 10 = 0. Eligible ms=(tick-1)*100+50. At tick 12000 the clock is 1199950ms. Next eligible is tick 12010 at 1200950ms. Victory priority simultaneous, allied defeat, enemy defeat, limited outcome, timeout."
+  }
+}

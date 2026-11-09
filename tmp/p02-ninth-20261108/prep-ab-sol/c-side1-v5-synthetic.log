@@ -1,0 +1,10 @@
+accepted canonical ordered 160 synthetic captures
+rejected all captures reversed capture 0: ordered phase or instance mismatch
+rejected adjacent phases swapped capture 0: ordered phase or instance mismatch
+rejected phase label substitution capture 0: ordered phase or instance mismatch
+rejected lane block permutation capture 0: ordered phase or instance mismatch
+rejected same count duplicate capture 1: ordered phase or instance mismatch
+rejected omitted capture incomplete ordered capture sequence
+accepted unchanged synthetic frozen bytes
+rejected stale claimed fixture SHA fixture source drift: fixture.gd
+rejected missing frozen input [WinError 2] ������ ������ ã�� �� �����ϴ�: 'C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\tmp5hrho9ey\\fixture.gd'

@@ -1,0 +1,25 @@
+--- source/tests/i01b_service_state.gd
++++ overlay/tests/i01b_service_state.gd
+@@ -149,7 +149,9 @@
+ 	var detect_ref: Variant = b.detect
+ 	var supply_ref: Variant = b.supply
+ 	var fleets_ref: Array = b.st.fleets.duplicate()
++	_k6_c_stream("c-source-native", a, label)
+ 	var answer := Service.restore_into_prepared_target(b, packet)
++	_k6_c_stream("c-target-restore", b, label)
+ 	_check(answer.ok, label + " restore " + str(answer.get("error", "")))
+ 	_check(_same(outside, _outside(b)), label + " external state unchanged")
+ 	_check(_same(source_before, _all(a)) and _same(packet_before, packet), label + " source and packet unchanged")
+@@ -402,4 +404,12 @@
+ 		quit(1)
+ 	else:
+ 		print("I01B_P2B_SERVICE_STATE_PASS cases=%d seeds=%d checks=%d rejections=%d PARTIAL_NOT_CHECKPOINT NOT_READY" % [cases.size(), SEEDS.size(), checks, rejection_codes.size()])
+-		quit(0)+		quit(0)
++func _k6_c_stream(stream: String, sim: BattleSim, label: String) -> void:
++	if sim.detect == null:
++		return
++	for side in 2:
++		var rows: Array = []
++		for id in sim.detect.contacts[side]:
++			rows.append({"id": id, "typed_payload": var_to_bytes(sim.detect.contacts[side][id]).hex_encode()})
++		print("K6_CAPTURE ", stream, " ", JSON.stringify({"case": "detection", "seed": sim.st.seed_id, "phase": label, "side": side, "records": rows}))

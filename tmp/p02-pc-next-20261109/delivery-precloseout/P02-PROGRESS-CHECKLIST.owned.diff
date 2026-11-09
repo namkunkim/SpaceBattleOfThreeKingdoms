@@ -1,0 +1,15 @@
+--- a/docs/battle-core/pc-campaign-design/P02-PROGRESS-CHECKLIST.md
++++ b/docs/battle-core/pc-campaign-design/P02-PROGRESS-CHECKLIST.md
+@@ -2,6 +2,12 @@
+ 
+ 갱신 2026-11-09 00:49 KST. 전체 P02/I01/I01b/A04~A06 **NOT_READY**, 외부 save schema **UNCLASSIFIED**. 상위 인수 항목은 [세션 요구사항 체크리스트의 P02 행](SESSION-REQUIREMENTS-CHECKLIST-20261031.md)을 따른다.
+ 
++## 최신 상태 — 직접 출격 장면 전환 거절
++
++갱신 2026-11-09 03:44 KST.
++
++- [x] **기존 직접 출격의 즉시 전환 오류 복구.** 장면 전환이 즉시 거절되면 WorldLink의 이전 명세·결과 참조와 난이도·모드를 되돌리고, 천하 지도의 출격 전 화면·입력·결산을 복구해 다시 출격할 수 있게 한다. 실제 씬 로더 거절은 양쪽 각 4회, 후보 복구는 45/45다. 격리 14개 lane과 독립 5-b를 통과했고 원본 반영 뒤 후보 바이트와의 일치를 독립 확인했다. 반영 뒤 Godot·OS 입력은 미실행이다. 이 조각은 3/6회 사용했다. [결과](P02-DIRECT-SCENE-REJECT-RESULT-20261109.md) · [전용 체크리스트](P02-DIRECT-SCENE-REJECT-CHECKLIST-20261109.md) · [인계](SESSION-HANDOFF-P02-DIRECT-SCENE-REJECT-20261109.md).
++
+ ## 최신 상태 — K6 사전 준비와 독립 심사
+ 
+ 이 절은 기존 독립 마감과 전달 ZIP 생성 이후의 작업을 기록한다.

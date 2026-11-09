@@ -1,0 +1,170 @@
+--- a/scripts/battle_trace.gd
++++ b/scripts/battle_trace.gd
+@@ -19,6 +19,7 @@
+ 	last_status_tick = -1
+ 	last_status.clear()
+ 	last_ui = ""
++	pc0_reset()
+ 	var dir := "user://battle_traces"
+ 	var err := DirAccess.make_dir_recursive_absolute(dir)
+ 	if err != OK:
+@@ -55,6 +56,8 @@
+ 	if file == null:
+ 		return
+ 	seq += 1
++	if kind in ["command_request", "command_applied", "command_blocked"]:
++		data = pc0_command(host, data)
+ 	var row := {"v": 1, "seq": seq, "wall_time": Time.get_datetime_string_from_system(),
+ 		"mono_ms": Time.get_ticks_msec(), "tick": host.sim.st.tick,
+ 		"sim_ms": host.sim.st.clock_ms, "kind": kind, "data": data}
+@@ -69,6 +72,7 @@
+ 		ids.append(f.id)
+ 	var ui := {"state": host.G.state, "selected": ids, "placing": host.placing,
+ 		"speed": host.G.speed, "slow": host.G.slow, "focused": host.get_window().has_focus()}
++	pc0_sample(host, ui)
+ 	var key := JSON.stringify(ui)
+ 	if key != last_ui:
+ 		last_ui = key
+@@ -107,3 +111,85 @@
+ 			out.append(_json(item))
+ 		return out
+ 	return value
++
++# PC0 reader. Counters belong to this trace and never control the host.
++var pc0_phase := ""
++var pc0_epoch := 0
++var pc0_start_ms := 0
++var pc0_second := false
++var pc0_advance := {}
++var pc0_terminal_end := false
++
++func pc0_reset() -> void:
++	pc0_phase = ""
++	pc0_epoch = 0
++	pc0_second = false
++	pc0_advance.clear()
++	pc0_terminal_end = false
++
++func pc0_sample(host: Node, ui: Dictionary) -> void:
++	var s: BattleState = host.sim.st
++	var phase := ""
++	if s.over:
++		phase = "terminal"
++	elif host.placing and ui.state == "play":
++		phase = "placing"
++	elif not host.placing and ui.state == "pause":
++		phase = "paused"
++	elif not host.placing and ui.state == "play":
++		phase = "running"
++	var now := Time.get_ticks_msec()
++	var data := ui.duplicate()
++	var screen: String = host.presentation.hud.screen if host.presentation and host.presentation.hud else ""
++	data.merge({"phase": phase, "epoch": pc0_epoch, "host_id": str(host.get_instance_id()),
++		"sim_id": str(host.sim.get_instance_id()), "screen": screen,
++		"log_size": host.sim.command_log.size(), "sample_ms": now})
++	if phase != pc0_phase:
++		write(host, "pc0_phase_exit", {"phase": pc0_phase, "epoch": pc0_epoch,
++			"two_samples": pc0_second})
++		pc0_advance.clear()
++		if phase == "running" and pc0_phase in ["placing", "paused"] and pc0_second:
++			pc0_advance = {"from": pc0_phase, "from_epoch": pc0_epoch}
++		pc0_phase = phase
++		pc0_epoch += 1
++		data.epoch = pc0_epoch
++		pc0_start_ms = now
++		pc0_second = false
++		if phase in ["placing", "paused", "terminal"]:
++			data.point = 1
++			if phase == "placing":
++				data.roster = []
++				for f in s.fleets:
++					if f.side == 0:
++						data.roster.append({"side": 0, "id": f.id, "sq": f.sq_id, "name": f.name,
++							"faction": f.faction, "is_flag": f.is_flag, "control": f.control})
++			write(host, "pc0_phase", data)
++	elif phase in ["placing", "paused", "terminal"] and not pc0_second and now - pc0_start_ms >= 2000:
++		pc0_second = true
++		data.point = 2
++		write(host, "pc0_phase", data)
++	if phase == "running" and not pc0_advance.is_empty():
++		if s.tick > pc0_last_frozen_tick and s.clock_ms > pc0_last_frozen_clock:
++			data.merge(pc0_advance)
++			write(host, "pc0_advance", data)
++			pc0_advance.clear()
++	if phase in ["placing", "paused", "terminal"]:
++		pc0_last_frozen_tick = s.tick
++		pc0_last_frozen_clock = s.clock_ms
++	if phase == "terminal" and ui.state == "end" and screen == "result" and not pc0_terminal_end:
++		pc0_terminal_end = true
++		write(host, "pc0_end_screen", data)
++
++var pc0_last_frozen_tick := -1
++var pc0_last_frozen_clock := -1
++
++func pc0_command(host: Node, data: Dictionary) -> Dictionary:
++	var copy := data.duplicate()
++	var log: Array[Dictionary] = host.sim.command_log
++	var ids := []
++	for f in host.selected:
++		ids.append(f.id)
++	copy.pc0 = {"log_size": log.size(), "last": log.back() if not log.is_empty() else null,
++		"selected": ids, "host_id": str(host.get_instance_id()), "sim_id": str(host.sim.get_instance_id()),
++		"focus": host.get_window().has_focus(), "field": host.field(), "edge": host.sim.R.edge}
++	return copy
+--- a/scripts/world_link.gd
++++ b/scripts/world_link.gd
+@@ -26,10 +26,23 @@
+ func back_to_world(o: BattleOutcome) -> void:
+ 	outcome = o
+ 	brief = null
++	pc0_record("publish", o)
+ 	get_tree().change_scene_to_file(WORLD_SCENE)
+ 
+ # 천하 지도가 결과를 한 번 가져간다.
+ func take_outcome() -> BattleOutcome:
+ 	var o := outcome
+ 	outcome = null
++	pc0_record("consume", o)
+ 	return o
++
++func _ready() -> void:
++	pc0_record("clock_anchor", null)
++
++func pc0_record(kind: String, value: BattleOutcome, display := {}) -> void:
++	var row := {"kind": kind, "mono_ms": Time.get_ticks_msec(), "utc_s": Time.get_unix_time_from_system(),
++		"pid": OS.get_process_id(), "brief_null": brief == null,
++		"queue_null": outcome == null, "payload": value.to_dict() if value else null,
++		"display": display, "project": ProjectSettings.globalize_path("res://"),
++		"user": ProjectSettings.globalize_path("user://")}
++	print("PC0_LINK ", JSON.stringify(row))
+--- a/view/world/world_map_screen.gd
++++ b/view/world/world_map_screen.gd
+@@ -540,6 +540,8 @@
+ func make_brief(seed := -1) -> BattleBrief:
+ 	var b := BattleBrief.new()
+ 	b.seed = seed if seed >= 0 else randi() % 1000000
++	if seed < 0:
++		b.seed = 777
+ 	b.difficulty = _difficulty
+ 	b.mode = _mode
+ 	b.edge_labels = (world.get("edge_labels", {}) as Dictionary).duplicate()
+@@ -620,6 +622,7 @@
+ 	_update_inset()
+ 
+ func _show_result(o: BattleOutcome) -> void:
++	WorldLink.pc0_record("show_result_enter", o, {"scene": scene_file_path})
+ 	outcome = o
+ 	resolver = null
+ 	state = "result"
+@@ -659,6 +662,11 @@
+ 	get_tree().create_timer(0.6).timeout.connect(func():
+ 		if state == "result":
+ 			canvas.set_region_owners(world.outcome_owners.get(o.kind, _initial_owners()), true))
++	WorldLink.pc0_record("show_result_display", o, {"state": state, "visible": _result.visible,
++		"title": _res_labels.title.text, "ending": _res_labels.ending.text,
++		"time": _res_labels.time.text, "loss_a": _res_labels.loss_a.text,
++		"loss_f": _res_labels.loss_f.text, "eyebrow": _res_labels.eyebrow.text,
++		"regions": _res_labels.regions.text})
+ 
+ func _result_to_world() -> void:
+ 	_result.visible = false

@@ -1,0 +1,718 @@
+{
+  "status": "PASS_PENDING_INDEPENDENT_5B",
+  "runner_exit": 0,
+  "attempt": 3,
+  "postcheck": {
+    "approved_inputs": 11,
+    "closure_source": 1480,
+    "protected": 4,
+    "head": "0be09755b70378286105972f35ac5b7031715664",
+    "index_sha256": "6980BAD4DF2570C03E76CD964AEC5BB0B71EC5CBDEF69F4B022E4DF1A2ACA57A"
+  },
+  "lanes": {
+    "before": {
+      "import": {
+        "engine_exit": 0,
+        "cleanup_active": 0,
+        "retained_members": [
+          [
+            "38324:134386364199740778",
+            "0",
+            "0"
+          ],
+          [
+            "17624:134386364199833042",
+            "0",
+            "0"
+          ]
+        ],
+        "test_rows": [],
+        "diagnostics": {},
+        "sha256": {
+          "engine.log": "4a4f98d1cb901c1199b98ddffeea74d7a649343f2a0176ced0c4eb898d5a5490",
+          "engine.os.tsv": "176ff6bf90ee7ca276320df1646de004b8071cb5b6f08207df9fbc993dbad086",
+          "command.json": "0c5629560840b0259bdbf868d07151ec2d46cbfe0d3a6a06b8ca467694097673"
+        }
+      },
+      "reject": {
+        "engine_exit": 1,
+        "cleanup_active": 0,
+        "retained_members": [],
+        "test_rows": [
+          [
+            "F1",
+            "PASS"
+          ],
+          [
+            "F2",
+            "PASS"
+          ],
+          [
+            "F3",
+            "PASS"
+          ],
+          [
+            "R1",
+            "FAIL"
+          ],
+          [
+            "R2",
+            "PASS"
+          ],
+          [
+            "R3",
+            "FAIL"
+          ],
+          [
+            "R4",
+            "FAIL"
+          ],
+          [
+            "R5",
+            "FAIL"
+          ],
+          [
+            "R6",
+            "FAIL"
+          ],
+          [
+            "A1",
+            "PASS"
+          ],
+          [
+            "A2",
+            "FAIL"
+          ],
+          [
+            "A3",
+            "FAIL"
+          ],
+          [
+            "A4",
+            "FAIL"
+          ],
+          [
+            "A5",
+            "FAIL"
+          ],
+          [
+            "A6",
+            "PASS"
+          ],
+          [
+            "A7",
+            "FAIL"
+          ],
+          [
+            "A8",
+            "FAIL"
+          ],
+          [
+            "A9",
+            "PASS"
+          ],
+          [
+            "A10",
+            "FAIL"
+          ],
+          [
+            "BS1",
+            "PASS"
+          ],
+          [
+            "BS2",
+            "PASS"
+          ],
+          [
+            "BS3",
+            "FAIL"
+          ],
+          [
+            "BS4",
+            "FAIL"
+          ],
+          [
+            "BS5",
+            "PASS"
+          ],
+          [
+            "BS6",
+            "FAIL"
+          ],
+          [
+            "BS7",
+            "PASS"
+          ],
+          [
+            "BS8",
+            "FAIL"
+          ],
+          [
+            "BS9",
+            "FAIL"
+          ],
+          [
+            "BS10",
+            "FAIL"
+          ],
+          [
+            "BS11",
+            "FAIL"
+          ],
+          [
+            "BS12",
+            "PASS"
+          ],
+          [
+            "BS13",
+            "FAIL"
+          ],
+          [
+            "BN1",
+            "PASS"
+          ],
+          [
+            "BN2",
+            "PASS"
+          ],
+          [
+            "BN3",
+            "FAIL"
+          ],
+          [
+            "BN4",
+            "FAIL"
+          ],
+          [
+            "BN5",
+            "PASS"
+          ],
+          [
+            "BN6",
+            "FAIL"
+          ],
+          [
+            "BN7",
+            "PASS"
+          ],
+          [
+            "BN8",
+            "FAIL"
+          ],
+          [
+            "BN9",
+            "FAIL"
+          ],
+          [
+            "BN10",
+            "FAIL"
+          ],
+          [
+            "BN11",
+            "FAIL"
+          ],
+          [
+            "BN12",
+            "PASS"
+          ],
+          [
+            "BN13",
+            "FAIL"
+          ]
+        ],
+        "diagnostics": {
+          "ERROR: Cannot open file 'res://scenes/FleetBattle3D.tscn'.": 4,
+          "ERROR: Failed loading resource: res://scenes/FleetBattle3D.tscn.": 4,
+          "ERROR: TEST_FAIL R1": 1,
+          "ERROR: TEST_FAIL R3": 1,
+          "ERROR: TEST_FAIL R4": 1,
+          "ERROR: TEST_FAIL R5": 1,
+          "ERROR: TEST_FAIL R6": 1,
+          "ERROR: TEST_FAIL A2": 1,
+          "ERROR: TEST_FAIL A3": 1,
+          "ERROR: TEST_FAIL A4": 1,
+          "ERROR: TEST_FAIL A5": 1,
+          "ERROR: TEST_FAIL A7": 1,
+          "ERROR: TEST_FAIL A8": 1,
+          "ERROR: TEST_FAIL A10": 1,
+          "ERROR: TEST_FAIL BS3": 1,
+          "ERROR: TEST_FAIL BS4": 1,
+          "ERROR: TEST_FAIL BS6": 1,
+          "ERROR: TEST_FAIL BS8": 1,
+          "ERROR: TEST_FAIL BS9": 1,
+          "ERROR: TEST_FAIL BS10": 1,
+          "ERROR: TEST_FAIL BS11": 1,
+          "ERROR: TEST_FAIL BS13": 1,
+          "ERROR: TEST_FAIL BN3": 1,
+          "ERROR: TEST_FAIL BN4": 1,
+          "ERROR: TEST_FAIL BN6": 1,
+          "ERROR: TEST_FAIL BN8": 1,
+          "ERROR: TEST_FAIL BN9": 1,
+          "ERROR: TEST_FAIL BN10": 1,
+          "ERROR: TEST_FAIL BN11": 1,
+          "ERROR: TEST_FAIL BN13": 1
+        },
+        "sha256": {
+          "engine.log": "21428a24cbf577d07916541fb26658626ac620a5bcf89c4b8c95e84362739568",
+          "engine.os.tsv": "9be3e4433d7d9e9696b81cd2c53f06517a15eae6cd4b0374e0fb389e5a960a85",
+          "command.json": "663dcb05cf86e6fcf63b8f0314fc6f8298b84c105ea9aad031acc141436af7c6"
+        }
+      },
+      "direct": {
+        "engine_exit": 0,
+        "cleanup_active": 0,
+        "retained_members": [],
+        "test_rows": [
+          [
+            "C1",
+            "PASS"
+          ],
+          [
+            "C2",
+            "PASS"
+          ],
+          [
+            "C3",
+            "PASS"
+          ],
+          [
+            "C4",
+            "PASS"
+          ]
+        ],
+        "diagnostics": {},
+        "sha256": {
+          "engine.log": "1f8a49ab0c7b99244479070b38e85869148cfbb86d92d5cd3e32dc1a0ddfaf33",
+          "engine.os.tsv": "38a80024fc18c8ee8e9fd491fb7c0bd119ddad22324215d044dad08fcb8a0230",
+          "command.json": "fda23484a014c2b6e85e8533dfc1ca54c6495b9a32b10fb2348b0e896f1ac8a0"
+        }
+      },
+      "auto-complete": {
+        "engine_exit": 0,
+        "cleanup_active": 0,
+        "retained_members": [
+          [
+            "40828:134386364956994364",
+            "0",
+            "0"
+          ]
+        ],
+        "test_rows": [],
+        "diagnostics": {},
+        "sha256": {
+          "engine.log": "6d1c065383a27c36804949b6ffa4b09714470b112e5dacc0bd5aeb7b9c147c4e",
+          "engine.os.tsv": "d9bcffed9ac474b3abcfa8450ebb9678720f248523c265859bba1c4f8f28e752",
+          "command.json": "d80f396dc288c64c1dd672131885bc1a8aeb3e942c7338f91dfc6fcaaf17b9b4",
+          "result.json": "3c03a0c78dad8cda809c1b38c5076e27dc2ff8bd394d20a3277aabdaa0dad766"
+        },
+        "auto_rows": 14,
+        "auto_pass": 14,
+        "auto_result": {
+          "fingerprint": "3028c9c61eadaa2fb1c7a6ea2934f6d2c6b6d079491b4cd0aa1cc1f17e3835c8",
+          "outcome": {
+            "cao_status": "unhurt",
+            "difficulty": "표준",
+            "ending": "J-D7",
+            "fingerprint": "3028c9c61eadaa2fb1c7a6ea2934f6d2c6b6d079491b4cd0aa1cc1f17e3835c8",
+            "grade": "패배",
+            "kind": "cao_win",
+            "limited": false,
+            "line": "E11",
+            "liu_status": "unhurt",
+            "loss_pct": {
+              "alliance": 39,
+              "foe": 10
+            },
+            "mode": "auto",
+            "reason": "alliance_morale_collapse",
+            "seed": 350157,
+            "t_s": 1054.95,
+            "win": false
+          },
+          "show_count": 1
+        }
+      },
+      "auto-cancel": {
+        "engine_exit": 0,
+        "cleanup_active": 0,
+        "retained_members": [],
+        "test_rows": [],
+        "diagnostics": {},
+        "sha256": {
+          "engine.log": "6d1c065383a27c36804949b6ffa4b09714470b112e5dacc0bd5aeb7b9c147c4e",
+          "engine.os.tsv": "b0d4f7b4e53b0d7bd7417f3e83fb966cf6ca2119e628f205ae80ecabe4aff9a1",
+          "command.json": "1eae6b77759a6f0ffe26b783f28c45e38d750c8a5f7ca77752ca13710cddc0d8",
+          "result.json": "405345065f833b1377dfba8f830f8a5938b8754caa4d72e3f1de7307ea74d068"
+        },
+        "auto_rows": 15,
+        "auto_pass": 15
+      },
+      "title": {
+        "engine_exit": 0,
+        "cleanup_active": 0,
+        "retained_members": [],
+        "test_rows": [],
+        "diagnostics": {},
+        "sha256": {
+          "engine.log": "882dbde802dff99b924fdfac7c1ee31b603ac162ffa9a90302851932d572051b",
+          "engine.os.tsv": "6c77f56e25c2d3aa752baf27e78c8833fc27067599a860d94089835a60efdc1e",
+          "command.json": "b03999f8f5c4a833a7fdfa1abe007730eb44e83b84c612ce4c05987b4e35ce77"
+        }
+      },
+      "restart": {
+        "engine_exit": 0,
+        "cleanup_active": 0,
+        "retained_members": [],
+        "test_rows": [],
+        "diagnostics": {},
+        "sha256": {
+          "engine.log": "e6e2be1e7a3afcf236d7a5488fe776c20cc7c32ad0f64a4bf8c823c5a760032f",
+          "engine.os.tsv": "b99c3d1521c1e16bf0c086da6e2f7a9667904f50d405048b97cfcecb16ac749a",
+          "command.json": "cb6c9e4bb7357d77cd6feefa5df71b6b9697e1fdc6e3636c7500c14c66bf9187"
+        }
+      },
+      "fixture": {
+        "pre-import.json": "86cb26a396a8607d8ad55a34de64146ec84241895729d2444731d3ecf9ff5989",
+        "post-import.json": "e4aaa0f738e15b202cfb131716d15d270f8eb4c8af945be6ff635c2f700efa23",
+        "reject-closure.json": "f20694f57b4bedc0651301eb43a276d0144446f852c40aaa0b67fdfee42c07ff",
+        "reject-metadata-review.json": "e30cd22c7a6de01f168defcb6e9c2c24cf5620d0f4b48f566e0b0ee35005855b",
+        "class_cache_sha256": "ed124eccd739e5e865688cc4f906ff9bf6da154828a5d1bef4235ff6397cacb0"
+      }
+    },
+    "after": {
+      "import": {
+        "engine_exit": 0,
+        "cleanup_active": 0,
+        "retained_members": [
+          [
+            "38680:134386365794800524",
+            "0",
+            "0"
+          ],
+          [
+            "38508:134386365794901083",
+            "0",
+            "0"
+          ]
+        ],
+        "test_rows": [],
+        "diagnostics": {},
+        "sha256": {
+          "engine.log": "4a4f98d1cb901c1199b98ddffeea74d7a649343f2a0176ced0c4eb898d5a5490",
+          "engine.os.tsv": "6a85c5f52620bd125abc41107cb97f585d404c5ff77bae707c96af62bcc72b87",
+          "command.json": "8962a99fd0ea461186d98bd035952f28c130797d6fb769047bb026ab9c5a4622"
+        }
+      },
+      "reject": {
+        "engine_exit": 0,
+        "cleanup_active": 0,
+        "retained_members": [],
+        "test_rows": [
+          [
+            "F1",
+            "PASS"
+          ],
+          [
+            "F2",
+            "PASS"
+          ],
+          [
+            "F3",
+            "PASS"
+          ],
+          [
+            "R1",
+            "PASS"
+          ],
+          [
+            "R2",
+            "PASS"
+          ],
+          [
+            "R3",
+            "PASS"
+          ],
+          [
+            "R4",
+            "PASS"
+          ],
+          [
+            "R5",
+            "PASS"
+          ],
+          [
+            "R6",
+            "PASS"
+          ],
+          [
+            "A1",
+            "PASS"
+          ],
+          [
+            "A2",
+            "PASS"
+          ],
+          [
+            "A3",
+            "PASS"
+          ],
+          [
+            "A4",
+            "PASS"
+          ],
+          [
+            "A5",
+            "PASS"
+          ],
+          [
+            "A6",
+            "PASS"
+          ],
+          [
+            "A7",
+            "PASS"
+          ],
+          [
+            "A8",
+            "PASS"
+          ],
+          [
+            "A9",
+            "PASS"
+          ],
+          [
+            "A10",
+            "PASS"
+          ],
+          [
+            "BS1",
+            "PASS"
+          ],
+          [
+            "BS2",
+            "PASS"
+          ],
+          [
+            "BS3",
+            "PASS"
+          ],
+          [
+            "BS4",
+            "PASS"
+          ],
+          [
+            "BS5",
+            "PASS"
+          ],
+          [
+            "BS6",
+            "PASS"
+          ],
+          [
+            "BS7",
+            "PASS"
+          ],
+          [
+            "BS8",
+            "PASS"
+          ],
+          [
+            "BS9",
+            "PASS"
+          ],
+          [
+            "BS10",
+            "PASS"
+          ],
+          [
+            "BS11",
+            "PASS"
+          ],
+          [
+            "BS12",
+            "PASS"
+          ],
+          [
+            "BS13",
+            "PASS"
+          ],
+          [
+            "BN1",
+            "PASS"
+          ],
+          [
+            "BN2",
+            "PASS"
+          ],
+          [
+            "BN3",
+            "PASS"
+          ],
+          [
+            "BN4",
+            "PASS"
+          ],
+          [
+            "BN5",
+            "PASS"
+          ],
+          [
+            "BN6",
+            "PASS"
+          ],
+          [
+            "BN7",
+            "PASS"
+          ],
+          [
+            "BN8",
+            "PASS"
+          ],
+          [
+            "BN9",
+            "PASS"
+          ],
+          [
+            "BN10",
+            "PASS"
+          ],
+          [
+            "BN11",
+            "PASS"
+          ],
+          [
+            "BN12",
+            "PASS"
+          ],
+          [
+            "BN13",
+            "PASS"
+          ]
+        ],
+        "diagnostics": {
+          "ERROR: Cannot open file 'res://scenes/FleetBattle3D.tscn'.": 4,
+          "ERROR: Failed loading resource: res://scenes/FleetBattle3D.tscn.": 4
+        },
+        "sha256": {
+          "engine.log": "ece3a4ecf87322792e5fdc69860967e511e90df65ec895eaca41365d2a43354e",
+          "engine.os.tsv": "8fb56cad1eed3312d56d6cff6accf3aa69cde3360eceb1552c5dc221f7203ac7",
+          "command.json": "12343cda33a6a1d5d372b81a61ba22268cdfac9d768d324a8171ddf067fba59e"
+        }
+      },
+      "direct": {
+        "engine_exit": 0,
+        "cleanup_active": 0,
+        "retained_members": [],
+        "test_rows": [
+          [
+            "C1",
+            "PASS"
+          ],
+          [
+            "C2",
+            "PASS"
+          ],
+          [
+            "C3",
+            "PASS"
+          ],
+          [
+            "C4",
+            "PASS"
+          ]
+        ],
+        "diagnostics": {},
+        "sha256": {
+          "engine.log": "0bb81b6a663cb1f6929f4971c1974ba17a47c9470bc44eec8f5ee2ed00e3269e",
+          "engine.os.tsv": "ed80ce16f66e5e76fb6109afc56758a67cec1fa60933ea5599d9c37aef13c8bc",
+          "command.json": "97b68b70409894c19c91d58bf25876a76b1b0aa11697987883775ac70943be4e"
+        }
+      },
+      "auto-complete": {
+        "engine_exit": 0,
+        "cleanup_active": 0,
+        "retained_members": [],
+        "test_rows": [],
+        "diagnostics": {},
+        "sha256": {
+          "engine.log": "6d1c065383a27c36804949b6ffa4b09714470b112e5dacc0bd5aeb7b9c147c4e",
+          "engine.os.tsv": "b0013a55a3ac1c2ae8c0d4ed564f802da19a330bed8096e96e62ce36eae59827",
+          "command.json": "7da1d58bff76e9ee5e0728a959979e794dbee3958b4bd24677c6e0778868f7aa",
+          "result.json": "3c03a0c78dad8cda809c1b38c5076e27dc2ff8bd394d20a3277aabdaa0dad766"
+        },
+        "auto_rows": 14,
+        "auto_pass": 14,
+        "auto_result": {
+          "fingerprint": "3028c9c61eadaa2fb1c7a6ea2934f6d2c6b6d079491b4cd0aa1cc1f17e3835c8",
+          "outcome": {
+            "cao_status": "unhurt",
+            "difficulty": "표준",
+            "ending": "J-D7",
+            "fingerprint": "3028c9c61eadaa2fb1c7a6ea2934f6d2c6b6d079491b4cd0aa1cc1f17e3835c8",
+            "grade": "패배",
+            "kind": "cao_win",
+            "limited": false,
+            "line": "E11",
+            "liu_status": "unhurt",
+            "loss_pct": {
+              "alliance": 39,
+              "foe": 10
+            },
+            "mode": "auto",
+            "reason": "alliance_morale_collapse",
+            "seed": 350157,
+            "t_s": 1054.95,
+            "win": false
+          },
+          "show_count": 1
+        }
+      },
+      "auto-cancel": {
+        "engine_exit": 0,
+        "cleanup_active": 0,
+        "retained_members": [],
+        "test_rows": [],
+        "diagnostics": {},
+        "sha256": {
+          "engine.log": "6d1c065383a27c36804949b6ffa4b09714470b112e5dacc0bd5aeb7b9c147c4e",
+          "engine.os.tsv": "f96cf9e38a194d27e876a5d26681ffb42f13603953f1214754be5edf2d059ebb",
+          "command.json": "6e0655100a638fc4ac9582d49540aa3afcf57bef6b7f84ff97f54360ed8d835d",
+          "result.json": "405345065f833b1377dfba8f830f8a5938b8754caa4d72e3f1de7307ea74d068"
+        },
+        "auto_rows": 15,
+        "auto_pass": 15
+      },
+      "title": {
+        "engine_exit": 0,
+        "cleanup_active": 0,
+        "retained_members": [],
+        "test_rows": [],
+        "diagnostics": {},
+        "sha256": {
+          "engine.log": "1d45d46cb497b77d6c7b63d5b459ce9f58f63e0c9a13d38c41cef78d1e40606c",
+          "engine.os.tsv": "7edaa7605c19c3674c926e69ccc037317a18b31375fd05eef23fb4af1090884b",
+          "command.json": "f6cde1863fa6965f7214911b743fc96dbb56d7a7e43b63465094454ba315b0b9"
+        }
+      },
+      "restart": {
+        "engine_exit": 0,
+        "cleanup_active": 0,
+        "retained_members": [],
+        "test_rows": [],
+        "diagnostics": {},
+        "sha256": {
+          "engine.log": "9896658172ac52de7779b60d9565947da85d98cf11dc05143adfc168d8f432c2",
+          "engine.os.tsv": "8f94777ce034f8cf9427c4caaf0e6b415da38d1281ba5cdd871c4225174578e8",
+          "command.json": "22f300c84dc0df7f09d7e6c6a116d75747a3da36323107181620dbf2827bb6d4"
+        }
+      },
+      "fixture": {
+        "pre-import.json": "4b4aca3467b005c0d1b5770c50de3920369c10b15c7fc7d9f20949de2a68fac8",
+        "post-import.json": "436adb46c563af7c1bfe2edcd51f4a4c0f82f27be8ab86ef0c329b752d488f21",
+        "reject-closure.json": "50ed36584631f74249cf1daf07369add890ef98d0709729df2b867f217bf5fd0",
+        "reject-metadata-review.json": "e30cd22c7a6de01f168defcb6e9c2c24cf5620d0f4b48f566e0b0ee35005855b",
+        "class_cache_sha256": "ed124eccd739e5e865688cc4f906ff9bf6da154828a5d1bef4235ff6397cacb0"
+      }
+    }
+  }
+}

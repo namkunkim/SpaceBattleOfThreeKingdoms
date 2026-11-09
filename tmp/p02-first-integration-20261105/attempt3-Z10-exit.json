@@ -1,0 +1,24 @@
+{
+  "label": "attempt3-Z10",
+  "command": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+    "--log-file",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-first-integration-20261105\\attempt3-Z10-engine.log",
+    "-s",
+    "tests/autoresolve.gd",
+    "--",
+    "--operation-input",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tests\\fixtures\\p02\\poc.json",
+    "--out",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-first-integration-20261105\\attempt3-cli-inputs\\bad*.json"
+  ],
+  "actual_exit": 1,
+  "script_errors": 0,
+  "errors": 0,
+  "warnings": 0,
+  "log_sha256": "67a9492e35d3e541abf3b5e96afb8df5720b549be73b15a8f67332d8e721a06b",
+  "engine_log_sha256": "1ccf6b59a6878529a13ced1057f71837e17a320ebc3622f16a0f4ec6a15dceb8"
+}

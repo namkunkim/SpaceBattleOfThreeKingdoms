@@ -1,0 +1,2 @@
+download.saveAs: canceled
+    at C:\WorkSpace\SpaceBattleOfThreeKingdoms\tmp\session-requirements-html-20261031\verify-browser.cjs:39:207

@@ -1,0 +1,26 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+WARNING: [TRACE] Cannot open log: Can't open file
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] start (res://scripts/battle_trace.gd:31)
+       [1] init_game (res://scripts/FleetBattle3D.gd:219)
+       [2] _ready (res://scripts/FleetBattle3D.gd:148)
+       [3] _run (res://tests/battle_flow.gd:21)
+WARNING: [TRACE] Cannot open log: Can't open file
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] start (res://scripts/battle_trace.gd:31)
+       [1] init_game (res://scripts/FleetBattle3D.gd:219)
+       [2] _restart (res://scripts/FleetBattle3D.gd:295)
+       [3] _run (res://tests/battle_flow.gd:25)
+[ORDER] move w=(846.0, 601.0) field=(1700.0, 1150.0) args={  } ["f4 pos=(446.0, 601.0) to=(846.0, 601.0)"]
+WARNING: [TRACE] Cannot open log: Can't open file
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] start (res://scripts/battle_trace.gd:31)
+       [1] init_game (res://scripts/FleetBattle3D.gd:219)
+       [2] _restart (res://scripts/FleetBattle3D.gd:295)
+       [3] _run (res://tests/battle_flow.gd:89)
+[ORDER] move w=(1557.0, 792.0) field=(1700.0, 1150.0) args={  } ["f1 pos=(329.0, 792.0) to=(1490.0, 926.0)", "f2 pos=(457.0, 767.0) to=(1618.0, 901.0)", "f3 pos=(244.0, 894.0) to=(1405.0, 1029.0)", "f4 pos=(446.0, 601.0) to=(1607.0, 735.0)", "f5 pos=(499.0, 473.0) to=(1660.0, 607.0)", "f6 pos=(404.0, 422.0) to=(1564.0, 556.0)"]
+BATTLE_FLOW_PASS

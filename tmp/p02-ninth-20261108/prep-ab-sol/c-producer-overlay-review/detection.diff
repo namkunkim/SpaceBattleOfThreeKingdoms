@@ -1,0 +1,14 @@
+--- source/core/battle/detection.gd
++++ overlay/core/battle/detection.gd
+@@ -148,7 +148,11 @@
+ 	for side in 2:
+ 		_eval(side)
+ 
++var k6_review_observer := Callable()
++
+ func _eval(side: int) -> void:
++	if side == 1 and k6_review_observer.is_valid():
++		k6_review_observer.call(side)
+ 	var st := sim.st
+ 	var obs: Array[FleetState] = []
+ 	var sens: Array[int] = []

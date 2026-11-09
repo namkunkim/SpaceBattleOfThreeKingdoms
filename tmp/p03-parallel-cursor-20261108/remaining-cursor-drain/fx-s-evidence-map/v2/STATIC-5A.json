@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "original_inputs_preserved": 16,
+  "new_direct_inputs": 4,
+  "inputs": 20,
+  "rows": 7,
+  "counterexamples": 3,
+  "before_sha": "6DCD7EADD1C629E58C11CEEAD4BCC2F8D0FC6A33CBC6437A0D642FF096FB5BF7",
+  "after_sha": "6DCD7EADD1C629E58C11CEEAD4BCC2F8D0FC6A33CBC6437A0D642FF096FB5BF7",
+  "godot_executed": false
+}

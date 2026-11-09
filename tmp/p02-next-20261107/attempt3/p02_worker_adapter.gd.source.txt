@@ -1,0 +1,138 @@
+extends SceneTree
+
+const Baseline := preload("res://tests/p02_headless_adapter.gd")
+const Adapter := preload("res://core/battle/operation_runtime_adapter.gd")
+var failures := 0
+var checks := 0
+var running_frames := 0
+
+func _initialize() -> void:
+	call_deferred("_run")
+
+func check(condition: bool, label: String) -> void:
+	checks += 1
+	if not condition:
+		failures += 1
+		push_error("P02_WORKER_FAIL " + label)
+
+func fixture(kind: String) -> Dictionary:
+	return JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/p02/worker-" + kind + ".json"))
+
+# Direct native oracle. The fixture fleet integer assignments are explicit and
+# the oracle never reads normalized input, owner state or the worker result.
+func reference(kind: String) -> Dictionary:
+	var data := fixture(kind)
+	var p: Dictionary = data.profile
+	p.ally[0].ships = 4 if kind == "services" else 30
+	p.foe[0].ships = {"poc": 1, "services": 40, "timeout-poc": 30}[kind]
+	for fleet in p.ally + p.foe:
+		fleet.lv = 1
+		fleet.p = 0
+		if kind == "services":
+			fleet.command = 70
+			fleet.start_morale_bp = 10000
+	if kind == "services":
+		p.ally[0].composition[0].count = 1
+		p.ally[0].composition[1].count = 1
+		p.ally[0].composition[2].count = 2
+		p.foe[0].composition[0].count = 40
+	var sim := BattleSim.new(0, 10, p)
+	for fleet in sim.st.fleets:
+		fleet.control = "delegate"
+	sim.projection(0)
+	var events: Array = []
+	var st := sim.st
+	while not st.over and st.tick < int(data.max_ticks):
+		sim.step()
+		events.append_array(sim.drain_events())
+	var summary := {"tick": st.tick, "clock_ms": st.clock_ms, "over": st.over,
+		"win": st.over and st.win, "reason": st.end_reason if st.over else "timeout",
+		"t": st.end_ms / 1000.0 if st.over else st.clock_s(), "end_tick": st.end_tick, "end_ms": st.end_ms,
+		"lost": st.lost / 1000.0, "killed": st.killed / 1000.0,
+		"reinf_t": st.reinf_ms / 1000.0 if st.reinf else -1.0,
+		"ally_alive": st.alive(0).size(), "foe_alive": st.alive(1).size(),
+		"fp": sim.fingerprint(), "commands": sim.command_log.size()}
+	for field in ["salvo", "detect", "supply"]:
+		var module: Variant = sim.get(field)
+		if module: module.sim = null
+	return {"summary": summary, "events": events}
+
+func joined(resolver: AutoResolver) -> Dictionary:
+	var value := resolver.poll_operation()
+	while value.get("status") == "running":
+		running_frames += 1
+		if value != {"ok": true, "status": "running"}:
+			failures += 1
+			push_error("P02_WORKER_FAIL running has no result")
+		await process_frame
+		value = resolver.poll_operation()
+	return value
+
+func _run() -> void:
+	var resolver := AutoResolver.new(null)
+	check(resolver.get_script().resource_path == "res://scripts/world/auto_resolver.gd", "canonical resolver")
+	check(resolver.poll_operation().status == "idle", "initial idle")
+	var cycle: Array = []
+	cycle.append(cycle)
+	for input in [RefCounted.new(), cycle, {"value": INF}]:
+		check(resolver.start_operation(input) == Adapter.fail("invalid_worker_input", "input"), "plain input rejection")
+	cycle.clear()
+	check(resolver.start_operation({"checkpoint": {}}).ok, "worker started for adapter rejection")
+	check(await joined(resolver) == Adapter.fail("unsupported_checkpoint", "checkpoint"), "joined worker rejection")
+	var negative := fixture("poc")
+	negative.initial_controls[0] = "direct"
+	check(resolver.start_operation(negative).ok, "worker started for post-create rejection")
+	check(await joined(resolver) == Adapter.fail("worker_requires_delegate", "initial_controls"), "joined support rejection")
+	check(resolver.start_operation(fixture("services")).ok, "cancel setup")
+	resolver.cancel_operation()
+	check(resolver.poll_operation().status == "idle", "cancelled unpublished result discarded")
+	check(resolver.start_operation(fixture("timeout-poc")).ok, "completed but unpublished cancel setup")
+	# Inspect only the Thread lifecycle, never an owner, sim or partial result.
+	while resolver._operation_thread.is_alive():
+		await process_frame
+	check(resolver.start_operation(fixture("timeout-poc")) == Adapter.fail("busy", "worker"), "terminated but unjoined remains busy")
+	resolver.cancel_operation()
+	check(resolver.poll_operation().status == "idle", "completed but unpublished result discarded")
+	for kind in ["poc", "services", "timeout-poc"]:
+		var data := fixture(kind)
+		var before := var_to_bytes(data).hex_encode().sha256_text()
+		var expected := reference(kind)
+		check(resolver.start_operation(data) == {"ok": true, "status": "running"}, kind + " start")
+		data.profile.ally[0].ships = 999
+		data.initial_controls[0] = "direct"
+		check(resolver.start_operation(data) == Adapter.fail("busy", "worker"), "duplicate start busy before join")
+		check(not resolver.start() and resolver.run_blocking() == null, "legacy start guards")
+		check(not resolver.poll() and resolver.outcome == null and resolver.sim == null, "no legacy state")
+		check(resolver.clock_s() == 0.0 and resolver.progress() == 0.0 and resolver.army_bp() == [0, 0], "no legacy publication")
+		var got := await joined(resolver)
+		check(got.ok, kind + " joined success")
+		if not got.ok:
+			continue
+		check(got.keys() == ["ok", "summary", "events", "event_count", "meta"], "result fields")
+		check(var_to_bytes(got.summary) == var_to_bytes(expected.summary), kind + " native summary with types")
+		check(var_to_bytes(got.events) == var_to_bytes(expected.events), kind + " native events with order and types")
+		check(got.event_count == expected.events.size(), kind + " event count")
+		check(got.meta == {"format": Adapter.FORMAT, "transform": "identity/no-transform", "input_sha256": before, "executor": "worker"}, "meta including input snapshot")
+		var kinds: Dictionary = {}
+		for event in got.events:
+			kinds[event.kind] = int(kinds.get(event.kind, 0)) + 1
+		print("P02_WORKER_OBSERVATION " + JSON.stringify({"fixture": kind, "summary": got.summary, "event_kinds": kinds}))
+		if kind == "timeout-poc":
+			check(not got.summary.over and got.summary.tick == 1 and got.summary.clock_ms == 100 and got.summary.reason == "timeout" and got.summary.end_tick == -1 and got.summary.end_ms == -1, "timeout sentinel")
+		else:
+			check(got.summary.over and not got.events.is_empty() and got.events[-1].kind == "battle_end" and got.events[-1].tick == got.summary.end_tick, kind + " natural terminal event")
+		if kind == "services":
+			for event_kind in ["contact", "salvo", "ship_lost"]:
+				check(kinds.has(event_kind), "services " + event_kind)
+		var original := var_to_bytes(got)
+		got.summary.tick = -99
+		if not got.events.is_empty():
+			got.events[0].kind = "mutated"
+		got.meta.executor = "mutated"
+		resolver.cancel_operation()
+		check(resolver.start_operation(RefCounted.new()).error == "invalid_worker_input", "invalid start after publication")
+		check(var_to_bytes(resolver.poll_operation()) == original, "published result isolated")
+	print("P02_WORKER_CHECKS %d running_frames_observed=%d" % [checks, running_frames])
+	quit(1 if failures else 0)
+
+

@@ -134,3 +134,5 @@ func _run() -> void:
 		check(var_to_bytes(resolver.poll_operation()) == original, "published result isolated")
 	print("P02_WORKER_CHECKS %d running_frames_observed=%d" % [checks, running_frames])
 	quit(1 if failures else 0)
+
+

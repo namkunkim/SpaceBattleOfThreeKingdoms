@@ -1,0 +1,1384 @@
+{
+	"actual_profile_operation_rejection": {
+		"assertions": 1,
+		"failures": 0,
+		"value": {
+			"profile_sha": "1c9fa315648e47a53b17b2e0ef9c5492da64122e98b462a789b7b35790e31e38",
+			"result": {
+				"error": "unsupported_scenario",
+				"ok": false,
+				"path": "profile"
+			}
+		}
+	},
+	"deck_start_restart": {
+		"assertions": 4,
+		"failures": 0,
+		"value": {
+			"camera": "(396.6667, 658.0556)",
+			"screen": "",
+			"selected": 1,
+			"state": "play",
+			"trace": 1,
+			"zoom": 0.9
+		}
+	},
+	"direct_outcome_once": {
+		"assertions": 2,
+		"failures": 0,
+		"value": {
+			"outcome": {
+				"cao_status": "",
+				"difficulty": "표준",
+				"ending": "J-D1",
+				"fingerprint": "91466085eecdff15a63049b7ff426cb56b998fa94006d7f1c5612dd7ab932481",
+				"grade": "승리",
+				"kind": "alliance_win",
+				"limited": false,
+				"line": "E5",
+				"liu_status": "",
+				"loss_pct": {
+					"alliance": 0,
+					"foe": 0
+				},
+				"mode": "direct",
+				"reason": "annihilation",
+				"seed": 777,
+				"t_s": 0.0,
+				"win": true
+			}
+		}
+	},
+	"invalid_org_legacy_preview": {
+		"assertions": 2,
+		"failures": 0,
+		"value": {
+			"errors": [
+				{
+					"code": "flag_admiral",
+					"faction_id": "liu_bei",
+					"squadron_id": "RC-LIU-SQ-01"
+				},
+				{
+					"code": "foreign_officer",
+					"faction_id": "liu_bei",
+					"squadron_id": "RC-LIU-SQ-01"
+				}
+			],
+			"notice": "이전 편성이 이 전투와 맞지 않아 고쳤습니다(기함 제독은 바꿀 수 없습니다 · 유비군 장수가 아닙니다) — 다시 채운 함대: 유비 본대. 나머지 유비군 함대는 그대로입니다. 확인 뒤 확정하십시오. "
+		}
+	},
+	"legacy_profile_fallback": {
+		"assertions": 1,
+		"failures": 0,
+		"value": {
+			"load_error": "시나리오를 읽지 못해 시험 전장으로 엽니다",
+			"roster": [
+				[
+					1,
+					0,
+					"",
+					"",
+					"delegate",
+					120000,
+					"(620.0, 1150.0)",
+					0.0
+				],
+				[
+					2,
+					0,
+					"",
+					"",
+					"delegate",
+					108000,
+					"(840.0, 960.0)",
+					0.0
+				],
+				[
+					3,
+					0,
+					"",
+					"",
+					"delegate",
+					108000,
+					"(840.0, 1340.0)",
+					0.0
+				],
+				[
+					4,
+					0,
+					"",
+					"",
+					"delegate",
+					96000,
+					"(1000.0, 830.0)",
+					0.0
+				],
+				[
+					5,
+					0,
+					"",
+					"",
+					"delegate",
+					96000,
+					"(1000.0, 1470.0)",
+					0.0
+				],
+				[
+					6,
+					0,
+					"",
+					"",
+					"delegate",
+					100000,
+					"(1040.0, 1150.0)",
+					0.0
+				],
+				[
+					7,
+					1,
+					"",
+					"",
+					"delegate",
+					125000,
+					"(2950.0, 1150.0)",
+					3.14159265358979
+				],
+				[
+					8,
+					1,
+					"",
+					"",
+					"delegate",
+					110000,
+					"(2500.0, 880.0)",
+					3.14159265358979
+				],
+				[
+					9,
+					1,
+					"",
+					"",
+					"delegate",
+					105000,
+					"(2500.0, 1420.0)",
+					3.14159265358979
+				],
+				[
+					10,
+					1,
+					"",
+					"",
+					"delegate",
+					100000,
+					"(2330.0, 1150.0)",
+					3.14159265358979
+				],
+				[
+					11,
+					1,
+					"",
+					"",
+					"delegate",
+					95000,
+					"(2680.0, 680.0)",
+					3.14159265358979
+				],
+				[
+					12,
+					1,
+					"",
+					"",
+					"delegate",
+					95000,
+					"(2680.0, 1620.0)",
+					3.14159265358979
+				],
+				[
+					13,
+					1,
+					"",
+					"",
+					"delegate",
+					95000,
+					"(2780.0, 1150.0)",
+					3.14159265358979
+				]
+			]
+		}
+	},
+	"placement_clock": {
+		"assertions": 4,
+		"failures": 0,
+		"value": {
+			"commands": [
+				{
+					"args": {
+						"facing_deg": -0.870930925123805
+					},
+					"ids": [
+						1
+					],
+					"kind": "place",
+					"point": "(329.375, 792.2222)",
+					"side": 0,
+					"target_id": -1,
+					"tick": 0
+				}
+			],
+			"tick": 1
+		}
+	},
+	"routed_seed_roster_controls": {
+		"assertions": 4,
+		"failures": 0,
+		"value": {
+			"ally_dto": [
+				{
+					"command": 82,
+					"commander_id": "CHR-0128",
+					"composition": [
+						{
+							"count": 5,
+							"ship_type_id": "SHP-01"
+						},
+						{
+							"count": 10,
+							"ship_type_id": "SHP-03"
+						},
+						{
+							"count": 21,
+							"ship_type_id": "SHP-04"
+						},
+						{
+							"count": 5,
+							"ship_type_id": "SHP-05"
+						},
+						{
+							"count": 5,
+							"ship_type_id": "SHP-06"
+						},
+						{
+							"count": 10,
+							"ship_type_id": "SHP-07"
+						},
+						{
+							"count": 18,
+							"mission_equipment_id": "FAST-EQ-RECON",
+							"ship_type_id": "SHP-08"
+						}
+					],
+					"faction_id": "liu_bei",
+					"flag": true,
+					"formation_id": "FRM-03",
+					"intellect": 76,
+					"level": 1,
+					"lv": 1,
+					"might": 73,
+					"name": "유비",
+					"p": 0,
+					"role": "유비 본대",
+					"ships": 74,
+					"skill_slots": [
+						"SK-T-MORALE",
+						"SK-U-ZHUGE",
+						"SK-T-DISRUPT"
+					],
+					"squadron_id": "RC-LIU-SQ-01",
+					"staff": [
+						{
+							"charm": 45.0,
+							"command": 88.0,
+							"id": "CHR-0130",
+							"intellect": 45.0,
+							"might": 98.0,
+							"name": "장비",
+							"politics": 22.0,
+							"post": "assault",
+							"traits": [
+								"연인"
+							]
+						},
+						{
+							"charm": 72.0,
+							"command": 78.0,
+							"id": "CHR-0118",
+							"intellect": 97.0,
+							"might": 30.0,
+							"name": "방통",
+							"politics": 80.0,
+							"post": "siege",
+							"traits": [
+								"봉추"
+							]
+						},
+						{
+							"charm": 85.0,
+							"command": 68.0,
+							"id": "CHR-0132",
+							"intellect": 80.0,
+							"might": 25.0,
+							"name": "장완",
+							"politics": 92.0,
+							"post": "supply",
+							"traits": [
+								"사직지기"
+							]
+						}
+					],
+					"start_morale_bp": 10000,
+					"traits": [
+						"인덕"
+					],
+					"vice_commander": {
+						"charm": 92.0,
+						"command": 92.0,
+						"id": "CHR-0134",
+						"intellect": 100.0,
+						"might": 38.0,
+						"name": "제갈량",
+						"politics": 95.0,
+						"traits": [
+							"신기묘산"
+						]
+					},
+					"wait": 0,
+					"x": 329.375,
+					"y": 792.222230434418
+				},
+				{
+					"command": 95,
+					"commander_id": "CHR-0107",
+					"composition": [
+						{
+							"count": 6,
+							"ship_type_id": "SHP-01"
+						},
+						{
+							"count": 12,
+							"ship_type_id": "SHP-03"
+						},
+						{
+							"count": 25,
+							"ship_type_id": "SHP-04"
+						},
+						{
+							"count": 6,
+							"ship_type_id": "SHP-05"
+						},
+						{
+							"count": 6,
+							"ship_type_id": "SHP-06"
+						},
+						{
+							"count": 12,
+							"ship_type_id": "SHP-07"
+						},
+						{
+							"count": 1,
+							"mission_equipment_id": "FAST-EQ-RECON",
+							"ship_type_id": "SHP-08"
+						}
+					],
+					"faction_id": "liu_bei",
+					"flag": false,
+					"formation_id": "FRM-01",
+					"intellect": 75,
+					"level": 1,
+					"lv": 1,
+					"might": 97,
+					"name": "관우",
+					"p": 1,
+					"role": "관우 수군",
+					"ships": 68,
+					"skill_slots": [
+						"SK-U-GUANYU",
+						"SK-U-ZHAOYUN",
+						"SK-T-FIRE"
+					],
+					"squadron_id": "RC-LIU-SQ-02",
+					"staff": [
+						{
+							"charm": 45.0,
+							"command": 85.0,
+							"id": "CHR-0126",
+							"intellect": 70.0,
+							"might": 90.0,
+							"name": "위연",
+							"politics": 40.0,
+							"post": "assault",
+							"traits": [
+								"반골"
+							]
+						},
+						{
+							"charm": 50.0,
+							"command": 72.0,
+							"id": "CHR-0119",
+							"intellect": 95.0,
+							"might": 40.0,
+							"name": "법정",
+							"politics": 76.0,
+							"post": "siege",
+							"traits": [
+								"기모"
+							]
+						},
+						{
+							"charm": 86.0,
+							"command": 62.0,
+							"id": "CHR-0112",
+							"intellect": 88.0,
+							"might": 30.0,
+							"name": "마량",
+							"politics": 90.0,
+							"post": "supply",
+							"traits": [
+								"백미"
+							]
+						}
+					],
+					"start_morale_bp": 10000,
+					"traits": [
+						"만인지적"
+					],
+					"vice_commander": {
+						"charm": 88.0,
+						"command": 91.0,
+						"id": "CHR-0136",
+						"intellect": 76.0,
+						"might": 96.0,
+						"name": "조운",
+						"politics": 65.0,
+						"traits": [
+							"일신시담"
+						]
+					},
+					"wait": 0,
+					"x": 456.875,
+					"y": 766.666674613953
+				},
+				{
+					"command": 92,
+					"commander_id": "CHR-0114",
+					"composition": [
+						{
+							"count": 6,
+							"ship_type_id": "SHP-01"
+						},
+						{
+							"count": 12,
+							"ship_type_id": "SHP-03"
+						},
+						{
+							"count": 24,
+							"ship_type_id": "SHP-04"
+						},
+						{
+							"count": 6,
+							"ship_type_id": "SHP-05"
+						},
+						{
+							"count": 5,
+							"ship_type_id": "SHP-06"
+						},
+						{
+							"count": 12,
+							"ship_type_id": "SHP-07"
+						},
+						{
+							"count": 1,
+							"mission_equipment_id": "FAST-EQ-RECON",
+							"ship_type_id": "SHP-08"
+						}
+					],
+					"faction_id": "liu_bei",
+					"flag": false,
+					"formation_id": "FRM-03",
+					"intellect": 44,
+					"level": 1,
+					"lv": 1,
+					"might": 97,
+					"name": "마초",
+					"p": 61,
+					"role": "유기 강하군",
+					"ships": 66,
+					"skill_slots": [
+						"SK-T-FIRE",
+						"SK-U-HUANGZHONG",
+						"SK-T-MORALE"
+					],
+					"squadron_id": "RC-LIU-SQ-03",
+					"staff": [
+						{
+							"charm": 72.0,
+							"command": 82.0,
+							"id": "CHR-0108",
+							"intellect": 62.0,
+							"might": 88.0,
+							"name": "관흥",
+							"politics": 58.0,
+							"post": "assault",
+							"traits": [
+								"부풍"
+							]
+						},
+						{
+							"charm": 80.0,
+							"command": 65.0,
+							"id": "CHR-0137",
+							"intellect": 92.0,
+							"might": 10.0,
+							"name": "황월영",
+							"politics": 75.0,
+							"post": "siege",
+							"traits": [
+								"목우유마"
+							]
+						},
+						{
+							"charm": 88.0,
+							"command": 62.0,
+							"id": "CHR-0121",
+							"intellect": 85.0,
+							"might": 30.0,
+							"name": "비의",
+							"politics": 90.0,
+							"post": "supply",
+							"traits": [
+								"조정"
+							]
+						}
+					],
+					"start_morale_bp": 10000,
+					"traits": [
+						"금마초"
+					],
+					"vice_commander": {
+						"charm": 72.0,
+						"command": 89.0,
+						"id": "CHR-0138",
+						"intellect": 64.0,
+						"might": 93.0,
+						"name": "황충",
+						"politics": 56.0,
+						"traits": [
+							"강궁"
+						]
+					},
+					"wait": 0,
+					"x": 244.375,
+					"y": 894.444453716278
+				},
+				{
+					"command": 96,
+					"commander_id": "CHR-0211",
+					"composition": [
+						{
+							"count": 6,
+							"ship_type_id": "SHP-01"
+						},
+						{
+							"count": 12,
+							"ship_type_id": "SHP-03"
+						},
+						{
+							"count": 25,
+							"ship_type_id": "SHP-04"
+						},
+						{
+							"count": 6,
+							"ship_type_id": "SHP-05"
+						},
+						{
+							"count": 6,
+							"ship_type_id": "SHP-06"
+						},
+						{
+							"count": 13,
+							"ship_type_id": "SHP-07"
+						}
+					],
+					"faction_id": "sun_quan",
+					"flag": false,
+					"formation_id": "FRM-02",
+					"intellect": 95,
+					"level": 1,
+					"lv": 1,
+					"might": 72,
+					"name": "주유",
+					"p": 85,
+					"role": "주유 중군",
+					"ships": 68,
+					"skill_slots": [
+						"SK-U-ZHOUYU",
+						"SK-T-MOVE",
+						"SK-T-DISRUPT"
+					],
+					"squadron_id": "RC-SUN-SQ-01",
+					"staff": [
+						{
+							"charm": 62.0,
+							"command": 82.0,
+							"id": "CHR-0185",
+							"intellect": 70.0,
+							"might": 96.0,
+							"name": "감녕",
+							"politics": 40.0,
+							"post": "assault",
+							"traits": [
+								"금범적"
+							]
+						},
+						{
+							"charm": 86.0,
+							"command": 82.0,
+							"id": "CHR-0186",
+							"intellect": 92.0,
+							"might": 40.0,
+							"name": "노숙",
+							"politics": 88.0,
+							"post": "siege",
+							"traits": [
+								"천하이분"
+							]
+						},
+						{
+							"charm": 82.0,
+							"command": 50.0,
+							"id": "CHR-0204",
+							"intellect": 85.0,
+							"might": 25.0,
+							"name": "장소",
+							"politics": 95.0,
+							"post": "supply",
+							"traits": [
+								"중신"
+							]
+						}
+					],
+					"start_morale_bp": 10000,
+					"traits": [
+						"미주랑"
+					],
+					"vice_commander": {
+						"charm": 72.0,
+						"command": 92.0,
+						"id": "CHR-0199",
+						"intellect": 94.0,
+						"might": 80.0,
+						"name": "여몽",
+						"politics": 80.0,
+						"traits": [
+							"백의도강"
+						]
+					},
+					"wait": 0,
+					"x": 446.25,
+					"y": 600.55556178093
+				},
+				{
+					"command": 94,
+					"commander_id": "CHR-0198",
+					"composition": [
+						{
+							"count": 6,
+							"ship_type_id": "SHP-01"
+						},
+						{
+							"count": 12,
+							"ship_type_id": "SHP-03"
+						},
+						{
+							"count": 24,
+							"ship_type_id": "SHP-04"
+						},
+						{
+							"count": 6,
+							"ship_type_id": "SHP-05"
+						},
+						{
+							"count": 6,
+							"ship_type_id": "SHP-06"
+						},
+						{
+							"count": 12,
+							"ship_type_id": "SHP-07"
+						},
+						{
+							"count": 3,
+							"mission_equipment_id": "FAST-EQ-RECON",
+							"ship_type_id": "SHP-08"
+						}
+					],
+					"faction_id": "sun_quan",
+					"flag": false,
+					"formation_id": "FRM-01",
+					"intellect": 70,
+					"level": 1,
+					"lv": 1,
+					"might": 94,
+					"name": "손책",
+					"p": 83,
+					"role": "정보 우군",
+					"ships": 69,
+					"skill_slots": [
+						"SK-T-MOVE",
+						"SK-T-FIRE",
+						"SK-T-GUARD"
+					],
+					"squadron_id": "RC-SUN-SQ-02",
+					"staff": [
+						{
+							"charm": 66.0,
+							"command": 78.0,
+							"id": "CHR-0212",
+							"intellect": 56.0,
+							"might": 90.0,
+							"name": "주태",
+							"politics": 50.0,
+							"post": "assault",
+							"traits": [
+								"만신창이"
+							]
+						},
+						{
+							"charm": 33.0,
+							"command": 14.0,
+							"id": "CHR-0255",
+							"intellect": 83.0,
+							"might": 21.0,
+							"name": "제갈근",
+							"politics": 79.0,
+							"post": "siege",
+							"traits": [
+								"화평"
+							]
+						},
+						{
+							"charm": 74.0,
+							"command": 70.0,
+							"id": "CHR-0190",
+							"intellect": 80.0,
+							"might": 45.0,
+							"name": "보즐",
+							"politics": 85.0,
+							"post": "supply",
+							"traits": [
+								"교주"
+							]
+						}
+					],
+					"start_morale_bp": 10000,
+					"traits": [
+						"소패왕"
+					],
+					"vice_commander": {
+						"charm": 68.0,
+						"command": 88.0,
+						"id": "CHR-0215",
+						"intellect": 80.0,
+						"might": 78.0,
+						"name": "하제",
+						"politics": 72.0,
+						"traits": [
+							"산월토벌"
+						]
+					},
+					"wait": 0,
+					"x": 499.375,
+					"y": 472.777782678604
+				},
+				{
+					"command": 92,
+					"commander_id": "CHR-0193",
+					"composition": [
+						{
+							"count": 6,
+							"ship_type_id": "SHP-01"
+						},
+						{
+							"count": 12,
+							"ship_type_id": "SHP-03"
+						},
+						{
+							"count": 24,
+							"ship_type_id": "SHP-04"
+						},
+						{
+							"count": 6,
+							"ship_type_id": "SHP-05"
+						},
+						{
+							"count": 5,
+							"ship_type_id": "SHP-06"
+						},
+						{
+							"count": 12,
+							"ship_type_id": "SHP-07"
+						},
+						{
+							"count": 1,
+							"mission_equipment_id": "FAST-EQ-TORPEDO",
+							"ship_type_id": "SHP-08"
+						}
+					],
+					"faction_id": "sun_quan",
+					"flag": false,
+					"formation_id": "FRM-05",
+					"intellect": 72,
+					"level": 1,
+					"lv": 1,
+					"might": 90,
+					"name": "손견",
+					"p": 82,
+					"role": "황개 화공대",
+					"ships": 66,
+					"skill_slots": [
+						"SK-T-FIRE",
+						"SK-U-HUANGGAI",
+						"SK-T-SUPPLY"
+					],
+					"squadron_id": "RC-SUN-SQ-03",
+					"staff": [
+						{
+							"charm": 72.0,
+							"command": 82.0,
+							"id": "CHR-0217",
+							"intellect": 68.0,
+							"might": 85.0,
+							"name": "황개",
+							"politics": 65.0,
+							"post": "assault",
+							"traits": [
+								"고육계"
+							]
+						},
+						{
+							"charm": 27.0,
+							"command": 20.0,
+							"id": "CHR-0264",
+							"intellect": 78.0,
+							"might": 23.0,
+							"name": "호종",
+							"politics": 77.0,
+							"post": "siege",
+							"traits": [
+								"사령"
+							]
+						},
+						{
+							"charm": 49.0,
+							"command": 20.0,
+							"id": "CHR-0240",
+							"intellect": 41.0,
+							"might": 15.0,
+							"name": "시적",
+							"politics": 83.0,
+							"post": "supply",
+							"traits": [
+								"청렴"
+							]
+						}
+					],
+					"start_morale_bp": 10000,
+					"traits": [
+						"강동지호"
+					],
+					"vice_commander": {
+						"charm": 72.0,
+						"command": 84.0,
+						"id": "CHR-0187",
+						"intellect": 64.0,
+						"might": 88.0,
+						"name": "능통",
+						"politics": 58.0,
+						"traits": [
+							"원한"
+						]
+					},
+					"wait": 0,
+					"x": 403.75,
+					"y": 421.666671037674
+				}
+			],
+			"foe_dto": [
+				{
+					"command": 96,
+					"commander_id": "CHR-0016",
+					"composition": [
+						{
+							"count": 11,
+							"ship_type_id": "SHP-01"
+						},
+						{
+							"count": 5,
+							"ship_type_id": "SHP-03"
+						},
+						{
+							"count": 27,
+							"ship_type_id": "SHP-04"
+						},
+						{
+							"count": 5,
+							"ship_type_id": "SHP-05"
+						},
+						{
+							"count": 5,
+							"ship_type_id": "SHP-06"
+						},
+						{
+							"count": 11,
+							"ship_type_id": "SHP-07"
+						},
+						{
+							"count": 3,
+							"mission_equipment_id": "FAST-EQ-RECON",
+							"ship_type_id": "SHP-08"
+						}
+					],
+					"faction_id": "cao_cao",
+					"flag": false,
+					"formation_id": "FRM-01",
+					"intellect": 97,
+					"level": 1,
+					"lv": 1,
+					"might": 60,
+					"morale_group": "northern",
+					"name": "사마의",
+					"p": 23,
+					"role": "조인 선봉",
+					"ships": 67,
+					"skill_slots": [
+						"SK-T-GUARD",
+						"SK-U-HAOZHAO",
+						"SK-U-XUCHU"
+					],
+					"squadron_id": "RC-CAO-SQ-02",
+					"staff": [
+						{
+							"charm": 50.0,
+							"command": 70.0,
+							"id": "CHR-0047",
+							"intellect": 32.0,
+							"might": 96.0,
+							"name": "허저",
+							"politics": 28.0,
+							"post": "assault",
+							"traits": [
+								"호치"
+							]
+						},
+						{
+							"charm": 78.0,
+							"command": 60.0,
+							"id": "CHR-0003",
+							"intellect": 96.0,
+							"might": 15.0,
+							"name": "곽가",
+							"politics": 80.0,
+							"post": "siege",
+							"traits": [
+								"귀모"
+							]
+						},
+						{
+							"charm": 78.0,
+							"command": 60.0,
+							"id": "CHR-0040",
+							"intellect": 85.0,
+							"might": 30.0,
+							"name": "진군",
+							"politics": 95.0,
+							"post": "supply",
+							"traits": [
+								"구품관인법"
+							]
+						}
+					],
+					"start_morale_bp": 8000,
+					"traits": [
+						"낭고"
+					],
+					"vice_commander": {
+						"charm": 58.0,
+						"command": 82.0,
+						"id": "CHR-0046",
+						"intellect": 80.0,
+						"might": 72.0,
+						"name": "학소",
+						"politics": 62.0,
+						"traits": [
+							"진창"
+						]
+					},
+					"wait": 0.0,
+					"x": 1413.125,
+					"y": 536.666672229767
+				},
+				{
+					"command": 90,
+					"commander_id": "CHR-0017",
+					"composition": [
+						{
+							"count": 6,
+							"ship_type_id": "SHP-01"
+						},
+						{
+							"count": 12,
+							"ship_type_id": "SHP-03"
+						},
+						{
+							"count": 23,
+							"ship_type_id": "SHP-04"
+						},
+						{
+							"count": 6,
+							"ship_type_id": "SHP-05"
+						},
+						{
+							"count": 5,
+							"ship_type_id": "SHP-06"
+						},
+						{
+							"count": 12,
+							"ship_type_id": "SHP-07"
+						}
+					],
+					"faction_id": "cao_cao",
+					"flag": false,
+					"formation_id": "FRM-04",
+					"intellect": 72,
+					"level": 1,
+					"lv": 1,
+					"might": 89,
+					"morale_group": "jing_navy",
+					"name": "서황",
+					"p": 20,
+					"role": "형주 수군 갑",
+					"ships": 64,
+					"skill_slots": [
+						"SK-T-MOVE",
+						"SK-T-FIRE",
+						"SK-T-MORALE"
+					],
+					"squadron_id": "RC-CAO-SQ-04",
+					"staff": [
+						{
+							"charm": 29.0,
+							"command": 37.0,
+							"id": "CHR-0091",
+							"intellect": 25.0,
+							"might": 72.0,
+							"name": "조창",
+							"politics": 26.0,
+							"post": "assault",
+							"traits": [
+								"황수아"
+							]
+						},
+						{
+							"charm": 70.0,
+							"command": 65.0,
+							"id": "CHR-0024",
+							"intellect": 92.0,
+							"might": 40.0,
+							"name": "유엽",
+							"politics": 78.0,
+							"post": "siege",
+							"traits": [
+								"종실지신"
+							]
+						},
+						{
+							"charm": 72.0,
+							"command": 72.0,
+							"id": "CHR-0032",
+							"intellect": 85.0,
+							"might": 64.0,
+							"name": "조비",
+							"politics": 88.0,
+							"post": "supply",
+							"traits": [
+								"선양"
+							]
+						}
+					],
+					"start_morale_bp": 6500,
+					"traits": [
+						"주아부의 풍"
+					],
+					"vice_commander": {
+						"charm": 62.0,
+						"command": 80.0,
+						"id": "CHR-0037",
+						"intellect": 65.0,
+						"might": 76.0,
+						"name": "조휴",
+						"politics": 60.0,
+						"traits": [
+							"천리구"
+						]
+					},
+					"wait": 0.0,
+					"x": 1328.125,
+					"y": 191.666668653488
+				}
+			],
+			"hz": 10,
+			"roster": [
+				[
+					1,
+					0,
+					"liu_bei",
+					"RC-LIU-SQ-01",
+					"direct",
+					74000,
+					"(329.375, 792.2222)",
+					-0.277
+				],
+				[
+					2,
+					0,
+					"liu_bei",
+					"RC-LIU-SQ-02",
+					"direct",
+					68000,
+					"(456.875, 766.6667)",
+					-0.289
+				],
+				[
+					3,
+					0,
+					"liu_bei",
+					"RC-LIU-SQ-03",
+					"direct",
+					66000,
+					"(244.375, 894.4445)",
+					-0.343
+				],
+				[
+					4,
+					0,
+					"sun_quan",
+					"RC-SUN-SQ-01",
+					"delegate",
+					68000,
+					"(446.25, 600.5555)",
+					-0.102
+				],
+				[
+					5,
+					0,
+					"sun_quan",
+					"RC-SUN-SQ-02",
+					"delegate",
+					69000,
+					"(499.375, 472.7778)",
+					0.047
+				],
+				[
+					6,
+					0,
+					"sun_quan",
+					"RC-SUN-SQ-03",
+					"delegate",
+					66000,
+					"(403.75, 421.6667)",
+					0.098
+				],
+				[
+					7,
+					1,
+					"cao_cao",
+					"RC-CAO-SQ-01",
+					"delegate",
+					68000,
+					"(1551.25, 421.6667)",
+					3.093
+				],
+				[
+					8,
+					1,
+					"cao_cao",
+					"RC-CAO-SQ-02",
+					"delegate",
+					67000,
+					"(1413.125, 536.6667)",
+					-3.072
+				],
+				[
+					9,
+					1,
+					"cao_cao",
+					"RC-CAO-SQ-03",
+					"delegate",
+					64000,
+					"(1625.625, 600.5555)",
+					-3.029
+				],
+				[
+					10,
+					1,
+					"cao_cao",
+					"RC-CAO-SQ-04",
+					"delegate",
+					64000,
+					"(1328.125, 191.6667)",
+					2.815
+				],
+				[
+					11,
+					1,
+					"cao_cao",
+					"RC-CAO-SQ-05",
+					"delegate",
+					65000,
+					"(1413.125, 242.7778)",
+					2.895
+				],
+				[
+					12,
+					1,
+					"cao_cao",
+					"RC-CAO-SQ-06",
+					"delegate",
+					65000,
+					"(1487.5, 715.5555)",
+					-2.901
+				],
+				[
+					13,
+					1,
+					"cao_cao",
+					"RC-CAO-SQ-07",
+					"delegate",
+					61000,
+					"(1678.75, 319.4445)",
+					3.012
+				],
+				[
+					14,
+					1,
+					"cao_cao",
+					"RC-CAO-SQ-08",
+					"delegate",
+					60000,
+					"(1402.5, 408.8889)",
+					3.071
+				],
+				[
+					15,
+					1,
+					"cao_cao",
+					"RC-CAO-SQ-09",
+					"delegate",
+					59000,
+					"(1572.5, 204.4444)",
+					2.897
+				],
+				[
+					16,
+					1,
+					"cao_cao",
+					"RC-CAO-SQ-10",
+					"delegate",
+					60000,
+					"(1317.5, 511.1111)",
+					-3.095
+				]
+			],
+			"seed": 777
+		}
+	},
+	"same_tick_commands_events": {
+		"assertions": 6,
+		"failures": 0,
+		"value": {
+			"commands": [
+				{
+					"args": {},
+					"ids": [
+						1
+					],
+					"kind": "move",
+					"point": "(369.375, 812.2222)",
+					"side": 0,
+					"target_id": -1,
+					"tick": 0
+				},
+				{
+					"args": {},
+					"ids": [
+						1
+					],
+					"kind": "stop",
+					"point": "(0.0, 0.0)",
+					"side": 0,
+					"target_id": -1,
+					"tick": 0
+				}
+			],
+			"filtered": [
+				{
+					"kind": "say",
+					"other": -1,
+					"pos": "(329.375, 792.2222)",
+					"sq": 1,
+					"tick": 0,
+					"value": "move"
+				},
+				{
+					"kind": "say",
+					"other": -1,
+					"pos": "(329.375, 792.2222)",
+					"sq": 1,
+					"tick": 0,
+					"value": "stop"
+				},
+				{
+					"kind": "charge",
+					"other": -1,
+					"pos": "(329.375, 792.2222)",
+					"sq": 1,
+					"tick": 0,
+					"value": "visible"
+				}
+			],
+			"raw": [
+				{
+					"kind": "say",
+					"other": -1,
+					"pos": "(329.375, 792.2222)",
+					"sq": 1,
+					"tick": 0,
+					"value": "move"
+				},
+				{
+					"kind": "say",
+					"other": -1,
+					"pos": "(329.375, 792.2222)",
+					"sq": 1,
+					"tick": 0,
+					"value": "stop"
+				},
+				{
+					"kind": "charge",
+					"other": -1,
+					"pos": "(329.375, 792.2222)",
+					"sq": 1,
+					"tick": 0,
+					"value": "visible"
+				},
+				{
+					"kind": "morale_crisis",
+					"other": -1,
+					"pos": "(1551.25, 421.6667)",
+					"sq": 7,
+					"tick": 0,
+					"value": "hidden"
+				}
+			]
+		}
+	}
+}

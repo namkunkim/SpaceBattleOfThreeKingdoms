@@ -1,0 +1,2 @@
+{"clear":[0,1],"far":[0,1],"near":{"steps":1200,"side0_contact":"confirmed","side1_enemy_contact":"none","masked_actor_kind":"salvo","masked_other_kind":"ship_lost"},"seed":0,"hz":10,"controls":["direct","direct"],"sequence":["stop-side0","stop-side1","advance"]}
+

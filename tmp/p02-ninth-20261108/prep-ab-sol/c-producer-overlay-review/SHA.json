@@ -1,0 +1,12 @@
+{
+  "core/battle/detection.gd": {
+    "source_sha256": "df34cee4a225683d6bc1c9005dc7760c365ce3a61ae68e106449cb2e7154253b",
+    "overlay_sha256": "4e69bec54d22afb339fdcdc2bcb7b043cad5a2bfda4e5daf7b25534e55f09982",
+    "normalized_diff_sha256": "20a3761bf1567ee5e64e890aacc3532ccf5fe2535f072cff4d6e0eaa23ca6bd6"
+  },
+  "tests/i01b_service_state.gd": {
+    "source_sha256": "d11615fa541a7064e10bfd2eb648253192baae0ee98e2adf609ad954b4967e66",
+    "overlay_sha256": "8f6d171a5c7cd088f76f8dca99014399127a5e935ccc84485c877aa590acefa6",
+    "normalized_diff_sha256": "7e0c76df151fe3b47c05f70835f5b72a78e8ff7ab1534cc6966c574aba583e31"
+  }
+}

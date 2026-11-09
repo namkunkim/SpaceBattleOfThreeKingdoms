@@ -1,0 +1,14 @@
+[
+  {
+    "path": "docs/battle-core/CHECKLIST-OPEN.md",
+    "bytes": 118979,
+    "sha256": "77f6c71d8b6f52a496b24cad1164038611e421f05dda94396983ae0ebab54b10",
+    "before_copy": "tmp/p02-first-integration-20261105/CHECKLIST-OPEN.md.before-p02-closeout.txt"
+  },
+  {
+    "path": "docs/battle-core/pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.md",
+    "bytes": 16889,
+    "sha256": "8c02f89e7adaab8e257f51016889442317c226dceb7d398f269176c64ee32660",
+    "before_copy": "tmp/p02-first-integration-20261105/SESSION-REQUIREMENTS-CHECKLIST-20261031.md.before-p02-closeout.txt"
+  }
+]

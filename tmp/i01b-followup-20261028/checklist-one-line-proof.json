@@ -1,0 +1,7 @@
+{
+  "before_sha256": "d957788e12781dec5dc82a76af9e9c87ef93aba6efceebf8061d2a82ec69bd89",
+  "reversed_own_hunk_sha256": "d957788e12781dec5dc82a76af9e9c87ef93aba6efceebf8061d2a82ec69bd89",
+  "matches": true,
+  "own_line_lf": true,
+  "other_baseline_crlf_untouched": true
+}

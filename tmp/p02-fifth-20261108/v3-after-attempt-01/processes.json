@@ -1,0 +1,279 @@
+[
+  {
+    "args": [
+      "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+      "--headless",
+      "--path",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3\\project-after",
+      "--script",
+      "res://tmp/p02-fifth-20261108/v3/product-outcome-common.gd",
+      "--",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\product-outcome-common\\result.json"
+    ],
+    "env": {
+      "APPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\product-outcome-common\\roaming",
+      "LOCALAPPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\product-outcome-common\\local",
+      "XDG_DATA_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\product-outcome-common\\roaming"
+    },
+    "limit_seconds": 240,
+    "seconds": 129.02660430013202,
+    "exit": 0,
+    "timeout": false,
+    "marker": true,
+    "script_error": false,
+    "name": "product-outcome-common",
+    "user_start": {},
+    "stdout": "0d5e09a212c648970a82c85ada98ed1df49d66e08818ba77e7b27c830878b6ef",
+    "stderr": "22140dfee51228e46209cc948cd4c289998345a40bf4f111667d5691d4c5625a",
+    "result_sha256": "14d6d3a2209bca5f275edacb97404d4b1c7ced307feb62212996fc9afce16f74",
+    "guard": {
+      "classes": [
+        "res://scripts/world/battle_outcome.gd",
+        "res://scripts/world/auto_resolver.gd"
+      ],
+      "project": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fifth-20261108/v3/project-after/",
+      "settings_at_start": false,
+      "user": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fifth-20261108/v3-after-attempt-01/product-outcome-common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms",
+      "version": "4.7.2-stable (official)"
+    },
+    "user_probe": {
+      "dir": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fifth-20261108/v3-after-attempt-01/product-outcome-common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms",
+      "initial_files": []
+    },
+    "expected_user": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\product-outcome-common\\roaming\\Godot\\app_userdata\\SpaceBattleOfThreeKingdoms",
+    "user_end": {
+      "settings.cfg": {
+        "bytes": 227,
+        "sha256": "dc8b198fe72c2657ba41f105387080eaceea12dbda917f1d9528a529166bdfb4"
+      },
+      "battle_traces/battle-2026-11-08T15-53-00-10332-123342199.jsonl": {
+        "bytes": 9761,
+        "sha256": "3458d3d952ac9a90807609ee7f671bbb2d2c22a24312699792cdf8dec8c9fdf5"
+      },
+      "battle_traces/battle-2026-11-08T15-53-01-10332-124551893.jsonl": {
+        "bytes": 15927,
+        "sha256": "f9c442ec05846aece74fbfc91e35a20007c748cb525da0c8b3f91f355e6e61f0"
+      },
+      "logs/godot.log": {
+        "bytes": 616,
+        "sha256": "0099c14d462acb62b031763b3b7903c6fe5ce76edfd39822d848fb833aa2b310"
+      }
+    }
+  },
+  {
+    "args": [
+      "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+      "--headless",
+      "--path",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3\\project-after",
+      "--script",
+      "res://tmp/p02-fifth-20261108/v3/world_link-path-probe.gd",
+      "--",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\world-link-clean\\result.json"
+    ],
+    "env": {
+      "APPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\world-link-clean\\roaming",
+      "LOCALAPPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\world-link-clean\\local",
+      "XDG_DATA_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\world-link-clean\\roaming"
+    },
+    "limit_seconds": 240,
+    "seconds": 134.6961306000594,
+    "exit": 1,
+    "timeout": false,
+    "marker": true,
+    "script_error": false,
+    "name": "world-link-clean",
+    "user_start": {},
+    "stdout": "1624004ed5f18e110d1eb513ace6c9e6319bab83c05ae0568c4d58c9fa1b6769",
+    "stderr": "acb6056197fda3f4ce4a014e2aa27c33b79adb711b9b764e321dc97102722bc8",
+    "user_probe": {
+      "dir": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fifth-20261108/v3-after-attempt-01/world-link-clean/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms",
+      "initial_files": [],
+      "settings_sha": ""
+    },
+    "expected_user": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\world-link-clean\\roaming\\Godot\\app_userdata\\SpaceBattleOfThreeKingdoms",
+    "user_end": {
+      "battle_traces/battle-2026-11-08T15-53-04-22288-127610402.jsonl": {
+        "bytes": 16091,
+        "sha256": "b1920190bb6cfc0f042548420dfdda031d53ccbaa1ed9aac9023830383073484"
+      },
+      "logs/godot.log": {
+        "bytes": 982,
+        "sha256": "91014a2069bfd8f26299d4f4ff57ae84da37213a3c9ace5717615583ebbb46fd"
+      }
+    }
+  },
+  {
+    "args": [
+      "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+      "--headless",
+      "--path",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3\\project-after",
+      "--script",
+      "res://tmp/p02-fifth-20261108/v3/world_link-path-probe.gd",
+      "--",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\world-link-returning\\result.json"
+    ],
+    "env": {
+      "APPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\world-link-returning\\roaming",
+      "LOCALAPPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\world-link-returning\\local",
+      "XDG_DATA_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\world-link-returning\\roaming"
+    },
+    "limit_seconds": 240,
+    "seconds": 135.15228319982998,
+    "exit": 0,
+    "timeout": false,
+    "marker": true,
+    "script_error": false,
+    "name": "world-link-returning",
+    "user_start": {
+      "settings.cfg": {
+        "bytes": 30,
+        "sha256": "c8b752aba9f5015889c00c5a45db9fef916af2a1e1be3e68d49b8121b2db721b"
+      }
+    },
+    "stdout": "a7b93c6962361aa85b0c2ad3c7603778147153672c2ac1b063438b18df849cdf",
+    "stderr": "6b4583c5551163f6340fbb3e2066cf020c632195aac365a8a1e723d015cda292",
+    "user_probe": {
+      "dir": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fifth-20261108/v3-after-attempt-01/world-link-returning/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms",
+      "initial_files": [
+        "settings.cfg"
+      ],
+      "settings_sha": "c8b752aba9f5015889c00c5a45db9fef916af2a1e1be3e68d49b8121b2db721b"
+    },
+    "expected_user": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\world-link-returning\\roaming\\Godot\\app_userdata\\SpaceBattleOfThreeKingdoms",
+    "user_end": {
+      "settings.cfg": {
+        "bytes": 30,
+        "sha256": "c8b752aba9f5015889c00c5a45db9fef916af2a1e1be3e68d49b8121b2db721b"
+      },
+      "battle_traces/battle-2026-11-08T15-53-04-28980-127864247.jsonl": {
+        "bytes": 16091,
+        "sha256": "87989b993d2077d9bbbf0805d9e177ee7ab52c9485b19d92464ad4fc902e826b"
+      },
+      "logs/godot.log": {
+        "bytes": 742,
+        "sha256": "f3e2d01a137b1332c78d0f70cfe42360152d5c32471549f38b69262466b3a53c"
+      }
+    }
+  },
+  {
+    "args": [
+      "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+      "--headless",
+      "--path",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3\\project-after",
+      "--script",
+      "res://tmp/p02-fifth-20261108/v3/p02_worker_adapter-path-probe.gd",
+      "--",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\p02_worker_adapter\\result.json"
+    ],
+    "env": {
+      "APPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\p02_worker_adapter\\roaming",
+      "LOCALAPPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\p02_worker_adapter\\local",
+      "XDG_DATA_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\p02_worker_adapter\\roaming"
+    },
+    "limit_seconds": 240,
+    "seconds": 2.455243900185451,
+    "exit": 0,
+    "timeout": false,
+    "marker": true,
+    "script_error": false,
+    "name": "p02_worker_adapter",
+    "user_start": {},
+    "stdout": "edd52821d1e2d11de790bd7d952a9b3ad4de9256c18d16b39395168da6d8c84d",
+    "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "user_probe": {
+      "dir": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fifth-20261108/v3-after-attempt-01/p02_worker_adapter/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms",
+      "initial_files": [],
+      "settings_sha": ""
+    },
+    "expected_user": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\p02_worker_adapter\\roaming\\Godot\\app_userdata\\SpaceBattleOfThreeKingdoms",
+    "user_end": {
+      "logs/godot.log": {
+        "bytes": 1522,
+        "sha256": "53131eaa1733b2f4987975b1142bab6d7af91a43efa3f6a380b410eebed04f7e"
+      }
+    }
+  },
+  {
+    "args": [
+      "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+      "--headless",
+      "--path",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3\\project-after",
+      "--script",
+      "res://tmp/p02-fifth-20261108/v3/p02_headless_adapter-path-probe.gd",
+      "--",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\p02_headless_adapter\\result.json"
+    ],
+    "env": {
+      "APPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\p02_headless_adapter\\roaming",
+      "LOCALAPPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\p02_headless_adapter\\local",
+      "XDG_DATA_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\p02_headless_adapter\\roaming"
+    },
+    "limit_seconds": 240,
+    "seconds": 29.886781600071117,
+    "exit": 0,
+    "timeout": false,
+    "marker": true,
+    "script_error": false,
+    "name": "p02_headless_adapter",
+    "user_start": {},
+    "stdout": "16cb983c05a8d49c97e8f3ff906fe13968f35afcd969bee76203b45a2ade3542",
+    "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "result_sha256": "5e77c23183b9a77fa56fbf0dfb829dc27b2104678fa96add8e54a44e77ef89a3",
+    "user_probe": {
+      "dir": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fifth-20261108/v3-after-attempt-01/p02_headless_adapter/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms",
+      "initial_files": [],
+      "settings_sha": ""
+    },
+    "expected_user": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\p02_headless_adapter\\roaming\\Godot\\app_userdata\\SpaceBattleOfThreeKingdoms",
+    "user_end": {
+      "logs/godot.log": {
+        "bytes": 361,
+        "sha256": "1109b208855beab7561d78ba4636e8f829f580935f1cf49e996b00a032be3547"
+      }
+    }
+  },
+  {
+    "args": [
+      "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+      "--headless",
+      "--path",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3\\project-after",
+      "--script",
+      "res://tmp/p02-fifth-20261108/v3/product-outcome-boundary.gd",
+      "--",
+      "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\product-outcome-boundary\\result.json"
+    ],
+    "env": {
+      "APPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\product-outcome-boundary\\roaming",
+      "LOCALAPPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\product-outcome-boundary\\local",
+      "XDG_DATA_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\product-outcome-boundary\\roaming"
+    },
+    "limit_seconds": 240,
+    "seconds": 108.8785848999396,
+    "exit": 0,
+    "timeout": false,
+    "marker": true,
+    "script_error": false,
+    "name": "product-outcome-boundary",
+    "user_start": {},
+    "stdout": "a7008d3134dd84fa59d05a354310f8b961731b4497a75d546f5e24a2769ff9c7",
+    "stderr": "7f64e6ecdac75e93f81f7b5f42d958184f3d546beecf25cf68ef2f0bb121aed2",
+    "result_sha256": "7e19d732b9b23397d0d3decc08f59aa448812febe113663a8ceffbfe8b009e4c",
+    "guard": null,
+    "user_probe": {
+      "dir": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fifth-20261108/v3-after-attempt-01/product-outcome-boundary/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms",
+      "initial_files": []
+    },
+    "expected_user": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\v3-after-attempt-01\\product-outcome-boundary\\roaming\\Godot\\app_userdata\\SpaceBattleOfThreeKingdoms",
+    "user_end": {
+      "logs/godot.log": {
+        "bytes": 318,
+        "sha256": "e79a44ed85af0f3b730861a36584927f94a628b4b2b799b0b4d638f051f006df"
+      }
+    }
+  }
+]

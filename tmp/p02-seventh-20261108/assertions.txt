@@ -1,0 +1,12 @@
+01 profile-empty: return,path,warning,live identity
+02 roster-ally/foe: return,path,identical player reason,live identity
+03 org confirm/sortie: actual input,callback,visibility,unchanged live state
+04 briefing auto: actual input,callback,visibility,unchanged live state
+05 recovery opening/sortie: actual input,callback,visibility,unchanged live state
+06 restart: actual input,callback,visibility,unchanged live state
+07 standalone title: actual input,callback,visibility,unchanged live state
+08 legacy reset: actual input,callback,visibility,unchanged live state
+09 repeat/recovery: reused warning,success clear,native roster,trace bytes and sequence
+10 initial standalone: no sim/deck/trace,legacy hidden,mouse and keyboard independent,exit 0
+11 initial routed: no sim/deck/trace,legacy hidden,mouse and keyboard independent,WorldMap/no outcome/selection preserved
+12 healthy/fallback: no preparation warning,legacy fallback unchanged

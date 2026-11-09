@@ -1,0 +1,33 @@
+{
+  "jobs": [
+    {
+      "name": "raw",
+      "command": [
+        "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+        "--log-file",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fourth-20261108\\negative-oracle\\raw.engine.log",
+        "-s",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fourth-20261108\\negative-oracle\\raw.gd"
+      ],
+      "script_sha256": "5f070f6c7b5883a323f2e72898fbd022a98aaf860bf42ae0b5a4022463929789"
+    },
+    {
+      "name": "swap",
+      "command": [
+        "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+        "--log-file",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fourth-20261108\\negative-oracle\\swap.engine.log",
+        "-s",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fourth-20261108\\negative-oracle\\swap.gd"
+      ],
+      "script_sha256": "e2466c3acea83c2249d3ed1d8e8ed10a86d6b68974b3b7052f51656eeceeed2c"
+    }
+  ],
+  "canonical_runner_sha256": "e85e1dbd76a0cf124ae47b782d4489685e40966e1a546033c1d8b1c26191279e"
+}

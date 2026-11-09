@@ -1,0 +1,25 @@
+{
+  "cwd": "C:\\Users\\nk782\\.codex\\worktrees\\i01a-operation-config\\SpaceBattleOfThreeKingdoms",
+  "project_exists": true,
+  "head": "8292805143f4561a4f5258d40b7b94adf4ff5802",
+  "godot_processes": [],
+  "core_resume_log_exists": false,
+  "logs": [
+    {
+      "Name": "core_rules-attempt1.log",
+      "Length": 92,
+      "LastWriteTime": "2026-10-28T09:36:53.7274807+09:00"
+    },
+    {
+      "Name": "core_rules.log",
+      "Length": 92,
+      "LastWriteTime": "2026-10-28T09:36:53.7274807+09:00"
+    },
+    {
+      "Name": "i01b_logical_clock.log",
+      "Length": 295,
+      "LastWriteTime": "2026-10-28T09:33:26.3663671+09:00"
+    }
+  ],
+  "runner_sha256": "febcbc625a32814b21ac60a10fcba389928921044711fecb95a2ada6ddaf8925"
+}

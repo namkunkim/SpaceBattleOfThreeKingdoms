@@ -1,0 +1,14 @@
+{
+  "changed": [
+    "?? tmp/p03-parallel-state-20261108/policy-ownership/attempt-01/eighth_misclassification.stderr",
+    "?? tmp/p03-parallel-state-20261108/policy-ownership/attempt-01/eighth_misclassification.stdout",
+    "?? tmp/p03-parallel-state-20261108/policy-ownership/attempt-01/git-before.z",
+    "?? tmp/p03-parallel-state-20261108/policy-ownership/attempt-01/input-after.json",
+    "?? tmp/p03-parallel-state-20261108/policy-ownership/attempt-01/missing_anchor.stderr",
+    "?? tmp/p03-parallel-state-20261108/policy-ownership/attempt-01/missing_anchor.stdout",
+    "?? tmp/p03-parallel-state-20261108/policy-ownership/attempt-01/normal.stderr",
+    "?? tmp/p03-parallel-state-20261108/policy-ownership/attempt-01/normal.stdout",
+    "?? tmp/p03-parallel-state-20261108/policy-ownership/attempt-01/row_omission.stderr",
+    "?? tmp/p03-parallel-state-20261108/policy-ownership/attempt-01/row_omission.stdout"
+  ]
+}

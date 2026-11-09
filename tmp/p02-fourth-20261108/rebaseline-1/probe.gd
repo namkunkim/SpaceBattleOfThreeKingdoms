@@ -1,0 +1,17 @@
+extends SceneTree
+
+const Private := preload("res://core/battle/operation_private_state.gd")
+
+func _initialize() -> void:
+	var scene := load("res://scenes/FleetBattle3D.tscn") as PackedScene
+	print("P02_ISOLATION ", JSON.stringify({
+		"guard": Private._classes(),
+		"res": ProjectSettings.globalize_path("res://"),
+		"user": ProjectSettings.globalize_path("user://"),
+		"cache": FileAccess.get_sha256("res://.godot/global_script_class_cache.cfg"),
+		"uid": FileAccess.get_sha256("res://.godot/uid_cache.bin"),
+		"version": Engine.get_version_info().string,
+		"resources": [load("res://core/battle/operation_private_state.gd").resource_path, load("res://core/battle/battle_sim.gd").resource_path, load("res://core/battle/detection.gd").resource_path, scene.resource_path],
+	}))
+	quit()
+

@@ -1,0 +1,55 @@
+{
+  "before": {
+    "path": "tmp\\p02-fifth-20261108\\progress-post-closeout\\P02-PROGRESS-CHECKLIST.before.md",
+    "bytes": 7292,
+    "sha256": "fb32a2eaa17fc786eedcb8d9f5aa3e439fb06fbc6d13dc88034f1402686caae5"
+  },
+  "source": {
+    "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\closeout\\REVIEW-CLOSEOUT-RECHECK-INDEPENDENT.md",
+    "bytes": 2119,
+    "sha256": "8683140103c3e4c86ad46bd4a430461eb9bfa2f18f3a9a29dc85a6a01d12bd0b"
+  },
+  "diff": {
+    "path": "tmp\\p02-fifth-20261108\\progress-post-closeout\\P02-PROGRESS-CHECKLIST.diff",
+    "bytes": 2058,
+    "sha256": "597f333c4d5ec4f3a94fba061fe28d8c3a362bd531cc644ab11f5cfe0e0a7c6b"
+  },
+  "after": {
+    "path": "docs\\battle-core\\pc-campaign-design\\P02-PROGRESS-CHECKLIST.md",
+    "bytes": 8205,
+    "sha256": "6fe7e83fdbc627ddd62897202bc542bdab915a017958d94a1568b48aadc5a30f"
+  },
+  "verified_links": [
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\docs\\battle-core\\pc-campaign-design\\P02-LEGACY-OUTCOME-RESULT-20261108.md",
+      "bytes": 3651,
+      "sha256": "79484d7192626678576a6350bbd80cc64adca427fe14dbba0a43ad9043728987"
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\docs\\battle-core\\pc-campaign-design\\P02-LEGACY-OUTCOME-CHECKLIST-20261108.md",
+      "bytes": 1370,
+      "sha256": "56949ad4ced2f40a797617f27bdbc0a87e085102a858c808f724c09a88b310f0"
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\docs\\battle-core\\pc-campaign-design\\SESSION-HANDOFF-P02-LEGACY-OUTCOME-20261108.md",
+      "bytes": 1566,
+      "sha256": "6747409d434b564853fc9e8eb6df53e1d59e7e3f11c47abfa7ffacb5d180b162"
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\closeout\\P02-LEGACY-OUTCOME-DELIVERY-20261108.zip",
+      "bytes": 1741238,
+      "sha256": "dbd75d2117deb151135a1b87373b34d0c1434549accd26b1c56a8dcd47a5bd8c"
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\closeout\\REVIEW-CLOSEOUT-RECHECK-INDEPENDENT.md",
+      "bytes": 2119,
+      "sha256": "8683140103c3e4c86ad46bd4a430461eb9bfa2f18f3a9a29dc85a6a01d12bd0b"
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fifth-20261108\\closeout\\post-zip-preservation-audit.json",
+      "bytes": 2363,
+      "sha256": "2c2241b525b530bf45585ee98373a884983e35b0f982cbc665324a20f0f03410"
+    }
+  ],
+  "reverse_insert_matches_before": true
+}

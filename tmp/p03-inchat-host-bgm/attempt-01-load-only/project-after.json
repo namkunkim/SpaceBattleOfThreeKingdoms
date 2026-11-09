@@ -1,0 +1,26 @@
+{
+  "bgm_probe.gd": {
+    "size": 2287,
+    "sha256": "a6a66680985ab0b11f6f87d4990233ca389d65bfecd52fa9c42466713c4ca913"
+  },
+  "project.godot": {
+    "size": 60,
+    "sha256": "5be6cd74415fdf1387a52ad00a40909f953c4019a435156aa6f60404fd50caf9"
+  },
+  "assets/audio/music/stars_stripes.ogg": {
+    "size": 2053947,
+    "sha256": "c7f8efe0f59318c2ae725080d45cffb71fe73b90818f02bdff4c7f6bd6d8a364"
+  },
+  "assets/audio/music/stars_stripes.ogg.import": {
+    "size": 414,
+    "sha256": "168d814805d827e2ba0c7239b042adebdd9d84f85a63b5a16f520a05298538f0"
+  },
+  ".godot/imported/stars_stripes.ogg-b59abb1eef986334bd1d3b3ab6e47e07.md5": {
+    "size": 91,
+    "sha256": "f682a417ee0782d302f8437cb0bb818197986a49a3da8749b0359c8ba13be930"
+  },
+  ".godot/imported/stars_stripes.ogg-b59abb1eef986334bd1d3b3ab6e47e07.oggvorbisstr": {
+    "size": 2147963,
+    "sha256": "8e8d916b1fad127cd6e8ac0edda2ef0008f1455d0ce483679a09bd4eb4e1d57a"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "exit": 0,
+  "timeout": false,
+  "user_after": {
+    "settings.cfg": "c8b752aba9f5015889c00c5a45db9fef916af2a1e1be3e68d49b8121b2db721b",
+    "logs\\godot.log": "6d1c065383a27c36804949b6ffa4b09714470b112e5dacc0bd5aeb7b9c147c4e"
+  }
+}

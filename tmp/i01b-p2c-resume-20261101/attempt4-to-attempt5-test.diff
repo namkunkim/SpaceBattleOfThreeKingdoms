@@ -1,0 +1,40 @@
+--- attempt4/tests/i01b_private_state.gd
++++ attempt5/tests/i01b_private_state.gd
+@@ -3,7 +3,7 @@
+ const Private := preload("res://core/battle/operation_private_state.gd")
+ const Service := preload("res://core/battle/operation_service_state.gd")
+ const SEEDS := [0, 1, 20824, 20825, 20826, 90210, 123456789, 2147483647, 2147483648, 4294967295]
+-const OUT := "res://tmp/i01b-p2c-20261101/observations.json"
++const OUT := "res://tmp/i01b-p2c-resume-20261101/attempt5-observations.json"
+ var checks := 0
+ var failed := false
+ var cases: Array = []
+@@ -324,6 +324,19 @@
+ 		var bad: Dictionary = packet.duplicate(true)
+ 		changes[label].call(bad)
+ 		_reject(owner, bad, label)
++	var stable_result := Private.prepare(packet)
++	_check(stable_result.ok, "normal packet prepares before empty form rejection")
++	if stable_result.ok:
++		var stable: OperationPrivateState = stable_result.owner
++		var stable_before := _oracle(stable)
++		for index in [0, packet.view.fleets.size() - 1]:
++			var empty_form_packet: Dictionary = packet.duplicate(true)
++			empty_form_packet.view.fleets[index].form.clear()
++			var label: String = "empty_form_first" if index == 0 else "empty_form_last"
++			_reject(owner, empty_form_packet, label)
++			_check(rejections[label] == "fleet_empty_form", "empty form expected error " + label)
++			_check(_same(stable_before, _oracle(stable)), "empty form preserves existing successful owner " + label)
++		stable.close()
+ 	var object := RefCounted.new()
+ 	var bad: Dictionary = packet.duplicate(true)
+ 	bad.view.state.result.probe = object
+@@ -374,7 +387,7 @@
+ 		for kind in ["projectile", "resource", "memory", "pending", "post", "damaged", "terrain"]: _roundtrip(seed, kind)
+ 	_negative()
+ 	_check(cases.size() == 70, "complete seventy cases")
+-	_check(rejections.size() == 43, "complete named rejections")
++	_check(rejections.size() == 45, "complete named rejections")
+ 	var file := FileAccess.open(OUT, FileAccess.WRITE)
+ 	_check(file != null, "evidence output opens")
+ 	if file != null:

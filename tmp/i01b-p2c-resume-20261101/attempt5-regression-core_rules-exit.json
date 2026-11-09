@@ -1,0 +1,5 @@
+{
+  "script": "res://tests/core_rules.gd",
+  "actual_exit": 0,
+  "name": "core_rules"
+}

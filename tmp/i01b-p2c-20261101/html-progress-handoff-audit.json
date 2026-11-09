@@ -1,0 +1,20 @@
+{
+  "updatedAt": "2026-11-01T12:04:33.780Z",
+  "scope": "status and handoff link only; HTML feature work stopped",
+  "path": "docs/battle-core/pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.html",
+  "beforeSha": "e1cdfe0332c68dba3c38d21f0e0e4be29dc7b3171fb24c98a6a253a999487875",
+  "afterSha": "9653d4913deff9e2cdb7d5c7db768b29ee2dd53aa80cd67a260378b48263dc1d",
+  "changedIds": [
+    "P01"
+  ],
+  "counts": {
+    "상시준수": 9,
+    "완료": 24,
+    "미완료": 8
+  },
+  "itemCount": 41,
+  "functionalJavaScriptUnchanged": true,
+  "cssUnchanged": true,
+  "baselineIdPreserved": true,
+  "note": "Stable requirement identity and browser storage keys retained; browser-local overrides are not edited. Whole I01b NOT_READY and P2c final review pending."
+}

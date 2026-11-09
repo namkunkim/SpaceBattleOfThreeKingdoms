@@ -1,0 +1,8 @@
+{
+  "deleted_local_branch": "codex/i01a-operation-config",
+  "deleted_ref_sha": "8292805143f4561a4f5258d40b7b94adf4ff5802",
+  "ancestor_of": "25879eedd22bcf9c7c258630cfef8dd23a991175",
+  "main_still_references": "8292805143f4561a4f5258d40b7b94adf4ff5802",
+  "worktrees_removed": 0,
+  "retained_experiment": "codex/pc-ten-minute-battle-review"
+}

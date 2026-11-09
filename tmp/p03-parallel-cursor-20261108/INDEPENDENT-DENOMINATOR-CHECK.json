@@ -1,0 +1,13 @@
+{
+  "expected": 32,
+  "actual": 32,
+  "difference": [],
+  "cases": [
+    "prefix_then_terminal_unconsumed",
+    "invalid_late_prevalidates_all",
+    "prefix_only_control",
+    "helper_close_error"
+  ],
+  "exit": 0,
+  "gate": true
+}

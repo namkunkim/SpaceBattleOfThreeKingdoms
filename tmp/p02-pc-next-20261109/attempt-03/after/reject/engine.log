@@ -1,0 +1,103 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PC_DIRECT_ROW F1 PASS
+PC_DIRECT_ROW F2 PASS
+PC_DIRECT_PATHS {"project":"C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-pc-next-20261109/attempt-03/after/reject-project","user":"C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-pc-next-20261109/attempt-03/after/reject/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms"}
+PC_DIRECT_ROW F3 PASS
+ERROR: Cannot open file 'res://scenes/FleetBattle3D.tscn'.
+   at: load (scene/resources/resource_format_text.cpp:1442)
+   GDScript backtrace (most recent call first):
+       [0] go_battle (res://scripts/world_link.gd:27)
+       [1] _pc_reject (res://tests/world_link.gd:343)
+       [2] _frames (res://tests/world_link.gd:20)
+ERROR: Failed loading resource: res://scenes/FleetBattle3D.tscn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] go_battle (res://scripts/world_link.gd:27)
+       [1] _pc_reject (res://tests/world_link.gd:343)
+       [2] _frames (res://tests/world_link.gd:20)
+PC_DIRECT_ROW R1 PASS
+PC_DIRECT_ROW R2 PASS
+PC_DIRECT_ROW R3 PASS
+PC_DIRECT_ROW R4 PASS
+PC_DIRECT_ROW R5 PASS
+PC_DIRECT_ROW R6 PASS
+ERROR: Cannot open file 'res://scenes/FleetBattle3D.tscn'.
+   at: load (scene/resources/resource_format_text.cpp:1442)
+   GDScript backtrace (most recent call first):
+       [0] go_battle (res://scripts/world_link.gd:27)
+       [1] _finish_sortie (res://view/world/world_map_screen.gd:610)
+       [2] _pc_reject (res://tests/world_link.gd:362)
+       [3] _seconds (res://tests/world_link.gd:23)
+ERROR: Failed loading resource: res://scenes/FleetBattle3D.tscn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] go_battle (res://scripts/world_link.gd:27)
+       [1] _finish_sortie (res://view/world/world_map_screen.gd:610)
+       [2] _pc_reject (res://tests/world_link.gd:362)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW A1 PASS
+PC_DIRECT_ROW A2 PASS
+PC_DIRECT_ROW A3 PASS
+PC_DIRECT_ROW A4 PASS
+PC_DIRECT_ROW A5 PASS
+PC_DIRECT_ROW A6 PASS
+PC_DIRECT_ROW A7 PASS
+PC_DIRECT_ROW A8 PASS
+PC_DIRECT_ROW A9 PASS
+PC_DIRECT_ROW A10 PASS
+PC_DIRECT_ROW BS1 PASS
+ERROR: Cannot open file 'res://scenes/FleetBattle3D.tscn'.
+   at: load (scene/resources/resource_format_text.cpp:1442)
+   GDScript backtrace (most recent call first):
+       [0] go_battle (res://scripts/world_link.gd:27)
+       [1] _finish_sortie (res://view/world/world_map_screen.gd:610)
+       [2] _pc_reject_result (res://tests/world_link.gd:415)
+       [3] _seconds (res://tests/world_link.gd:23)
+ERROR: Failed loading resource: res://scenes/FleetBattle3D.tscn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] go_battle (res://scripts/world_link.gd:27)
+       [1] _finish_sortie (res://view/world/world_map_screen.gd:610)
+       [2] _pc_reject_result (res://tests/world_link.gd:415)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW BS2 PASS
+PC_DIRECT_ROW BS3 PASS
+PC_DIRECT_ROW BS4 PASS
+PC_DIRECT_ROW BS5 PASS
+PC_DIRECT_ROW BS6 PASS
+PC_DIRECT_ROW BS7 PASS
+PC_DIRECT_ROW BS8 PASS
+PC_DIRECT_ROW BS9 PASS
+PC_DIRECT_ROW BS10 PASS
+PC_DIRECT_ROW BS11 PASS
+PC_DIRECT_ROW BS12 PASS
+PC_DIRECT_ROW BS13 PASS
+PC_DIRECT_ROW BN1 PASS
+ERROR: Cannot open file 'res://scenes/FleetBattle3D.tscn'.
+   at: load (scene/resources/resource_format_text.cpp:1442)
+   GDScript backtrace (most recent call first):
+       [0] go_battle (res://scripts/world_link.gd:27)
+       [1] _finish_sortie (res://view/world/world_map_screen.gd:610)
+       [2] _pc_reject_result (res://tests/world_link.gd:415)
+       [3] _seconds (res://tests/world_link.gd:23)
+ERROR: Failed loading resource: res://scenes/FleetBattle3D.tscn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] go_battle (res://scripts/world_link.gd:27)
+       [1] _finish_sortie (res://view/world/world_map_screen.gd:610)
+       [2] _pc_reject_result (res://tests/world_link.gd:415)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW BN2 PASS
+PC_DIRECT_ROW BN3 PASS
+PC_DIRECT_ROW BN4 PASS
+PC_DIRECT_ROW BN5 PASS
+PC_DIRECT_ROW BN6 PASS
+PC_DIRECT_ROW BN7 PASS
+PC_DIRECT_ROW BN8 PASS
+PC_DIRECT_ROW BN9 PASS
+PC_DIRECT_ROW BN10 PASS
+PC_DIRECT_ROW BN11 PASS
+PC_DIRECT_ROW BN12 PASS
+PC_DIRECT_ROW BN13 PASS
+PC_DIRECT_REJECT_DONE 0

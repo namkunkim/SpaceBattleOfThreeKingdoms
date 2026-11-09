@@ -1,0 +1,11 @@
+{
+  "zip": "P03-CURSOR-DRAIN-ATTEMPT-05.zip",
+  "bytes": 8439926,
+  "sha256": "8a33aed8e46bb6f9954c000d13abb70c3b9386e1da47eb0bd3ea204aab9562d4",
+  "crc32": "776c41c9",
+  "entries": 104,
+  "exact_original_rechecks": 104,
+  "duplicate_entries": 0,
+  "crc_failures": 0,
+  "godot_reexecuted": false
+}

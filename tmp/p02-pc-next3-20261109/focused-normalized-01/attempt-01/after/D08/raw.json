@@ -1,0 +1,1 @@
+{"checks":{"fail.notice":true,"fail.same.clocks":true,"fail.same.difficulty":true,"fail.same.g":true,"fail.same.link":true,"fail.same.seed":true,"fail.same.selection":true,"fail.same.sim":true,"fail.same.trace":true,"placement.tick":true,"retry.valid":true,"start.controls":true},"facts":{},"failed":[],"lane":"D08","phase":"after"}

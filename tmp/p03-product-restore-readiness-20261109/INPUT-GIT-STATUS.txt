@@ -1,0 +1,2 @@
+ M core/battle/operation_private_state.gd
+ M docs/battle-core/pc-campaign-design/P02-PROGRESS-CHECKLIST.md

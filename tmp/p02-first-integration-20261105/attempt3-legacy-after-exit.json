@@ -1,0 +1,26 @@
+{
+  "label": "attempt3-legacy-after",
+  "command": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+    "--log-file",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-first-integration-20261105\\attempt3-legacy-after-engine.log",
+    "-s",
+    "tests/autoresolve.gd",
+    "--",
+    "--runs",
+    "1",
+    "--policies",
+    "none",
+    "--out",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-first-integration-20261105\\attempt3-cli-inputs\\legacy-after.json"
+  ],
+  "actual_exit": 0,
+  "script_errors": 0,
+  "errors": 0,
+  "warnings": 0,
+  "log_sha256": "12381c82d0eb6d21110289b7a57f7b939d941cb47ff3bcfc29885809404af686",
+  "engine_log_sha256": "ec50595b4da0a3376ceda34ab803c17bc5b3f4c5cde827749bd53ab4f11197d2"
+}

@@ -1,0 +1,23 @@
+--- docs\battle-core\pc-campaign-design\P02-PROGRESS-CHECKLIST.md
++++ docs\battle-core\pc-campaign-design\P02-PROGRESS-CHECKLIST.md
+@@ -27,13 +27,17 @@
+ 
+ - [ ] 제품 적벽 operation 프로필과 WorldMap·FleetBattle3D UI 연결은 남아 있다. 이번 결산 검사는 기존 legacy 제품 경로와 headless 호출을 다뤘다. 실제 1,800초 상한 도달과 수동 GUI 확인은 미검증이다.
+ 
+-## 한정 수용 — legacy FleetBattle3D 후보 준비
++## 한정 수용 완료 — legacy FleetBattle3D 후보 준비
+ 
+-- [x] 지정 bench patch 두 오류에서 기존 전투와 deck·편성 화면의 동기 상태를 보존한다. 공통 8행·27단언이 전후 일치했고 사후 10행·546단언과 전체 복구 trace 대조가 통과했다. clean WorldLink 기존 실패, 종료 진단, HUD 오류 표시 미검증을 별도로 기록했다. 제품 operation은 미연결이다. [결과](P02-HOST-PREP-RESULT-20261108.md) · [전용 체크리스트](P02-HOST-PREP-CHECKLIST-20261108.md) · [인계](SESSION-HANDOFF-P02-HOST-PREP-20261108.md) · [전달 ZIP](../../../tmp/p02-sixth-20261108/closeout-v2/P02-HOST-PREP-DELIVERY-20261108.zip)
++- [x] 실제 FleetBattle3D에서 새 전투 후보를 준비한 뒤 성공한 후보만 게시한다. 지정 bench patch의 두 명시 오류에서 기존 전투와 실제 출격·재시작·타이틀·편성 호출부의 동기 상태가 유지됐다. 공통 8행·27단언은 전후 일치했고 사후 10행·546단언과 복구 trace 대조를 통과했다. 예상 엔진 거절 진단 10건을 관측했다. clean-user WorldLink는 기존 단일 실패(exit 1), returning-user는 통과(exit 0)로 각각 기록했다. ObjectDB/리소스 종료 진단의 원인은 확정하지 않았다. [결과](P02-HOST-PREP-RESULT-20261108.md) · [전용 체크리스트](P02-HOST-PREP-CHECKLIST-20261108.md) · [인계](SESSION-HANDOFF-P02-HOST-PREP-20261108.md)
++
++- [x] 최종 전달 ZIP은 독립 마감에서 한정 수용됐다. ZIP 안의 마감 대기 표기는 생성 당시 상태이며, 이후 판정은 외부 심사 기록에 있다. 마감 중 관측된 미귀속 경로 차이는 확인된 실행 입력 및 소유 파일과 겹치지 않았고 변경 주체는 확인되지 않았다. [최종 전달 ZIP](../../../tmp/p02-sixth-20261108/closeout-v2/P02-HOST-PREP-DELIVERY-20261108.zip) · [독립 마감](../../../tmp/p02-sixth-20261108/closeout-v2/REVIEW-CLOSEOUT-INDEPENDENT.md)
++
++- [ ] 사용자 HUD 오류 표시, 적벽 operation 지원, FleetBattle3D·WorldMap 제품 operation 연결과 P02 전체 인수는 남아 있다.
+ 
+ ## 남은 인수
+ 
+-- [ ] **FleetBattle3D 제품 호스트.** 공통 입력으로 새 후보를 준비하고 검증 성공 후에만 화면에 게시한다. 시계와 초기 controls, 배치/명령, 투영/사건, UI 선택·카메라·trace의 소유권과 실패 시 기존 세션 보존을 함께 검증한다.
++- [ ] **FleetBattle3D 제품 operation 호스트.** 공통 operation 입력으로 새 후보를 준비하고 검증 성공 후에만 화면에 게시한다. 시계와 초기 controls, 배치/명령, 투영/사건, UI 선택·카메라·trace의 소유권과 실패 시 기존 세션 보존을 함께 검증한다.
+ - [ ] **WorldMap 제품 경로.** 제품 operation 입력, 실제 작업 시작·취소·join 책임, 진행 표시와 `BattleOutcome` 결산을 연결하고 기존 `BattleBrief` 경로와 대조한다. 현재 CLI worker 요약·사건 DTO는 제품 결산의 인수 근거로 쓰지 않는다.
+ - [ ] **제품 replay 소비 경로.** 현재 `BattleSim.replay`의 확인된 호출자는 테스트다. 제품 진입점과 초기화·명령/사건 적용 책임을 정하고 검증한다. 기존 진단 trace의 재생, checkpoint·cursor, 외부 저장/재개는 별도 계약이다.
+ - [ ] **I01/K01~08 소비자 공동 인수.** 지원 프로필과 source→effective 변환·ID, 실제 초기화/시계/controls, 명령·사건 순서와 경계, 지원 밖 입력의 명시 실패와 실패 원자성, legacy 호환을 실제 소비자들에서 함께 확인한다. 제한 CLI의 identity 경로와 부분 회귀는 이 전체 인수와 분리한다.

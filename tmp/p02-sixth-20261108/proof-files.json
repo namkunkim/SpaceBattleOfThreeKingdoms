@@ -1,0 +1,18 @@
+{
+  "tmp/p02-sixth-20261108/PLAN-v2.md": {
+    "bytes": 7290,
+    "sha256": "493adbb5f88432d18628e45ee2ee78a774e9c9caafa8c0f7513e56a75a98085f"
+  },
+  "tmp/p02-sixth-20261108/REVIEW-PLAN-V2-INDEPENDENT.md": {
+    "bytes": 3567,
+    "sha256": "5a9b2e254240d68022959afeb1884ea11b02c103a81f5c21ea918ae7ed59cb84"
+  },
+  "tmp/p02-sixth-20261108/run.py": {
+    "bytes": 5851,
+    "sha256": "fbda2ade88ae26acac77c908cf067215ccf358d6b49f242efd53cbd16b639e06"
+  },
+  "tmp/p02-sixth-20261108/returning-settings.cfg": {
+    "bytes": 30,
+    "sha256": "c8b752aba9f5015889c00c5a45db9fef916af2a1e1be3e68d49b8121b2db721b"
+  }
+}

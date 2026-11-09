@@ -1,0 +1,35 @@
+{
+  "label": "sync-services-after",
+  "command": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+    "--log-file",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt3\\sync-services-after.engine.log",
+    "-s",
+    "tests/autoresolve.gd",
+    "--",
+    "--operation-input",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tests\\fixtures\\p02\\services.json",
+    "--out",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt3\\sync-services-after.json"
+  ],
+  "expected_exit": 0,
+  "error": null,
+  "output": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt3\\sync-services-after.json",
+  "expected_diagnostics": null,
+  "actual_exit": 0,
+  "diagnostics": {
+    "script_errors": 0,
+    "errors": 0,
+    "warnings": 0
+  },
+  "log_shas": {
+    "sync-services-after.stdout": "10fde996fc64fe9b9cd602b40aa754bbe5becf5ff3dd891761f164cc16d08789",
+    "sync-services-after.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sync-services-after.engine.log": "e099b096836d936adaada55e5834ba4a99fc104791a152f557ab7b343bdb721d"
+  },
+  "output_sha256": "fa3a2b12310f5c348c3f1b92217c87081222539557c727b35731e4cc7802e082",
+  "pass": true
+}

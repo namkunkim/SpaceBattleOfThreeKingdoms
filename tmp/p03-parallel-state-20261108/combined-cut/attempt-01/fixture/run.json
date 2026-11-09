@@ -1,0 +1,43 @@
+{
+  "command": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+    "--script",
+    "res://tmp/p03-parallel-state-20261108/combined-cut/combined_cut.gd"
+  ],
+  "expected_exit": 0,
+  "actual_exit": 0,
+  "gate_exit": 0,
+  "launcher_pid": 3744,
+  "launcher_thread": 24368,
+  "timeout": false,
+  "termination": null,
+  "job": {
+    "active": 0,
+    "total": 2,
+    "terminated": 0
+  },
+  "diagnostics": {
+    "script_error": 0,
+    "error": 0,
+    "warning": 0,
+    "objectdb": 0,
+    "resources": 0
+  },
+  "engine_identity_matches": true,
+  "success_marker": {
+    "cases": [
+      "combined_cut",
+      "restore_active_pending",
+      "advance_once_in_order"
+    ],
+    "checks": 53,
+    "engine_path": "C:/Tools/Godot/Godot_v4.7.2-stable_win64.exe",
+    "engine_pid": 25180,
+    "failures": []
+  },
+  "failure_marker": null,
+  "passed": true
+}

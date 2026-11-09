@@ -1,0 +1,44 @@
+{
+  "label": "modules",
+  "command": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+    "--log-file",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt3\\modules.engine.log",
+    "-s",
+    "tests/autoresolve.gd",
+    "--",
+    "--operation-worker",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt3\\modules-input.json",
+    "--out",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt3\\should-not-exist.json"
+  ],
+  "expected_exit": 1,
+  "error": [
+    "unsupported_module_config",
+    "profile.combat"
+  ],
+  "output": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt3\\should-not-exist.json",
+  "expected_diagnostics": null,
+  "actual_exit": 1,
+  "diagnostics": {
+    "script_errors": 0,
+    "errors": 0,
+    "warnings": 0
+  },
+  "log_shas": {
+    "modules.stdout": "187973d7f596dc7d8452b99b0ed664082720984800352b0769d2279608459ead",
+    "modules.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "modules.engine.log": "e24cf1bd30848c056e1ad70a070f657479be18cb586f025cbd7dc31683ee5b39"
+  },
+  "observed": [
+    {
+      "error": "unsupported_module_config",
+      "ok": false,
+      "path": "profile.combat"
+    }
+  ],
+  "pass": true
+}

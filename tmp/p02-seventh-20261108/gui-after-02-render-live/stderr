@@ -1,0 +1,4 @@
+SCRIPT ERROR: Parse Error: Expected end of statement after expression, found "`" instead.
+   at: GDScript::reload (C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-seventh-20261108/render-probe.gd:39)
+ERROR: Failed to load script "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-seventh-20261108/render-probe.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)

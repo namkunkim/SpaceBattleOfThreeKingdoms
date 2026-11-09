@@ -1,0 +1,74 @@
+{
+  "status": "APPLIED_AND_VERIFIED",
+  "utc": "2026-11-08T19:37:51.843329+00:00",
+  "before": {
+    "scripts/world_link.gd": "42f98746255011935166770bfd070ed60218a227f6051a166adaa3b6353bbb56",
+    "scripts/FleetBattle3D.gd": "604b79308d9b3dbab84dced32456a4f41b28686c8eec748073d3816892cffc5c",
+    "hud/ui_kit/command_deck.gd": "bb81eb1855ff0c13708648597905411663223758ccd9a54ba73da1cab0565cf6",
+    "hud/ui_kit/deck_screens.gd": "73dc364af79b43afaca9fa1f9eb2dedfb747a6b56e2ef70b7ef046defcdefe6b"
+  },
+  "after": {
+    "scripts/world_link.gd": "1ae03ec0a07c6636c38201279edb64eaad7e2f5ae604a7fd9b5a80fccbdad440",
+    "scripts/FleetBattle3D.gd": "029a11be7c08038f2ed4a482f0b2668bd924c842c33a2a671409cd486f0191c9",
+    "hud/ui_kit/command_deck.gd": "9fd1c6317a16c78f0f24315a219d78e2d4c1c6682ec0cdacd17b444a3e606ecc",
+    "hud/ui_kit/deck_screens.gd": "6d154680a71f7bf98dcbd0f333607a8cf3e70cdfe316b4da4327fb127ebc0a9f"
+  },
+  "shared_status_snapshot": [
+    {
+      "id": "01a1bbe2-3f04-7a71-8577-3d35b0fd6785",
+      "hostId": "local",
+      "status": "notLoaded",
+      "title": "P07 첫 PC 캠페인 · 보급·증원·목표·철수 연결 계획",
+      "updatedAt": 1794153915
+    },
+    {
+      "id": "01a1ac0f-b2b6-7891-820d-0701e4f48536",
+      "hostId": "local",
+      "status": "notLoaded",
+      "title": "(ING) P03 전체 상태 관리 채팅",
+      "updatedAt": 1794153076
+    },
+    {
+      "id": "01a1bbb3-7b67-7f43-86ca-71dbe88919fd",
+      "hostId": "local",
+      "status": "notLoaded",
+      "title": "P05 첫 PC 캠페인 · 진입로와 보급·철수 구역",
+      "updatedAt": 1794153185
+    },
+    {
+      "id": "01a1ba43-9b49-7210-bb27-117a423006ab",
+      "hostId": "local",
+      "status": "notLoaded",
+      "title": "(DONE) P03 전체 상태 원장",
+      "updatedAt": 1794149946
+    },
+    {
+      "id": "01a1ba43-d1fe-77e3-910b-9deee6216760",
+      "hostId": "local",
+      "status": "notLoaded",
+      "title": "(DONE) P03 명령 커서 계약",
+      "updatedAt": 1794149933
+    },
+    {
+      "id": "01a1ba53-9472-7613-bdd4-ef1aef873ef0",
+      "hostId": "local",
+      "status": "notLoaded",
+      "title": "(DONE) P03 3D 저장·재개 호출 경로 추적",
+      "updatedAt": 1794149939
+    },
+    {
+      "id": "01a1ba43-85e3-7763-ad86-a3e5f77f5ebe",
+      "hostId": "local",
+      "status": "notLoaded",
+      "title": "(DONE) P03 활성 모듈 복원",
+      "updatedAt": 1794133624
+    }
+  ],
+  "head": "0be09755b70378286105972f35ac5b7031715664",
+  "index_sha256": "6980bad4df2570c03e76cd964aec5bb0b71ec5cbdef69f4b022e4df1a2aca57a",
+  "reverse_bytes": true,
+  "scoped_diff_check": true,
+  "protected_source_count": 1476,
+  "product_engine_reruns": 0,
+  "note": "The first scratch-only reverse check hit CRLF normalization before writing product files. Command-local core.autocrlf=false proved exact reverse/forward bytes and applied the patch. Repository-default per-file git diff --check passed with the existing WorldLink LF warning."
+}

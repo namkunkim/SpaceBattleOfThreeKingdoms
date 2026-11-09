@@ -1,0 +1,13 @@
+{"focus":"/root/FleetBattle3D/BattlePrepareError/SafeContent/PrepareErrorCard/@VBoxContainer@85/ExitBattlePrepareError","host_process":false,"layer":true,"legacy_visible":false,"phase":"initial","presentation":false,"sim":false}
+{"code":87,"phase":"os-input","type":"key"}
+{"code":75,"phase":"os-input","type":"key"}
+{"code":82,"phase":"os-input","type":"key"}
+{"code":68,"phase":"os-input","type":"key"}
+{"code":74,"phase":"os-input","type":"key"}
+{"code":81,"phase":"os-input","type":"key"}
+{"code":71,"phase":"os-input","type":"key"}
+{"code":75,"phase":"os-input","type":"key"}
+{"code":83,"phase":"os-input","type":"key"}
+{"code":77,"phase":"os-input","type":"key"}
+{"code":4194309,"phase":"os-input","type":"key"}
+{"brief_null":true,"last_difficulty":"표준","last_mode":"auto","outcome_null":true,"phase":"return","scene":"res://scenes/WorldMap.tscn"}

@@ -1,0 +1,9 @@
+{
+  "exit": 0,
+  "timeout": false,
+  "user_after": {
+    "settings.cfg": "c8b752aba9f5015889c00c5a45db9fef916af2a1e1be3e68d49b8121b2db721b",
+    "battle_traces\\battle-2026-11-08T18-10-20-7756-148346532.jsonl": "bdf7bcc14fffc2c9ea23c18ff6d5983cc02cc017c4c605e28087ccf7a1236a6d",
+    "logs\\godot.log": "1178181e8ed9ae5d23fed53cba63b26600ac776a0bd27ded053c6a196deed640"
+  }
+}

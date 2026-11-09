@@ -1,0 +1,19 @@
+{
+  "args": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--verbose",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-sixth-20261108\\project-after",
+    "--script",
+    "res://tmp/p02-sixth-20261108/product-host-common-v2.gd",
+    "--",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-sixth-20261108\\leak-verbose-diagnostics\\after\\common\\result.json"
+  ],
+  "env": {
+    "APPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-sixth-20261108\\leak-verbose-diagnostics\\after\\common\\roaming",
+    "LOCALAPPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-sixth-20261108\\leak-verbose-diagnostics\\after\\common\\local",
+    "XDG_DATA_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-sixth-20261108\\leak-verbose-diagnostics\\after\\common\\roaming"
+  },
+  "exit": 0
+}

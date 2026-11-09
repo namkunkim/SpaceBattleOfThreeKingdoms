@@ -1,0 +1,71 @@
+{
+  "base": {
+    "bytes": 14940257,
+    "sha256": "4b8c3845fb3e91c8d1bc514a63c940c4306dfbddeb1bdf65b06b76685f0fc3e1"
+  },
+  "branch": "codex/feature-i01b-not_remove",
+  "head": "0be09755b70378286105972f35ac5b7031715664",
+  "index": {
+    "bytes": 282415,
+    "sha256": "6980bad4df2570c03e76cd964aec5bb0b71ec5cbdef69f4b022e4df1a2aca57a"
+  },
+  "stage_sha": "ae3306f6ba4fb347acf5e80f732684a30994cbc6cac0bd07d990e67e233149c8",
+  "added": {
+    "tracked": {},
+    "untracked": {
+      "tmp/p03-parallel-cursor-20261108/remaining-cursor-drain/a06-effect-completion/INDEPENDENT-CLOSEOUT-TERRA.md": {
+        "bytes": 595,
+        "sha256": "541cc17977885e21ae08be8d316fff2ba8332f6f4e7f69777fffd69adb44909f"
+      },
+      "tmp/p03-parallel-cursor-20261108/remaining-cursor-drain/a06-effect-completion/REVIEW-5B-TERRA.md": {
+        "bytes": 1427,
+        "sha256": "4e2b0431fff7196d30167e94ceb25a41b49dc22797eadc07a5b12229882b0b42"
+      },
+      "tmp/p03-parallel-cursor-20261108/remaining-cursor-drain/fx-s-evidence-map/FX-S-EVIDENCE-MAP.md": {
+        "bytes": 5616,
+        "sha256": "7dde61ae8e61da46afdd46d11255e78a82f958e1f5b8e7225f012c6dbc6393ae"
+      },
+      "tmp/p03-parallel-cursor-20261108/remaining-cursor-drain/fx-s-evidence-map/HANDOFF.md": {
+        "bytes": 1057,
+        "sha256": "d9cda9bb05609c5e56043b901919e68f8c48f0ef0e06a2e2280e771d10c2e10e"
+      },
+      "tmp/p03-parallel-cursor-20261108/remaining-cursor-drain/fx-s-evidence-map/INPUT-AFTER.json": {
+        "bytes": 3152,
+        "sha256": "68575ce780744dde3dc3866bd4e3dd94b80de719219e1ce23f8776baebc929c8"
+      },
+      "tmp/p03-parallel-cursor-20261108/remaining-cursor-drain/fx-s-evidence-map/INPUT-BEFORE.json": {
+        "bytes": 3152,
+        "sha256": "68575ce780744dde3dc3866bd4e3dd94b80de719219e1ce23f8776baebc929c8"
+      },
+      "tmp/p03-parallel-cursor-20261108/remaining-cursor-drain/fx-s-evidence-map/MANIFEST.json": {
+        "bytes": 1018,
+        "sha256": "2be8de585cb04558e82488f2a864c044705e0f0d1c9fa4952995c725866d2d33"
+      },
+      "tmp/p03-parallel-cursor-20261108/remaining-cursor-drain/fx-s-evidence-map/PLAN.md": {
+        "bytes": 3686,
+        "sha256": "64f52a2f21d5a388e36980f9a9e11d134200e14f50ee89df14df223dfefa87b1"
+      },
+      "tmp/p03-parallel-cursor-20261108/remaining-cursor-drain/fx-s-evidence-map/REVIEW-PLAN-TERRA.md": {
+        "bytes": 1257,
+        "sha256": "a174d68ebfe5d4defe9a056b54f5ea911a4d0b8bbcc7a0e60b575051cd8dc35e"
+      },
+      "tmp/p03-parallel-cursor-20261108/remaining-cursor-drain/fx-s-evidence-map/STATIC-5A.json": {
+        "bytes": 329,
+        "sha256": "30b1799ce197a00327747c3ba8299a051f0aee906321f8a6ca21fe18ad5ffa00"
+      },
+      "tmp/p03-parallel-state-20261108/REVIEW-PLAN-BUSY-CN.md": {
+        "bytes": 1771,
+        "sha256": "10dfc7c2d6e469b97bebec2a260257ca5e7435b366f53ad963c74cf44f3c9234"
+      }
+    }
+  },
+  "removed": {
+    "tracked": [],
+    "untracked": []
+  },
+  "changed_metadata": [],
+  "directory_entries": [
+    "tmp/p02-space-cleanup-20261108/commit-plan/patch-repo/"
+  ],
+  "note": "Read-only additive evidence. File metadata is not a second SHA pass. Nested repos are Git pseudo-entries and are not expanded here."
+}

@@ -1,0 +1,5 @@
+{
+  "script": "res://tests/data_rules.gd",
+  "actual_exit": 0,
+  "name": "data_rules"
+}

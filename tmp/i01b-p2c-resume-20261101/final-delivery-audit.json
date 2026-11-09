@@ -1,0 +1,99 @@
+{
+  "created_utc": "2026-11-01T12:21:49.734626+00:00",
+  "branch": "codex/feature-i01b-not_remove",
+  "head": "fb660cea69207fd332e26128643007694910a253",
+  "index": [],
+  "baseline_count": 3660,
+  "baseline_changed": [
+    {
+      "path": "docs/battle-core/CHECKLIST-OPEN.md",
+      "before": "a7e209c8404b18a9411551c1a3adf51481d0bc61347826e1f4e40fa0dfecd8eb",
+      "current": "dda7386c426ebd3a5804e2f5309489a6175f387be827369c781875a8cceabe7b"
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.html",
+      "before": "e1cdfe0332c68dba3c38d21f0e0e4be29dc7b3171fb24c98a6a253a999487875",
+      "current": "9653d4913deff9e2cdb7d5c7db768b29ee2dd53aa80cd67a260378b48263dc1d"
+    }
+  ],
+  "baseline_missing": [],
+  "initial_dirty_count": 3823,
+  "initial_changed": [
+    {
+      "path": "core/battle/operation_private_state.gd",
+      "before": "d8f977b7d3a89da3071e8be96d140a44b4db4e89b20944666cb18df294f28074",
+      "current": "a1376b70c22dcf371120d44999a38b68d141bc2306d9339f1e2294e6744196ca"
+    },
+    {
+      "path": "docs/battle-core/CHECKLIST-OPEN.md",
+      "before": "58dbc9637705991ca5799bd599f9bb8d43f13fabee97fe4f862b3e4cafa47f0f",
+      "current": "dda7386c426ebd3a5804e2f5309489a6175f387be827369c781875a8cceabe7b"
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/I01B-P2C-CHECKLIST-20261101.md",
+      "before": "2d12d66a015c06e3b2559dad5ffdfe97c737c73405147700c233a8b2eaea81bd",
+      "current": "6ba546f326b3d337b77b84beeec792b5c17394235e589d4e767af192b56c8b3a"
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/SESSION-HANDOFF-I01B-P2C-20261101.md",
+      "before": "de301430ffa5bd838bf8575ddcb9fef61c892998344263d60a21c2d8563e8736",
+      "current": "1a1609386233ce14450a5c8f9eb378ced0f49867243e0c1b6e3b275ab7b02a8e"
+    },
+    {
+      "path": "tests/i01b_private_state.gd",
+      "before": "b49662172df74adee0494840cd0a88b42249aabe4d0348e8259fa77421eb9501",
+      "current": "bd12cdad427ec672373ab844329bd6846e109f4d088ae007181eb24f4489403b"
+    }
+  ],
+  "initial_missing": [],
+  "source_count": 35,
+  "source_changed": [],
+  "source_missing": [],
+  "quarantine_count": 77,
+  "quarantine_sha_matches": 77,
+  "original_paths_absent": 77,
+  "creation_time_reaudit": "quarantine-current-time-audit.json (outside_count=0)",
+  "upper_checklist_inverse_sha256": "a7e209c8404b18a9411551c1a3adf51481d0bc61347826e1f4e40fa0dfecd8eb",
+  "upper_single_owned_row_only": true,
+  "html_unchanged_from_resume": true,
+  "allowed_document_hashes": [
+    {
+      "path": "docs/battle-core/CHECKLIST-OPEN.md",
+      "before": "58dbc9637705991ca5799bd599f9bb8d43f13fabee97fe4f862b3e4cafa47f0f",
+      "current": "dda7386c426ebd3a5804e2f5309489a6175f387be827369c781875a8cceabe7b",
+      "authorization": "stage6 P2c checklist/handoff and its single parent checklist row only"
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/I01B-P2C-CHECKLIST-20261101.md",
+      "before": "2d12d66a015c06e3b2559dad5ffdfe97c737c73405147700c233a8b2eaea81bd",
+      "current": "6ba546f326b3d337b77b84beeec792b5c17394235e589d4e767af192b56c8b3a",
+      "authorization": "stage6 P2c checklist/handoff and its single parent checklist row only"
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/SESSION-HANDOFF-I01B-P2C-20261101.md",
+      "before": "de301430ffa5bd838bf8575ddcb9fef61c892998344263d60a21c2d8563e8736",
+      "current": "1a1609386233ce14450a5c8f9eb378ced0f49867243e0c1b6e3b275ab7b02a8e",
+      "authorization": "stage6 P2c checklist/handoff and its single parent checklist row only"
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/I01B-P2C-RESULT-20261101.md",
+      "current": "737da932e42817264fc8e7fde15285749d23c753064b78f86ffc62c01ef27fff",
+      "authorization": "new P2c result / independent reviewer-owned final review"
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/REVIEW-I01B-P2C-20261101.md",
+      "current": "b3dea05450a794c4bc4804dbaa94eb24eef273114e8ce74da22b4bd7ab8077e9",
+      "authorization": "new P2c result / independent reviewer-owned final review"
+    }
+  ],
+  "attempt5_inputs_rehashed_matches": 7,
+  "code_changes_after_final_5b": false,
+  "main_attempts": 5,
+  "main_attempt_limit": 6,
+  "separate_probes": 2,
+  "editor_import_this_resume": false,
+  "scope": "restricted private runtime component accepted; whole I01b/A04-A06 NOT_READY; save schema UNCLASSIFIED",
+  "archive": "tmp/i01b-p2c-delivery-20261101.zip",
+  "external_archive_integrity_report": "archive-verification.json",
+  "archive_self_reference_policy": "final audit and record manifest are inside ZIP; content list and archive digest verification are external to avoid recursive digest dependencies"
+}

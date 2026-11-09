@@ -1,0 +1,22 @@
+{
+  "utc": "2026-11-08T10:27:32.873757+00:00",
+  "writer_check": "Prior recorded post-edit SHA matched both current documents and was rechecked before writing; no intervening change observed.",
+  "files": {
+    "tmp/p03-progress-20261108/P03-CHECKLIST-REVISION-20261108.md": {
+      "before": "a0007d992220ff136f4cd16a312d5745e1da82867f7f046cac0cc982d817177f",
+      "after": "e3a04a103103906dcd3e9c82ee691c0de7b4676dacb27772076dda589433244f",
+      "preservation": "all bytes outside one existing row"
+    },
+    "tmp/p03-progress-20261108/HANDOFF-20261108.md": {
+      "before": "54f2f5d58e59b1e6c81b5a025d3111318a7e2efa553a33907cfe27ea0dac7467",
+      "after": "3d34343c3f1eb94722dcb6f9fc7ae22eeee8ce4c5535025c98421679359d0d46",
+      "preservation": "full prefix"
+    }
+  },
+  "evidence_sha256": {
+    "p03-parallel-active-20261108/owner-active-guard/RESULT.md": "2756d46ff2a54415ff3120013f1352f9fa0f397bdf7c6263e63591942cff945d",
+    "p03-parallel-active-20261108/owner-active-guard/APPROVED-HUNK.diff": "e8490b6f1c2850cac1408fe763836d4ccf122b9d7487b6e1028afa1b4eaceb36",
+    "p03-parallel-active-20261108/owner-active-guard/REVIEW-5B.md": "5efdd4f6ebbcab6ce56ad184bc04f9a168ca7d84cab207c3a874df30691faa3a",
+    "p03-parallel-active-20261108/owner-active-guard/REVIEW-CLOSEOUT.md": "80294f6cb57bcbd3518fcb6c71fc3372ec877db20b1dde955f23214131cd1b99"
+  }
+}

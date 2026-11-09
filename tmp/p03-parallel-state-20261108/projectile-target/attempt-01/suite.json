@@ -1,0 +1,7 @@
+{
+  "passed": false,
+  "input_stable": true,
+  "inputs": 47,
+  "fixture_exit": 1,
+  "forced_exit": 1
+}

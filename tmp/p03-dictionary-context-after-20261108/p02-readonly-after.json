@@ -1,0 +1,43 @@
+{
+  "timedOut": true,
+  "wake": null,
+  "polls": [
+    {
+      "schemaVersion": 1,
+      "cursor": "98e6033e-5c02-4ef4-a3bf-d065aabf4035:12",
+      "revision": 12,
+      "changed": true,
+      "thread": {
+        "id": "01a1ac09-125c-71d0-b13b-721727506c85",
+        "hostId": "local",
+        "status": {
+          "type": "active",
+          "activeFlags": []
+        }
+      },
+      "latestTurn": {
+        "id": "01a1ba35-277d-7ad1-bdb6-c1c9b089b41a",
+        "status": "inProgress",
+        "error": null,
+        "startedAt": 1794125408,
+        "completedAt": null,
+        "durationMs": null
+      },
+      "latestAssistantMessageId": "msg_024448c931706213016af02ee2fb9487d09df79cf27f07233a",
+      "latestAssistantMessage": {
+        "id": "msg_024448c931706213016af02ee2fb9487d09df79cf27f07233a",
+        "turnId": "01a1ba35-277d-7ad1-bdb6-c1c9b089b41a",
+        "phase": "commentary",
+        "text": "검증용 창을 식별해 다시 확인했습니다. 단독 종료와 천하 복귀를 각각 실제 마우스와 키보드로 실행했고, 천하 복귀 시 결산이 생성되지 않은 것도 확인했습니다. 이제 원문 로그와 화면을 독립 심사합니다."
+      },
+      "latestToolMarkerId": "call_ae27ecee56ac4a5281946fe32ea948b0",
+      "latestToolMarker": {
+        "id": "call_ae27ecee56ac4a5281946fe32ea948b0",
+        "turnId": "01a1ba35-277d-7ad1-bdb6-c1c9b089b41a",
+        "type": "collabAgentToolCall",
+        "name": "wait",
+        "status": "completed"
+      }
+    }
+  ]
+}

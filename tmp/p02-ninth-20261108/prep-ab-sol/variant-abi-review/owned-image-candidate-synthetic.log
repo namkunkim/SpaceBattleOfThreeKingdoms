@@ -1,0 +1,5 @@
+lexical match does not override distinct original resolver result
+rejected pre-serialization path overflow diagnostic path pre-cap; evidence incomplete
+rejected encoded frame overflow diagnostic encoded cap before serialization
+primary and cleanup separately preserved
+synthetic only

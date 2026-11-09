@@ -1,0 +1,46 @@
+{
+  "label": "N15",
+  "command": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+    "--log-file",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt2\\N15.engine.log",
+    "-s",
+    "tests/autoresolve.gd",
+    "--",
+    "--operation-input",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tests\\fixtures\\p02\\poc.json",
+    "--profile",
+    "red_cliffs",
+    "--out",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt2\\should-not-exist.json"
+  ],
+  "expected_exit": 1,
+  "error": [
+    "conflicting_option",
+    "--profile"
+  ],
+  "output": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt2\\should-not-exist.json",
+  "expected_diagnostics": null,
+  "actual_exit": 1,
+  "diagnostics": {
+    "script_errors": 0,
+    "errors": 0,
+    "warnings": 0
+  },
+  "log_shas": {
+    "N15.stdout": "508df59ac5b0f30e953dabb6fbda9c828239f066a841b539a0640150bc0cfe31",
+    "N15.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "N15.engine.log": "c9fd97e4730f4a05ce3177a30fc99125745b1068e161aaf0d5697ea3027ab5e0"
+  },
+  "observed": [
+    {
+      "error": "conflicting_option",
+      "ok": false,
+      "path": "--profile"
+    }
+  ],
+  "pass": true
+}

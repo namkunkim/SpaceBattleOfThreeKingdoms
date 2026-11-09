@@ -1,0 +1,12 @@
+{
+  "command.json": "f6cde1863fa6965f7214911b743fc96dbb56d7a7e43b63465094454ba315b0b9",
+  "engine.log": "1d45d46cb497b77d6c7b63d5b459ce9f58f63e0c9a13d38c41cef78d1e40606c",
+  "engine.os.tsv": "7edaa7605c19c3674c926e69ccc037317a18b31375fd05eef23fb4af1090884b",
+  "supervisor-argv.json": "c74cd8350dd3e74ef9341a592a18a47cdab8d36945ed5b05d41c17ad42325ec4",
+  "supervisor-exit.json": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "supervisor.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "supervisor.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-09T03-38-50-16568-1178638.jsonl": "d1c406733beca51e50ac7c2c74d70adda77173d7645e254a370bc831cf81203d",
+  "roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-09T03-38-52-16568-3486877.jsonl": "3bf20135d51a4e975a6dc20eec14c927678e49c8b44acdc4e496ab79c6ed026e",
+  "roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-09T03-38-54-16568-5969372.jsonl": "d5c465a8bf0c0ab6954f12485315527db402c1dde9385211f5a53f856ba4dac4"
+}

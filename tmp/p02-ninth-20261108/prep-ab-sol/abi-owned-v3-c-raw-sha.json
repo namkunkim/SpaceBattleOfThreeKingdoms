@@ -1,0 +1,10 @@
+{
+  "ABI-OWNED-V3-AND-C-RAW-REVIEW.md": "ddc21e16b0be39788c33be0e1a02cfefa0c24f8e4f7742946797612066309382",
+  "c_raw_overlay_mapping.py": "f16966ad47957548bdafc1282e8a8e5c59ba23f6c714270884da2f084679b1a0",
+  "c-raw-mapping-synthetic.py": "3001b402c4bb8b699f6b927d08a9f406ede445a895377191fa0493a0399dd271",
+  "c-raw-mapping-synthetic.log": "c5b6008026ac629283ab2f7fcba303bfaa4e81b21839456cdb11293a0a5d8b74",
+  "variant-abi-review/abi_owned_runner_v3.py": "a97490e99029e9e46a2ff91ba3e233553ebad4420f907093ab27112e4de85381",
+  "variant-abi-review/ABI-OWNED-RUNNER-v3-MANIFEST.json": "6e5d3868262b51cee2867fde5176951da03e9a1b3d35615e0b5e4a4422a44644",
+  "variant-abi-review/abi-owned-v3-static.py": "dbe02b398c8668878ff2fdd663415b891564807a4bf68528bd97fda9fd8a9ea9",
+  "variant-abi-review/abi-owned-v3-static.log": "690c63f97a807c234d93789eaebdd4f217d3c9c687388b0cf8c2636dc8e65ac8"
+}

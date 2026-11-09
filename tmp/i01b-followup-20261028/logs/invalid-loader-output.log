@@ -1,0 +1,21 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: 묶음 진형 기하 데이터가 없거나 잘못되었다: res://tmp/i01b-followup-20261028/negative-missing-kind.json
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _load_layout (gdscript://-9223371999072483870.gd:39)
+       [1] offsets (gdscript://-9223371999072483870.gd:44)
+       [2] _run (res://tmp/i01b-followup-20261028/invalid_loader.gd:27)
+ERROR: 묶음 진형 기하 데이터가 없거나 잘못되었다: res://tmp/i01b-followup-20261028/negative-invalid-pattern.json
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _load_layout (gdscript://-9223371998804048434.gd:39)
+       [1] offsets (gdscript://-9223371998804048434.gd:44)
+       [2] _run (res://tmp/i01b-followup-20261028/invalid_loader.gd:27)
+ERROR: 묶음 진형 기하 데이터가 없거나 잘못되었다: res://tmp/i01b-followup-20261028/negative-invalid-coefficient.json
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _load_layout (gdscript://-9223371998535612949.gd:39)
+       [1] offsets (gdscript://-9223371998535612949.gd:44)
+       [2] _run (res://tmp/i01b-followup-20261028/invalid_loader.gd:27)
+BUNDLE_INVALID_LOADER_EXPECTED_REJECTION_PASS cases=3

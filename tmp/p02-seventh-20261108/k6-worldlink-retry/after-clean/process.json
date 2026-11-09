@@ -1,0 +1,13 @@
+{
+  "stage": "after",
+  "lane": "clean",
+  "exit": 1,
+  "timeout": false,
+  "inputs_unchanged": true,
+  "expected_result": true,
+  "diagnostics": [
+    "ERROR: TEST_FAIL 천하에서 오면 브리핑부터 (prologue)",
+    "WARNING: 150 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+    "ERROR: 18 resources still in use at exit (run with --verbose for details)."
+  ]
+}

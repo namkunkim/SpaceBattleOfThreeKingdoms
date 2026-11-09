@@ -1,0 +1,12 @@
+{
+  "paths": [
+    "command_suffix.gd",
+    "run_gate.py",
+    "windows_job.py",
+    "RESULT.md",
+    "HANDOFF.md",
+    "P03-CHECKLIST-CLOSEOUT-20261108.md"
+  ],
+  "findings": [],
+  "actual_exit": 0
+}

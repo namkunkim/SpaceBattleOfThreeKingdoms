@@ -1,0 +1,20 @@
+{
+  "before_sha256": "52fde94aa9d2cca411ee038856643934990aac7de26ad7141ce3f9e61e379101",
+  "after_sha256": "52fde94aa9d2cca411ee038856643934990aac7de26ad7141ce3f9e61e379101",
+  "unchanged": true,
+  "literal_scan_hit_count": 11,
+  "literal_scan_hits": [
+    "res://core/battle/bundle_layout.gd:15  8  <- 1, 8: # 봉시·안행: 양익을 대칭으로 배치",
+    "res://core/battle/bundle_layout.gd:17  0.9  <- p = Vector2(absf(side) * (0.9 if kind == 8 else -0.9), side)",
+    "res://core/battle/bundle_layout.gd:17  8  <- p = Vector2(absf(side) * (0.9 if kind == 8 else -0.9), side)",
+    "res://core/battle/bundle_layout.gd:17  0.9  <- p = Vector2(absf(side) * (0.9 if kind == 8 else -0.9), side)",
+    "res://core/battle/bundle_layout.gd:24  0.45  <- p = Vector2(side * side / span * 0.45, side)",
+    "res://core/battle/bundle_layout.gd:29  9  <- elif kind == 3 or kind == 9:",
+    "res://core/battle/bundle_layout.gd:34  6  <- if kind == 6:",
+    "res://core/battle/bundle_layout.gd:35  0.7  <- p.x -= p.y * 0.7",
+    "res://core/battle/bundle_layout.gd:36  7  <- elif kind == 7:",
+    "res://core/battle/bundle_layout.gd:37  0.25  <- p.y += 0.25 if row % 2 else -0.25",
+    "res://core/battle/bundle_layout.gd:37  0.25  <- p.y += 0.25 if row % 2 else -0.25"
+  ],
+  "scope": "Complete first literal scan only; subsequent data_rules checks not run; no claim about all runtime defects"
+}

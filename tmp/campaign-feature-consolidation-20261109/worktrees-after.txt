@@ -1,0 +1,8 @@
+worktree C:/WorkSpace/SpaceBattleOfThreeKingdoms
+HEAD 25879eedd22bcf9c7c258630cfef8dd23a991175
+branch refs/heads/codex/feature-i01b-not_remove
+
+worktree C:/Users/nk782/.codex/worktrees/pc-ten-minute-battle-review/SpaceBattleOfThreeKingdoms
+HEAD 5264543b58919f906bcc8cf81a6be08dc55acc2a
+branch refs/heads/codex/pc-ten-minute-battle-review
+

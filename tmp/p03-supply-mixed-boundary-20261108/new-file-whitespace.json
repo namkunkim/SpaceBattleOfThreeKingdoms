@@ -1,0 +1,12 @@
+{
+  "paths": [
+    "supply_mixed.gd",
+    "run_gate.py",
+    "windows_job.py",
+    "RESULT.md",
+    "HANDOFF.md",
+    "CHECKLIST.md"
+  ],
+  "findings": [],
+  "actual_exit": 0
+}

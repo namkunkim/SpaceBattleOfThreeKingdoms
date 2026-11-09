@@ -1,0 +1,5 @@
+rejected both omit button constructor stage counts
+rejected different node $[0].buttons[0].path: value mismatch
+rejected stage omitted B: all stage IDs in order
+rejected wrong device type b[0].buttons[0]: integer token
+synthetic only: one valid and four invalid

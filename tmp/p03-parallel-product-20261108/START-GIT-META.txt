@@ -1,0 +1,3 @@
+exit=0
+HEAD=fb660cea69207fd332e26128643007694910a253
+Full untracked enumeration was attempted first; output exceeded capture limit. This normal-mode snapshot is subsequent and concurrent changes may have occurred.

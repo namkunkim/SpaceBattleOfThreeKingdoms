@@ -1,0 +1,16 @@
+--- before/docs/battle-core/pc-campaign-design/P02-PROGRESS-CHECKLIST.md
++++ after/docs/battle-core/pc-campaign-design/P02-PROGRESS-CHECKLIST.md
+@@ -7,11 +7,11 @@
+ - [x] **첫 headless 연결.** 기존 실행기의 `--operation-input`이 제한된 runtime-ready 입력을 공통 어댑터로 한 번 검증해 private owner를 생성한다. 공개 투영을 쓰는 정책, 틱 진행과 순서 있는 사건 회수, 실패 시 출력 경계, legacy 출력 비교를 검증했다. 정본 3/K6. [결과](P02-FIRST-HEADLESS-RESULT-20261107.md) · [독립 구현 심사](../../../tmp/p02-first-integration-20261105/REVIEW-5B-NON-ASTRA-20261107.md) · [독립 마감](../../../tmp/p02-first-integration-20261105/REVIEW-CLOSEOUT-NON-ASTRA-20261107.md)
+ - [x] **CLI → AutoResolver worker.** `--operation-worker`는 명시 전원 delegate·policy none의 제한 입력을 받는다. worker가 owner를 생성·진행·종료하고, 메인은 join 후 결과 사본을 공개한다. 취소와 미게시 결과 폐기, 자연종료와 timeout, 동기 CLI 결과 대조를 검증했다. 정본 3/K6, 실제 53개 프로세스. [결과](P02-WORKER-RESULT-20261107.md) · [정본 실행](../../../tmp/p02-next-20261107/attempt3/results.json) · [독립 구현 심사](../../../tmp/p02-next-20261107/REVIEW-5B-INDEPENDENT.md) · [독립 마감](../../../tmp/p02-next-20261107/closeout/REVIEW-CLOSEOUT-INDEPENDENT-20261108.md)
+ 
+-## 한정 구현 수용 — 제한 fresh replay CLI
++## 한정 수용 완료 — 제한 fresh replay CLI
+ 
+ - [x] 기존 실행기에 `--operation-replay`를 추가하는 계획이 독립 심사에서 한정 수용됐다. 공통 어댑터가 만든 fresh owner에 명시 명령을 동틱 입력 순서대로 적용하는 새 CLI 소비자다. 제품 replay 및 legacy trace 재생은 별도 항목이다. [계획](../../../tmp/p02-third-20261108/PLAN.md) · [독립 계획 판정](../../../tmp/p02-third-20261108/REVIEW-PLAN-INDEPENDENT.md)
+ - [x] 실제 CLI와 native 오라클을 대조하고 독립 구현 5-b 한정 수용을 받았다. 2/K6 74/75 및 3/K6 BattleFlow 단일 재실행으로 최종 75사례를 통과했다. [결과](P02-REPLAY-RESULT-20261108.md) · [독립 판정](../../../tmp/p02-third-20261108/REVIEW-5B-INDEPENDENT.md)
+-- [ ] 문서·새 ZIP의 독립 마감 판정 진행 중. [전용 체크리스트](P02-REPLAY-CHECKLIST-20261108.md) · [최신 인계](SESSION-HANDOFF-P02-REPLAY-20261108.md)
++- [x] 문서와 전달 ZIP이 독립 마감에서 한정 수용됐다. ZIP 안 문서의 마감 대기 표기는 생성 당시 상태다. 생성 후 독립 마감 판정은 별도 기록에 있다. [전용 체크리스트](P02-REPLAY-CHECKLIST-20261108.md) · [최신 인계](SESSION-HANDOFF-P02-REPLAY-20261108.md) · [전달 ZIP](../../../tmp/P02-REPLAY-DELIVERY-20261108.zip) · [독립 마감](../../../tmp/p02-third-20261108/closeout/REVIEW-CLOSEOUT-INDEPENDENT.md)
+ 
+ ## 남은 인수
+ 

@@ -1,0 +1,58 @@
+--- a/core/battle/operation_runtime_adapter.gd
++++ b/core/battle/operation_runtime_adapter.gd
+@@ -10,6 +10,20 @@
+ 
+ static func fail(error: String, path: String) -> Dictionary:
+ 	return {"ok": false, "error": error, "path": path}
++
++# Legacy product callers supply their effective profile by reference.
++# They still own profile preparation, publication, and worker startup.
++static func create_product_native(profile: Dictionary, seed: int, mode: String) -> Dictionary:
++	if mode != "direct" and mode != "auto":
++		return fail("unsupported_mode", "mode")
++	var sim := BattleSim.new(seed, BattleRules.TICK_HZ, profile)
++	if mode == "auto":
++		sim.set_manual_all(false)
++	else:
++		for f in sim.st.fleets:
++			if f.side == 0 and f.faction == "liu_bei":
++				f.control = "direct"
++	return {"ok": true, "sim": sim}
+ 
+ static func _integer(value: Variant, minimum: int, maximum: int) -> bool:
+ 	if typeof(value) not in [TYPE_INT, TYPE_FLOAT]: return false
+--- a/scripts/FleetBattle3D.gd
++++ b/scripts/FleetBattle3D.gd
+@@ -303,12 +303,10 @@
+ 					break
+ 		if not invalid_path.is_empty():
+ 			return {"ok": false, "error": "invalid_candidate_profile", "path": invalid_path}
+-	var candidate_sim := BattleSim.new(candidate_seed, BattleRules.TICK_HZ, profile)
+-	# 플레이어 유비군은 처음부터 직접 지휘한다. 손권군·적군은 기존 위임 AI를 쓴다.
+-	for f in candidate_sim.st.fleets:
+-		if f.side == 0 and f.faction == "liu_bei":
+-			f.control = "direct"
+-	return {"ok": true, "seed": candidate_seed, "sim": candidate_sim,
++	var native := preload("res://core/battle/operation_runtime_adapter.gd").create_product_native(profile, candidate_seed, "direct")
++	if not native.ok:
++		return native
++	return {"ok": true, "seed": candidate_seed, "sim": native.sim,
+ 		"ally": profile.ally.map(_with_portrait),
+ 		"foe": profile.foe.filter(func(d): return int(d.wait) == 0).map(_with_portrait),
+ 		"errors": errors, "message": message, "fallback": fallback, "scenario": scen}
+--- a/scripts/world/auto_resolver.gd
++++ b/scripts/world/auto_resolver.gd
+@@ -40,8 +40,11 @@
+ 	if p.is_empty():
+ 		error = "적벽 프로필을 읽지 못했다"
+ 		return false
+-	sim = BattleSim.new(brief.seed, BattleRules.TICK_HZ, p)
+-	sim.set_manual_all(false)
++	var native := OperationAdapter.create_product_native(p, brief.seed, "auto")
++	if not native.ok:
++		error = "%s at %s" % [native.error, native.path]
++		return false
++	sim = native.sim
+ 	if sim.victory:
+ 		_limit_s = float(sim.victory.V.get("time_limit_s", _limit_s))
+ 	_max_tick = int(MAX_S * sim.st.hz)

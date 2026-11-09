@@ -1,0 +1,10 @@
+pre/post input count=9, drift=0
+0B5A634A44442B90154187431C83DA3B755E36A261EB04A29F9A709C529F3FC2 C:\WorkSpace\SpaceBattleOfThreeKingdoms\tmp\p03-product-resume-20261108\detection-ui\project.godot
+A588908BC29E6B9870195D06537A35BB8C6D06918C46EEE48C683AAEFB5FED0C C:\WorkSpace\SpaceBattleOfThreeKingdoms\tmp\p03-product-resume-20261108\detection-ui\scripts\FleetBattle3D.gd
+B483ABD92F78FE4D1D394728F278FBE2927C8422EBA525E5D06ECF7DF8BD00C6 C:\WorkSpace\SpaceBattleOfThreeKingdoms\tmp\p03-product-resume-20261108\detection-ui\detection_ui.gd
+DF34CEE4A225683D6BC1C9005DC7760C365CE3A61AE68E106449CB2E7154253B C:\WorkSpace\SpaceBattleOfThreeKingdoms\tmp\p03-product-resume-20261108\detection-ui\core\battle\detection.gd
+E40B067A8F9AF61A85F5FBF88B4297962F770B0191442EDE543B69B0F49BCE07 C:\WorkSpace\SpaceBattleOfThreeKingdoms\tmp\p03-product-resume-20261108\detection-ui\view\battle_view_model.gd
+ECA2D9CE26D25892C422D536F4A2E37D613995A4E9E03F704FE3170DC1A61F1B C:\WorkSpace\SpaceBattleOfThreeKingdoms\tmp\p03-product-resume-20261108\detection-ui\view\fleet_render\fleet_renderer.gd
+1070FC1B282AD89AFBB6E94022BCB442E8E672F7491B2A496B9B5AE4341434B1 C:\WorkSpace\SpaceBattleOfThreeKingdoms\tmp\p03-product-resume-20261108\detection-ui\hud\ui_kit\tactical_overlay.gd
+01E805C3176C10AD6F04A216B9CEA60BE57366CF92EA4048856F2F25E618203B C:\WorkSpace\SpaceBattleOfThreeKingdoms\tmp\p03-product-resume-20261108\detection-ui\scenes\FleetBattle3D.tscn
+C8F0A6BC45A19B33541501E57F6F7CD972AB18453743266339D495CBBE846643 C:\Tools\Godot\Godot_v4.7.2-stable_win64_console.exe

@@ -1,0 +1,2653 @@
+diff --git a/core/battle/operation_private_state.gd b/core/battle/operation_private_state.gd
+index f7fa465..10f66f0 100644
+--- a/core/battle/operation_private_state.gd
++++ b/core/battle/operation_private_state.gd
+@@ -337,6 +337,13 @@ static func prepare(packet: Variant) -> Dictionary:
+ static func _context_same(a: Variant, b: Variant) -> bool:
+ 	if typeof(a) != typeof(b): return false
+ 	if a is Dictionary:
++		if (a.get_typed_key_builtin() != b.get_typed_key_builtin()
++			or a.get_typed_key_class_name() != b.get_typed_key_class_name()
++			or not is_same(a.get_typed_key_script(), b.get_typed_key_script())
++			or a.get_typed_value_builtin() != b.get_typed_value_builtin()
++			or a.get_typed_value_class_name() != b.get_typed_value_class_name()
++			or not is_same(a.get_typed_value_script(), b.get_typed_value_script())):
++			return false
+ 		if not _context_same(a.keys(), b.keys()): return false
+ 		for key in a:
+ 			if not _context_same(a[key], b[key]): return false
+@@ -354,6 +361,8 @@ static func _context_same(a: Variant, b: Variant) -> bool:
+ func restore_completed(packet: Variant) -> Dictionary:
+ 	var error := _guard()
+ 	if error != "": return _fail(error)
++	if _sim.decisions != null:
++		return _fail("unsupported_active_decisions")
+ 	_busy = true
+ 	var prepared := prepare(packet)
+ 	if not prepared.ok:
+diff --git a/docs/battle-core/pc-campaign-design/P02-DIRECT-SCENE-REJECT-RESULT-20261109.md b/docs/battle-core/pc-campaign-design/P02-DIRECT-SCENE-REJECT-RESULT-20261109.md
+new file mode 100644
+index 0000000..c316941
+--- /dev/null
++++ b/docs/battle-core/pc-campaign-design/P02-DIRECT-SCENE-REJECT-RESULT-20261109.md
+@@ -0,0 +1,11 @@
++# P02 직접 출격 장면 전환 거절 결과
++
++2026-11-09 KST · 기존 직접 출격의 즉시 전환 오류 복구 한정 수용. 전체 P02/첫 PC 캠페인/I01/I01b **NOT_READY**, 외부 저장 스키마 **UNCLASSIFIED**.
++
++WorldLink는 기존처럼 전환 호출 전에 전투 명세와 선택값을 게시하고, 장면 전환이 즉시 오류를 반환하면 기존 brief/outcome 참조와 난이도·모드 값을 되돌린다. WorldMap은 출격 직전의 browse 또는 result, 기존 brief와 표시·입력·지역 소유 표현을 복구한다. 결산 카드에서 시작한 경우 같은 결산 객체와 다시 출격 버튼이 남고 오류가 표시된다. 새 결산 게시나 결산 타이머를 만들지 않는다. 장면이 수락된 뒤의 내부 준비 실패와 귀환은 별도 경계다. [제품 변경](../../../tmp/p02-pc-next-20261109/apply-verified-legacy/production-applied.diff).
++
++승인된 세 번째 격리 실행은 before/after 각 7개, 총 14개 lane을 완료했다. 실제 누락 씬 로더 오류는 각 reject에서 4쌍이며, 원본은 예상 28개 실패를 포함한 45개 행 전체를 기록했다. 후보는 45/45와 ERR_CANT_OPEN 반환을 확인했다. 정상 왕복 C1–C4, 자동 해결 14/14 및 취소 15/15, 타이틀·재시작은 양쪽을 통과했다. 자동 결산 fingerprint와 결산 1회도 일치했다. 14개 실제 root 종료와 Job active 0을 확인했다. 원본 reject만 예상 exit 1, 나머지는 exit 0이다. [실행 기록](../../../tmp/p02-pc-next-20261109/ATTEMPT-03-RESULT.md) · [독립 5-b](../../../tmp/p02-pc-next-20261109/REVIEW-5B-INDEPENDENT.md).
++
++적용한 두 제품 파일은 격리 after 실행 입력 및 검토 후보와 바이트 단위로 일치한다. 적용 후 Godot 실행과 실제 Windows 입력은 미수행이다. 정상 왕복의 두 번째 호출은 같은 프레임의 handler 재진입이며, 끝맺음은 테스트의 강제 종료다. PC 자연 종료나 캠페인 operation의 수용 근거로 집계하지 않는다. 원본 테스트 overlay는 적용하지 않았다. [원본 반영](../../../tmp/p02-pc-next-20261109/apply-verified-legacy/APPLY-RESULT.md) · [적용 후 독립 검토](../../../tmp/p02-pc-next-20261109/REVIEW-POST-APPLY-INDEPENDENT.md).
++
++첫 시도는 편집기 접기 설정 검사에서, 두 번째는 테스트가 이미 분리된 버튼에 보낸 인위 신호의 오디오 오류에서 중단됐다. 이 조각은 3/6회 사용했다. PC0 2/2 소진과 별도 여덟째 K6 미사용을 유지한다. [첫 실패](../../../tmp/p02-pc-next-20261109/ATTEMPT-01-RESULT.md) · [두 번째 실패](../../../tmp/p02-pc-next-20261109/ATTEMPT-02-RESULT.md).
+diff --git a/docs/battle-core/pc-campaign-design/P02-WORLD-RETURN-NOTICE-RESULT-20261109.md b/docs/battle-core/pc-campaign-design/P02-WORLD-RETURN-NOTICE-RESULT-20261109.md
+new file mode 100644
+index 0000000..2b0bc14
+--- /dev/null
++++ b/docs/battle-core/pc-campaign-design/P02-WORLD-RETURN-NOTICE-RESULT-20261109.md
+@@ -0,0 +1,9 @@
++# P02 천하 복귀 실패 안내 결과
++
++일시정지·결과·최초 준비 실패의 천하 복귀가 즉시 거절되면 ‘천하로 돌아가지 못했습니다. 다시 눌러 주세요.’가 표시된다. 같은 버튼으로 다시 요청할 수 있다. WorldLink의 기존 rollback을 유지하고 실제 로더 Error를 전장과 UI에 전달한다. 네 대상은 적용 후 독립 검토에서 수용됐다.
++
++격리 attempt-01의 28개 명령과 단언 728개가 통과했다. 로더 오류 48줄, Error 19 경고 24줄, 준비 fixture 오류 8줄은 예정 분모다. 프로그램 버튼 신호를 사용했으며 WorldLink fixture의 관측 배열은 제품 코드에서 제외했다. 결과는 강제 종료 fixture로 유도했다.
++
++독립 검토자가 1600×900 앱 viewport PNG 18개에서 경고 가독성과 겹침을 확인했다. 최초 준비 화면의 42px 예약 슬롯으로 기준선 대비 버튼이 25px 아래로 이동했다. 후보의 반복 거절 동안 버튼 위치와 초점은 유지됐다. 다른 DPI·해상도, OS 입력, 자연 종료, 제품 operation은 미검증이다. 제품 원본 적용 뒤 Godot은 재실행하지 않았다.
++
++[격리 결과](../../../tmp/p02-return-notice-20261109/ATTEMPT-01-RESULT.md) · [독립 5-b](../../../tmp/p02-return-notice-20261109/REVIEW-5B-INDEPENDENT.md) · [적용 후 독립 심사](../../../tmp/p02-return-notice-20261109/REVIEW-POST-APPLY-INDEPENDENT.md)
+diff --git a/docs/battle-core/pc-campaign-design/P02-WORLD-RETURN-REJECT-RESULT-20261109.md b/docs/battle-core/pc-campaign-design/P02-WORLD-RETURN-REJECT-RESULT-20261109.md
+new file mode 100644
+index 0000000..c1b9d27
+--- /dev/null
++++ b/docs/battle-core/pc-campaign-design/P02-WORLD-RETURN-REJECT-RESULT-20261109.md
+@@ -0,0 +1,11 @@
++# P02 전장 → 천하 전환 거절 복구 결과
++
++2026-11-09 KST · 기존 즉시 로더 거절 복구 한정 수용 · P02 및 첫 PC 캠페인 **NOT_READY**.
++
++`WorldLink.back_to_world`는 기존 Brief·Outcome 참조를 보관한다. WorldMap으로의 장면 전환 요청이 즉시 거절되면 두 참조를 복원하고 엔진 로그에 오류 코드를 남긴다. 현재 전장 화면과 기존 복귀 버튼을 그대로 사용할 수 있다. 성공 시 기존 WorldMap 초기화와 결산의 일회 전달을 사용한다.
++
++격리 2회차에서 20개 실행과 순서가 지정된 210개 단언을 통과했다. 기준선 세 호출부에서 실제 로더 거절 3회로 출격 정보 손실을 재현했다. 후보는 결과·일시정지·최초 준비 실패 화면에서 각 2회, 총 6회의 실제 로더 거절과 경고 6건을 기록했다. 이전 Brief와 대기 Outcome 참조, 전장·sim·화면·상태 키를 보존했고, 씬 파일을 복구한 뒤 같은 전장과 버튼으로 재시도해 WorldMap에 도착했다. 완료 결과는 한 번 전달되고 중도·초기 실패는 결과 없이 복귀했다. [실행 결과](../../../tmp/p02-pc-next2-20261109/ATTEMPT-02-RESULT.md) · [독립 5-b](../../../tmp/p02-pc-next2-20261109/REVIEW-5B-INDEPENDENT.md)
++
++1회차는 최초 준비 실패 검사에서 없는 상태 키를 읽어 중단했다. 2회차 검사는 키 존재와 Variant 값을 구분했고 정상 경로·기존 직접 출격 왕복을 대조했다. clean WorldLink의 기존 서막 편차로 양쪽 각각 exit 1 한 건, 다른 실행은 자연 root exit 0이었다. 모든 2회차 Job이 active 0으로 정리됐다. [1회차 기록](../../../tmp/p02-pc-next2-20261109/ATTEMPT-01-RESULT.md) · [2회차 원문 판정](../../../tmp/p02-pc-next2-20261109/attempt-02/results.json)
++
++원본에는 `back_to_world` 한 함수만 반영했다. 승인 격리 후보와 원본 적용 바이트가 일치하고 직전 출격 hunk와 다른 동결 소스를 보존했다. 원본 반영 후 Godot은 미실행이다. 검증은 기존 버튼의 pressed signal과 강제 종료 fixture를 사용했다. Windows OS 입력과 자연 전투 종료는 미검증이며, 개발 로그 경고에 대응하는 사용자 화면 오류 표시는 제공하지 않는다. 제품 operation과 첫 PC는 미인수, PC0 2/2 소진, 별도 여덟째 K6 미실행이다. [적용 기록](../../../tmp/p02-pc-next2-20261109/apply-result.json) · [독립 적용 확인](../../../tmp/p02-pc-next2-20261109/REVIEW-POST-APPLY-INDEPENDENT.md)
+diff --git a/docs/battle-core/pc-campaign-design/P05-PC-FORMATION-ENVELOPE-EVIDENCE-20261109.md b/docs/battle-core/pc-campaign-design/P05-PC-FORMATION-ENVELOPE-EVIDENCE-20261109.md
+new file mode 100644
+index 0000000..5e06f59
+--- /dev/null
++++ b/docs/battle-core/pc-campaign-design/P05-PC-FORMATION-ENVELOPE-EVIDENCE-20261109.md
+@@ -0,0 +1,64 @@
++# P05 승인 측정 편성의 진형 외곽
++
++2026-11-09 · 정적 측정 · **실제 제품 최대 외곽 미산정 · P05/A04 및 전체 캠페인/I01/I01b NOT_READY · 외부 저장 스키마 UNCLASSIFIED**.
++
++## 1. 측정 범위와 런타임 근거
++
++사용자가 승인한 **측정 후보**는 유비군 LIU01 39척 FRM-03 및 LIU02 21척 FRM-01, 양쪽 진형 사이 양방향 전환과 두 함대 동시 운용, C 수비 CAO04 45척 FRM-04, R 증원 CAO05 30척 FRM-03이다. 정면 E–J–A–C, 우회 E–J–B–D–C, 증원 R–C와 E/A/B/C/R 위치는 앞선 후보 좌표를 적용한다. 이 승인은 논리 선체 치수·함대 간격·안전 여유·영역 반경·이동 중 추종 규칙의 승인과 구별한다. [기존 지도 후보](P05-PC-MAP-INPUT-EVIDENCE-20261109.md) · [P05 계획](P05-PC-MAP-ACCESS-PLAN-20261109.md).
++
++| 후보 | 척수와 함종 구성 | 시작 및 전환 |
++|---|---|---|
++| RC-LIU-SQ-01 | 39 · SHP-04×12, SHP-05×3, SHP-07×6, SHP-08×18 · 기함 있음 | FRM-03 출발, FRM-03↔FRM-01 |
++| RC-LIU-SQ-02 | 21 · SHP-03×6, SHP-04×9, SHP-07×6 | FRM-01 출발, FRM-01↔FRM-03 |
++| RC-CAO-SQ-04 | 45 · SHP-03×12, SHP-04×24, SHP-05×3, SHP-07×6 | C, FRM-04 고정 |
++| RC-CAO-SQ-05 | 30 · SHP-03×9, SHP-04×18, SHP-05×3 | R, FRM-03 고정 |
++
++**코어 근거.** `FleetState`는 함대마다 중심·heading과 함종별 척수/피해 단계, 점수형 `hull`을 유지한다. `_spawn`은 함대 하나당 상태 하나를 만들며 `BattleRules.formation_offsets`의 고정 28점은 표시·발사 위치용이다. `ship_pos`는 같은 배열을 나머지 인덱스로 재사용한다. 39·45척 전원의 서로 다른 선체 위치를 재현할 수 있는 논리 슬롯 배열이 아니다. 진형 전환의 `form_left`, `form_t`는 상태에 있지만 개별 선체를 이동시켜 통로와 충돌시키는 계약은 확인되지 않았다. `_separate`는 함대 중심의 전장 경계만 제한한다. 따라서 기존 실제 코어를 정적으로 읽어 승인 편성의 **제품 논리 선체·회전·전환 최대값**을 채집할 수 없다. [상태](../../../core/battle/fleet_state.gd#L13) · [코어 슬롯](../../../core/battle/rules.gd#L47) · [생성](../../../core/battle/battle_sim.gd#L218) · [전환](../../../core/battle/salvo.gd#L149) · [경계 처리](../../../core/battle/battle_sim.gd#L1163).
++
++**렌더 근거.** 편성이 알려진 적벽 함대는 렌더러가 실제 척수만큼 명목 슬롯을 만든다. 함종별 역할 배치는 좌표 집합의 순열이다. 길이와 폭은 PC가 실제로 사용하는 실루엣 평면에서 읽었다. 선체 구간은 앞쪽 길이 `MODEL_LEN=1.9`이고 나머지 평면 길이는 항적이다. 폭 `SHIP_WIDTH=0.48`, 길이 축 `HULL_STRETCH.x=0.75`, 함종별 `CLASS_LEN`, 기함 1.8배를 적용한다. 아래 사각형은 이 렌더러의 **명목 선체 실루엣 구간을 덮는 사각형**이다. GLB 3D 자산의 실제 메시 외곽, 선미 항적·엔진광·잔해의 외곽, 실제 움직이는 화면에서의 추종 위치는 측정 대상에서 제외했다. 월드 투영에서 `S=0.05`는 슬롯에 곱했다가 전술 평면으로 돌아오므로 슬롯 수치는 유지되고 선체의 3D 길이/폭은 `S`로 나눈다. [슬롯과 함종](../../../view/fleet_render/fleet_renderer.gd#L215) · [역할 배치](../../../view/fleet_render/fleet_renderer.gd#L298) · [렌더 치수와 기함](../../../view/fleet_render/fleet_renderer.gd#L517) · [함종 모델 대응](../../../view/fleet_render/scenario_roster.gd#L10) · [선체/항적 구간](../../../view/fleet_render/ship_sprite.gdshader#L59) · [PC 투영](../../../view/fleet_render/battle_source.gd#L103) · [좌표 비율](../../../view/camera_rig.gd#L8).
++
++## 2. 수치가 있는 명목 외곽 계약 후보
++
++계약 후보 `p05-layout-disks-v1`은 전체 함선의 명목 슬롯과 평면 선체를 사용하고, 각 선체를 자세에 관계없이 포함하는 원으로 감싼다. 함선별 반경 `h_i = hypot(0.75 L_i, 0.48 L_i / 1.9) × f_i / (2 × 0.05)`이다. `L_i`는 renderer CLASS_LEN이며 `f_i`는 기함이면 1.8, 일반이면 1이다. 함대별 `max_i(||p_i||+h_i)`는 함종 배정까지 반영한 보수적 상계다. 배치에서 동점/반올림이 달라져 함종 슬롯이 바뀔 가능성에 대비해 **`max_i ||p_i|| + max_i h_i`**도 함께 계산했다. 두 번째 수치는 기함이 있는 LIU01에서 가장 큰 함종이 기함인 경우까지 덮는다. 아래 숫자는 전술 단위, 표의 표시는 가장 가까운 소수점 6자리이며 경계 판정에는 스크립트의 반올림 전 값을 사용한다.
++
++| 후보 / 진형 | 명목 슬롯 수 | 최대 슬롯 반경 | 배정 반영 상계 | 배정 독립 상계 |
++|---|---:|---:|---:|---:|
++| LIU01 / FRM-03 | 39 | 42.560700 | 47.309133 | 58.942795 |
++| LIU01 / FRM-01 | 39 | 59.075757 | 68.176921 | 75.457852 |
++| LIU02 / FRM-01 | 21 | 40.958091 | 50.059254 | 50.059254 |
++| LIU02 / FRM-03 | 21 | 33.156508 | 42.257672 | 42.257672 |
++| CAO04 / FRM-04 | 45 | 78.078487 | 85.992542 | 87.179651 |
++| CAO05 / FRM-03 | 30 | 38.826719 | 47.833478 | 47.927882 |
++
++**회전·전환 상계.** 임의 heading의 강체 회전·점대칭은 슬롯 거리와 선체 외접원의 반경을 보존한다. 명목 슬롯이 양끝 위치 사이를 선형으로 움직이면, 각 함선의 중간 슬롯 거리는 `||(1−t)p0+t·p1|| ≤ max(||p0||,||p1||)`이다. 전환 방향을 바꿔도 상계는 동일하다. 이 후보의 선형·회전 계약에서는 LIU01의 01↔03 전환 중 최대 상계가 **75.457852**, LIU02는 **50.059254**다. 배정 반영 시 각각 68.176921, 50.059254다. 전환 도중 동일한 두 끝점으로 다시 전환하더라도 중간점이 그 볼록집합 안에 있으면 이 상계를 유지한다. 증원·수비의 고정 진형은 표의 회전 상계를 그대로 사용한다. 이 상계는 전환 시간이나 진행 중 세계 좌표의 실제 이동 거리를 의미하지 않는다.
++
++렌더러의 `_form_progress`는 명목 슬롯을 선형 보간하지만, `_follow`는 이전 선체 위치와 함대 속도를 이용해 별도로 추종하고 개별 yaw도 제한한다. 이 때문에 화면에 움직이는 개별 선체의 실제 중심 상대 거리가 명목 슬롯 상계를 넘을 수 있다. 코어의 이동 중 선회 궤적, 명령 재경로, 슬롯 추종 편차, 안전 여유와 다중 함대 회랑을 계약하려면 소유자가 각 편차의 상계나 상태 전이 규칙을 제공해야 한다. 중심이 이동하는 경우에는 중심 경로 전체를 해당 원으로 팽창시킨 swept 영역을 사용하고, 경로 추종 편차까지 추가한다. [명목 전환](../../../view/fleet_render/fleet_renderer.gd#L491) · [동적 추종](../../../view/fleet_render/fleet_renderer.gd#L406).
++
++## 3. 후보 지도에 적용할 수 있는 조건
++
++`m_i`를 각 함대의 독립 안전 여유, `g`를 두 외곽 사이 추가 간격으로 둔다. LIU01과 LIU02가 동시에 전환/회전하면서 명목 외곽을 분리하려면 중심 간 거리가 **125.517106 + m1 + m2 + g 이상**이면 충분하다. 두 원의 중심 거리가 `d`일 때 양 원을 포함하는 최소 원의 반경은 `max(r1,r2,(d+r1+r2)/2)`다. 여기서 `r_i`는 위 배정 독립 상계에 해당 여유를 더한 값이다. 여유 0, 중심 이격 125.517106 조건에서 중심을 최적으로 고르면 합성 반경은 125.517106, 두 함대 중심의 산술 중점을 쓰면 138.216405다. 제품 그룹 명령의 실제 시작 오프셋·회전 축은 고정되지 않았으므로 이 수치는 그 명시적 배치 조건의 예다. 실제 그룹 중심과 각 함대 오프셋 `o_i(t)`가 정해지면 `max_{t,i}(||o_i(t)||+r_i)`로 재산정한다. 기존 다중 이동은 현재 상대 배치를 목표점에 반영하므로 개별 함대 간 이격을 보장하는 계약은 따로 필요하다. [그룹 이동](../../../core/battle/battle_sim.gd#L685).
++
++| 지도 후보 | 계산 가능한 경계 여유 | 판정에 남은 값 |
++|---|---|---|
++| E–J–A–C / E–J–B–D–C | 중심선의 최소 벽거리 240 / 250. 예시의 두 함대 산술 중점 합성 반경 138.216405를 적용할 때 외곽과 벽의 남은 기하 예산 101.783595 / 111.783595. | 실제 회전 중심선, 회랑 폭·꺾임과 정지 자리, E 배치 및 철수 반경, A/B 서비스 반경·정지·이탈, 동시 통행/대기와 여유. |
++| R–C | CAO05 외곽 47.927882, 중심선 최소 벽거리 250. 정해진 직선에 외곽을 적용하는 경우 벽 여유 202.072118. | R에서 최대 편성을 허용할 배치 영역의 형상·반경·heading, R 진입/출발 정책, C에서 수비 CAO04와의 대기·정지·교전. |
++| C | CAO04의 명목 외곽은 87.179651. LIU01이 같은 순간 물리적으로 겹치지 않는 별도 정지 자리라면 중심 이격 162.637502에 양측 여유·추가 간격을 더한 값이 충분하다. | 점령·가동에 어떤 상태와 간격이 필요한지, 수비 중첩 허용 여부. C 목표 영역의 실제 반경과 연결성이 결정돼야 한다. |
++
++표의 차감은 **직선 중심선이 지켜지고 후보 원형 외곽이 적용될 때의 벽 대조**다. E·R의 배치 영역이 전체 선체를 담는 원으로 정의된다면 각 함대·합성 외곽과 해당 여유 이상의 반경이 필요하다. A/B 서비스와 E 철수가 중심 도착 조건이면 서비스/철수 유효 영역과 벽·회랑을 침식한 자유중심공간의 교집합, 정지·이탈 및 접근 연결을 검증한다. 미승인 영역 크기를 표에서 역으로 확정하지 않는다. [후보 좌표와 벽거리](P05-PC-MAP-INPUT-EVIDENCE-20261109.md) · [F12/A04](I01-ACCEPTANCE-PREREG-20261026.md).
++
++## 4. 재현 및 인계
++
++원본 checkout HEAD `0be09755b703`. Python 3으로 [P05 전용 산정 스크립트](p05_formation_envelope_probe_20261109.py)를 실행하면 승인 편성의 척수·함종, 모든 계산 행, 가장 큰 상계를 내는 슬롯과 두 함대 합성 수치를 출력한다. 실행은 입력 읽기와 표준 출력만 사용한다. 원본 계획·지도 근거·공유 코드 및 P02/P03 제품 작업을 수정하지 않았고 엔진·UI는 실행하지 않았다.
++
++| 고정 입력 | SHA-256 |
++|---|---|
++| [스크립트](p05_formation_envelope_probe_20261109.py) | `f106c2b51a02037bd70967ef5d69b41b029ba7e218833217b79d6eb40e371f40` |
++| [적벽 편성](../../../data/scenarios/red_cliffs_208_realtime.json) | `0d702495a1ac94e255b44948ba8ebb625d4cdae2f1605658d05ec47911edb208` |
++| [역할 배치 설정](../../../data/fleet-role-layout.md) | `3e584d2976197207bdebb14efecd9dd78b1f070222d78a3c1da18b1db1b1a508` |
++| [렌더러 수식](../../../view/fleet_render/fleet_renderer.gd) | `eca2d9ce26d25892c422d536f4a2e37d613995a4e9e03f704fe3170dc1a61f1b` |
++| [함종 대응](../../../view/fleet_render/scenario_roster.gd) | `66f65a3b5aebd187276e672a82d3af7109218e0059b28913f711a531479db938` |
++| [좌표 단위](../../../view/camera_rig.gd) | `bb63326e15828a85c42d77510c6e5d5f29b6f6227089e6d847ca52833729281c` |
++| [렌더 소스 변환](../../../view/fleet_render/battle_source.gd) | `15b9f140c63d67365e69e959190794a17d59991716de0bde5100c200ee0736ac` |
++| [셰이더 선체 구간](../../../view/fleet_render/ship_sprite.gdshader) | `9f0350b0f281dbb0df5a95cdb13036922f278c1eda3e9e562d5ec495a7420e1b` |
++
++전투/편성 소유자에게 이 명목 외곽을 제품 논리 공간으로 채택할지, 별도 선체 규격을 제공할지 넘긴다. 지도/P07 소유자는 회랑과 E/A/B/C/R 유효 영역 및 안전 여유·간격을 확정한다. 그 입력을 받아 같은 편성으로 양성 경로와 기하 단절·서비스 불가 음성을 채점해야 한다. 독립 검토에는 코어의 실제 한계, 함종 배치와 단위 변환, 양방향 전환·동시 이격의 수치와 전제, 제품 판정 유보를 전달한다.
+diff --git a/docs/battle-core/pc-campaign-design/P05-PC-MAP-ACCESS-VALIDATION-20261109.md b/docs/battle-core/pc-campaign-design/P05-PC-MAP-ACCESS-VALIDATION-20261109.md
+new file mode 100644
+index 0000000..49fa9cb
+--- /dev/null
++++ b/docs/battle-core/pc-campaign-design/P05-PC-MAP-ACCESS-VALIDATION-20261109.md
+@@ -0,0 +1,58 @@
++# P05 첫 PC 작전의 접근 검증
++
++2026-11-09 · **채택한 논리 외곽을 적용한 오프라인 후보 검증 통과 · 제품 P05/A04 및 전체 캠페인/I01/I01b NOT_READY · 외부 저장 스키마 UNCLASSIFIED**.
++
++## 1. 승인과 후보 계약
++
++사용자는 `p05-layout-disks-v1`을 첫 작전의 논리 외곽으로 채택했다. 적용 대상은 LIU01 39척과 LIU02 21척의 FRM-01↔03 양방향 전환 및 동시 운용, C 수비 CAO04 45척 FRM-04, R 증원 CAO05 30척 FRM-03이다. 원형 반경은 배정 독립 상계 **75.457852 / 50.059254 / 87.179651 / 47.927882** 전술 단위다. 새로 산정한 편차·안전 예산, 회랑과 영역 반경, 정지 좌표와 속도는 아래 검증 후보에서 사용했다. [승인 모델 산정](P05-PC-FORMATION-ENVELOPE-EVIDENCE-20261109.md) · [지도와 노드](P05-PC-MAP-INPUT-EVIDENCE-20261109.md).
++
++| 항목 | 검증 후보와 근거 |
++|---|---|
++| 좌표·회랑 | 원점 (0,0), 1700×1150, identity 1회, 기존 후보 노드·효과 지형 유지. 회랑은 각 직선 구간의 **반폭 155인 닫힌 캡슐**의 합집합이며 양쪽 갈래의 경유 순서는 각각 고정한다. 효과 지형은 비용만 바꾼다. 실제 물리 장애물을 추가하지 않았다. |
++| 논리 추종 편차 | 함대별 계획 중심에 대한 유클리드 오차 **≤2**를 커밋 전 강제하는 후보 규범. 검증용 최고 이동 속도 20 전술 단위/게임 초와 최대 업데이트 0.10초에서 1회 계획 진행 길이도 최대 2다. 속도·시간 제한만으로 누적 오차가 제한되지는 않는다. 실제 상태를 매번 같은 시각의 계획점과 대조하는 가드가 필요하다. |
++| 별도 안전 예산 | 추종 2에 좌표 양자화·판정 여유 1을 더해 각 외곽을 **3**씩 팽창한다. 축별 0.001 반올림의 1회 유클리드 오차는 ≤0.000708이며, 여유 1은 이 반올림의 최댓값을 크게 웃도는 후보 예산이다. 누적 오차는 가드의 재대조가 맡는다. 두 함대 사이 134를 적용하면 팽창한 외곽 사이에 2.482894가 남는다. |
++| 회전과 전환 | 유비군 두 함대 중심을 그룹 기준점의 전술 y축 ±67에 둔다. 중심 오프셋은 heading과 함께 회전시키지 않는다. 각 구간 끝에서 정지해 다음 구간 방향으로 제자리 선회한다. 권고 검증 속도는 36°/게임 초 이하이며, 선회와 두 명목 슬롯 간 볼록 전환은 채택 원형 외곽 안에 있다. 구간 이동은 동기화하고, 두 함대의 최대 허용 진행 속도 중 작은 값을 사용한다. |
++| 가드 실패 | 제안된 각 중심과 계획점 차이가 2를 넘거나, 이전 중심부터 제안된 중심까지 swept 원이 회랑·경계·기타 접근 조건을 벗어나면 양쪽 갱신을 함께 거부한다. 이전 유효 포즈와 계획 진행을 정지하고 원인을 기록한 뒤 새 경로를 받는다. 구간 끝에는 계획/실측 중심 정지를 확인하고 다음 구간을 진행한다. 순간 보정이나 다른 진형으로 바꾸는 식의 자동 복구는 이 검증의 전제가 아니다. |
++
++정상 구간에서 계획과 실제 중심을 같은 시각의 두 끝점 사이에서 각각 직선으로 잇는 후보라면, 양끝 오차의 볼록 결합도 2 이하라서 연속 구간 전체를 덮는다. 구간 접합은 도착과 선회/정지를 명시적으로 나눈다. 팽창 반경은 각 외곽과 편차를 이미 포함한다. 별도의 중심 벽 제한 40은 외곽 여유에 더하는 대신 두 조건을 각각 검사한다. 오프라인 스크립트는 이 기하 계약과 가드 예시를 검사하며, 실제 코어에 가드가 있다는 증거는 아니다. [중심 제한](../../../core/battle/battle_sim.gd#L1163) · [양자화](../../../core/battle/rules.gd#L38).
++
++## 2. 기존 추종의 한계
++
++코어는 함대 중심을 heading·이동 속도에 따라 전진시키거나 접적/평행 이동 분기로 보낸다. 경유점 도착은 기존 반경 `arrive_r=10` 안에서 다음 점으로 넘어가는 방식이다. 10Hz에서 논리 틱 0.10초를 보통 0.05초 하위 걸음으로 나누고 틱 끝에서 좌표를 양자화한다. legacy PC가 이동·선회에 150/15를 적용한 뒤 이동 선회율은 기준 9°/초의 15배인 135°/초, 도착 제자리 선회율은 36°/초다. 속도는 교전·스킬·비용·돌격 등으로 달라진다. 이 경로에는 계획 기준점과의 거리 2를 매 걸음 검사하는 장치가 확인되지 않았다. 예를 들어 경유점까지 9 남은 위치에서도 legacy 도착 조건을 만족할 수 있지만, 후보의 경유점 정지 오차 2는 그 상태를 허용하지 않는다. [경유점·이동](../../../core/battle/battle_sim.gd#L1023) · [하위 걸음](../../../core/battle/battle_sim.gd#L936) · [도착 반경](../../../data/profiles/poc_corridor.json#L60) · [선회 변환](../../../core/battle/scenario_profile.gd#L128) · [기준 선회율](../../../data/profiles/combat_m3.json#L600).
++
++렌더러는 최초 슬롯 생성 시 목표 슬롯으로 스냅한다. 이후 실제 표시 위치를 따로 보관하고, 샘플 `h=min(acc,0.25)`에 대해 `α=h/(τ+h)`, `τ=0.3초`로 목표를 추종한다. 샘플 중심을 `c_n`, 회전·전환된 명목 슬롯을 `q_n`, 표시 위치를 `s_n`, 오차를 `e_n=s_n−c_n−q_n`으로 쓰면, 연속 갱신 구간의 속도 예측 `(c_n−c_prev)/h` 때문에 중심 이동 항은 소거된다.
++
++```text
++e_n = τ/(τ+h) × (e_prev + q_prev − q_n)
++||q_n−q_prev|| ≤ K × elapsed, elapsed ≤ ρh
++⇒ ||e_n|| ≤ max(||e_0||, τρK)    [갱신 직후, 가정 충족 구간]
++```
++
++예시로 heading 속도 ≤135°/초, LIU01의 최대 슬롯 반경 59.075757, 5초 선형 전환, `ρ=1`이면 `K≤59.075757×(135π/180+2/5)`로 잡아 슬롯 표시 중심의 조건부 상계 **48.847283**을 얻는다. 5초는 legacy 일반 값의 예일 뿐 숙련·특기·즉시 전환이 가능하다. `acc>0.25`일 때 `ρ=1`이 깨질 수 있고, 갱신 건너뜀·불연속 pose 변경·샘플 사이 화면 오차는 위 예시가 보장하지 않는다. 정확한 180° 반전과 슬롯 점대칭이 동시에 적용되면 명목 세계 슬롯은 유지되지만, 일반적인 즉시 전환까지 덮지는 않는다. 화면상 조건부 상계를 제품의 논리 편차 2나 안전 여유 1에 합산하지 않는다. [추종 상수](../../../view/fleet_render/fleet_renderer.gd#L47) · [프레임 추종](../../../view/fleet_render/fleet_renderer.gd#L406) · [초기 스냅](../../../view/fleet_render/fleet_renderer.gd#L559) · [전환 속도](../../../core/battle/salvo.gd#L138).
++
++## 3. 접근 증거
++
++| 영역 | 검증 정의 |
++|---|---|
++| E 진입 / E 철수 | E=(250,830). 진입 반경 155 안에 그룹 전체의 팽창 외곽을 포함한다. 철수는 반경 75의 개별 중심 도착 검사다. 아군 중심은 후보상 (250,763)/(250,897), 시작 heading은 E→J의 −51.546291°. 실제 철수 완료 사유는 P07 규칙이다. |
++| A/B 보급 | A=(895,240), B=(690,875), 각각 중심 반경 75. A에서는 (895,173)/(895,307), B에서는 (690,808)/(690,942)에 정지한다. 서비스 기하 witness는 가동 상태를 입력으로 두며, 실제 서비스 실행·용량·동시 제공을 채점하지 않는다. 수용 영역에 진입→정지→다음 항로로 이탈하거나 역방향으로 E까지 복귀한다. |
++| R 증원 | R=(1450,290), 진입 반경 60 안에 CAO05 팽창 외곽을 포함하고 R→C heading 110.376435°로 배치한다. |
++| C 목표 | C=(1320,640), 중심 도착 반경 320의 후보 영역. CAO04는 C 중심의 고정 원으로 두고 모든 heading을 덮는다. 아군은 각 접근 직선의 C 앞 245, 증원은 R→C의 C 앞 155에서 정지한다. 아군 정지 기준점은 (1141.591002,472.085649)/(1134.738673,800.322302), 증원은 (1373.968912,494.699083)이다. 각 중심의 C 진입과 수비 외곽 이격을 동시에 만족한다. |
++
++| 양성 witness | 회랑 여유 | 전장 벽 여유 | 추가 영역 및 수비 여유 |
++|---|---:|---:|---|
++| E–J–A–C, 복귀 C–A–J–E | 9.542148 | 94.542148 | E 배치 9.542148, A 정지 및 E 철수 각각 5, C 목표 5, C 수비 최소 9.362498 |
++| E–J–B–D–C, 복귀 C–D–B–J–E | 9.542148 | 104.542148 | E 배치 9.542148, B 정지 및 E 철수 각각 5, C 목표 5, C 수비 최소 9.362498 |
++| R–C | 104.072118 | 199.072118 | R 배치 9.072118, C 목표 162, C 수비 최소 13.892467 |
++
++아군 두 경로 모두 그룹 중점 기준 반경 **145.457852**로 캡슐 안에 든다. 각 선분을 감싸는 캡슐과 월드 사각형은 볼록하므로 선분의 양끝 및 반경 대조가 연속 구간을 보장한다. 접합점에는 회랑의 끝원 전체가 들어 있고 고정 중심에서 heading만 바꾸므로 정지·재출발·반대 방향 회전도 같은 외곽 안이다. 정면 전진 heading은 −51.546291°, −33.690068°, 43.264295°이고 우회는 −51.546291°, 66.175739°, −1.548158°, −40.872408°다. 역방향은 각 구간을 180° 바꿔 역순으로 진행한다. P07의 C 점령, E 철수 완료, R 시간 증원과 아군 동시 교전은 이 정적 접근 검사와 별도다.
++
++**음성 1 · 실제 폭 부족.** J→A의 전진 축 거리 205.346955–245.346955에 옆으로 새지 못하는 횡단 목을 두고 그 구간의 물리적 반폭만 60으로 줄인다. 같은 edge와 시작·종료는 유지한다. 연속적으로 J에서 A로 가려면 중간 횡단면을 통과해야 하며, LIU01의 **채택 외곽만 적용해도** 반폭이 15.457852 부족하다. 경계에 원을 옆으로 붙이거나 heading을 바꿔도 채택 원이 그 단면에 들어갈 수 없다. 대체 경로의 우회 양성은 유지한다. 이 결과는 횡단 목을 강제한 검증 회랑의 기하 실패다.
++
++**음성 2 · 가동 서비스 접근 불가.** 별도 지도 사본에서 A 가동 상태·정면 경로를 유지하고 서비스 영역만 (0,240), 반경 20으로 바꾼다. 도착 가능한 서비스 중심의 x는 최대 20이며, 전장 안 합법 중심은 x≥40이다. 전체 지도에서 20 간극으로 교집합이 없어 A 서비스만 실패한다. 정면 항로의 기하 양성과 B 서비스 양성은 유지된다.
++
++## 4. 재현·인계
++
++[P05 접근 검증 스크립트](p05_map_access_validation_20261109.py)를 Python 3으로 실행하면 이전 외곽 스크립트의 반올림 전 값을 받아 각 경로의 좌표·heading·양성 여유, 두 음성 이유, 중심 오차 2의 경계 예를 JSON으로 출력한다. 입력 파일을 읽고 표준 출력만 사용한다. 원본 HEAD `0be09755b703`에서 확인했다. 스크립트 SHA-256은 `990e945af8ae09305de98d04720c30f15b16dbb2f1691af51dd0fa757e08765e`, 불러오는 [외곽 스크립트](p05_formation_envelope_probe_20261109.py) SHA-256은 `f106c2b51a02037bd70967ef5d69b41b029ba7e218833217b79d6eb40e371f40`이다. 기존 지도/외곽 산정과 공유 파일, P02/P03 제품 파일에는 쓰지 않았다. 엔진·UI는 실행하지 않았다.
++
++다음 구현에서 P05는 이 후보의 회랑/영역/안전 수치를 승인 입력으로 동결하고, 전투 이동 담당은 중심·swept 가드와 실패 원자성을 연결한다. P02는 실제 시작·명령·결과에서 동일 manifest를 확인하고, P03은 진형과 이동의 소유 경계를 확인하며, P07은 가동 보급·시간 증원·목표/철수 사유를 연결한다. PC 제품에서 같은 정·부 사례를 재현할 때까지 제품 A04는 **NOT_READY**다.
+diff --git a/docs/battle-core/pc-campaign-design/P05-PC-NATIVE-ACCESS-RESULT-20261109.md b/docs/battle-core/pc-campaign-design/P05-PC-NATIVE-ACCESS-RESULT-20261109.md
+new file mode 100644
+index 0000000..7a343fe
+--- /dev/null
++++ b/docs/battle-core/pc-campaign-design/P05-PC-NATIVE-ACCESS-RESULT-20261109.md
+@@ -0,0 +1,44 @@
++# P05 전용 경로 가드와 Windows PC 검증
++
++2026-11-09 · **P05 독립 실행 검증 19/19 · 제품 P05/A04 및 전체 캠페인/I01/I01b NOT_READY · 외부 저장 스키마 UNCLASSIFIED**.
++
++## 구현과 인수 범위
++
++채택한 `p05-layout-disks-v1`, 승인 중심 편차 2와 별도 안전 여유 1을 사용했다. 앞선 오프라인 검증의 경로와 정지 좌표·후보 반경을 읽어 `effective` manifest를 만들고, 검증 전용 Godot 창에서 동일 자료를 읽는다. 기존 게임 프로젝트와 별개이며 P02/P03의 제품 진입·명령·결산에는 배선하지 않았다. [접근 계약](P05-PC-MAP-ACCESS-VALIDATION-20261109.md) · [외곽 근거](P05-PC-FORMATION-ENVELOPE-EVIDENCE-20261109.md) · [실행 방법](../../../tools/p05_access_demo/README.md).
++
++- 그룹 가드는 한 업데이트에서 제안된 두 중심, heading·진행 인덱스·틱을 함께 검사한 뒤 게시한다. 계획 중심 대비 오차, 한 걸음의 상한, 연속 이동선의 전장·회랑·수비 외곽·다른 함대 이격을 검사한다. 구간별 정지 후 방향을 바꾸고, 같은 경로로 복귀한다. 실패 시 직전 위치와 진행을 통째로 유지한다. [이동 가드](../../../tools/p05_access_demo/guard.gd).
++- E/R 배치는 팽창 외곽 전체, A/B 보급·C 목표·E 철수는 해당 정지 지점에서 각 함대 중심을 검증한다. C 수비는 고정 외곽이며 움직이는 적의 교전, 보급량이나 시간 증원 사건, 제품의 목표·철수 결산은 이 실행에서 관찰하지 않았다. 유비군 두 진형 전환은 이미 전환 최대를 포함한 외곽으로 검사했다. [이동과 영역](../../../tools/p05_access_demo/guard.gd).
++- 시작 버튼의 처리기를 두 자동 모드에서도 호출한다. Windows 자동 검사는 외부 마우스·키보드 입력을 보내지 않았으며 화면은 완료된 경로와 정지 외곽을 표시한다. 엔진 로그와 렌더러를 구분해 기록했다. [검증 장면](../../../tools/p05_access_demo/demo.gd).
++
++## 실행 결과
++
++| 실행 | 환경과 판정 | 증거 |
++|---|---|---|
++| Headless | Windows, Godot 4.7.2, display `headless`, 19/19, exit 0 | [결과 JSON](../../../tmp/p05-native-20261109/headless/Headless.json) · [실행 명령](../../../tmp/p05-native-20261109/headless/Headless.command.json) · [종료값](../../../tmp/p05-native-20261109/headless/Headless.exit.txt) |
++| WindowsAuto | Windows display, Intel Arc 130V, 1050×760, 19/19, exit 0. 두 번의 프레임 그리기 완료 후 화면을 읽어 PNG 저장 | [결과 JSON](../../../tmp/p05-native-20261109/windows/WindowsAuto.json) · [실행 명령](../../../tmp/p05-native-20261109/windows/WindowsAuto.command.json) · [종료값](../../../tmp/p05-native-20261109/windows/WindowsAuto.exit.txt) · [렌더 프레임](../../../tmp/p05-native-20261109/windows/P05-Windows-frame.png) |
++
++두 실행의 19개 검사 행이 정확히 일치했다. 양성 12개는 정면·우회의 E 진입, A/B 정지와 이탈, C 접근, 명시 복귀 후 E 철수, R 진입과 C 접근이다. 부정·복구 7개는 다음과 같다.
++
++| 사례 | 관측 |
++|---|---|
++| 추종 편차 위반 | 두 번째 함대에만 (1.5,1.5)를 제안해 `tracking_budget`으로 거부. 두 함대 위치·heading·경로·틱·진행·방문·배치 상태 전부 동일. |
++| 허용 속도 초과 | 두 번째 함대에만 진행 방향 추가 이동을 제안해 `step_speed`로 거부. 전체 이전 상태 보존. |
++| 유효 재시도 | 같은 그룹에서 정상 이동을 재시도하자 한 틱 진행되고 두 위치가 바뀜. |
++| J–A 목 폭 부족 | 경유점을 유지한 상태에서 연속 swept 외곽이 폭 120 구간에 걸려 `throat_clearance`로 거부. 실패한 한 걸음 전 상태 보존. |
++| A 서비스 접근 불가 | 정면의 A 정지까지 이동한 뒤 `service_inaccessible`로 거부. 전체 이전 상태 보존. |
++| 서비스 실패 후 항로 유지 | A 서비스 거부 뒤 같은 정면 항로에서 다음 구간 진행 성공. |
++| 새 시작 거부 | 지원 밖 경로가 `unknown_route`로 거부되고 활성 상태 전부 동일. |
++
++거부 다섯 건은 두 결과 JSON에 `transaction.before/after` 전체를 포함하며 각 객체를 대조했다. 이번 Windows 화면에는 검사 19/19, 세 항로와 목표 접근 정지 외곽이 보인다. 엔진은 각 실행에서 프로젝트 파일을 전용 임시 디렉터리로 복사해 사용했다. [격리 실행](../../../tools/p05_access_demo/run.ps1).
++
++## 재현 기준
++
++| 항목 | SHA-256 |
++|---|---|
++| [이동 가드](../../../tools/p05_access_demo/guard.gd) | `47de8be4449084014b80d6180a1ea6bd52c37105bfa72eb69229bd4e012900eb` |
++| [검증 장면 처리기](../../../tools/p05_access_demo/demo.gd) | `d44e5a562115d23e7a989bcb3de2276cb6dd37c25fe88229e51f925a3bd7c975` |
++| [manifest 생성기](../../../tools/p05_access_demo/build_manifest.py) | `d06e755cab5a1784133b11a4e148f185734a372f3ad4c536a0fbfacf9bb018c8` |
++| [Windows 실행 manifest](../../../tmp/p05-native-20261109/windows/WindowsAuto.manifest.json) / [Headless 실행 manifest](../../../tmp/p05-native-20261109/headless/Headless.manifest.json) | `223eb53c920bd7bd8662962c0196ee2e02056962636ed4306725439d94c48ecd` |
++| [Windows 프레임](../../../tmp/p05-native-20261109/windows/P05-Windows-frame.png) | `5e0c4f01536605b5fb7897686f2dc9692b5e703498c403c912c6a4587f2c80d6` |
++
++제품 이관은 P02 실제 PC 시작·표시·결산과 P03 명령·전투 상태의 소유 경계에서 수행한다. P07의 가동 보급·시간 증원·목표 달성·철수 정책을 연결하고, 같은 수용 사례를 제품에서 다시 실행해야 한다.
+diff --git a/docs/battle-core/pc-campaign-design/REVIEW-P05-PC-NATIVE-ACCESS-RESULT-20261109.md b/docs/battle-core/pc-campaign-design/REVIEW-P05-PC-NATIVE-ACCESS-RESULT-20261109.md
+new file mode 100644
+index 0000000..7b43a45
+--- /dev/null
++++ b/docs/battle-core/pc-campaign-design/REVIEW-P05-PC-NATIVE-ACCESS-RESULT-20261109.md
+@@ -0,0 +1,49 @@
++# P05 전용 native 접근 검증 독립 심사
++
++2026-11-09 / 독립 검토자 `independent_review` / **P05 전용 가드 및 Windows 자동 렌더 검증 한정 수용**.
++
++대상 [결과](P05-PC-NATIVE-ACCESS-RESULT-20261109.md)의 동결 SHA-256 `65ED367455DF454417573E80DC8C8F7C6FDEC6136D5E99441E14F875799A5331`을 직접 확인했다. 작성·구현에 참여하지 않은 검토자가 `tools/p05_access_demo/` 원문, 실행 자료 및 Windows PNG를 대조하고 별도 headless 실행과 연속 이동 반례를 수행했다.
++
++## 실행 근거
++
++| 확인 | 결과 |
++|---|---|
++| 정본 Headless | Windows/Godot 4.7.2, display=headless, 19/19, exit 0. 로그 안 P05_RESULT와 결과 JSON 일치, SCRIPT ERROR/ERROR/WARNING 문자열 없음. |
++| 정본 WindowsAuto | display=Windows, Intel Arc 130V, 1050×760, 19/19, exit 0. 명령에 --headless 없음. 로그의 OpenGL 장치 정보·결과 JSON·프레임 완료/저장 결과가 일치한다. |
++| PNG 직접 확인 | 19/19 표시, 세 항로·노드·C 앞 정지 외곽을 눈으로 확인했다. SHA-256 `5E0C4F01536605B5FB7897686F2DC9692B5E703498C403C912C6A4587F2C80D6` 일치. |
++| 독립 Headless | [별도 실행 결과](../../../tmp/p05-native-independent-20261109/headless/Headless.json), [명령](../../../tmp/p05-native-independent-20261109/headless/Headless.command.json), [exit](../../../tmp/p05-native-independent-20261109/headless/Headless.exit.txt). actual exit 0, 19/19. 정본 두 실행과 results 배열 전체가 필드 단위로 같다. |
++| 독립 swept 반례 | [별도 탐침](../../../tmp/p05-native-independent-20261109/probe/independent_sweep_probe.gd), [로그](../../../tmp/p05-native-independent-20261109/headless/independent-sweep.log). 수비 원 밖의 두 끝점을 잇지만 중간이 침범하는 2단위 선분을 `_swept`에 넣어 defender_clearance와 상태 불변을 확인했다(actual exit 0). 전장 경계의 허용과 0.01 바깥 거부도 통과했다. 이는 내부 기하 함수 반례이며 정상 사용자 경로 실행과 구별한다. |
++
++독립 탐침 첫 시도는 이전 도구 호출의 임시 프로젝트 경로가 다음 호출에서 보이지 않아 파일 생성/프로젝트 접근이 실패했다. 이를 성공 증거로 쓰지 않았다. 후속은 별도 workspace tmp에 원본 파일을 복사한 프로젝트에서 성공했다. 원본 구현은 수정하지 않았다.
++
++결과 문서에 기록한 guard/demo/build_manifest·manifest·PNG 해시를 대조했고 일치했다. Windows와 Headless의 manifest는 동일하다. 이 확인은 지정 입력의 일치이며 작업 트리 전체 변경 보존의 감사는 아니다.
++
++## 시작점·화면 증거의 경계
++
++`project.godot`/`main.tscn`의 전용 장면에서 manifest를 읽고 버튼을 만든다. 수동 버튼의 pressed와 Headless/WindowsAuto의 지연 signal emit은 같은 `_start_checks`로 연결된다. 자동 검사는 외부 OS 마우스·키보드 입력을 보내지 않는다. WindowsAuto는 렌더 완료 신호를 두 번 기다린 뒤 자기 viewport를 저장한다. 따라서 실제 Windows 렌더러가 그린 전용 검증 장면의 증거로 수용한다.
++
++실제 사용자의 버튼 클릭·OS 입력 귀속, 시간에 따른 이동 애니메이션, 기존 FleetBattle3D/WorldMap 시작·표시·결산의 검증은 아니다. `_start_checks` 안에서 시뮬레이션을 동기로 완료한 뒤 최종 정지 witness를 그린다는 구현과 결과 문서의 한계가 일치한다. 검토자는 Windows UI 입력이나 새 Windows GUI 실행을 하지 않았다.
++
++## 가드와 실패 원자성
++
++`step`은 이전 state의 깊은 사본에 tick/heading/plan/index/positions를 제안하고 `_swept` 성공 뒤에만 state를 게시한다. 추종 편차·속도·기하 실패 경로는 게시 전에 반환한다. `visit`도 모든 중심의 영역 조건을 확인한 뒤 visits/complete를 사본에 기록한다. unknown_route 시작은 route/points/offsets를 바꾸기 전에 반환한다.
++
++거부 5건에서 live Dictionary 비교와 JSON before/after를 확인했다. 위치·heading·tick·진행 index·moving·returning·visits·complete 및 route/points/offsets/radii/neck/service 설정이 보존된다. 정상 retry는 추종/속도 거부 뒤 같은 그룹에서 한 틱 진행하고 두 위치가 바뀐다. 서비스 거부 뒤에도 다음 구간을 진행할 수 있다.
++
++전용 구현에는 실제 게임 이벤트 큐나 외부 결산 게시가 없다. visits는 전용 영역 방문 기록이며, 그 보존을 실제 P03 사건·외부 효과 원자성으로 확대하지 않는다. 고정 manifest는 snapshot 대상이 아니며 입력 검증 전반·동시 writer·외부 IO 실패를 검사한 것으로 해석하지 않는다.
++
++## 연속 이동과 영역
++
++- 각 실제 끝점에서 추종 2, 속도 상한과 전장·캡슐 침식 조건을 검사한다. 허용 속도에는 0.001의 수치 비교 허용폭이 있다. 두 실제 끝점 사이를 직선으로 잇는 전용 모형에서 전장과 침식 캡슐은 볼록하므로 끝점 검사로 전체 선분을 덮는다.
++- 실제 중심을 검사할 때 반경에서 TRACK을 빼고 채택 외곽+SAFETY를 사용하는 것은 실제 위치에 추종 편차를 중복 합산하지 않는 처리다. 수비 원은 팽창값을 유지해 보수적으로 검사한다.
++- 수비 외곽은 중심부터 이동 선분까지의 최소 거리, 아군끼리는 상대 위치 선분의 원점 최소 거리로 검사한다. 샘플 사이 침범을 놓치는 끝점 전용 검사가 아니다. 독립 tangent 반례에서도 이를 확인했다.
++- 횡단 목 검사는 해당 J–A 구간의 축 범위·횡폭 조건을 적용한다. 원이 목에 닿는 범위를 보수적으로 잡으므로 좁은 목의 실패가 보장된다. 임의 장애물 경로 탐색이나 지도 전체 우회 불가 증거는 아니다.
++- E/R 배치에서 전체 팽창 외곽과 세계 경계·아군 이격을 검사한다. A/B 서비스 및 C/E 도착은 정지 계획점과 실제 중심을 검사한다. 구간 끝 정지 후 heading을 갱신하고 동일 경로를 역순으로 복귀하므로 19행의 정면/우회 서비스 이탈·목표 접근·철수 및 R 접근을 수용한다.
++
++허용되는 세계선은 이 전용 모형의 직선 보간과 정지 선회다. 기존 게임의 실제 기동·렌더 추종을 이 가드가 제어한다는 증거는 아니다. 진형 전환은 채택된 최대 원에 포함하는 방식이며 개별 함선 전환 애니메이션을 실행해 검증하지 않았다.
++
++## 최종 범위
++
++정본의 12개 양성·7개 부정/복구 및 별도 내부 swept 반례에서 차단 결함을 발견하지 못했다. **P05 전용 native 실행과 Windows 자동 렌더 확인을 한정 수용**한다. 제품 이관은 별도다. P02의 실제 시작·명령·표시·결산, P03 전투 상태/사건과 원자성, P07 실제 가동 보급·시간 증원·목표/철수 결과를 연결하고 같은 반례를 다시 인수해야 한다.
++
++**제품 P05/A04 및 전체 캠페인/I01/I01b NOT_READY, 외부 저장 스키마 UNCLASSIFIED**를 유지한다. 검토 쓰기는 이 리뷰와 허용된 독립 실행용 tmp 자료뿐이며 P02/P03·공유 소스·HTML·Git 상태를 변경하지 않았다.
+diff --git a/docs/battle-core/pc-campaign-design/p05_formation_envelope_probe_20261109.py b/docs/battle-core/pc-campaign-design/p05_formation_envelope_probe_20261109.py
+new file mode 100644
+index 0000000..a6ef668
+--- /dev/null
++++ b/docs/battle-core/pc-campaign-design/p05_formation_envelope_probe_20261109.py
+@@ -0,0 +1,138 @@
++"""Read-only P05 candidate envelope. Run with Python 3 from any directory."""
++
++import json
++import math
++import re
++from pathlib import Path
++
++
++ROOT = Path(__file__).resolve().parents[3]
++GAP_FWD, GAP_LAT = 25.0, 13.0
++SHAPES = {"FRM-01": 7, "FRM-03": 4, "FRM-04": 8}
++# Model lengths keyed by ship type. SHP-08 uses the escort silhouette.
++CLASS_LENGTH = {
++    "SHP-01": 1.25, "SHP-02": 1.2, "SHP-03": 1.0, "SHP-04": 1.15,
++    "SHP-05": 0.9, "SHP-06": 0.88, "SHP-07": 0.6, "SHP-08": 0.6,
++}
++RENDER_ORDER = ("SHP-04", "SHP-02", "SHP-03", "SHP-06",
++                "SHP-01", "SHP-05", "SHP-07", "SHP-08")
++CASES = {
++    "RC-LIU-SQ-01": (39, ("FRM-03", "FRM-01")),
++    "RC-LIU-SQ-02": (21, ("FRM-01", "FRM-03")),
++    "RC-CAO-SQ-04": (45, ("FRM-04",)),
++    "RC-CAO-SQ-05": (30, ("FRM-03",)),
++}
++
++
++def pattern(shape, count):
++    if shape == 4:
++        points = [(0.0, 0.0)]
++        ring = 1
++        while len(points) < count:
++            for index in range(min(ring * 7, count - len(points))):
++                angle = math.tau * index / (ring * 7) + ring * 0.3
++                radius = ring * GAP_LAT * 1.25
++                points.append((math.cos(angle) * radius, math.sin(angle) * radius))
++            ring += 1
++        return points
++    columns = math.ceil(math.sqrt(count * 3.0))
++    points = []
++    for index in range(count):
++        row, column = divmod(index, columns)
++        relative_column = column - (columns - 1) * 0.5
++        forward = -row * GAP_FWD
++        lateral = relative_column * GAP_LAT
++        if shape == 7 and row % 2:
++            lateral += GAP_LAT * 0.5
++        if shape == 8:
++            forward += abs(relative_column) * GAP_FWD * 0.5 - columns * GAP_FWD * 0.1
++        points.append((forward, lateral))
++    return points
++
++
++def projected_slots(shape, count):
++    base = pattern(shape, (count + 1) // 2)
++    points = [
++        (base[index // 2][0] + index % 2 * GAP_FWD * 0.5,
++         base[index // 2][1] + index % 2 * GAP_LAT * 0.5)
++        for index in range(count)
++    ]
++    center_x, center_y = (sum(axis) / count for axis in zip(*points))
++    return [(x - center_x, y - center_y) for x, y in points]
++
++
++def assign_slots(points, ship_ids, roles):
++    lo = min(x for x, _ in points)
++    depth = max(1.0, max(x for x, _ in points) - lo)
++    width = max(1.0, max(abs(y) for _, y in points))
++    free = list(range(len(points)))
++    result = [None] * len(points)
++    for kind in roles["order"]:
++        balance = 0
++        front, edge = roles["targets"][kind]
++
++        def score(slot):
++            x, y = points[slot]
++            side = (y > 0) - (y < 0)
++            return (2 * ((x - lo) / depth - front) ** 2
++                    + (abs(y) / width - edge) ** 2 + 0.12 * max(0, balance * side))
++
++        for index, ship_id in enumerate(ship_ids):
++            if ship_id != kind:
++                continue
++            selected = min(free, key=score)
++            result[index] = points[selected]
++            y = points[selected][1]
++            balance += (y > 0) - (y < 0)
++            free.remove(selected)
++    assert not free and None not in result
++    return result
++
++
++def hull_corner_radius(ship_id, flagship):
++    scale = CLASS_LENGTH[ship_id] * (1.8 if flagship else 1.0)
++    length = scale * 0.75 / 0.05
++    width = scale * 0.48 / 1.9 / 0.05
++    return math.hypot(length * 0.5, width * 0.5)
++
++
++def measure():
++    scenario = json.loads((ROOT / "data/scenarios/red_cliffs_208_realtime.json").read_text(encoding="utf-8"))
++    roster = {fleet["id"]: fleet for fleet in scenario["squadrons"]}
++    roles_text = (ROOT / "data/fleet-role-layout.md").read_text(encoding="utf-8")
++    roles = json.loads(re.search(r"```fleet-role-layout\s+(.*?)```", roles_text, re.S).group(1))
++    bounds = {}
++    for fleet_id, (count, formations) in CASES.items():
++        fleet = roster[fleet_id]
++        counts = {ship["ship_type_id"]: ship["count"] for ship in fleet["composition"]}
++        ship_ids = [kind for kind in RENDER_ORDER for _ in range(counts.get(kind, 0))]
++        assert len(ship_ids) == count and set(ship_ids) == set(counts)
++        starts = assign_slots(projected_slots(SHAPES[formations[0]], count), ship_ids, roles)
++        flagship = min(range(count), key=lambda i: math.hypot(*starts[i])) if fleet["flagship"] else -1
++        max_hull = max(hull_corner_radius(kind, fleet["flagship"]) for kind in ship_ids)
++        rows = []
++        for formation in formations:
++            points = assign_slots(projected_slots(SHAPES[formation], count), ship_ids, roles)
++            slot_max = max(math.hypot(*point) for point in points)
++            assigned = [math.hypot(*point) + hull_corner_radius(ship_id, index == flagship)
++                        for index, (point, ship_id) in enumerate(zip(points, ship_ids))]
++            witness = max(range(count), key=assigned.__getitem__)
++            robust = slot_max + max_hull
++            assert assigned[witness] <= robust
++            rows.append({"formation": formation, "slot_max": slot_max,
++                         "assigned_bound": assigned[witness],
++                         "witness": [witness, ship_ids[witness], *points[witness]],
++                         "order_independent_bound": robust})
++        bounds[fleet_id] = {"count": count, "rows": rows, "flagship_slot": flagship,
++                            "max_transition_assigned": max(r["assigned_bound"] for r in rows),
++                            "max_transition_order_independent": max(r["order_independent_bound"] for r in rows)}
++    return bounds
++
++
++if __name__ == "__main__":
++    bounds = measure()
++    print(json.dumps(bounds, ensure_ascii=False, indent=2))
++    allies = [bounds[fleet]["max_transition_order_independent"] for fleet in tuple(CASES)[:2]]
++    print(f"ally_pair_center_separation_without_margin={sum(allies):.6f}")
++    print(f"ally_pair_best_center_disk_at_minimum_separation={sum(allies):.6f}")
++    print(f"ally_pair_midpoint_disk_at_minimum_separation={sum(allies)/2 + max(allies):.6f}")
+diff --git a/docs/battle-core/pc-campaign-design/p05_map_access_validation_20261109.py b/docs/battle-core/pc-campaign-design/p05_map_access_validation_20261109.py
+new file mode 100644
+index 0000000..cc452c6
+--- /dev/null
++++ b/docs/battle-core/pc-campaign-design/p05_map_access_validation_20261109.py
+@@ -0,0 +1,142 @@
++"""P05 offline witness checks. Reads only P05 envelope inputs; writes to stdout."""
++
++import json
++import math
++import runpy
++from pathlib import Path
++
++
++HERE = Path(__file__).resolve().parent
++NODES = dict(E=(250, 830), J=(520, 490), A=(895, 240), B=(690, 875),
++             D=(1060, 865), C=(1320, 640), R=(1450, 290))
++WIDTH, HEIGHT, EDGE = 1700, 1150, 40
++TRACK, NUMERIC = 2.0, 1.0
++HALF_CORRIDOR = 155.0
++PAIR_OFFSET = 67.0
++C_DEFENDER_DISTANCE = 245.0
++R_DEFENDER_DISTANCE = 155.0
++E_DEPLOY, E_EXIT, SUPPLY, R_DEPLOY, C_GOAL = 155.0, 75.0, 75.0, 60.0, 320.0
++
++
++def distance(a, b):
++    return math.dist(a, b)
++
++
++def margin_to_box(point, inset=0.0):
++    x, y = point
++    return min(x, y, WIDTH - x, HEIGHT - y) - inset
++
++
++def before_end(start, end, distance_to_end):
++    ratio = distance_to_end / distance(start, end)
++    assert 0 < ratio < 1
++    return tuple(e + (s - e) * ratio for s, e in zip(start, end))
++
++
++def headings(points):
++    return [math.degrees(math.atan2(by - ay, bx - ax))
++            for (ax, ay), (bx, by) in zip(points, points[1:])]
++
++
++def tube_checks(points, outer_radius, center_offset):
++    # A closed straight capsule is convex. Its cross-section centered anywhere
++    # on the segment contains the swept disk if half-width >= outer_radius.
++    # The four world and center-clamp halfspaces need only endpoint checks.
++    wall = min(margin_to_box(point) for point in points)
++    return dict(corridor=HALF_CORRIDOR - outer_radius, wall=wall - outer_radius,
++                core_center_limit=wall - EDGE - center_offset - TRACK - NUMERIC)
++
++
++def inside_tracking_budget(proposed, planned):
++    return distance(proposed, planned) <= TRACK
++
++
++def main():
++    envelope = runpy.run_path(str(HERE / "p05_formation_envelope_probe_20261109.py"))
++    values = envelope["measure"]()
++
++    def pad(id):
++        return values[id]["max_transition_order_independent"] + TRACK + NUMERIC
++
++    liu1, liu2 = (pad(f"RC-LIU-SQ-0{i}") for i in (1, 2))
++    cao4, cao5 = (pad(f"RC-CAO-SQ-0{i}") for i in (4, 5))
++    group = PAIR_OFFSET + max(liu1, liu2)
++    cases = {}
++    c, e = NODES["C"], NODES["E"]
++    for route, supply_id in (("EJAC", "A"), ("EJBDC", "B")):
++        points = [NODES[node] for node in route]
++        points[-1] = before_end(points[-2], c, C_DEFENDER_DISTANCE)
++        clearances = tube_checks(points, group, PAIR_OFFSET)
++        clearances.update(
++            e_deploy=E_DEPLOY - group,
++            e_exit=E_EXIT - PAIR_OFFSET - TRACK - NUMERIC,
++            service=SUPPLY - PAIR_OFFSET - TRACK - NUMERIC,
++            c_goal=C_GOAL - distance(points[-1], c) - PAIR_OFFSET - TRACK - NUMERIC,
++            c_defender=distance(points[-1], c) - group - cao4,
++            group_interfleet=2 * PAIR_OFFSET - liu1 - liu2,
++        )
++        # Prior segments lie entirely farther from C than their last endpoint.
++        # Verify the closest point on every segment, including the clipped last.
++        for start, end in zip(points, points[1:]):
++            delta = tuple(b - a for a, b in zip(start, end))
++            t = sum((p - a) * d for p, a, d in zip(c, start, delta))
++            t = min(1.0, max(0.0, t / sum(d * d for d in delta)))
++            closest = tuple(a + t * d for a, d in zip(start, delta))
++            assert distance(closest, c) >= group + cao4
++        assert all(value >= 0 for value in clearances.values()), (route, clearances)
++        cases[route] = dict(points=points, headings_deg=headings(points),
++                            return_headings_deg=headings(points[::-1]),
++                            service_node=NODES[supply_id], exit_node=e,
++                            service_centers=[(NODES[supply_id][0], NODES[supply_id][1] + offset)
++                                             for offset in (-PAIR_OFFSET, PAIR_OFFSET)],
++                            exit_centers=[(e[0], e[1] + offset)
++                                          for offset in (-PAIR_OFFSET, PAIR_OFFSET)],
++                            clearance=clearances)
++
++    reinforcement = [NODES["R"], before_end(NODES["R"], c, R_DEFENDER_DISTANCE)]
++    clearances = tube_checks(reinforcement, cao5, 0.0)
++    clearances.update(r_deploy=R_DEPLOY - cao5,
++                      c_goal=C_GOAL - distance(reinforcement[-1], c) - TRACK - NUMERIC,
++                      c_defender=distance(reinforcement[-1], c) - cao5 - cao4)
++    assert all(value >= 0 for value in clearances.values())
++    cases["RC"] = dict(points=reinforcement, headings_deg=headings(reinforcement),
++                       clearance=clearances)
++
++    # Closed transverse throat: ordered J-A corridor, no side bypass.
++    # Radius uses the accepted disk even before uncertainty inflation.
++    throat = 60.0
++    j, a = NODES["J"], NODES["A"]
++    edge_length = distance(j, a)
++    station_bounds = (edge_length / 2 - 20.0, edge_length / 2 + 20.0)
++    assert 0 < station_bounds[0] < station_bounds[1] < edge_length
++    bare_liu1 = liu1 - TRACK - NUMERIC
++    assert throat < bare_liu1 and cases["EJBDC"]["clearance"]["corridor"] > 0
++    # Separate service negative: center rule, not full-hull containment.
++    # Moving A service center to x=0 and using radius 20 allows only x<=20.
++    # Every legal fleet center must satisfy x>=40, independently of hull size.
++    bad_service_radius = 20.0
++    assert bad_service_radius < EDGE and cases["EJAC"]["clearance"]["corridor"] > 0
++    cases["negative"] = dict(
++        throat_half_width=throat, required_half_width=bare_liu1,
++        throat_station_bounds=station_bounds,
++        throat_deficit=bare_liu1 - throat, affected="J-A only",
++        inaccessible_service_center=(0, NODES["A"][1]),
++        inaccessible_service_radius=bad_service_radius,
++        legal_center_gap=EDGE - bad_service_radius, affected_service="A only",
++    )
++
++    # Guard arithmetic example; an actual future engine must enforce these per tick.
++    dt, speed_cap = 0.1, 20.0
++    assert speed_cap * dt == TRACK
++    boundary = inside_tracking_budget((2.0, 0.0), (0.0, 0.0))
++    outside = inside_tracking_budget((1.5, 1.5), (0.0, 0.0))
++    assert boundary and not outside
++    cases["guard"] = dict(max_dt=dt, speed_cap=speed_cap, track=TRACK,
++                          numeric=NUMERIC, nominal_center_separation=2 * PAIR_OFFSET,
++                          group_radius=group, admitted_error_2=boundary,
++                          rejected_error_over_2=not outside)
++    print(json.dumps(cases, indent=2))
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/hud/ui_kit/command_deck.gd b/hud/ui_kit/command_deck.gd
+index 204521e..3b4cb25 100644
+--- a/hud/ui_kit/command_deck.gd
++++ b/hud/ui_kit/command_deck.gd
+@@ -285,9 +285,11 @@ func restart() -> void:
+ func title_label() -> String:
+ 	return "천하로" if battle.has_method("routed") and battle.routed() else "타이틀로"
+ 
+-func to_title() -> void:
++func to_title(return_notice: Label = null) -> void:
+ 	if battle.has_method("routed") and battle.routed():
+-		battle.back_to_world()
++		var error: Error = battle.back_to_world()
++		if error != OK and return_notice != null:
++			return_notice.show()
+ 		return
+ 	if not battle.init_game().ok:
+ 		return
+diff --git a/hud/ui_kit/deck_screens.gd b/hud/ui_kit/deck_screens.gd
+index 3a0abba..db049ed 100644
+--- a/hud/ui_kit/deck_screens.gd
++++ b/hud/ui_kit/deck_screens.gd
+@@ -5,15 +5,25 @@ extends RefCounted
+ 
+ const W := preload("res://hud/ui_kit/deck_widgets.gd")
+ 
++const WORLD_RETURN_NOTICE := "천하로 돌아가지 못했습니다. 다시 눌러 주세요."
++
++static func world_return_notice() -> Label:
++	var notice := UiTheme.label(WORLD_RETURN_NOTICE, "Body", 16, UiTheme.WARN)
++	notice.name = "WorldReturnNotice"
++	notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
++	notice.mouse_filter = Control.MOUSE_FILTER_IGNORE
++	notice.hide()
++	return notice
++
+ static func build_all(deck: Control) -> Dictionary:
+ 	var out := {
+ 		"title": TitleScreen.new(deck),
+ 		"prologue": PrologueScreen.new(deck),
+ 		"brief": BriefScreen.new(deck),
+-		"pause": PauseScreen.new(deck),
++		"pause": PauseScreen.new(deck, world_return_notice()),
+ 		"settings": SettingsScreen.new(deck, "title"),
+ 		"settings_pause": SettingsScreen.new(deck, "pause"),
+-		"result": ResultScreen.new(deck),
++		"result": ResultScreen.new(deck, world_return_notice()),
+ 		"roster": preload("res://hud/ui_kit/roster_screen.gd").new(deck),
+ 		"org": preload("res://hud/ui_kit/org_screen.gd").new(deck),
+ 		"formation_guide": preload("res://hud/ui_kit/formation_guide.gd").new(deck),
+@@ -305,7 +315,8 @@ class BriefScreen extends Control:
+ class PauseScreen extends Control:
+ 	var deck: Control
+ 	var title_btn: Button
+-	func _init(d: Control) -> void:
++	var return_notice: Label
++	func _init(d: Control, notice: Label) -> void:
+ 		deck = d
+ 		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+ 		mouse_filter = Control.MOUSE_FILTER_STOP
+@@ -315,7 +326,11 @@ class PauseScreen extends Control:
+ 		col.position = Vector2(36, 150)
+ 		col.add_theme_constant_override("separation", 2)
+ 		p.add_child(col)
+-		var specs := [["계속", func(): deck.resume()], ["설정", func(): deck.show_screen("settings_pause")], ["처음부터", func(): deck.restart()], ["타이틀로", func(): deck.to_title()], ["종료", func(): deck.get_tree().quit()]]
++		return_notice = notice
++		return_notice.position = Vector2(36, 436)
++		return_notice.size = Vector2(344, 32)
++		p.add_child(return_notice)
++		var specs := [["계속", func(): deck.resume()], ["설정", func(): deck.show_screen("settings_pause")], ["처음부터", func(): deck.restart()], ["타이틀로", func(): deck.to_title(return_notice)], ["종료", func(): deck.get_tree().quit()]]
+ 		for i in specs.size():
+ 			var b := ScreenKit.menu_button(specs[i][0], i == 0)
+ 			b.custom_minimum_size = Vector2(300, 56 if i == 0 else 52)
+@@ -356,6 +371,7 @@ class PauseScreen extends Control:
+ 			UiDraw.diamond(c, Vector2(x + 5, c.size.y - 49), 4.0, UiTheme.GOLD)
+ 			UiDraw.text(c, Vector2(x + 18, c.size.y - 44), "자리를 비워 자동으로 멈췄습니다. 전황은 그대로입니다.", "regular", 13, UiTheme.INK_2)
+ 	func on_show() -> void:
++		return_notice.hide()
+ 		if title_btn:
+ 			title_btn.text = deck.title_label()
+ 		queue_redraw()
+@@ -585,7 +601,8 @@ class ResultScreen extends Control:
+ 	var deck: Control
+ 	var t := 0.0
+ 	var title_btn: Button
+-	func _init(d: Control) -> void:
++	var return_notice: Label
++	func _init(d: Control, notice: Label) -> void:
+ 		deck = d
+ 		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+ 		mouse_filter = Control.MOUSE_FILTER_STOP
+@@ -602,19 +619,28 @@ class ResultScreen extends Control:
+ 		title.text = "타이틀로"
+ 		title.custom_minimum_size = Vector2(150, 54)
+ 		title.focus_mode = Control.FOCUS_NONE
+-		title.pressed.connect(func(): deck.to_title())
++		title.pressed.connect(func(): deck.to_title(return_notice))
+ 		hb.add_child(title)
+ 		title_btn = title
+ 		var again := ScreenKit.menu_button("다시 출격", true)
+ 		again.custom_minimum_size = Vector2(240, 54)
+ 		again.pressed.connect(func(): deck.restart())
+ 		hb.add_child(again)
++		return_notice = notice
++		return_notice.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
++		add_child(return_notice)
++		return_notice.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
++		return_notice.offset_left = -230
++		return_notice.offset_right = 230
++		return_notice.offset_top = -48
++		return_notice.offset_bottom = -8
+ 	func _process(delta: float) -> void:
+ 		delta = UiDraw.real_dt(delta)
+ 		t += delta
+ 		queue_redraw()
+ 	func on_show() -> void:
+ 		t = 0.0
++		return_notice.hide()
+ 		title_btn.text = deck.title_label()
+ 	func _draw() -> void:
+ 		var b: Node = deck.battle
+diff --git a/scripts/FleetBattle3D.gd b/scripts/FleetBattle3D.gd
+index b4fb84a..b848bec 100644
+--- a/scripts/FleetBattle3D.gd
++++ b/scripts/FleetBattle3D.gd
+@@ -188,6 +188,7 @@ func _show_prepare_error(path: String) -> void:
+ 	if _prepare_error_layer == null:
+ 		_build_prepare_error(sim == null)
+ 	_prepare_error_reason.text = ("전투 프로필이 비어 있습니다." if path == "profile"
++		else "난이도가 올바르지 않습니다." if path == "brief.difficulty"
+ 		else "함대 편성 데이터가 올바르지 않습니다.")
+ 
+ func _build_prepare_error(initial: bool) -> void:
+@@ -245,6 +246,16 @@ func _build_prepare_error(initial: bool) -> void:
+ 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+ 	content.add_child(hint)
+ 	if initial:
++		var return_notice: Label
++		if in_world:
++			const screens := preload("res://hud/ui_kit/deck_screens.gd")
++			return_notice = screens.world_return_notice()
++			var notice_slot := Control.new()
++			notice_slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
++			notice_slot.custom_minimum_size.y = 42
++			content.add_child(notice_slot)
++			notice_slot.add_child(return_notice)
++			return_notice.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+ 		var exit := Button.new()
+ 		exit.name = "ExitBattlePrepareError"
+ 		exit.theme_type_variation = "PrimaryButton"
+@@ -253,8 +264,10 @@ func _build_prepare_error(initial: bool) -> void:
+ 		exit.add_theme_stylebox_override("focus", UiTheme.flat(Color.TRANSPARENT, UiTheme.GOLD_HI, 2, 4))
+ 		content.add_child(exit)
+ 		if in_world:
+-			var link := get_node("/root/WorldLink")
+-			exit.pressed.connect(func(): link.back_to_world(null))
++			exit.pressed.connect(func():
++				if back_to_world() != OK:
++					return_notice.show()
++			)
+ 		else:
+ 			exit.pressed.connect(_quit)
+ 		exit.grab_focus()
+@@ -270,21 +283,27 @@ func _clear_prepare_error() -> void:
+ func _prepare_game(candidate_org: Dictionary) -> Dictionary:
+ 	# 천하 지도에서 들어온 전투면 BattleBrief의 시드를 쓴다(같은 Brief = 같은 전투, WORLD-MAP-LINK §3).
+ 	var link := get_node_or_null("/root/WorldLink")
+-	var candidate_seed: int = link.brief.seed if link and link.routed() else randi()
++	var has_brief: bool = link != null and link.routed()
++	var candidate_seed: int = link.brief.seed if has_brief else randi()
++	var candidate_difficulty := difficulty
++	if has_brief and profile_def == BattleBrief.PROFILE_DEF:
++		candidate_difficulty = link.brief.difficulty
++		if not BattleBrief.difficulties().has(candidate_difficulty):
++			return {"ok": false, "error": "invalid_brief_difficulty", "path": "brief.difficulty"}
+ 	# Q83: 편성 사본이 없으면 세 세력 자동 편성(load_auto). 편성 화면의 사본(O4)이 있으면 기본 프로필에 apply
+ 	var errors := []
+-	var profile := (ScenarioProfile.load_profile(profile_def, difficulty) if not candidate_org.is_empty() else Organization.load_auto(profile_def, difficulty)) if profile_def != "" else PocSetup.profile()
++	var profile := (ScenarioProfile.load_profile(profile_def, candidate_difficulty) if not candidate_org.is_empty() else Organization.load_auto(profile_def, candidate_difficulty)) if profile_def != "" else PocSetup.profile()
+ 	if not candidate_org.is_empty() and not profile.is_empty():
+ 		var applied := Organization.apply(profile, candidate_org, ProfileLoader.read_json(ProfileLoader.read_json(profile_def).scenario_path))
+ 		if applied.has("errors"):   # 난이도 변경 등: 전장은 자동 편성으로 세워 두되 시작 경로(command_deck)가 편성 화면으로 돌린다
+ 			errors = applied.errors
+-			profile = Organization.load_auto(profile_def, difficulty)
++			profile = Organization.load_auto(profile_def, candidate_difficulty)
+ 		else:
+ 			profile = applied
+ 	var message := "편성이 지금 전투와 맞지 않습니다. 편성 화면에서 다시 확정하십시오" if not errors.is_empty() else ""
+ 	var fallback := false
+ 	if profile_def != "" and profile.is_empty():   # 자동 편성 검증 실패(load_auto = {}) 등: 편성 없는 프로필, 그것도 없으면 POC로 연다
+-		profile = ScenarioProfile.load_profile(profile_def, difficulty)
++		profile = ScenarioProfile.load_profile(profile_def, candidate_difficulty)
+ 		message = "자동 편성에 실패해 시나리오 기본 편성으로 엽니다" if not profile.is_empty() else "시나리오를 읽지 못해 시험 전장으로 엽니다"
+ 		fallback = true
+ 		if profile.is_empty():
+@@ -309,6 +328,7 @@ func _prepare_game(candidate_org: Dictionary) -> Dictionary:
+ 		if f.side == 0 and f.faction == "liu_bei":
+ 			f.control = "direct"
+ 	return {"ok": true, "seed": candidate_seed, "sim": candidate_sim,
++		"difficulty": candidate_difficulty if scen else difficulty,
+ 		"ally": profile.ally.map(_with_portrait),
+ 		"foe": profile.foe.filter(func(d): return int(d.wait) == 0).map(_with_portrait),
+ 		"errors": errors, "message": message, "fallback": fallback, "scenario": scen}
+@@ -321,6 +341,7 @@ func _publish_game(candidate: Dictionary, candidate_org: Dictionary) -> void:
+ 	fx.clear()
+ 	org = candidate_org
+ 	battle_seed = candidate.seed
++	difficulty = candidate.difficulty
+ 	sim = candidate.sim
+ 	ALLY_DEF = candidate.ally
+ 	FOE_DEF = candidate.foe
+@@ -429,11 +450,12 @@ func routed() -> bool:
+ 	return link != null and link.routed()
+ 
+ # 천하 지도로 돌아간다. 전투가 끝났으면 결과(BattleOutcome)를, 아니면 결과 없이.
+-func back_to_world() -> void:
++func back_to_world() -> Error:
+ 	var link := get_node_or_null("/root/WorldLink")
+ 	if link == null:
+-		return
+-	link.back_to_world(BattleOutcome.from_sim(sim, link.brief) if sim.st.over else null)
++		return ERR_UNAVAILABLE
++	var outcome := BattleOutcome.from_sim(sim, link.brief) if sim != null and sim.st.over else null
++	return link.back_to_world(outcome)
+ 
+ func _toggle_menu() -> void:
+ 	if G.state == "play":
+diff --git a/scripts/world_link.gd b/scripts/world_link.gd
+index 48f1eeb..a2defb6 100644
+--- a/scripts/world_link.gd
++++ b/scripts/world_link.gd
+@@ -15,18 +15,35 @@ var last_mode := "direct"
+ func routed() -> bool:
+ 	return brief != null
+ 
+-func go_battle(b: BattleBrief) -> void:
++func go_battle(b: BattleBrief) -> Error:
++	var previous_brief := brief
++	var previous_outcome := outcome
++	var previous_difficulty := last_difficulty
++	var previous_mode := last_mode
+ 	brief = b
+ 	outcome = null
+ 	last_difficulty = b.difficulty
+ 	last_mode = b.mode
+-	get_tree().change_scene_to_file(BATTLE_SCENE)
++	var error := get_tree().change_scene_to_file(BATTLE_SCENE)
++	if error != OK:
++		brief = previous_brief
++		outcome = previous_outcome
++		last_difficulty = previous_difficulty
++		last_mode = previous_mode
++	return error
+ 
+ # 전장에서 천하로 돌아온다. o가 null이면 전투를 끝내지 않고 나온 것이다.
+-func back_to_world(o: BattleOutcome) -> void:
++func back_to_world(o: BattleOutcome) -> Error:
++	var previous_brief := brief
++	var previous_outcome := outcome
+ 	outcome = o
+ 	brief = null
+-	get_tree().change_scene_to_file(WORLD_SCENE)
++	var error := get_tree().change_scene_to_file(WORLD_SCENE)
++	if error != OK:
++		brief = previous_brief
++		outcome = previous_outcome
++		push_warning("WORLD_RETURN_REJECTED error=%d" % error)
++	return error
+ 
+ # 천하 지도가 결과를 한 번 가져간다.
+ func take_outcome() -> BattleOutcome:
+diff --git a/tests/i01b_active_replace.gd b/tests/i01b_active_replace.gd
+new file mode 100644
+index 0000000..86ffee0
+--- /dev/null
++++ b/tests/i01b_active_replace.gd
+@@ -0,0 +1,294 @@
++extends SceneTree
++
++const Private := preload("res://core/battle/operation_private_state.gd")
++const SEEDS := [0, 1, 20824, 20825, 20826, 90210, 123456789, 2147483647, 2147483648, 4294967295]
++const OUT := "res://tmp/i01b-active-replace-20261102/attempt2-observations.json"
++var checks := 0
++var failed := false
++var cases: Array = []
++var rejections := {}
++var refusal_calls := 0
++
++func _initialize() -> void:
++	call_deferred("_run")
++
++func _check(condition: bool, label: String) -> void:
++	checks += 1
++	if not condition:
++		failed = true
++		push_error("I01B_ACTIVE_REPLACE_FAIL " + label)
++
++func _same(a: Variant, b: Variant) -> bool:
++	if typeof(a) != typeof(b): return false
++	if a is Dictionary:
++		if not _same(a.keys(), b.keys()): return false
++		for key in a:
++			if not _same(a[key], b[key]): return false
++		return true
++	if a is Array:
++		if a.size() != b.size(): return false
++		for i in a.size():
++			if not _same(a[i], b[i]): return false
++		return true
++	return a == b
++
++# Independent observations enumerate actual script properties, not the codec's
++# field lists. Container metadata is recorded before any JSON diagnostics.
++func _properties(value: Object, excluded: Array = []) -> Dictionary:
++	var out := {}
++	for property in value.get_property_list():
++		if int(property.usage) & PROPERTY_USAGE_SCRIPT_VARIABLE and str(property.name) not in excluded:
++			out[property.name] = _plain(value.get(property.name))
++	return out
++
++func _plain(value: Variant) -> Variant:
++	if value is Object: return _properties(value)
++	if value is Dictionary:
++		var out := {}
++		for key in value: out[key] = _plain(value[key])
++		return out
++	if value is Array:
++		var out: Array = []
++		for item in value: out.append(_plain(item))
++		return {"typed_builtin": value.get_typed_builtin(), "typed_class": str(value.get_typed_class_name()), "typed_script": value.get_typed_script().resource_path if value.get_typed_script() != null else "", "values": out}
++	return value
++
++func _oracle(owner: OperationPrivateState) -> Dictionary:
++	var sim := owner._sim
++	return {"state": _properties(sim.st, ["_idx", "_idx_n"]),
++		"sim": _properties(sim, ["st", "salvo", "terrain", "detect", "supply", "morale", "victory", "cai", "decisions", "chain", "cmd", "assault", "skills"]),
++		"salvo": _properties(sim.salvo, ["sim", "C", "terr"]) if sim.salvo else {},
++		"terrain": _properties(sim.terrain) if sim.terrain else {},
++		"detect": _properties(sim.detect, ["sim", "D", "terr"]) if sim.detect else {},
++		"supply": _properties(sim.supply, ["sim", "S"]) if sim.supply else {},
++		"owner_profile": _plain(owner._profile), "initial_controls": _plain(owner._controls),
++		"seed": owner._seed, "hz": owner._hz, "ready": owner._ready, "busy": owner._busy}
++
++func _profile(kind: String) -> Dictionary:
++	var rules: Dictionary = PocSetup.profile().rules
++	rules.world_w = 3400
++	rules.world_h = 2300
++	var typed_note: Array[int] = [1]
++	var profile := {"profile_id": "active-replace-" + kind, "rules": rules,
++		"ally": [{"name": "A", "role": "A", "ships": 30, "lv": 1, "x": 500, "y": 500, "p": 0, "flag": true}],
++		"foe": [{"name": "B", "role": "B", "ships": 30, "lv": 1, "x": 750, "y": 500, "p": 0, "flag": true}],
++		"reinf": [], "note": {"typed_probe": typed_note, "ordered_probe": {"first": 1, "last": 2}}}
++	if kind == "poc": return profile
++	var combat := SalvoFixture.combat()
++	for key in ["morale", "victory", "command", "stratagem", "assault", "terrain"]: combat.erase(key)
++	profile.combat = combat
++	profile.ally = [SalvoFixture.def("S", 800, 450, [["SHP-05", 2], ["SHP-04", 2]], true), SalvoFixture.def("C", 925, 450, [["SHP-04", 2]])]
++	profile.foe = [SalvoFixture.def("F", 1000, 450, [["SHP-02", 4]], true)]
++	for fleet in profile.ally: fleet.faction_id = "liu_bei"
++	profile.foe[0].faction_id = "cao_cao"
++	return profile
++
++func _new(seed: int, kind: String, controls: Array = []) -> OperationPrivateState:
++	var result := Private.create(_profile(kind), seed, BattleRules.TICK_HZ, controls)
++	_check(result.ok, "create " + kind)
++	if not result.ok: return null
++	var owner: OperationPrivateState = result.owner
++	# Fixture setup suppresses AI/automatic attacks, not Detection/Supply effects.
++	owner._sim.st.ai_timer = 1 << 40
++	owner._sim.endless = true
++	if kind == "services":
++		for fleet in owner._sim.st.fleets:
++			for category in fleet.next_fire: fleet.next_fire[category] = 1 << 40
++		# Initially empty cargo is fixture input. Only real Supply.step refills it.
++		for category in owner._sim.st.fleets[1].ammo: owner._sim.st.fleets[1].ammo[category] = 0
++	return owner
++
++func _advance(owner: OperationPrivateState, count: int, drain := true) -> void:
++	for i in count:
++		_check(owner.advance().ok, "public advance")
++		if drain: _check(owner.drain_events().ok, "public drain")
++
++func _capture(owner: OperationPrivateState) -> Dictionary:
++	var result := owner.capture_completed()
++	_check(result.ok, "capture completed")
++	return result.get("packet", {})
++
++func _retired(sim: BattleSim) -> void:
++	for field in ["salvo", "detect", "supply"]:
++		var module: Variant = sim.get(field)
++		if module != null: _check(module.sim == null, "old binding retired " + field)
++
++func _bindings(owner: OperationPrivateState) -> void:
++	var sim := owner._sim
++	for field in ["salvo", "detect", "supply"]:
++		var module: Variant = sim.get(field)
++		if module != null: _check(is_same(module.sim, sim), "new binding alive " + field)
++	for fleet in sim.st.fleets:
++		_check(is_same(sim.st.by_id(fleet.id), fleet), "new by_id fleet identity")
++
++func _normal(seed: int, kind: String) -> void:
++	var owner := _new(seed, kind)
++	if owner == null: return
++	var stock := 0
++	if kind == "poc":
++		_check(owner.issue(BattleSim.command(0, [1], "missile", 2)).ok, "actual missile issue")
++		_check(owner.issue(BattleSim.command(1, [2], "fighter", 1)).ok, "actual fighter issue")
++		_advance(owner, 1, false)
++		_check(not owner._sim.st.missiles.is_empty() and not owner._sim.st.swarms.is_empty(), "actual in-flight attacks")
++		_check(owner._sim.st.fleets[0].missile_cd > 0 and owner._sim.st.fleets[1].fighter_cd > 0, "actual active cooldowns")
++	else:
++		stock = owner._sim.st.fleets[0].sup_ammo
++		_advance(owner, 1)
++		_check(owner._sim.detect.contacts[0].has(3), "actual nonempty contact")
++		# Controlled fixture relocation makes target unseen. Memory is generated
++		# and aged by ordinary Detection.step, not by writing contact records.
++		owner._sim.st.fleets[2].pos = Vector2(3200, 2000)
++		_advance(owner, 598)
++		var contact: Dictionary = owner._sim.detect.rec(0, 3)
++		_check(contact.get("state") == "estimated" and contact.get("pos") != owner._sim.st.fleets[2].pos, "actual remembered contact")
++		_check(owner._sim.st.fleets[1].sup_src != "" and owner._sim.st.fleets[1].sup_prog > 0 and owner._sim.st.fleets[1].supplied == 0, "actual supply pending")
++		_check(owner._sim.st.fleets[0].sup_ammo == stock, "supply has not spent stock before completion")
++	_check(owner.issue(BattleSim.command(0, [1], "stop")).ok, "completed public command produces event boundary")
++	_check(not owner._sim._events.is_empty(), "nonempty packet event boundary")
++	_check(owner.queue(BattleSim.command(0, [1], "stop")).ok, "pending public queue")
++	var packet := _capture(owner)
++	var packet_before: Variant = _plain(packet)
++	var checkpoint := _oracle(owner)
++	var prepared := Private.prepare(packet)
++	_check(prepared.ok, "independent fresh reference prepares")
++	if not prepared.ok:
++		owner.close()
++		return
++	var reference: OperationPrivateState = prepared.owner
++	var handle_id := owner.get_instance_id()
++	_advance(owner, 3)
++	_check(not _same(checkpoint, _oracle(owner)), "active timeline really progressed after capture")
++	var previous: BattleSim = owner._sim
++	var old_fleet := previous.st.by_id(1)
++	var result := owner.restore_completed(packet)
++	_check(result.ok and not result.has("owner"), "restore returns status on existing handle")
++	_check(owner.get_instance_id() == handle_id and not is_same(owner._sim, previous), "same owner handle new sim")
++	_check(not is_same(owner._sim.st.by_id(1), old_fleet), "fresh fleet replaces old cached identity")
++	_check(_same(checkpoint, _oracle(owner)) and _same(_oracle(reference), _oracle(owner)), "replacement equals independent direct checkpoint oracle")
++	_check(_same(packet_before, _plain(packet)), "successful replacement packet unchanged")
++	_retired(previous)
++	_bindings(owner)
++	var repeat_before := _oracle(owner)
++	var repeat_old: BattleSim = owner._sim
++	_check(owner.restore_completed(packet).ok and _same(repeat_before, _oracle(owner)), "repeat restore itself adds no effects")
++	_retired(repeat_old)
++	_bindings(owner)
++	_check(owner._sim._queue.size() == 1 and owner._sim.command_log.size() == packet.view.sim.command_log.size(), "preparation never consumes pending")
++	# The old timeline consumed these events; snapshot restore deliberately
++	# restores its earlier pending events. This is not global deduplication.
++	var events := owner.drain_events()
++	_check(events.ok and _same(events, reference.drain_events()) and _same(events.events, packet.view.sim._events), "snapshot pending events restore in order")
++	_check(owner.drain_events().events.is_empty(), "pending events drain once per restored timeline")
++	var drained_packet := _capture(owner)
++	_check(owner.issue(BattleSim.command(0, [1], "move", -1, Vector2(900, 500))).ok, "temporary later timeline event")
++	_check(owner.restore_completed(drained_packet).ok and owner.drain_events().events.is_empty(), "snapshot already-drained events remain empty")
++	_check(_same(_oracle(owner), _oracle(reference)), "drained snapshot still equals independent reference")
++	var log_size := owner._sim.command_log.size()
++	var initial_missiles := owner._sim.st.missiles.size()
++	var suffix_steps := 110 if kind == "poc" else 70
++	for i in suffix_steps:
++		_check(owner.advance().ok and reference.advance().ok, "public suffix advances")
++		_check(owner._sim._queue.is_empty() and owner._sim.command_log.size() == log_size + 1, "pending command consumed exactly once")
++		_check(_same(_oracle(owner), _oracle(reference)), "public suffix exact independent state")
++		_check(_same(owner.drain_events(), reference.drain_events()), "public suffix ordered events")
++	if kind == "services":
++		_check(owner._sim.st.fleets[1].supplied == 1 and owner._sim.st.fleets[0].sup_ammo < stock, "suffix crosses actual supply completion and stock spending once")
++		_check(not owner._sim.detect.contacts[0].is_empty() and owner._sim.st.tick > int(drained_packet.view.state.tick) + owner._sim.detect._period, "suffix crosses actual detection evaluation")
++	else:
++		_check(owner._sim.st.missiles.size() < initial_missiles, "suffix resolves actual in-flight missile")
++	var stable := _oracle(owner)
++	packet.view.fleets[0].route.append(Vector2(1, 2))
++	var exposed := owner.observe()
++	exposed.fleets[0].route.append(Vector2(3, 4))
++	_check(_same(stable, _oracle(owner)) and _same(stable, _oracle(reference)), "packet and public observation have no mutable alias")
++	cases.append({"seed": seed, "kind": kind, "suffix_steps": suffix_steps, "tick": owner._sim.st.tick, "clock_ms": owner._sim.st.clock_ms, "supplied": owner._sim.st.fleets[1].supplied if kind == "services" else 0})
++	owner.close()
++	reference.close()
++
++func _valid_candidate(packet: Dictionary, label: String) -> void:
++	var result := Private.prepare(packet)
++	_check(result.ok, "different context is independently valid " + label)
++	if result.ok: result.owner.close()
++
++func _reject(owner: OperationPrivateState, packet: Dictionary, label: String, expected: String) -> void:
++	var before := _oracle(owner)
++	var sim: BattleSim = owner._sim
++	var packet_before: Variant = _plain(packet)
++	var result := owner.restore_completed(packet)
++	refusal_calls += 1
++	_check(not result.ok and not result.has("owner") and result.get("error") == expected, "expected named refusal " + label)
++	_check(is_same(owner._sim, sim) and _same(before, _oracle(owner)) and _same(packet_before, _plain(packet)), "failed replacement preserves sim owner packet " + label)
++	_check(not owner._busy and owner.issue(BattleSim.command(0, [1], "stop")).ok, "failure restores busy and permits next public input " + label)
++	rejections[label] = result.get("error", "UNEXPECTED_SUCCESS")
++
++func _negative() -> void:
++	var owner := _new(1, "poc")
++	if owner == null: return
++	var packet := _capture(owner)
++	var bad: Dictionary = packet.duplicate(true)
++	bad.view.fleets.back().form.clear()
++	_reject(owner, bad, "late_empty_form", "fleet_empty_form")
++	bad = packet.duplicate(true)
++	var untyped: Array = [1]
++	bad.profile.note.typed_probe = untyped
++	_check(Private.Service._same(packet.profile, bad.profile), "metadata-only context would escape Service comparator")
++	_valid_candidate(bad, "typed metadata only")
++	_reject(owner, bad, "different_profile", "replacement_context_mismatch")
++	bad = packet.duplicate(true)
++	bad.profile.note.ordered_probe = {"last": 2, "first": 1}
++	_valid_candidate(bad, "dictionary insertion order only")
++	_reject(owner, bad, "different_profile", "replacement_context_mismatch")
++	var different := _new(2, "poc")
++	if different != null:
++		bad = _capture(different)
++		_valid_candidate(bad, "seed")
++		_reject(owner, bad, "different_seed", "replacement_context_mismatch")
++		different.close()
++	different = _new(1, "poc", ["delegate", "delegate"])
++	if different != null:
++		bad = _capture(different)
++		_valid_candidate(bad, "explicit delegate versus empty initial controls")
++		_reject(owner, bad, "different_controls", "replacement_context_mismatch")
++		different.close()
++	bad = packet.duplicate(true)
++	bad.hz = 20
++	_reject(owner, bad, "unsupported_hz", "unsupported_hz")
++	var before := _oracle(owner)
++	var sim: BattleSim = owner._sim
++	var stamp: Variant = _plain(packet)
++	owner._busy = true
++	var busy := owner.restore_completed(packet)
++	refusal_calls += 1
++	_check(not busy.ok and busy.get("error") == "busy" and owner._busy and is_same(owner._sim, sim), "busy refuses before preparation and retains existing busy")
++	owner._busy = false
++	_check(_same(before, _oracle(owner)) and _same(stamp, _plain(packet)), "busy guard no mutation")
++	rejections.busy = busy.get("error", "UNEXPECTED_SUCCESS")
++	owner._ready = false
++	var unprepared := owner.restore_completed(packet)
++	refusal_calls += 1
++	_check(not unprepared.ok and unprepared.get("error") == "unprepared_owner" and not owner._ready and not owner._busy and is_same(owner._sim, sim), "unprepared refuses before swap")
++	owner._ready = true
++	_check(_same(before, _oracle(owner)) and _same(stamp, _plain(packet)), "unprepared guard no mutation")
++	rejections.unprepared = unprepared.get("error", "UNEXPECTED_SUCCESS")
++	_check(owner.restore_completed(packet).ok and owner.issue(BattleSim.command(0, [1], "stop")).ok, "normal restore and issue recover after all failures")
++	owner.close()
++	var closed := owner.restore_completed(packet)
++	refusal_calls += 1
++	_check(not closed.ok and closed.get("error") == "unprepared_owner" and owner._sim == null and not owner._ready and not owner._busy and _same(stamp, _plain(packet)), "closed owner cannot adopt runtime")
++	rejections.closed = closed.get("error", "UNEXPECTED_SUCCESS")
++
++func _run() -> void:
++	var fixture_script: Script = SalvoFixture
++	_check(fixture_script.resource_path == "res://tests/lib/salvo_fixture.gd", "canonical test fixture path")
++	for seed in SEEDS:
++		for kind in ["poc", "services"]: _normal(seed, kind)
++	_negative()
++	_check(cases.size() == 20 and cases.filter(func(c): return c.kind == "poc").size() == 10 and cases.filter(func(c): return c.kind == "services").size() == 10, "complete twenty active replacement cases")
++	_check(rejections.size() == 8 and refusal_calls == 9, "complete eight refusal names nine calls including two profile subcases")
++	var file := FileAccess.open(OUT, FileAccess.WRITE)
++	_check(file != null, "evidence output opens")
++	if file != null:
++		file.store_string(JSON.stringify({"scope": "RESTRICTED_SAME_CONTEXT_ACTIVE_REPLACEMENT", "overall": "NOT_READY", "cases": cases, "checks": checks, "rejections": rejections, "refusal_calls": refusal_calls, "failed": failed}, "  "))
++		file.close()
++	print("I01B_ACTIVE_REPLACE_", "FAIL" if failed else "PASS", " cases=", cases.size(), " checks=", checks, " rejections=", rejections.size(), " refusal_calls=", refusal_calls)
++	quit(1 if failed else 0)
+diff --git a/tests/i01b_private_state.gd b/tests/i01b_private_state.gd
+new file mode 100644
+index 0000000..e62af4c
+--- /dev/null
++++ b/tests/i01b_private_state.gd
+@@ -0,0 +1,397 @@
++extends SceneTree
++
++const Private := preload("res://core/battle/operation_private_state.gd")
++const Service := preload("res://core/battle/operation_service_state.gd")
++const SEEDS := [0, 1, 20824, 20825, 20826, 90210, 123456789, 2147483647, 2147483648, 4294967295]
++const OUT := "res://tmp/i01b-p2c-resume-20261101/attempt5-observations.json"
++var checks := 0
++var failed := false
++var cases: Array = []
++var rejections := {}
++
++func _initialize() -> void:
++	call_deferred("_run")
++
++func _check(condition: bool, label: String) -> void:
++	checks += 1
++	if not condition:
++		failed = true
++		push_error("I01B_P2C_FAIL " + label)
++
++func _same(a: Variant, b: Variant) -> bool:
++	if typeof(a) != typeof(b): return false
++	if a is Dictionary:
++		if not _same(a.keys(), b.keys()): return false
++		for key in a:
++			if not _same(a[key], b[key]): return false
++		return true
++	if a is Array:
++		if a.size() != b.size(): return false
++		for i in a.size():
++			if not _same(a[i], b[i]): return false
++		return true
++	return a == b
++
++# This oracle enumerates actual script properties, not production field lists
++# or the packet. It independently includes even newly added script fields.
++func _properties(value: Object, excluded: Array = []) -> Dictionary:
++	var out := {}
++	for property in value.get_property_list():
++		if int(property.usage) & PROPERTY_USAGE_SCRIPT_VARIABLE and str(property.name) not in excluded:
++			out[property.name] = _plain(value.get(property.name))
++	return out
++
++func _plain(value: Variant) -> Variant:
++	if value is Object: return _properties(value)
++	if value is Dictionary:
++		var out := {}
++		for key in value: out[key] = _plain(value[key])
++		return out
++	if value is Array:
++		var out: Array = []
++		for item in value: out.append(_plain(item))
++		return {"typed_builtin": value.get_typed_builtin(), "typed_class": str(value.get_typed_class_name()), "typed_script": value.get_typed_script().resource_path if value.get_typed_script() != null else "", "values": out}
++	return value
++
++func _oracle(owner: OperationPrivateState) -> Dictionary:
++	var sim := owner._sim
++	return {"state": _properties(sim.st, ["_idx", "_idx_n"]),
++		"sim": _properties(sim, ["st", "salvo", "terrain", "detect", "supply", "morale", "victory", "cai", "decisions", "chain", "cmd", "assault", "skills"]),
++		"salvo": _properties(sim.salvo, ["sim", "C", "terr"]) if sim.salvo else {},
++		"terrain": _properties(sim.terrain) if sim.terrain else {},
++		"detect": _properties(sim.detect, ["sim", "D", "terr"]) if sim.detect else {},
++		"supply": _properties(sim.supply, ["sim", "S"]) if sim.supply else {}}
++
++# Malicious packet stamp has no property traversal and terminates on cycles.
++func _stamp(value: Variant, path: Array = []) -> Variant:
++	if value is Object: return ["Object", value.get_instance_id()]
++	if value is Array or value is Dictionary:
++		for old in path:
++			if is_same(value, old): return ["cycle"]
++		var next := path.duplicate()
++		next.append(value)
++		var out: Array = [type_string(typeof(value))]
++		if value is Array:
++			out.append([value.get_typed_builtin(), str(value.get_typed_class_name()), value.get_typed_script().resource_path if value.get_typed_script() != null else ""])
++		if value is Dictionary:
++			for key in value: out.append([_stamp(key, next), _stamp(value[key], next)])
++		else:
++			for item in value: out.append(_stamp(item, next))
++		return out
++	return [type_string(typeof(value)), var_to_bytes(value).hex_encode()]
++
++func _profile(kind: String) -> Dictionary:
++	var rules: Dictionary = PocSetup.profile().rules
++	rules.world_w = 3400
++	rules.world_h = 2300
++	if kind == "projectile":
++		return {"profile_id": "p2c-restricted-poc", "rules": rules, "ally": [{"name": "A", "role": "A", "ships": 30, "lv": 1, "x": 500, "y": 500, "p": 0, "flag": true}], "foe": [{"name": "B", "role": "B", "ships": 30, "lv": 1, "x": 750, "y": 500, "p": 0, "flag": true}], "reinf": []}
++	var combat := SalvoFixture.combat()
++	for key in ["morale", "victory", "command", "stratagem", "assault"]: combat.erase(key)
++	if kind != "terrain": combat.erase("terrain")
++	if kind not in ["memory"]: combat.erase("detection")
++	if kind not in ["pending", "post"]: combat.erase("supply")
++	var ally: Array = []
++	var foe: Array = []
++	if kind in ["pending", "post"]:
++		ally = [SalvoFixture.def("S", 800, 450, [["SHP-05", 2], ["SHP-04", 2]], true), SalvoFixture.def("C", 925, 450, [["SHP-04", 2]])]
++		foe = [SalvoFixture.def("F", 3000, 1800, [["SHP-04", 2]], true)]
++		ally[0].faction_id = "liu_bei"
++		ally[1].faction_id = "liu_bei"
++		foe[0].faction_id = "cao_cao"
++	else:
++		ally = [SalvoFixture.def("A", 400, 450, [["SHP-01", 1], ["SHP-03", 1], ["SHP-04", 2]], true)]
++		foe = [SalvoFixture.def("B", 550, 450, [["SHP-02", 40]], true)]
++		if kind == "memory":
++			ally = [SalvoFixture.def("A", 400, 450, [["SHP-01", 10]], true)]
++			foe = [SalvoFixture.def("B", 550, 450, [["SHP-02", 4]], true)]
++		if kind == "terrain":
++			ally[0].x = 650
++			ally[0].y = 100
++			foe[0].x = 1000
++			foe[0].y = 100
++	return {"profile_id": "p2c-" + kind, "rules": rules, "ally": ally, "foe": foe, "reinf": [], "combat": combat}
++
++func _new(seed: int, kind: String) -> OperationPrivateState:
++	var result := Private.create(_profile(kind), seed, 10)
++	_check(result.ok, "create " + kind)
++	if not result.ok: return null
++	var owner: OperationPrivateState = result.owner
++	# Fixture-only inspection/setup of private fields. Production callers receive
++	# no mutable runtime reference; all evolution below uses the owner operations.
++	owner._sim.st.ai_timer = 1 << 40
++	owner._sim.endless = true
++	return owner
++
++func _advance(owner: OperationPrivateState, count: int, drain := true) -> void:
++	for i in count:
++		owner.advance()
++		if drain: owner.drain_events()
++
++func _suffix(a: OperationPrivateState, b: OperationPrivateState, count: int, label: String) -> void:
++	for i in count:
++		if i == 1:
++			var command := BattleSim.command(0, [1], "stop")
++			_check(a.queue(command).ok and b.queue(command).ok, label + " suffix input")
++		a.advance()
++		b.advance()
++		_check(_same(_oracle(a), _oracle(b)), label + " suffix state " + str(i))
++		_check(_same(a.drain_events(), b.drain_events()), label + " suffix ordered events " + str(i))
++
++func _roundtrip(seed: int, kind: String) -> void:
++	var a := _new(seed, kind)
++	if a == null: return
++	var sim := a._sim
++	var before_stock := 0
++	if kind == "projectile":
++		_check(a.issue(BattleSim.command(0, [1], "missile", 2)).ok, "actual missile issue")
++		_check(a.issue(BattleSim.command(1, [2], "fighter", 1)).ok, "actual fighter issue")
++		_advance(a, 1, false)
++		_check(not sim.st.missiles.is_empty() and not sim.st.swarms.is_empty(), "active missile and swarm")
++		_check(sim.st.fleets[0].missile_cd > 0 and sim.st.fleets[1].fighter_cd > 0, "active weapon timers")
++	elif kind in ["pending", "post"]:
++		# Empty initial cargo is fixture setup; real Supply.step assigns/spends it.
++		for category in sim.st.fleets[1].ammo: sim.st.fleets[1].ammo[category] = 0
++		before_stock = sim.st.fleets[0].sup_ammo
++		_advance(a, 599 if kind == "pending" else 601)
++		if kind == "pending": _check(sim.st.fleets[1].sup_prog > 0 and sim.st.fleets[1].supplied == 0, "actual incomplete supply")
++		else: _check(sim.st.fleets[1].supplied > 0 and sim.st.fleets[0].sup_ammo < before_stock, "actual completed supply spending")
++	elif kind == "memory":
++		_advance(a, 1)
++		_check(sim.detect.contacts[0].has(2), "real observed contact")
++		# Test-only relocation creates an unseen target; memory itself is generated
++		# and aged by actual detection evaluation at ordinary completed steps.
++		sim.st.fleets[1].pos = Vector2(3200, 2000)
++		_advance(a, 11)
++		_check(sim.detect.contacts[0].has(2) and sim.detect.contacts[0][2].state == "estimated" and sim.detect.contacts[0][2].pos != sim.st.fleets[1].pos, "actual stale remembered position")
++	elif kind == "damaged":
++		var capacity: Dictionary = sim.st.fleets[0].wmax.duplicate(true)
++		# Fixture invokes the same production damage+removal path synchronously.
++		# Platform destruction is real, not a manual wmax edit.
++		sim.salvo.apply_hull(sim.st.fleets[1], sim.st.fleets[0], float(sim.st.fleets[0].max_hull), "engagement", "front", sim.st.new_event_id())
++		sim.remove_fleet(sim.st.fleets[0], "sunk")
++		_check(not _same(capacity, sim.st.fleets[0].wmax) and sim.st.fleets[0].lost_ships > 0, "real platform loss changes dynamic wmax")
++	elif kind == "terrain":
++		_check(sim.terrain != null and sim.terrain.move_cost_bp(sim.st.fleets[0].pos) > 10000, "real terrain effect active")
++		var position := sim.st.fleets[0].pos
++		a.issue(BattleSim.command(0, [1], "move", -1, Vector2(850, 100)))
++		_advance(a, 5, false)
++		_check(sim.st.fleets[0].pos != position, "actual movement through effect terrain")
++	else:
++		for category in sim.st.fleets[1].next_fire: sim.st.fleets[1].next_fire[category] = 1 << 40
++		var initial_ammo: Dictionary = sim.st.fleets[0].ammo.duplicate(true)
++		var initial_charges: Dictionary = sim.st.fleets[0].wch.duplicate(true)
++		var initial_energy := sim.st.fleets[0].energy_m
++		var initial_hull := sim.st.fleets[1].hull
++		_check(a.issue(BattleSim.command(0, [1], "attack", 2)).ok, "salvo attack")
++		_check(a.issue(BattleSim.command(0, [1], "volley")).ok, "salvo actual pull")
++		_advance(a, 5, false)
++		_check(sim._events.any(func(event): return event.kind == "salvo"), "actual salvo event")
++		_check(not _same(initial_ammo, sim.st.fleets[0].ammo) and not _same(initial_charges, sim.st.fleets[0].wch), "actual ammo and charge spending")
++		_check(sim.st.fleets[0].energy_m < initial_energy and sim.st.fleets[0].heat_m > 0, "actual energy heat state")
++		_check(sim.st.fleets[0].energy_rem != 0 or sim.st.fleets[0].heat_rem != 0, "actual fractional resource remainder")
++		_check(sim.st.fleets[1].hull < initial_hull, "actual volley damage")
++		_check(a.issue(BattleSim.command(0, [1], "formation", -1, Vector2.ZERO, {"id": "FRM-02"})).ok, "formation transition issue")
++		_check(sim.st.fleets[0].form_left > 0, "actual transition timer")
++	var command := BattleSim.command(0, [1], "stop")
++	var log_size := sim.command_log.size()
++	_check(a.queue(command).ok, "queue accepted")
++	command.kind = "attack"
++	command.ids.append(9999)
++	_check(sim._queue.back().kind == "stop" and sim._queue.back().ids.size() == 1 and sim.command_log.size() == log_size, "pending detached and unapplied")
++	# Warm source cache; this reference must never enter the restored target.
++	var source_fleet := sim.st.by_id(1)
++	var before := _oracle(a)
++	var captured := a.capture_completed()
++	_check(captured.ok, "capture " + kind)
++	if not captured.ok:
++		a.close()
++		return
++	var packet: Dictionary = captured.packet
++	var packet_stamp: Variant = _stamp(packet)
++	var restored := Private.prepare(packet)
++	_check(restored.ok, "fresh restore " + kind + " " + str(restored.get("error", "")))
++	if not restored.ok:
++		a.close()
++		return
++	var b: OperationPrivateState = restored.owner
++	_check(_same(before, _oracle(b)), "independent full typed oracle " + kind)
++	_check(_same(before, _oracle(a)) and _same(packet_stamp, _stamp(packet)), "prepare preserves source and packet")
++	_check(not is_same(source_fleet, b._sim.st.by_id(1)) and is_same(b._sim.st.by_id(1), b._sim.st.fleets[0]), "target cache references own fleet")
++	_check(b._sim.command_log.size() == log_size and b._sim._queue.size() == 1, "prepare never applies pending")
++	var wrong_result := Private.prepare(packet)
++	_check(wrong_result.ok, "negative clone")
++	if wrong_result.ok:
++		var wrong: OperationPrivateState = wrong_result.owner
++		if kind == "projectile": wrong._sim.st.missiles[0].age = 0
++		elif kind in ["pending", "post"]: wrong._sim.st.fleets[1].supplied += 1
++		else: wrong._sim.st.fleets[0].next_fire.clear()
++		_check(not _same(_oracle(a), _oracle(wrong)), "independent omitted field negative " + kind)
++		wrong.close()
++	# P2b alone must not silently count as full fresh restore.
++	var naive := _new(seed, kind)
++	naive._sim.st.tick = sim.st.tick
++	naive._sim.st.clock_ms = sim.st.clock_ms
++	var partial := Service.restore_into_prepared_target(naive._sim, packet.view.service)
++	_check(partial.ok and not _same(_oracle(naive), before), "P2b alone insufficient " + kind)
++	naive.close()
++	var suffix_steps := 110 if kind == "projectile" else 65
++	_suffix(a, b, suffix_steps, kind)
++	_check(a._sim.command_log.size() == log_size + 2, "pending and suffix input each applied once")
++	_check(a._sim._queue.is_empty() and b._sim._queue.is_empty(), "pending consumed once")
++	if kind == "projectile": _check(a._sim.st.missiles.is_empty() and a._sim.st.swarms.is_empty(), "suffix crosses projectile lifetime")
++	if kind == "pending": _check(a._sim.st.fleets[1].supplied == 1 and a._sim.st.fleets[0].sup_ammo < before_stock, "suffix crosses actual supply completion")
++	if kind == "post": _check(a._sim.st.fleets[1].supplied == 1, "post supply not repeated")
++	if kind == "resource": _check(a._sim.st.fleets[0].form_left == 0 and a._sim.st.fleets[0].formation_id == "FRM-02", "suffix completes actual formation transition")
++	# Mutable packet/observe containers must not reach either runtime.
++	var stable_a := _oracle(a)
++	var stable_b := _oracle(b)
++	packet.view.fleets[0].route.append(Vector2(1, 2))
++	packet.profile.ally[0].name = "packet mutation"
++	var view := b.observe()
++	view.fleets[0].ammo["alias-probe"] = 3
++	_check(_same(stable_a, _oracle(a)) and _same(stable_b, _oracle(b)), "packet and observe alias isolation")
++	cases.append({"seed": seed, "kind": kind, "suffix_steps": suffix_steps, "tick": a._sim.st.tick, "clock_ms": a._sim.st.clock_ms, "log_size": a._sim.command_log.size()})
++	a.close()
++	b.close()
++
++func _reject(owner: OperationPrivateState, packet: Dictionary, label: String) -> void:
++	var source := _oracle(owner)
++	var stamp: Variant = _stamp(packet)
++	var result := Private.prepare(packet)
++	_check(not result.ok and not result.has("owner"), "reject " + label)
++	_check(_same(source, _oracle(owner)) and _same(stamp, _stamp(packet)), "reject atomic " + label)
++	rejections[label] = result.get("error", "UNEXPECTED_SUCCESS")
++	if result.ok: result.owner.close()
++
++func _negative() -> void:
++	var typed: Array[int] = [1]
++	var untyped: Array = [1]
++	_check(not _same(_plain(typed), _plain(untyped)), "independent oracle catches array metadata mismatch")
++	var profile := _profile("projectile")
++	var controls: Array = ["direct", "delegate"]
++	var created := Private.create(profile, 1, 10, controls)
++	_check(created.ok, "explicit initial controls")
++	if created.ok:
++		var isolated: OperationPrivateState = created.owner
++		var raw := _oracle(isolated)
++		profile.rules.world_w = 999
++		profile.ally[0].name = "caller mutation"
++		controls[0] = "delegate"
++		_check(_same(raw, _oracle(isolated)) and isolated._profile.rules.world_w != 999 and isolated._controls[0] == "direct", "caller profile controls deep isolated")
++		isolated.close()
++	var owner := _new(20824, "projectile")
++	owner.issue(BattleSim.command(0, [1], "missile", 2))
++	owner.issue(BattleSim.command(1, [2], "fighter", 1))
++	owner.queue(BattleSim.command(0, [1], "stop"))
++	var packet: Dictionary = owner.capture_completed().packet
++	var changes := {
++		"format": func(p): p.format = "other",
++		"code": func(p): p.code["rules.gd"] = "wrong",
++		"seed": func(p): p.seed = -1,
++		"hz": func(p): p.hz = 20,
++		"reinf": func(p): p.profile.reinf = [{}],
++		"scenario": func(p): p.profile.scenario = {"active": true},
++		"ai": func(p): p.profile.ai = {"active": true},
++		"rules": func(p): p.profile.rules.missile_v0 = 0,
++		"missing_profile": func(p): p.profile.erase("ally"),
++		"profile_bad_type": func(p): p.profile.rules = 5,
++		"view": func(p): p.view.erase("state"),
++		"state_extra": func(p): p.view.state.extra = 1,
++		"clock": func(p): p.view.state.clock_ms = -1,
++		"late_fleet": func(p): p.view.fleets.back().max_ships = 0,
++		"late_fleet_id": func(p): p.view.fleets.back().id = 1,
++		"reference": func(p): p.view.fleets.back().target_id = 999,
++		"fleet_type": func(p): p.view.fleets.back().ships = "bad",
++		"fleet_route": func(p): p.view.fleets.back().route = ["bad"],
++		"event": func(p): p.view.sim._events.back().pos = 7,
++		"pending": func(p): p.view.sim._queue.back().ids = ["bad"],
++		"pending_kind": func(p): p.view.sim._queue.back().kind = "skill",
++		"pending_args": func(p): p.view.sim._queue.back().args = {"extra": true},
++		"log": func(p): p.view.sim.command_log.back().point = "bad",
++		"sim_container": func(p): p.view.sim._events = 3,
++		"projectile_id": func(p): p.view.missiles.back().id = p.view.state.next_event_id,
++		"projectile_src": func(p): p.view.missiles.back().src_id = 999,
++		"projectile_age": func(p): p.view.missiles.back().age = -1,
++		"projectile_type": func(p): p.view.missiles.back().v = "bad",
++		"swarm_point": func(p): p.view.swarms.back().pts.back().w = "bad",
++		"service": func(p): p.view.service = 5,
++		"derived": func(p): p.view.derived.dt = 0.2,
++		"nan": func(p): p.view.fleets.back().heading = NAN,
++		"infinity": func(p): p.view.missiles.back().pos = Vector2(INF, 0),
++	}
++	for label in changes:
++		var bad: Dictionary = packet.duplicate(true)
++		changes[label].call(bad)
++		_reject(owner, bad, label)
++	var stable_result := Private.prepare(packet)
++	_check(stable_result.ok, "normal packet prepares before empty form rejection")
++	if stable_result.ok:
++		var stable: OperationPrivateState = stable_result.owner
++		var stable_before := _oracle(stable)
++		for index in [0, packet.view.fleets.size() - 1]:
++			var empty_form_packet: Dictionary = packet.duplicate(true)
++			empty_form_packet.view.fleets[index].form.clear()
++			var label: String = "empty_form_first" if index == 0 else "empty_form_last"
++			_reject(owner, empty_form_packet, label)
++			_check(rejections[label] == "fleet_empty_form", "empty form expected error " + label)
++			_check(_same(stable_before, _oracle(stable)), "empty form preserves existing successful owner " + label)
++		stable.close()
++	var object := RefCounted.new()
++	var bad: Dictionary = packet.duplicate(true)
++	bad.view.state.result.probe = object
++	_reject(owner, bad, "Object")
++	bad = packet.duplicate(true)
++	bad.view.state.result.self = bad.view.state.result
++	_reject(owner, bad, "cycle")
++	bad.view.state.result.clear()
++	var combat := _new(1, "resource")
++	var combat_packet: Dictionary = combat.capture_completed().packet
++	for key in ["next_fire", "ammo", "wch", "wmax", "comp0", "stats", "stages"]:
++		bad = combat_packet.duplicate(true)
++		bad.view.fleets.back()[key] = {}
++		_reject(combat, bad, "missing_nested_" + key)
++	bad = combat_packet.duplicate(true)
++	bad.profile.combat.morale = SalvoFixture.combat().morale
++	_reject(combat, bad, "unsupported_morale")
++	combat.close()
++	# All malformed public inputs must fail before log/events/control mutation.
++	var inputs := [
++		{}, BattleSim.command(0, [1], "skill"), BattleSim.command(0, [1], "move", -1, Vector2(NAN, 0)),
++		BattleSim.command(0, [1, 1], "stop"), BattleSim.command(0, [1], "formation", -1, Vector2.ZERO, {"id": 1}),
++		BattleSim.command(0, [1], "supply_hold", -1, Vector2.ZERO, {"on": 1}),
++		BattleSim.command(0, [1], "stop", -1, Vector2.ZERO, {"extra": true})]
++	for i in inputs.size():
++		for pending in [false, true]:
++			var before := _oracle(owner)
++			var result := owner.queue(inputs[i]) if pending else owner.issue(inputs[i])
++			_check(not result.ok and _same(before, _oracle(owner)) and not owner._busy, "malformed public atomic " + str(i))
++	var before := _oracle(owner)
++	owner._busy = true
++	_check(not owner.capture_completed().ok and not owner.issue(BattleSim.command(0, [1], "stop")).ok and not owner.queue(BattleSim.command(0, [1], "stop")).ok and not owner.advance().ok and not owner.drain_events().ok and not owner.observe().ok, "busy guard all operations")
++	owner._busy = false
++	_check(_same(before, _oracle(owner)), "busy rejection no mutation")
++	owner._ready = false
++	_check(not owner.capture_completed().ok, "incomplete guard")
++	owner._ready = true
++	var log_size := owner._sim.command_log.size()
++	var events_size := owner._sim._events.size()
++	_check(owner.issue(BattleSim.command(0, [99999], "stop")).ok and owner._sim.command_log.size() == log_size + 1 and owner._sim._events.size() == events_size + 1 and owner._sim._events.back().kind == "rejected", "logical rejected is completed logged event")
++	var drained := owner.drain_events()
++	_check(drained.ok and owner.drain_events().events.is_empty(), "drain exactly once")
++	owner.close()
++	_check(not owner.capture_completed().ok, "closed guard")
++
++func _run() -> void:
++	for seed in SEEDS:
++		for kind in ["projectile", "resource", "memory", "pending", "post", "damaged", "terrain"]: _roundtrip(seed, kind)
++	_negative()
++	_check(cases.size() == 70, "complete seventy cases")
++	_check(rejections.size() == 45, "complete named rejections")
++	var file := FileAccess.open(OUT, FileAccess.WRITE)
++	_check(file != null, "evidence output opens")
++	if file != null:
++		file.store_string(JSON.stringify({"scope": "RESTRICTED_PRIVATE_RUNTIME_NOT_CHECKPOINT", "overall": "NOT_READY", "cases": cases, "checks": checks, "rejections": rejections, "failed": failed}, "  "))
++		file.close()
++	print("I01B_P2C_PRIVATE_STATE_", "FAIL" if failed else "PASS", " cases=", cases.size(), " checks=", checks, " rejections=", rejections.size())
++	quit(1 if failed else 0)
+diff --git a/tests/i01b_private_state.gd.uid b/tests/i01b_private_state.gd.uid
+new file mode 100644
+index 0000000..1a23e68
+--- /dev/null
++++ b/tests/i01b_private_state.gd.uid
+@@ -0,0 +1 @@
++uid://eimgob7thrxp
+diff --git a/tests/i01b_service_state.gd b/tests/i01b_service_state.gd
+new file mode 100644
+index 0000000..69d0ebe
+--- /dev/null
++++ b/tests/i01b_service_state.gd
+@@ -0,0 +1,405 @@
++extends SceneTree
++
++const Service := preload("res://core/battle/operation_service_state.gd")
++const SEEDS := [0, 1, 20824, 20825, 20826, 90210, 123456789, 2147483647, 2147483648, 4294967295]
++const OUT := "res://tmp/i01b-next-20261031/observations.json"
++var checks := 0
++var failed := false
++var cases: Array = []
++var rejection_codes := {}
++
++func _initialize() -> void:
++	call_deferred("_run")
++
++func _check(ok: bool, message: String) -> bool:
++	checks += 1
++	if not ok:
++		failed = true
++		push_error("I01B_P2B_FAIL: " + message)
++	return ok
++
++func _same(a: Variant, b: Variant) -> bool:
++	if typeof(a) != typeof(b): return false
++	if a is Dictionary:
++		if not _same(a.keys(), b.keys()): return false
++		for key in a:
++			if not _same(a[key], b[key]): return false
++		return true
++	if a is Array:
++		if a.size() != b.size(): return false
++		for i in a.size():
++			if not _same(a[i], b[i]): return false
++		return true
++	return a == b
++
++func _typed(value: Variant) -> Dictionary:
++	var result := {"type": type_string(typeof(value))}
++	if value is Dictionary:
++		var entries: Array = []
++		for key in value: entries.append({"key": _typed(key), "value": _typed(value[key])})
++		result.entries = entries
++	elif value is Array:
++		var entries: Array = []
++		for entry in value: entries.append(_typed(entry))
++		result.entries = entries
++	elif typeof(value) == TYPE_VECTOR2:
++		result.x = _typed(value.x)
++		result.y = _typed(value.y)
++	elif typeof(value) == TYPE_FLOAT:
++		result.bytes = var_to_bytes(value).hex_encode()
++	else: result.value = value
++	return result
++
++# Exact logical data for the prepared-target precondition and side-effect checks.
++# These fixtures have Salvo/Detection/Supply only; this is not a whole-game codec.
++func _plain(value: Variant) -> Variant:
++	if value is Object:
++		return _properties(value)
++	if value is Dictionary:
++		var out := {}
++		for key in value: out[key] = _plain(value[key])
++		return out
++	if value is Array:
++		var out: Array = []
++		for item in value: out.append(_plain(item))
++		return out
++	return value
++
++func _properties(value: Object, excluded: Array = []) -> Dictionary:
++	var out := {}
++	for property in value.get_property_list():
++		if int(property.usage) & PROPERTY_USAGE_SCRIPT_VARIABLE and property.name not in excluded:
++			out[property.name] = _plain(value.get(property.name))
++	return out
++
++func _outside(sim: BattleSim) -> Dictionary:
++	var fleets: Array = []
++	for fleet in sim.st.fleets: fleets.append(_properties(fleet, Service.SUP_FIELDS))
++	return {
++		"state": _properties(sim.st, ["fleets", "_idx", "_idx_n"]), "fleets": fleets,
++		"salvo": _properties(sim.salvo, ["sim", "C", "terr"]) if sim.salvo else {},
++		"detect": _properties(sim.detect, ["sim", "D", "terr", "contacts"]) if sim.detect else {},
++		"supply": _properties(sim.supply, ["sim", "S"]) if sim.supply else {},
++		"command_log": _plain(sim.command_log), "queue": _plain(sim._queue), "events": _plain(sim._events),
++		"first_hit_tick": sim.first_hit_tick, "sub_ms": sim.sub_ms,
++	}
++
++func _selected(sim: BattleSim) -> Dictionary:
++	var fleets: Array = []
++	if sim.supply:
++		for fleet in sim.st.fleets:
++			var values := {}
++			for field in Service.SUP_FIELDS: values[field] = fleet.get(field)
++			fleets.append({"id": fleet.id, "values": values})
++	return {"contacts": sim.detect.contacts.duplicate(true) if sim.detect else [], "supply": fleets}
++
++func _all(sim: BattleSim) -> Dictionary:
++	return {"outside": _outside(sim), "selected": _selected(sim)}
++
++func _capture(sim: BattleSim) -> Dictionary:
++	var before := _all(sim)
++	var answer := Service.capture_partial(sim)
++	_check(answer.ok, "capture: " + str(answer.get("error", "")))
++	_check(_same(before, _all(sim)), "capture does not change selected or external data")
++	return answer.get("packet", {})
++
++func _fixture(seed_id: int, detection: bool, supply: bool) -> BattleSim:
++	var full := SalvoFixture.combat()
++	var ally: Array = []
++	var foe: Array = []
++	if supply:
++		var supplier := SalvoFixture.def("S", 800, 450, [["SHP-05", 2], ["SHP-04", 2]], true)
++		var client := SalvoFixture.def("A", 925, 450, [["SHP-04", 2]])
++		supplier.faction_id = "liu_bei"
++		client.faction_id = "liu_bei"
++		ally = [supplier, client]
++		foe = [SalvoFixture.def("Z", 1500, 850, [["SHP-04", 1]], true)]
++		foe[0].faction_id = "cao_cao"
++	else:
++		ally = [SalvoFixture.def("A", 400, 450, [["SHP-01", 10]], true)]
++		foe = [SalvoFixture.def("B", 500, 450, [["SHP-02", 4]], true)]
++	var sim := SalvoFixture.sim(ally, foe, seed_id, "", func(combat):
++		if detection:
++			combat.detection = full.detection.duplicate(true)
++			combat.detection.view_r = 0
++			combat.detection.radar_r = 0
++			combat.detection.ship_points_div = 1
++		if supply: combat.supply = full.supply.duplicate(true))
++	if supply:
++		for cat in sim.st.fleets[1].ammo: sim.st.fleets[1].ammo[cat] = 0
++	return sim
++
++func _advance(sim: BattleSim, count: int) -> void:
++	for i in count:
++		sim.step()
++		sim.drain_events()
++
++func _suffix(a: BattleSim, b: BattleSim, count: int, label: String) -> void:
++	for i in count:
++		a.step()
++		b.step()
++		_check(a.fingerprint() == b.fingerprint(), label + " fingerprint suffix")
++		_check(_same(_all(a), _all(b)), label + " exact state and events suffix")
++		_check(_same(a.drain_events(), b.drain_events()), label + " event order suffix")
++
++func _restore(a: BattleSim, b: BattleSim, packet: Dictionary, label: String) -> void:
++	var outside := _outside(b)
++	var source_before := _all(a)
++	var packet_before: Dictionary = packet.duplicate(true)
++	var detect_ref: Variant = b.detect
++	var supply_ref: Variant = b.supply
++	var fleets_ref: Array = b.st.fleets.duplicate()
++	var answer := Service.restore_into_prepared_target(b, packet)
++	_check(answer.ok, label + " restore " + str(answer.get("error", "")))
++	_check(_same(outside, _outside(b)), label + " external state unchanged")
++	_check(_same(source_before, _all(a)) and _same(packet_before, packet), label + " source and packet unchanged")
++	_check(_same(_selected(a), _selected(b)), label + " exact slice restored")
++	_check(is_same(detect_ref, b.detect) and is_same(supply_ref, b.supply), label + " module instances unchanged")
++	for i in fleets_ref.size(): _check(is_same(fleets_ref[i], b.st.fleets[i]), label + " fleet instances unchanged")
++	if b.detect:
++		_check(is_same(b.detect.sim, b) and not is_same(b.detect.sim, a), label + " detection target binding")
++		_check(not is_same(b.detect.contacts, a.detect.contacts) and not is_same(b.detect.contacts, packet.detection.contacts), label + " contact container detachment")
++		for side in 2:
++			_check(not is_same(b.detect.contacts[side], packet.detection.contacts[side]), label + " side dictionary detachment")
++			for id in b.detect.contacts[side]:
++				_check(not is_same(b.detect.contacts[side][id], packet.detection.contacts[side][id]), label + " record detachment")
++	if b.supply: _check(is_same(b.supply.sim, b) and not is_same(b.supply.sim, a), label + " supply target binding")
++	var again := _all(b)
++	_check(Service.restore_into_prepared_target(b, packet).ok and _same(again, _all(b)), label + " repeated apply adds no effects")
++
++# Diagnostic immutability oracle handles NaN, objects and cyclic malicious inputs
++# without serializing objects or following their properties.
++func _input_stamp(value: Variant, ancestors: Array = []) -> Dictionary:
++	var stamp := {"type": typeof(value)}
++	if value is Dictionary or value is Array:
++		for i in ancestors.size():
++			if is_same(value, ancestors[i]):
++				stamp.cycle_to_ancestor = i
++				return stamp
++		var path := ancestors.duplicate()
++		path.append(value)
++		var entries: Array = []
++		if value is Dictionary:
++			for key in value: entries.append({"key": _input_stamp(key, path), "value": _input_stamp(value[key], path)})
++		else:
++			for entry in value: entries.append(_input_stamp(entry, path))
++		stamp.entries = entries
++	elif value is Object:
++		stamp.instance_id = value.get_instance_id()
++	else:
++		stamp.bytes = var_to_bytes(value).hex_encode()
++	return stamp
++
++func _reject(target: BattleSim, packet: Dictionary, label: String) -> void:
++	var before := _all(target)
++	var packet_before := _input_stamp(packet)
++	var answer := Service.restore_into_prepared_target(target, packet)
++	_check(not answer.ok, label + " rejected")
++	_check(_same(before, _all(target)), label + " atomic refusal")
++	_check(_same(packet_before, _input_stamp(packet)), label + " rejected packet unchanged")
++	if not answer.ok: rejection_codes[label] = answer.error
++
++func _detection(seed_id: int, wanted: String) -> void:
++	var a := _fixture(seed_id, true, false)
++	var b := _fixture(seed_id, true, false)
++	_advance(a, 2 * a.st.hz)
++	_advance(b, 2 * b.st.hz)
++	_check(not a.detect.contacts[0].is_empty(), "actual confirmed contact exists")
++	for sim in [a, b]: sim.st.fleets[1].pos = Vector2(1500, 450)
++	var age_seconds := 30.0 if wanted == "estimated" else 190.0
++	_advance(a, roundi(age_seconds * a.st.hz))
++	_advance(b, roundi(age_seconds * b.st.hz))
++	var id: int = a.st.fleets[1].id
++	var record := a.detect.rec(0, id)
++	_check(record.get("state") == wanted and record.pos != a.st.fleets[1].pos, "actual " + wanted + " past position retained")
++	_check(_same(_all(a), _all(b)), "prepared detection external context equal")
++	var packet := _capture(a)
++	b.detect.contacts = [{}, {}]
++	_check(a.fingerprint() != b.fingerprint(), "omitted contact slice negative control")
++	_restore(a, b, packet, wanted)
++	var original: Dictionary = record.duplicate(true)
++	packet.detection.contacts[0][id].pos = Vector2.ZERO
++	_check(_same(a.detect.rec(0, id), original) and _same(b.detect.rec(0, id), original), "packet mutation cannot leak to source/target")
++	var wrong := _capture(a)
++	wrong.detection.contacts[0][id].pos = a.st.fleets[1].pos
++	_check(Service.restore_into_prepared_target(b, wrong).ok and a.fingerprint() != b.fingerprint(), "re-observing actual position diverges")
++	_restore(a, b, _capture(a), wanted + " repaired")
++	var suffix := a.detect._period + 1
++	_suffix(a, b, suffix, wanted)
++	cases.append({"kind": wanted, "seed": seed_id, "tick": a.st.tick - suffix, "suffix_ticks": suffix, "record": _typed(original), "scope": "PARTIAL_NOT_CHECKPOINT"})
++	_release(a)
++	_release(b)
++
++func _supply(seed_id: int, after_completion: bool) -> void:
++	var a := _fixture(seed_id, false, true)
++	var b := _fixture(seed_id, false, true)
++	var cycle: int = a.supply.need / BattleRules.BP
++	var tick := cycle + 1 if after_completion else cycle - 1
++	_advance(a, tick)
++	_advance(b, tick)
++	var supplier: FleetState = a.st.fleets[0]
++	var client: FleetState = a.st.fleets[1]
++	_check(_same(_all(a), _all(b)), "prepared supply external context equal")
++	_check(client.supplied > 0 if after_completion else (client.sup_src != "" and client.sup_prog > 0), "actual supply stage reached")
++	var initial_stock: int = supplier.sup_n * int(a.supply.S.per_ship.ammo)
++	if after_completion: _check(supplier.sup_ammo < initial_stock, "actual resource spending observed")
++	var packet := _capture(a)
++	b.st.fleets[0].sup_ammo = 0
++	b.st.fleets[1].sup_prog = 0
++	b.st.fleets[1].sup_src = ""
++	_check(a.fingerprint() != b.fingerprint(), "omitted supply slice negative control")
++	_restore(a, b, packet, "supply")
++	packet.supply.fleets[0].values.sup_ammo = 999
++	_check(supplier.sup_ammo == b.st.fleets[0].sup_ammo and b.st.fleets[0].sup_ammo != 999, "supply packet independent")
++	# Bad order is proven specifically AFTER a completed service spent stock.
++	# Before completion the constructor may reproduce the same stock, which
++	# would not be evidence of divergence and is not claimed as such.
++	if after_completion:
++		var constructor := SupplyCore.new(b, b.supply.S)
++		_check(b.st.fleets[0].sup_ammo == initial_stock and b.st.fleets[0].sup_ammo != supplier.sup_ammo, "post-completion constructor bad order resets spent stock")
++		constructor.sim = null
++		_restore(a, b, _capture(a), "supply after bad order")
++	var old_cycles: int = client.supplied
++	var old_stock: int = supplier.sup_ammo
++	var suffix := 3
++	_suffix(a, b, suffix, "supply")
++	if not after_completion:
++		_check(client.supplied == old_cycles + 1 and supplier.sup_ammo < old_stock, "suffix crosses actual completion and resource spending")
++	cases.append({"kind": "supply_post" if after_completion else "supply_pending", "seed": seed_id, "tick": tick, "suffix_ticks": suffix, "stock_before": old_stock, "stock_after": supplier.sup_ammo, "completed_after": client.supplied, "slice": _typed(_selected(a)), "scope": "SUP10_NOT_FULL_ST11"})
++	_release(a)
++	_release(b)
++
++func _refusals() -> void:
++	var a := _fixture(1, true, true)
++	_advance(a, 2)
++	var packet := _capture(a)
++	# Populate contacts naturally in a separate detection pair for late-record checks.
++	var det := _fixture(1, true, false)
++	_advance(det, 2)
++	var dp := _capture(det)
++	var id: int = det.st.fleets[1].id
++	for kind in ["missing", "extra", "version", "seed", "clock", "profile", "hz", "tick", "roster", "context_type", "module_type", "layout", "cfg", "order", "late_fleet", "source", "priority", "nan", "object", "cycle"]:
++		var bad: Dictionary = packet.duplicate(true)
++		match kind:
++			"missing": bad.erase("supply")
++			"extra": bad.extra = true
++			"version": bad.format = "unknown"
++			"seed": bad.context.seed += 1
++			"clock": bad.context.clock_ms += 1
++			"profile": bad.context.profile_id = "other"
++			"hz": bad.context.hz += 1
++			"tick": bad.context.tick += 1
++			"roster": bad.context.roster.reverse()
++			"context_type": bad.context = []
++			"module_type": bad.supply.active = 1
++			"layout": bad.supply.active = false
++			"cfg": bad.context.combat.supply.stationary_s += 1
++			"order": bad.supply.fleets.reverse()
++			"late_fleet":
++				bad.supply.fleets[0].values.sup_ammo += 1
++				bad.supply.fleets[-1].values.sup_hold = 1
++			"source": bad.supply.fleets[-1].values.sup_src = "unknown-source"
++			"priority": bad.supply.fleets[-1].values.sup_first = a.st.next_id
++			"nan": bad.supply.fleets[-1].values.sup_pos = Vector2(NAN, 0)
++			"object": bad.extra = a
++			"cycle": bad.extra = bad
++		_reject(a, bad, kind)
++		if kind == "cycle": bad.erase("extra")
++	for kind in ["late_contact", "future_seen", "int_error_radius", "bad_state", "foreign_id", "infinity"]:
++		var bad: Dictionary = dp.duplicate(true)
++		match kind:
++			"late_contact":
++				bad.detection.contacts[0][id].pos = Vector2.ZERO
++				var late_record: Dictionary = bad.detection.contacts[0][id].duplicate(true)
++				late_record.conf_bp = "bad"
++				bad.detection.contacts[1][det.st.fleets[0].id] = late_record
++			"future_seen": bad.detection.contacts[0][id].seen = det.st.tick + 1
++			"int_error_radius": bad.detection.contacts[0][id].err_r = 0
++			"bad_state": bad.detection.contacts[0][id].state = "hidden"
++			"foreign_id": bad.detection.contacts[1][det.st.next_id] = bad.detection.contacts[0][id].duplicate(true)
++			"infinity": bad.detection.contacts[0][id].err_r = INF
++		_reject(det, bad, kind)
++	for count in [1, 3]:
++		var malformed: Dictionary = dp.duplicate(true)
++		malformed.detection.contacts.resize(count)
++		_reject(det, malformed, "packet_side_count_%d" % count)
++		var good_contacts: Array = det.detect.contacts
++		det.detect.contacts = [{}, {}]
++		det.detect.contacts.resize(count)
++		_check(not Service.capture_partial(det).ok, "malformed source side count rejected")
++		det.detect.contacts = good_contacts
++	# Target's selected contacts may be corrupted; restore must not use their
++	# length as an oracle for the packet's two-side contract.
++	var good_contacts: Array = det.detect.contacts.duplicate(true)
++	det.detect.contacts = [{}]
++	_check(Service.restore_into_prepared_target(det, dp).ok and _same(det.detect.contacts, good_contacts), "restore repairs selected contact length")
++	# Live target binding/config/derived validation must refuse before mutation.
++	var old_sim := a.supply.sim
++	a.supply.sim = det
++	_reject(a, packet, "foreign_module_binding")
++	a.supply.sim = old_sim
++	a.supply.need += 1
++	_reject(a, packet, "derived_target_mismatch")
++	a.supply.need -= 1
++	var old_stationary: Variant = a.supply.S.stationary_s
++	a.supply.S.erase("stationary_s")
++	_reject(a, packet, "target_missing_config")
++	a.supply.S.stationary_s = old_stationary
++	var cfg_order: Dictionary = packet.context.combat.supply.duplicate(true)
++	# Preserve the original config key order after the deliberate missing-key probe.
++	a.supply.S.clear()
++	a.supply.S.merge(cfg_order)
++	a.supply.S.stationary_s = "bad"
++	_reject(a, packet, "target_config_type")
++	a.supply.S.stationary_s = old_stationary
++	var old_hz: int = a.st.hz
++	a.st.hz = 0
++	_reject(a, packet, "target_invalid_hz")
++	a.st.hz = old_hz
++	# Legacy can retain dead fleet references until next evaluation/step.
++	det.st.fleets[1].dead = true
++	_check(Service.capture_partial(det).ok, "dead contact ID is a reachable stale reference")
++	a.st.fleets[0].sup_first = a.st.fleets[-1].id
++	a.st.fleets[-1].dead = true
++	a.st.fleets[1].sup_src = "f%d" % a.st.fleets[-1].id
++	_check(Service.capture_partial(a).ok, "dead priority/source ID accepted until next service step")
++	_release(a)
++	_release(det)
++
++func _inactive() -> void:
++	var a := BattleSim.new(1)
++	var b := BattleSim.new(1)
++	_restore(a, b, _capture(a), "both absent")
++	_release(a)
++	_release(b)
++
++func _release(sim: BattleSim) -> void:
++	# Only after observations; teardown is a separate mutation.
++	for field in ["morale", "victory", "salvo", "detect", "supply", "chain", "cmd", "assault", "skills", "decisions"]:
++		var module: Variant = sim.get(field)
++		if module != null:
++			for property in module.get_property_list():
++				if property.name == "sim": module.set("sim", null)
++
++func _run() -> void:
++	_inactive()
++	_refusals()
++	for seed_id in SEEDS:
++		_detection(seed_id, "estimated")
++		_detection(seed_id, "lost")
++		_supply(seed_id, false)
++		_supply(seed_id, true)
++	_check(cases.size() == 40, "all planned positive segments completed")
++	_check(rejection_codes.size() == 33, "all planned refusal segments completed")
++	var report := {"scope": "PARTIAL_IN_MEMORY_NOT_CHECKPOINT", "overall_I01b": "NOT_READY", "external_save_schema": "UNCLASSIFIED", "cases": cases, "rejections": rejection_codes, "checks_before_file_open": checks, "failed": failed}
++	var file := FileAccess.open(OUT, FileAccess.WRITE)
++	_check(file != null, "open diagnostic evidence")
++	if file != null:
++		file.store_string(JSON.stringify(report, "\t"))
++		file.close()
++	if failed:
++		print("I01B_P2B_SERVICE_STATE_FAIL cases=%d checks=%d" % [cases.size(), checks])
++		quit(1)
++	else:
++		print("I01B_P2B_SERVICE_STATE_PASS cases=%d seeds=%d checks=%d rejections=%d PARTIAL_NOT_CHECKPOINT NOT_READY" % [cases.size(), SEEDS.size(), checks, rejection_codes.size()])
++		quit(0)
+\ No newline at end of file
+diff --git a/tools/p05_access_demo/.gdignore b/tools/p05_access_demo/.gdignore
+new file mode 100644
+index 0000000..8b13789
+--- /dev/null
++++ b/tools/p05_access_demo/.gdignore
+@@ -0,0 +1 @@
++
+diff --git a/tools/p05_access_demo/README.md b/tools/p05_access_demo/README.md
+new file mode 100644
+index 0000000..c03f03e
+--- /dev/null
++++ b/tools/p05_access_demo/README.md
+@@ -0,0 +1,17 @@
++# P05 독립 PC 접근 검증
++
++검증용 Godot 프로젝트입니다. 저장소의 게임 프로젝트와 분리되어 있습니다. Python 3과 Windows용 Godot 4.7.2를 사용합니다. PowerShell에서 저장소 루트 기준으로 실행합니다.
++
++```powershell
++.\tools\p05_access_demo\run.ps1 -Mode WindowsManual
++.\tools\p05_access_demo\run.ps1 -Mode WindowsAuto
++.\tools\p05_access_demo\run.ps1 -Mode Headless
++```
++
++Godot 실행 파일이 다른 위치에 있다면 `-Godot`에 그 경로를 넣습니다. `-EvidenceDir`로 로그와 결과를 저장할 위치를 지정할 수 있습니다. 기본값은 모드마다 새로 만드는 임시 프로젝트 폴더입니다.
++
++- **WindowsManual**은 창의 **Run P05 access checks** 버튼으로 검사합니다. 검사가 끝난 뒤 창을 직접 닫습니다.
++- **WindowsAuto**는 Windows 창을 띄우고 같은 버튼 처리기를 자동으로 실행합니다. 그리기가 끝난 프레임을 저장한 다음 종료합니다.
++- **Headless**는 창 없이 동일한 이동과 상태 검사를 실행합니다.
++
++검증 시작점은 P05 전용 창입니다. 화면에는 경로, 정지한 외곽, 검사 개수가 표시됩니다. 실제 게임 시작·명령·결산 및 애니메이션은 후속 연결 범위입니다. [P05 접근 계약](../../docs/battle-core/pc-campaign-design/P05-PC-MAP-ACCESS-VALIDATION-20261109.md).
+diff --git a/tools/p05_access_demo/build_manifest.py b/tools/p05_access_demo/build_manifest.py
+new file mode 100644
+index 0000000..5f05ac2
+--- /dev/null
++++ b/tools/p05_access_demo/build_manifest.py
+@@ -0,0 +1,41 @@
++"""Build the isolated P05 demo input from the reviewed offline probes."""
++
++import contextlib
++import io
++import json
++from pathlib import Path
++import runpy
++import sys
++
++
++DESIGN = Path(__file__).resolve().parents[2] / "docs/battle-core/pc-campaign-design"
++
++
++def build():
++    access = runpy.run_path(str(DESIGN / "p05_map_access_validation_20261109.py"))
++    capture = io.StringIO()
++    with contextlib.redirect_stdout(capture):
++        access["main"]()
++    result = json.loads(capture.getvalue())
++    envelope = runpy.run_path(str(DESIGN / "p05_formation_envelope_probe_20261109.py"))
++    radii = {
++        name: entry["max_transition_order_independent"]
++        for name, entry in envelope["measure"]().items()
++    }
++    return {
++        "schema": "p05-access-demo-v1",
++        "envelope": "p05-layout-disks-v1",
++        "space": "effective",
++        "nodes": access["NODES"],
++        "world": [access["WIDTH"], access["HEIGHT"]],
++        "edge": access["EDGE"],
++        "corridor": access["HALF_CORRIDOR"],
++        "offset": access["PAIR_OFFSET"],
++        "radii": radii,
++        "regions": {key: access[key] for key in ("E_DEPLOY", "E_EXIT", "SUPPLY", "R_DEPLOY", "C_GOAL")},
++        "witness": result,
++    }
++
++
++if __name__ == "__main__":
++    Path(sys.argv[1]).write_text(json.dumps(build(), indent=2), encoding="utf-8")
+diff --git a/tools/p05_access_demo/demo.gd b/tools/p05_access_demo/demo.gd
+new file mode 100644
+index 0000000..22c181c
+--- /dev/null
++++ b/tools/p05_access_demo/demo.gd
+@@ -0,0 +1,229 @@
++extends Node2D
++
++const Guard = preload("res://guard.gd")
++const SCALE := 0.55
++const ORIGIN := Vector2(48, 78)
++const INK := Color("#e1efff")
++const ROUTE_COLORS := {"EJAC": Color("#54e0c6"), "EJBDC": Color("#88aeff"), "RC": Color("#ffa96b")}
++
++var manifest: Dictionary
++var mode := "WindowsManual"
++var evidence := ""
++var results: Array[Dictionary] = []
++var witnesses: Dictionary = {}
++var failures := 0
++var button: Button
++var output: Label
++
++
++func _ready() -> void:
++	for arg in OS.get_cmdline_user_args():
++		if arg.begins_with("--mode="):
++			mode = arg.trim_prefix("--mode=")
++		if arg.begins_with("--evidence="):
++			evidence = arg.trim_prefix("--evidence=")
++	var loaded: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://manifest.json"))
++	if not loaded is Dictionary or loaded.get("schema") != "p05-access-demo-v1" or loaded.get("envelope") != "p05-layout-disks-v1" or loaded.get("space") != "effective":
++		push_error("P05 manifest not valid")
++		get_tree().quit(2)
++		return
++	manifest = loaded
++	button = Button.new()
++	button.text = "Run P05 access checks"
++	button.position = Vector2(48, 12)
++	button.size = Vector2(220, 45)
++	add_child(button)
++	button.pressed.connect(_start_checks)
++	output = Label.new()
++	output.position = Vector2(290, 20)
++	output.text = "P05 isolated native route validation"
++	add_child(output)
++	queue_redraw()
++	if mode in ["Headless", "WindowsAuto"]:
++		button.pressed.emit.call_deferred()
++
++
++func _record(label: String, ok: bool, extra: Dictionary = {}) -> void:
++	var result := {"case": label, "pass": ok}
++	result.merge(extra)
++	results.append(result)
++	if not ok:
++		failures += 1
++
++
++func _summary(g: Guard) -> Dictionary:
++	var state := g.snapshot()
++	var point: Vector2 = state.plan
++	var centers := []
++	for p: Vector2 in state.positions:
++		centers.append([p.x, p.y])
++	return {"plan": [point.x, point.y], "centers": centers,
++		"heading_deg": rad_to_deg(state.heading), "tick": state.tick, "route_index": state.index,
++		"returning": state.returning, "moving": state.moving, "visits": state.visits,
++		"complete": state.complete}
++
++
++func _snapshot(g: Guard) -> Dictionary:
++	return {"state": g.snapshot(), "route": g.route_id, "points": g.points.duplicate(),
++		"offsets": g.offsets.duplicate(), "radii": g.radii.duplicate(),
++		"neck": g.neck, "bad_service": g.inaccessible_service}
++
++
++func _transaction(g: Guard, before: Dictionary) -> Dictionary:
++	var after := _snapshot(g)
++	return {"unchanged": after == before, "before": before, "after": after}
++
++
++func _advance(g: Guard, index: int) -> String:
++	var remaining := 6000
++	while g.state.index < index and remaining > 0:
++		var problem := g.step()
++		if problem != "":
++			return problem
++		remaining -= 1
++	return "" if g.state.index == index else "step_limit"
++
++
++func _positive(id: String) -> void:
++	var g := Guard.new(manifest)
++	var problem := g.start(id)
++	_record(id + "_entry", problem == "", {"reason": problem})
++	if problem != "":
++		return
++	if id != "RC":
++		problem = _advance(g, 2)
++		if problem == "":
++			problem = g.visit("service")
++		_record(id + "_service_stop", problem == "", {"reason": problem, "state": _summary(g)})
++		if problem != "":
++			return
++		var stop: Vector2 = g.state.plan
++		problem = _advance(g, 3)
++		_record(id + "_service_departure", problem == "" and g.state.plan != stop, {"reason": problem})
++		if problem != "":
++			return
++	problem = _advance(g, g.points.size() - 1)
++	if problem == "":
++		problem = g.visit("goal")
++	_record(id + "_goal_access", problem == "", {"reason": problem, "state": _summary(g)})
++	if problem != "":
++		return
++	witnesses[id] = g.snapshot()
++	if id != "RC":
++		problem = g.return_to_e()
++		if problem == "":
++			problem = _advance(g, g.points.size() - 1)
++		if problem == "":
++			problem = g.visit("exit")
++		_record(id + "_explicit_return_exit", problem == "" and g.state.complete,
++			{"reason": problem, "state": _summary(g)})
++
++
++func _negative() -> void:
++	var g := Guard.new(manifest)
++	g.start("EJAC")
++	var prior := _snapshot(g)
++	var problem := g.step([Vector2.ZERO, Vector2(1.5, 1.5)])
++	_record("tracking_rejection_preserves_entire_group", problem == "tracking_budget" and _snapshot(g) == prior,
++		{"reason": problem, "transaction": _transaction(g, prior)})
++	var forward := g.points[0].direction_to(g.points[1])
++	problem = g.step([Vector2.ZERO, forward])
++	_record("speed_rejection_preserves_entire_group", problem == "step_speed" and _snapshot(g) == prior,
++		{"reason": problem, "transaction": _transaction(g, prior)})
++	problem = g.step()
++	_record("tracking_valid_retry", problem == "" and g.state.tick == prior.state.tick + 1 and g.state.positions != prior.state.positions,
++		{"reason": problem, "state": _summary(g)})
++	g.start("EJAC", true)
++	for _i in 6000:
++		prior = _snapshot(g)
++		problem = g.step()
++		if problem != "":
++			break
++	_record("physical_throat_rejects_sweep", problem == "throat_clearance" and _snapshot(g) == prior,
++		{"reason": problem, "transaction": _transaction(g, prior)})
++	g.start("EJAC", false, true)
++	problem = _advance(g, 2)
++	prior = _snapshot(g)
++	if problem == "":
++		problem = g.visit("service")
++	_record("active_service_outside_legal_center_preserves_state", problem == "service_inaccessible" and _snapshot(g) == prior,
++		{"reason": problem, "transaction": _transaction(g, prior)})
++	var old_index: int = g.state.index
++	problem = _advance(g, old_index + 1)
++	_record("inaccessible_service_route_still_open", problem == "" and g.state.index == old_index + 1, {"reason": problem})
++	prior = _snapshot(g)
++	problem = g.start("INVALID")
++	_record("invalid_start_preserves_active_route", problem == "unknown_route" and _snapshot(g) == prior,
++		{"reason": problem, "transaction": _transaction(g, prior)})
++
++
++func _start_checks() -> void:
++	button.disabled = true
++	results.clear()
++	witnesses.clear()
++	failures = 0
++	for id in ["EJAC", "EJBDC", "RC"]:
++		_positive(id)
++	_negative()
++	output.text = "%d/%d checks passed  |  isolated P05" % [results.size() - failures, results.size()]
++	queue_redraw()
++	var display := DisplayServer.get_name()
++	var info := {"schema": manifest.schema, "mode": mode, "os": OS.get_name(), "display": display,
++		"godot": Engine.get_version_info(), "device": RenderingServer.get_video_adapter_name(),
++		"window": str(DisplayServer.window_get_size()), "results": results}
++	if mode != "Headless":
++		await RenderingServer.frame_post_draw
++		await RenderingServer.frame_post_draw
++		var frame := get_viewport().get_texture().get_image()
++		var nonuniform := not frame.is_empty() and frame.get_pixel(5, 5) != frame.get_pixel(80, 33)
++		var png_result := ERR_INVALID_PARAMETER
++		if nonuniform and not evidence.is_empty():
++			png_result = frame.save_png(evidence.path_join("P05-Windows-frame.png"))
++		info["frame"] = {"completed": true, "nonuniform": nonuniform, "save_result": png_result,
++			"width": frame.get_width(), "height": frame.get_height()}
++		if mode == "WindowsAuto" and (OS.get_name() != "Windows" or display == "headless" or png_result != OK):
++			failures += 1
++	info["failures"] = failures
++	var encoded := JSON.stringify(info)
++	print("P05_RESULT " + encoded)
++	if not evidence.is_empty():
++		var file := FileAccess.open(evidence.path_join(mode + ".json"), FileAccess.WRITE)
++		if file == null:
++			failures += 1
++		else:
++			file.store_string(JSON.stringify(info, "  ") + "\n")
++	if mode == "WindowsManual":
++		button.disabled = false
++	else:
++		get_tree().quit(0 if failures == 0 else 1)
++
++
++func _map_point(p: Vector2) -> Vector2:
++	return ORIGIN + p * SCALE
++
++
++func _draw() -> void:
++	if manifest.is_empty():
++		return
++	var map := Rect2(ORIGIN, Guard.vec(manifest.world) * SCALE)
++	draw_rect(map, Color("#152338"))
++	draw_rect(map, Color("#3a526b"), false, 2.0)
++	for id in ROUTE_COLORS:
++		var path := PackedVector2Array()
++		for p in manifest.witness[id].points:
++			path.append(_map_point(Guard.vec(p)))
++		draw_polyline(path, ROUTE_COLORS[id], 3.0, true)
++	for id in manifest.nodes:
++		var p := _map_point(Guard.vec(manifest.nodes[id]))
++		draw_circle(p, 6.0, INK)
++		draw_string(ThemeDB.fallback_font, p + Vector2(9, -8), id, HORIZONTAL_ALIGNMENT_LEFT, -1, 19, INK)
++	for id in witnesses:
++		var indexes := ["RC-CAO-SQ-05"] if id == "RC" else ["RC-LIU-SQ-01", "RC-LIU-SQ-02"]
++		for i in indexes.size():
++			var p := _map_point(witnesses[id].positions[i])
++			var radius := (float(manifest.radii[indexes[i]]) + Guard.TRACK + Guard.SAFETY) * SCALE
++			draw_circle(p, radius, Color(ROUTE_COLORS[id], 0.20))
++			draw_arc(p, radius, 0, TAU, 48, ROUTE_COLORS[id], 1.5, true)
++	draw_string(ThemeDB.fallback_font, Vector2(48, 738),
++		"Teal  front route     Blue  detour     Orange  reinforcements     Circles  stopped goal-access witnesses",
++		HORIZONTAL_ALIGNMENT_LEFT, -1, 17, INK)
+diff --git a/tools/p05_access_demo/guard.gd b/tools/p05_access_demo/guard.gd
+new file mode 100644
+index 0000000..f5c740d
+--- /dev/null
++++ b/tools/p05_access_demo/guard.gd
+@@ -0,0 +1,206 @@
++extends RefCounted
++
++const TRACK := 2.0
++const SAFETY := 1.0
++const DT := 0.1
++const SPEED := 20.0
++const TURN := deg_to_rad(36.0) * DT
++const EPS := 0.00001
++
++var data: Dictionary
++var route_id := ""
++var points: Array[Vector2] = []
++var offsets: Array[Vector2] = []
++var radii: Array[float] = []
++var state: Dictionary = {}
++var neck := false
++var inaccessible_service := false
++
++
++func _init(manifest: Dictionary) -> void:
++	data = manifest
++
++
++static func vec(v: Array) -> Vector2:
++	return Vector2(v[0], v[1])
++
++
++func node(id: String) -> Vector2:
++	return vec(data.nodes[id])
++
++
++func _positions(plan: Vector2) -> Array[Vector2]:
++	var positions: Array[Vector2] = []
++	for offset in offsets:
++		positions.append(plan + offset)
++	return positions
++
++
++func _radius(id: String) -> float:
++	return float(data.radii[id]) + TRACK + SAFETY
++
++
++func start(id: String, use_neck := false, bad_service := false) -> String:
++	if id not in ["EJAC", "EJBDC", "RC"]:
++		return "unknown_route"
++	var entry: Vector2 = node("R" if id == "RC" else "E")
++	var spawn_radius: float = float(data.regions.R_DEPLOY if id == "RC" else data.regions.E_DEPLOY)
++	var next_offsets: Array[Vector2] = [Vector2.ZERO]
++	var next_radii: Array[float] = [_radius("RC-CAO-SQ-05")]
++	if id != "RC":
++		var offset := Vector2(0.0, float(data.offset))
++		next_offsets = [-offset, offset]
++		next_radii = [_radius("RC-LIU-SQ-01"), _radius("RC-LIU-SQ-02")]
++	for i in next_offsets.size():
++		if next_offsets[i].length() + next_radii[i] > spawn_radius:
++			return "entry_clearance"
++		if not _inside_world(entry + next_offsets[i], next_radii[i]):
++			return "entry_world"
++	if next_offsets.size() == 2 and next_offsets[0].distance_to(next_offsets[1]) < next_radii[0] + next_radii[1]:
++		return "entry_interfleet"
++	route_id = id
++	neck = use_neck
++	inaccessible_service = bad_service
++	offsets = next_offsets
++	radii = next_radii
++	points.clear()
++	for p in data.witness[id].points:
++		points.append(vec(p))
++	state = {"plan": entry, "positions": _positions(entry), "index": 0,
++		"heading": (points[1] - entry).angle(), "tick": 0, "moving": false,
++		"returning": false, "visits": [], "complete": false}
++	return ""
++
++
++func _inside_world(p: Vector2, radius: float) -> bool:
++	var w := vec(data.world)
++	var inset := maxf(radius, float(data.edge))
++	return p.x >= inset and p.y >= inset and p.x <= w.x - inset and p.y <= w.y - inset
++
++
++func snapshot() -> Dictionary:
++	return state.duplicate(true)
++
++
++func at_stop() -> bool:
++	return state.plan == points[state.index]
++
++
++func step(perturbation: Array[Vector2] = []) -> String:
++	if state.complete or state.index >= points.size() - 1:
++		return "finished"
++	var index: int = state.index
++	var target := points[index + 1]
++	var plan: Vector2 = state.plan
++	var desired_heading := (target - points[index]).angle()
++	var next := snapshot()
++	next.tick += 1
++	if absf(angle_difference(state.heading, desired_heading)) > EPS:
++		next.heading = rotate_toward(state.heading, desired_heading, TURN)
++		next.moving = false
++	else:
++		next.plan = plan.move_toward(target, SPEED * DT)
++		next.moving = next.plan != target
++		if not next.moving:
++			next.index += 1
++	next.positions = _positions(next.plan)
++	if not perturbation.is_empty():
++		if perturbation.size() != next.positions.size():
++			return "position_arity"
++		for i in next.positions.size():
++			next.positions[i] += perturbation[i]
++	var problem := _swept(next, points[index], target)
++	if problem != "":
++		return problem
++	state = next
++	return ""
++
++
++func _swept(next: Dictionary, a: Vector2, b: Vector2) -> String:
++	var defender := node("C")
++	var defender_radius := _radius("RC-CAO-SQ-04")
++	var corridor: float = float(data.corridor)
++	for i in offsets.size():
++		var old: Vector2 = state.positions[i]
++		var new: Vector2 = next.positions[i]
++		if not new.is_finite() or new.distance_to(next.plan + offsets[i]) > TRACK:
++			return "tracking_budget"
++		if old.distance_to(new) > SPEED * DT + 0.001:
++			return "step_speed"
++		# Exact actual endpoints plus separate numeric reserve. The candidate
++		# nominal disks used for all other checks already include TRACK.
++		var swept_radius := radii[i] - TRACK
++		for p: Vector2 in [old, new]:
++			if not _inside_world(p, swept_radius):
++				return "world_boundary"
++			if p.distance_to(Geometry2D.get_closest_point_to_segment(p, a, b)) + swept_radius > corridor:
++				return "corridor_clearance"
++		if defender.distance_to(Geometry2D.get_closest_point_to_segment(defender, old, new)) < defender_radius + swept_radius:
++			return "defender_clearance"
++		if neck and route_id == "EJAC" and ((a == node("J") and b == node("A")) or (b == node("J") and a == node("A"))):
++			var j := node("J")
++			var axis := j.direction_to(node("A"))
++			var first := (old - j).dot(axis)
++			var last := (new - j).dot(axis)
++			var stations: Array = data.witness.negative.throat_station_bounds
++			if maxf(first, last) + swept_radius >= float(stations[0]) and minf(first, last) - swept_radius <= float(stations[1]):
++				var transverse := axis.orthogonal()
++				var cross := maxf(absf((old - j).dot(transverse)), absf((new - j).dot(transverse)))
++				if cross + swept_radius > float(data.witness.negative.throat_half_width):
++					return "throat_clearance"
++	if offsets.size() == 2:
++		var old_gap: Vector2 = state.positions[1] - state.positions[0]
++		var new_gap: Vector2 = next.positions[1] - next.positions[0]
++		var minimum_gap := Geometry2D.get_closest_point_to_segment(Vector2.ZERO, old_gap, new_gap).length()
++		if minimum_gap < radii[0] + radii[1] - 2.0 * TRACK:
++			return "interfleet_clearance"
++	return ""
++
++
++func visit(kind: String) -> String:
++	if state.complete or state.moving or not at_stop():
++		return "not_stopped"
++	if kind in state.visits:
++		return "already_visited"
++	var center: Vector2
++	var radius: float
++	match kind:
++		"service":
++			if route_id == "RC":
++				return "no_service"
++			var service_node := node("A" if route_id == "EJAC" else "B")
++			if not state.plan.is_equal_approx(service_node):
++				return "wrong_service_stop"
++			center = vec(data.witness.negative.inaccessible_service_center) if inaccessible_service else service_node
++			radius = float(data.witness.negative.inaccessible_service_radius if inaccessible_service else data.regions.SUPPLY)
++		"goal":
++			if state.returning or state.index != points.size() - 1:
++				return "wrong_goal_stop"
++			center = node("C")
++			radius = float(data.regions.C_GOAL)
++		"exit":
++			if not state.returning or state.index != points.size() - 1:
++				return "wrong_exit_stop"
++			center = node("E")
++			radius = float(data.regions.E_EXIT)
++		_:
++			return "unknown_region"
++	for p: Vector2 in state.positions:
++		if p.distance_to(center) + SAFETY > radius:
++			return kind + "_inaccessible"
++	var next := snapshot()
++	next.visits.append(kind)
++	next.complete = kind == "exit" or (route_id == "RC" and kind == "goal")
++	state = next
++	return ""
++
++
++func return_to_e() -> String:
++	if route_id == "RC" or state.returning or not "goal" in state.visits or state.moving:
++		return "cannot_return"
++	points.reverse()
++	var next := snapshot()
++	next.index = 0
++	next.returning = true
++	state = next
++	return ""
+diff --git a/tools/p05_access_demo/main.tscn b/tools/p05_access_demo/main.tscn
+new file mode 100644
+index 0000000..88e61e5
+--- /dev/null
++++ b/tools/p05_access_demo/main.tscn
+@@ -0,0 +1,6 @@
++[gd_scene load_steps=2 format=3]
++
++[ext_resource type="Script" path="res://demo.gd" id="1"]
++
++[node name="P05AccessValidation" type="Node2D"]
++script = ExtResource("1")
+diff --git a/tools/p05_access_demo/project.godot b/tools/p05_access_demo/project.godot
+new file mode 100644
+index 0000000..47b50cc
+--- /dev/null
++++ b/tools/p05_access_demo/project.godot
+@@ -0,0 +1,16 @@
++config_version=5
++
++[application]
++config/name="P05 PC Access Validation"
++run/main_scene="res://main.tscn"
++
++[display]
++window/size/viewport_width=1050
++window/size/viewport_height=760
++window/size/window_width_override=1050
++window/size/window_height_override=760
++
++[rendering]
++renderer/rendering_method="gl_compatibility"
++renderer/rendering_method.mobile="gl_compatibility"
++environment/defaults/default_clear_color=Color(0.043, 0.063, 0.10, 1)
+diff --git a/tools/p05_access_demo/run.ps1 b/tools/p05_access_demo/run.ps1
+new file mode 100644
+index 0000000..0496562
+--- /dev/null
++++ b/tools/p05_access_demo/run.ps1
+@@ -0,0 +1,35 @@
++param(
++    [ValidateSet('Headless','WindowsAuto','WindowsManual')]
++    [string] $Mode = 'Headless',
++    [string] $Godot = 'C:\Tools\Godot\Godot_v4.7.2-stable_win64_console.exe',
++    [string] $EvidenceDir
++)
++$ErrorActionPreference = 'Stop'
++if (!(Test-Path -LiteralPath $Godot -PathType Leaf)) { throw "Godot executable not found: $Godot" }
++$scratch = Join-Path ([IO.Path]::GetTempPath()) ("p05-access-" + [Guid]::NewGuid().ToString('N'))
++New-Item -ItemType Directory -Path $scratch | Out-Null
++foreach ($name in 'project.godot','main.tscn','guard.gd','demo.gd') {
++    Copy-Item -LiteralPath (Join-Path $PSScriptRoot $name) -Destination $scratch
++}
++$manifest = Join-Path $scratch 'manifest.json'
++& python (Join-Path $PSScriptRoot 'build_manifest.py') $manifest
++if ($LASTEXITCODE -ne 0) { throw "P05 manifest build failed: $LASTEXITCODE" }
++if (!$EvidenceDir) { $EvidenceDir = $scratch }
++New-Item -ItemType Directory -Force -Path $EvidenceDir | Out-Null
++$EvidenceDir = (Resolve-Path -LiteralPath $EvidenceDir).Path
++Copy-Item -LiteralPath $manifest -Destination (Join-Path $EvidenceDir "$Mode.manifest.json")
++$log = Join-Path $EvidenceDir "$Mode.log"
++$argsForRun = @('--path', $scratch, '--log-file', $log)
++if ($Mode -eq 'Headless') { $argsForRun += '--headless' }
++$argsForRun += @('--', "--mode=$Mode", "--evidence=$EvidenceDir")
++$invocation = @{
++    executable = (Resolve-Path -LiteralPath $Godot).Path
++    arguments = $argsForRun
++    manifest_sha256 = (Get-FileHash -LiteralPath $manifest -Algorithm SHA256).Hash
++}
++$invocation | ConvertTo-Json -Depth 3 | Set-Content -Encoding UTF8 -LiteralPath (Join-Path $EvidenceDir "$Mode.command.json")
++& $Godot @argsForRun
++$result = $LASTEXITCODE
++[IO.File]::WriteAllText((Join-Path $EvidenceDir "$Mode.exit.txt"), [string]$result)
++Write-Output "P05 evidence: $EvidenceDir"
++exit $result
+diff --git a/view/world/world_map_screen.gd b/view/world/world_map_screen.gd
+index c972b8c..3d37b9b 100644
+--- a/view/world/world_map_screen.gd
++++ b/view/world/world_map_screen.gd
+@@ -52,6 +52,7 @@ var _diff_note: Label
+ var _mode_note: Label
+ var _sortie_t := 0.0
+ var _sortie_i := 0
++var _sortie_origin := {}
+ var _difficulty := "표준"
+ var _mode := "direct"
+ var _res_labels := {}
+@@ -550,6 +551,17 @@ func make_brief(seed := -1) -> BattleBrief:
+ func sortie(seed := -1) -> void:
+ 	if state == "sortie" or state == "resolve":
+ 		return
++	_sortie_origin = {
++		"state": state,
++		"brief": brief,
++		"card_visible": _card.visible,
++		"result_visible": _result.visible,
++		"cta_visible": _cta.visible,
++		"legend_visible": _legend.visible,
++		"input_lock": canvas.input_lock,
++		"arrows": canvas.arrows,
++		"owners": canvas.owners_rgn,
++	}
+ 	brief = make_brief(seed)
+ 	sound.play("confirm_heavy")
+ 	state = "sortie"
+@@ -591,9 +603,22 @@ func _finish_sortie() -> void:
+ 	_caption.visible = false
+ 	_skip.visible = false
+ 	var link := _link()
++	var origin := _sortie_origin
++	_sortie_origin = {}
+ 	if brief.mode == "direct" and link:
+ 		state = "leaving"
+-		link.go_battle(brief)
++		if link.go_battle(brief) != OK:
++			state = origin.state
++			brief = origin.brief
++			_card.visible = origin.card_visible
++			_result.visible = origin.result_visible
++			_cta.visible = origin.cta_visible
++			_legend.visible = origin.legend_visible
++			canvas.input_lock = origin.input_lock
++			canvas.arrows = origin.arrows
++			canvas.set_region_owners(origin.owners, false)
++			_update_inset()
++			_show_chip("전장에 들어갈 수 없습니다. 다시 출격해 주세요.")
+ 		return
+ 	_start_resolve()
+ 

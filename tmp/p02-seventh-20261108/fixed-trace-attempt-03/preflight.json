@@ -1,0 +1,11 @@
+{
+  "attempt": 3,
+  "phase": "canonical-source-preflight",
+  "godot_processes_started": 0,
+  "result": "held",
+  "drift": {
+    "path": "core/battle/operation_private_state.gd",
+    "frozen": "c555099934bdd0a80f4f4d89100e435e621db6f2f0fe5b98c2be9b2d63619a6e",
+    "canonical_observed": "ac59a7547469c705d33854742e9503b08422770b01956a47861b45735ab8c1c6"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "arguments": [
+    "--path",
+    "C:\\Users\\nk782\\AppData\\Local\\Packages\\openai.codex_2p2nqsd0c76g0\\AC\\#!sandbox.{65feec1b-3d49-4ce0-8e08-f7053c216e2e}\\Temp\\p05-access-6482d81fb3c44104a045856b2468bde8",
+    "--log-file",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p05-native-independent-20261109\\headless\\Headless.log",
+    "--headless",
+    "--",
+    "--mode=Headless",
+    "--evidence=C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p05-native-independent-20261109\\headless"
+  ],
+  "executable": "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+  "manifest_sha256": "223EB53C920BD7BD8662962C0196EE2E02056962636ED4306725439D94C48ECD"
+}

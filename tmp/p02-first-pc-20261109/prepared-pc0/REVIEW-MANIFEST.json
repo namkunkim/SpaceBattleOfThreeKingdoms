@@ -1,0 +1,17 @@
+{
+  "stage": "review-only",
+  "productExecuted": false,
+  "planV3": "3c73b8dbfffb659c2920a9547a52858cda266bae282fb0e8d937ac28dcf0751e",
+  "parts": {
+    "EXECUTION-CONTRACT.md": "b12b8a6adecefac68fe26b43cd3c896946baa7aeec5e4ff907109bac3f616edf",
+    "oracle.json": "062c869a49e2cc0fca3e0612863cb48d92449c442cec414f1b8c68a9a19309ec",
+    "overlay.patch": "1dc5c15189ebc65d3f2748388fefd0606d9b48b23517d5f25cfea1ec6f972de6",
+    "source-manifest.json": "103273590efecbf8342ca3c516f1e48af221d7c83567f2cca5b084ee15e85ba5",
+    "Pc0Job.cs": "57c080e771a19b5b29855aabeba45080992f62498e5ba7a69ba5c72b8731b369",
+    "prepare.py": "29ada37b01c73e3b2ceb2dbe9b4b533661c94d856fd4bed2b22590b78e513967",
+    "stage.py": "6d2b0acccbf9ed5b5044ff0f828f6d74ff97b44e2c918740f3651b464a7da611",
+    "supervisor.ps1": "f49958c3bee39f105dd661cfa484ea5354cd97c7bed3bf8af4847b3000a7b25a",
+    "trace-reader.gd.txt": "a047c83811cf0341e6133c69672c19bbd0fc6e538055b0b7fd4e624e86ab61fc",
+    "verify.py": "43efa6ab6eb2c88d285aa5f67c0d9d899772cc03f9ef013890250f005fff840d"
+  }
+}

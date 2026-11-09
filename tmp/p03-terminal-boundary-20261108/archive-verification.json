@@ -1,0 +1,12 @@
+{
+  "name": "P03-TERMINAL-BOUNDARY-DELIVERY-20261108.zip",
+  "sha256": "29b6694f854faf21c2115e014b9db1cef35b048b2ebc7d700409e6889c3f2e3f",
+  "bytes": 572440,
+  "entries": 27,
+  "payload_count": 26,
+  "manifest_sha256": "86d8bc13f64dde329c1580bc1a9590cdca9756b4ff95935ad1d7d45de2c97098",
+  "crc_failure": null,
+  "duplicates": 0,
+  "entry_mismatches": 0,
+  "independent_closeout_in_archive": false
+}

@@ -1,0 +1,182 @@
+{
+  "common": {
+    "verbose_before": {
+      "objects": 322,
+      "resources": 20,
+      "resource_paths": [
+        "res://assets/audio/music/stars_stripes.ogg (AudioStreamOggVorbis)",
+        "res://assets/audio/music/stars_stripes.ogg::OggPacketSequence_q35hk (OggPacketSequence)",
+        "res://core/battle/ai/commander_ai.gd (GDScript)",
+        "res://core/battle/ai/poc_enemy_ai.gd (GDScript)",
+        "res://core/battle/assault.gd (GDScript)",
+        "res://core/battle/battle_rng.gd (GDScript)",
+        "res://core/battle/battle_sim.gd (GDScript)",
+        "res://core/battle/battle_state.gd (GDScript)",
+        "res://core/battle/command.gd (GDScript)",
+        "res://core/battle/decisions.gd (GDScript)",
+        "res://core/battle/detection.gd (GDScript)",
+        "res://core/battle/fleet_state.gd (GDScript)",
+        "res://core/battle/morale.gd (GDScript)",
+        "res://core/battle/rule_set.gd (GDScript)",
+        "res://core/battle/salvo.gd (GDScript)",
+        "res://core/battle/skills.gd (GDScript)",
+        "res://core/battle/stratagem.gd (GDScript)",
+        "res://core/battle/supply.gd (GDScript)",
+        "res://core/battle/terrain.gd (GDScript)",
+        "res://core/battle/victory.gd (GDScript)"
+      ],
+      "object_types": {
+        "AudioStreamOggVorbis": 1,
+        "AudioStreamPlaybackOggVorbis": 1,
+        "GDScript": 20,
+        "GDScriptNativeClass": 1,
+        "OggPacketSequence": 1,
+        "OggPacketSequencePlayback": 1,
+        "RefCounted": 297
+      }
+    },
+    "verbose_after": {
+      "objects": 322,
+      "resources": 20,
+      "resource_paths": [
+        "res://assets/audio/music/stars_stripes.ogg (AudioStreamOggVorbis)",
+        "res://assets/audio/music/stars_stripes.ogg::OggPacketSequence_q35hk (OggPacketSequence)",
+        "res://core/battle/ai/commander_ai.gd (GDScript)",
+        "res://core/battle/ai/poc_enemy_ai.gd (GDScript)",
+        "res://core/battle/assault.gd (GDScript)",
+        "res://core/battle/battle_rng.gd (GDScript)",
+        "res://core/battle/battle_sim.gd (GDScript)",
+        "res://core/battle/battle_state.gd (GDScript)",
+        "res://core/battle/command.gd (GDScript)",
+        "res://core/battle/decisions.gd (GDScript)",
+        "res://core/battle/detection.gd (GDScript)",
+        "res://core/battle/fleet_state.gd (GDScript)",
+        "res://core/battle/morale.gd (GDScript)",
+        "res://core/battle/rule_set.gd (GDScript)",
+        "res://core/battle/salvo.gd (GDScript)",
+        "res://core/battle/skills.gd (GDScript)",
+        "res://core/battle/stratagem.gd (GDScript)",
+        "res://core/battle/supply.gd (GDScript)",
+        "res://core/battle/terrain.gd (GDScript)",
+        "res://core/battle/victory.gd (GDScript)"
+      ],
+      "object_types": {
+        "AudioStreamOggVorbis": 1,
+        "AudioStreamPlaybackOggVorbis": 1,
+        "GDScript": 20,
+        "GDScriptNativeClass": 1,
+        "OggPacketSequence": 1,
+        "OggPacketSequencePlayback": 1,
+        "RefCounted": 297
+      }
+    },
+    "before-attempt-03": {
+      "objects": 318,
+      "resources": 18,
+      "resource_paths": [],
+      "object_types": {}
+    },
+    "after-attempt-01": {
+      "objects": 322,
+      "resources": 20,
+      "resource_paths": [],
+      "object_types": {}
+    },
+    "after-attempt-02": {
+      "objects": 318,
+      "resources": 18,
+      "resource_paths": [],
+      "object_types": {}
+    }
+  },
+  "organization": {
+    "verbose_before": {
+      "objects": 511,
+      "resources": 20,
+      "resource_paths": [
+        "res://assets/audio/music/stars_stripes.ogg (AudioStreamOggVorbis)",
+        "res://assets/audio/music/stars_stripes.ogg::OggPacketSequence_q35hk (OggPacketSequence)",
+        "res://core/battle/ai/commander_ai.gd (GDScript)",
+        "res://core/battle/ai/poc_enemy_ai.gd (GDScript)",
+        "res://core/battle/assault.gd (GDScript)",
+        "res://core/battle/battle_rng.gd (GDScript)",
+        "res://core/battle/battle_sim.gd (GDScript)",
+        "res://core/battle/battle_state.gd (GDScript)",
+        "res://core/battle/command.gd (GDScript)",
+        "res://core/battle/decisions.gd (GDScript)",
+        "res://core/battle/detection.gd (GDScript)",
+        "res://core/battle/fleet_state.gd (GDScript)",
+        "res://core/battle/morale.gd (GDScript)",
+        "res://core/battle/rule_set.gd (GDScript)",
+        "res://core/battle/salvo.gd (GDScript)",
+        "res://core/battle/skills.gd (GDScript)",
+        "res://core/battle/stratagem.gd (GDScript)",
+        "res://core/battle/supply.gd (GDScript)",
+        "res://core/battle/terrain.gd (GDScript)",
+        "res://core/battle/victory.gd (GDScript)"
+      ],
+      "object_types": {
+        "AudioStreamOggVorbis": 1,
+        "AudioStreamPlaybackOggVorbis": 1,
+        "GDScript": 20,
+        "GDScriptNativeClass": 1,
+        "OggPacketSequence": 1,
+        "OggPacketSequencePlayback": 1,
+        "RefCounted": 486
+      }
+    },
+    "verbose_after": {
+      "objects": 511,
+      "resources": 20,
+      "resource_paths": [
+        "res://assets/audio/music/stars_stripes.ogg (AudioStreamOggVorbis)",
+        "res://assets/audio/music/stars_stripes.ogg::OggPacketSequence_q35hk (OggPacketSequence)",
+        "res://core/battle/ai/commander_ai.gd (GDScript)",
+        "res://core/battle/ai/poc_enemy_ai.gd (GDScript)",
+        "res://core/battle/assault.gd (GDScript)",
+        "res://core/battle/battle_rng.gd (GDScript)",
+        "res://core/battle/battle_sim.gd (GDScript)",
+        "res://core/battle/battle_state.gd (GDScript)",
+        "res://core/battle/command.gd (GDScript)",
+        "res://core/battle/decisions.gd (GDScript)",
+        "res://core/battle/detection.gd (GDScript)",
+        "res://core/battle/fleet_state.gd (GDScript)",
+        "res://core/battle/morale.gd (GDScript)",
+        "res://core/battle/rule_set.gd (GDScript)",
+        "res://core/battle/salvo.gd (GDScript)",
+        "res://core/battle/skills.gd (GDScript)",
+        "res://core/battle/stratagem.gd (GDScript)",
+        "res://core/battle/supply.gd (GDScript)",
+        "res://core/battle/terrain.gd (GDScript)",
+        "res://core/battle/victory.gd (GDScript)"
+      ],
+      "object_types": {
+        "AudioStreamOggVorbis": 1,
+        "AudioStreamPlaybackOggVorbis": 1,
+        "GDScript": 20,
+        "GDScriptNativeClass": 1,
+        "OggPacketSequence": 1,
+        "OggPacketSequencePlayback": 1,
+        "RefCounted": 486
+      }
+    },
+    "before-attempt-03": {
+      "objects": 507,
+      "resources": 18,
+      "resource_paths": [],
+      "object_types": {}
+    },
+    "after-attempt-01": {
+      "objects": 511,
+      "resources": 20,
+      "resource_paths": [],
+      "object_types": {}
+    },
+    "after-attempt-02": {
+      "objects": 507,
+      "resources": 18,
+      "resource_paths": [],
+      "object_types": {}
+    }
+  }
+}

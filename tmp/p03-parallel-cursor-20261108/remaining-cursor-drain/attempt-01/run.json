@@ -1,0 +1,37 @@
+{
+  "argv": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+    "--script",
+    "res://tmp/p03-parallel-cursor-20261108/remaining-cursor-drain/probe.gd"
+  ],
+  "actual_exit": 1,
+  "timeout_exit": null,
+  "timed_out": false,
+  "launch_error": null,
+  "accounting": {
+    "active": 0,
+    "total": 2,
+    "terminated": 0
+  },
+  "launcher_pid": 4504,
+  "elapsed": 1.874074400169775,
+  "input_count": 135,
+  "input_stable": true,
+  "input_after_errors": [],
+  "engine_identity_matches": false,
+  "diagnostics": {
+    "script_error": 2,
+    "error": 1,
+    "warning": 0,
+    "objectdb": 0,
+    "leak": 0,
+    "resources": 0
+  },
+  "exact_markers": false,
+  "result": {},
+  "hard_stop": false,
+  "gate_passed": false
+}

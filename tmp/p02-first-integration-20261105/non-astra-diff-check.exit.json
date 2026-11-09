@@ -1,0 +1,10 @@
+{
+  "command": [
+    "git",
+    "diff",
+    "--check"
+  ],
+  "actual_exit": 2,
+  "stdout_sha256": "e0d8a44db41f411d8a51b356211d059342b9cdd255a4fad69357a7698ea2217f",
+  "stderr_sha256": "9383227f23e362399d837fdb9c3c96bbd55d9aa7b4797dccb087af7227ca50c7"
+}

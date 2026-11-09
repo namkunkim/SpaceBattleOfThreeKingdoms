@@ -1,0 +1,61 @@
+{
+  "files": [
+    {
+      "path": "core/battle/battle_rng.gd",
+      "sha256": "f5f42abd399bed12d10e8385dc83a1fed6450881fe060fdab8734b5a93e3def6"
+    },
+    {
+      "path": "core/battle/battle_state.gd",
+      "sha256": "0c7f4589156e642ade356e0785c3096bb305ac1e2328607e9973e173d1ed9e5b"
+    },
+    {
+      "path": "core/battle/fleet_state.gd",
+      "sha256": "00b39729582cea9f7b66fecd5396c44bdc4b0fa0b2f57516bc4d94cf12d04d6e"
+    },
+    {
+      "path": "core/battle/tick_clock.gd",
+      "sha256": "dfb9cd4a070995d9aca44f77bf08cab18ae87eb4c678a341ccddc34c5a7ff74e"
+    },
+    {
+      "path": "tmp/p03-parallel-state-20261108/READONLY-PREPLAN.sha256",
+      "sha256": "109e28a8a913f9b3c6d5916612e99824120dfe9ed618c2abe1b7e21c7a47d830"
+    },
+    {
+      "path": "tmp/p03-parallel-state-20261108/STATE-LEDGER-S1.md",
+      "sha256": "d3fdb59c06b98b1ff8d292b1cf93d8cc427eba2ea55bc5145fe5e8b676cf662f"
+    },
+    {
+      "path": "tmp/p03-parallel-state-20261108/cases/duplicate/fleet_state.gd",
+      "sha256": "17dc8734dd77bd98526bd5c89bb8d76b1925805adf11bebea3cfac622e03e95e"
+    },
+    {
+      "path": "tmp/p03-parallel-state-20261108/cases/ignored/battle_state.gd",
+      "sha256": "5a00a8c719ac18c8aff725f10ac4278d69eabe75e06cb89dadeb52867b75523f"
+    },
+    {
+      "path": "tmp/p03-parallel-state-20261108/cases/nested/battle_state.gd",
+      "sha256": "3c86e3525c0d589520a6072a0d022cc034c4c269b64249e6fea44868680b3184"
+    },
+    {
+      "path": "tmp/p03-parallel-state-20261108/cases/omission/battle_state.gd",
+      "sha256": "73cbb0092257f66305d80df359432d7338bbe7a4a0c8471e46dbb8619a4d4d5b"
+    },
+    {
+      "path": "tmp/p03-parallel-state-20261108/cases/rename/fleet_state.gd",
+      "sha256": "106fe11374ceb17d2c330a6f4758c0e1814987aa8b73f223b10790817aba1ad4"
+    },
+    {
+      "path": "tmp/p03-parallel-state-20261108/oracle-approved.json",
+      "sha256": "929a97710e415d4727824f4c4b573eaea7036d078b1da3eb2a56ca9191a4d9da"
+    },
+    {
+      "path": "tmp/p03-parallel-state-20261108/readonly_gate.py",
+      "sha256": "4173fa0923c15c5e6ae35f302d80303cc7f65ac97a9150869f4f7acc1dd15996"
+    }
+  ],
+  "python": {
+    "path": "C:\\Python314\\python.exe",
+    "sha256": "03168c01b7b7491423350e82c26fee71f35b43694d1319d3c668bda6903a0c38"
+  },
+  "head": "fb660cea69207fd332e26128643007694910a253"
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "path": "scripts/world/auto_resolver.gd",
+    "original_sha256": "3619547e309b613ef60ec6994a6c08c5ca7a8559ad86d577033c85ccdf4f4221",
+    "current_sha256": "50fd0ee2d41b0abd5b86d05a76b861b5d63a6275925369e03460dbcc66e2d679",
+    "inverse_sha256": "3619547e309b613ef60ec6994a6c08c5ca7a8559ad86d577033c85ccdf4f4221",
+    "diff": "auto_resolver.gd.owned.diff",
+    "diff_sha256": "de265b6895c3b843b058f49c610a52c3c3e1d3842e30b318d7cf4473adbebcdf",
+    "diff_hunks": 5
+  },
+  {
+    "path": "tests/autoresolve.gd",
+    "original_sha256": "a6c3ee903e2365569a31aa0194acb426d87c5856a74a9c7dcaaedeaeea18b5b8",
+    "current_sha256": "27427c810c3813666b9172ae35d02940b9d1361196632e3970e421f6a3fb21a5",
+    "inverse_sha256": "a6c3ee903e2365569a31aa0194acb426d87c5856a74a9c7dcaaedeaeea18b5b8",
+    "diff": "autoresolve.gd.owned.diff",
+    "diff_sha256": "cdf5e81375852286087fb33940ac481107561f84ad9aee36f0da7d97b0c14dad",
+    "diff_hunks": 13
+  }
+]

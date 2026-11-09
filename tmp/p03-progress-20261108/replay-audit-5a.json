@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "inputs": 15,
+  "sha_drift": [],
+  "link_count": 10,
+  "missing_links": [],
+  "trailing_whitespace": [],
+  "anchors": {
+    "H2-02": 1,
+    "ST02": 1,
+    "ST18": 1,
+    "A06": 2,
+    "commands_consumed": 1,
+    "NOT_READY": 1,
+    "UNCLASSIFIED": 1
+  },
+  "refs": {
+    "branch": "codex/feature-i01b-not_remove",
+    "head": "fb660cea69207fd332e26128643007694910a253",
+    "index": []
+  },
+  "runtime_executed": false
+}

@@ -1,0 +1,53 @@
+{
+  "nonproduct_attempt": 3,
+  "nonproduct_budget": 3,
+  "run_count_this_turn": 1,
+  "exit": 1,
+  "started_cases": [
+    "normal"
+  ],
+  "passed_cases": [],
+  "primary": "unexpected-owned-image",
+  "case_cleanup_verified": false,
+  "global_watchdog_drain_reported": true,
+  "raw_image_in_local_evidence": true,
+  "head_before_after": "0be09755b70378286105972f35ac5b7031715664",
+  "raw": {
+    "variant-abi-review/never-run-python-nowindow-until-independent-approval.guard.jsonl": {
+      "bytes": 340,
+      "sha256": "d352a7cb1e62b3abaa47b1258160cad44ad4652867932b6ff516af27b36c1dff"
+    },
+    "variant-abi-review/never-run-python-nowindow-until-independent-approval.stderr.txt": {
+      "bytes": 1486,
+      "sha256": "eb91bb86d45f548fbe314c065c04bdf1a8b187ff94c6869753b3eac6c071f2af"
+    },
+    "variant-abi-review/never-run-python-nowindow-until-independent-approval.stdout.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "variant-abi-review/nowindow-exec.stderr.txt": {
+      "bytes": 835,
+      "sha256": "b73496a0241d2cde9e50bbbf360217abb0c6f10e0366bfceb0fcb2d048d3d7bc"
+    },
+    "variant-abi-review/nowindow-exec.stdout.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "variant-abi-review/never-run-python-nowindow-until-independent-approval/sentinel.jsonl": {
+      "bytes": 113,
+      "sha256": "9c2906cda295e1034701c3ea370ab0136ee05438a5b04e0279813166aaaa8517"
+    },
+    "variant-abi-review/never-run-python-nowindow-until-independent-approval/normal/outer.jsonl": {
+      "bytes": 143,
+      "sha256": "0b5bd4f5fc903f16844b8e84f1a0750a2db6750263ddf4ef319aeeda8444a538"
+    },
+    "variant-abi-review/PYTHON-JOB-NOWINDOW-MANIFEST-APPROVED.json": {
+      "bytes": 11035,
+      "sha256": "fc61b561d7e9f4740497c77d9dbacb1ea603dfd5d0cf584f0acd692655bc603f"
+    },
+    "PYTHON-JOB-NOWINDOW-ATTEMPT3-RESULT.md": {
+      "bytes": 2056,
+      "sha256": "e38f7b1505efb4a2a16c34245722443b0ab4341cd7ad9e24963284e5becb0a04"
+    }
+  }
+}

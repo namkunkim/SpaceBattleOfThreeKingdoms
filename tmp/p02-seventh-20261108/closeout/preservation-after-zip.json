@@ -1,0 +1,101 @@
+{
+  "git": {
+    "head": "fb660cea69207fd332e26128643007694910a253",
+    "branch": "codex/feature-i01b-not_remove",
+    "index_sha256": "09ac9b489ae38de5bdcb1ce75e1689c6a4bb8e86d3b4a7ed99ee3db2928f6afd",
+    "stage_sha256": "1d6b6528766f42f16fad877a5fb54fcd54dd0990d3c5356133451550156f45a3",
+    "staged_hex": ""
+  },
+  "tracked": 2453,
+  "nonignored_untracked": 21097,
+  "changes_since_sample_2": {
+    "docs/battle-core/pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.md": [
+      {
+        "bytes": 19234,
+        "sha256": "7ce01b53092ce716fb8dd68962dd9acb3e694987af163fee53f3ef71689f698e",
+        "read_drift": false
+      },
+      {
+        "bytes": 19352,
+        "sha256": "4e7c869edd83d91413790d6c54613c21e91761bcee40d4f9254a336b05c8927d"
+      }
+    ],
+    "docs/battle-core/pc-campaign-design/P02-PROGRESS-CHECKLIST.md": [
+      {
+        "bytes": 9734,
+        "sha256": "60f14047d3e63c7e7ffc12bff57bac0bf8188631199232bd9d7f43850e8233e1",
+        "read_drift": false
+      },
+      {
+        "bytes": 10400,
+        "sha256": "828c2f5a8992c19ce89b239620601a6effdf021f8db4dac79526285f6ca6f34e"
+      }
+    ],
+    "docs/battle-core/pc-campaign-design/SESSION-HANDOFF-P02-PREP-ERROR-20261108.md": [
+      null,
+      {
+        "bytes": 1293,
+        "sha256": "6190f6942ebf1909345118b7edaf167807ea6c26693e74be52bde555b086fa64"
+      }
+    ],
+    "docs/battle-core/pc-campaign-design/P02-PREP-ERROR-CHECKLIST-20261108.md": [
+      null,
+      {
+        "bytes": 1268,
+        "sha256": "9ce9d3c98e3fd3d0d6590013e93c0c3be8ef922ede709ab4f5a1eccf9c8dd457"
+      }
+    ],
+    "docs/battle-core/CHECKLIST-OPEN.md": [
+      {
+        "bytes": 122127,
+        "sha256": "efff61990048ad074206326d19041ad205c7aa55f730a77b192d8bbb4630f99e",
+        "read_drift": false
+      },
+      {
+        "bytes": 122545,
+        "sha256": "4ce0c1fc724f10837621c3bd717de5ced29ac69c85eb2c090824ee20726bce61"
+      }
+    ],
+    "docs/battle-core/pc-campaign-design/P02-PREP-ERROR-RESULT-20261108.md": [
+      null,
+      {
+        "bytes": 3740,
+        "sha256": "14bb5509afbeb75aaa7733bfb0e6d2733835885131e25897f66bcd20ec339d7e"
+      }
+    ]
+  },
+  "unattributed_changes": {},
+  "protected_zip_html_delta": [],
+  "execution_input_overlap": [],
+  "list_drift": [],
+  "owned": {
+    "docs/battle-core/CHECKLIST-OPEN.md": {
+      "bytes": 122545,
+      "sha256": "4ce0c1fc724f10837621c3bd717de5ced29ac69c85eb2c090824ee20726bce61"
+    },
+    "docs/battle-core/pc-campaign-design/P02-PROGRESS-CHECKLIST.md": {
+      "bytes": 10400,
+      "sha256": "828c2f5a8992c19ce89b239620601a6effdf021f8db4dac79526285f6ca6f34e"
+    },
+    "docs/battle-core/pc-campaign-design/P02-PREP-ERROR-CHECKLIST-20261108.md": {
+      "bytes": 1268,
+      "sha256": "9ce9d3c98e3fd3d0d6590013e93c0c3be8ef922ede709ab4f5a1eccf9c8dd457"
+    },
+    "docs/battle-core/pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.md": {
+      "bytes": 19352,
+      "sha256": "4e7c869edd83d91413790d6c54613c21e91761bcee40d4f9254a336b05c8927d"
+    },
+    "docs/battle-core/pc-campaign-design/P02-PREP-ERROR-RESULT-20261108.md": {
+      "bytes": 3740,
+      "sha256": "14bb5509afbeb75aaa7733bfb0e6d2733835885131e25897f66bcd20ec339d7e"
+    },
+    "docs/battle-core/pc-campaign-design/SESSION-HANDOFF-P02-PREP-ERROR-20261108.md": {
+      "bytes": 1293,
+      "sha256": "6190f6942ebf1909345118b7edaf167807ea6c26693e74be52bde555b086fa64"
+    },
+    "scripts/FleetBattle3D.gd": {
+      "bytes": 37542,
+      "sha256": "604b79308d9b3dbab84dced32456a4f41b28686c8eec748073d3816892cffc5c"
+    }
+  }
+}

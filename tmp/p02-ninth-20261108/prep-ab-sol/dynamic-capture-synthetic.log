@@ -1,0 +1,7 @@
+rejected q q[0].commands[0]: command ordinal
+rejected q $: list length mismatch
+rejected c c[0].records[1]: duplicate identity
+rejected c $[0].side: value mismatch
+rejected b b[0]: device/path order
+rejected b B: all stage IDs in order
+synthetic only: three equal and six invalid

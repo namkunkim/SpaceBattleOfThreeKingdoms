@@ -1,0 +1,33 @@
+{
+  "stable": {
+    "gate": true,
+    "hard_stop": false,
+    "actual_exit": 0,
+    "synthetic_gate_exit": 0
+  },
+  "changed": {
+    "gate": false,
+    "hard_stop": true,
+    "actual_exit": 0,
+    "synthetic_gate_exit": 2
+  },
+  "deleted": {
+    "gate": false,
+    "hard_stop": true,
+    "actual_exit": 0,
+    "synthetic_gate_exit": 2
+  },
+  "unexpected": {
+    "gate": false,
+    "hard_stop": true,
+    "actual_exit": 0,
+    "synthetic_gate_exit": 2
+  },
+  "exit_failure": {
+    "gate": false,
+    "hard_stop": false,
+    "actual_exit": 1,
+    "synthetic_gate_exit": 1
+  },
+  "reservation_collision": true
+}

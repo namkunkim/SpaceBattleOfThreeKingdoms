@@ -1,0 +1,162 @@
+{
+  "status": "REVIEW_ONLY_NON_EXECUTABLE",
+  "no_product_resources": true,
+  "frozen_sources": {
+    "C:\\Python314\\python.exe": "03168c01b7b7491423350e82c26fee71f35b43694d1319d3c668bda6903a0c38",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-eighth-resume-8d838216ccfc\\prepared\\owned_job_v3.py": "49740a782f476af4fda134c5aa101b8900ed98b6aea6b495fed9e16965f1b3a4",
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe": "c8f0a6bc45a19b33541501e57f6f7cd972ab18453743266339d495cbbe846643",
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64.exe": "ab1824f85bfd8e0e4128182c000c4003a3e042245b2967848d089b2a04b22424",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\minimal\\project.godot": "c4a932915bdcc1098e759e88be54134de172bcdaab5b363b9683bce1644c477b",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\minimal\\probe.gd": "2f372627d739d7103b59cfd9bd9d7b5d164af661210c0118b6b7f1a9eaa5bee0",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\freeze_inputs.py": "22c50bffe2a1de8425dba4ab085b49709a806cbed6fa8c7fc7ae06ddeb7ce9e6"
+  },
+  "missing_gates": [
+    "sandbox-backed filesystem write confinement and pre/post reparse boundary",
+    "outer/inner supervisor executable and independent Job/process HANDLE recorder",
+    "actual environment and controller argv",
+    "independent review"
+  ],
+  "cases": [
+    {
+      "id": "W1",
+      "blocking_phase": null,
+      "cwd": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W1\\project",
+      "env_overrides": {
+        "APPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W1\\roaming",
+        "LOCALAPPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W1\\local",
+        "XDG_DATA_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W1\\roaming",
+        "XDG_CONFIG_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W1\\config",
+        "XDG_CACHE_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W1\\cache",
+        "TEMP": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W1\\temp",
+        "TMP": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W1\\temp"
+      },
+      "engine_argv": [
+        "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W1\\project",
+        "--script",
+        "res://probe.gd",
+        "--",
+        "normal"
+      ],
+      "stdout": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W1\\engine.stdout",
+      "stderr": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W1\\engine.stderr",
+      "hard_seconds_from_before_staging": 40,
+      "engine_seconds_from_barrier": 30,
+      "inner_cleanup_seconds": 5,
+      "external_drain_verification_seconds": 5,
+      "expected_user_data_dir": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W1\\roaming\\Godot\\app_userdata\\P02WatchdogNonProduct"
+    },
+    {
+      "id": "W2",
+      "blocking_phase": null,
+      "cwd": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W2\\project",
+      "env_overrides": {
+        "APPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W2\\roaming",
+        "LOCALAPPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W2\\local",
+        "XDG_DATA_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W2\\roaming",
+        "XDG_CONFIG_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W2\\config",
+        "XDG_CACHE_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W2\\cache",
+        "TEMP": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W2\\temp",
+        "TMP": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W2\\temp"
+      },
+      "engine_argv": [
+        "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W2\\project",
+        "--script",
+        "res://probe.gd",
+        "--",
+        "wait"
+      ],
+      "stdout": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W2\\engine.stdout",
+      "stderr": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W2\\engine.stderr",
+      "hard_seconds_from_before_staging": 40,
+      "engine_seconds_from_barrier": 15,
+      "inner_cleanup_seconds": 5,
+      "external_drain_verification_seconds": 5,
+      "expected_user_data_dir": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W2\\roaming\\Godot\\app_userdata\\P02WatchdogNonProduct"
+    },
+    {
+      "id": "W3",
+      "blocking_phase": "staging",
+      "cwd": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W3\\project",
+      "env_overrides": {
+        "APPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W3\\roaming",
+        "LOCALAPPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W3\\local",
+        "XDG_DATA_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W3\\roaming",
+        "XDG_CONFIG_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W3\\config",
+        "XDG_CACHE_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W3\\cache",
+        "TEMP": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W3\\temp",
+        "TMP": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W3\\temp"
+      },
+      "engine_argv": null,
+      "stdout": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W3\\engine.stdout",
+      "stderr": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W3\\engine.stderr",
+      "hard_seconds_from_before_staging": 8,
+      "engine_seconds_from_barrier": null,
+      "inner_cleanup_seconds": 5,
+      "external_drain_verification_seconds": 5,
+      "expected_user_data_dir": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W3\\roaming\\Godot\\app_userdata\\P02WatchdogNonProduct"
+    },
+    {
+      "id": "W4",
+      "blocking_phase": "postverify",
+      "cwd": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W4\\project",
+      "env_overrides": {
+        "APPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W4\\roaming",
+        "LOCALAPPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W4\\local",
+        "XDG_DATA_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W4\\roaming",
+        "XDG_CONFIG_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W4\\config",
+        "XDG_CACHE_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W4\\cache",
+        "TEMP": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W4\\temp",
+        "TMP": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W4\\temp"
+      },
+      "engine_argv": [
+        "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W4\\project",
+        "--script",
+        "res://probe.gd",
+        "--",
+        "normal"
+      ],
+      "stdout": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W4\\engine.stdout",
+      "stderr": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W4\\engine.stderr",
+      "hard_seconds_from_before_staging": 55,
+      "engine_seconds_from_barrier": 30,
+      "inner_cleanup_seconds": 5,
+      "external_drain_verification_seconds": 5,
+      "expected_user_data_dir": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W4\\roaming\\Godot\\app_userdata\\P02WatchdogNonProduct",
+      "postverify_seconds_from_durable_begin": 8,
+      "stage_preverify_seconds": 5,
+      "external_reserve_seconds": 7
+    },
+    {
+      "id": "W5",
+      "blocking_phase": "actual-nested-policy-only",
+      "cwd": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W5\\project",
+      "env_overrides": {
+        "APPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W5\\roaming",
+        "LOCALAPPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W5\\local",
+        "XDG_DATA_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W5\\roaming",
+        "XDG_CONFIG_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W5\\config",
+        "XDG_CACHE_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W5\\cache",
+        "TEMP": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W5\\temp",
+        "TMP": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W5\\temp"
+      },
+      "engine_argv": null,
+      "stdout": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W5\\engine.stdout",
+      "stderr": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W5\\engine.stderr",
+      "hard_seconds_from_before_staging": 8,
+      "engine_seconds_from_barrier": null,
+      "inner_cleanup_seconds": 5,
+      "external_drain_verification_seconds": 5,
+      "expected_user_data_dir": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-ninth-20261108\\prep-ab-sol\\watchdog-review\\never-run-with-draft\\W5\\roaming\\Godot\\app_userdata\\P02WatchdogNonProduct"
+    }
+  ],
+  "prior_draft_sha256": "2aa1bd9100ce2ef049f7d26086bab2351e1fa3cdec53f4b37236f6e53ca11949"
+}

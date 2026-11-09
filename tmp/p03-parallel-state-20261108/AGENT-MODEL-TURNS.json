@@ -1,0 +1,50 @@
+[
+  {
+    "role": "조사·구현",
+    "thread": "01a1ba46-715f-7430-b53b-18c9c31557eb",
+    "turn": "01a1ba46-76a3-7713-81f4-654df5f05b00",
+    "model": "gpt-6.1-sol"
+  },
+  {
+    "role": "조사·구현",
+    "thread": "01a1ba46-715f-7430-b53b-18c9c31557eb",
+    "turn": "01a1ba4e-c12d-7e23-821a-a6c674d66aea",
+    "model": "gpt-6.1-sol"
+  },
+  {
+    "role": "조사·구현",
+    "thread": "01a1ba46-715f-7430-b53b-18c9c31557eb",
+    "turn": "01a1ba52-a893-7e03-a5db-1d6ca4da72a4",
+    "model": "gpt-6.1-sol"
+  },
+  {
+    "role": "독립 심사",
+    "thread": "01a1ba47-f9c7-7d43-b618-a01fd544f280",
+    "turn": "01a1ba47-fd4c-7bd0-af20-988e9ff87211",
+    "model": "gpt-6.1-terra"
+  },
+  {
+    "role": "독립 심사",
+    "thread": "01a1ba47-f9c7-7d43-b618-a01fd544f280",
+    "turn": "01a1ba4d-a2bc-7490-bb71-b0975263f8fd",
+    "model": "gpt-6.1-terra"
+  },
+  {
+    "role": "독립 심사",
+    "thread": "01a1ba47-f9c7-7d43-b618-a01fd544f280",
+    "turn": "01a1ba50-f4a8-7fe0-9e78-ccb9db6d185d",
+    "model": "gpt-6.1-terra"
+  },
+  {
+    "role": "독립 심사",
+    "thread": "01a1ba47-f9c7-7d43-b618-a01fd544f280",
+    "turn": "01a1ba52-405b-72b0-9f92-77a2b29d7c68",
+    "model": "gpt-6.1-terra"
+  },
+  {
+    "role": "독립 심사",
+    "thread": "01a1ba47-f9c7-7d43-b618-a01fd544f280",
+    "turn": "01a1ba54-5918-7b32-a40c-e069c7bb63d8",
+    "model": "gpt-6.1-terra"
+  }
+]

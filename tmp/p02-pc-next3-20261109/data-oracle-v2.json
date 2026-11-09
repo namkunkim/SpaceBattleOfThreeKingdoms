@@ -1,0 +1,582 @@
+{
+  "sources": {
+    "data/scenarios/red_cliffs_208_realtime.json": "0d702495a1ac94e255b44948ba8ebb625d4cdae2f1605658d05ec47911edb208",
+    "data/profiles/red_cliffs_rt.json": "1c9fa315648e47a53b17b2e0ef9c5492da64122e98b462a789b7b35790e31e38"
+  },
+  "tick_hz": 10,
+  "difficulty": {
+    "입문": {
+      "cao_cap": 9,
+      "ai": {
+        "think_depth": 1,
+        "mistake_bp": 2500,
+        "reaction_s": 120,
+        "chain_risk_response": false,
+        "chain_detect_mean_s": null,
+        "suspicion_per_s": 0.4
+      },
+      "ally": [
+        {
+          "id": "RC-LIU-SQ-01",
+          "faction_id": "liu_bei",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-LIU-SQ-02",
+          "faction_id": "liu_bei",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-LIU-SQ-03",
+          "faction_id": "liu_bei",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-SUN-SQ-01",
+          "faction_id": "sun_quan",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-SUN-SQ-02",
+          "faction_id": "sun_quan",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-SUN-SQ-03",
+          "faction_id": "sun_quan",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        }
+      ],
+      "foe": [
+        {
+          "id": "RC-CAO-SQ-01",
+          "faction_id": "cao_cao",
+          "wait_s": 180,
+          "wait_ticks": 1800,
+          "start_morale_bp": 8000
+        },
+        {
+          "id": "RC-CAO-SQ-02",
+          "faction_id": "cao_cao",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 8000
+        },
+        {
+          "id": "RC-CAO-SQ-03",
+          "faction_id": "cao_cao",
+          "wait_s": 180,
+          "wait_ticks": 1800,
+          "start_morale_bp": 8000
+        },
+        {
+          "id": "RC-CAO-SQ-04",
+          "faction_id": "cao_cao",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 6000
+        },
+        {
+          "id": "RC-CAO-SQ-05",
+          "faction_id": "cao_cao",
+          "wait_s": 180,
+          "wait_ticks": 1800,
+          "start_morale_bp": 6000
+        },
+        {
+          "id": "RC-CAO-SQ-06",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 8000
+        },
+        {
+          "id": "RC-CAO-SQ-07",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 8000
+        },
+        {
+          "id": "RC-CAO-SQ-08",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 8000
+        },
+        {
+          "id": "RC-CAO-SQ-09",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 8000
+        }
+      ],
+      "brief_foe_ids": [
+        "RC-CAO-SQ-02",
+        "RC-CAO-SQ-04"
+      ]
+    },
+    "표준": {
+      "cao_cap": 10,
+      "ai": {
+        "think_depth": 2,
+        "mistake_bp": 1000,
+        "reaction_s": 60,
+        "chain_risk_response": true,
+        "chain_detect_mean_s": 60,
+        "suspicion_per_s": 0.8
+      },
+      "ally": [
+        {
+          "id": "RC-LIU-SQ-01",
+          "faction_id": "liu_bei",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-LIU-SQ-02",
+          "faction_id": "liu_bei",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-LIU-SQ-03",
+          "faction_id": "liu_bei",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-SUN-SQ-01",
+          "faction_id": "sun_quan",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-SUN-SQ-02",
+          "faction_id": "sun_quan",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-SUN-SQ-03",
+          "faction_id": "sun_quan",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        }
+      ],
+      "foe": [
+        {
+          "id": "RC-CAO-SQ-01",
+          "faction_id": "cao_cao",
+          "wait_s": 180,
+          "wait_ticks": 1800,
+          "start_morale_bp": 8000
+        },
+        {
+          "id": "RC-CAO-SQ-02",
+          "faction_id": "cao_cao",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 8000
+        },
+        {
+          "id": "RC-CAO-SQ-03",
+          "faction_id": "cao_cao",
+          "wait_s": 180,
+          "wait_ticks": 1800,
+          "start_morale_bp": 8000
+        },
+        {
+          "id": "RC-CAO-SQ-04",
+          "faction_id": "cao_cao",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 6500
+        },
+        {
+          "id": "RC-CAO-SQ-05",
+          "faction_id": "cao_cao",
+          "wait_s": 180,
+          "wait_ticks": 1800,
+          "start_morale_bp": 6500
+        },
+        {
+          "id": "RC-CAO-SQ-06",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 8000
+        },
+        {
+          "id": "RC-CAO-SQ-07",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 8000
+        },
+        {
+          "id": "RC-CAO-SQ-08",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 8000
+        },
+        {
+          "id": "RC-CAO-SQ-09",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 8000
+        },
+        {
+          "id": "RC-CAO-SQ-10",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 8000
+        }
+      ],
+      "brief_foe_ids": [
+        "RC-CAO-SQ-02",
+        "RC-CAO-SQ-04"
+      ]
+    },
+    "상급": {
+      "cao_cap": 14,
+      "ai": {
+        "think_depth": 3,
+        "mistake_bp": 300,
+        "reaction_s": 0,
+        "chain_risk_response": true,
+        "chain_detect_mean_s": 20,
+        "suspicion_per_s": 1.5
+      },
+      "ally": [
+        {
+          "id": "RC-LIU-SQ-01",
+          "faction_id": "liu_bei",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-LIU-SQ-02",
+          "faction_id": "liu_bei",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-LIU-SQ-03",
+          "faction_id": "liu_bei",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-SUN-SQ-01",
+          "faction_id": "sun_quan",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-SUN-SQ-02",
+          "faction_id": "sun_quan",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-SUN-SQ-03",
+          "faction_id": "sun_quan",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        }
+      ],
+      "foe": [
+        {
+          "id": "RC-CAO-SQ-01",
+          "faction_id": "cao_cao",
+          "wait_s": 180,
+          "wait_ticks": 1800,
+          "start_morale_bp": 9500
+        },
+        {
+          "id": "RC-CAO-SQ-02",
+          "faction_id": "cao_cao",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 9500
+        },
+        {
+          "id": "RC-CAO-SQ-03",
+          "faction_id": "cao_cao",
+          "wait_s": 180,
+          "wait_ticks": 1800,
+          "start_morale_bp": 9500
+        },
+        {
+          "id": "RC-CAO-SQ-04",
+          "faction_id": "cao_cao",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 7500
+        },
+        {
+          "id": "RC-CAO-SQ-05",
+          "faction_id": "cao_cao",
+          "wait_s": 180,
+          "wait_ticks": 1800,
+          "start_morale_bp": 7500
+        },
+        {
+          "id": "RC-CAO-SQ-06",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 9500
+        },
+        {
+          "id": "RC-CAO-SQ-07",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 9500
+        },
+        {
+          "id": "RC-CAO-SQ-08",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 9500
+        },
+        {
+          "id": "RC-CAO-SQ-09",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 9500
+        },
+        {
+          "id": "RC-CAO-SQ-10",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 9500
+        },
+        {
+          "id": "RC-CAO-SQ-11",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 9500
+        },
+        {
+          "id": "RC-CAO-SQ-12",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 9500
+        },
+        {
+          "id": "RC-CAO-SQ-13",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 9500
+        },
+        {
+          "id": "RC-CAO-SQ-14",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 9500
+        }
+      ],
+      "brief_foe_ids": [
+        "RC-CAO-SQ-02",
+        "RC-CAO-SQ-04"
+      ]
+    },
+    "극한": {
+      "cao_cap": 14,
+      "ai": {
+        "think_depth": 3,
+        "mistake_bp": 0,
+        "reaction_s": 0,
+        "chain_risk_response": true,
+        "chain_detect_mean_s": 10,
+        "suspicion_per_s": 2.0
+      },
+      "ally": [
+        {
+          "id": "RC-LIU-SQ-01",
+          "faction_id": "liu_bei",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-LIU-SQ-02",
+          "faction_id": "liu_bei",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-LIU-SQ-03",
+          "faction_id": "liu_bei",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-SUN-SQ-01",
+          "faction_id": "sun_quan",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-SUN-SQ-02",
+          "faction_id": "sun_quan",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-SUN-SQ-03",
+          "faction_id": "sun_quan",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        }
+      ],
+      "foe": [
+        {
+          "id": "RC-CAO-SQ-01",
+          "faction_id": "cao_cao",
+          "wait_s": 180,
+          "wait_ticks": 1800,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-CAO-SQ-02",
+          "faction_id": "cao_cao",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-CAO-SQ-03",
+          "faction_id": "cao_cao",
+          "wait_s": 180,
+          "wait_ticks": 1800,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-CAO-SQ-04",
+          "faction_id": "cao_cao",
+          "wait_s": 0,
+          "wait_ticks": 0,
+          "start_morale_bp": 9000
+        },
+        {
+          "id": "RC-CAO-SQ-05",
+          "faction_id": "cao_cao",
+          "wait_s": 180,
+          "wait_ticks": 1800,
+          "start_morale_bp": 9000
+        },
+        {
+          "id": "RC-CAO-SQ-06",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-CAO-SQ-07",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-CAO-SQ-08",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-CAO-SQ-09",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-CAO-SQ-10",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-CAO-SQ-11",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-CAO-SQ-12",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-CAO-SQ-13",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 10000
+        },
+        {
+          "id": "RC-CAO-SQ-14",
+          "faction_id": "cao_cao",
+          "wait_s": 360,
+          "wait_ticks": 3600,
+          "start_morale_bp": 10000
+        }
+      ],
+      "brief_foe_ids": [
+        "RC-CAO-SQ-02",
+        "RC-CAO-SQ-04"
+      ]
+    }
+  }
+}

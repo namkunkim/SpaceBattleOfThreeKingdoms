@@ -1,0 +1,32 @@
+accepted synthetic: 8960 evals, 80 initial receipts, 160 captures
+rejected boolean fleet ID fleet ID: exact int
+rejected float tick evaluation tick: exact int
+rejected boolean seed seed: exact int
+rejected boolean evaluating side evaluating side: exact int
+rejected boolean fleet side fleet side: exact int
+rejected boolean live ship count live SHP-02: exact int
+rejected float ship count live SHP-02: exact int
+rejected float intellect intellect: exact int
+rejected boolean radius view radius: finite bounded number
+rejected nonfinite position fleet position[0]: finite bounded number
+rejected nonfinite offset formation offset[0]: finite bounded number
+rejected boolean coordinate fleet position[0]: finite bounded number
+rejected empty offsets fleet offset count
+rejected oversized offsets fleet offset count
+rejected missing evaluation evaluation receipts missing, reordered or duplicated
+rejected duplicate evaluation evaluation receipts missing, reordered or duplicated
+rejected missing initial initial receipts missing, reordered or duplicated
+rejected prior contact initial side 1 contacts
+rejected negative EW nonnegative target EW
+rejected negative conceal nonnegative target conceal
+rejected fixture SHA drift fixture provenance
+rejected config drift estimated_threshold: unexpected value
+rejected lane identity drift evaluation receipts missing, reordered or duplicated
+rejected instance identity drift evaluation receipts missing, reordered or duplicated
+rejected uncertified geometry insufficient source geometry clearance
+rejected omitted required field evaluation receipt: exact fields
+rejected capture missing incomplete or absent certificate
+rejected empty captures cannot substitute for a certificate incomplete or absent certificate
+rejected unexpected opposing contact independently excluded opposing record
+rejected subset certificate incomplete or absent certificate
+rejected boolean capture side contact capture side: exact int

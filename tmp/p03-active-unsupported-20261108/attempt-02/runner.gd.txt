@@ -1,0 +1,151 @@
+extends SceneTree
+
+const Private := preload("res://core/battle/operation_private_state.gd")
+const SimScript := preload("res://core/battle/battle_sim.gd")
+const StateScript := preload("res://core/battle/battle_state.gd")
+const FleetScript := preload("res://core/battle/fleet_state.gd")
+const CONTROLS := ["direct", "direct"]
+const Decision := preload("res://core/battle/decisions.gd")
+const NAMES := ["supported_control", "capture_live_decision", "replace_live_decision"]
+var checks := 0
+var failed := false
+var completed: Array[String] = []
+var observations: Array[Dictionary] = []
+
+
+func _initialize() -> void:
+	call_deferred("_run")
+
+func _check(condition: bool, label: String) -> bool:
+	checks += 1
+	if not condition:
+		failed = true
+		push_error("P03_ACTIVE_UNSUPPORTED_FAIL " + label)
+	return condition
+
+func _exact(a: Variant, b: Variant) -> bool:
+	if typeof(a) != typeof(b): return false
+	if a is Dictionary:
+		if not _exact(_dict_type(a), _dict_type(b)) or not _exact(a.keys(), b.keys()): return false
+		for key in a:
+			if not _exact(a[key], b[key]): return false
+		return true
+	if a is Array:
+		if a.get_typed_builtin() != b.get_typed_builtin() or a.get_typed_class_name() != b.get_typed_class_name(): return false
+		if not is_same(a.get_typed_script(), b.get_typed_script()) or a.size() != b.size(): return false
+		for i in a.size():
+			if not _exact(a[i], b[i]): return false
+		return true
+	if a is Object: return is_same(a, b)
+	return a == b
+
+func _dict_type(value: Dictionary) -> Array:
+	return [value.get_typed_key_builtin(), value.get_typed_key_class_name(), value.get_typed_key_script(),
+		value.get_typed_value_builtin(), value.get_typed_value_class_name(), value.get_typed_value_script()]
+
+func _profile() -> Dictionary:
+	var rules: Dictionary = PocSetup.profile().rules
+	rules.world_w = 3400
+	rules.world_h = 2300
+	var note_array: Array[int] = [7]
+	return {"profile_id": "p03-active-unsupported", "rules": rules,
+		"ally": [{"name": "A", "role": "A", "ships": 30, "lv": 1, "x": 500, "y": 500, "p": 0, "flag": true}],
+		"foe": [{"name": "B", "role": "B", "ships": 30, "lv": 1, "x": 2600, "y": 1500, "p": 0, "flag": true}],
+		"reinf": [], "note": {"typed_probe": note_array, "key_probe": {7: "value"}, "order_probe": {"first": 1, "last": 2}}}
+
+func _class_guard() -> bool:
+	var classes := [Private, SimScript, StateScript, FleetScript]
+	var names := ["operation_private_state", "battle_sim", "battle_state", "fleet_state"]
+	for i in classes.size():
+		var script: Script = classes[i]
+		if not _check(script.resource_path == "res://core/battle/" + names[i] + ".gd", "canonical " + names[i]): return false
+	return _check(Private._classes() == "", "canonical transitive class map")
+
+func _binding(owner: OperationPrivateState) -> bool:
+	var sim := owner._sim
+	return _check(is_same(owner.get_script(), Private) and is_same(sim.get_script(), SimScript)
+		and is_same(sim.st.get_script(), StateScript) and sim.st.fleets.size() == 2
+		and is_same(sim.st.fleets[0].get_script(), FleetScript)
+		and is_same(sim.st.fleets[1].get_script(), FleetScript)
+		and is_same(sim.st.by_id(1), sim.st.fleets[0]) and is_same(sim.st.by_id(2), sim.st.fleets[1]),
+		"runtime class identity and fleet bindings")
+
+func _run() -> void:
+	if not _class_guard():
+		quit(1)
+		return
+	_cases()
+	_check(completed == NAMES and observations.size() == 1, "all three named cases")
+	print("P03_ACTIVE_UNSUPPORTED_RESULT ", JSON.stringify({"cases": completed, "checks": checks,
+		"engine_path": OS.get_executable_path(), "engine_pid": OS.get_process_id(),
+		"observations": observations, "ok": not failed}))
+	quit(1 if failed else 0)
+
+func _same_view(a: OperationPrivateState, b: OperationPrivateState) -> bool:
+	return _exact(a.observe(), b.observe())
+
+func _suffix(a: OperationPrivateState, b: OperationPrivateState) -> bool:
+	var cmd := BattleSim.command(0, [1], "move", -1, Vector2(650, 500))
+	return a.queue(cmd.duplicate(true)).ok and b.queue(cmd.duplicate(true)).ok and a.advance().ok and b.advance().ok and _same_view(a, b) and _exact(a.drain_events(), b.drain_events())
+
+func _cases() -> void:
+	var source := Private.create(_profile(), 91231, BattleRules.TICK_HZ, CONTROLS)
+	var normal := Private.create(_profile(), 91231, BattleRules.TICK_HZ, CONTROLS)
+	var active := Private.create(_profile(), 91231, BattleRules.TICK_HZ, CONTROLS)
+	if not _check(source.ok and normal.ok and active.ok, "three ready owners"): return
+	var twin: OperationPrivateState = source.owner
+	var control: OperationPrivateState = normal.owner
+	var live: OperationPrivateState = active.owner
+	var captured := twin.capture_completed()
+	if not _check(captured.ok, "capture C0"): return
+	var packet: Dictionary = captured.packet
+	var frozen := packet.duplicate(true)
+	var c0 := twin.observe()
+	var prior := control._sim
+	if not _check(control.advance().ok and control._sim.st.tick == 1 and control.restore_completed(packet).ok
+		and not is_same(prior, control._sim) and _exact(control.observe(), c0) and _suffix(control, twin), "supported control and suffix"): return
+	completed.append(NAMES[0])
+	if not _check(live.advance().ok and live._sim.st.tick == 1 and _binding(live), "live actual advance and bindings"): return
+	var sim := live._sim
+	var pre := live.observe()
+	var decision := Decision.new(sim, {}, {})
+	if not _check(decision.get_script().resource_path == "res://core/battle/decisions.gd", "canonical decisions"): return
+	decision._seq = 47
+	sim.decisions = decision
+	var capture := live.capture_completed()
+	var refused := {"ok": false, "error": "unsupported_active_decisions"}
+	var preserved := is_same(live._sim, sim) and is_same(sim.decisions, decision) and is_same(decision.sim, sim) and decision._seq == 47
+	if not _check(_exact(capture, refused) and preserved and _exact(live.observe(), pre) and live._ready and not live._busy and _exact(packet, frozen), "unsupported capture atomic"):
+		sim.decisions = null
+		decision.sim = null
+		return
+	completed.append(NAMES[1])
+	var prepared := Private.prepare(packet)
+	if not _check(prepared.ok, "valid independent candidate"):
+		sim.decisions = null
+		decision.sim = null
+		return
+	var oracle: OperationPrivateState = prepared.owner
+	var owner_id := live.get_instance_id()
+	var result := live.restore_completed(packet)
+	var same_sim := is_same(live._sim, sim)
+	var post_decision := live._sim.decisions != null
+	var common := live.get_instance_id() == owner_id and live._ready and not live._busy and _exact(packet, frozen)
+	var marker_preserved := is_same(sim.decisions, decision) and is_same(decision.sim, sim) and decision._seq == 47
+	sim.decisions = null
+	decision.sim = null
+	var classification := ""
+	if result.ok:
+		if _check(common and not same_sim and not post_decision and marker_preserved and _exact(live.observe(), c0) and _suffix(live, oracle), "accepted drops active module and follows C0 suffix"):
+			classification = "ACCEPTED_DROPS_ACTIVE_MODULE"
+	else:
+		if _check(common and _exact(result, refused) and same_sim and post_decision and marker_preserved and _exact(live.observe(), pre)
+			and oracle.advance().ok and _suffix(live, oracle), "rejected atomic and follows pre-restore suffix"):
+			classification = "REJECTED_ATOMIC"
+	if not classification.is_empty():
+		completed.append(NAMES[2])
+		observations.append({"capture": capture, "restore": result, "classification": classification,
+			"same_sim": same_sim, "active_module_after": post_decision, "retired_marker_preserved_before_cleanup": marker_preserved})
+	for owner in [twin, control, live, oracle]:
+		owner.close()
+

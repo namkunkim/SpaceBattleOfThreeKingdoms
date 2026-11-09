@@ -1,0 +1,5 @@
+* codex/feature-i01b-not_remove     0be0975 [origin/codex/feature-i01b-not_remove: ahead 1] feat(battle): integrate accepted P02 operation paths
+  codex/i01a-operation-config       8292805 merge: integrate I01a operation configuration
++ codex/pc-ten-minute-battle-review 5264543 (C:/Users/nk782/.codex/worktrees/pc-ten-minute-battle-review/SpaceBattleOfThreeKingdoms) feat(battle): add opt-in PC pacing experiments and terrain review
+  develop                           0ee8570 [origin/develop] docs(poc): import HTML fleet motion prototype into develop
+  main                              8292805 [origin/main] merge: integrate I01a operation configuration

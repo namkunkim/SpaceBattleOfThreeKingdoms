@@ -1,0 +1,50 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-space-cleanup-20261108/commit-plan/isolated-appdata/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T19-28-34-23388-1884562.jsonl
+FPS 12.0 ships 411 state brief speed 1
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-space-cleanup-20261108/commit-plan/isolated-appdata/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T19-28-44-23388-11450016.jsonl
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-space-cleanup-20261108/commit-plan/isolated-appdata/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T19-28-44-23388-11584886.jsonl
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-space-cleanup-20261108/commit-plan/isolated-appdata/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T19-28-44-23388-11633073.jsonl
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-space-cleanup-20261108/commit-plan/isolated-appdata/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T19-28-44-23388-11679778.jsonl
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-space-cleanup-20261108/commit-plan/isolated-appdata/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T19-28-44-23388-11731484.jsonl
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-space-cleanup-20261108/commit-plan/isolated-appdata/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T19-28-44-23388-11965242.jsonl
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-space-cleanup-20261108/commit-plan/isolated-appdata/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T19-28-44-23388-12008935.jsonl
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-space-cleanup-20261108/commit-plan/isolated-appdata/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T19-28-44-23388-12058332.jsonl
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-space-cleanup-20261108/commit-plan/isolated-appdata/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T19-28-44-23388-12273325.jsonl
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-space-cleanup-20261108/commit-plan/isolated-appdata/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T19-28-44-23388-12329335.jsonl
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-space-cleanup-20261108/commit-plan/isolated-appdata/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T19-28-46-23388-13662341.jsonl
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-space-cleanup-20261108/commit-plan/isolated-appdata/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T19-28-47-23388-14968445.jsonl
+ERROR: 알 수 없는 난이도: 없는 난이도
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] build (res://core/battle/scenario_profile.gd:40)
+       [1] load_profile (res://core/battle/scenario_profile.gd:31)
+       [2] load_auto (res://core/battle/organization.gd:462)
+       [3] _prepare_game (res://scripts/FleetBattle3D.gd:276)
+       [4] init_game (res://scripts/FleetBattle3D.gd:178)
+       [5] _run (res://tests/organization_ui.gd:383)
+       [6] _frames (res://tests/organization_ui.gd:55)
+ERROR: 알 수 없는 난이도: 없는 난이도
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] build (res://core/battle/scenario_profile.gd:40)
+       [1] load_profile (res://core/battle/scenario_profile.gd:31)
+       [2] _prepare_game (res://scripts/FleetBattle3D.gd:287)
+       [3] init_game (res://scripts/FleetBattle3D.gd:178)
+       [4] _run (res://tests/organization_ui.gd:383)
+       [5] _frames (res://tests/organization_ui.gd:55)
+ERROR: 시나리오를 읽지 못해 시험 전장으로 엽니다 (res://data/profiles/red_cliffs_rt.json, 없는 난이도)
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _publish_game (res://scripts/FleetBattle3D.gd:330)
+       [1] init_game (res://scripts/FleetBattle3D.gd:183)
+       [2] _run (res://tests/organization_ui.gd:383)
+       [3] _frames (res://tests/organization_ui.gd:55)
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-space-cleanup-20261108/commit-plan/isolated-appdata/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T19-28-48-23388-16192062.jsonl
+FPS 12.0 ships 813 state brief speed 1
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-space-cleanup-20261108/commit-plan/isolated-appdata/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T19-28-48-23388-16346115.jsonl
+ORGANIZATION_UI_PASS
+WARNING: 507 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 18 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

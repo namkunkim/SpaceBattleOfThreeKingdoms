@@ -1,0 +1,22 @@
+{
+  "utc": "2026-11-01T12:13:27.3058105Z",
+  "reviewer": "/root/independent_review",
+  "baseline_count": 3660,
+  "changed": [
+    {
+      "path": "docs/battle-core/CHECKLIST-OPEN.md",
+      "before": "a7e209c8404b18a9411551c1a3adf51481d0bc61347826e1f4e40fa0dfecd8eb",
+      "current": "58dbc9637705991ca5799bd599f9bb8d43f13fabee97fe4f862b3e4cafa47f0f"
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.html",
+      "before": "e1cdfe0332c68dba3c38d21f0e0e4be29dc7b3171fb24c98a6a253a999487875",
+      "current": "9653d4913deff9e2cdb7d5c7db768b29ee2dd53aa80cd67a260378b48263dc1d"
+    }
+  ],
+  "missing": [],
+  "source_count": 35,
+  "source_diff": [],
+  "quarantine_count": 77,
+  "quarantine_diff": []
+}

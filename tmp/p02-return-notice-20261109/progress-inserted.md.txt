@@ -1,0 +1,5 @@
+## 최신 상태 — 천하 복귀 실패 안내
+
+- [x] **즉시 복귀 거절과 재시도 안내.** 일시정지·결과·최초 준비 실패에서 한글 안내를 표시한다. 격리 28개 명령·728개 단언과 1600×900 앱 viewport PNG 18개를 검토했고 네 파일을 반영했다. 준비 화면 버튼은 기준선보다 25px 내려갔다. 원본 반영 후 Godot은 재실행하지 않았다. [결과](P02-WORLD-RETURN-NOTICE-RESULT-20261109.md) · [체크리스트](P02-WORLD-RETURN-NOTICE-CHECKLIST-20261109.md) · [인계](SESSION-HANDOFF-P02-WORLD-RETURN-NOTICE-20261109.md).
+- [ ] **전달 독립 마감 대기.** OS 입력·다른 DPI·자연 종료·제품 operation은 미검증이다. PC0 2/2와 별도 여덟째 K6 상태를 유지한다. [전달 ZIP](../../../tmp/p02-return-notice-20261109/P02-WORLD-RETURN-NOTICE-DELIVERY-20261109.zip).
+

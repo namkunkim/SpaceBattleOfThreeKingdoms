@@ -1,0 +1,10 @@
+{
+  "preserved_findings": [
+    [
+      "mirrored_progress.gd",
+      180
+    ]
+  ],
+  "reason": "preserve exact independently accepted runner bytes",
+  "runner_snapshot_equal": true
+}

@@ -1,0 +1,44 @@
+{
+  "label": "empty-controls",
+  "command": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+    "--log-file",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt2\\empty-controls.engine.log",
+    "-s",
+    "tests/autoresolve.gd",
+    "--",
+    "--operation-worker",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt2\\empty-controls-input.json",
+    "--out",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt2\\should-not-exist.json"
+  ],
+  "expected_exit": 1,
+  "error": [
+    "worker_requires_delegate",
+    "initial_controls"
+  ],
+  "output": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt2\\should-not-exist.json",
+  "expected_diagnostics": null,
+  "actual_exit": 1,
+  "diagnostics": {
+    "script_errors": 0,
+    "errors": 0,
+    "warnings": 0
+  },
+  "log_shas": {
+    "empty-controls.stdout": "390d8ea1bd1e38a3d30d9a3e0be617d5e90c10a0095e03c81cd9e2e957ab954c",
+    "empty-controls.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "empty-controls.engine.log": "834aaf28b66e46e37cd4184dc4ccbac16dee67b5dbfaf9f8777b7d6818223f8f"
+  },
+  "observed": [
+    {
+      "error": "worker_requires_delegate",
+      "ok": false,
+      "path": "initial_controls"
+    }
+  ],
+  "pass": true
+}

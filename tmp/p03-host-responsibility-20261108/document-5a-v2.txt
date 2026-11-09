@@ -1,0 +1,1 @@
+PASS inputs=20 groups=8 counterexamples=3 links=28 index=0 Godot_runs=0 ledger_sha=a32a0ad0645b181b9c00ff98e89022bb1d5682a13a66b6fd618b1d5a803aa7fb

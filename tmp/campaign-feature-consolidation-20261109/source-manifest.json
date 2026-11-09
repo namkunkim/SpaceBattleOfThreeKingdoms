@@ -1,0 +1,137 @@
+[
+  {
+    "path": "core/battle/operation_private_state.gd",
+    "bytes": 27843,
+    "sha256": "46B6FE191166EC3DCDB620F51C3CCD391A9080F52289517AE804BF86CECC1EA3"
+  },
+  {
+    "path": "hud/ui_kit/command_deck.gd",
+    "bytes": 54452,
+    "sha256": "9FD1C6317A16C78F0F24315A219D78E2D4C1C6682EC0CDACD17B444A3E606ECC"
+  },
+  {
+    "path": "hud/ui_kit/deck_screens.gd",
+    "bytes": 33054,
+    "sha256": "6D154680A71F7BF98DCBD0F333607A8CF3E70CDFE316B4DA4327FB127EBC0A9F"
+  },
+  {
+    "path": "scripts/FleetBattle3D.gd",
+    "bytes": 38613,
+    "sha256": "0BE6A03729A0906B6170169E607C0D26CB08AE046F9E31785C8862F372B10E81"
+  },
+  {
+    "path": "scripts/world_link.gd",
+    "bytes": 1864,
+    "sha256": "1AE03EC0A07C6636C38201279EDB64EAAD7E2F5AE604A7FD9B5A80FCCBDAD440"
+  },
+  {
+    "path": "view/world/world_map_screen.gd",
+    "bytes": 24783,
+    "sha256": "E40F0A99954A11942A9256E260B6C40121CAC7051BA4DB69F33698BBF82B6BA4"
+  },
+  {
+    "path": "tests/i01b_active_replace.gd",
+    "bytes": 16128,
+    "sha256": "E76BC22EF569CCBF969FDDC92691F20D1556DAB963102A85AEC7C4C2D0631759"
+  },
+  {
+    "path": "tests/i01b_private_state.gd",
+    "bytes": 20971,
+    "sha256": "BD12CDAD427EC672373AB844329BD6846E109F4D088AE007181EB24F4489403B"
+  },
+  {
+    "path": "tests/i01b_private_state.gd.uid",
+    "bytes": 19,
+    "sha256": "D8B6869ECB6B08A54AD2C621BE3DE9F42CA332D0F266FFF1F8947F0BCB4C83C2"
+  },
+  {
+    "path": "tests/i01b_service_state.gd",
+    "bytes": 18346,
+    "sha256": "D11615FA541A7064E10BFD2EB648253192BAAE0EE98E2ADF609AD954B4967E66"
+  },
+  {
+    "path": "tools/p05_access_demo/.gdignore",
+    "bytes": 1,
+    "sha256": "01BA4719C80B6FE911B091A7C05124B64EEECE964E09C058EF8F9805DACA546B"
+  },
+  {
+    "path": "tools/p05_access_demo/README.md",
+    "bytes": 1381,
+    "sha256": "653282CD4D03BB2E95B6654886E4EA763EED282C2D49D088B2659556C8F73164"
+  },
+  {
+    "path": "tools/p05_access_demo/build_manifest.py",
+    "bytes": 1318,
+    "sha256": "D06E755CAB5A1784133B11A4E148F185734A372F3AD4C536A0FBFACF9BB018C8"
+  },
+  {
+    "path": "tools/p05_access_demo/demo.gd",
+    "bytes": 8584,
+    "sha256": "D44E5A562115D23E7A989BCB3DE2276CB6DD37C25FE88229E51F925A3BD7C975"
+  },
+  {
+    "path": "tools/p05_access_demo/guard.gd",
+    "bytes": 6994,
+    "sha256": "47DE8BE4449084014B80D6180A1EA6BD52C37105BFA72EB69229BD4E012900EB"
+  },
+  {
+    "path": "tools/p05_access_demo/main.tscn",
+    "bytes": 166,
+    "sha256": "B8F11FCEA7158CC218315D68A31E18D638B2AE8ADA7217F4C85A25272DD09911"
+  },
+  {
+    "path": "tools/p05_access_demo/project.godot",
+    "bytes": 437,
+    "sha256": "5A3329F4DA04D3B557F796FD4135A39DE18036E2C4EC95F98A86F156F75999B2"
+  },
+  {
+    "path": "tools/p05_access_demo/run.ps1",
+    "bytes": 1820,
+    "sha256": "4555913986B9D61232644438956CCDF674E265BF4D18293F701477A4B2AB7D0F"
+  },
+  {
+    "path": "docs/battle-core/pc-campaign-design/p05_formation_envelope_probe_20261109.py",
+    "bytes": 5913,
+    "sha256": "F106C2B51A02037BD70967EF5D69B41B029BA7E218833217B79D6EB40E371F40"
+  },
+  {
+    "path": "docs/battle-core/pc-campaign-design/p05_map_access_validation_20261109.py",
+    "bytes": 6391,
+    "sha256": "990E945AF8AE09305DE98D04720C30F15B16DBB2F1691AF51DD0FA757E08765E"
+  },
+  {
+    "path": "docs/battle-core/pc-campaign-design/P05-PC-FORMATION-ENVELOPE-EVIDENCE-20261109.md",
+    "bytes": 11940,
+    "sha256": "087E4705B72128D4FB8A9F5AFEED90C128F57894F1AC81A09570433374FD0B2C"
+  },
+  {
+    "path": "docs/battle-core/pc-campaign-design/P05-PC-MAP-ACCESS-VALIDATION-20261109.md",
+    "bytes": 11600,
+    "sha256": "B8B6619BD3FB9697EB4D6569DBE5BC9740AF08C5F2E8554A195C7E138DDD14FC"
+  },
+  {
+    "path": "docs/battle-core/pc-campaign-design/P05-PC-NATIVE-ACCESS-RESULT-20261109.md",
+    "bytes": 5694,
+    "sha256": "65ED367455DF454417573E80DC8C8F7C6FDEC6136D5E99441E14F875799A5331"
+  },
+  {
+    "path": "docs/battle-core/pc-campaign-design/REVIEW-P05-PC-NATIVE-ACCESS-RESULT-20261109.md",
+    "bytes": 7304,
+    "sha256": "45B5FCD82E25DF6438025D530AB6EAE983F027B4407E23A4FD3224A3CBD16182"
+  },
+  {
+    "path": "docs/battle-core/pc-campaign-design/P02-DIRECT-SCENE-REJECT-RESULT-20261109.md",
+    "bytes": 2690,
+    "sha256": "198D924C9F38AECED8F9FF0273DD0A162FFF8782C2974C1814C33C325F1E7B98"
+  },
+  {
+    "path": "docs/battle-core/pc-campaign-design/P02-WORLD-RETURN-REJECT-RESULT-20261109.md",
+    "bytes": 2552,
+    "sha256": "A9C1E498D8B4F8712E78F93ECBA447F65A5C3EEF98D32DDE8D7F3CCC3523D5C1"
+  },
+  {
+    "path": "docs/battle-core/pc-campaign-design/P02-WORLD-RETURN-NOTICE-RESULT-20261109.md",
+    "bytes": 1440,
+    "sha256": "2132D898877D54763262F061539D98B8CB9BC9F4BBD195922E96434857E361B2"
+  }
+]

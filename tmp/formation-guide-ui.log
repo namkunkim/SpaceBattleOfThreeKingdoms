@@ -1,0 +1,38 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: Can't change orientation of HBoxContainer.
+   at: set_vertical (scene/gui/box_container.cpp:373)
+   GDScript backtrace (most recent call first):
+       [0] _layout (res://hud/ui_kit/formation_guide.gd:142)
+       [1] build_all (res://hud/ui_kit/deck_screens.gd:22)
+       [2] setup (res://hud/ui_kit/command_deck.gd:170)
+       [3] setup (res://hud/ui_kit/presentation.gd:41)
+       [4] _ready (res://scripts/FleetBattle3D.gd:155)
+       [5] _run (res://tests/formation_guide_ui.gd:9)
+ERROR: Can't change orientation of HBoxContainer.
+   at: set_vertical (scene/gui/box_container.cpp:373)
+   GDScript backtrace (most recent call first):
+       [0] _layout (res://hud/ui_kit/formation_guide.gd:142)
+       [1] on_show (res://hud/ui_kit/formation_guide.gd:136)
+       [2] show_screen (res://hud/ui_kit/command_deck.gd:240)
+       [3] open_guide (res://hud/ui_kit/formation_guide.gd:115)
+       [4] <anonymous lambda> (res://hud/ui_kit/deck_screens.gd:45)
+       [5] _run (res://tests/formation_guide_ui.gd:20)
+ERROR: Can't change orientation of HBoxContainer.
+   at: set_vertical (scene/gui/box_container.cpp:373)
+   GDScript backtrace (most recent call first):
+       [0] _layout (res://hud/ui_kit/formation_guide.gd:142)
+       [1] on_show (res://hud/ui_kit/formation_guide.gd:136)
+       [2] show_screen (res://hud/ui_kit/command_deck.gd:240)
+       [3] open_guide (res://hud/ui_kit/formation_guide.gd:115)
+       [4] <anonymous lambda> (res://hud/ui_kit/command_deck.gd:1051)
+       [5] _run (res://tests/formation_guide_ui.gd:42)
+ERROR: Can't change orientation of HBoxContainer.
+   at: set_vertical (scene/gui/box_container.cpp:373)
+   GDScript backtrace (most recent call first):
+       [0] _layout (res://hud/ui_kit/formation_guide.gd:142)
+       [1] on_show (res://hud/ui_kit/formation_guide.gd:136)
+       [2] show_screen (res://hud/ui_kit/command_deck.gd:240)
+       [3] open_guide (res://hud/ui_kit/formation_guide.gd:115)
+       [4] _run (res://tests/formation_guide_ui.gd:76)
+FORMATION_GUIDE_UI_PASS

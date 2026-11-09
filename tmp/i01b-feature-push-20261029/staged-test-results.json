@@ -1,0 +1,65 @@
+[
+  {
+    "test": "core_rules",
+    "exit": 0,
+    "started_utc": "2026-10-28T23:42:10.0877066Z",
+    "ended_utc": "2026-10-28T23:42:13.6960217Z",
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-feature-push-20261029/logs/core_rules.log",
+    "captured": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-feature-push-20261029/logs/core_rules.captured.log",
+    "output": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\nCORE_RULES_PASS"
+  },
+  {
+    "test": "data_rules",
+    "exit": 0,
+    "started_utc": "2026-10-28T23:42:13.7711516Z",
+    "ended_utc": "2026-10-28T23:42:34.3981382Z",
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-feature-push-20261029/logs/data_rules.log",
+    "captured": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-feature-push-20261029/logs/data_rules.captured.log",
+    "output": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\nQ82 입문 함대 9 비율 1.470\nQ82 표준 함대 10 비율 1.590\nQ82 상급 함대 14 비율 2.140\nQ82 극한 함대 14 비율 2.140\nspecial_skills 19 by_officer 148\nDATA_RULES_PASS keys=80 core=28 proposed=28 first_move=1814\nWARNING: 280 ObjectDB instances were leaked at exit (run with `--verbose` for details).\n   at: cleanup (core/object/object.cpp:2536)\nERROR: 18 resources still in use at exit (run with --verbose for details).\n   at: clear (core/io/resource.cpp:822)"
+  },
+  {
+    "test": "i01_operation_config",
+    "exit": 0,
+    "started_utc": "2026-10-28T23:42:34.4016869Z",
+    "ended_utc": "2026-10-28T23:42:35.2233901Z",
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-feature-push-20261029/logs/i01_operation_config.log",
+    "captured": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-feature-push-20261029/logs/i01_operation_config.captured.log",
+    "output": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\nI01A_ADDITIONAL_REGRESSIONS=17\nI01A_CONFIGURATION_BUILDS=60 NAMED_REJECTIONS=24 CHECKS=326\nORIGINAL_I01_A04_A05_A06=NOT_READY; no host/runtime/save/gameplay validation\nI01A_OPERATION_CONFIG_PASS a01 a02 a03 a04 a05 a06"
+  },
+  {
+    "test": "i01b_logical_clock",
+    "exit": 0,
+    "started_utc": "2026-10-28T23:42:35.2267266Z",
+    "ended_utc": "2026-10-28T23:42:36.1034447Z",
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-feature-push-20261029/logs/i01b_logical_clock.log",
+    "captured": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-feature-push-20261029/logs/i01b_logical_clock.captured.log",
+    "output": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\nI01B_P1_PARTIAL_CLOCK_PASS cases=60 seeds=10 speeds=3 pause_variants=2 trace=50,100,150 tick=2 end_ms=150\nORIGINAL_I01_A04_A05_A06=NOT_READY; no host/replay adapters, checkpoint restore, or product geometry validation"
+  },
+  {
+    "test": "bundle_layout_data",
+    "exit": 0,
+    "started_utc": "2026-10-28T23:42:36.1073069Z",
+    "ended_utc": "2026-10-28T23:42:36.9543697Z",
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-feature-push-20261029/logs/bundle_layout_data.log",
+    "captured": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-feature-push-20261029/logs/bundle_layout_data.captured.log",
+    "output": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\nBUNDLE_LAYOUT_DATA_PASS checks=56"
+  },
+  {
+    "test": "bundle_layout",
+    "exit": 0,
+    "started_utc": "2026-10-28T23:42:36.9581095Z",
+    "ended_utc": "2026-10-28T23:42:38.3525356Z",
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-feature-push-20261029/logs/bundle_layout.log",
+    "captured": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-feature-push-20261029/logs/bundle_layout.captured.log",
+    "output": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\nBUNDLE_LAYOUT_PASS\nWARNING: 41 ObjectDB instances were leaked at exit (run with `--verbose` for details).\n   at: cleanup (core/object/object.cpp:2536)\nERROR: 7 resources still in use at exit (run with --verbose for details).\n   at: clear (core/io/resource.cpp:822)"
+  },
+  {
+    "test": "i01b_runtime_inventory",
+    "exit": 0,
+    "started_utc": "2026-10-28T23:42:38.3566364Z",
+    "ended_utc": "2026-10-28T23:42:39.7177220Z",
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-feature-push-20261029/logs/i01b_runtime_inventory.log",
+    "captured": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-feature-push-20261029/logs/i01b_runtime_inventory.captured.log",
+    "output": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\nI01B_P2A_B0_INVENTORY_PASS cases=40 profiles=2 seeds=10 fresh=2 checks=2352\nB0_NOT_C0; SAVE_POLICY=UNCLASSIFIED; ORIGINAL_I01_I01B_A04_A05_A06=NOT_READY"
+  }
+]

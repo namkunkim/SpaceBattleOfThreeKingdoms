@@ -1,0 +1,9 @@
+{
+  "path": "docs/battle-core/CHECKLIST-OPEN.md",
+  "before_sha256": "dda7386c426ebd3a5804e2f5309489a6175f387be827369c781875a8cceabe7b",
+  "after_sha256": "88d767679e218b545443cc59bf1cecbe12a69af5d072ebcfc189607f24746e7d",
+  "inverse_sha256": "dda7386c426ebd3a5804e2f5309489a6175f387be827369c781875a8cceabe7b",
+  "one_added_line_only": true,
+  "existing_p2c_crlf_line_preserved": true,
+  "added_line_file": "upper-checklist-added-line.txt"
+}

@@ -1,0 +1,13 @@
+diff --git a/tmp/p02-pc-next3-20261109/prepare-01/p02_difficulty_probe.gd "b/C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-pc-next3-20261109\\prepare-01\\probe-fix-v2/p02_difficulty_probe.gd"
+index d4ef1bc..26ae24e 100644
+--- a/tmp/p02-pc-next3-20261109/prepare-01/p02_difficulty_probe.gd
++++ "b/C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-pc-next3-20261109\\prepare-01\\probe-fix-v2/p02_difficulty_probe.gd"
+@@ -438,7 +438,7 @@ func request_click(target: Button, step: String) -> bool:
+ 	var deadline := Time.get_ticks_msec() + 18000
+ 	while physical_events.size() < 2 and Time.get_ticks_msec() < deadline:
+ 		await process_frame
+-	var ok := physical_events.size() == 2 and physical_events[0].down and not physical_events[1].down
++	var ok: bool = physical_events.size() == 2 and physical_events[0].down and not physical_events[1].down
+ 	ok = ok and physical_events.all(func(ev): return ev.inside and ev.focused)
+ 	facts["physical." + step] = {"request": request, "events": physical_events.duplicate(true)}
+ 	check("physical.input." + step, ok)

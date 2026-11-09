@@ -1,0 +1,8 @@
+SCRIPT ERROR: Compile Error: Identifier not found: WorldLink
+   at: GDScript::reload (res://scripts/FleetBattle3D.gd:256)
+ERROR: Failed to load script "res://scripts/FleetBattle3D.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid access to property or key 'presentation' on a base object of type 'Node3D'.
+   at: exercise (res://tmp/p02-sixth-20261108/product-host-common-v2.gd:102)
+   GDScript backtrace (most recent call first):
+       [0] exercise (res://tmp/p02-sixth-20261108/product-host-common-v2.gd:102)

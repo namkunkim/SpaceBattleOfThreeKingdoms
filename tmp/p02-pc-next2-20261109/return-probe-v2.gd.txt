@@ -1,0 +1,126 @@
+extends SceneTree
+
+const BATTLE := preload("res://scenes/FleetBattle3D.tscn")
+const MAP := "res://scenes/WorldMap.tscn"
+const HELD := MAP + ".p02-held"
+const SEED := 71757
+var fails := 0
+var checks := 0
+var transitions := 0
+
+func _initialize() -> void:
+	call_deferred("_run")
+
+func _check(id: String, ok: bool) -> void:
+	checks += 1
+	fails += 0 if ok else 1
+	print("P02_RETURN_ASSERT ", id, " ", "PASS" if ok else "FAIL")
+
+func _finish() -> void:
+	print("P02_RETURN_DONE ", checks, " ", fails)
+	quit(0 if fails == 0 else 1)
+
+func _run() -> void:
+	var args := OS.get_cmdline_user_args()
+	var lane := args[0] if args.size() == 2 else ""
+	var variant := args[1] if args.size() == 2 else ""
+	var link := root.get_node("WorldLink")
+	var map_path := ProjectSettings.globalize_path(MAP).replace("\\", "/")
+	var held_path := ProjectSettings.globalize_path(HELD)
+	var project_path := ProjectSettings.globalize_path("res://").replace("\\", "/").trim_suffix("/")
+	var user_path := OS.get_user_data_dir().replace("\\", "/")
+	_check("scope", project_path == OS.get_environment("P02_PC_EXPECT_PROJECT") and user_path == OS.get_environment("P02_PC_EXPECT_USER") and map_path == project_path + "/scenes/WorldMap.tscn")
+	_check("arguments", lane in ["result", "pause", "prepare", "result-ok", "pause-ok", "prepare-ok"] and variant in ["before", "after"])
+	if fails:
+		_finish()
+		return
+	var phase := lane.trim_suffix("-ok")
+	var reject := not lane.ends_with("-ok")
+	var brief := BattleBrief.new()
+	brief.seed = SEED
+	brief.difficulty = "표준"
+	brief.mode = "direct"
+	var previous := BattleOutcome.new()
+	previous.seed = -117
+	link.brief = brief
+	link.outcome = previous
+	link.last_mode = brief.mode
+	link.last_difficulty = brief.difficulty
+	var battle := BATTLE.instantiate()
+	if phase == "prepare":
+		battle.profile_patch = func(profile: Dictionary): profile.clear()
+	root.add_child(battle)
+	current_scene = battle
+	var deck = null if phase == "prepare" else battle.presentation.hud
+	var button: Button
+	if phase == "prepare":
+		button = battle.find_child("ExitBattlePrepareError", true, false) as Button
+	elif phase == "result":
+		deck.begin_battle()
+		battle.sim._end(true, "annihilation")
+		battle.end_game(true, "P02 fixture")
+		await create_timer(2.2).timeout
+		button = deck.screens.result.title_btn
+	else:
+		deck.begin_battle()
+		battle._toggle_menu()
+		deck.show_screen("pause")
+		button = deck.screens.pause.title_btn
+	var sim = battle.sim
+	var screen: String = deck.screen if deck != null else ""
+	var had_state: bool = battle.G.has("state")
+	var state: Variant = battle.G["state"] if had_state else null
+	var expected_fingerprint: String = sim.fingerprint() if phase == "result" else ""
+	var expected_time: float = sim.st.clock_s() if phase == "result" else 0.0
+	_check("battle", current_scene == battle and link.brief == brief and link.outcome == previous and link.routed())
+	_check("phase", (sim == null if phase == "prepare" else sim != null and sim.st.over == (phase == "result")) and (phase == "prepare" or screen == phase))
+	_check("state-presence", had_state == (phase != "prepare"))
+	_check("state-value", battle.G.is_empty() if phase == "prepare" else had_state and is_same(state, "end" if phase == "result" else "pause"))
+	_check("button", button != null and button.is_visible_in_tree() and not button.disabled and button.text == "천하로")
+	_check("map-uncached", not ResourceLoader.has_cached(MAP) and not FileAccess.file_exists(HELD) and FileAccess.file_exists(MAP))
+	if fails:
+		_finish()
+		return
+	scene_changed.connect(func(): transitions += 1)
+	if reject:
+		_check("hide-map", DirAccess.rename_absolute(map_path, held_path) == OK and not FileAccess.file_exists(MAP) and FileAccess.file_exists(HELD) and not ResourceLoader.exists(MAP))
+		if not fails:
+			var repetitions := 1 if variant == "before" else 2
+			for i in repetitions:
+				var tag := "reject-%d-" % (i + 1)
+				print("P02_RETURN_ACTION ", tag)
+				button.pressed.emit()
+				await process_frame
+				_check(tag + "scene", current_scene == battle and transitions == 0 and battle.sim == sim)
+				_check(tag + "state-presence", battle.G.has("state") == had_state)
+				_check(tag + "state-value", battle.G.has("state") and is_same(battle.G["state"], state) if had_state else battle.G.is_empty())
+				_check(tag + "ui", button.is_visible_in_tree() and not button.disabled and button.text == "천하로" and (deck == null or deck.screen == screen))
+				_check(tag + "settings", link.last_difficulty == "표준" and link.last_mode == "direct")
+				if variant == "after":
+					_check(tag + "brief", link.brief == brief and link.routed())
+					_check(tag + "queue", link.outcome == previous and previous.seed == -117)
+				else:
+					_check(tag + "brief", link.brief == null and not link.routed())
+					_check(tag + "queue", (link.outcome != null and link.outcome != previous and link.outcome.seed == SEED) if phase == "result" else link.outcome == null)
+		_check("restore-map", DirAccess.rename_absolute(held_path, map_path) == OK and FileAccess.file_exists(MAP) and not FileAccess.file_exists(HELD) and ResourceLoader.exists(MAP))
+		if fails or variant == "before":
+			_finish()
+			return
+	print("P02_RETURN_ACTION accept")
+	button.pressed.emit()
+	for i in range(12):
+		await process_frame
+	var world := current_scene as WorldMapScreen
+	_check("accept-scene", world != null and transitions == 1)
+	_check("accept-queue", not link.routed() and link.outcome == null and link.take_outcome() == null)
+	_check("accept-settings", link.last_difficulty == "표준" and link.last_mode == "direct")
+	if world == null:
+		_finish()
+		return
+	if phase == "result":
+		var o := world.outcome
+		_check("accept-view", world.state == "result" and o != null and world._result.visible)
+		_check("accept-facts", o != null and o != previous and o.seed == SEED and o.difficulty == "표준" and o.mode == "direct" and o.win and o.reason == "annihilation" and o.t_s == expected_time and o.fingerprint == expected_fingerprint)
+	else:
+		_check("accept-view", world.state == "browse" and world.outcome == null and world._cta.visible)
+	_finish()

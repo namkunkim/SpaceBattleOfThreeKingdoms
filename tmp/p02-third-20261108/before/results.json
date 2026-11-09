@@ -1,0 +1,202 @@
+{
+  "stage": "before",
+  "passed": false,
+  "processes": 11,
+  "cases": [
+    {
+      "label": "legacy",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": "369409d12a29965096a9c5a4c05c5f5d3500fbef057eed1ebe5ca37dfd3ef996",
+      "pass_process": true
+    },
+    {
+      "label": "sync-poc",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": "52d827e1983de606a85b48d938e7049e61c59e1b7f2521d23dcdb8aa5a43414e",
+      "pass_process": true
+    },
+    {
+      "label": "sync-services",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": "fa3a2b12310f5c348c3f1b92217c87081222539557c727b35731e4cc7802e082",
+      "pass_process": true
+    },
+    {
+      "label": "sync-negative",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "invalid_json",
+          "ok": false,
+          "path": "input"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "worker-poc",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "unsupported_worker_policy",
+          "ok": false,
+          "path": "policy"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": false
+    },
+    {
+      "label": "worker-services",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "unsupported_worker_policy",
+          "ok": false,
+          "path": "policy"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": false
+    },
+    {
+      "label": "worker-negative",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "invalid_json",
+          "ok": false,
+          "path": "input"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "legacy--no-chain",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "unknown_option",
+          "ok": false,
+          "path": "--no-chain"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "legacy--no-m9",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "unknown_option",
+          "ok": false,
+          "path": "--no-m9"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "legacy--wind",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "unknown_option",
+          "ok": false,
+          "path": "--wind"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "world-link",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 1,
+        "WARNING": 1
+      },
+      "rejects": [],
+      "output_sha256": null,
+      "pass_process": true
+    }
+  ],
+  "comparisons": [
+    {
+      "label": "input/source/class map SHA stable",
+      "passed": true
+    },
+    {
+      "label": "existing output bytes",
+      "passed": true
+    }
+  ]
+}

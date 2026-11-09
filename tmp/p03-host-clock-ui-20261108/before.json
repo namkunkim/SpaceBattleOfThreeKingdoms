@@ -1,0 +1,42 @@
+[
+  {
+    "Algorithm": "SHA256",
+    "Hash": "C8F0A6BC45A19B33541501E57F6F7CD972AB18453743266339D495CBBE846643",
+    "Path": "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "AB1824F85BFD8E0E4128182C000C4003A3E042245B2967848D089B2A04B22424",
+    "Path": "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64.exe"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "418EE456D234DC6B2644E1333D8654E62B1822AA7D11DFD0701D6397CED5AE36",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-host-clock-ui-20261108\\host_clock.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "0B5A634A44442B90154187431C83DA3B755E36A261EB04A29F9A709C529F3FC2",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-host-clock-ui-20261108\\project.godot"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "604B79308D9B3DBAB84DCED32456A4F41B28686C8EEC748073D3816892CFFC5C",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-host-clock-ui-20261108\\scripts\\FleetBattle3D.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "DFB9CD4A070995D9ACA44F77BF08CAB18AE87EB4C678A341CCDDC34C5A7FF74E",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-host-clock-ui-20261108\\core\\battle\\tick_clock.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "0EB214EBCC65CD2CA7B9D98DC83F61A9C170CA75B1B23ACF4C3C58FDFB550AB1",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-host-clock-ui-20261108\\.godot\\global_script_class_cache.cfg"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "604B79308D9B3DBAB84DCED32456A4F41B28686C8EEC748073D3816892CFFC5C",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\scripts\\FleetBattle3D.gd"
+  }
+]

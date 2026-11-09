@@ -1,0 +1,5 @@
+## 7. 전투 준비 실패 안내와 최초 탈출
+
+- [x] 지정 준비 실패에서 기존 전투 안내와 최초 종료·천하 복귀를 제공한다. 실제 Windows 입력과 현재 자동 해결 완료·취소, 고정 후속 트레이스를 검증했다. 최초 시작 strict 7/8, clean WorldLink 기존 단일 실패 및 K6 소모를 따로 기록했다. 독립 5-b 한정 수용. [결과](P02-PREP-ERROR-RESULT-20261108.md) · [전용 체크리스트](P02-PREP-ERROR-CHECKLIST-20261108.md) · [인계](SESSION-HANDOFF-P02-PREP-ERROR-20261108.md)
+- [ ] 새 전달 ZIP 독립 마감 대기. [전달 ZIP](../../../tmp/p02-seventh-20261108/closeout/P02-PREP-ERROR-DELIVERY-20261108.zip)
+- [ ] 적벽 operation 지원, FleetBattle3D·WorldMap 제품 operation 연결과 P02 전체 인수는 남아 있다.

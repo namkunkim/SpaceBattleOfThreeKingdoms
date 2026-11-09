@@ -1,0 +1,21 @@
+{
+  "folding_metadata": {
+    ".godot/editor/FleetBattle3D.tscn-folding-6fc9f3aa03723dcea84c2d7516fcefec.cfg": {
+      "sha256": "9b34a7fc95b0f9cd640941851bbb0ebc8777e0666f5560e828143047b26c7c93",
+      "lines": [
+        "[folding]",
+        "",
+        "node_unfolds=[NodePath(\".\"), PackedStringArray(\"Visibility\")]",
+        "resource_unfolds=[]",
+        "nodes_folded=[]",
+        "animation_groups_folded=[]"
+      ]
+    }
+  },
+  "project_scene_references": {
+    "project.godot": [
+      "run/main_scene=\"res://scenes/FleetBattle3D.tscn\""
+    ]
+  },
+  "import_or_remap_files_checked": 621
+}

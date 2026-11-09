@@ -1,0 +1,16 @@
+--- before
++++ after
+@@ -337,6 +337,13 @@
+ static func _context_same(a: Variant, b: Variant) -> bool:
+ 	if typeof(a) != typeof(b): return false
+ 	if a is Dictionary:
++		if (a.get_typed_key_builtin() != b.get_typed_key_builtin()
++			or a.get_typed_key_class_name() != b.get_typed_key_class_name()
++			or not is_same(a.get_typed_key_script(), b.get_typed_key_script())
++			or a.get_typed_value_builtin() != b.get_typed_value_builtin()
++			or a.get_typed_value_class_name() != b.get_typed_value_class_name()
++			or not is_same(a.get_typed_value_script(), b.get_typed_value_script())):
++			return false
+ 		if not _context_same(a.keys(), b.keys()): return false
+ 		for key in a:
+ 			if not _context_same(a[key], b[key]): return false

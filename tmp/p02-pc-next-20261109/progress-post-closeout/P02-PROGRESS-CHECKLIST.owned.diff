@@ -1,0 +1,11 @@
+--- a/docs/battle-core/pc-campaign-design/P02-PROGRESS-CHECKLIST.md
++++ b/docs/battle-core/pc-campaign-design/P02-PROGRESS-CHECKLIST.md
+@@ -7,6 +7,8 @@
+ 갱신 2026-11-09 03:44 KST.
+ 
+ - [x] **기존 직접 출격의 즉시 전환 오류 복구.** 장면 전환이 즉시 거절되면 WorldLink의 이전 명세·결과 참조와 난이도·모드를 되돌리고, 천하 지도의 출격 전 화면·입력·결산을 복구해 다시 출격할 수 있게 한다. 실제 씬 로더 거절은 양쪽 각 4회, 후보 복구는 45/45다. 격리 14개 lane과 독립 5-b를 통과했고 원본 반영 뒤 후보 바이트와의 일치를 독립 확인했다. 반영 뒤 Godot·OS 입력은 미실행이다. 이 조각은 3/6회 사용했다. [결과](P02-DIRECT-SCENE-REJECT-RESULT-20261109.md) · [전용 체크리스트](P02-DIRECT-SCENE-REJECT-CHECKLIST-20261109.md) · [인계](SESSION-HANDOFF-P02-DIRECT-SCENE-REJECT-20261109.md).
++
++- [x] **전달 독립 마감.** 기존 직접 출격의 즉시 전환 거절 복구를 한정 수용했다. 전달 ZIP의 마감 대기는 생성 당시 상태이며 최종 판정은 ZIP 밖에 있다. 원본 반영 뒤 Godot은 미실행이며 첫 PC 플레이·자연 종료·제품 operation은 미인수다. PC0 2/2 소진과 별도 여덟째 K6 미사용을 유지한다. [전달 ZIP](../../../tmp/p02-pc-next-20261109/delivery-precloseout/P02-DIRECT-SCENE-REJECT-DELIVERY-20261109.zip) · [독립 마감](../../../tmp/p02-pc-next-20261109/REVIEW-CLOSEOUT-INDEPENDENT.md).
+ 
+ ## 최신 상태 — K6 사전 준비와 독립 심사
+ 

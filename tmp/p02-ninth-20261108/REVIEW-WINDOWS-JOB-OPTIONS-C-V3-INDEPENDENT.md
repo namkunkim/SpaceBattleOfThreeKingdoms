@@ -1,0 +1,13 @@
+# Windows Job 소유 재설계 및 C v3 독립 심사
+
+판정: **스펙 복귀 및 direct launch 설계 탐색은 수용한다. 실제 실행·재시도·제품 적용은 승인하지 않는다.** `P02-WINDOWS-JOB-OWNERSHIP-SPEC-OPTIONS.md` SHA `3649ae3a1c7ad07e288b4660fad09fe3058bc67265b3b620d4ea0b2c92a987ee`, 목록 `eea4b71094643f272af16ba56bf764dc43d7ac80a06df4d517887ac68e78e1bb`, C overlay manifest `ff4d12be9c09494c11329a8b6beedb11f8fa1aa569652b04eff9f2de95d98c5d` 확인. 심사 모델 gpt-6.1-terra. 제품/Godot/Job/GUI 실행 없음.
+
+[Microsoft 문서](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-updateprocthreadattribute)는 process creation 속성에 Job list와 명시적 상속 handle list를 제공하며 후자는 상속 가능 HANDLE과 `bInheritHandles=TRUE`를 요구한다. [Job 문서](https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects)는 일반 CreateProcess 자손의 기본 membership과 예외를 설명한다. 따라서 direct `STARTUPINFOEX` 또는 suspended→정확 HANDLE assign→확인→resume은 검토 가능한 서로 다른 구현이지 현재 host에서 검증된 대안이 아니다. 전자는 attribute buffer/handle lifetime·nested Job 호환·CreateProcess 실패 atomicity, 후자는 assign 실패 시 suspended process 종료와 resume 금지·thread/process HANDLE·stdin/out/err 상속 및 race를 각각 구현·검증해야 한다. 두 방식 모두 console helper가 없거나 그것이 명시된 ownership/identity 계약을 만족한다고 보장하지 않는다. 잔존 Job만 정리하고 허용 밖 image나 identity 미관측은 실패다.
+
+선택지 평가에서 시스템 helper에 대한 exact identity·lineage 및 소유 근거는 실제 위험과 계약에 맞춰 정하고, 단순 이름/경로·Microsoft 문자열만으로 신뢰하지 않는 것이 옳다. 다만 광범위 ETW나 모든 OS 파일에 대한 과도한 검증을 선결조건으로 임의 확대할 필요는 없다. 작업 범위와 가능한 책임 경계를 먼저 정하고 Job membership은 부모·image bytes·입력 귀속의 증거와 구분한다. 현재 managed profile의 강제 read-deny/완전 read-only source 부재를 제품 작업 불가능의 일반 규칙으로 만들지 않는다. 독립 input snapshot, 별도 user/cache/output, reviewed source, Job 정리·실제 전후 보호와 명시적 한계를 위험에 맞게 평가한다.
+
+기존 Python broker 관측 실패 K=3은 소진됐으며 실행기를 바꿔도 실패를 지우거나 동일 목표의 무한 새 예산을 만드는 수단이 아니다. 설계 검토·정적 코드 작성은 가능하다. genuinely 다른 direct 경로를 실제 시험하려면 기존 세 실패 및 변경된 스펙/가설과 전체 상한, 저위험 단일 비제품 사례, 정확 소유·cleanup 및 실패 시 정지 조건을 명시해 독립 재심한다. 합성/정적 점검을 제품 K6으로 계산하지 않는다. 제품 최초 import/검증 spawn은 마지막 K6을 소진한다. GUI 입력 귀속과 21행/175·320은 별도 계약이다.
+
+C v3 diff는 side 1 gated observer와 `_restore`의 primary/repeat 및 wrong-position wrapper를 유지하며, request/result에서 packet을 각각 직렬화한다. 다섯 call을 자동으로 실제 관측·검증한 것이 아니다. `packet_hex_sha256`은 hex 텍스트 hash이므로 원문 bytes SHA로 취급하지 말고 verifier에서 hex를 검증·decode해 계산한다. `_k6_live`의 `mono_usec`은 v8 scoped validator의 `mono_ns` schema와 직접 일치하지 않으며 receipt identity/순서·원본 raw bytes를 잃지 않는 명시 변환이 필요하다. producer와 독립 pin, v4 geometry·v7 causal·v9 scoped pre/post 및 `_all`/alias/detach/suffix·200 calls를 같은 run에 결합하고 누락·재정렬·타임아웃·공통 오류 반례를 통과해야 한다. GDScript parse·실제 engine data/output·성능은 미측정이다.
+
+P03 활성 +9와 worker +2, 원본·Git 상태 및 이전 실패 증거를 보존한다. HEAD lane은 P03 활성본 결합을 입증하지 않는다. 현 단계는 21행 완성, GUI provenance 또는 제품 실행 승인이 아니다.

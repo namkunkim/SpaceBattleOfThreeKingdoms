@@ -1,0 +1,14 @@
+{
+  "files": [
+    "active_unsupported.gd",
+    "CHECKLIST.md",
+    "HANDOFF.md",
+    "PLAN.md",
+    "RESULT.md",
+    "REVIEW-5B-attempt-02.md",
+    "REVIEW-PLAN.md",
+    "run_gate.py",
+    "windows_job.py"
+  ],
+  "findings": []
+}

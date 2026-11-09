@@ -1,0 +1,13 @@
+{
+  "manifest_sha256": "223EB53C920BD7BD8662962C0196EE2E02056962636ED4306725439D94C48ECD",
+  "executable": "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+  "arguments": [
+    "--path",
+    "C:\\Users\\nk782\\AppData\\Local\\Packages\\openai.codex_2p2nqsd0c76g0\\AC\\#!sandbox.{098e8ed6-54e9-440b-9c3d-4570376f62fb}\\Temp\\p05-access-a7c239f2b0e24ab6941f7d81f6ee6117",
+    "--log-file",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p05-native-20261109\\windows\\WindowsAuto.log",
+    "--",
+    "--mode=WindowsAuto",
+    "--evidence=C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p05-native-20261109\\windows"
+  ]
+}

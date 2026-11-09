@@ -1,0 +1,6 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[TRACE] C:/Users/nk782/AppData/Roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-10-24T11-16-35-27756-887224.jsonl
+[ORDER] move w=(503.0, 817.0) field=(1700.0, 1150.0) args={  } ["f1 pos=(329.0, 792.0) to=(503.0, 817.0)"]
+[ORDER] move w=(793.0, 803.0) field=(1700.0, 1150.0) args={ &"facing_deg": 177.236428508499 } ["f1 pos=(329.0, 792.0) to=(793.0, 803.0)"]
+MOUSE_INPUT_PASS

@@ -1,0 +1,87 @@
+{
+  "live_source_vs_copied_after_manifest_drift": [],
+  "first_and_last_shared_freeze_equal": true,
+  "identity_after_diff_check": true,
+  "actual_new_processes": {
+    "regressions": 14,
+    "probes": 3,
+    "failed_probe_exit": 1
+  },
+  "resources": {
+    "isolated-before": {
+      "actual_res": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fourth-20261108/rebaseline-1/isolated-before/",
+      "actual_user": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fourth-20261108/rebaseline-1/isolated-before-run2-logs/user/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/",
+      "loaded": [
+        "res://scripts/world_link.gd",
+        "res://scenes/FleetBattle3D.tscn",
+        "res://scripts/FleetBattle3D.gd",
+        "res://data/i18n/messages.json"
+      ],
+      "loaded_all_in_manifest": true,
+      "artifacts": {
+        "roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T14-27-51-23808-959808.jsonl": {
+          "bytes": 3234,
+          "sha256": "8ca20212ade06f2e5970cf3c026bcd25a717c3c2ed3b6e4258e1f0893db395ee"
+        },
+        "roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T14-27-52-23808-2136203.jsonl": {
+          "bytes": 46072,
+          "sha256": "e8690d3a1e916fc29f9063ea586519758e8b6644255abf337df92c04559bd244"
+        },
+        "roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T14-27-52-23808-2437755.jsonl": {
+          "bytes": 46686,
+          "sha256": "5668b1407e9ed8f10c53255e0507694be1c39fb2164ea544e704e6697c32fa65"
+        }
+      },
+      "fixed_outputs": {
+        "p02_headless_adapter": {
+          "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fourth-20261108\\rebaseline-1\\isolated-before\\tmp\\p02-first-integration-20261105\\attempt1-observations.json",
+          "bytes": 20985,
+          "sha256": "5e77c23183b9a77fa56fbf0dfb829dc27b2104678fa96add8e54a44e77ef89a3"
+        },
+        "i01b_active_replace": {
+          "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fourth-20261108\\rebaseline-1\\isolated-before\\tmp\\i01b-active-replace-20261102\\attempt2-observations.json",
+          "bytes": 3510,
+          "sha256": "d2da6302f08ef237788bd6209835d0f22d842208762eb838abacfc8302eed580"
+        }
+      }
+    },
+    "isolated-after": {
+      "actual_res": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fourth-20261108/rebaseline-1/isolated-after/",
+      "actual_user": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fourth-20261108/rebaseline-1/isolated-after-run2-logs/user/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/",
+      "loaded": [
+        "res://scripts/world_link.gd",
+        "res://scenes/FleetBattle3D.tscn",
+        "res://scripts/FleetBattle3D.gd",
+        "res://data/i18n/messages.json"
+      ],
+      "loaded_all_in_manifest": true,
+      "artifacts": {
+        "roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T14-29-57-27068-1125576.jsonl": {
+          "bytes": 3236,
+          "sha256": "924959c9cf96375ade4c82d6769a259559769f554140b234a0bf7f86e9d62127"
+        },
+        "roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T14-29-58-27068-2447017.jsonl": {
+          "bytes": 46072,
+          "sha256": "03c6e21146219bf63d60d6a11db7edea904a58eb82e86aa496517a73c1982e7d"
+        },
+        "roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T14-29-59-27068-2733541.jsonl": {
+          "bytes": 46686,
+          "sha256": "abf9ef4c117e0ffe4069d0f769b7fb4dfb7671accca172238532266c420b6440"
+        }
+      },
+      "fixed_outputs": {
+        "p02_headless_adapter": {
+          "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fourth-20261108\\rebaseline-1\\isolated-after\\tmp\\p02-first-integration-20261105\\attempt1-observations.json",
+          "bytes": 20985,
+          "sha256": "5e77c23183b9a77fa56fbf0dfb829dc27b2104678fa96add8e54a44e77ef89a3"
+        },
+        "i01b_active_replace": {
+          "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fourth-20261108\\rebaseline-1\\isolated-after\\tmp\\i01b-active-replace-20261102\\attempt2-observations.json",
+          "bytes": 3510,
+          "sha256": "d2da6302f08ef237788bd6209835d0f22d842208762eb838abacfc8302eed580"
+        }
+      }
+    }
+  },
+  "passed": true
+}

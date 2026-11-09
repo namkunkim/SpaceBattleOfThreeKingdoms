@@ -1,0 +1,12 @@
+{
+  "name": "P03-SUPPLY-MIXED-BOUNDARY-DELIVERY-20261108.zip",
+  "sha256": "4ce28ea585b79abe9dc1d6c2e3ebaa0d5f690fd5059c7969710106233da08cf2",
+  "bytes": 1186254,
+  "entries": 51,
+  "payload_count": 50,
+  "manifest_sha256": "6e960f772216eef8d00075ff2255a8e46d0fc66ee9e738246fe8a1cd3fe04ea5",
+  "crc_failure": null,
+  "duplicates": 0,
+  "entry_mismatches": 0,
+  "independent_closeout_in_archive": false
+}

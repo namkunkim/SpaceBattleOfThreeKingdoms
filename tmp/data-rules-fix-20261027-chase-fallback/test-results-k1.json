@@ -1,0 +1,50 @@
+[
+  {
+    "test": "tests/data_rules.gd",
+    "exit_code": 1,
+    "started_utc": "2026-10-27T14:55:31.4044508Z",
+    "ended_utc": "2026-10-27T14:55:32.7554208Z",
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/data-rules-fix-20261027-chase-fallback/logs/data_rules.log",
+    "sha256": "b2b5c59fca79e07d2f5145a45627862d335b33569b6dd0b9bea2c5f0a86692d6"
+  },
+  {
+    "test": "tests/i01_operation_config.gd",
+    "exit_code": 0,
+    "started_utc": "2026-10-27T14:55:32.7733781Z",
+    "ended_utc": "2026-10-27T14:55:33.7399842Z",
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/data-rules-fix-20261027-chase-fallback/logs/i01_operation_config.log",
+    "sha256": "8b1672c088e0b03d24a90bdcff4b90352d6f9bf3fadc39d3a5f753fc1f46c076"
+  },
+  {
+    "test": "tests/hold_distance.gd",
+    "exit_code": 0,
+    "started_utc": "2026-10-27T14:55:33.7442239Z",
+    "ended_utc": "2026-10-27T14:55:46.1955200Z",
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/data-rules-fix-20261027-chase-fallback/logs/hold_distance.log",
+    "sha256": "fae8428c5c541da84e4dbb27c1b1d03fae34ac7c15dc77c14abbcab63a036889"
+  },
+  {
+    "test": "tests/commander_ai.gd",
+    "exit_code": 0,
+    "started_utc": "2026-10-27T14:55:46.1990977Z",
+    "ended_utc": "2026-10-27T14:57:22.9450728Z",
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/data-rules-fix-20261027-chase-fallback/logs/commander_ai.log",
+    "sha256": "42172520187a576dd3edf390082b4187e58a66ce93e75085a242777c629fc52a"
+  },
+  {
+    "test": "tests/core_rules.gd",
+    "exit_code": 0,
+    "started_utc": "2026-10-27T14:57:22.9482562Z",
+    "ended_utc": "2026-10-27T14:57:25.9322062Z",
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/data-rules-fix-20261027-chase-fallback/logs/core_rules.log",
+    "sha256": "f5edd78c23b68d37e1b7609e43fb2ee24a2e6612d10ffe500adaaac205b849d8"
+  },
+  {
+    "test": "tests/battle_flow.gd",
+    "exit_code": 0,
+    "started_utc": "2026-10-27T14:57:25.9346289Z",
+    "ended_utc": "2026-10-27T14:57:44.0828616Z",
+    "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/data-rules-fix-20261027-chase-fallback/logs/battle_flow.log",
+    "sha256": "c93173ff9ec60f67876e23a6346d1e3a0156bfd1bb14b13e8a9be9ec607a42ce"
+  }
+]

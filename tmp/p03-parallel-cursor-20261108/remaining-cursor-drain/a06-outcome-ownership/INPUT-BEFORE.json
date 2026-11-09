@@ -1,0 +1,62 @@
+[
+  {
+    "path": "docs/battle-core/pc-campaign-design/H2-DECISION.md",
+    "sha256": "FFF580FC061237C070BAE26D6251E2B09EC894D479ABAD25E6FA72E3914EE9AB",
+    "bytes": 7934
+  },
+  {
+    "path": "docs/battle-core/pc-campaign-design/D04-STATE.md",
+    "sha256": "D8272A2159D4384558B83B7DB8952913E82242EE2CF41CD08315BB036553886D",
+    "bytes": 26449
+  },
+  {
+    "path": "docs/battle-core/pc-campaign-design/I01-ACCEPTANCE-PREREG-20261026.md",
+    "sha256": "106FEAEDFA7121BFE89B16072F66A380FE948494A343AF27496F7D1B36517211",
+    "bytes": 21832
+  },
+  {
+    "path": "scripts/FleetBattle3D.gd",
+    "sha256": "604B79308D9B3DBAB84DCED32456A4F41B28686C8EEC748073D3816892CFFC5C",
+    "bytes": 37542
+  },
+  {
+    "path": "scripts/world_link.gd",
+    "sha256": "F24585CE1EC065D9654AD05220748284DE1BB2D0BD75A342FDE84321F4FCE798",
+    "bytes": 1376
+  },
+  {
+    "path": "scripts/world/battle_outcome.gd",
+    "sha256": "1586EC11745640A1AA8B6D9C7FDFACD515553AC8E4BE634394C552C03843D162",
+    "bytes": 5417
+  },
+  {
+    "path": "scripts/world/auto_resolver.gd",
+    "sha256": "85EC124DF59C0C50CEE616565E88BCDD978588F28BAF36180F8EC2C92EEBD9EB",
+    "bytes": 8058
+  },
+  {
+    "path": "view/world/world_map_screen.gd",
+    "sha256": "E969BFE7E58434F465B6E006A8925A5E36F944BD62931503C5472693B0ECF055",
+    "bytes": 24684
+  },
+  {
+    "path": "tmp/p03-host-responsibility-20261108/HOST-STATE-LEDGER.md",
+    "sha256": "A32A0AD0645B181B9C00FF98E89022BB1D5682A13A66B6FD618B1D5A803AA7FB",
+    "bytes": 8969
+  },
+  {
+    "path": "tmp/p03-parallel-cursor-20261108/remaining-cursor-drain/REVIEW-5B-ATTEMPT-05-TERRA.md",
+    "sha256": "89CABA0723CEF0D97372B1CD81CF3B8CADAC937C6DEF7215DBAB7B02B95302EE",
+    "bytes": 2510
+  },
+  {
+    "path": "docs/battle-core/pc-campaign-design/P02-HOST-PREP-RESULT-20261108.md",
+    "sha256": "E7B06597C83275915DB76907399AE8846D983A10D2D8930D4AEE36C40EA5FCDF",
+    "bytes": 2349
+  },
+  {
+    "path": "docs/battle-core/pc-campaign-design/P02-LEGACY-OUTCOME-RESULT-20261108.md",
+    "sha256": "79484D7192626678576A6350BBD80CC64ADCA427FE14DBBA0A43AD9043728987",
+    "bytes": 3651
+  }
+]

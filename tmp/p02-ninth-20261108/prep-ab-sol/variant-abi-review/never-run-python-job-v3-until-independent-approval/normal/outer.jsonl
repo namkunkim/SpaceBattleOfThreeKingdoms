@@ -1,0 +1,3 @@
+{"event":"case-start","stage":"case-before-release"}
+{"event":"owned-cleanup","stage":"case-running","drained":true,"reason":null,"exit":125}
+{"event":"outside-evidence","stage":"case-running","controller_pipe_complete":true,"inner_receipt":false,"payload_pid":null,"payload_observed":false,"members":[{"pid":21620,"image":"c:\\python314\\python.exe","creation_time":134386277516902214,"retained_signalled":true}],"controller_stdout_sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855","controller_stderr_sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}

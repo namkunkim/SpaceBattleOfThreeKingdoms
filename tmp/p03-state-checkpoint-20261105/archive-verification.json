@@ -1,0 +1,12 @@
+{
+  "name": "P03-DECLARATION-DELIVERY-20261107.zip",
+  "bytes": 745826,
+  "sha256": "8b0f01004060b483a584089465463fa356f362188bc28ad0b3fb18a4b754b17e",
+  "entries": 622,
+  "payload_count": 621,
+  "manifest_sha256": "5e3776f4a393979102892442bcca8bd4fa310a299303fb4147b11a42d4fb400a",
+  "crc_failure": null,
+  "entry_mismatches": [],
+  "archive_verification_excluded_from_archive": true,
+  "independent_closeout_excluded_from_archive": true
+}

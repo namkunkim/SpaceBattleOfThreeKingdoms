@@ -1,0 +1,54 @@
+{
+  "clean-assertions": true,
+  "zero-exit-false-rejected": true,
+  "zero-exit-missing-rejected": true,
+  "zero-exit-duplicate-rejected": true,
+  "typed-false-is-not-string": true,
+  "exact-clean-deviation": true,
+  "clean-second-failure-rejected": true,
+  "clean-missing-raw-diagnostic-rejected": true,
+  "unfrozen-suite-count-rejected": true,
+  "ordered-suite-drift-rejected": true,
+  "raw-typed-drift-rejected": true,
+  "raw-absent-rejected": true,
+  "normal": {
+    "exit": 0,
+    "interruption": null,
+    "active_at_join": 0,
+    "broker_pid": 22280,
+    "descendants_outlived_broker": false
+  },
+  "normal-job-joined": true,
+  "normal-success": true,
+  "timeout": {
+    "exit": 125,
+    "interruption": "timeout",
+    "active_at_join": 0,
+    "broker_pid": 1912,
+    "descendants_outlived_broker": false
+  },
+  "timeout-job-joined": true,
+  "timeout-interrupted": true,
+  "timeout-started-owned-descendant": true,
+  "stop": {
+    "exit": 125,
+    "interruption": "stop",
+    "active_at_join": 0,
+    "broker_pid": 27704,
+    "descendants_outlived_broker": false
+  },
+  "stop-job-joined": true,
+  "stop-interrupted": true,
+  "stop-started-owned-descendant": true,
+  "preflight-stop": {
+    "exit": null,
+    "interruption": "stop-or-deadline-before-launch",
+    "active_at_join": 0
+  },
+  "preflight-stop-job-joined": true,
+  "preflight-stop-interrupted": true,
+  "unowned-witness-still-running": true,
+  "timeout-no-descendant-completion-marker": true,
+  "stop-no-descendant-completion-marker": true,
+  "preflight-stop-no-descendant-completion-marker": true
+}

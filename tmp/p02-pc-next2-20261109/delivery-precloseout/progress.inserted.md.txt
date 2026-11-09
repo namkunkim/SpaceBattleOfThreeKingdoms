@@ -1,0 +1,5 @@
+## 최신 상태 — 전장 → 천하 전환 거절
+
+- [x] **기존 복귀의 즉시 전환 오류 복구.** 결과·일시정지·최초 준비 실패의 실제 로더 거절에서 Brief와 이전 대기 Outcome 참조를 복원한다. 2회차 격리 20개 실행·210개 단언을 통과했다. 후보는 각 경로에서 실제 거절 두 번 뒤 같은 전장과 버튼으로 재시도했다. 원본 한 함수 반영과 후보 바이트 일치, 기존 출격 hunk 보존을 독립 확인했다. 반영 뒤 Godot은 미실행이다. [결과](P02-WORLD-RETURN-REJECT-RESULT-20261109.md) · [체크리스트](P02-WORLD-RETURN-REJECT-CHECKLIST-20261109.md) · [인계](SESSION-HANDOFF-P02-WORLD-RETURN-REJECT-20261109.md).
+- [ ] **전달 독립 마감.** ZIP 생성 시점의 상태다. 이 조각 2/6회 사용. PC0 2/2 소진, 별도 여덟째 K6 미실행, 첫 PC 플레이·자연 종료·제품 operation은 미인수다. [전달 ZIP](../../../tmp/p02-pc-next2-20261109/delivery-precloseout/P02-WORLD-RETURN-REJECT-DELIVERY-20261109.zip).
+

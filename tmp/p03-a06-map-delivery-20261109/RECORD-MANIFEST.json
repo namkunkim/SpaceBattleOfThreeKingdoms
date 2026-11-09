@@ -1,0 +1,82 @@
+[
+  {
+    "path": "PLAN.md",
+    "size": 3686,
+    "sha256": "9b3f07115814f7851fd78e369274bb81dffe8e92a60b80de744b4b061e388dd3"
+  },
+  {
+    "path": "REVIEW-PLAN.md",
+    "size": 1763,
+    "sha256": "20d11d7f7747ba544647d7c299429e7715379e1742ddf4a614ac6be7234fcba9"
+  },
+  {
+    "path": "RESULT.md",
+    "size": 2035,
+    "sha256": "ebea619289adeac7e8d94c729224f212d922e5731679b249b72584efd93e3d27"
+  },
+  {
+    "path": "HANDOFF.md",
+    "size": 827,
+    "sha256": "fef1c6207ded0d33044d88730753893b44862d1f6868619ed6eb1e1ea5a4e7f1"
+  },
+  {
+    "path": "MANIFEST.json",
+    "size": 19437,
+    "sha256": "7ef463c5b7dc9e89594bd6e5045879523dfba905eefe364a70bc3124b4b9ca87"
+  },
+  {
+    "path": ".gdignore",
+    "size": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "run_gate.py",
+    "size": 5401,
+    "sha256": "6d737b2999bedf143cd2a7cf7293b3bc40c17ba507ed2073ae90de1a0af56801"
+  },
+  {
+    "path": "windows_job.py",
+    "size": 4907,
+    "sha256": "6c8333ae38b148777d2f1b78bd1c02321f89602054d3f5daa75beb4f4526580f"
+  },
+  {
+    "path": "map_delivery.gd",
+    "size": 6423,
+    "sha256": "0d1716b23ad7177b5706d0ea825511d028c8a8991c9017864e0c37783c87dcd5"
+  },
+  {
+    "path": "attempt-01/command.json",
+    "size": 559,
+    "sha256": "1300e2972ea4d51ca53c0f7fae60e4ee166664c2873809c84722b49412f20ce2"
+  },
+  {
+    "path": "attempt-01/run.json",
+    "size": 1619,
+    "sha256": "c44ed21d6f069ca0af7462997a516b9363778a7f8499315b543a67c709888806"
+  },
+  {
+    "path": "attempt-01/input-before.json",
+    "size": 19437,
+    "sha256": "7ef463c5b7dc9e89594bd6e5045879523dfba905eefe364a70bc3124b4b9ca87"
+  },
+  {
+    "path": "attempt-01/input-after.json",
+    "size": 19437,
+    "sha256": "7ef463c5b7dc9e89594bd6e5045879523dfba905eefe364a70bc3124b4b9ca87"
+  },
+  {
+    "path": "attempt-01/stdout.bin",
+    "size": 918,
+    "sha256": "35878d6d1b4e891bb0d582afdd46f0057e268a35d18a9fdb080cad41387a31fb"
+  },
+  {
+    "path": "attempt-01/stderr.bin",
+    "size": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "attempt-01/godot.log",
+    "size": 915,
+    "sha256": "5dee89d36799c8722af1601b47cb9136ebe9ac06986377e894ccbb32047a15f7"
+  }
+]

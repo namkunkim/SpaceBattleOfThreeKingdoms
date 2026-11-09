@@ -1,0 +1,10 @@
+{
+  "archive": "tmp/P02-REPLAY-DELIVERY-20261108.zip",
+  "archive_sha256": "d82b87f30ac65b46be41ede87a8aa7c8af1a48d7fb3310cad731ae61fdc8c6f6",
+  "archive_bytes": 1877236,
+  "manifest_sha256": "1de62d0e10f96366ea01308709d4dd80049cc43dac692a4633f5a332d8998781",
+  "member_count_including_manifest": 692,
+  "member_byte_hash_matches": 692,
+  "crc": true,
+  "unique_exact_member_set": true
+}

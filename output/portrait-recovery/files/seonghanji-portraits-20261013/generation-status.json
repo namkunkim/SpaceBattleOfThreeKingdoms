@@ -1,0 +1,19 @@
+{
+  "status": "waiting_for_image_generation_quota",
+  "completed": 180,
+  "total": 501,
+  "remaining": 321,
+  "lastCompletedId": "SHJ-O030",
+  "lastCompletedName": "석포",
+  "nextId": "SHJ-O031",
+  "reason": "Built-in image generation returned HTTP 429 usage_limit_reached.",
+  "reportedResetAt": "2026-10-14T21:03:26+09:00",
+  "resetTimestamp": 1791979406,
+  "finalWidth": 561,
+  "finalHeight": 701,
+  "textInPortraits": false,
+  "identityFiles": ["tags.json", "tags.csv"],
+  "promptFile": "prompts.jsonl",
+  "resume": "Use next.cjs to retrieve pending records from manifest.json; generate each pending portrait with the built-in image tool, run resize.ps1, then save-result.cjs. Do not regenerate completed records. Update this status file when resumed.",
+  "fallback": "CLI/API fallback requires explicit user choice and a locally configured OPENAI_API_KEY; the key is currently absent."
+}

@@ -1,0 +1,11 @@
+--- before/core/battle/operation_private_state.gd
++++ after/core/battle/operation_private_state.gd
+@@ -361,6 +361,8 @@
+ func restore_completed(packet: Variant) -> Dictionary:
+ 	var error := _guard()
+ 	if error != "": return _fail(error)
++	if _sim.decisions != null:
++		return _fail("unsupported_active_decisions")
+ 	_busy = true
+ 	var prepared := prepare(packet)
+ 	if not prepared.ok:

@@ -1,0 +1,98 @@
+{
+  "revision": "ac8b780447c4ab156612b89ce1e30c0b04326a2e",
+  "verified_files": 400,
+  "difficulties": {
+    "입문": {
+      "foe_wins": 235,
+      "foe_wilson_95": [
+        0.20976558842625362,
+        0.2622625935710906
+      ],
+      "chain_letter_games": 842,
+      "chain_ignited_games": 77,
+      "chain_ignited_alliance_wins": 70,
+      "chain_detected_games": 568,
+      "wind_start_seconds_mean": 1067.8563,
+      "skills_total": 20412,
+      "skills_per_game": 20.412,
+      "skills_by_id": {
+        "SK-T-DISRUPT": 1998,
+        "SK-T-FIRE": 4036,
+        "SK-T-GUARD": 624,
+        "SK-T-MORALE": 2990,
+        "SK-T-MOVE": 3122,
+        "SK-T-SUPPLY": 1268,
+        "SK-U-CAOREN": 657,
+        "SK-U-GUOJIA": 1000,
+        "SK-U-HAOZHAO": 855,
+        "SK-U-HUANGGAI": 842,
+        "SK-U-HUANGZHONG": 993,
+        "SK-U-XIAHOUYUAN": 1000,
+        "SK-U-XUCHU": 1,
+        "SK-U-ZHAOYUN": 2,
+        "SK-U-ZHOUYU": 26,
+        "SK-U-ZHUGE": 998
+      },
+      "assault_totals": {
+        "flagship": [
+          0,
+          0
+        ],
+        "forced": [
+          0,
+          0
+        ],
+        "unit": [
+          0,
+          0
+        ]
+      }
+    },
+    "표준": {
+      "foe_wins": 656,
+      "foe_wilson_95": [
+        0.6260105435553518,
+        0.684795507797155
+      ],
+      "chain_letter_games": 916,
+      "chain_ignited_games": 74,
+      "chain_ignited_alliance_wins": 53,
+      "chain_detected_games": 546,
+      "wind_start_seconds_mean": 1064.725,
+      "skills_total": 24446,
+      "skills_per_game": 24.446,
+      "skills_by_id": {
+        "SK-T-DISRUPT": 2999,
+        "SK-T-FIRE": 3719,
+        "SK-T-GUARD": 633,
+        "SK-T-MORALE": 2833,
+        "SK-T-MOVE": 3859,
+        "SK-T-SCOUT": 2000,
+        "SK-T-SUPPLY": 3689,
+        "SK-U-CAOREN": 759,
+        "SK-U-HAOZHAO": 1,
+        "SK-U-HUANGGAI": 916,
+        "SK-U-HUANGZHONG": 995,
+        "SK-U-XIAHOUYUAN": 1000,
+        "SK-U-XUCHU": 1,
+        "SK-U-ZHAOYUN": 4,
+        "SK-U-ZHOUYU": 38,
+        "SK-U-ZHUGE": 1000
+      },
+      "assault_totals": {
+        "flagship": [
+          0,
+          0
+        ],
+        "forced": [
+          0,
+          0
+        ],
+        "unit": [
+          7,
+          2
+        ]
+      }
+    }
+  }
+}

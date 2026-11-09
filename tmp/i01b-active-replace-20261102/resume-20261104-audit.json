@@ -1,0 +1,19 @@
+{
+  "client_date": "2026-11-04 Asia/Seoul",
+  "captured_host_utc": "2026-11-04T14:05:11.679421+00:00",
+  "existing_baseline_count": 3879,
+  "changed": [],
+  "missing": [],
+  "source_hashes": {
+    "core/battle/operation_private_state.gd": "a1376b70c22dcf371120d44999a38b68d141bc2306d9339f1e2294e6744196ca",
+    "tests/i01b_private_state.gd": "bd12cdad427ec672373ab844329bd6846e109f4d088ae007181eb24f4489403b",
+    ".godot/global_script_class_cache.cfg": "0eb214ebcc65cd2ca7b9d98dc83f61a9c170ca75b1b23acf4c3c58fdfb550ab1",
+    "tmp/i01b-p2c-delivery-20261101.zip": "99a4a1adca1bdc3bf7e56baa9112c1625ab6c6371bfaafa0482b3471903a2971"
+  },
+  "restore_method_exists": false,
+  "new_test_exists": false,
+  "new_runner_exit_files": [],
+  "new_stage_main_runner_count": 0,
+  "new_stage_limit": 6,
+  "previous_p2c_main_runner_count": 5
+}

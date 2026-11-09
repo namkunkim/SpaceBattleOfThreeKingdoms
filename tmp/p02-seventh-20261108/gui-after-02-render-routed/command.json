@@ -1,0 +1,33 @@
+{
+  "args": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-seventh-20261108\\project-after-02",
+    "--rendering-method",
+    "gl_compatibility",
+    "--resolution",
+    "1600x900",
+    "--script",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-seventh-20261108\\render-probe.gd",
+    "--",
+    "routed",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-seventh-20261108\\gui-after-02-render-routed\\rows.jsonl"
+  ],
+  "env": {
+    "APPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-seventh-20261108\\gui-after-02-render-routed\\roaming",
+    "LOCALAPPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-seventh-20261108\\gui-after-02-render-routed\\local",
+    "XDG_DATA_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-seventh-20261108\\gui-after-02-render-routed\\roaming",
+    "SBTK_SAFE_INSETS": "0,0,0,0"
+  },
+  "hashes": {
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe": "c8f0a6bc45a19b33541501e57f6f7cd972ab18453743266339d495cbbe846643",
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64.exe": "ab1824f85bfd8e0e4128182c000c4003a3e042245b2967848d089b2a04b22424",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-seventh-20261108\\render-probe.gd": "8241d5806f470ff28db514e9c79abeb83112a27f219603770b1a70d47263942e",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\scripts\\FleetBattle3D.gd": "604b79308d9b3dbab84dced32456a4f41b28686c8eec748073d3816892cffc5c",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-seventh-20261108\\project-after-02\\scripts\\FleetBattle3D.gd": "604b79308d9b3dbab84dced32456a4f41b28686c8eec748073d3816892cffc5c",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\.godot\\global_script_class_cache.cfg": "0eb214ebcc65cd2ca7b9d98dc83f61a9c170ca75b1b23acf4c3c58fdfb550ab1",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-seventh-20261108\\project-after-02\\.godot\\global_script_class_cache.cfg": "0eb214ebcc65cd2ca7b9d98dc83f61a9c170ca75b1b23acf4c3c58fdfb550ab1",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-seventh-20261108\\after-attempt-02\\inputs.json": "0f70c9b4497705880419cc55190b1d921faae2daf60d3a8fc88a0667397abcc0",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-seventh-20261108\\run-render.py": "ebd2c8abaf885584bee6eea5da95c5baec321d60e5b1bf011c44c35831b52abe"
+  }
+}

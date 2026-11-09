@@ -1,0 +1,9 @@
+[
+  "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+  "--headless",
+  "--verbose",
+  "--path",
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-inchat-host-clock\\attempt-06\\project",
+  "--script",
+  "res://host_clock_probe.gd"
+]

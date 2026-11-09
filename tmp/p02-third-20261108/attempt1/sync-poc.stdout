@@ -1,0 +1,3 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+OPERATION_HEADLESS_PASS {"ally_alive":1,"clock_ms":150,"commands":3,"end_ms":150,"end_tick":2,"foe_alive":0,"fp":"7d492b366451cf1a2232b4ab49971d4885e82126d210c76613a5d86131ea20a3","killed":0.949,"lost":0.003,"over":true,"reason":"annihilation","reinf_t":-1.0,"t":0.15,"tick":2,"win":true}

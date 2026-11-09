@@ -1,0 +1,13 @@
+{
+  "exit": 1,
+  "timeout": false,
+  "stdout": {
+    "bytes": 626,
+    "sha256": "814ce201b1edb455213e5a0cfb527d23d440399acd8d3feb0859d99baaba76b6"
+  },
+  "stderr": {
+    "bytes": 582,
+    "sha256": "6181d3dbafaab9a8ea72898f1ee1ed0fbe5bab47de20820ba5291fd86244275f"
+  },
+  "result": null
+}

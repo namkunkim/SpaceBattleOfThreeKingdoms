@@ -1,0 +1,21 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Using "default" pen tablet driver...
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+CORE API HASH: 2004498165
+EDITOR API HASH: 1696660745
+Loading resource: C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fourth-20261108/rebaseline-1/probe.gd remapped: C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fourth-20261108/rebaseline-1/probe.gd
+Completed load for: 'C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fourth-20261108/rebaseline-1/probe.gd' remapped 'C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fourth-20261108/rebaseline-1/probe.gd' at thread -1
+SceneTreeFTI: traversal method DEFAULT
+Loading resource: res://scripts/world_link.gd remapped: res://scripts/world_link.gd
+Completed load for: 'res://scripts/world_link.gd' remapped 'res://scripts/world_link.gd' at thread -1
+Loaded system CA certificates
+Loading resource: res://scenes/FleetBattle3D.tscn remapped: res://scenes/FleetBattle3D.tscn
+Loading resource: res://scripts/FleetBattle3D.gd remapped: res://scripts/FleetBattle3D.gd
+Loading resource: res://data/i18n/messages.json remapped: res://data/i18n/messages.json
+Completed load for: 'res://data/i18n/messages.json' remapped 'res://data/i18n/messages.json' at thread -1
+Completed load for: 'res://scripts/FleetBattle3D.gd' remapped 'res://scripts/FleetBattle3D.gd' at thread -1
+Completed load for: 'res://scenes/FleetBattle3D.tscn' remapped 'res://scenes/FleetBattle3D.tscn' at thread -1
+P02_ISOLATION {"cache":"0eb214ebcc65cd2ca7b9d98dc83f61a9c170ca75b1b23acf4c3c58fdfb550ab1","guard":"","res":"C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fourth-20261108/rebaseline-1/isolated-before/","resources":["res://core/battle/operation_private_state.gd","res://core/battle/battle_sim.gd","res://core/battle/detection.gd","res://scenes/FleetBattle3D.tscn"],"uid":"19118dfdf835797d2bcdb8c8d870a3b72d8e3999aac37cdca1f20cff77e24595","user":"C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fourth-20261108/rebaseline-1/isolated-before-run2-logs/user/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/","version":"4.7.2-stable (official)"}

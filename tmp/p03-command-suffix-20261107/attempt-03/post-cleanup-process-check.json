@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "powershell",
+    "-NoProfile",
+    "-Command",
+    "Get-Process -Id 7876,30904 -ErrorAction SilentlyContinue | Select-Object Id,ProcessName"
+  ],
+  "actual_exit": 1,
+  "stdout": "",
+  "stderr": "",
+  "observation": "no matching process at post-probe observation; not evidence of bounded cleanup"
+}

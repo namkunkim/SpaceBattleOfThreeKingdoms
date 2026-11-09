@@ -1,0 +1,1466 @@
+{
+  "executed": true,
+  "argv": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+    "--script",
+    "res://tmp/p03-dictionary-context-after-20261108/dictionary_context_after.gd"
+  ],
+  "cwd": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+  "engine_version": "4.7.2.stable.official.ed1daf0bf",
+  "actual_exit": 0,
+  "launcher_pid": 4964,
+  "engine_identity_matches": true,
+  "launcher_primary_thread": 15568,
+  "launch_error": null,
+  "job_accounting": {
+    "active": 0,
+    "total": 2,
+    "terminated": 0
+  },
+  "timed_out": false,
+  "elapsed_seconds": 2.5375783001072705,
+  "input_stable": true,
+  "input_count": 47,
+  "timeout_probe": null,
+  "timeout_probe_passed": false,
+  "cleanup": null,
+  "diagnostics": {
+    "script_error": 0,
+    "error": 0,
+    "warning": 0,
+    "objectdb": 0,
+    "resources_at_exit": 0
+  },
+  "runner": {
+    "cases": [
+      "metadata_fix_01_same_dictionary",
+      "metadata_fix_02_value_builtin_both_directions",
+      "metadata_fix_03_value_class_both_directions",
+      "metadata_fix_04_value_script_both_directions",
+      "metadata_fix_05_existing_context_controls",
+      "metadata_fix_06_key_metadata",
+      "metadata_fix_07_controls"
+    ],
+    "checks": 314,
+    "engine_path": "C:/Tools/Godot/Godot_v4.7.2-stable_win64.exe",
+    "engine_pid": 10532,
+    "observations": [
+      {
+        "active_input_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "active_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "active_packet_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "active_post_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_input_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "candidate_packet_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_prepared_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "contract": "MATCH",
+        "group": "metadata_fix_01_same_dictionary",
+        "name": "same",
+        "result": {
+          "ok": true
+        },
+        "same_active_sim": false
+      },
+      {
+        "active_input_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "active_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "active_packet_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "active_post_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_input_meta": [
+          4,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "candidate_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "candidate_packet_meta": [
+          4,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "candidate_prepared_meta": [
+          4,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "contract": "MATCH",
+        "group": "metadata_fix_02_value_builtin_both_directions",
+        "name": "builtin_int_to_variant",
+        "result": {
+          "error": "replacement_context_mismatch",
+          "ok": false
+        },
+        "same_active_sim": true
+      },
+      {
+        "active_input_meta": [
+          4,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "active_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "active_packet_meta": [
+          4,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "active_post_meta": [
+          4,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "candidate_input_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "candidate_packet_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_prepared_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "contract": "MATCH",
+        "group": "metadata_fix_02_value_builtin_both_directions",
+        "name": "builtin_variant_to_int",
+        "result": {
+          "error": "replacement_context_mismatch",
+          "ok": false
+        },
+        "same_active_sim": true
+      },
+      {
+        "active_input_meta": [
+          4,
+          "",
+          null,
+          24,
+          "Node",
+          null
+        ],
+        "active_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "active_packet_meta": [
+          4,
+          "",
+          null,
+          24,
+          "Node",
+          null
+        ],
+        "active_post_meta": [
+          4,
+          "",
+          null,
+          24,
+          "Node",
+          null
+        ],
+        "candidate_input_meta": [
+          4,
+          "",
+          null,
+          24,
+          "RefCounted",
+          null
+        ],
+        "candidate_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "candidate_packet_meta": [
+          4,
+          "",
+          null,
+          24,
+          "RefCounted",
+          null
+        ],
+        "candidate_prepared_meta": [
+          4,
+          "",
+          null,
+          24,
+          "RefCounted",
+          null
+        ],
+        "contract": "MATCH",
+        "group": "metadata_fix_03_value_class_both_directions",
+        "name": "class_node_to_ref",
+        "result": {
+          "error": "replacement_context_mismatch",
+          "ok": false
+        },
+        "same_active_sim": true
+      },
+      {
+        "active_input_meta": [
+          4,
+          "",
+          null,
+          24,
+          "RefCounted",
+          null
+        ],
+        "active_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "active_packet_meta": [
+          4,
+          "",
+          null,
+          24,
+          "RefCounted",
+          null
+        ],
+        "active_post_meta": [
+          4,
+          "",
+          null,
+          24,
+          "RefCounted",
+          null
+        ],
+        "candidate_input_meta": [
+          4,
+          "",
+          null,
+          24,
+          "Node",
+          null
+        ],
+        "candidate_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "candidate_packet_meta": [
+          4,
+          "",
+          null,
+          24,
+          "Node",
+          null
+        ],
+        "candidate_prepared_meta": [
+          4,
+          "",
+          null,
+          24,
+          "Node",
+          null
+        ],
+        "contract": "MATCH",
+        "group": "metadata_fix_03_value_class_both_directions",
+        "name": "class_ref_to_node",
+        "result": {
+          "error": "replacement_context_mismatch",
+          "ok": false
+        },
+        "same_active_sim": true
+      },
+      {
+        "active_input_meta": [
+          4,
+          "",
+          null,
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd"
+        ],
+        "active_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "active_packet_meta": [
+          4,
+          "",
+          null,
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd"
+        ],
+        "active_post_meta": [
+          4,
+          "",
+          null,
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd"
+        ],
+        "candidate_input_meta": [
+          4,
+          "",
+          null,
+          24,
+          "RefCounted",
+          "res://core/battle/battle_state.gd"
+        ],
+        "candidate_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "candidate_packet_meta": [
+          4,
+          "",
+          null,
+          24,
+          "RefCounted",
+          "res://core/battle/battle_state.gd"
+        ],
+        "candidate_prepared_meta": [
+          4,
+          "",
+          null,
+          24,
+          "RefCounted",
+          "res://core/battle/battle_state.gd"
+        ],
+        "contract": "MATCH",
+        "group": "metadata_fix_04_value_script_both_directions",
+        "name": "script_fleet_to_state",
+        "result": {
+          "error": "replacement_context_mismatch",
+          "ok": false
+        },
+        "same_active_sim": true
+      },
+      {
+        "active_input_meta": [
+          4,
+          "",
+          null,
+          24,
+          "RefCounted",
+          "res://core/battle/battle_state.gd"
+        ],
+        "active_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "active_packet_meta": [
+          4,
+          "",
+          null,
+          24,
+          "RefCounted",
+          "res://core/battle/battle_state.gd"
+        ],
+        "active_post_meta": [
+          4,
+          "",
+          null,
+          24,
+          "RefCounted",
+          "res://core/battle/battle_state.gd"
+        ],
+        "candidate_input_meta": [
+          4,
+          "",
+          null,
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd"
+        ],
+        "candidate_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "candidate_packet_meta": [
+          4,
+          "",
+          null,
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd"
+        ],
+        "candidate_prepared_meta": [
+          4,
+          "",
+          null,
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd"
+        ],
+        "contract": "MATCH",
+        "group": "metadata_fix_04_value_script_both_directions",
+        "name": "script_state_to_fleet",
+        "result": {
+          "error": "replacement_context_mismatch",
+          "ok": false
+        },
+        "same_active_sim": true
+      },
+      {
+        "active_input_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "active_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "active_packet_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "active_post_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_input_meta": [
+          0,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "candidate_key_list_meta": [
+          0,
+          "",
+          null
+        ],
+        "candidate_packet_meta": [
+          0,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "candidate_prepared_meta": [
+          0,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "contract": "MATCH",
+        "group": "metadata_fix_05_existing_context_controls",
+        "name": "key_metadata",
+        "result": {
+          "error": "replacement_context_mismatch",
+          "ok": false
+        },
+        "same_active_sim": true
+      },
+      {
+        "active_input_meta": [
+          0,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "active_key_list_meta": [
+          0,
+          "",
+          null
+        ],
+        "active_packet_meta": [
+          0,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "active_post_meta": [
+          0,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "candidate_input_meta": [
+          0,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "candidate_key_list_meta": [
+          0,
+          "",
+          null
+        ],
+        "candidate_packet_meta": [
+          0,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "candidate_prepared_meta": [
+          0,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "contract": "MATCH",
+        "group": "metadata_fix_05_existing_context_controls",
+        "name": "actual_key_type",
+        "result": {
+          "error": "replacement_context_mismatch",
+          "ok": false
+        },
+        "same_active_sim": true
+      },
+      {
+        "active_input_meta": [
+          0,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "active_key_list_meta": [
+          0,
+          "",
+          null
+        ],
+        "active_packet_meta": [
+          0,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "active_post_meta": [
+          0,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "candidate_input_meta": [
+          0,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "candidate_key_list_meta": [
+          0,
+          "",
+          null
+        ],
+        "candidate_packet_meta": [
+          0,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "candidate_prepared_meta": [
+          0,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "contract": "MATCH",
+        "group": "metadata_fix_05_existing_context_controls",
+        "name": "key_order",
+        "result": {
+          "error": "replacement_context_mismatch",
+          "ok": false
+        },
+        "same_active_sim": true
+      },
+      {
+        "active_input_meta": [
+          2,
+          "",
+          null
+        ],
+        "active_packet_meta": [
+          2,
+          "",
+          null
+        ],
+        "active_post_meta": [
+          2,
+          "",
+          null
+        ],
+        "candidate_input_meta": [
+          0,
+          "",
+          null
+        ],
+        "candidate_packet_meta": [
+          0,
+          "",
+          null
+        ],
+        "candidate_prepared_meta": [
+          0,
+          "",
+          null
+        ],
+        "contract": "MATCH",
+        "group": "metadata_fix_05_existing_context_controls",
+        "name": "array_builtin",
+        "result": {
+          "error": "replacement_context_mismatch",
+          "ok": false
+        },
+        "same_active_sim": true
+      },
+      {
+        "active_input_meta": [
+          24,
+          "Node",
+          null
+        ],
+        "active_packet_meta": [
+          24,
+          "Node",
+          null
+        ],
+        "active_post_meta": [
+          24,
+          "Node",
+          null
+        ],
+        "candidate_input_meta": [
+          24,
+          "RefCounted",
+          null
+        ],
+        "candidate_packet_meta": [
+          24,
+          "RefCounted",
+          null
+        ],
+        "candidate_prepared_meta": [
+          24,
+          "RefCounted",
+          null
+        ],
+        "contract": "MATCH",
+        "group": "metadata_fix_05_existing_context_controls",
+        "name": "array_class",
+        "result": {
+          "error": "replacement_context_mismatch",
+          "ok": false
+        },
+        "same_active_sim": true
+      },
+      {
+        "active_input_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd"
+        ],
+        "active_packet_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd"
+        ],
+        "active_post_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd"
+        ],
+        "candidate_input_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/battle_state.gd"
+        ],
+        "candidate_packet_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/battle_state.gd"
+        ],
+        "candidate_prepared_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/battle_state.gd"
+        ],
+        "contract": "MATCH",
+        "group": "metadata_fix_05_existing_context_controls",
+        "name": "array_script",
+        "result": {
+          "error": "replacement_context_mismatch",
+          "ok": false
+        },
+        "same_active_sim": true
+      },
+      {
+        "active_input_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "active_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "active_packet_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "active_post_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_input_meta": [
+          2,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_key_list_meta": [
+          2,
+          "",
+          null
+        ],
+        "candidate_packet_meta": [
+          2,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_prepared_meta": [
+          2,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "contract": "MATCH",
+        "group": "metadata_fix_06_key_metadata",
+        "name": "key_builtin_forward",
+        "result": {
+          "error": "replacement_context_mismatch",
+          "ok": false
+        },
+        "same_active_sim": true
+      },
+      {
+        "active_input_meta": [
+          2,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "active_key_list_meta": [
+          2,
+          "",
+          null
+        ],
+        "active_packet_meta": [
+          2,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "active_post_meta": [
+          2,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_input_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "candidate_packet_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_prepared_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "contract": "MATCH",
+        "group": "metadata_fix_06_key_metadata",
+        "name": "key_builtin_reverse",
+        "result": {
+          "error": "replacement_context_mismatch",
+          "ok": false
+        },
+        "same_active_sim": true
+      },
+      {
+        "active_input_meta": [
+          24,
+          "Node",
+          null,
+          2,
+          "",
+          null
+        ],
+        "active_key_list_meta": [
+          24,
+          "Node",
+          null
+        ],
+        "active_packet_meta": [
+          24,
+          "Node",
+          null,
+          2,
+          "",
+          null
+        ],
+        "active_post_meta": [
+          24,
+          "Node",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_input_meta": [
+          24,
+          "RefCounted",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_key_list_meta": [
+          24,
+          "RefCounted",
+          null
+        ],
+        "candidate_packet_meta": [
+          24,
+          "RefCounted",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_prepared_meta": [
+          24,
+          "RefCounted",
+          null,
+          2,
+          "",
+          null
+        ],
+        "contract": "MATCH",
+        "group": "metadata_fix_06_key_metadata",
+        "name": "key_class_forward",
+        "result": {
+          "error": "replacement_context_mismatch",
+          "ok": false
+        },
+        "same_active_sim": true
+      },
+      {
+        "active_input_meta": [
+          24,
+          "RefCounted",
+          null,
+          2,
+          "",
+          null
+        ],
+        "active_key_list_meta": [
+          24,
+          "RefCounted",
+          null
+        ],
+        "active_packet_meta": [
+          24,
+          "RefCounted",
+          null,
+          2,
+          "",
+          null
+        ],
+        "active_post_meta": [
+          24,
+          "RefCounted",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_input_meta": [
+          24,
+          "Node",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_key_list_meta": [
+          24,
+          "Node",
+          null
+        ],
+        "candidate_packet_meta": [
+          24,
+          "Node",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_prepared_meta": [
+          24,
+          "Node",
+          null,
+          2,
+          "",
+          null
+        ],
+        "contract": "MATCH",
+        "group": "metadata_fix_06_key_metadata",
+        "name": "key_class_reverse",
+        "result": {
+          "error": "replacement_context_mismatch",
+          "ok": false
+        },
+        "same_active_sim": true
+      },
+      {
+        "active_input_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd",
+          2,
+          "",
+          null
+        ],
+        "active_key_list_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd"
+        ],
+        "active_packet_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd",
+          2,
+          "",
+          null
+        ],
+        "active_post_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd",
+          2,
+          "",
+          null
+        ],
+        "candidate_input_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/battle_state.gd",
+          2,
+          "",
+          null
+        ],
+        "candidate_key_list_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/battle_state.gd"
+        ],
+        "candidate_packet_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/battle_state.gd",
+          2,
+          "",
+          null
+        ],
+        "candidate_prepared_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/battle_state.gd",
+          2,
+          "",
+          null
+        ],
+        "contract": "MATCH",
+        "group": "metadata_fix_06_key_metadata",
+        "name": "key_script_forward",
+        "result": {
+          "error": "replacement_context_mismatch",
+          "ok": false
+        },
+        "same_active_sim": true
+      },
+      {
+        "active_input_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/battle_state.gd",
+          2,
+          "",
+          null
+        ],
+        "active_key_list_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/battle_state.gd"
+        ],
+        "active_packet_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/battle_state.gd",
+          2,
+          "",
+          null
+        ],
+        "active_post_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/battle_state.gd",
+          2,
+          "",
+          null
+        ],
+        "candidate_input_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd",
+          2,
+          "",
+          null
+        ],
+        "candidate_key_list_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd"
+        ],
+        "candidate_packet_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd",
+          2,
+          "",
+          null
+        ],
+        "candidate_prepared_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd",
+          2,
+          "",
+          null
+        ],
+        "contract": "MATCH",
+        "group": "metadata_fix_06_key_metadata",
+        "name": "key_script_reverse",
+        "result": {
+          "error": "replacement_context_mismatch",
+          "ok": false
+        },
+        "same_active_sim": true
+      },
+      {
+        "active_input_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd",
+          2,
+          "",
+          null
+        ],
+        "active_key_list_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd"
+        ],
+        "active_packet_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd",
+          2,
+          "",
+          null
+        ],
+        "active_post_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd",
+          2,
+          "",
+          null
+        ],
+        "candidate_input_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd",
+          2,
+          "",
+          null
+        ],
+        "candidate_key_list_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd"
+        ],
+        "candidate_packet_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd",
+          2,
+          "",
+          null
+        ],
+        "candidate_prepared_meta": [
+          24,
+          "RefCounted",
+          "res://core/battle/fleet_state.gd",
+          2,
+          "",
+          null
+        ],
+        "contract": "MATCH",
+        "group": "metadata_fix_06_key_metadata",
+        "name": "key_metadata_same",
+        "result": {
+          "ok": true
+        },
+        "same_active_sim": false
+      },
+      {
+        "active_input_meta": [
+          0,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "active_key_list_meta": [
+          0,
+          "",
+          null
+        ],
+        "active_packet_meta": [
+          0,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "active_post_meta": [
+          0,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "candidate_input_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "candidate_packet_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_prepared_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "contract": "MATCH",
+        "group": "metadata_fix_05_existing_context_controls",
+        "name": "typed_untyped_reverse",
+        "result": {
+          "error": "replacement_context_mismatch",
+          "ok": false
+        },
+        "same_active_sim": true
+      },
+      {
+        "active_input_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "active_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "active_packet_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "active_post_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_input_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "candidate_packet_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_prepared_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "contract": "MATCH",
+        "group": "metadata_fix_07_controls",
+        "name": "controls_mismatch",
+        "result": {
+          "error": "replacement_context_mismatch",
+          "ok": false
+        },
+        "same_active_sim": true
+      }
+    ],
+    "ok": true
+  },
+  "legacy_marker_matches": null,
+  "gate_passed": true
+}

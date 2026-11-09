@@ -1,0 +1,12 @@
+{
+  "paths": [
+    "dictionary_context_before.gd",
+    "run_gate.py",
+    "windows_job.py",
+    "RESULT-BEFORE.md",
+    "HANDOFF.md",
+    "CHECKLIST.md"
+  ],
+  "findings": [],
+  "actual_exit": 0
+}

@@ -1,0 +1,22 @@
+{
+  "prior_attempts": 3,
+  "code_cap": 6,
+  "allowed_now": 1,
+  "plan_sha": "8852B8C89A2217D1967BEF431FBA6913B66FC0D4BCEC10652C19F271D4A345AF",
+  "input_count": 135,
+  "changed_inputs": [],
+  "external_status_delta": [
+    {
+      "InputObject": "?? tmp/p02-eighth-20261108/gate-k1/before-world-clean/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T18-10-20-4008-148693981.jsonl",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "?? tmp/p02-eighth-20261108/gate-k1/before-world-returning/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T18-10-20-7756-148346532.jsonl",
+      "SideIndicator": "=>"
+    }
+  ],
+  "active_godot_first": [],
+  "active_godot_second": [],
+  "coordination": "Root confirmed parallel state/clock-RNG write and new execution stop; Terra attempt-03 closeout conditions used",
+  "at": "2026-11-08T18:10:26.7237346+09:00"
+}

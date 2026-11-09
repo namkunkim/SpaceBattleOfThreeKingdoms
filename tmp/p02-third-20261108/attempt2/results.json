@@ -1,0 +1,1446 @@
+{
+  "stage": "attempt2",
+  "passed": false,
+  "processes": 75,
+  "cases": [
+    {
+      "label": "legacy",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": "369409d12a29965096a9c5a4c05c5f5d3500fbef057eed1ebe5ca37dfd3ef996",
+      "pass_process": true
+    },
+    {
+      "label": "sync-poc",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": "52d827e1983de606a85b48d938e7049e61c59e1b7f2521d23dcdb8aa5a43414e",
+      "pass_process": true
+    },
+    {
+      "label": "sync-services",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": "fa3a2b12310f5c348c3f1b92217c87081222539557c727b35731e4cc7802e082",
+      "pass_process": true
+    },
+    {
+      "label": "sync-negative",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "invalid_json",
+          "ok": false,
+          "path": "input"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "worker-poc",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": "3a6e2f30baf478e15cc8b4fa4f18c15d6463104218a5d947a3c8316f54114462",
+      "pass_process": true
+    },
+    {
+      "label": "worker-services",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": "aab27947d363880eda44d03d61e0a37e85eee6a5ddaa37ec93aa1a4564ad0e24",
+      "pass_process": true
+    },
+    {
+      "label": "worker-negative",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "invalid_json",
+          "ok": false,
+          "path": "input"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "sync-worker-services",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": "c3e49eca0f4731f18d226bc6f97928bedf69c0f1b10d017b03221aea09449a02",
+      "pass_process": true
+    },
+    {
+      "label": "legacy--no-chain",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "unknown_option",
+          "ok": false,
+          "path": "--no-chain"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "legacy--no-m9",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "unknown_option",
+          "ok": false,
+          "path": "--no-m9"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "legacy--wind",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "unknown_option",
+          "ok": false,
+          "path": "--wind"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "world-link",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 1,
+        "WARNING": 1
+      },
+      "rejects": [],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "replay-commands",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": "25cdc7bf81088ab39493c6e6a087ffc3138f14a653db0187d1f8d1e93f6cd104",
+      "pass_process": true
+    },
+    {
+      "label": "replay-repeat",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": "25cdc7bf81088ab39493c6e6a087ffc3138f14a653db0187d1f8d1e93f6cd104",
+      "pass_process": true
+    },
+    {
+      "label": "replay-reordered",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": "d0fb081f897cd91fc01443e0660a08ba06e7dced7619d0a3105232a8067797c4",
+      "pass_process": true
+    },
+    {
+      "label": "replay-removed",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": "142208ca6c50b251b7120c930c0c7461bd0a6d9c7e37db277c0cfadb72389aeb",
+      "pass_process": true
+    },
+    {
+      "label": "replay-defaults",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": "b53fd9c85f6ea212fc164ca380f71f160856605cf5ac2e083bdbc01fa04d72da",
+      "pass_process": true
+    },
+    {
+      "label": "replay-one-tick",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": "81cf0af6975b8be5ce614576f3d56711d6d8b1d159f375efa7780e5affd0cb77",
+      "pass_process": true
+    },
+    {
+      "label": "replay-natural",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": "4d094ad8cb05606f17f6bb2610daf14152e2e3b150f3d298d5dd575b99cb8f5d",
+      "pass_process": true
+    },
+    {
+      "label": "replay-direct",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": "3fc585eeb273427b8371a3d116c892f3f8acb7b03ff7ec954a817290e90913a3",
+      "pass_process": true
+    },
+    {
+      "label": "replay-delegate",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": "a31b03323fe546a1f9646d28713f16b476256472158ad8cfa3b260a21bfb8d85",
+      "pass_process": true
+    },
+    {
+      "label": "replay-hidden",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": "7c3307b032e34322838b40c059a1ea048a35d04825c2ed23c47f215f18255341",
+      "pass_process": true
+    },
+    {
+      "label": "late",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "replay_unconsumed_command",
+          "ok": false,
+          "path": "commands[0].tick"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "malformed",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "invalid_json",
+          "ok": false,
+          "path": "input"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "shape",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "invalid_replay_envelope",
+          "ok": false,
+          "path": "$"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "extra",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "invalid_replay_envelope",
+          "ok": false,
+          "path": "$"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "format",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "unsupported_replay_format",
+          "ok": false,
+          "path": "format"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "input-shape",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "invalid_container",
+          "ok": false,
+          "path": "input"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "commands-shape",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "invalid_replay_command",
+          "ok": false,
+          "path": "commands"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "definition",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "unsupported_input_representation",
+          "ok": false,
+          "path": "input.definition"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "checkpoint",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "unsupported_checkpoint",
+          "ok": false,
+          "path": "input.checkpoint"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "reinforcement",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "unsupported_reinforcement",
+          "ok": false,
+          "path": "input.profile.reinf"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "module",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "unsupported_module_config",
+          "ok": false,
+          "path": "input.profile.combat"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "product",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "unsupported_scenario",
+          "ok": false,
+          "path": "input.profile"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "policy",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "unsupported_replay_policy",
+          "ok": false,
+          "path": "input.policy"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "bad-policy",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "unsupported_policy",
+          "ok": false,
+          "path": "input.policy"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "rate",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "unsupported_hz",
+          "ok": false,
+          "path": "input.hz"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "limit",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "replay_tick_limit",
+          "ok": false,
+          "path": "input.max_ticks"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "zero-limit",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "invalid_integer",
+          "ok": false,
+          "path": "input.max_ticks"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "controls-missing",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "missing_field",
+          "ok": false,
+          "path": "input.initial_controls"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "rows",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "replay_command_limit",
+          "ok": false,
+          "path": "commands"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "bytes",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "replay_input_limit",
+          "ok": false,
+          "path": "input"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "order",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "replay_command_order",
+          "ok": false,
+          "path": "commands[1].tick"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "row-shape",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "invalid_replay_command",
+          "ok": false,
+          "path": "commands[0]"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "row-extra",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "invalid_replay_command",
+          "ok": false,
+          "path": "commands[0]"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "negative-tick",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "replay_command_tick",
+          "ok": false,
+          "path": "commands[0].tick"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "last-invalid-tick",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "replay_command_tick",
+          "ok": false,
+          "path": "commands[0].tick"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "fractional-tick",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "invalid_replay_command",
+          "ok": false,
+          "path": "commands[0].tick"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "string-tick",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "invalid_replay_command",
+          "ok": false,
+          "path": "commands[0].tick"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "side",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "invalid_replay_command",
+          "ok": false,
+          "path": "commands[0].side"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "duplicate-id",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "invalid_replay_command",
+          "ok": false,
+          "path": "commands[0].ids[1]"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "empty-id",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "invalid_replay_command",
+          "ok": false,
+          "path": "commands[0].ids"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "overflow-id",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "invalid_replay_command",
+          "ok": false,
+          "path": "commands[0].ids[0]"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "target",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "invalid_replay_command",
+          "ok": false,
+          "path": "commands[0].target_id"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "string-point",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "invalid_replay_command",
+          "ok": false,
+          "path": "commands[0].point"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "vector-overflow",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "invalid_replay_command",
+          "ok": false,
+          "path": "commands[0].point"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "kind",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "unsupported_replay_command",
+          "ok": false,
+          "path": "commands[0].kind"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "nonempty-args",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "invalid_replay_command",
+          "ok": false,
+          "path": "commands[0].args"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "mix-sync",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "conflicting_option",
+          "ok": false,
+          "path": "--operation-replay"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "mix-worker",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "conflicting_option",
+          "ok": false,
+          "path": "--operation-replay"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "unknown",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "unknown_option",
+          "ok": false,
+          "path": "--unknown"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "legacy-option",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "conflicting_option",
+          "ok": false,
+          "path": "--runs"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "duplicate",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "duplicate_option",
+          "ok": false,
+          "path": "--operation-replay"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "missing-value",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "missing_option_value",
+          "ok": false,
+          "path": "--operation-replay"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "missing-out",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "missing_option",
+          "ok": false,
+          "path": "--out"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "unreadable",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "input_read_failed",
+          "ok": false,
+          "path": "input"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "exists",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "output_exists",
+          "ok": false,
+          "path": "out"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "output-dir",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "output_exists",
+          "ok": false,
+          "path": "out"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "output-missing-parent",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "output_parent_missing",
+          "ok": false,
+          "path": "out"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "output-before-json",
+      "exit": 1,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [
+        {
+          "error": "output_exists",
+          "ok": false,
+          "path": "out"
+        }
+      ],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "headless-api",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "worker-api",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "replay-api",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "core-rules",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "rejects": [],
+      "output_sha256": null,
+      "pass_process": true
+    },
+    {
+      "label": "battle-flow",
+      "exit": 0,
+      "timeout": false,
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 1,
+        "WARNING": 1
+      },
+      "rejects": [],
+      "output_sha256": null,
+      "pass_process": false
+    }
+  ],
+  "comparisons": [
+    {
+      "label": "input/source/class map SHA stable",
+      "passed": true
+    },
+    {
+      "label": "existing output bytes",
+      "passed": true
+    },
+    {
+      "label": "legacy byte identical",
+      "passed": true
+    },
+    {
+      "label": "sync-poc byte identical",
+      "passed": true
+    },
+    {
+      "label": "sync-services byte identical",
+      "passed": true
+    },
+    {
+      "label": "worker-poc byte identical",
+      "passed": true
+    },
+    {
+      "label": "worker-services byte identical",
+      "passed": true
+    },
+    {
+      "label": "sync-worker-services byte identical",
+      "passed": true
+    },
+    {
+      "label": "sync-negative stdout/stderr unchanged",
+      "passed": true
+    },
+    {
+      "label": "worker-negative stdout/stderr unchanged",
+      "passed": true
+    },
+    {
+      "label": "legacy--no-chain stdout/stderr unchanged",
+      "passed": true
+    },
+    {
+      "label": "legacy--no-m9 stdout/stderr unchanged",
+      "passed": true
+    },
+    {
+      "label": "legacy--wind stdout/stderr unchanged",
+      "passed": true
+    },
+    {
+      "label": "world-link stdout/stderr unchanged",
+      "passed": true
+    },
+    {
+      "label": "commands oracle",
+      "passed": true
+    },
+    {
+      "label": "commands metadata",
+      "passed": true
+    },
+    {
+      "label": "repeat oracle",
+      "passed": true
+    },
+    {
+      "label": "repeat metadata",
+      "passed": true
+    },
+    {
+      "label": "reordered oracle",
+      "passed": true
+    },
+    {
+      "label": "reordered metadata",
+      "passed": true
+    },
+    {
+      "label": "removed oracle",
+      "passed": true
+    },
+    {
+      "label": "removed metadata",
+      "passed": true
+    },
+    {
+      "label": "defaults oracle",
+      "passed": true
+    },
+    {
+      "label": "defaults metadata",
+      "passed": true
+    },
+    {
+      "label": "natural oracle",
+      "passed": true
+    },
+    {
+      "label": "natural metadata",
+      "passed": true
+    },
+    {
+      "label": "one-tick oracle",
+      "passed": true
+    },
+    {
+      "label": "one-tick metadata",
+      "passed": true
+    },
+    {
+      "label": "direct oracle",
+      "passed": true
+    },
+    {
+      "label": "direct metadata",
+      "passed": true
+    },
+    {
+      "label": "delegate oracle",
+      "passed": true
+    },
+    {
+      "label": "delegate metadata",
+      "passed": true
+    },
+    {
+      "label": "hidden oracle",
+      "passed": true
+    },
+    {
+      "label": "hidden metadata",
+      "passed": true
+    },
+    {
+      "label": "empty replay equals sync services",
+      "passed": true
+    },
+    {
+      "label": "repeated exact bytes",
+      "passed": true
+    }
+  ]
+}

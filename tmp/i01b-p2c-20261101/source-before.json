@@ -1,0 +1,142 @@
+[
+  {
+    "path": "core/battle\\victory.gd",
+    "sha256": "73f87d6ecb1727171ca9ff3dfb6c0515b49699d5c34f05d502569944c317b74a"
+  },
+  {
+    "path": "core/battle\\tick_clock.gd",
+    "sha256": "dfb9cd4a070995d9aca44f77bf08cab18ae87eb4c678a341ccddc34c5a7ff74e"
+  },
+  {
+    "path": "core/battle\\terrain.gd",
+    "sha256": "9af7390a225398e4b31b6698c8d71ad8fcf877d8a296c750421892b5c997069d"
+  },
+  {
+    "path": "core/battle\\supply.gd",
+    "sha256": "1f762bfea77abb57795c87af619e2d6b48210377cc6e04b9463d021be6e2d5be"
+  },
+  {
+    "path": "core/battle\\stratagem.gd",
+    "sha256": "f7d45eb4c31118e44fe4e8ee1ee31778c99f0a933bd1b49d49afd935f8447581"
+  },
+  {
+    "path": "core/battle\\skills.gd",
+    "sha256": "0d2bf2bfd81cb6f026e025f008774725f7c87d53e0d857697501172bafb21b3d"
+  },
+  {
+    "path": "core/battle\\scenario_profile.gd",
+    "sha256": "a8871ba03f7e37b85c51b70c534cf5073e5e3a3e757569855eefbbb3155234a0"
+  },
+  {
+    "path": "core/battle\\salvo.gd",
+    "sha256": "c80ede4aa4d9c6aa75cd99f9af3672645f0a03e87d170d295bbe9f716b022090"
+  },
+  {
+    "path": "core/battle\\rule_set.gd",
+    "sha256": "43c8a2a313c5d3a625a4aa9b925ae7c5b153d8cbd8147763f2f7b60fe93c364d"
+  },
+  {
+    "path": "core/battle\\rules.gd",
+    "sha256": "1bffb26daedded5749d2885671f26fab1683f02a948212e75b49b9a07a83c6ea"
+  },
+  {
+    "path": "core/battle\\profile_loader.gd",
+    "sha256": "ec1f0a55d28d9aac8c56d59b209fa0da52583c6ee802941551d335d98971c412"
+  },
+  {
+    "path": "core/battle\\poc_setup.gd",
+    "sha256": "fb780a9d3c7a6c7b6ebbc6c6681585f47045587e90cd147c9a17700c01f87bfc"
+  },
+  {
+    "path": "core/battle\\organization.gd",
+    "sha256": "726d30b1a0f95dd7c91089401695b1810de43726c351fcc12003ecec2cd20e44"
+  },
+  {
+    "path": "core/battle\\operation_service_state.gd",
+    "sha256": "18f1381a330d6f33163cc94f678fa624f8500dd415f5d35ee4a4b4bfd5ee44a0"
+  },
+  {
+    "path": "core/battle\\operation_profile.gd",
+    "sha256": "4963f178877f3657a6def8580ed2deaf2f612960e1198c2ee04e7a7309722f0e"
+  },
+  {
+    "path": "core/battle\\morale.gd",
+    "sha256": "0bfbe6ca0f85557b59bfed737bca65ad6e352aa328c837ad747f2dd759773af4"
+  },
+  {
+    "path": "core/battle\\fleet_state.gd",
+    "sha256": "00b39729582cea9f7b66fecd5396c44bdc4b0fa0b2f57516bc4d94cf12d04d6e"
+  },
+  {
+    "path": "core/battle\\detection.gd",
+    "sha256": "df34cee4a225683d6bc1c9005dc7760c365ce3a61ae68e106449cb2e7154253b"
+  },
+  {
+    "path": "core/battle\\decisions.gd",
+    "sha256": "18c9c52d46fbf16a798e1a9451adc0b0ba9b91fb920fb1f8882307a6351d9d7d"
+  },
+  {
+    "path": "core/battle\\command.gd",
+    "sha256": "02415d2f2f7c91a8617ca27123895feb03d3df658c7ad00cb615188bb0009b31"
+  },
+  {
+    "path": "core/battle\\bundle_layout.gd",
+    "sha256": "d9cd27a4688ad58a36f5b82a0b524c437536ef11ef9a18008db36b1d308db148"
+  },
+  {
+    "path": "core/battle\\battle_state.gd",
+    "sha256": "0c7f4589156e642ade356e0785c3096bb305ac1e2328607e9973e173d1ed9e5b"
+  },
+  {
+    "path": "core/battle\\battle_sim.gd",
+    "sha256": "670916af166c1f67fd58f6ab3007782a598a7a8f6fea72024042e1945beb967a"
+  },
+  {
+    "path": "core/battle\\battle_rng.gd",
+    "sha256": "f5f42abd399bed12d10e8385dc83a1fed6450881fe060fdab8734b5a93e3def6"
+  },
+  {
+    "path": "core/battle\\battle_projection.gd",
+    "sha256": "04c146b3f7aabc67a9119f604ff839eab8f2efa69be9b45d654556679c969f30"
+  },
+  {
+    "path": "core/battle\\battle_fingerprint.gd",
+    "sha256": "4f658a2ab2e0012568fcd7a14342457c90a82f02d58980b99039f73acd133890"
+  },
+  {
+    "path": "core/battle\\assault.gd",
+    "sha256": "a98747df1ac2505b03557962c78ff5e3dae41af6c1d021a8dd679dcd8f83954f"
+  },
+  {
+    "path": "core/battle\\ai\\poc_enemy_ai.gd",
+    "sha256": "74113ab7cd332a7519bccfee092fe2ca09efb2fc3e6ac989ada8faff2fbb9885"
+  },
+  {
+    "path": "core/battle\\ai\\commander_ai.gd",
+    "sha256": "a5ecb379d4258a46eeb78f91697c366adbd6a04d9164fca5f1c7c7983c5a2ae5"
+  },
+  {
+    "path": "tests/i01b_service_state.gd",
+    "sha256": "d11615fa541a7064e10bfd2eb648253192baae0ee98e2adf609ad954b4967e66"
+  },
+  {
+    "path": "tests/lib/salvo_fixture.gd",
+    "sha256": "1776fee18e15fd3ef4eb68b16dd081468672f0c3d666227ce1c5ace9ae947326"
+  },
+  {
+    "path": "data/profiles/combat_m3.json",
+    "sha256": "78d89e8c65f9d5fc4ab7324cc99b9f9ab0578157149f3f58036959d21131aa4c"
+  },
+  {
+    "path": "docs/battle-core/pc-campaign-design/H2-DECISION.md",
+    "sha256": "fff580fc061237c070bae26d6251e2b09ec894d479abad25e6fa72e3914ee9ab"
+  },
+  {
+    "path": "docs/battle-core/pc-campaign-design/D04-STATE.md",
+    "sha256": "d8272a2159d4384558b83b7db8952913e82242ee2cf41cd08315bb036553886d"
+  },
+  {
+    "path": "docs/battle-core/pc-campaign-design/I01-READINESS-DECISION-20261026.md",
+    "sha256": "49c0c3fc49eb1a14815584cc0b45fecd402b2b1f3e28668e7179c965a1815a50"
+  }
+]

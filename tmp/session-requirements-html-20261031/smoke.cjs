@@ -1,0 +1,20 @@
+const fs=require('fs');
+const vm=require('vm');
+const path=require('path');
+const {pathToFileURL}=require('url');
+const {chromium}=require('C:/Users/nk782/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+(async()=>{
+ const htmlPath=path.resolve('docs/battle-core/pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.html');
+ const html=fs.readFileSync(htmlPath,'utf8');
+ const scripts=[...html.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/g)];
+ const data=JSON.parse(scripts.find(x=>x[1].includes('requirements-data'))[2]);
+ new vm.Script(scripts.find(x=>!x[1].includes('application/json'))[2]);
+ const browser=await chromium.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true});
+ const page=await browser.newPage({viewport:{width:1365,height:950}});
+ const errors=[]; page.on('pageerror',error=>errors.push(error.message));
+ await page.goto(pathToFileURL(htmlPath).href);
+ await page.waitForSelector('.card');
+ console.log(JSON.stringify({dataRows:data.items.length,renderedCards:await page.locator('.card').count(),pageErrors:errors,counts:await page.locator('[data-count]').allTextContents(),progress:await page.locator('#progress-number').innerText()}));
+ await page.screenshot({path:'tmp/session-requirements-html-20261031/desktop-first.png',fullPage:false});
+ await browser.close();
+})().catch(error=>{console.error(error);process.exit(1);});

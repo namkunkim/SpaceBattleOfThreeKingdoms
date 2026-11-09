@@ -1,0 +1,248 @@
+{
+  "executed": true,
+  "argv": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+    "--script",
+    "res://tmp/p03-dictionary-value-type-20261108/dictionary_value_type.gd"
+  ],
+  "cwd": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+  "engine_version": "4.7.2.stable.official.ed1daf0bf",
+  "actual_exit": 0,
+  "launcher_pid": 29576,
+  "engine_identity_matches": true,
+  "launcher_primary_thread": 35364,
+  "launch_error": null,
+  "job_accounting": {
+    "active": 0,
+    "total": 2,
+    "terminated": 0
+  },
+  "timed_out": false,
+  "elapsed_seconds": 1.2892553999554366,
+  "input_stable": true,
+  "input_count": 45,
+  "timeout_probe": null,
+  "timeout_probe_passed": false,
+  "cleanup": null,
+  "diagnostics": {
+    "script_error": 0,
+    "error": 0,
+    "warning": 0,
+    "objectdb": 0,
+    "resources_at_exit": 0
+  },
+  "runner": {
+    "cases": [
+      "value_type_01_same_context_control",
+      "value_type_02_key_derived_control",
+      "value_type_03_only_value_metadata"
+    ],
+    "checks": 48,
+    "engine_path": "C:/Tools/Godot/Godot_v4.7.2-stable_win64.exe",
+    "engine_pid": 3744,
+    "observations": [
+      {
+        "active_input_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "active_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "active_packet_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "active_post_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_input_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "candidate_packet_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_prepared_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "name": "value_type_01_same_context_control",
+        "result": {
+          "ok": true
+        },
+        "same_active_sim": false
+      },
+      {
+        "active_input_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "active_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "active_packet_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "active_post_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_input_meta": [
+          0,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "candidate_key_list_meta": [
+          0,
+          "",
+          null
+        ],
+        "candidate_packet_meta": [
+          0,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "candidate_prepared_meta": [
+          0,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "name": "value_type_02_key_derived_control",
+        "result": {
+          "error": "replacement_context_mismatch",
+          "ok": false
+        },
+        "same_active_sim": true
+      },
+      {
+        "active_input_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "active_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "active_packet_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "active_post_meta": [
+          4,
+          "",
+          null,
+          2,
+          "",
+          null
+        ],
+        "candidate_input_meta": [
+          4,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "candidate_key_list_meta": [
+          4,
+          "",
+          null
+        ],
+        "candidate_packet_meta": [
+          4,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "candidate_prepared_meta": [
+          4,
+          "",
+          null,
+          0,
+          "",
+          null
+        ],
+        "name": "value_type_03_only_value_metadata",
+        "result": {
+          "ok": true
+        },
+        "same_active_sim": false
+      }
+    ],
+    "ok": true,
+    "value_metadata_contract": "MISMATCH"
+  },
+  "gate_passed": true
+}

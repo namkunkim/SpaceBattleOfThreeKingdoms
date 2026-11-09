@@ -1,0 +1,32 @@
+[
+  {
+    "Algorithm": "SHA256",
+    "Hash": "8260F405C4BF0BC4142E104C0A22923BE77B36F62B1D8FCDCC5FA6B8DB47D518",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tests\\fixtures\\p02\\poc.json"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "8C4E4DCBB1632AA46ED65D04B8D3F6D41D4F5982D2984D126B902FE3F475C879",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tests\\fixtures\\p02\\services.json"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "9BA01F6E20EAC68F59D70BAC6BC842F29ABB9E3FB5AB268203A6C20161A91CDA",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tests\\fixtures\\p02\\timeout-poc.json"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "D50D0374885B60633684BA0A4D796470C4E29E5D7B5F8FC68F93D6A7D7B0015E",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fourth-20261108\\typed-native.gd"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "B0863D87A8775009741DA354A6CEEF36CE44E246E201EBE0A991C088A38BE414",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fourth-20261108\\native-contract.json"
+  },
+  {
+    "Algorithm": "SHA256",
+    "Hash": "1C9A451773AF6D80E3FC40EC504A734232E6E4F7A5D9A4CAA61B7936A000583B",
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-fourth-20261108\\native2.stdout"
+  }
+]

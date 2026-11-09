@@ -1,0 +1,32 @@
+core/battle/battle_projection.gd:7:# 사건은 투영에 넣지 않고 BattleSim.drain_events()로 따로 받는다(한 프레임에 여러 틱이 돌 수 있어서).
+core/battle/battle_sim.gd:8:#   플레이어 명령은 queue()로 넣고 다음 step()의 첫머리에 적용·기록한다. AI 명령은 기록하지 않는다(상태에서 다시 나온다).
+core/battle/battle_sim.gd:9:# 사건: {tick, kind, sq, other, pos, value} — drain_events()로 가져간다. 표현과 로그는 사건만 보고 그린다.
+core/battle/battle_sim.gd:95:func queue(cmd: Dictionary) -> void:
+core/battle/battle_sim.gd:98:func drain_events() -> Array[Dictionary]:
+core/battle/battle_sim.gd:188:			sim.queue(log[i])
+core/battle/battle_sim.gd:191:		sim.drain_events()
+core/battle/battle_sim.gd:424:func drain_events_for(side: int) -> Array[Dictionary]:
+core/battle/battle_sim.gd:425:	var evs := drain_events()
+core/battle/operation_replay.gd:124:			var queued := owner.queue(commands[next])
+core/battle/operation_replay.gd:128:		var advanced := owner.advance()
+core/battle/operation_replay.gd:132:		var drained := owner.drain_events()
+core/battle/operation_private_state.gd:209:func queue(command: Variant) -> Dictionary:
+core/battle/operation_private_state.gd:218:	if pending: _sim.queue(detached)
+core/battle/operation_private_state.gd:223:func advance() -> Dictionary:
+core/battle/operation_private_state.gd:231:func drain_events() -> Dictionary:
+core/battle/operation_private_state.gd:235:	var events := _sim.drain_events().duplicate(true)
+core/battle/operation_private_state.gd:240:func drain_events_for(side: Variant) -> Dictionary:
+core/battle/operation_private_state.gd:245:	var events := _sim.drain_events_for(side).duplicate(true)
+core/battle/operation_private_state.gd:285:func capture_completed() -> Dictionary:
+core/battle/operation_private_state.gd:361:func restore_completed(packet: Variant) -> Dictionary:
+core/battle/tick_clock.gd:20:func advance(real_s: float) -> int:
+scripts/FleetBattle3D.gd:344:	sim.drain_events()
+scripts/FleetBattle3D.gd:485:		var n := 0 if placing else clock.advance(delta)   # 초기 배치 중에는 틱이 멈춘다
+scripts/FleetBattle3D.gd:530:	var n := _sim_acc_clock.advance(dt)
+scripts/FleetBattle3D.gd:565:	for e in sim.drain_events_for(0):
+scripts/world/auto_resolver.gd:54:			sim.drain_events()
+scripts/world/auto_resolver.gd:155:func start_operation(input: Variant) -> Dictionary:
+scripts/world/auto_resolver.gd:174:func poll_operation() -> Dictionary:
+scripts/world/auto_resolver.gd:184:func cancel_operation() -> void:
+scripts/world/auto_resolver.gd:229:		var advanced := owner.advance()
+scripts/world/auto_resolver.gd:232:		var drained := owner.drain_events()

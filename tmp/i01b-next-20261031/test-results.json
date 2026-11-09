@@ -1,0 +1,190 @@
+{
+  "date": "2026-10-31 KST",
+  "head": "fb660cea69207fd332e26128643007694910a253",
+  "scope": "PARTIAL_IN_MEMORY_NOT_CHECKPOINT",
+  "overall": "NOT_READY",
+  "external_save_schema": "UNCLASSIFIED",
+  "code_attempt_cap": 6,
+  "code_attempts_used": 5,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "actual_exit": 1,
+      "accepted": false,
+      "engine_log": "tmp/i01b-next-20261031/attempt1-engine.log",
+      "engine_sha": "056b57595ddc90a70dd000b76c0180d39a5c476c9564ef835c809cf1fba8adb3",
+      "captured_log": null,
+      "captured_sha": null,
+      "script_errors": 61,
+      "pass_lines": [
+        "I01B_P2B_SERVICE_STATE_FAIL cases=0 checks=622"
+      ]
+    },
+    {
+      "attempt": 2,
+      "actual_exit": 0,
+      "accepted": false,
+      "engine_log": "tmp/i01b-next-20261031/attempt2-engine.log",
+      "engine_sha": "88a91df172c29fa4819444da34cd8dbc33fbcb1931d6eabbd08156835795e9ea",
+      "captured_log": "tmp/i01b-next-20261031/attempt2-captured.log",
+      "captured_sha": "d27009f2254efa5f558c1a62fd7ce75dc5bf30ad2639ffb321cfdafd462f1f8b",
+      "script_errors": 1,
+      "pass_lines": [
+        "I01B_P2B_SERVICE_STATE_PASS cases=40 seeds=10 checks=2254 rejections=14 PARTIAL_NOT_CHECKPOINT NOT_READY"
+      ]
+    },
+    {
+      "attempt": 3,
+      "actual_exit": 0,
+      "accepted": false,
+      "engine_log": "tmp/i01b-next-20261031/attempt3-engine.log",
+      "engine_sha": "6dc736ce9f5af576b1bfa10bff8618026b714c0e1bc26651170e057a1f586b7f",
+      "captured_log": "tmp/i01b-next-20261031/attempt3-captured.log",
+      "captured_sha": "b816c5d6f9c1810405f02de8f47f6500932368f0fb5220b98ff38958685d3326",
+      "script_errors": 0,
+      "pass_lines": [
+        "I01B_P2B_SERVICE_STATE_PASS cases=40 seeds=10 checks=2279 rejections=24 PARTIAL_NOT_CHECKPOINT NOT_READY"
+      ]
+    },
+    {
+      "attempt": 4,
+      "actual_exit": 0,
+      "accepted": false,
+      "engine_log": "tmp/i01b-next-20261031/attempt4-engine.log",
+      "engine_sha": "3f732061dfdcc0fdd0d1ef92cca8b791ad33da203940f312db0cdac2f889a8b4",
+      "captured_log": "tmp/i01b-next-20261031/attempt4-captured.log",
+      "captured_sha": "a700314f93cf493f545294922036600c1f86aba34074caec2aa883eee964ef1c",
+      "script_errors": 0,
+      "pass_lines": [
+        "I01B_P2B_SERVICE_STATE_PASS cases=40 seeds=10 checks=2299 rejections=33 PARTIAL_NOT_CHECKPOINT NOT_READY"
+      ]
+    },
+    {
+      "attempt": 5,
+      "actual_exit": 0,
+      "accepted": true,
+      "engine_log": "tmp/i01b-next-20261031/attempt5-engine.log",
+      "engine_sha": "911a6fb9a9f9b889528c87d20dac99f64295d67f27bbc03d5e008e55f79f9672",
+      "captured_log": "tmp/i01b-next-20261031/attempt5-captured.log",
+      "captured_sha": "affea346dfbc00028c3a80cb69c9fd09e0f91a6c16254a76d49ccc358e46d26e",
+      "script_errors": 0,
+      "pass_lines": [
+        "I01B_P2B_SERVICE_STATE_PASS cases=40 seeds=10 checks=2202 rejections=33 PARTIAL_NOT_CHECKPOINT NOT_READY"
+      ]
+    }
+  ],
+  "attempt2_invalid_despite_exit0": "SCRIPT ERROR aborted refusal section; PASS marker is not success",
+  "final": {
+    "actual_exit": 0,
+    "positive_cases": 40,
+    "seeds": 10,
+    "checks_stdout": 2202,
+    "checks_diagnostic_before_file_open": 2201,
+    "named_rejections": 33,
+    "script_errors": 0,
+    "error_lines": 0,
+    "diagnostics": [],
+    "observations": "tmp/i01b-next-20261031/observations.json",
+    "observations_sha": "92bcc921b5dca9bc7403daad0fd7d18efbd1dba1347a12597883b0b2e19872b3"
+  },
+  "sources": [
+    {
+      "path": "core/battle/operation_service_state.gd",
+      "sha256": "18f1381a330d6f33163cc94f678fa624f8500dd415f5d35ee4a4b4bfd5ee44a0"
+    },
+    {
+      "path": "tests/i01b_service_state.gd",
+      "sha256": "d11615fa541a7064e10bfd2eb648253192baae0ee98e2adf609ad954b4967e66"
+    },
+    {
+      "path": "tests/lib/salvo_fixture.gd",
+      "sha256": "1776fee18e15fd3ef4eb68b16dd081468672f0c3d666227ce1c5ace9ae947326"
+    },
+    {
+      "path": "core/battle/battle_sim.gd",
+      "sha256": "670916af166c1f67fd58f6ab3007782a598a7a8f6fea72024042e1945beb967a"
+    },
+    {
+      "path": "core/battle/battle_state.gd",
+      "sha256": "0c7f4589156e642ade356e0785c3096bb305ac1e2328607e9973e173d1ed9e5b"
+    },
+    {
+      "path": "core/battle/fleet_state.gd",
+      "sha256": "00b39729582cea9f7b66fecd5396c44bdc4b0fa0b2f57516bc4d94cf12d04d6e"
+    },
+    {
+      "path": "core/battle/detection.gd",
+      "sha256": "df34cee4a225683d6bc1c9005dc7760c365ce3a61ae68e106449cb2e7154253b"
+    },
+    {
+      "path": "core/battle/supply.gd",
+      "sha256": "1f762bfea77abb57795c87af619e2d6b48210377cc6e04b9463d021be6e2d5be"
+    },
+    {
+      "path": "core/battle/terrain.gd",
+      "sha256": "9af7390a225398e4b31b6698c8d71ad8fcf877d8a296c750421892b5c997069d"
+    },
+    {
+      "path": "core/battle/battle_fingerprint.gd",
+      "sha256": "4f658a2ab2e0012568fcd7a14342457c90a82f02d58980b99039f73acd133890"
+    },
+    {
+      "path": "core/battle/profile_loader.gd",
+      "sha256": "ec1f0a55d28d9aac8c56d59b209fa0da52583c6ee802941551d335d98971c412"
+    },
+    {
+      "path": "core/battle/poc_setup.gd",
+      "sha256": "fb780a9d3c7a6c7b6ebbc6c6681585f47045587e90cd147c9a17700c01f87bfc"
+    },
+    {
+      "path": "core/battle/rules.gd",
+      "sha256": "1bffb26daedded5749d2885671f26fab1683f02a948212e75b49b9a07a83c6ea"
+    },
+    {
+      "path": "core/battle/tick_clock.gd",
+      "sha256": "dfb9cd4a070995d9aca44f77bf08cab18ae87eb4c678a341ccddc34c5a7ff74e"
+    },
+    {
+      "path": "core/battle/scenario_profile.gd",
+      "sha256": "a8871ba03f7e37b85c51b70c534cf5073e5e3a3e757569855eefbbb3155234a0"
+    },
+    {
+      "path": "core/battle/operation_profile.gd",
+      "sha256": "4963f178877f3657a6def8580ed2deaf2f612960e1198c2ee04e7a7309722f0e"
+    },
+    {
+      "path": "data/profiles/poc_corridor.json",
+      "sha256": "bb7c2dbaa8c258dc8b43f16894502a72cb66a22d2058b5d5314816a0488e9d8e"
+    },
+    {
+      "path": "data/profiles/combat_m3.json",
+      "sha256": "78d89e8c65f9d5fc4ab7324cc99b9f9ab0578157149f3f58036959d21131aa4c"
+    },
+    {
+      "path": "data/profiles/red_cliffs_rt.json",
+      "sha256": "1c9fa315648e47a53b17b2e0ef9c5492da64122e98b462a789b7b35790e31e38"
+    },
+    {
+      "path": "data/profiles/ai_m7.json",
+      "sha256": "a1a7fa6f2460bc38abe14c48f4ee89fc49e40e1cfca76cf89644df34864749a0"
+    },
+    {
+      "path": "data/scenarios/red_cliffs_208_realtime.json",
+      "sha256": "0d702495a1ac94e255b44948ba8ebb625d4cdae2f1605658d05ec47911edb208"
+    },
+    {
+      "path": "data/bundle-layout.json",
+      "sha256": "b8b373c9d7a91c0e58f75202eb6bce28509aa0c122ce93471e4fe09d889a53e2"
+    }
+  ],
+  "engine": {
+    "path": "C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe",
+    "sha256": "c8f0a6bc45a19b33541501e57f6f7cd972ab18453743266339d495cbbe846643"
+  },
+  "regressions": "tmp/i01b-next-20261031/regression-results.json",
+  "regression_sha": "d720d7254c371214a396ae61b3da5df11986d17d499500476c7908b48e06a8cc",
+  "caller_precondition": "Prepared target matches all external state; context guards are necessary only",
+  "constructor_negative_control": "After-completion reset of spent supplier stock only",
+  "teardown": "Separate post-observation module.sim reference cleanup",
+  "screen_android_export_performance": "NOT_EXECUTED"
+}

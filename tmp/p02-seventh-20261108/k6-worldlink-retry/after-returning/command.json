@@ -1,0 +1,18 @@
+{
+  "args": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-seventh-20261108\\k4-current\\after",
+    "--script",
+    "res://tmp/p02-sixth-20261108/world-probe.gd",
+    "--",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-seventh-20261108\\k6-worldlink-retry\\after-returning\\result.json"
+  ],
+  "env": {
+    "APPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-seventh-20261108\\k6-worldlink-retry\\after-returning\\roaming",
+    "LOCALAPPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-seventh-20261108\\k6-worldlink-retry\\after-returning\\local",
+    "XDG_DATA_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-seventh-20261108\\k6-worldlink-retry\\after-returning\\roaming"
+  },
+  "expected_exit": 0
+}

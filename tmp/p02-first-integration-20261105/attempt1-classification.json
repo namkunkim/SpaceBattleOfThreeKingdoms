@@ -1,0 +1,14 @@
+{
+  "actual_exit": 1,
+  "attempt": 1,
+  "limit": 6,
+  "canonical_class_guard": "",
+  "cases": 8,
+  "checks": 16804,
+  "api_rejections": 32,
+  "script_errors": 8112,
+  "explicit_errors": 1,
+  "natural": 6,
+  "timeout": 2,
+  "status": "FAIL; not acceptance evidence"
+}

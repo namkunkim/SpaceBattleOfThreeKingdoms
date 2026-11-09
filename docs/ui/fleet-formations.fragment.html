@@ -1,7 +1,8 @@
 <div id="fleet-formation-board">
   <h2>함종별 함대 배치 · 7개 진형</h2>
-  <div class="viz-controls"><label class="form-label">진형 보기 <select class="form-select" id="formation-choice"><option value="all">전체 비교</option></select></label><span class="text-small text-muted">동일한 예시 편성 56척 · 위쪽이 전방 ↑ · 실제 게임 배치 기준</span></div>
+  <div class="viz-controls"><label class="form-label">진형 보기 <select class="form-select" id="formation-choice"><option value="all">전체 비교</option></select></label><button class="btn" id="ship-show-all" type="button">전체 표시</button><span class="text-small text-muted">동일한 예시 편성 56척 · 위쪽이 전방 ↑ · 실제 게임 배치 기준</span></div>
   <div id="ship-key" class="viz-row" aria-label="함종 범례"></div>
+  <div id="ship-selection-status" class="text-small" aria-live="polite">함종을 클릭하면 위치를 강조합니다.</div>
   <div id="formation-panels" aria-live="polite"></div><p class="text-small text-muted">¹ 고속정은 게임과 동일하게 요격함 이미지를 작게 표시했습니다.</p>
 </div>
 <style>
@@ -27,8 +28,12 @@
  const names=['어린진','학익진','방원진','안행진','봉시진','장사진','팔진'];
  const intents=['중앙 돌파 · 전열함이 앞을 열고 화력선이 뒤를 지원','양익 포위 · 양 날개의 요격함·고속정이 포위 전개','종심 방어 · 모함·보급함을 안쪽에 두고 외곽 호위','사격 전개 · 포격함·공성함의 사격 간격 확보','축차 투입 · 전열 선봉과 후속 강습 전력의 돌파','종렬 항진 · 좁은 대열에서 전방 초계와 후미 지원','가변 대응 · 전열·화력·호위 전력을 구역별 분산'];
  const types=[['강습모함','중앙 후방 · 강습정 운용',6,'--viz-series-4'],['공성함','후방 · 관통 사격',2,'--viz-series-2'],['포격함','중후방 · 장거리 포화',1,'--viz-series-2'],['전열함','전방 · 정면 교전',0,'--viz-series-1'],['보급함','후방 안쪽 · 수리·보급',3,'--viz-series-4'],['전자전함','전열 뒤 · 탐지·교란',4,'--viz-series-5'],['요격함','양익 외곽 · 요격·호위',5,'--viz-series-3'],['고속정','전방 양익 · 정찰·기습',5,'--viz-series-6']];
- const key=root.querySelector('#ship-key'), panels=root.querySelector('#formation-panels'), choice=root.querySelector('#formation-choice');
- types.forEach((t,i)=>{const item=document.createElement('div');item.className='key-item';item.style.setProperty('--ship-color',`var(${t[3]})`);item.innerHTML=`<i class="swatch" aria-hidden="true"></i><img src="${data.textures[t[2]]}" alt=""><div><span>${t[0]}${i===7?' ¹':''}</span><span class="text-small text-muted">${t[1]}</span></div>`;key.appendChild(item)});
+ const key=root.querySelector('#ship-key'), panels=root.querySelector('#formation-panels'), choice=root.querySelector('#formation-choice'), reset=root.querySelector('#ship-show-all'), status=root.querySelector('#ship-selection-status');
+ let selectedType=-1;
+ const legendButtons=[];
+ function saveState(){window.openai?.setWidgetState({modelContent:{formation:choice.value,shipType:selectedType},privateContent:null}).catch(()=>{});}
+ types.forEach((t,i)=>{const button=document.createElement('button');button.className='btn';button.type='button';button.setAttribute('aria-pressed','false');const item=document.createElement('span');item.className='key-item';item.style.setProperty('--ship-color',`var(${t[3]})`);item.innerHTML=`<i class="swatch" aria-hidden="true"></i><img src="${data.textures[t[2]]}" alt=""><span><span>${t[0]}${i===7?' ¹':''}</span><span class="text-small text-muted">${t[1]}</span></span>`;button.appendChild(item);button.addEventListener('click',()=>{selectedType=selectedType===i?-1:i;render();saveState()});legendButtons.push(button);key.appendChild(button)});
+ reset.addEventListener('click',()=>{selectedType=-1;render();saveState()});
  names.forEach((name,i)=>{const opt=document.createElement('option');opt.value=String(i);opt.textContent=name+' 크게 보기';choice.appendChild(opt)});
  const NS='http://www.w3.org/2000/svg';
  function el(tag,attrs,parent){const e=document.createElementNS(NS,tag);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));parent.appendChild(e);return e;}
@@ -47,19 +52,23 @@
   records.forEach(p=>{
    const i=Number(p.t.slice(-2))-1,t=types[i],x=w/2+(p.l-midx)*scale,y=(h+24)/2-(p.f-midy)*scale;
    const factor=[1.12,1.04,0.98,1,0.92,0.82,0.72,0.48][i],len=length*factor;
-   const g=el('g',{transform:`translate(${x} ${y})`,class:'ship-mark','data-tooltip':t[0]+' · '+t[1]},svg);
+   const g=el('g',{transform:`translate(${x} ${y})`,class:'ship-mark','data-ship-type':i,opacity:selectedType<0||selectedType===i?1:0.18,'data-tooltip':t[0]+' · '+t[1]},svg);
+   if(selectedType===i)el('rect',{x:-len/8-4,y:-len/2-4,width:len/4+8,height:len+8,fill:'none',stroke:`var(${t[3]})`,'stroke-width':2},g);
    el('circle',{cx:0,cy:len/2+4,r:i===7?1.7:2.3,fill:`var(${t[3]})`},g);
    el('image',{href:data.textures[t[2]],x:-len/2,y:-len/8,width:len,height:len/4,transform:'rotate(90)',preserveAspectRatio:'xMidYMid meet'},g);
   });
  }
  let observers=[]; function render(){ observers.forEach(o=>o.disconnect());observers=[];
+  legendButtons.forEach((button,i)=>button.setAttribute('aria-pressed',String(selectedType===i)));reset.disabled=selectedType<0;
+  status.textContent=selectedType<0?'함종을 클릭하면 위치를 강조합니다.':`${types[selectedType][0]} ${[6,4,8,14,4,4,10,6][selectedType]}척 강조 · 다시 클릭하거나 전체 표시로 해제`;
   panels.classList.toggle('single',choice.value!=='all');panels.replaceChildren();
   const indices=choice.value==='all'?names.map((_,i)=>i):[Number(choice.value)];
   indices.forEach(i=>{const section=document.createElement('section');const heading=document.createElement('h3');heading.textContent=names[i];const intent=document.createElement('p');intent.className='intent text-small';intent.textContent=intents[i];section.append(heading,intent);const svg=el('svg',{class:'formation-plot',role:'img','aria-label':names[i]+' 함종별 배치'},section);panels.append(section);const ro=new ResizeObserver(()=>draw(svg,i,choice.value!=='all'));observers.push(ro);ro.observe(svg);draw(svg,i,choice.value!=='all');});
  }
- const saved=window.openai?.widgetState?.modelContent?.formation;if(saved==='all'||names[Number(saved)])choice.value=saved;
- choice.addEventListener('change',()=>{render();window.openai?.setWidgetState({modelContent:{formation:choice.value},privateContent:null}).catch(()=>{});});
- window.addEventListener('openai:set_globals',e=>{const s=e.detail?.globals?.widgetState?.modelContent?.formation;if(s==='all'||names[Number(s)]){choice.value=s;render()}});
+ function restore(state){const saved=state?.formation;if(saved==='all'||names[Number(saved)])choice.value=saved;selectedType=Number.isInteger(state?.shipType)&&state.shipType>=0&&state.shipType<8?state.shipType:-1;}
+ restore(window.openai?.widgetState?.modelContent);
+ choice.addEventListener('change',()=>{render();saveState()});
+ window.addEventListener('openai:set_globals',e=>{restore(e.detail?.globals?.widgetState?.modelContent);render()});
  render();
 })();
 </script>

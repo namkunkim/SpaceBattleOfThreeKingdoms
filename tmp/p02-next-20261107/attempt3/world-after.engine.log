@@ -1,0 +1,7 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+P02_WORLD_OUTCOME {"cao_status":"unhurt","difficulty":"입문","ending":"J-D4","fingerprint":"48db8dcd9750f1e87449e6202dd19b8e4916e4035eabb5accf9482c6e1289855","grade":"근소 우세","kind":"alliance_win","limited":false,"line":"E9","liu_status":"unhurt","loss_pct":{"alliance":15,"foe":33},"mode":"auto","reason":"cao_morale_collapse","seed":11,"t_s":1096.95,"win":true}
+자동 해결 1판 49.7s (스레드), 결과 alliance_win cao_morale_collapse 근소 우세
+[TRACE] C:/Users/nk782/AppData/Roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-07T20-41-40-14012-105245616.jsonl
+FPS 145.0 ships 411 state end speed 4
+WORLD_LINK_PASS

@@ -1,0 +1,1 @@
+Packaging attempt 1 stopped at a misnamed review path. Its partial ZIP is preserved separately and is excluded from delivery. Attempt 2 corrected the path to REVIEW-PLAN-TERRA-V2.md. Source evidence was unchanged.

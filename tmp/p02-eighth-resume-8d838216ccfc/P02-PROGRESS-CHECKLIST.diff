@@ -1,0 +1,12 @@
+--- docs\battle-core\pc-campaign-design\P02-PROGRESS-CHECKLIST.md
++++ docs\battle-core\pc-campaign-design\P02-PROGRESS-CHECKLIST.md
+@@ -41,7 +41,8 @@
+ 
+ ## 미완료 — 두 제품 소비자의 공통 native 초기화 후보
+ 
+-- [ ] 격리 후보만 준비했다. 원본 제품 코드는 미적용이며 제품 operation·실제 UI 인수는 남아 있다. K1·K2는 비정본이다. K3는 일부 native 대조를 통과했고 K4는 WorldMap 정상 완료·취소를 viewport 입력으로 확인했다. 별도 오류 뒤 재시도는 175초 제한 뒤 join 단언이 실패했다. K4 GUI exit 81, K5 마우스 이벤트 주체 미확인으로 실제 OS 입력 근거는 미충족이다. PID·HWND·전경 확인 전 추가 OS 입력을 보류했다. K6은 미실행이고 계획 21행과 독립 5-b 수용은 미완료다. [중단 인계](../../../tmp/p02-eighth-20261108/SESSION-HANDOFF-INCOMPLETE.md) · [실행 근거](../../../tmp/p02-eighth-20261108/IMPLEMENTATION-EVIDENCE.md) · [격리 후보 패치](../../../tmp/p02-eighth-20261108/candidate-product.patch)
++- [ ] 격리 후보만 준비했다. 원본 제품 코드는 미적용이며 제품 operation·실제 UI 인수는 남아 있다. K1·K2는 비정본이다. K3는 일부 native 대조를 통과했고 K4는 WorldMap 정상 완료·취소를 viewport 입력으로 확인했다. 별도 오류 뒤 재시도는 175초 제한 뒤 join 단언이 실패했다. K4 GUI exit 81, K5 마우스 이벤트 주체 미확인으로 실제 OS 입력 근거는 미충족이다. PID·HWND·전경 확인 전 추가 OS 입력을 보류했다. K6은 미실행이고 계획 21행과 독립 5-b 수용은 미완료다. [중단 인계](../../../tmp/p02-eighth-20261108/SESSION-HANDOFF-INCOMPLETE.md) · [실행 근거](../../../tmp/p02-eighth-20261108/IMPLEMENTATION-EVIDENCE.md) · [격리 후보 패치](../../../tmp/p02-eighth-20261108/candidate-product.patch) · [재개 인계](../../../tmp/p02-eighth-resume-8d838216ccfc/SESSION-HANDOFF-INCOMPLETE.md) · [준비 V5 독립 심사](../../../tmp/p02-eighth-resume-8d838216ccfc/REVIEW-PREPARED-V5-INDEPENDENT.md)
++- [ ] 재개 준비 V5의 계획 분모는 21행이며 58개 프로세스와 합산 상한 20,270초는 실행 전 산정이다. timeout 안전 경로는 정적·합성 자료로 확인했다. 7종 suite 기준선 분모, GUI 연속 전경·입력 귀속, 실제 Godot console 자손·중첩 Job 검증이 남아 K6 실행은 독립 심사에서 반려됐다. 남은 한 회의 전체 계획이 독립 재심을 통과해야 실행할 수 있다.
+ 
+ ## 남은 인수
+ 

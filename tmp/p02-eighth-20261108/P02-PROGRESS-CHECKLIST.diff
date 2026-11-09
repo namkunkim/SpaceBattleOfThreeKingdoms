@@ -1,0 +1,13 @@
+--- before/P02-PROGRESS-CHECKLIST.md
++++ after/P02-PROGRESS-CHECKLIST.md
+@@ -39,6 +39,10 @@
+ - [x] 독립 구현 5-b와 전달 ZIP의 독립 마감은 이 범위를 한정 수용했다. ZIP 내부 마감 대기는 생성 당시 표기이며, 최종 판정은 ZIP 외부 독립 마감 기록에 있다. 최초 randomize 시작 트레이스 strict 비교는 7/8이었다. 고정 RNG의 별도 init_game 후속 한 행 전체 일치는 최초 시작 비교와 별개다. K1~K6을 사용했고 clean-user WorldLink의 기존 서막 단일 실패(exit 1)와 returning-user 통과(exit 0)를 재현했다. 기존 ObjectDB·리소스 종료 진단의 원인은 확정하지 않았다. [독립 5-b](../../../tmp/p02-seventh-20261108/REVIEW-5B-INDEPENDENT.md) · [최종 전달 ZIP](../../../tmp/p02-seventh-20261108/closeout/P02-PREP-ERROR-DELIVERY-20261108.zip) · [독립 마감](../../../tmp/p02-seventh-20261108/closeout/REVIEW-CLOSEOUT-INDEPENDENT.md)
+ - [ ] 적벽 operation 지원, FleetBattle3D·WorldMap 제품 operation 연결과 P02 전체 인수는 남아 있다.
+ 
++## 미완료 — 두 제품 소비자의 공통 native 초기화 후보
++
++- [ ] 격리 후보만 준비했다. 원본 제품 코드는 미적용이며 제품 operation·실제 UI 인수는 남아 있다. K1·K2는 비정본이다. K3는 일부 native 대조를 통과했고 K4는 WorldMap 정상 완료·취소를 viewport 입력으로 확인했다. 별도 오류 뒤 재시도는 175초 제한 뒤 join 단언이 실패했다. K4 GUI exit 81, K5 마우스 이벤트 주체 미확인으로 실제 OS 입력 근거는 미충족이다. PID·HWND·전경 확인 전 추가 OS 입력을 보류했다. K6은 미실행이고 계획 21행과 독립 5-b 수용은 미완료다. [중단 인계](../../../tmp/p02-eighth-20261108/SESSION-HANDOFF-INCOMPLETE.md) · [실행 근거](../../../tmp/p02-eighth-20261108/IMPLEMENTATION-EVIDENCE.md) · [격리 후보 패치](../../../tmp/p02-eighth-20261108/candidate-product.patch)
++
+ ## 남은 인수
+ 
+ - [ ] **FleetBattle3D 제품 operation 호스트.** 공통 operation 입력으로 새 후보를 준비하고 검증 성공 후에만 화면에 게시한다. 시계와 초기 controls, 배치/명령, 투영/사건, UI 선택·카메라·trace의 소유권과 실패 시 기존 세션 보존을 함께 검증한다.

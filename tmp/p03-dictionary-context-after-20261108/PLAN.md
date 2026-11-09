@@ -1,0 +1,11 @@
+# P03 Dictionary context 비교 수정과 검증
+
+2026-11-08 KST. 사용자 명시 승인으로 OperationPrivateState의 Dictionary context 비교 한 hunk를 P03이 소유한다. Sol 구현 / Terra 독립 심사, Astra 제외. [독립 before 결과](../p03-dictionary-context-fix-20261108/RESULT-BEFORE.md) 6/6 MISMATCH 및 [마감](../p03-dictionary-context-fix-20261108/REVIEW-CLOSEOUT-BEFORE.md)을 그대로 둔다.
+
+승인 경계는 core/battle/operation_private_state.gd의 _context_same 안 Dictionary 분기 첫 부분이다. 기존 타입 비교 이후, keys() 순서 검사 및 재귀 이전에 좌우 get_typed_key_builtin/class_name/script 및 get_typed_value_builtin/class_name/script의 정확 일치를 검사한다. builtin/class는 값 비교, script는 is_same으로 identity 비교한다. Dictionary branch 외 소스 바이트, Array/keys() 순서와 재귀 값 비교, capture/prepare/restore 정책·포맷, P02 호출자와 활성 unsupported 처리에는 변화가 없어야 한다. 사용자 권한은 해당 hunk에 한정한다.
+
+현재 branch codex/feature-i01b-not_remove, HEAD fb660cea69207fd332e26128643007694910a253, index empty. 대상은 Git untracked로 git diff 단독으로는 확인할 수 없다. 기존 owner 바이트와 SHA c555099934bdd0a80f4f4d89100e435e621db6f2f0fe5b98c2be9b2d63619a6e, dirty 분모, P02 read-only revision11을 동결한다. P02는 다른 제품/UI 조각 진행 중이며 쓰기 충돌 여부는 실제 대상 SHA·근거로만 판정한다. 수정 바로 전 바이트 확인, 수정 후 동일 prefix/suffix의 단일 허용 삽입을 비교하고 시도 전후 source 및 dirty 재해시한다. 다른 경로 drift는 별도 분류하며 rollback하지 않는다. P02 확인은 읽기 전용으로 한다.
+
+After 5a는 기존 before의 명명5/논리 입력13을 그대로 포함한다. Dictionary value builtin/class/script 각 양방향 6은 create→capture→prepare에서 실제 단일 축 metadata 차이를 확인한 뒤 모두 정확한 replacement_context_mismatch를 요구한다. 같음 대조는 교체 성공 및 정본 객체/상태를 확인한다. 기존 key builtin, 실제 키 타입, 삽입 순서, Array builtin/class/script 6 대조를 재실행한다. 추가 명명 검사는 Dictionary key builtin/class/script 각각 양방향 6(빈 Dictionary로 key metadata 외 내용 동일), 동일 typed key 대조 1, 같은 입력 controls 성공/명시 controls 차이 정확 거부 1 및 기존 명령 suffix runner 회귀다. 모든 거부는 owner/sim·코어 전체 관측·기존 context 및 input·ready/busy 불변과 다음 정상 advance에서 pending 1회 소비를 요구한다. create/capture/prepare 실패, 오라클 전제 실패, 임의 거부는 절차 실패다.
+
+정본 class map·project/소스·엔진 console/body·실행 Python과 runner·입력을 실행 전후 동결한다. 전용 Windows Job runner에서 engine path/PID 및 실제 exit, timeout, SCRIPT ERROR/ERROR/종료 누수 진단을 기록한다. 논리 분모, 실제 호출 K6, 이전 before의 분모를 분리한다. 새 경로 whitespace와 기존 전체 diff-check exit2를 구분한다. 5b에서 최소 hunk 및 위 오라클을 독립 확인한 뒤 결과·사용자 체크리스트·인계·보존 감사·ZIP SHA/CRC·독립 closeout까지 마감한다. 사용량 제한 즉시 보고 및 반복 금지. 전체 P03/I01/I01b/A04~A06 NOT_READY, O07 OPEN, 외부 저장 schema UNCLASSIFIED.

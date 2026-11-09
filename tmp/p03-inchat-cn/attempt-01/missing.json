@@ -1,0 +1,250 @@
+{
+  "rows": [
+    {
+      "id": "RAW_HOST",
+      "owner": "\ud638\uc2a4\ud2b8\uac00 \uc9c1\uc811 \uc18c\uc720\ud55c raw BattleSim",
+      "thread": "\ud638\uc2a4\ud2b8 \ud504\ub808\uc784",
+      "mutable": "sim\uacfc \ud45c\uc2dc \ucc38\uc870",
+      "lock": "\uc81c\ud55c owner mutex \uc5c6\uc74c",
+      "end": "\ud638\uc2a4\ud2b8\uac00 \uacb0\uc0b0 \ubc18\ud658",
+      "condition": "\ud6c4\ubcf4 \uad6c\uc131 \ud6c4 \ud638\uc2a4\ud2b8 \uac8c\uc2dc",
+      "anchors": [
+        [
+          "missing-evidence.gd",
+          "var candidate_sim := BattleSim.new"
+        ],
+        [
+          "scripts/FleetBattle3D.gd",
+          "sim.step()"
+        ]
+      ],
+      "status": "CURRENT_SOURCE"
+    },
+    {
+      "id": "LEGACY_WORKER",
+      "owner": "resolver\uac00 \ucc38\uc870\ud558\ub294 raw BattleSim",
+      "thread": "worker \uc9c4\ud589, main join \ubc0f \uac8c\uc2dc",
+      "mutable": "raw sim\uacfc progress \uac12",
+      "lock": "\uc81c\ud55c owner\uc640 \ubcc4\uac1c",
+      "end": "join \uc774\ud6c4 BattleOutcome",
+      "condition": "WorldMap\uc774 legacy start \ud638\ucd9c",
+      "anchors": [
+        [
+          "view/world/world_map_screen.gd",
+          "resolver.start()"
+        ],
+        [
+          "scripts/world/auto_resolver.gd",
+          "_thread.start(_run_legacy)"
+        ],
+        [
+          "scripts/world/auto_resolver.gd",
+          "_thread.wait_to_finish()"
+        ]
+      ],
+      "status": "CURRENT_SOURCE"
+    },
+    {
+      "id": "LIMITED_WORKER",
+      "owner": "worker \uc9c0\uc5ed fresh owner",
+      "thread": "worker \uc0dd\uc131\u00b7\uc804\uc9c4\u00b7\uc885\ub8cc, main join",
+      "mutable": "\ubcf5\uc81c \uc785\ub825\uacfc owner \ub0b4\ubd80 \uc0c1\ud0dc",
+      "lock": "mutex\ub294 \ucde8\uc18c \ud50c\ub798\uadf8\ub97c \ubcf4\ud638",
+      "end": "owner.close \ud6c4 \uacb0\uacfc DTO \ubc18\ud658",
+      "condition": "start_operation \ud638\ucd9c \ud544\uc694",
+      "anchors": [
+        [
+          "scripts/world/auto_resolver.gd",
+          "thread.start(_run_operation.bind(snapshot))"
+        ],
+        [
+          "scripts/world/auto_resolver.gd",
+          "var owner: OperationPrivateState = created.owner"
+        ],
+        [
+          "scripts/world/auto_resolver.gd",
+          "owner.close()"
+        ],
+        [
+          "scripts/world/auto_resolver.gd",
+          "_operation_result.duplicate(true)"
+        ]
+      ],
+      "status": "CURRENT_SOURCE"
+    },
+    {
+      "id": "LIMITED_REPLAY",
+      "owner": "fresh replay \uc9c0\uc5ed owner",
+      "thread": "\ub3d9\uae30 \ud638\ucd9c \uc2a4\ub808\ub4dc",
+      "mutable": "owner \ud050\u00b7\uc2dc\uacc4\u00b7\uc0ac\uac74",
+      "lock": "\uacf5\uc720 owner mutex \uadfc\uac70 \uc5c6\uc74c",
+      "end": "\uc7ac\uc0dd \uc9c1\ud6c4 owner.close",
+      "condition": "fresh adapter \uc785\ub825",
+      "anchors": [
+        [
+          "core/battle/operation_replay.gd",
+          "var owner: OperationPrivateState = created.owner"
+        ],
+        [
+          "core/battle/operation_replay.gd",
+          "owner.close()"
+        ],
+        [
+          "core/battle/operation_replay.gd",
+          "owner.queue("
+        ]
+      ],
+      "status": "CURRENT_SOURCE"
+    },
+    {
+      "id": "OWNER_PUBLIC",
+      "owner": "\ud638\ucd9c \ub300\uc0c1 \ub2e8\uc77c owner",
+      "thread": "\ud638\ucd9c\uc790 \uc2a4\ub808\ub4dc, \uce5c\ud654\uc131 \uac15\uc81c \uadfc\uac70 \uc5c6\uc74c",
+      "mutable": "_busy/\uc2dc\ubbac\ub808\uc774\uc158/\ud050",
+      "lock": "_busy\ub294 \uc77c\ubc18 bool \uac80\uc0ac",
+      "end": "\uad50\uccb4 \uc2dc \uc0c8 sim \uac8c\uc2dc, close\ub85c \ube44\uc900\ube44",
+      "condition": "\uac19\uc740 owner \ucc38\uc870\ub97c \uacf5\uc720\ud558\ub294 \uc790\uc5f0 \ud638\ucd9c\uc740 \ubbf8\ubc1c\uacac",
+      "anchors": [
+        [
+          "core/battle/operation_private_state.gd",
+          "if _busy: return"
+        ],
+        [
+          "core/battle/operation_private_state.gd",
+          "func restore_completed("
+        ],
+        [
+          "core/battle/operation_private_state.gd",
+          "func capture_completed("
+        ],
+        [
+          "core/battle/operation_private_state.gd",
+          "func close()"
+        ]
+      ],
+      "status": "CURRENT_SOURCE"
+    },
+    {
+      "id": "PRODUCT_JOIN",
+      "owner": "WorldMap legacy \uacb0\uacfc \ubc0f WorldLink \uacb0\uacfc \uc2ac\ub86f",
+      "thread": "\uba54\uc778 \uc18c\ube44",
+      "mutable": "outcome \uc2ac\ub86f\u00b7UI",
+      "lock": "private owner \ub77d\uacfc \ubb34\uad00",
+      "end": "poll \ub610\ub294 take_outcome\uc73c\ub85c \uc18c\ube44",
+      "condition": "\uc9c0\ub3c4 \uacb0\uacfc \uac8c\uc2dc",
+      "anchors": [
+        [
+          "view/world/world_map_screen.gd",
+          "resolver.poll()"
+        ],
+        [
+          "view/world/world_map_screen.gd",
+          "_show_result(resolver.outcome)"
+        ],
+        [
+          "scripts/world_link.gd",
+          "func take_outcome()"
+        ]
+      ],
+      "status": "CURRENT_SOURCE"
+    }
+  ],
+  "pairs": [
+    {
+      "pair": [
+        "RAW_HOST",
+        "LIMITED_WORKER"
+      ],
+      "owner": "raw sim \ub300 fresh owner",
+      "anchors": [
+        [
+          "scripts/FleetBattle3D.gd",
+          "var candidate_sim := BattleSim.new"
+        ],
+        [
+          "scripts/world/auto_resolver.gd",
+          "var owner: OperationPrivateState = created.owner"
+        ]
+      ],
+      "thread": "\uac01 \uc6d0\uc7a5 \ud589\uc758 \ud638\ucd9c \uc2a4\ub808\ub4dc",
+      "mutable": "\uacf5\uc720\ub418\ub294 \ub2e8\uc77c private owner\uac00 \ud655\uc778\ub418\uc9c0 \uc54a\uc74c",
+      "lock": "owner _busy \ubc0f worker \ucde8\uc18c mutex \ubcc4\uac1c",
+      "end": "worker/replay \uac01 close, worker join",
+      "condition": "\uac19\uc740 owner \ucc38\uc870\uc758 \uc804\ub2ec\uacfc \uad50\ucc28 \ud638\ucd9c\uc774 \ucd94\uac00 \uc785\uc99d\ub418\uc5b4\uc57c \ud568",
+      "status": "NOT_FOUND_IN_SCOPE",
+      "same_owner_product_race": false
+    },
+    {
+      "pair": [
+        "LEGACY_WORKER",
+        "LIMITED_WORKER"
+      ],
+      "owner": "legacy raw sim \ub300 fresh owner",
+      "anchors": [
+        [
+          "scripts/world/auto_resolver.gd",
+          "sim = BattleSim.new"
+        ],
+        [
+          "scripts/world/auto_resolver.gd",
+          "var owner: OperationPrivateState = created.owner"
+        ]
+      ],
+      "thread": "\uac01 \uc6d0\uc7a5 \ud589\uc758 \ud638\ucd9c \uc2a4\ub808\ub4dc",
+      "mutable": "\uacf5\uc720\ub418\ub294 \ub2e8\uc77c private owner\uac00 \ud655\uc778\ub418\uc9c0 \uc54a\uc74c",
+      "lock": "owner _busy \ubc0f worker \ucde8\uc18c mutex \ubcc4\uac1c",
+      "end": "worker/replay \uac01 close, worker join",
+      "condition": "\uac19\uc740 owner \ucc38\uc870\uc758 \uc804\ub2ec\uacfc \uad50\ucc28 \ud638\ucd9c\uc774 \ucd94\uac00 \uc785\uc99d\ub418\uc5b4\uc57c \ud568",
+      "status": "NOT_FOUND_IN_SCOPE",
+      "same_owner_product_race": false
+    },
+    {
+      "pair": [
+        "LIMITED_REPLAY",
+        "LIMITED_WORKER"
+      ],
+      "owner": "\ubcc4\ub3c4 fresh \uc0dd\uc131 \ud638\ucd9c",
+      "anchors": [
+        [
+          "core/battle/operation_replay.gd",
+          "_play_and_close(created"
+        ],
+        [
+          "scripts/world/auto_resolver.gd",
+          "OperationAdapter.create(snapshot)"
+        ]
+      ],
+      "thread": "\uac01 \uc6d0\uc7a5 \ud589\uc758 \ud638\ucd9c \uc2a4\ub808\ub4dc",
+      "mutable": "\uacf5\uc720\ub418\ub294 \ub2e8\uc77c private owner\uac00 \ud655\uc778\ub418\uc9c0 \uc54a\uc74c",
+      "lock": "owner _busy \ubc0f worker \ucde8\uc18c mutex \ubcc4\uac1c",
+      "end": "worker/replay \uac01 close, worker join",
+      "condition": "\uac19\uc740 owner \ucc38\uc870\uc758 \uc804\ub2ec\uacfc \uad50\ucc28 \ud638\ucd9c\uc774 \ucd94\uac00 \uc785\uc99d\ub418\uc5b4\uc57c \ud568",
+      "status": "NOT_FOUND_IN_SCOPE",
+      "same_owner_product_race": false
+    },
+    {
+      "pair": [
+        "OWNER_PUBLIC",
+        "OWNER_PUBLIC"
+      ],
+      "owner": "\uac19\uc740 \uc778\uc2a4\ud134\uc2a4 \ucc38\uc870 \uc804\ub2ec \ubc0f \ud638\ucd9c \uacb9\uce68 \ubbf8\ubc1c\uacac",
+      "anchors": [
+        [
+          "core/battle/operation_private_state.gd",
+          "if _busy: return"
+        ],
+        [
+          "scripts/world/auto_resolver.gd",
+          "owner.close()"
+        ]
+      ],
+      "thread": "\uac01 \uc6d0\uc7a5 \ud589\uc758 \ud638\ucd9c \uc2a4\ub808\ub4dc",
+      "mutable": "\uacf5\uc720\ub418\ub294 \ub2e8\uc77c private owner\uac00 \ud655\uc778\ub418\uc9c0 \uc54a\uc74c",
+      "lock": "owner _busy \ubc0f worker \ucde8\uc18c mutex \ubcc4\uac1c",
+      "end": "worker/replay \uac01 close, worker join",
+      "condition": "\uac19\uc740 owner \ucc38\uc870\uc758 \uc804\ub2ec\uacfc \uad50\ucc28 \ud638\ucd9c\uc774 \ucd94\uac00 \uc785\uc99d\ub418\uc5b4\uc57c \ud568",
+      "status": "NOT_FOUND_IN_SCOPE",
+      "same_owner_product_race": false
+    }
+  ]
+}

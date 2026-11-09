@@ -1,0 +1,17 @@
+--- tmp/p02-pc-next3-20261109/prepare-01/probe-fix-v2/p02_difficulty_probe.gd
++++ tmp/p02-pc-next3-20261109/focused-01/d02-probe-diagnostic/p02_difficulty_probe.gd
+@@ -126,6 +126,14 @@
+ 	var morals := func(rows: Array): return rows.map(func(row): return row.start_morale_bp)
+ 	var waits := func(rows: Array): return rows.map(func(row): return [row.id, row.wait_ticks])
+ 	facts["roster" + variant] = actual
++	var operand := func(rows: Array) -> Dictionary:
++		return {"rows": rows, "types": rows.map(func(row):
++			return {"id": type_string(typeof(row.id)), "faction_id": type_string(typeof(row.faction_id)),
++				"wait_ticks": type_string(typeof(row.wait_ticks)), "start_morale_bp": type_string(typeof(row.start_morale_bp))})}
++	facts["roster_operands" + variant] = {
++		"actual": {"ally": operand.call(actual.ally), "foe": operand.call(actual.foe)},
++		"expected": {"ally": operand.call(want.ally), "foe": operand.call(want.foe)},
++	}
+ 	check("roster.full" + variant, ids.call(actual.ally) == ids.call(want.ally) and ids.call(actual.foe) == ids.call(want.foe) and morals.call(actual.ally) == morals.call(want.ally) and morals.call(actual.foe) == morals.call(want.foe))
+ 	check("roster.wait" + variant, waits.call(actual.ally) == waits.call(want.ally) and waits.call(actual.foe) == waits.call(want.foe))
+ 

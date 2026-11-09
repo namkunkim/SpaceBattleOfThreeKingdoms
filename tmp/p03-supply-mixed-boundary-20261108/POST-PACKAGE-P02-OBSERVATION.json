@@ -1,0 +1,31 @@
+{
+  "observed_utc": "2026-11-08T07:30:53.373274+00:00",
+  "audit_written_utc": "2026-11-08T07:28:07.295004+00:00",
+  "archive_written_utc": "2026-11-08T07:28:45.730601+00:00",
+  "scope": "P02 sixth project-after only; isolated copies; author not inferred from SHA alone",
+  "ownership_evidence": "tmp/p02-sixth-20261108/PLAN.md product host candidate and separated measurement patches; independent closeout reread",
+  "changed": [
+    {
+      "path": "tmp/p02-sixth-20261108/project-after/hud/ui_kit/command_deck.gd",
+      "start_sha256": "d9fda5c9bb7bd78d6f13aaeed27904e8d830ba4a75c65770dd79d1d728f09a2c",
+      "current_sha256": "bb81eb1855ff0c13708648597905411663223758ccd9a54ba73da1cab0565cf6",
+      "current_mtime_utc": "2026-11-08T07:29:01.870282+00:00",
+      "bytes": 54336
+    },
+    {
+      "path": "tmp/p02-sixth-20261108/project-after/hud/ui_kit/org_screen.gd",
+      "start_sha256": "38ff748aaabef547db99a531d34ad115e624fbdef416f49c20230d29e1d5d5b7",
+      "current_sha256": "e30c317c09cd195b590e9f53d86dae0387f4b7d35e281b38331833d84ba11799",
+      "current_mtime_utc": "2026-11-08T07:29:01.877277+00:00",
+      "bytes": 33144
+    },
+    {
+      "path": "tmp/p02-sixth-20261108/project-after/scripts/FleetBattle3D.gd",
+      "start_sha256": "b8e119f99bddea8ecca7091158f193591dec9fdd0ab3bcb6a9df11ef180dd040",
+      "current_sha256": "34908bf325ae06aca22a4ee8f90172cd4dfa91c05b79c054c70a547e245f316a",
+      "current_mtime_utc": "2026-11-08T07:29:01.862279+00:00",
+      "bytes": 33704
+    }
+  ],
+  "original_audit_and_archive_preserved": true
+}

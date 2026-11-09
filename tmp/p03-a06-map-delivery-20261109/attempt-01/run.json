@@ -1,0 +1,64 @@
+{
+  "actual_exit": 0,
+  "timed_out": false,
+  "launcher_pid": 29140,
+  "job": {
+    "active": 0,
+    "total": 2,
+    "terminated": 0
+  },
+  "inputs": 99,
+  "input_stable": true,
+  "diagnostics": {
+    "script_error": 0,
+    "error": 0,
+    "warning": 0,
+    "objectdb": 0,
+    "resources": 0
+  },
+  "engine_identity_matches": true,
+  "user_isolated": true,
+  "payload": {
+    "cases": [
+      "normal_map_effect",
+      "early_result_exit",
+      "reentry_after_slot_consumed"
+    ],
+    "checks": 15,
+    "engine_path": "C:/Tools/Godot/Godot_v4.7.2-stable_win64.exe",
+    "engine_pid": 19760,
+    "evidence": {
+      "early": {
+        "after": "contested",
+        "after_timer_ms": 3068,
+        "before": "contested",
+        "button": "천하 보기",
+        "connected": true,
+        "dismissed_ms": 2484,
+        "opened_ms": 2353,
+        "result_observed_ms": 2478
+      },
+      "mapping": {
+        "initial": "contested",
+        "kind": "alliance_win",
+        "region": "RGN-02",
+        "target": "wu",
+        "world_path": "res://data/scenarios/base/world_208.json"
+      },
+      "normal": {
+        "after": "wu",
+        "after_timer_ms": 2346,
+        "before": "contested",
+        "opened_ms": 1468
+      },
+      "reentry": {
+        "outcome_present": false,
+        "owner": "contested",
+        "state": "browse"
+      }
+    },
+    "failures": [],
+    "user_dir": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-a06-map-delivery-20261109/attempt-01/user/Godot/app_userdata/SpaceBattleOfThreeKingdoms"
+  },
+  "passed": true
+}

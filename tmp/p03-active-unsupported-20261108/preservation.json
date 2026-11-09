@@ -1,0 +1,23 @@
+{
+  "scope": "Frozen execution inputs and branch/HEAD/index only. No full dirty before/after preservation claim.",
+  "attempts": {
+    "01": {
+      "inputs": 45,
+      "before_after_equal": true,
+      "later_drift": [
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-active-unsupported-20261108\\active_unsupported.gd"
+      ],
+      "frozen_runner_sha256": "d008557fcb32b0604b31f7d7bbb8fa33c94d5d9fd1a192a098de258ec4b1fbd8"
+    },
+    "02": {
+      "inputs": 45,
+      "before_after_equal": true,
+      "later_drift": [],
+      "frozen_runner_sha256": "932c720829499e29f2772b3d22830c1456c4c5daf7601e2a4241c784c6b074fa"
+    }
+  },
+  "head": "fb660cea69207fd332e26128643007694910a253",
+  "branch": "codex/feature-i01b-not_remove",
+  "index": [],
+  "whole_diff_check_exit": 2
+}

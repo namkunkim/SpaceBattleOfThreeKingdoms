@@ -1,0 +1,42 @@
+{
+  "label": "missing-out",
+  "command": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+    "--log-file",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt3\\missing-out.engine.log",
+    "-s",
+    "tests/autoresolve.gd",
+    "--",
+    "--operation-worker",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tests\\fixtures\\p02\\worker-poc.json"
+  ],
+  "expected_exit": 1,
+  "error": [
+    "missing_option",
+    "--out"
+  ],
+  "output": null,
+  "expected_diagnostics": null,
+  "actual_exit": 1,
+  "diagnostics": {
+    "script_errors": 0,
+    "errors": 0,
+    "warnings": 0
+  },
+  "log_shas": {
+    "missing-out.stdout": "3fd67518e63ebf93ce80d14375cd6c729dcd961c891c04b2ebd74cce121e370c",
+    "missing-out.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "missing-out.engine.log": "18d945c19aa14ff844bed83e6ef6bbc86f7e5b122a4f07d5c25c8b936311c2b3"
+  },
+  "observed": [
+    {
+      "error": "missing_option",
+      "ok": false,
+      "path": "--out"
+    }
+  ],
+  "pass": true
+}

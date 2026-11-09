@@ -1,0 +1,40 @@
+{
+  "outside": [],
+  "status_after": 39453,
+  "status_before": 39445,
+  "changes": [
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/projectile-target/attempt-03/fixture/run.json",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/projectile-target/attempt-03/fixture/stderr.bin",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/projectile-target/attempt-03/fixture/stdout.bin",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/projectile-target/attempt-03/forced_failure/run.json",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/projectile-target/attempt-03/forced_failure/stderr.bin",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/projectile-target/attempt-03/forced_failure/stdout.bin",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/projectile-target/attempt-03/git-before.z",
+      "SideIndicator": "=>"
+    },
+    {
+      "InputObject": "?? tmp/p03-parallel-state-20261108/projectile-target/attempt-03/input-after.json",
+      "SideIndicator": "=>"
+    }
+  ],
+  "changed": 8
+}

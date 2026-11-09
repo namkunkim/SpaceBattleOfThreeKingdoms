@@ -1,0 +1,46 @@
+{
+  "label": "Z04",
+  "command": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+    "--log-file",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt3\\Z04.engine.log",
+    "-s",
+    "tests/autoresolve.gd",
+    "--",
+    "--operation-input",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tests\\fixtures\\p02\\poc.json",
+    "--out",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt3\\should-not-exist.json",
+    "--out",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt3\\should-not-exist.json"
+  ],
+  "expected_exit": 1,
+  "error": [
+    "duplicate_option",
+    "--out"
+  ],
+  "output": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt3\\should-not-exist.json",
+  "expected_diagnostics": null,
+  "actual_exit": 1,
+  "diagnostics": {
+    "script_errors": 0,
+    "errors": 0,
+    "warnings": 0
+  },
+  "log_shas": {
+    "Z04.stdout": "7d0bd77b70a2cd454ec53e2c916d3f46947fea990e194567357b9a431d36ae35",
+    "Z04.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Z04.engine.log": "c46dbede2c5f32025c12953d52953fc70f295ded987370eb7f92bd7202c0c730"
+  },
+  "observed": [
+    {
+      "error": "duplicate_option",
+      "ok": false,
+      "path": "--out"
+    }
+  ],
+  "pass": true
+}

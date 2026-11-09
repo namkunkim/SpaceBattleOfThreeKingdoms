@@ -1,0 +1,26 @@
+{
+  "head": "8292805143f4561a4f5258d40b7b94adf4ff5802",
+  "before_count": 1061,
+  "changed_existing": [
+    {
+      "path": "docs/battle-core/CHECKLIST-OPEN.md",
+      "before": "8f527c8b123a9051a405382f7d9fffd60443effbb755148965472eb417f79e3c",
+      "after": "a2c38e1d267aa5349f07291343c9896294c4d895b5b7632fe5c0c0f85d77ac9a"
+    }
+  ],
+  "concurrent_baseline_record_changes": [
+    {
+      "path": "docs/battle-core/CHECKLIST-OPEN.md",
+      "before": "8f527c8b123a9051a405382f7d9fffd60443effbb755148965472eb417f79e3c",
+      "after": "a2c38e1d267aa5349f07291343c9896294c4d895b5b7632fe5c0c0f85d77ac9a"
+    }
+  ],
+  "unexpected_existing_changes": [],
+  "missing": [],
+  "new_outside_evidence": [
+    "docs/battle-core/pc-campaign-design/DATA-RULES-GEOMETRY-RESULT-20261028.md",
+    "tests/i01b_runtime_inventory.gd",
+    "tmp/i01b-followup-20261028/checklist-one-line-proof.json",
+    "tmp/i01b-followup-20261028/final-delivery-audit.json"
+  ]
+}

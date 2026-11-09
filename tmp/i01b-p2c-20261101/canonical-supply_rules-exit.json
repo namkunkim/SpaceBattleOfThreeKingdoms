@@ -1,0 +1,5 @@
+{
+  "name": "supply_rules",
+  "actual_exit": 0,
+  "script": "tests/supply_rules.gd"
+}

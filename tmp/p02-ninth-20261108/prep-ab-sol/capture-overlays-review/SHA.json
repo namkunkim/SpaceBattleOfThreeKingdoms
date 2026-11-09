@@ -1,0 +1,17 @@
+{
+  "status": "REVIEW_ONLY_NON_EXECUTABLE",
+  "inputs": {
+    "tests/p02_headless_adapter.gd": {
+      "source_sha256": "e44e964ed76f4d7d2edab8ebffa238672c70717670b6d82738120c72dfea9583",
+      "overlay_sha256": "a4b7ff4fef78016813d2e8163b76b7a70af6c3f99439d17a7d1fedea95e6cb14",
+      "normalized_diff_sha256": "067dc1fec4b8e68e9fbd4b1d2fbf6e5664105349340e13eec300fbd118e4743d",
+      "output": "p02_headless_adapter.gd"
+    },
+    "tests/i01b_service_state.gd": {
+      "source_sha256": "d11615fa541a7064e10bfd2eb648253192baae0ee98e2adf609ad954b4967e66",
+      "overlay_sha256": "44d8bc0144d2d95cff2f0cc0ea6ad0301c9d3834b8b2e5cefe72fecc91de7def",
+      "normalized_diff_sha256": "cd344b8c6bbde507a8d0d712ab7e785127f71403dfe2761ac21374bfcbe919f0",
+      "output": "i01b_service_state.gd"
+    }
+  }
+}

@@ -1,0 +1,31 @@
+--- world-link-prepared.gd.txt
++++ world-link-prepared-v6.gd.txt
+@@ -252,7 +252,7 @@
+ 	skip.emit_signal("pressed")
+ 	if pc_verify:
+ 		_pc_check("C1", not s.is_inside_tree() and current_scene == null)
+-		skip.emit_signal("pressed")
++		s._finish_sortie()  # Same-frame handler reentry after the outgoing scene detaches.
+ 	await _frames(8)
+ 	if pc_verify:
+ 		scene_changed.disconnect(observe)
+--- run-direct-v5.py
++++ run-direct-v6.py
+@@ -114,7 +114,7 @@
+             exact(dst, digest)
+     for side in ("before", "after"):
+         project = run / side / "project"
+-        shutil.copyfile(BASE / "world-link-prepared.gd.txt", project / TEST)
++        shutil.copyfile(BASE / "world-link-prepared-v6.gd.txt", project / TEST)
+         shutil.copyfile(AUTO, project / PROBE)
+         if side == "after":
+             for name in PRODUCT:
+@@ -233,7 +233,7 @@
+ def required_paths():
+     return {
+         PYTHON, ENGINE, PWSH, AUTO, SUPERVISOR, LAUNCHER, Path(__file__).resolve(),
+-        BASE / "closure-v2.json", BASE / "world-link-prepared.gd.txt",
++        BASE / "closure-v2.json", BASE / "world-link-prepared-v6.gd.txt",
+         *(BASE / "candidate" / (Path(name).name + ".txt") for name in PRODUCT),
+     }
+ 

@@ -1,0 +1,38 @@
+{
+  "runs": [
+    [
+      "before",
+      "clean"
+    ],
+    [
+      "before",
+      "returning"
+    ],
+    [
+      "after",
+      "clean"
+    ],
+    [
+      "after",
+      "returning"
+    ]
+  ],
+  "mode": "serial",
+  "timeout_s": 320,
+  "same_engine_inputs": {
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe": "c8f0a6bc45a19b33541501e57f6f7cd972ab18453743266339d495cbbe846643",
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64.exe": "ab1824f85bfd8e0e4128182c000c4003a3e042245b2967848d089b2a04b22424",
+    ".godot/global_script_class_cache.cfg": "0eb214ebcc65cd2ca7b9d98dc83f61a9c170ca75b1b23acf4c3c58fdfb550ab1"
+  },
+  "files": {
+    "tmp/p02-seventh-20261108/k6-worldlink.py": "41f8be8cbff9f479914fa3e057a7293777419211ae14cb6eacb51421985812c7",
+    "tmp/p02-seventh-20261108/PLAN-v5.md": "d064c3e280345fea1e1c026a8b7941f5fc0bb61ad2d7492d9da3d3249d3bb904",
+    "tmp/p02-seventh-20261108/REVIEW-PLAN-V5-INDEPENDENT.md": "da9176b346f330a838cb6e277fc13d11e486ebadccae318ee6eeb52b7a7fbf61",
+    "tmp/p02-sixth-20261108/world-probe.gd": "adc4a42eb5fe9921cc616bdffd71d7e18a542e2eb9c5b44f6ed7d58ac1332b87",
+    "tmp/p02-sixth-20261108/returning-settings.cfg": "c8b752aba9f5015889c00c5a45db9fef916af2a1e1be3e68d49b8121b2db721b"
+  },
+  "replica_manifest": {
+    "before": "822ba06bc017df3b958ae9e01e76b34fdb045e5d4c9051c8a773515f2c39205d",
+    "after": "fa31c25fdd254588f8895bbc48dd8df142a1414fb0de794b8f50a867e168f0e5"
+  }
+}

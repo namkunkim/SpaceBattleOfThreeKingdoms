@@ -1,0 +1,14 @@
+{
+  "created_utc": "2026-11-04T14:24:05.674922+00:00",
+  "archive": "tmp/i01b-active-replace-delivery-20261104.zip",
+  "zip_sha256": "87a090a8d891391473fd9dfa9627dcd4430af234359e06d0b78e9e7b5f005eae",
+  "zip_bytes": 1601850,
+  "entry_count": 105,
+  "crc_failures": 0,
+  "entry_sha_mismatches": 0,
+  "entry_list_exact": true,
+  "duplicate_paths": 0,
+  "archive_contents_sha256": "3ec1f610d91cee229d97ee90d296a0c64d8337f968efec9977e32d62e2f24aba",
+  "final_audit_sha256": "81ad83a31f4c1fd47e19d6babbc0aa9cc1f1b4cef0ec47a4648bd499848b6eec",
+  "record_manifest_sha256": "6b7e2cc49261c29d56ea33d85df8a01d4eb0f045f9d3c694094f3cf37301144b"
+}

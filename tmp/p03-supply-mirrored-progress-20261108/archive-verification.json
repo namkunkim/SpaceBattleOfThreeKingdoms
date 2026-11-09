@@ -1,0 +1,12 @@
+{
+  "name": "P03-SUPPLY-MIRRORED-PROGRESS-DELIVERY-20261108.zip",
+  "sha256": "b007ad1ffe3f8184c234098be5316347e29480397d98a7ec0359853784d0a055",
+  "bytes": 1177914,
+  "entries": 28,
+  "payload_count": 27,
+  "manifest_sha256": "8cb45f62178a426a247418e510b0454dde7c8880cf441d7a9ae66cb019e5f6bc",
+  "crc_failure": null,
+  "duplicates": 0,
+  "entry_mismatches": 0,
+  "independent_closeout_in_archive": false
+}

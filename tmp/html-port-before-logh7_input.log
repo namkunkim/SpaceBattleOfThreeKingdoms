@@ -1,0 +1,20 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[ORDER] move w=(760.0, 700.0) field=(1700.0, 1150.0) args={ "logh7": true, "flip": true, "destinations": { 1: (760.0, 699.9999) }, "destination_facings": { 1: 1.55741822719574 }, "sync_arrival": true, &"facing_deg": 89.2334913550627 } ["f1 pos=(329.0, 792.0) to=(760.0, 700.0)"]
+[ORDER] move w=(650.0, 720.0) field=(1700.0, 1150.0) args={ "logh7": true, "flip": true, "destinations": { 2: (650.0, 720.0) }, "destination_facings": {  }, "sync_arrival": true } ["f2 pos=(457.0, 767.0) to=(650.0, 720.0)"]
+[ORDER] move w=(850.0, 760.0) field=(1700.0, 1150.0) args={ "logh7": true, "flip": true, "destinations": { 1: (850.0, 760.0) }, "destination_facings": {  }, "sync_arrival": true } ["f1 pos=(329.0, 792.0) to=(850.0, 760.0)"]
+FAIL 상자 전체 포함시 묶음
+[ORDER] move w=(900.0, 650.0) field=(1700.0, 1150.0) args={ "logh7": true, "flip": true, "destinations": { 1: (990.0, 605.0), 2: (990.0, 785.0), 3: (810.0, 605.0) }, "destination_facings": { 1: 1.5707963267949, 2: 1.5707963267949, 3: 1.5707963267949 }, "sync_arrival": true, &"facing_deg": 90.0 } ["f1 pos=(380.0, 420.0) to=(990.0, 605.0)", "f2 pos=(560.0, 420.0) to=(990.0, 785.0)", "f3 pos=(380.0, 600.0) to=(810.0, 605.0)"]
+FAIL 가장자리 슬롯이 기존 중심 히트범위 밖
+[ORDER] move w=(992.0, 675.0) field=(1700.0, 1150.0) args={ "logh7": true, "flip": true, "destinations": { 1: (999.2154, 630.3304), 2: (1013.773, 540.8401), 3: (977.3785, 764.5659) }, "destination_facings": { 1: 0.16126330196857, 2: 0.16126330196857, 3: 0.16126330196857 }, "sync_arrival": true } ["f1 pos=(990.0, 605.0) to=(999.0, 630.0)", "f2 pos=(990.0, 785.0) to=(1014.0, 541.0)", "f3 pos=(810.0, 605.0) to=(977.0, 765.0)"]
+FAIL 끝 함선 메뉴와 현재 대열 활성 표시
+SCRIPT ERROR: Out of bounds get index '0' (on base: 'Array[Vector2]')
+   at: BattleView3D.build_fleet (res://view/battle_view_3d.gd:116)
+   GDScript backtrace (most recent call first):
+       [0] build_fleet (res://view/battle_view_3d.gd:116)
+       [1] _sync (res://scripts/FleetBattle3D.gd:365)
+       [2] _pump (res://scripts/FleetBattle3D.gd:375)
+       [3] sync_core (res://tests/logh7_input.gd:164)
+       [4] extended_cases (res://tests/logh7_input.gd:286)
+       [5] settle (res://tests/logh7_input.gd:17)
+LOGH7_INPUT_FAIL 3

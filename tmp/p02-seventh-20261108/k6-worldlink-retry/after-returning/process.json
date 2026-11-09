@@ -1,0 +1,12 @@
+{
+  "stage": "after",
+  "lane": "returning",
+  "exit": 0,
+  "timeout": false,
+  "inputs_unchanged": true,
+  "expected_result": true,
+  "diagnostics": [
+    "WARNING: 154 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+    "ERROR: 20 resources still in use at exit (run with --verbose for details)."
+  ]
+}

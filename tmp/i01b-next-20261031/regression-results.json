@@ -1,0 +1,95 @@
+[
+  {
+    "script": "tests/core_rules.gd",
+    "actual_exit": 0,
+    "script_sha": "f05bb7af048626b9823cdd169f4f72c1025dd1073426bed5e8bb7b133b84bbb7",
+    "engine_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-next-20261031\\core_rules-engine.log",
+    "captured_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-next-20261031\\core_rules-captured.log",
+    "engine_sha": "f840d3c0784ee9beff94eea1b3de8aed303664f88fa73b47ccc06b422dfaa4d8",
+    "captured_sha": "f5edd78c23b68d37e1b7609e43fb2ee24a2e6612d10ffe500adaaac205b849d8",
+    "pass_lines": [
+      "CORE_RULES_PASS"
+    ],
+    "script_error_count": 0,
+    "diagnostics": []
+  },
+  {
+    "script": "tests/data_rules.gd",
+    "actual_exit": 0,
+    "script_sha": "e21db4b23e9814bb89cae2fc5f5e8f5751b6dcdb952fb3da01cc68da8af670d3",
+    "engine_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-next-20261031\\data_rules-engine.log",
+    "captured_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-next-20261031\\data_rules-captured.log",
+    "engine_sha": "3e1fe4dbfb88b22c2b684e8afb2a313c2608fed942b850229c761b122538d8d9",
+    "captured_sha": "3b763b37711a6782ea9cdb9973498039d76f92dd6df1a7b048f38c85a397767b",
+    "pass_lines": [
+      "DATA_RULES_PASS keys=80 core=29 proposed=28 first_move=1814"
+    ],
+    "script_error_count": 0,
+    "diagnostics": [
+      "WARNING: 280 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+      "ERROR: 18 resources still in use at exit (run with --verbose for details)."
+    ]
+  },
+  {
+    "script": "tests/i01_operation_config.gd",
+    "actual_exit": 0,
+    "script_sha": "daf611b6568b20f76bd9784f34b2eddb767251a6f02df43507b289cc3cd4cdd4",
+    "engine_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-next-20261031\\i01_operation_config-engine.log",
+    "captured_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-next-20261031\\i01_operation_config-captured.log",
+    "engine_sha": "e4abb51256f8f8dc88db6aa95ddcc57d1612deb8207b155319cf6eb7bcb22bbf",
+    "captured_sha": "8b1672c088e0b03d24a90bdcff4b90352d6f9bf3fadc39d3a5f753fc1f46c076",
+    "pass_lines": [
+      "I01A_OPERATION_CONFIG_PASS a01 a02 a03 a04 a05 a06"
+    ],
+    "script_error_count": 0,
+    "diagnostics": []
+  },
+  {
+    "script": "tests/i01b_logical_clock.gd",
+    "actual_exit": 0,
+    "script_sha": "febcbc625a32814b21ac60a10fcba389928921044711fecb95a2ada6ddaf8925",
+    "engine_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-next-20261031\\i01b_logical_clock-engine.log",
+    "captured_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-next-20261031\\i01b_logical_clock-captured.log",
+    "engine_sha": "58ddc2dc76aa1a559a65aa76788349496b2358644b424399bc4ccf71de2380c2",
+    "captured_sha": "abe6b954a3691267cf440e75f449885e2740a5af5b83acb494d1329bf1b0df95",
+    "pass_lines": [
+      "I01B_P1_PARTIAL_CLOCK_PASS cases=60 seeds=10 speeds=3 pause_variants=2 trace=50,100,150 tick=2 end_ms=150"
+    ],
+    "script_error_count": 0,
+    "diagnostics": []
+  },
+  {
+    "script": "tests/detection_rules.gd",
+    "actual_exit": 0,
+    "script_sha": "d1a4766bc39406d8785007cac424132a7bf4c835d5c8b900f2adaeebf4c0e10c",
+    "engine_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-next-20261031\\detection_rules-engine.log",
+    "captured_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-next-20261031\\detection_rules-captured.log",
+    "engine_sha": "4fb41698c9e3d977a828df94523687cf662705b2f603121ee345285035d41032",
+    "captured_sha": "ac85ff2ecd1948239f16269355f7d8e2116c868f474aa5968fca9f137074df6d",
+    "pass_lines": [
+      "DETECTION_RULES_PASS"
+    ],
+    "script_error_count": 0,
+    "diagnostics": [
+      "WARNING: 285 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+      "ERROR: 18 resources still in use at exit (run with --verbose for details)."
+    ]
+  },
+  {
+    "script": "tests/supply_rules.gd",
+    "actual_exit": 0,
+    "script_sha": "54bbd2fe1a15b50e15d66c62821e1fe2dfdefc5d8d2dcb7e63b64514ec3d63d7",
+    "engine_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-next-20261031\\supply_rules-engine.log",
+    "captured_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-next-20261031\\supply_rules-captured.log",
+    "engine_sha": "1dd6ccc818c7d15b987fb8bee3049f4f2022302499d074331b80df6eb94e1e2d",
+    "captured_sha": "f016e253ac4431a0a873c07e7eed0763fe5b33f9b39ac6a3e39b5441c2db2d39",
+    "pass_lines": [
+      "SUPPLY_RULES_PASS"
+    ],
+    "script_error_count": 0,
+    "diagnostics": [
+      "WARNING: 244 ObjectDB instances were leaked at exit (run with `--verbose` for details).",
+      "ERROR: 18 resources still in use at exit (run with --verbose for details)."
+    ]
+  }
+]

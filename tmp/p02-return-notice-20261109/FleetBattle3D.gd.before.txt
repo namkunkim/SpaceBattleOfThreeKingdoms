@@ -1,0 +1,861 @@
+extends Node3D
+# 실시간 함대 전술 전투 — 전투 노드(호스트).
+#
+# M1 구조 분리 이후 이 파일은 얇은 접착층이다. 규칙은 core/battle/BattleSim이 계산하고(고정 10Hz 틱),
+# 이 노드는 (1) 누산기로 틱을 돌리고 (2) 공개 투영을 화면 모델(view/battle_view_model.gd)에 옮기고
+# (3) 코어가 낸 사건을 로그·토스트·연출로 바꾸고 (4) 입력(input/)이 만든 명령을 코어에 넘긴다.
+# 상품화 표현 계층(hud/ui_kit, view/fleet_render, input/touch)이 읽는 필드와 함수(fleets, G, selected ...)는
+# 화면 모델과 이 노드의 세션 상태로 그대로 제공한다.
+#
+# 구성: view/(battle_view_3d, camera_rig, fx_layer, battle_view_model) · hud/(battle_hud, fleet_labels, radar)
+#       · input/(battle_input, battle_commands) · core/battle/(BattleSim ...)
+
+const WORLD := CameraRig.WORLD
+const S := CameraRig.S
+const PITCH := CameraRig.PITCH
+const MAX_VISIBLE := BattleView3D.MAX_VISIBLE
+const FORM_NAMES := ["횡진", "쐐기진", "방진", "종진", "원진", "학익진", "사선진", "어린진", "안행진", "장사진"]
+const CMD_R := 560.0
+const MISSILE_R := 480.0
+const FIGHTER_R := 380.0
+var profile_def := "res://data/profiles/red_cliffs_rt.json"   # 적벽 시나리오 프로필. ""이면 POC 프로필(규칙 문구 대조 테스트 전용)
+var difficulty := "표준"
+var load_error := ""   # 프로필을 만들지 못해 대체했을 때의 문구(브리핑에 보인다, REVIEW-O2b #1)
+var org := {}   # 전투 전 편성 사본(O4, Organization). 비어 있으면 정사 편성. 다시 시작해도 유지된다
+var org_errors := []   # org가 apply에서 거부된 사유(REVIEW-O4 #1). 비어 있지 않으면 전투를 열지 않고 편성 화면으로 돌아간다
+var profile_patch := Callable()   # 측정 전용(bench_density 1,500척 프리셋): 프로필을 받아 고친다. 게임 흐름에서는 비어 있다
+var move_mul := 150.0   # 이동 배율: 화면 한 폭(1600)을 약 10초에 건넌다. 헤드리스 테스트는 1로 둔다
+var turn_mul := 15.0    # 선회율 배율: 선회 반경(속도÷선회율)이 도착 판정(settle 0.7×속도) 안에 들어야 목적지를 돌지 않는다. 조건은 선회율 > 82°/초(속도와 무관)
+const FIELD_SIZE := CameraRig.WORLD * 0.5   # 전투 전장 크기: 배경판(3400×2300)의 가로·세로 1/2 = 1700×1150 (이전 6800×4600의 1/4)
+var ALLY_DEF: Array = []   # 브리핑·결산 편성표: 시나리오 프로필의 아군(유비군+손권군) 전대
+var FOE_DEF: Array = []    # 브리핑 적 정보: 처음부터 배치되는 적 전대만(증원 전대는 안개 속, 규모를 미리 알리지 않는다)
+const CMDS := [
+	{"id": "stop", "key": "S", "name": "정지", "cost": 0},
+	{"id": "def", "key": "D", "name": "방어진형", "cost": 0},
+	{"id": "missile", "key": "M", "name": "미사일 일제사격", "cost": 2},
+	{"id": "fighter", "key": "F", "name": "함재기 발진", "cost": 3},
+	{"id": "charge", "key": "C", "name": "전 함대 돌격", "cost": 3},
+	{"id": "rally", "key": "R", "name": "기함으로 집결", "cost": 0},
+	{"id": "retreat", "key": "G", "name": "후퇴", "cost": 0},
+	{"id": "all", "key": "A", "name": "전 함대 선택", "cost": 0},
+]
+const SAY := {
+	"stop": "전 함 정지.", "def_on": "방어진형으로 전환!", "def_off": "방어진형 해제.", "missile": "미사일, 일제 발사!",
+	"fighter": "함재기, 발진!", "charge": "전 함대, 돌격하라!", "rally": "기함 주위로 집결한다.", "retreat": "전선을 물린다. 후퇴!",
+	"move_all": "전 함대 전진!", "move": "항로 변경, 전진.", "ai_def": "방어진을 펴라!", "ai_missile": "미사일 발사!", "ai_fighter": "전투정 발진!",
+}
+const REJECT := {
+	"cp_charge": "커맨드 포인트가 부족합니다 (필요 3)", "cp_missile": "커맨드 포인트가 부족합니다 (필요 2)", "cp_fighter": "커맨드 포인트가 부족합니다 (필요 3)",
+	"missile_no_target": "미사일 사정거리 안에 적이 없습니다", "missile_reload": "미사일 재장전 중",
+	"fighter_no_target": "함재기 작전 반경 안에 적이 없습니다", "fighter_reload": "함재기 정비 중",
+	"missile_charges": "미사일 남은 횟수가 없습니다. 보급함 영역에서 정지해 보급하세요", "fighter_charges": "함재기 남은 횟수가 없습니다. 보급함 영역에서 정지해 보급하세요",
+	"missile_none": "미사일을 쏠 포격함이 없습니다", "fighter_none": "강습모함이 없어 함재기를 쓸 수 없습니다",
+	"hold_distance": "교전 거리 유지: 돌격·강습 특기 발동 중에만 근접할 수 있습니다",
+	"charge_none": "강습모함이 없어 돌격할 수 없습니다",
+	"no_selection": "먼저 아군 함대를 선택하세요",
+	"supply_none": "보급함이 있는 함대가 아닙니다", "supply_target": "보급 대상으로 지정할 수 없는 함대입니다",
+	# 장수 특기(P8c). skill_requires_*는 requires 키마다 하나(SPECIAL-SKILLS §4)
+	"skill_used": "이 장수 특기는 이번 전투에서 이미 썼습니다", "skill_no_slot": "빈 특기 슬롯입니다",
+	"commander_down": "지휘관이 지휘 불능이라 장수 특기를 쓸 수 없습니다",
+	"skill_no_target": "특기를 걸 대상이 반경 안에 없습니다",
+	"skill_requires_has_ship_type": "강습모함이 있는 함대만 쓸 수 있습니다",
+	"skill_requires_enemy_within": "반경 안에 확인된 적 함대가 없습니다",
+	"skill_requires_ally_within": "반경 안에 다른 아군 함대가 없습니다",
+	"skill_requires_ally_flagship_within": "아군 기함 함대가 가까이 있어야 합니다",
+	"skill_requires_self_not_flagship": "기함 함대는 쓸 수 없습니다",
+	"skill_requires_charges_below_base": "미사일 사용 횟수가 이미 가득합니다",
+	"skill_requires_chain_host": "화공 운용 함대만 쓸 수 있습니다",
+	"assault_blocked": "적 함대가 호위를 받고 있어 지금은 강습할 수 없습니다",
+	"chain_host": "화공 운용 함대만 위장 항복 서신을 보낼 수 있습니다",
+	"chain_letter_used": "위장 항복 서신은 이미 보냈습니다", "chain_spent": "화공 기회가 지났습니다",
+}
+
+# 거부 사유 코드 → 화면 문구. 모르는 skill_requires_*는 일반 문구
+static func reject_text(code: String) -> String:
+	if REJECT.has(code):
+		return REJECT[code]
+	return "장수 특기 발동 조건이 맞지 않습니다" if code.begins_with("skill_requires_") else "명령을 수행할 수 없습니다"
+const END_TEXT := {
+	"flagship_lost": "기함이 격침되었습니다. 지휘 계통이 무너진 함대는 적벽에서 철수합니다.",
+	"annihilation": "조조군이 적벽에서 모두 사라졌습니다. 적벽의 궤도는 연합의 손에 남습니다.",
+}
+
+# 표현 계층(view/fleet_render, hud/ui_kit)이 교신·알림을 받는 통로. kind: "", "foe", "sys", "toast", "skill"(아군 특기 발동)
+signal battle_event(kind: String, text: String, fleet_id: int)
+signal sfx_event(name: String)   # 코어 사건 → 효과음 이름(UiSound 사건)
+signal sfx_loop(name: String, level: float)   # 코어 사건 → 루프 효과음(UiSound.set_loop). M9 화공 fire_loop
+const PRESENTATION := "res://hud/ui_kit/presentation.gd"
+var presentation: Node = null
+var hud_hidden := false   # F1 녹화용: HUD만 숨긴다(3D·VFX·진행은 그대로)
+var _saved_title := ""
+
+# ---- 코어와 시간 ----
+var sim: BattleSim
+var clock := TickClock.new()
+var battle_seed := 0
+var trace = preload("res://scripts/battle_trace.gd").new()
+var _sim_acc_clock := TickClock.new()   # update_sim(dt)용(속도 ×1 고정)
+
+# ---- 화면 모델과 표현 ----
+var vm := BattleViewModel.new()
+var rig := CameraRig.new()
+var view3d := BattleView3D.new()
+var fx: FxLayer
+var ui: FleetLabels
+var _legacy_canvas: CanvasLayer
+var _prepare_error_layer: CanvasLayer
+var _prepare_error_reason: Label
+var radar: BattleRadar
+var hud := BattleHud.new()
+var cmds: BattleCommands
+var input_node: BattleInput
+var fleets: Array[BattleViewModel.FleetView] = vm.fleets
+var missiles: Array[BattleViewModel.MissileView] = vm.missiles
+var swarms: Array[BattleViewModel.SwarmView] = vm.swarms
+var floats: Array:
+	get: return fx.floats
+
+# ---- 세션 상태(선택·그룹·끌기 같은 UI 상태) ----
+var G := {}
+var selected: Array = []
+var inspect = null
+var groups := {}
+var place_mode := false   # 다음 출격에서 초기 배치를 직접 한다(기본 자동 = 생성기 배치 그대로)
+var placing := false      # 초기 배치 중: 시간 정지, 이동 명령은 place가 된다. 확정하면 풀린다
+var multi := false   # 다중 선택 모드(터치): 탭 = 추가/해제, 빈 곳 끌기 = 범위 선택
+var marker := {}
+var drag := {}
+var now_t := 0.0
+var vsize := Vector2(1600.0, 900.0)
+var cam_pos: Vector2:
+	get: return rig.cam_pos
+	set(v): rig.cam_pos = v
+var cam_z: float:
+	get: return rig.cam_z
+	set(v): rig.cam_z = v
+var camera: Camera3D:
+	get: return rig.camera
+var _ptex := {}
+
+func _ready() -> void:
+	randomize()
+	vsize = get_viewport().get_visible_rect().size
+	rig.vsize = vsize
+	view3d.setup(self, rig)
+	_build_canvas()
+	cmds = BattleCommands.new(self)
+	input_node = BattleInput.new()
+	input_node.name = "BattleInput"
+	add_child(input_node)
+	input_node.setup(self, cmds)
+	if not init_game().ok:
+		set_process(false)
+		input_node.process_mode = Node.PROCESS_MODE_DISABLED
+		return
+	# 상품화 표현 계층이 있으면 POC 3D 함대와 HUD를 대신한다.
+	if ResourceLoader.exists(PRESENTATION):
+		presentation = load(PRESENTATION).new()
+		add_child(presentation)
+		presentation.setup(self)
+
+func _build_canvas() -> void:
+	var canvas := CanvasLayer.new()
+	_legacy_canvas = canvas
+	add_child(canvas)
+	fx = FxLayer.new()
+	canvas.add_child(fx)
+	fx.setup(rig, vm)
+	ui = FleetLabels.new()
+	canvas.add_child(ui)
+	ui.setup(self)
+	radar = BattleRadar.new()
+	radar.setup(self)
+	hud.build(self, ui, vsize, radar)
+
+# ============================================================ 시작·종료 흐름
+func init_game(proposed_org: Variant = null) -> Dictionary:
+	var candidate_org: Dictionary = org if proposed_org == null else proposed_org
+	var candidate := _prepare_game(candidate_org)
+	if not candidate.ok:
+		push_error("[FleetBattle3D] %s at %s" % [candidate.error, candidate.path])
+		_show_prepare_error(candidate.path)
+		return candidate
+	_publish_game(candidate, candidate_org)
+	_clear_prepare_error()
+	return {"ok": true}
+
+func _show_prepare_error(path: String) -> void:
+	if _prepare_error_layer == null:
+		_build_prepare_error(sim == null)
+	_prepare_error_reason.text = ("전투 프로필이 비어 있습니다." if path == "profile"
+		else "함대 편성 데이터가 올바르지 않습니다.")
+
+func _build_prepare_error(initial: bool) -> void:
+	_prepare_error_layer = CanvasLayer.new()
+	_prepare_error_layer.name = "BattlePrepareError"
+	_prepare_error_layer.layer = 6
+	_prepare_error_layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(_prepare_error_layer)
+	if initial:
+		_legacy_canvas.hide()
+		_legacy_canvas.process_mode = Node.PROCESS_MODE_DISABLED
+		ui.hide()
+		var backdrop := ColorRect.new()
+		backdrop.color = UiTheme.BG_DEEP
+		backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_prepare_error_layer.add_child(backdrop)
+		backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var safe_root := MarginContainer.new()
+	safe_root.name = "SafeContent"
+	safe_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	safe_root.theme = UiTheme.build()
+	for edge in ["left", "top", "right", "bottom"]:
+		safe_root.add_theme_constant_override("margin_" + edge, 16)
+	_prepare_error_layer.add_child(safe_root)
+	safe_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var safe := SafeArea.new()
+	safe_root.add_child(safe)
+	safe.setup(safe_root)
+	var card := PanelContainer.new()
+	card.name = "PrepareErrorCard"
+	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	card.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	card.size_flags_vertical = Control.SIZE_SHRINK_CENTER if initial else Control.SIZE_SHRINK_BEGIN
+	card.custom_minimum_size.x = minf(480.0, get_viewport().get_visible_rect().size.x * 0.44)
+	var style := UiTheme.flat(UiTheme.BG_DEEP, UiTheme.WARN, 1, 6)
+	style.set_content_margin_all(16)
+	card.add_theme_stylebox_override("panel", style)
+	safe_root.add_child(card)
+	var content := VBoxContainer.new()
+	content.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	content.add_theme_constant_override("separation", 8)
+	card.add_child(content)
+	var heading := UiTheme.label("전투를 준비하지 못했습니다.", "Heading", 22, UiTheme.WARN)
+	heading.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	content.add_child(heading)
+	_prepare_error_reason = UiTheme.label("", "Body", 17)
+	_prepare_error_reason.name = "Reason"
+	_prepare_error_reason.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	content.add_child(_prepare_error_reason)
+	var in_world := initial and routed()
+	var guidance := "기존 전투는 유지됩니다. 다시 시도해 주세요."
+	if initial:
+		guidance = "전투 결과 없이 천하로 돌아갑니다." if in_world else "전투를 시작하지 않고 게임을 종료합니다."
+	var hint := UiTheme.label(guidance, "Body", 17)
+	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	content.add_child(hint)
+	if initial:
+		var exit := Button.new()
+		exit.name = "ExitBattlePrepareError"
+		exit.theme_type_variation = "PrimaryButton"
+		exit.text = "천하로" if in_world else "종료"
+		exit.custom_minimum_size.y = 48
+		exit.add_theme_stylebox_override("focus", UiTheme.flat(Color.TRANSPARENT, UiTheme.GOLD_HI, 2, 4))
+		content.add_child(exit)
+		if in_world:
+			var link := get_node("/root/WorldLink")
+			exit.pressed.connect(func(): link.back_to_world(null))
+		else:
+			exit.pressed.connect(_quit)
+		exit.grab_focus()
+
+func _clear_prepare_error() -> void:
+	if _prepare_error_layer == null:
+		return
+	_prepare_error_layer.hide()
+	_prepare_error_layer.queue_free()
+	_prepare_error_layer = null
+	_prepare_error_reason = null
+
+func _prepare_game(candidate_org: Dictionary) -> Dictionary:
+	# 천하 지도에서 들어온 전투면 BattleBrief의 시드를 쓴다(같은 Brief = 같은 전투, WORLD-MAP-LINK §3).
+	var link := get_node_or_null("/root/WorldLink")
+	var candidate_seed: int = link.brief.seed if link and link.routed() else randi()
+	# Q83: 편성 사본이 없으면 세 세력 자동 편성(load_auto). 편성 화면의 사본(O4)이 있으면 기본 프로필에 apply
+	var errors := []
+	var profile := (ScenarioProfile.load_profile(profile_def, difficulty) if not candidate_org.is_empty() else Organization.load_auto(profile_def, difficulty)) if profile_def != "" else PocSetup.profile()
+	if not candidate_org.is_empty() and not profile.is_empty():
+		var applied := Organization.apply(profile, candidate_org, ProfileLoader.read_json(ProfileLoader.read_json(profile_def).scenario_path))
+		if applied.has("errors"):   # 난이도 변경 등: 전장은 자동 편성으로 세워 두되 시작 경로(command_deck)가 편성 화면으로 돌린다
+			errors = applied.errors
+			profile = Organization.load_auto(profile_def, difficulty)
+		else:
+			profile = applied
+	var message := "편성이 지금 전투와 맞지 않습니다. 편성 화면에서 다시 확정하십시오" if not errors.is_empty() else ""
+	var fallback := false
+	if profile_def != "" and profile.is_empty():   # 자동 편성 검증 실패(load_auto = {}) 등: 편성 없는 프로필, 그것도 없으면 POC로 연다
+		profile = ScenarioProfile.load_profile(profile_def, difficulty)
+		message = "자동 편성에 실패해 시나리오 기본 편성으로 엽니다" if not profile.is_empty() else "시나리오를 읽지 못해 시험 전장으로 엽니다"
+		fallback = true
+		if profile.is_empty():
+			profile = PocSetup.profile()
+	var scen := profile_def != "" and profile.has("combat")   # 시나리오 전장(POC로 대체됐으면 아니다)
+	if scen:
+		ScenarioProfile.enlarge_field(profile, FIELD_SIZE)   # 전장을 FIELD_SIZE로 맞추고 배치를 비율대로 늘린다. 미니맵은 이 전장을 비례 축소해 보여 준다
+		ScenarioProfile.tune_for_play(profile, move_mul, turn_mul)
+	if profile_patch.is_valid() and not profile.is_empty():
+		profile_patch.call(profile)
+		var invalid_path := "profile" if profile.is_empty() else ""
+		if invalid_path.is_empty():
+			for roster in ["ally", "foe"]:
+				if not profile.get(roster) is Array:
+					invalid_path = "profile." + roster
+					break
+		if not invalid_path.is_empty():
+			return {"ok": false, "error": "invalid_candidate_profile", "path": invalid_path}
+	var candidate_sim := BattleSim.new(candidate_seed, BattleRules.TICK_HZ, profile)
+	# 플레이어 유비군은 처음부터 직접 지휘한다. 손권군·적군은 기존 위임 AI를 쓴다.
+	for f in candidate_sim.st.fleets:
+		if f.side == 0 and f.faction == "liu_bei":
+			f.control = "direct"
+	return {"ok": true, "seed": candidate_seed, "sim": candidate_sim,
+		"ally": profile.ally.map(_with_portrait),
+		"foe": profile.foe.filter(func(d): return int(d.wait) == 0).map(_with_portrait),
+		"errors": errors, "message": message, "fallback": fallback, "scenario": scen}
+
+func _publish_game(candidate: Dictionary, candidate_org: Dictionary) -> void:
+	for f in fleets:
+		view3d.free_fleet(f)
+	vm.reset()
+	placing = false   # 시작 경로(_start)가 다시 정한다. 타이틀·천하로 나가도 참으로 남지 않게
+	fx.clear()
+	org = candidate_org
+	battle_seed = candidate.seed
+	sim = candidate.sim
+	ALLY_DEF = candidate.ally
+	FOE_DEF = candidate.foe
+	org_errors = candidate.errors
+	load_error = candidate.message
+	if candidate.fallback:
+		push_error("%s (%s, %s)" % [load_error, profile_def, difficulty])
+	var scen: bool = candidate.scenario
+	if scen:
+		rig.margin = 0.4   # 시작 배율에서도 두 손가락으로 화면을 옮길 수 있게
+		GameSettings.slow_mode = GameSettings.SLOW_OFF   # 선택 감속 끔(저장 설정은 건드리지 않는다)
+	clock = TickClock.new()
+	_sim_acc_clock = TickClock.new()
+	selected.clear()
+	multi = false
+	inspect = null
+	marker = {}
+	drag = {}
+	G = {"t": 0.0, "cp": 3.0, "ecp": 3.0, "reinf": false, "state": "brief", "speed": 1, "slow": 1.0, "killed": 0.0, "lost": 0.0, "panel_t": 0.0, "over": false, "end_t": -1.0, "end_win": false, "end_text": ""}
+	trace.start(self)
+	sim.drain_events()
+	_sync()
+	_assign_default_groups()
+	rig.limit = sim.rs.world
+	view3d.build_backdrop()
+	rig.cam_pos = _field_center()
+	_brief_x = rig.cam_pos.x
+	var mine := alive(0)
+	if scen and not mine.is_empty():   # 시작 화면은 아군(서쪽 끝) 쪽. 전장 밖으로는 clamp_cam이 막는다
+		var c := Vector2.ZERO
+		for f in mine:
+			c += f.pos
+		rig.cam_pos = c / mine.size()
+		_brief_x = rig.cam_pos.x
+	rig.cam_z = clampf(vsize.x / (sim.rs.world.x + 100.0), 0.45, 1.0)   # 전장 폭이 화면에 들어오게
+	if scen:
+		rig.cam_z = 0.9   # 전장이 커서 전체를 담으면 함대가 작다. 시작은 함대가 읽히는 배율, 확대·축소는 두 손가락
+	hud.reset()
+	refresh_panel()
+
+# 프로필 전장 크기와 중심. 시나리오 좌표는 (0,0)에서 시작한다.
+func field() -> Vector2:
+	return rig.limit
+
+var _brief_x := 0.0   # 브리핑 배경 카메라가 흔들리는 중심 x(시작 화면 위치)
+
+func _field_center() -> Vector2:
+	return rig.limit * 0.5
+
+# 프로필 전대 정의는 표시용 사본에만 최신 인물 초상 번호를 채운다.
+func _with_portrait(d: Dictionary) -> Dictionary:
+	var e := d.duplicate()
+	e.p = Commanders.portrait_index(str(d.get("commander_id", d.get("name", ""))), -1 if d.has("commander_id") else int(d.get("p", 0)))
+	return e
+
+# 기본 그룹 1~n: 아군 세력 하나가 번호 하나다(등장 순서, 1 유비군 · 2 손권군). 코어 상태가 아닌 UI 편성이다(Q73: 상위 묶음 없음).
+func _assign_default_groups() -> void:
+	groups = {}
+	var num := {}
+	for f in fleets:
+		if f.side != 0:
+			continue
+		if not num.has(f.faction):
+			num[f.faction] = num.size() + 1
+			groups[num[f.faction]] = []
+		groups[num[f.faction]].append(f.id)
+
+# REVIEW-O4 #1·O4b F-1: 걸린 편성이 거부됐으면 전투를 열지 않고 편성 화면(고친 편성 + 사유)을 연다.
+# 모든 시작 경로(deck 시작·다시 시작, 구 오버레이 "출격"·"처음부터"·"다시 출격", _restart)가 _start에서 이 검사를 지난다
+func org_blocked() -> bool:
+	if org_errors.is_empty():
+		return false
+	if presentation and presentation.hud:
+		presentation.hud.screens["org"].open_org()
+	return true
+
+func _start() -> void:
+	if org_blocked():
+		return
+	hud.brief_ov.visible = false
+	hud.end_ov.visible = false
+	hud.menu_ov.visible = false
+	G.state = "play"
+	placing = place_mode
+	selected.assign([flag(0)])
+	refresh_panel()
+	add_log("함대를 끌어 배치하고 확정하십시오." if placing else "전 함대, 전투 배치 완료.", "", fleets[0])
+	var foe = null
+	for f in fleets:
+		if f.side == 1 and not f.is_flag:
+			foe = f
+			break
+	get_tree().create_timer(0.9).timeout.connect(func(): if G.state == "play": add_log("조조군 선봉, 적벽 진입 확인.", "foe", foe))
+
+func _restart() -> void:
+	if not init_game().ok:
+		return
+	_start()
+
+func _quit() -> void:
+	get_tree().quit()
+
+# 천하 지도에서 들어온 전투인가(결과 화면의 "천하로", 시작 화면 생략)
+func routed() -> bool:
+	var link := get_node_or_null("/root/WorldLink")
+	return link != null and link.routed()
+
+# 천하 지도로 돌아간다. 전투가 끝났으면 결과(BattleOutcome)를, 아니면 결과 없이.
+func back_to_world() -> void:
+	var link := get_node_or_null("/root/WorldLink")
+	if link == null:
+		return
+	link.back_to_world(BattleOutcome.from_sim(sim, link.brief) if sim.st.over else null)
+
+func _toggle_menu() -> void:
+	if G.state == "play":
+		G.state = "pause"
+		hud.menu_ov.visible = true
+	elif G.state == "pause":
+		_close_menu()
+
+func _close_menu() -> void:
+	hud.menu_ov.visible = false
+	G.state = "play"
+
+# 영상 촬영용 HUD 숨김(LEGAL-YOUTUBE-RISK §3-①-B). 창 제목도 중립으로 바꿔 게임 이름이 잡히지 않게 한다.
+func toggle_hud() -> void:
+	hud_hidden = not hud_hidden
+	if presentation and presentation.hud:
+		presentation.hud.get_parent().visible = not hud_hidden
+	else:
+		ui.visible = not hud_hidden
+	var win := get_window()
+	if hud_hidden:
+		_saved_title = win.title
+		win.title = "Capture"
+	else:
+		win.title = _saved_title
+
+func _toggle_speed() -> void:
+	G.speed = 2 if G.speed == 1 else 1
+	hud.speed_btn.text = "×%d" % G.speed
+
+func end_game(win: bool, text: String) -> void:
+	G.over = true
+	G.end_t = 1.6
+	G.end_win = win
+	G.end_text = text
+
+func _show_end() -> void:
+	G.state = "end"
+	hud.show_end(G.end_win, G.end_text, G.killed, G.lost, G.t)
+
+# ============================================================ 시간
+func _process(delta: float) -> void:
+	trace.sample(self)
+	now_t += delta
+	var dt := minf(0.05, delta)
+	if G.state == "play":
+		input_node.poll_camera(dt)
+		clock.set_speed(float(G.speed) * G.slow)
+		var n := 0 if placing else clock.advance(delta)   # 초기 배치 중에는 틱이 멈춘다
+		for i in n:
+			if sim.st.over:
+				break
+			if i > 0 and i == n - 1:
+				_sync()   # 한 프레임에 여러 틱이면 마지막 틱 직전 상태를 보간 시작점(ppos)으로 둔다. 안 하면 2틱 구간을 1틱 alpha로 보간해 배속에서 표시가 앞뒤로 튄다
+			sim.step()
+		var a := 1.0 if (sim.st.over or placing) else clock.alpha()   # 전투가 끝나면 틱이 멈춘다: 보간을 마지막 위치에 고정(안 하면 결과 화면까지 직전 틱과 사이를 반복 재생해 흔들린다)
+		vm.alpha = a
+		if n > 0:   # 틱이 없으면 투영·사건이 그대로다(명령·디버그 경로는 직접 _pump한다). 매 프레임 투영을 다시 만들면 1,500척에서 약 3ms
+			_pump()
+		vm.interpolate(a)
+		_tick_view(dt * G.speed * G.slow)
+		G.panel_t -= dt
+		if G.panel_t <= 0.0:
+			G.panel_t = 0.25
+			refresh_panel()
+		if G.over and G.end_t > 0.0:
+			G.end_t -= dt
+			if G.end_t <= 0.0:
+				_show_end()
+	elif G.state == "brief" and not GameSettings.reduce_motion:
+		# 타이틀·서막·브리핑 뒤 전장이 천천히 흐른다. 동작 줄이기면 멈춘다.
+		rig.cam_pos.x = _brief_x + sin(now_t / 5.0) * 120.0
+	rig.update()
+	if presentation == null:   # 표현 계층이 있으면 POC 함대 노드는 숨겨져 있다(위치 갱신 생략, 1,500척 약 1ms)
+		view3d.sync(fleets)
+	hud.paint_cmds()
+	fx.queue_redraw()
+	ui.queue_redraw()
+	radar.queue_redraw()
+
+# 화면 쪽 시간 진행(말풍선, 표식, 연출). dt는 게임 속도를 반영한 시간이다.
+func _tick_view(dt: float) -> void:
+	for f in fleets:
+		if f.speech_t > 0.0:
+			f.speech_t -= dt
+	if not marker.is_empty():
+		marker.t -= dt
+		if marker.t <= 0.0:
+			marker = {}
+	fx.update(dt)
+
+# 호환: 프레임 폭(dt초)만큼 게임을 진행한다. 헤드리스 테스트가 쓴다(속도 ×1, 상태 무관).
+func update_sim(dt: float) -> void:
+	var n := _sim_acc_clock.advance(dt)
+	for i in n:
+		if sim.st.over:
+			break
+		sim.step()
+	_pump()
+	vm.interpolate(1.0)
+	_tick_view(dt)
+	if G.over and G.end_t > 0.0 and G.state == "play":
+		G.end_t -= dt
+		if G.end_t <= 0.0:
+			_show_end()
+
+# ============================================================ 코어 ↔ 화면
+# 투영을 화면 모델에 반영하고 새 전대의 3D 노드를 만든다.
+func _sync() -> void:
+	var projection := sim.projection(0)
+	for squadron in projection.squadrons:
+		# 확인된 접촉과 아군만 인물이 공개된다. 추정·상실 접촉에는 인물 정보를 추가하지 않는다.
+		if squadron.has("commander_id"):
+			squadron.portrait = Commanders.portrait_index(str(squadron.commander_id))
+	var fresh := vm.apply(projection)
+	for f in fresh:
+		view3d.build_fleet(f)
+	G.t = vm.clock_s
+	G.cp = vm.cp
+	G.reinf = vm.reinf
+	G.killed = vm.killed
+	G.lost = vm.lost
+	view3d.sync(fleets)
+
+# 사건을 모두 처리하고 화면 모델을 맞춘다.
+func _pump() -> void:
+	_sync()
+	_note_arrivals()
+	for e in sim.drain_events_for(0):
+		trace.event(self, e)
+		_on_event(e)
+
+# 이동 명령 완료 알림(M10, 표시 전용): 이동 명령이 사라졌을 때 목적지 근처면 "○○ 함대 이동 완료"를 교신 기록에 남긴다.
+var _had_move := {}
+var _last_dest := {}
+func _note_arrivals() -> void:
+	for f in fleets:
+		if f.side != 0 or f.dead:
+			continue
+		var was: bool = _had_move.get(f.id, false)
+		_had_move[f.id] = f.has_move
+		if f.has_move:
+			_last_dest[f.id] = f.move_to
+		elif was and not placing and f.target == null and f.pos.distance_to(_last_dest.get(f.id, Vector2(1e9, 1e9))) < 40.0:
+			add_log("%s 함대 이동 완료" % f.fname, "", f)
+
+# 플레이어 명령(input/ 이 만든 사전)을 코어에 넘긴다. 즉시 적용되고 명령 기록에 남는다.
+func issue(cmd: Dictionary) -> void:
+	trace.write(self, "command_request", {"command": cmd, "ui_state": G.state, "placing": placing, "fleets": trace.fleets(sim)})
+	for id in cmd.get("ids", []):
+		_had_move.erase(id)   # 사용자 명령으로 꺼진 이동은 "완료"로 알리지 않는다(M10)
+	if placing:   # 초기 배치(Q70): 이동 = 배치(틱 0 전용 place 명령, 허용 반경은 코어가 자른다), 진형만 그대로, 나머지는 확정 뒤
+		match cmd.kind:
+			"move":
+				cmd = BattleCommands.make("place", cmd.ids, -1, cmd.point)
+			"face":   # 정지 중이라 회전이 안 보인다: 틱 0 즉시 방향(place의 facing_deg)
+				cmd = BattleCommands.make("place", cmd.ids, -1, _center_of(cmd.ids), {"facing_deg": cmd.args.facing_deg})
+			"formation", "place", "posture", "delegate":
+				pass
+			_:
+				trace.write(self, "command_blocked", {"command": cmd, "reason": "placing"})
+				toast("배치를 확정한 뒤에 지시할 수 있습니다")
+				return
+	sim.issue(BattleSim.command(0, cmd.ids, cmd.kind, cmd.get("target_id", -1), cmd.get("point", Vector2.ZERO), cmd.get("args", {})))
+	trace.write(self, "command_applied", {"command": cmd, "fleets": trace.fleets(sim)})
+	_pump()
+	if cmd.kind == "place":   # 정지 중이라 보간할 틱이 없다: 새 위치로 바로 옮겨 그린다
+		for f in fleets:
+			f.ppos = f.tpos
+			f.pheading = f.theading
+		vm.interpolate(1.0)
+
+func _center_of(ids: Array) -> Vector2:
+	var c := Vector2.ZERO
+	for id in ids:
+		c += sim.st.by_id(int(id)).pos
+	return c / maxi(1, ids.size())
+
+# 배치 중 선택 함대를 deg도만큼 돌린다(함대마다 제자리에서, 틱 0 즉시)
+func place_turn(deg: float) -> void:
+	var s := my_sel()
+	if not placing or s.is_empty():
+		toast("먼저 아군 함대를 선택하세요")
+		return
+	for f in s:
+		var fs := sim.st.by_id(f.id)
+		issue(BattleCommands.make("place", [f.id], -1, fs.pos, {"facing_deg": rad_to_deg(fs.heading) + deg}))
+
+# 배치 중 선택 함대가 가장 가까운 적을 보게 한다(자동 방향)
+func place_face_foe() -> void:
+	var s := my_sel()
+	if not placing or s.is_empty():
+		toast("먼저 아군 함대를 선택하세요")
+		return
+	for f in s:
+		issue(BattleCommands.make("place", [f.id], -1, sim.st.by_id(f.id).pos))
+
+# 초기 배치를 모두 시작 위치로 되돌린다(자동 배치)
+func place_auto() -> void:
+	if not placing:
+		return
+	for f in alive(0):
+		issue(BattleCommands.make("place", [f.id], -1, sim.st.by_id(f.id).spawn))
+	toast("자동 배치로 되돌렸습니다")
+
+# 초기 배치를 확정하고 전투를 시작한다
+func place_confirm() -> void:
+	if not placing:
+		return
+	placing = false
+	toast("배치 확정 · 전투 시작")
+
+# 명령 되돌리기(U2): 스냅숏 {id: [has_move, move_to, target_id, defense]}의 상태로 돌아가는 새 명령을 발행한다.
+func restore_orders(snap: Dictionary) -> void:
+	var ids := []
+	for id in snap:
+		ids.append(int(id))
+	issue({"kind": "restore", "ids": ids, "args": {"orders": snap}})
+
+# 코어 사건 → 효과음. 코어에 아직 없는 사건: 함재기 기관포·회수, 보호막·장갑 피격
+const SFX_OF := {"missile_launch": "missile_launch", "missile_hit": "missile_hit", "fighter_launch": "fighter_launch", "charge": "engine_boost",
+	"chain_explosion": "chain_explosion", "fire_ignite": "fire_ignite"}   # M9 화공: 발동 폭발, 불붙음(번짐 포함)
+const SFX_OF_CAT := {"artillery": "missile_launch", "line_fire": "laser_light", "fighter": "fighter_launch"}
+# salvo 규칙의 미사일(포격 범주)·함재기 사격은 코어에 비행체가 없다. 렌더러가 이 대기열을 꺼내 비행 연출을 만든다(표시 전용).
+const FX_CATS := ["artillery", "fighter"]
+var salvo_fx: Array = []
+
+func _on_event(e: Dictionary) -> void:
+	var f = vm.fleet(e.sq) if e.sq >= 0 else null
+	if SFX_OF.has(e.kind):
+		sfx_event.emit(SFX_OF[e.kind])
+	elif e.kind == "salvo" and SFX_OF_CAT.has(e.value.cat):
+		sfx_event.emit(SFX_OF_CAT[e.value.cat])
+	if e.kind == "salvo" and e.value.cat in FX_CATS:
+		salvo_fx.append({"cat": e.value.cat, "from": e.sq, "to": e.other, "n": int(e.value.n)})
+	elif e.kind == "fire_loop":
+		sfx_loop.emit("fire_loop", 1.0 if e.value.on else 0.0)   # 불이 타는 동안(발동 ~ 번짐 끝)
+	match e.kind:
+		"say":
+			if f:
+				var txt: String = SAY.get(e.value, "")
+				if e.value == "attack":
+					var t = vm.fleet(e.other)
+					txt = "%s 함대를 친다!" % t.fname if t else ""
+				if txt != "":
+					f.speech = txt
+					f.speech_t = 2.4
+		"volley":
+			add_log("%d개 함대 미사일 일제사격" % e.value, "", f)
+		"charge":
+			add_log("돌격 명령 · 10초간 화력·속도 상승", "", f)
+		"rejected":
+			if e.other == 0:
+				toast(reject_text(str(e.value)))
+		"skill":   # 장수 특기 발동(시전 진영에만 온다). 짧은 알림 + 교신 기록
+			if f and f.side == 0:
+				var nm: String = sim.skills.defs.get(e.value.id, {}).get("name", "")
+				var to := ""
+				var t = vm.fleet(e.other) if e.other >= 0 else null
+				if t:
+					to = " → %s 함대" % t.fname
+				battle_event.emit("skill", "%s 함대 장수 특기 「%s」 발동%s" % [f.fname, nm, to], f.id)
+		"reinforcements":
+			add_log("경고: 위군 별동대 2개 함대가 측면에 출현!", "sys", null)
+			toast("적 증원 함대 출현 · 측면 주의")
+		"level_up":
+			fx.float_text(e.pos + Vector2(0.0, -60.0), "LEVEL UP", BattleHud.C_GOLD)
+		"flank":
+			var att = vm.fleet(e.sq)
+			fx.float_text(e.pos + Vector2(0.0, -50.0), "배후 공격!" if e.value > 1.4 else "측면 공격!", BattleHud.C_FOE if (att and att.side == 1) else BattleHud.C_GOLD)
+		"ship_lost":
+			if f:
+				fx.on_ship_lost(f, e.value)
+		"missile_hit":
+			if f:
+				fx.on_missile_hit(e.pos, f.side)
+		"destroyed":
+			if f:
+				fx.on_destroyed(f)
+				selected.erase(f)
+				if inspect == f:
+					inspect = null
+				var src = vm.fleet(e.other) if e.other >= 0 else null
+				if f.side == 1:
+					add_log("%s 함대 격파!" % f.fname, "", src if (src and src.side == 0) else null)
+					if src and not src.dead and src.side == 0:
+						src.speech = "적 함대 격파!"
+						src.speech_t = 2.4
+				else:
+					add_log("%s 함대가 궤멸되었습니다" % f.fname, "foe", f)
+				refresh_panel()
+		"battle_end":
+			end_game(vm.outcome.win, END_TEXT.get(e.value, ""))
+
+# ============================================================ 화면 도우미
+func w3(p: Vector2, y: float = 0.0) -> Vector3:
+	return rig.w3(p, y)
+
+func w2s(p: Vector2) -> Vector2:
+	return rig.w2s(p)
+
+func s2w(sp: Vector2) -> Vector2:
+	return rig.s2w(sp)
+
+func _clamp_cam() -> void:
+	rig.clamp_cam()
+
+func _zoom(mp: Vector2, factor: float) -> void:
+	rig.zoom(mp, factor)
+
+func label_rect(f) -> Rect2:
+	return ui.label_rect(f)
+
+func _portrait_tex(i: int) -> Texture2D:
+	if _ptex.has(i):
+		return _ptex[i]
+	var path := Commanders.portrait_path(i)
+	if not path.is_empty():
+		var texture := load(path) as Texture2D
+		if texture:
+			# 정사각형 HUD 슬롯에 얼굴 비율을 유지한다. 원본 전체 초상은 파일에 보존한다.
+			var portrait := AtlasTexture.new()
+			portrait.atlas = texture
+			portrait.region = Rect2(0, 0, texture.get_width(), texture.get_width())
+			_ptex[i] = portrait
+			return portrait
+	# 무명 집단이나 알 수 없는 인물에게 다른 장수의 얼굴을 빌려 주지 않는다.
+	var blank := GradientTexture2D.new()
+	blank.gradient = Gradient.new()
+	blank.gradient.colors = PackedColorArray([Color("18242e"), Color("111b24")])
+	blank.width = 561
+	blank.height = 561
+	_ptex[i] = blank
+	return blank
+
+func toast(text: String) -> void:
+	battle_event.emit("toast", text, -1)
+	hud.toast(text)
+
+func add_log(text: String, kind: String, f) -> void:
+	battle_event.emit(kind, text, f.id if f else -1)
+	hud.add_log(text, kind, f)
+
+func refresh_panel() -> void:
+	hud.refresh_panel()
+
+# ============================================================ 조회(호환)
+func alive(side: int) -> Array[BattleViewModel.FleetView]:
+	return vm.alive(side)
+
+func flag(side: int):
+	return vm.flag(side)
+
+func by_id(id: int):
+	return vm.fleet(id)
+
+func nearest_foe(f, max_r: float):
+	return vm.nearest_foe(f, max_r)
+
+func my_sel() -> Array:
+	var out: Array = []
+	for f in selected:
+		if not f.dead:
+			out.append(f)
+	return out
+
+func flank_mul(att, tgt) -> float:
+	return sim.rs.flank_mul(att.pos, tgt.pos, tgt.heading)
+
+func power(f) -> float:
+	return sim.rs.power(f.lv, f.charge_t > 0.0, f.in_cmd, f.defense)
+
+# ============================================================ 입력(호환: input/ 으로 넘긴다)
+func do_cmd(id: String) -> void:
+	cmds.do_cmd(id)
+
+func order_move(w: Vector2, strafe := false, facing_deg = null) -> void:
+	cmds.order_move(w, strafe, facing_deg)
+
+func order_face(rad: float) -> void:
+	cmds.order_face(rad)
+
+func order_attack(t) -> void:
+	cmds.order_attack(t)
+
+func _hit_fleet(sp: Vector2):
+	return input_node.hit_fleet(sp)
+
+func _click_at(sp: Vector2, btn: int, shift: bool) -> void:
+	input_node.click_at(sp, btn, shift)
+
+func _group_down(n: int) -> void:
+	input_node.group_down(n)
+
+func _group_up(n: int) -> void:
+	input_node.group_up(n)
+
+func group_fleets(n: int) -> Array:
+	return input_node.group_fleets(n)
+
+func same_sel(g: Array) -> bool:
+	return input_node.same_sel(g)
+
+func select_group(n: int) -> void:
+	input_node.select_group(n)
+
+func assign_group(n: int) -> void:
+	input_node.assign_group(n)
+
+# ============================================================ 테스트 훅(규칙 단위 테스트가 상태를 직접 만든다)
+func apply_dmg(src, tgt, amt: float) -> void:
+	sim.debug_damage(src.id if src else -1, tgt.id, amt * BattleRules.MILLI)
+	_pump()
+
+func fire_missiles(f, tgt) -> void:
+	sim.debug_fire_missiles(f.id, tgt.id)
+	_pump()
+
+func launch_fighters(f, tgt) -> void:
+	sim.debug_launch_fighters(f.id, tgt.id)
+	_pump()
+
+func spawn_reinf() -> void:
+	sim.debug_spawn_reinf()
+	_pump()

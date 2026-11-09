@@ -1,0 +1,90 @@
+[
+  {
+    "source": {
+      "path": "tests\\fixtures\\p02\\poc.json",
+      "sha256": "8260f405c4bf0bc4142e104c0a22923be77b36f62b1d8fcdcc5fa6b8db47d518",
+      "bytes": 3087
+    },
+    "derived": {
+      "path": "tests\\fixtures\\p02\\worker-poc.json",
+      "sha256": "f5d7efdf667211f9151d83ba7594200816d9d814f0404facb428062525ac107d",
+      "bytes": 3087
+    },
+    "changes": {
+      "initial_controls": {
+        "before": [
+          "direct",
+          "delegate"
+        ],
+        "after": [
+          "delegate",
+          "delegate"
+        ]
+      },
+      "policy": {
+        "before": "attack5",
+        "after": "none"
+      },
+      "max_ticks": {
+        "before": 1200,
+        "after": 18000
+      }
+    }
+  },
+  {
+    "source": {
+      "path": "tests\\fixtures\\p02\\services.json",
+      "sha256": "8c4e4dcbb1632aa46ed65d04b8d3f6d41d4f5982d2984d126b902fe3f475c879",
+      "bytes": 28351
+    },
+    "derived": {
+      "path": "tests\\fixtures\\p02\\worker-services.json",
+      "sha256": "6d8a038cf638d233f1cf466151f99ecc88a7ece288ef308314ab5155f7af520d",
+      "bytes": 28351
+    },
+    "changes": {
+      "initial_controls": {
+        "before": [
+          "direct",
+          "delegate"
+        ],
+        "after": [
+          "delegate",
+          "delegate"
+        ]
+      },
+      "policy": {
+        "before": "attack5",
+        "after": "none"
+      },
+      "max_ticks": {
+        "before": 1200,
+        "after": 18000
+      }
+    }
+  },
+  {
+    "source": {
+      "path": "tests\\fixtures\\p02\\timeout-poc.json",
+      "sha256": "9ba01f6e20eac68f59d70bac6bc842f29abb9e3fb5ab268203a6c20161a91cda",
+      "bytes": 3089
+    },
+    "derived": {
+      "path": "tests\\fixtures\\p02\\worker-timeout-poc.json",
+      "sha256": "cdaa5e821a574f365851e9ccd65de89da98d9683bcc16517b8e55d0aad1d25d9",
+      "bytes": 3093
+    },
+    "changes": {
+      "initial_controls": {
+        "before": [
+          "direct",
+          "direct"
+        ],
+        "after": [
+          "delegate",
+          "delegate"
+        ]
+      }
+    }
+  }
+]

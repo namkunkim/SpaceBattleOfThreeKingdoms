@@ -1,0 +1,62 @@
+[
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\PLAN-REPLAY-PARTIAL-20261108.md",
+    "Hash": "186D68D56785176DBF19AEC9A4CD3A851623759E8F073B876400D7963B92786A"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\REVIEW-5B-20261108.md",
+    "Hash": "A4DBB5A4DA91B8CFAF61A53767233D70DB24E0435AAB44BF21EE48AE38072590"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\oracle_a.gd",
+    "Hash": "5CE2D70B6DBF3D8D6E10332B6A1F98FCBE4E9C7AFD8FF4A912953DC3D951F9EE"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\oracle-a.native",
+    "Hash": "B9EC4B9C2E5AC1C3D9CBA60D4211384A3B0594B1A7885380FBD419E8CB2AA49B"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\probe.gd",
+    "Hash": "A97CC3198E008B6DA6DA93CF0E563631161921944B7C5DF85C6B650BC7E96BD6"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\launch.py",
+    "Hash": "97A53F00922101F23BD28C2DFDE4CA235F2FA1B33934D09706BB51BECFDDEA30"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\windows_job.py",
+    "Hash": "6C8333AE38B148777D2F1B78BD1C02321F89602054D3F5DAA75BEB4F4526580F"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\oracle-attempt-03\\run.json",
+    "Hash": "21192DFC700D772DC6B8333291DCE1D048961EFF2C92E5C846ACD154C3C461CE"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\probe-attempt-02\\run.json",
+    "Hash": "41804A064E8C3B97803AAE51F0FB6DDDAA240108C3F13AE75D5FC38E215A47B7"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\oracle-attempt-03\\stdout.bin",
+    "Hash": "93380AF63B1C78EA352BD0E8446F3E82CB8CFEF4F7A0DC362A91063F0BFC9D65"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\probe-attempt-02\\stdout.bin",
+    "Hash": "C11AD2C2B0310F851F5314A41E69A3D49D0779C21925D966174EC6D268370AAF"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\oracle-attempt-03\\input-before.json",
+    "Hash": "E325E58215F0EB0DCFA2E6F543328944E417F87A26DD312CFD37FB8A6568F2C8"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\oracle-attempt-03\\input-after.json",
+    "Hash": "E325E58215F0EB0DCFA2E6F543328944E417F87A26DD312CFD37FB8A6568F2C8"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\probe-attempt-02\\input-before.json",
+    "Hash": "883F4B5731BFED1E1F6EECC21A2CFFA99D3A9F47C5FE8E87EBEB9DFA4E1F5A98"
+  },
+  {
+    "Path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-cursor-20261108\\probe-attempt-02\\input-after.json",
+    "Hash": "883F4B5731BFED1E1F6EECC21A2CFFA99D3A9F47C5FE8E87EBEB9DFA4E1F5A98"
+  }
+]

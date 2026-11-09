@@ -1,0 +1,2527 @@
+{
+  "scope": "designated battle preparation failure UI and initial escape",
+  "implementation_5b": "limited acceptance",
+  "closeout": "pending independent review",
+  "paths": {
+    "docs/battle-core/CHECKLIST-OPEN.md": {
+      "bytes": 122545,
+      "sha256": "4ce0c1fc724f10837621c3bd717de5ced29ac69c85eb2c090824ee20726bce61"
+    },
+    "docs/battle-core/pc-campaign-design/P02-PREP-ERROR-CHECKLIST-20261108.md": {
+      "bytes": 1268,
+      "sha256": "9ce9d3c98e3fd3d0d6590013e93c0c3be8ef922ede709ab4f5a1eccf9c8dd457"
+    },
+    "docs/battle-core/pc-campaign-design/P02-PREP-ERROR-RESULT-20261108.md": {
+      "bytes": 3740,
+      "sha256": "14bb5509afbeb75aaa7733bfb0e6d2733835885131e25897f66bcd20ec339d7e"
+    },
+    "docs/battle-core/pc-campaign-design/P02-PROGRESS-CHECKLIST.md": {
+      "bytes": 10400,
+      "sha256": "828c2f5a8992c19ce89b239620601a6effdf021f8db4dac79526285f6ca6f34e"
+    },
+    "docs/battle-core/pc-campaign-design/SESSION-HANDOFF-P02-PREP-ERROR-20261108.md": {
+      "bytes": 1293,
+      "sha256": "6190f6942ebf1909345118b7edaf167807ea6c26693e74be52bde555b086fa64"
+    },
+    "docs/battle-core/pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.md": {
+      "bytes": 19352,
+      "sha256": "4e7c869edd83d91413790d6c54613c21e91761bcee40d4f9254a336b05c8927d"
+    },
+    "scripts/FleetBattle3D.gd": {
+      "bytes": 37542,
+      "sha256": "604b79308d9b3dbab84dced32456a4f41b28686c8eec748073d3816892cffc5c"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/atomic/command.json": {
+      "bytes": 813,
+      "sha256": "6bf9285ceba08383de847fb4f99e8e47e84dd0036fdaa799996107694b41b0e5"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/atomic/process.json": {
+      "bytes": 40,
+      "sha256": "9aa4fbe7cccbfa34f986e9636bb5e3b6688abedac7b8a1bb7dc6abbb63324536"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/atomic/stderr": {
+      "bytes": 582,
+      "sha256": "e035b5403d06cbcd26d9cd3bc16fbe708888184fb2fefab932e23512a59cbc89"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/atomic/stdout": {
+      "bytes": 75,
+      "sha256": "83cf0b082206af2aa236c83064fbcfa76be1e00a4aa3558574b2f65965d9481c"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/battle/command.json": {
+      "bytes": 785,
+      "sha256": "74b7e9712356bcdae4c4f4612e29f1d6ab029eaf29e96a00ec90e907c4494e48"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/battle/process.json": {
+      "bytes": 38,
+      "sha256": "f154c57fbaa6e1a3d90571a2e3e3534051fae21931418233db107037e69ededd"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/battle/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-02-54-15488-3461368.jsonl": {
+      "bytes": 3236,
+      "sha256": "e71ef460892054856dc79825c3eda304924e7956714748283c616ee32486bf11"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/battle/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-02-57-15488-5991162.jsonl": {
+      "bytes": 46072,
+      "sha256": "e8b0a92818c49bf69878cfcd21526d903d0a0e3856c257f2fa3a6f0ef45f71c0"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/battle/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-02-57-15488-6522333.jsonl": {
+      "bytes": 46687,
+      "sha256": "cd7349da411fabc1f8e72b24b56ecf6db8bb70ab4ba3720a97754dbbe1f4f3cb"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/battle/stderr": {
+      "bytes": 252,
+      "sha256": "54388bb9493153c525e5519a3b3bb8c42a600edb11c58048a4c77593e3b0949e"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/battle/stdout": {
+      "bytes": 1171,
+      "sha256": "5e78b6f48c4ca647b53ffc050323f1394e4ab76615beee295951d6e2be266a6b"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/clean/command.json": {
+      "bytes": 798,
+      "sha256": "1732befee846e0f9883f7e0b7003bdf73a64d7bdd49d9adcf8d7a5a9b9a65622"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/clean/process.json": {
+      "bytes": 40,
+      "sha256": "9aa4fbe7cccbfa34f986e9636bb5e3b6688abedac7b8a1bb7dc6abbb63324536"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/clean/stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/clean/stdout": {
+      "bytes": 253,
+      "sha256": "a65ad33305bf8fec619a0ef391660cb71ca4aa3c04c59646f3e9db43a9817ce6"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/common/command.json": {
+      "bytes": 813,
+      "sha256": "aafaaaed999e1005186d4e04533d514bb4ecfdeeb32f53fd0ad69497293dc201"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/common/process.json": {
+      "bytes": 38,
+      "sha256": "d71a32cd64e92026931ae49dd62a79e04eb75fe16c5036aed3972ffc0db072d2"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/common/result.json": {
+      "bytes": 2,
+      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/common/stderr": {
+      "bytes": 592,
+      "sha256": "ee88dce63c6df871dc5a27ec00968e8b0ea9a97fef684bb0ece29c7b1b38435c"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/common/stdout": {
+      "bytes": 113,
+      "sha256": "50d5d52cc046d08bdbd9d3ece5bffa26b2657744881de74e88e9e064ddce9015"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/inputs.json": {
+      "bytes": 554346,
+      "sha256": "700c4abf643b2ef92dc14adfa0ac4d34717641cbade7f8099557c0d66dacf3f9"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/organization/command.json": {
+      "bytes": 813,
+      "sha256": "94fecb1ba1ad6d7b212197942d0c50a320698275642007ae7820658ccb851921"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/organization/process.json": {
+      "bytes": 38,
+      "sha256": "f154c57fbaa6e1a3d90571a2e3e3534051fae21931418233db107037e69ededd"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-02-54-14484-3471568.jsonl": {
+      "bytes": 9749,
+      "sha256": "eb79bea758aa6c8d70830182887f4a2c79624bae91ee8459d6ab3465a2350a1f"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-03-09-14484-17974598.jsonl": {
+      "bytes": 9757,
+      "sha256": "1fc4b1855eec5a3f9c07354a116ddb804f36b893988d4f7063265da398c36944"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-03-09-14484-18147370.jsonl": {
+      "bytes": 3237,
+      "sha256": "360c3a4d14848fbdbded75c001d594f946af75b14ca454f0881d93518dc1533b"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-03-09-14484-18219706.jsonl": {
+      "bytes": 3238,
+      "sha256": "71dbda1cd4aec876f8f34ba6bca925f8e779c413e87f11a804722dc10657e757"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-03-09-14484-18306584.jsonl": {
+      "bytes": 3238,
+      "sha256": "8782b939cef60bf1af8f7fabb768b788adf0fdc110183351e1a1bca5e8e34556"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-03-09-14484-18382472.jsonl": {
+      "bytes": 9954,
+      "sha256": "4de75daaff8e9a89209da6857d75213485c67238b7314d943c94f305a8cb60ad"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-03-10-14484-18698358.jsonl": {
+      "bytes": 3238,
+      "sha256": "7ecc24292e9e9c7136f648f9496e3f286e3f2105fa034f5b1397b59e1fc643cc"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-03-10-14484-18770823.jsonl": {
+      "bytes": 3238,
+      "sha256": "1c4fada8b40da4d14670170f3b9b98978f558fef6b75f7df165e2834228a7b43"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-03-10-14484-18844770.jsonl": {
+      "bytes": 9954,
+      "sha256": "ba5e47863003f3f12314939d40ada211a9c0a772d11d6272a43d87bfac95705a"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-03-10-14484-19179318.jsonl": {
+      "bytes": 9758,
+      "sha256": "fae657de1b8868e8d109cb49e67373ca352a22c4152197338c7f952d4de7baa3"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-03-10-14484-19258007.jsonl": {
+      "bytes": 3238,
+      "sha256": "7918d06d66af5cdf9987c16bd32bb761180c7f498023b8007022697945fa396c"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-03-12-14484-21504169.jsonl": {
+      "bytes": 3238,
+      "sha256": "0525ee3bf0ece5a8b591be62d8c6de7b860b9ff7f0099bde32724ea27e22420d"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-03-15-14484-23624283.jsonl": {
+      "bytes": 3238,
+      "sha256": "b35eab03b6925fbfeb7f715877857af8fcb735c38cc83d4d787c52ea806e04d5"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-03-16-14484-25510632.jsonl": {
+      "bytes": 9125,
+      "sha256": "dddcfb4498efc8a1b5dc188b672a6d41581bc59a86851b05c0e18fc9c8d3358b"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-03-17-14484-25697131.jsonl": {
+      "bytes": 9619,
+      "sha256": "c83eb8339b9d5ab1585f1307c37407343fb1548f555853c37ccedd0a9ce8175c"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/organization/stderr": {
+      "bytes": 1821,
+      "sha256": "81c21ccf3b9bfe00f8abf5efc84e505b508ca53fdd51219cb43f748a08281082"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/organization/stdout": {
+      "bytes": 3476,
+      "sha256": "eef4756de584ead500c56278950cdf4ac180b01909bf4c835b5c028bcc78ff7c"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/processes.json": {
+      "bytes": 218,
+      "sha256": "1bcb327bce841e3cd4a813710639c55a8a42fdf0a5cbdb5d152d266f1a96b0a4"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/returning/command.json": {
+      "bytes": 814,
+      "sha256": "3ac18c3003b0f4c3e82c11cd2cf47388d292e7a7d3ef078259e1fc99f86d3518"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/returning/process.json": {
+      "bytes": 40,
+      "sha256": "9aa4fbe7cccbfa34f986e9636bb5e3b6688abedac7b8a1bb7dc6abbb63324536"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/returning/stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-01/returning/stdout": {
+      "bytes": 321,
+      "sha256": "dee2488a703e228957215f9732dbe46ac1623665e27569fc3bcc3f971084c2bd"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/atomic/command.json": {
+      "bytes": 816,
+      "sha256": "ed84b282e61d6afc525d3a0fee3df32889ae0a377167e3f4bc194c472d557243"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/atomic/process.json": {
+      "bytes": 38,
+      "sha256": "f154c57fbaa6e1a3d90571a2e3e3534051fae21931418233db107037e69ededd"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/atomic/result.json": {
+      "bytes": 6931,
+      "sha256": "0b30ebd3962463c7786d9f6f7dcd9c1fdf3818ddbcdbd7548eff8feac6f7610c"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/atomic/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-38-17096-4508508.jsonl": {
+      "bytes": 3236,
+      "sha256": "fd74901243406b3a02be09f2222ed79eca17e2c8baaa5dffc49ec9ae3d16fdbf"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/atomic/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-43-17096-9317372.jsonl": {
+      "bytes": 3236,
+      "sha256": "b0cff719b9775694b48cf980b30375ae6149e569c94c05ab91c2ebf56009c63d"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/atomic/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-43-17096-9670104.jsonl": {
+      "bytes": 3237,
+      "sha256": "a9487623529343b697efcfaf928cb86a0d6d64214c76a05552c1f66c99dfcb4b"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/atomic/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-44-17096-10270599.jsonl": {
+      "bytes": 3238,
+      "sha256": "96894e60dc59bf48f8325c520ffd0f1633dd0f88460498d8c9538ec540fc6b59"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/atomic/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-44-17096-10504220.jsonl": {
+      "bytes": 3237,
+      "sha256": "5b5d8960ce379b97d37b7a5969080664d2ff45c80004145e42a084f82e4f47f0"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/atomic/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-45-17096-10909791.jsonl": {
+      "bytes": 3093,
+      "sha256": "eb325b88efa47c39f42ef2c5e8ab67516c25f365e802273cf68275d0c39d8878"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/atomic/stderr": {
+      "bytes": 3928,
+      "sha256": "eb53d4d56ef4d89a7d3e1563a15dfa29ec6428e0dd19471e13489816805a13a1"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/atomic/stdout": {
+      "bytes": 1397,
+      "sha256": "ef926e46c3dbca354ef7c8796ff60e6e8aead83dd0016eb285ba148d882e38a5"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/atomic/trace-compare.json": {
+      "bytes": 6088,
+      "sha256": "3d855fdadf6e97a5000561bc58cd5e1d4e6855243c8b3be6aa384e8ba30b51b2"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/battle/command.json": {
+      "bytes": 788,
+      "sha256": "e1c70d4af8966d8ab1d13b9cba0d09e8ff719d9f015d109d1734862bcfa1cf40"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/battle/process.json": {
+      "bytes": 38,
+      "sha256": "f154c57fbaa6e1a3d90571a2e3e3534051fae21931418233db107037e69ededd"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/battle/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-38-18764-4505813.jsonl": {
+      "bytes": 3236,
+      "sha256": "c15190c2bfbe73bf615c095bcd7a505733a667deb2d243b6bf5c209e98895102"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/battle/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-43-18764-9075033.jsonl": {
+      "bytes": 46074,
+      "sha256": "3b473808649a5ff2195d608885efe61d3efd84a3ba2b80a97cf3bcea55380f6f"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/battle/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-44-18764-10139268.jsonl": {
+      "bytes": 46696,
+      "sha256": "ffc8f0c373488912e47771b5c1753c5d0c24fe5c6ad05fe63e8b0e08621604cb"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/battle/stderr": {
+      "bytes": 252,
+      "sha256": "34adaf6dbf4d9e7d0efec99d26e324013ab4b4319b04fefc8a480cd7c2d22827"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/battle/stdout": {
+      "bytes": 1172,
+      "sha256": "25e1a00779e814d5e6f45fb0a36adf71075a74565afc50094f56120a84531c49"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/clean/command.json": {
+      "bytes": 801,
+      "sha256": "75c1dffce1e95d5b09c721ffd269f0246bc907b8deee6e710a4cd882ff1bce1d"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/clean/process.json": {
+      "bytes": 38,
+      "sha256": "d71a32cd64e92026931ae49dd62a79e04eb75fe16c5036aed3972ffc0db072d2"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/clean/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-07-20-34012-166368411.jsonl": {
+      "bytes": 16091,
+      "sha256": "eb6313727c8c8e795351a4be396fbc713856452229b9e3f7cd0d7f34f6c8d771"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/clean/stderr": {
+      "bytes": 582,
+      "sha256": "acb6056197fda3f4ce4a014e2aa27c33b79adb711b9b764e321dc97102722bc8"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/clean/stdout": {
+      "bytes": 618,
+      "sha256": "ad0cb9aa3a1dbb7eeb3ccc00061ecea9ad31fd2f043d15f98d4176131e1fc598"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/common/command.json": {
+      "bytes": 816,
+      "sha256": "b280c88401a87f5a26b70eb194c4e71a648bd2fc185208dcd950ba3b63da4507"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/common/process.json": {
+      "bytes": 38,
+      "sha256": "f154c57fbaa6e1a3d90571a2e3e3534051fae21931418233db107037e69ededd"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/common/result.json": {
+      "bytes": 24612,
+      "sha256": "d54d30c58bee617288d65c9e567ad4ac52ba041b1e0d9c87435ecb168820f6d0"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-39-23108-5042026.jsonl": {
+      "bytes": 9741,
+      "sha256": "10bcb22ccd6175ca83f6057f30d960cfc186bd305bf15bf22c6b5c4cde620ba1"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-43-23108-9214132.jsonl": {
+      "bytes": 3229,
+      "sha256": "ab017229808e101ba340253612ee622cecf3879d360c6e467b4ece7752c52eb7"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-43-23108-9419936.jsonl": {
+      "bytes": 3229,
+      "sha256": "933566fe2f38bbd53a91b19c53421e71670c93beced23fea4aa9573e0b45fdfe"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-43-23108-9558241.jsonl": {
+      "bytes": 15966,
+      "sha256": "bcc63d88aaf481607d566072e1d635260c1cb225c8585928c23380c8f695f5b8"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-44-23108-10213000.jsonl": {
+      "bytes": 3231,
+      "sha256": "6802a512626f54a43cda1c2b336c3a3f8210d19aa0daa30a741877d9d145976a"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-44-23108-10286477.jsonl": {
+      "bytes": 9612,
+      "sha256": "e3cde67d22b47bcace9991917417f011809549f1f226c546ce8f6a6e091a3fdf"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-44-23108-9809085.jsonl": {
+      "bytes": 6216,
+      "sha256": "63e0292cebf054cecd2ea8ca49eeb89745d085330a73861390abadc15f9cf816"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-48-23108-13945986.jsonl": {
+      "bytes": 2897,
+      "sha256": "3c236b0040e882f5380c00408f5d41d8596a6cfb67551051014b71c8f2ee1142"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/common/stderr": {
+      "bytes": 1957,
+      "sha256": "03a428027462ba7556064fa361c744cf3f54eba06fdfe46be9f43376e6036c42"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/common/stdout": {
+      "bytes": 1862,
+      "sha256": "d5d9f44120e649735b52b640ae5c831f1a02221873bd9a975c7cda1191455c10"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/inputs.json": {
+      "bytes": 554455,
+      "sha256": "0f70c9b4497705880419cc55190b1d921faae2daf60d3a8fc88a0667397abcc0"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/organization/command.json": {
+      "bytes": 816,
+      "sha256": "206c34af5720caf1caf4e62dcdc715d763a16be0ab59da54d43318bdc455d9e3"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/organization/process.json": {
+      "bytes": 38,
+      "sha256": "f154c57fbaa6e1a3d90571a2e3e3534051fae21931418233db107037e69ededd"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-38-23112-4494014.jsonl": {
+      "bytes": 9749,
+      "sha256": "0c375e1a4a6faa319dceb2287da3b8c8a63c89018a043438de00e95b6116d59a"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-57-23112-23162325.jsonl": {
+      "bytes": 9758,
+      "sha256": "334259cdce5224bf0edc81e7a409546eb7b68304d3f8f1f5b6544a556e5ec400"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-57-23112-23416287.jsonl": {
+      "bytes": 3238,
+      "sha256": "26fec5d53b2a7382bb8e943235a6522a2144a44b534d2fab307d4541b735a57f"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-57-23112-23491764.jsonl": {
+      "bytes": 3238,
+      "sha256": "f1b17cc0fbab0d907bd667f1e2ced512dd0810400b5ba5db8c73e4dfbf20d85e"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-57-23112-23613575.jsonl": {
+      "bytes": 3238,
+      "sha256": "29a39d1782741593d9ea594496f29354feb82a4ee19f9c3c27399107538f3817"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-58-23112-23735180.jsonl": {
+      "bytes": 9954,
+      "sha256": "c078a0f5efa0dc088bc336d0b4ce319a674c0931cf81944e9c84c2d2423bccda"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-58-23112-24099782.jsonl": {
+      "bytes": 3238,
+      "sha256": "818dd4fb5ba58381533a83029881cf082ed5db4e7df59b61597d0c9b2b235d53"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-58-23112-24177609.jsonl": {
+      "bytes": 3238,
+      "sha256": "a94a4db7aa992b3b3969559108f9196a4f6b9fc5e03d66620def86c21bf5c5cf"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-58-23112-24284781.jsonl": {
+      "bytes": 9954,
+      "sha256": "64216d720346dd8fd6caac46f1bdfef84d60a99bb50164ce427156160855c478"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-58-23112-24602864.jsonl": {
+      "bytes": 9757,
+      "sha256": "476d50c8e566cc93a8e6f057054022f29d82a0773db4866220fd7d28efbd3c13"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-04-58-23112-24686795.jsonl": {
+      "bytes": 3238,
+      "sha256": "3ecf153d1a08bd3505dd23232aaa55597737e04d1476713f2d317f8f76c52897"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-05-01-23112-27064798.jsonl": {
+      "bytes": 3238,
+      "sha256": "0e6253668294d87d60b26a641a6beb34ee2115d0b5b0d81c40e3f215898645bb"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-05-03-23112-29193503.jsonl": {
+      "bytes": 3238,
+      "sha256": "e3d42fd7272c879fb67c25b6fa38c1b68289fd50cc8c0aedd1560c744308bff9"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-05-05-23112-31659108.jsonl": {
+      "bytes": 9125,
+      "sha256": "a891df2aea4531e4e7615339e2ca8fa1f2c367d1d215000528aa9b1b77422287"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-05-06-23112-31937460.jsonl": {
+      "bytes": 9619,
+      "sha256": "65aae90e97eed9d0698eec6953b16b072e26ec38886696f3ffb08f34b356fcc9"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/organization/stderr": {
+      "bytes": 1821,
+      "sha256": "5eba14ce261c8876f82dbe00482a01411fc2ff1562bb3ce7c476a1f9c6ea1b67"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/organization/stdout": {
+      "bytes": 3475,
+      "sha256": "8f6bbab9bf92a1b1015086aa2df75b27ae876fae3a919226b5f239ecebe87459"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/processes.json": {
+      "bytes": 209,
+      "sha256": "0f81d2ef466e6c86f133aac8f9d768bdea9ddaad365f270e67deabcd068917f5"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/returning/command.json": {
+      "bytes": 817,
+      "sha256": "2121ad08265e9814ea54c2f2b8a2993712b522cc003f33570766bbad193b82a5"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/returning/process.json": {
+      "bytes": 38,
+      "sha256": "f154c57fbaa6e1a3d90571a2e3e3534051fae21931418233db107037e69ededd"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/returning/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-07-20-316-165725304.jsonl": {
+      "bytes": 16091,
+      "sha256": "79aae0dc9e2e301c07fce6be9e00ce830178148f6e3f4e2901463584725cac90"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/returning/stderr": {
+      "bytes": 252,
+      "sha256": "6b4583c5551163f6340fbb3e2066cf020c632195aac365a8a1e723d015cda292"
+    },
+    "tmp/p02-seventh-20261108/after-attempt-02/returning/stdout": {
+      "bytes": 686,
+      "sha256": "4c83f0cc4da1c4f517e2be2899a6373689d5b7859c32533a59850535856e344c"
+    },
+    "tmp/p02-seventh-20261108/assertions.txt": {
+      "bytes": 939,
+      "sha256": "fcd79f252dc97f759c24652ec7de6466927cf9b7e432e796df79d3b5e44b500b"
+    },
+    "tmp/p02-seventh-20261108/baseline.json": {
+      "bytes": 6078249,
+      "sha256": "33c71e84f7c344a440bfdfe2890d1f18ee614b5a92fd60ce9bbd6aafc1266d08"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/atomic/command.json": {
+      "bytes": 818,
+      "sha256": "43cc459c0b845663aea841e491a8156e34f564dc1e2517ce570257e0ee78bacf"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/atomic/process.json": {
+      "bytes": 38,
+      "sha256": "f154c57fbaa6e1a3d90571a2e3e3534051fae21931418233db107037e69ededd"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/atomic/result.json": {
+      "bytes": 6927,
+      "sha256": "48070e52e6cc8b24869e6863293c06c108389063ea4fad60c4608629f76c5e5f"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/atomic/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-37-28492-3001315.jsonl": {
+      "bytes": 3236,
+      "sha256": "7f9895e789ae9f735d7b4a80aaa750bda917dd7339f0884a6106c8e7ce9e2a87"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/atomic/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-39-28492-5192594.jsonl": {
+      "bytes": 3236,
+      "sha256": "c1c6c3800c13616d2ed2455237429a08fae6dd30b72cd5342483264ed72eb5a2"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/atomic/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-39-28492-5367137.jsonl": {
+      "bytes": 3235,
+      "sha256": "3f3f2b77a97f3e3541fee0cdb5b6bcbb55cbe5a26a9ee283fe22e4a8d18bd325"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/atomic/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-39-28492-5887068.jsonl": {
+      "bytes": 3236,
+      "sha256": "0e34faa18320cd5e83ce1134379d428892a4316a7cb05309d17ab8ce885d8153"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/atomic/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-40-28492-6079776.jsonl": {
+      "bytes": 3236,
+      "sha256": "154571611e1c52d9b753ce15c735300fc0b8d8cd8122d36fe5fd90558f5d437f"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/atomic/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-40-28492-6426778.jsonl": {
+      "bytes": 3092,
+      "sha256": "12da35dfbaa7b2014c769f26253b1590a12e0d8355becec2c1b44bd2055db4f8"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/atomic/stderr": {
+      "bytes": 3928,
+      "sha256": "5d22f52da3020d63be6b93281869bf83ae1c81fa58d4349140af7978c56d1635"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/atomic/stdout": {
+      "bytes": 1400,
+      "sha256": "ff24b0dbe8b5175ad9755bb8db7b4315545543ddc5522b7c4957412721c43a13"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/battle/command.json": {
+      "bytes": 790,
+      "sha256": "90abd8f57f775a3741e95c17b9af788f7b39f779fe1e55673013f483a5387b14"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/battle/process.json": {
+      "bytes": 38,
+      "sha256": "f154c57fbaa6e1a3d90571a2e3e3534051fae21931418233db107037e69ededd"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/battle/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-36-28696-2864926.jsonl": {
+      "bytes": 3236,
+      "sha256": "d39eec3238c8ec64e470ad5c7643090d6b03c875f942f692d88075a36a1898f9"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/battle/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-39-28696-5173239.jsonl": {
+      "bytes": 46072,
+      "sha256": "dd9271aea90c0f88091ea51f380c78d3097e30bf96ed133d3d1997b7803757de"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/battle/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-39-28696-5762997.jsonl": {
+      "bytes": 46687,
+      "sha256": "d7ed9c828e8ff063809ebc76297a93be5949ce28a2cca1871fa5c1c3e40b35f4"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/battle/stderr": {
+      "bytes": 252,
+      "sha256": "34adaf6dbf4d9e7d0efec99d26e324013ab4b4319b04fefc8a480cd7c2d22827"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/battle/stdout": {
+      "bytes": 1174,
+      "sha256": "01cf966295db06ca41332ff65988df3f680da9a787ce7566333eac90102ca025"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/clean/command.json": {
+      "bytes": 803,
+      "sha256": "266d641dc2398c4c329f2ad8ab387d9cff75bc5d5847a9af16b65811cbfb01c3"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/clean/process.json": {
+      "bytes": 40,
+      "sha256": "9aa4fbe7cccbfa34f986e9636bb5e3b6688abedac7b8a1bb7dc6abbb63324536"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/clean/stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/clean/stdout": {
+      "bytes": 347,
+      "sha256": "c91c5905a7d003dc2dc4d2dbd131ba1374915ca83566c5809fd8522a0819cee8"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/common/command.json": {
+      "bytes": 818,
+      "sha256": "ea001cb114efca25fb66c34f22d6f27a50cb4e91365cece573ffa2117280ec7f"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/common/process.json": {
+      "bytes": 38,
+      "sha256": "f154c57fbaa6e1a3d90571a2e3e3534051fae21931418233db107037e69ededd"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/common/result.json": {
+      "bytes": 24612,
+      "sha256": "d54d30c58bee617288d65c9e567ad4ac52ba041b1e0d9c87435ecb168820f6d0"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-37-28092-3426577.jsonl": {
+      "bytes": 9741,
+      "sha256": "ff3e84dff6c1c71268d49819a4ed09334eafd4ede1e0727195da1cae5f9b9a48"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-39-28092-5361891.jsonl": {
+      "bytes": 3229,
+      "sha256": "2a988679a24b9e99306a863166806e0f763849e4d099ef6fc21e4c8ae2864d2f"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-39-28092-5436636.jsonl": {
+      "bytes": 3229,
+      "sha256": "94e6e089fe32758969b28840f90bc178a790870c1c42efa67a7372a84e2f46eb"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-39-28092-5578038.jsonl": {
+      "bytes": 15966,
+      "sha256": "53db9378496bde9eb6196dbe12f666293953b11bbb201e3ba2f196d7a94da42b"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-39-28092-5681979.jsonl": {
+      "bytes": 6215,
+      "sha256": "deffe4448208daffab1f77aeeae0eebe5c58cb5d359c1d88bac0a5652b9abeaa"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-39-28092-5912642.jsonl": {
+      "bytes": 3229,
+      "sha256": "895b6741c12471f2a5ee430b682a7af01541a64735b5f8fa242614ec9b8dc5ea"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-40-28092-5987129.jsonl": {
+      "bytes": 9603,
+      "sha256": "5af87e463ab1053c0b8c01205da0fb2495249a50556c94f657d24377a5c7f5ed"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-42-28092-8844681.jsonl": {
+      "bytes": 2895,
+      "sha256": "560f5ada568ae8fb0ca3101ea6c97bb598a433bdfafc8dc29d81dabb03bb3431"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/common/stderr": {
+      "bytes": 1957,
+      "sha256": "d3db53b2b34f745cebd8b2fcb5c9c4e73272b856fb935c166472cd638993c25e"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/common/stdout": {
+      "bytes": 1866,
+      "sha256": "e3b7df52890bff7e207422295d0f7bfcf3f8d3b02e8aa147c58de7e965b3b610"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/inputs.json": {
+      "bytes": 554346,
+      "sha256": "d6022d667b0947ff5bbe43dac7b333bf6ae55c38dc8c556e24fd3ac46cbf175d"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/organization/command.json": {
+      "bytes": 818,
+      "sha256": "975f13df3d2f8b8a9d41b88c878533a1021f085d5bcabc5553967ad53ea12304"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/organization/process.json": {
+      "bytes": 38,
+      "sha256": "f154c57fbaa6e1a3d90571a2e3e3534051fae21931418233db107037e69ededd"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-36-35220-2865752.jsonl": {
+      "bytes": 9749,
+      "sha256": "02da13f97654a65129bfcaab68a660de68c27135c1d21a88646ab7adc89b114e"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-48-35220-14423215.jsonl": {
+      "bytes": 9757,
+      "sha256": "80aa5f3ba8e9c459371c883a58a2fdc2982bf3e303801bedc77039a1cc227920"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-48-35220-14564470.jsonl": {
+      "bytes": 3238,
+      "sha256": "c6b88a8af5c8abf5e59ec69d502a6b9fd1ec74cf06ce1feabd02675a93d17023"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-48-35220-14620216.jsonl": {
+      "bytes": 3238,
+      "sha256": "3080b7bf484f21517493856344d2150ec96a6ff6492e518d98fb76d2f6d009d1"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-48-35220-14681512.jsonl": {
+      "bytes": 3238,
+      "sha256": "d3c475d31d712d5c571a0d9caab3bfb29b0565cd3ec7143fdbc3d8ddeb201601"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-48-35220-14738488.jsonl": {
+      "bytes": 9954,
+      "sha256": "680c863c87241e74c61bddcdaaeef5b5b9b3c453c7af86644fb77d96c1046084"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-49-35220-14995600.jsonl": {
+      "bytes": 3238,
+      "sha256": "84e3722e92a2c2b40b94ae05300d7cf5373166a417741fd1f3b3f590a2d48587"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-49-35220-15048500.jsonl": {
+      "bytes": 3238,
+      "sha256": "8bfa25e6345a5211f2dad1e93d9f56a324a4eb593d380b94227ea84134387f78"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-49-35220-15102086.jsonl": {
+      "bytes": 9954,
+      "sha256": "535ffa6d5b4d048a0a897645e79bb14527581ebc191e6fb76d399e2f871d068c"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-49-35220-15351962.jsonl": {
+      "bytes": 9757,
+      "sha256": "af94f67eae6517cfb164f3501dd4da93fc247663135e0d6379f8690fde5e3c1f"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-49-35220-15435796.jsonl": {
+      "bytes": 3238,
+      "sha256": "6c699ab7576effbfb1717cd8bcbb9f181563fd94e215422a07f2417bdcbc58ec"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-51-35220-17263279.jsonl": {
+      "bytes": 3238,
+      "sha256": "94a4a8aa20f51629c5767a433ef58be4af5faf1dc587670f92e34ee380c9cce0"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-53-35220-18995365.jsonl": {
+      "bytes": 3238,
+      "sha256": "51ac5e44ce7d9003bfedac703c73ffee67b91580f9200eaabe614849abd88329"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-54-35220-20436474.jsonl": {
+      "bytes": 9125,
+      "sha256": "cb1a15bfd100adf28c57823b2851ea29237c468738c1c36f436b8344096cef24"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T16-56-54-35220-20587669.jsonl": {
+      "bytes": 9619,
+      "sha256": "049df0d9bd9e8ea488a72ef7229580ce42bf0dcf25d2e867670960f6749afe58"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/organization/stderr": {
+      "bytes": 1821,
+      "sha256": "618dbe3817d28e71a6a9e464e4cecd3d603e632a83174e2f1f70d674012bfd00"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/organization/stdout": {
+      "bytes": 3491,
+      "sha256": "4e3ad8891b686b5df9e9c9de003b0562777f2860b15f2677b7fbff915772636b"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/processes.json": {
+      "bytes": 215,
+      "sha256": "c553e5f45b29663474fcb7dc4e6f58b0b95d5a0c1bb049df4b05f118e366df12"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/returning/command.json": {
+      "bytes": 819,
+      "sha256": "14945e955a54bd3cdf0f97391087f6d08b153b8fea9639c7c82a06450104b6cb"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/returning/process.json": {
+      "bytes": 40,
+      "sha256": "9aa4fbe7cccbfa34f986e9636bb5e3b6688abedac7b8a1bb7dc6abbb63324536"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/returning/stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-01/returning/stdout": {
+      "bytes": 415,
+      "sha256": "41ad299e17b3a6dfc525edf194676a98e1dd2f7f7abedbfbe7fbe003f695c62b"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-02/clean/command.json": {
+      "bytes": 806,
+      "sha256": "f41e749bae75c0cbd827fbb08e31527e15f2d7fc7aa7731be14f1f1786010567"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-02/clean/process.json": {
+      "bytes": 38,
+      "sha256": "d71a32cd64e92026931ae49dd62a79e04eb75fe16c5036aed3972ffc0db072d2"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-02/clean/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-08-08-31668-157325991.jsonl": {
+      "bytes": 16091,
+      "sha256": "491617e2617f50a473f1953791c4596b7a98bb68b680baa890f730c348eb945f"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-02/clean/stderr": {
+      "bytes": 582,
+      "sha256": "acb6056197fda3f4ce4a014e2aa27c33b79adb711b9b764e321dc97102722bc8"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-02/clean/stdout": {
+      "bytes": 620,
+      "sha256": "c5cf791d07576ad8daeedb03f78fe7569d21b79d84ff7866bd0a1e765631025c"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-02/inputs.json": {
+      "bytes": 554574,
+      "sha256": "9c1444b8759b8bb5ad761613c5635f65aa73e008cce0b924e6a472d6b6b4a079"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-02/processes.json": {
+      "bytes": 71,
+      "sha256": "efa8b34b41b605fc751751d24e4c6332d125c58175b40ffb06a2002c6d8bcaf2"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-02/returning/command.json": {
+      "bytes": 822,
+      "sha256": "021c5c7bb4c17d074d8395e18c2bb0f2e7055f903a26b2a5834410ced944d573"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-02/returning/process.json": {
+      "bytes": 38,
+      "sha256": "f154c57fbaa6e1a3d90571a2e3e3534051fae21931418233db107037e69ededd"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-02/returning/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-08-08-5868-157326206.jsonl": {
+      "bytes": 16091,
+      "sha256": "ffc4008df3f819d1f1fc86ccad665106a19784c46ce07959a1a6ae5adcfe822e"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-02/returning/stderr": {
+      "bytes": 252,
+      "sha256": "d36f2a8f74e1ce6f711c5db2a306acc57e2b798e526536d8e56c87b34d0a1b3f"
+    },
+    "tmp/p02-seventh-20261108/before-attempt-02/returning/stdout": {
+      "bytes": 689,
+      "sha256": "548e927d41ab5d84f28e87d6c093e166560ac99c81054af7366a4ed016ca448e"
+    },
+    "tmp/p02-seventh-20261108/button-probe.gd": {
+      "bytes": 3686,
+      "sha256": "c4905b54cdccc8eea4a5d0d688d393078f3af60ec7d3eeb0337500ce804634ee"
+    },
+    "tmp/p02-seventh-20261108/closeout/archive-attempt-1.json": {
+      "bytes": 199,
+      "sha256": "e611159ef7e5cd7a8a48f5bb404de412eb5a52bff87359159bdcecb21bea38b6"
+    },
+    "tmp/p02-seventh-20261108/closeout/CHECKLIST-OPEN.md.before.txt": {
+      "bytes": 122127,
+      "sha256": "efff61990048ad074206326d19041ad205c7aa55f730a77b192d8bbb4630f99e"
+    },
+    "tmp/p02-seventh-20261108/closeout/CHECKLIST-OPEN.md.new-hunk.txt": {
+      "bytes": 832,
+      "sha256": "837f83a481d7f4bae7d82affd29649fecd18d6acd4fadfc88fac4111a13167b9"
+    },
+    "tmp/p02-seventh-20261108/closeout/CHECKLIST-OPEN.md.old-hunk.txt": {
+      "bytes": 414,
+      "sha256": "6ff95dc690d949437f8726a9127364b2336068e340bfa6c8559dab2ecd9caa56"
+    },
+    "tmp/p02-seventh-20261108/closeout/docs-hunks.json": {
+      "bytes": 1391,
+      "sha256": "3e0c02ec7e40439a4d300d63274c3a846e47ee5bb8cc1a94d9ceb2167361991d"
+    },
+    "tmp/p02-seventh-20261108/closeout/docs-hunks.json.initial": {
+      "bytes": 1391,
+      "sha256": "090f2643cdabc969f4037fc9df7571995dc1ed94f158eca49e247bd0b5b1dc55"
+    },
+    "tmp/p02-seventh-20261108/closeout/fix-eol.py": {
+      "bytes": 1022,
+      "sha256": "d098350c66fb8165ee7d38fa769da6b7bb620d5838b9faa21eca764a8060e4f7"
+    },
+    "tmp/p02-seventh-20261108/closeout/global-diff-check.exit": {
+      "bytes": 3,
+      "sha256": "df4e26a04a444901b95afef44e4a96cfae34690fff2ad2c66389c70079cdff2b"
+    },
+    "tmp/p02-seventh-20261108/closeout/global-diff-check.stderr": {
+      "bytes": 951,
+      "sha256": "9383227f23e362399d837fdb9c3c96bbd55d9aa7b4797dccb087af7227ca50c7"
+    },
+    "tmp/p02-seventh-20261108/closeout/global-diff-check.stdout": {
+      "bytes": 809,
+      "sha256": "91be8367860019a1e276a52b8cd1f1542ff5439ce163f2f84cdd326e0ac08255"
+    },
+    "tmp/p02-seventh-20261108/closeout/owned-diff-check.exit": {
+      "bytes": 3,
+      "sha256": "df4e26a04a444901b95afef44e4a96cfae34690fff2ad2c66389c70079cdff2b"
+    },
+    "tmp/p02-seventh-20261108/closeout/owned-diff-check.exit.initial": {
+      "bytes": 3,
+      "sha256": "df4e26a04a444901b95afef44e4a96cfae34690fff2ad2c66389c70079cdff2b"
+    },
+    "tmp/p02-seventh-20261108/closeout/owned-diff-check.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tmp/p02-seventh-20261108/closeout/owned-diff-check.stderr.initial": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tmp/p02-seventh-20261108/closeout/owned-diff-check.stdout": {
+      "bytes": 809,
+      "sha256": "91be8367860019a1e276a52b8cd1f1542ff5439ce163f2f84cdd326e0ac08255"
+    },
+    "tmp/p02-seventh-20261108/closeout/owned-diff-check.stdout.initial": {
+      "bytes": 1286,
+      "sha256": "df3cb0a88b6ed56a9dea9ecbb730b86972ff616171d2984c4f6b359bd001bb93"
+    },
+    "tmp/p02-seventh-20261108/closeout/P02-PROGRESS-CHECKLIST.md.before.txt": {
+      "bytes": 9734,
+      "sha256": "60f14047d3e63c7e7ffc12bff57bac0bf8188631199232bd9d7f43850e8233e1"
+    },
+    "tmp/p02-seventh-20261108/closeout/P02-PROGRESS-CHECKLIST.md.new-hunk.txt": {
+      "bytes": 812,
+      "sha256": "7a3688c553012017393be625178bb969c3596df7e3369db28597044121c25997"
+    },
+    "tmp/p02-seventh-20261108/closeout/P02-PROGRESS-CHECKLIST.md.old-hunk.txt": {
+      "bytes": 146,
+      "sha256": "dc955ef520f8cb27ae8e0e65295c66f40e78fb347c98fc8140222ee5b7d1ae37"
+    },
+    "tmp/p02-seventh-20261108/closeout/pack-resume-v2.py": {
+      "bytes": 6159,
+      "sha256": "493e6b9dd297d798fc1057646084f5ad06ed6202df476c20ceffb7b5397fe651"
+    },
+    "tmp/p02-seventh-20261108/closeout/pack-resume.py": {
+      "bytes": 5890,
+      "sha256": "1f0952a06fdcc2e497865669816d1a4de9c0eb010c067e92c2e8f023b85d248f"
+    },
+    "tmp/p02-seventh-20261108/closeout/pack.py": {
+      "bytes": 8246,
+      "sha256": "9513a7a00b850ee414673162769878a7fbaa183ffa190944d9d269c4675c94b0"
+    },
+    "tmp/p02-seventh-20261108/closeout/preservation-before-zip-v2.json": {
+      "bytes": 3649,
+      "sha256": "2647572e661f545dcb77e4e9586a209e31882ce4ae98f2aefd6f1f9f87135811"
+    },
+    "tmp/p02-seventh-20261108/closeout/preservation-before-zip.json": {
+      "bytes": 3649,
+      "sha256": "a085b353c0f6c583dfdc41bbbcd6f26bbf933da2630452a4a0e9fdf67e34aced"
+    },
+    "tmp/p02-seventh-20261108/closeout/SESSION-REQUIREMENTS-CHECKLIST-20261031.md.before.txt": {
+      "bytes": 19234,
+      "sha256": "7ce01b53092ce716fb8dd68962dd9acb3e694987af163fee53f3ef71689f698e"
+    },
+    "tmp/p02-seventh-20261108/closeout/SESSION-REQUIREMENTS-CHECKLIST-20261031.md.new-hunk.txt": {
+      "bytes": 252,
+      "sha256": "d1076862dd71e19a200e5b011e8926e8162756a63b9348379c7fe86a4df993f6"
+    },
+    "tmp/p02-seventh-20261108/closeout/SESSION-REQUIREMENTS-CHECKLIST-20261031.md.old-hunk.txt": {
+      "bytes": 134,
+      "sha256": "98203ee117dc460639ce07c6a52985354f81bfd2ae61032794ef736689f2fd3d"
+    },
+    "tmp/p02-seventh-20261108/compare.py": {
+      "bytes": 1732,
+      "sha256": "a28d1dd848a9867c6554c5f0756c18d45e662afa8d13e2707fd6b6ac139f8867"
+    },
+    "tmp/p02-seventh-20261108/comparison-02.json": {
+      "bytes": 6715,
+      "sha256": "02a64461567725eb1adab540ad19fc9e78c2b7cfb01e91337da4ec98556c1dca"
+    },
+    "tmp/p02-seventh-20261108/edit.py": {
+      "bytes": 5176,
+      "sha256": "8e4f0639dd4802791a4b0d063c6360a7e22beca1522af421b087987141bc6cb2"
+    },
+    "tmp/p02-seventh-20261108/engine-version.txt": {
+      "bytes": 33,
+      "sha256": "bf8803022b574250bb04dea65053a46b7c58570725316c1f7fe2aa6735706498"
+    },
+    "tmp/p02-seventh-20261108/final-readonly-index/INDEX.json": {
+      "bytes": 159803,
+      "sha256": "482aa467db19bf0d489c4f295165c5f28e2d8483a69e752c88c24fe32764343a"
+    },
+    "tmp/p02-seventh-20261108/final-readonly-index/sample-1.json": {
+      "bytes": 6266184,
+      "sha256": "9356e485059a7f554a7dd5542d2d27b85a27a8e323bf4b75ad77420b5427c9e7"
+    },
+    "tmp/p02-seventh-20261108/final-readonly-index/sample-2.json": {
+      "bytes": 6266184,
+      "sha256": "a42ca67c6d7af4488ec747f8720fda56b7f4f340f459af9406512e7ed18253aa"
+    },
+    "tmp/p02-seventh-20261108/final-readonly-index.py": {
+      "bytes": 4575,
+      "sha256": "404c923adab58508ad138c9681996f30e33d4e620ff4f82026a0855a7928ebe3"
+    },
+    "tmp/p02-seventh-20261108/fixed-trace-attempt-03/preflight.json": {
+      "bytes": 360,
+      "sha256": "b8fee018d95bfaa8a8a56100357ad208709cb8e13a719acae998378f8f1392ef"
+    },
+    "tmp/p02-seventh-20261108/fixed-trace-probe-v2.gd": {
+      "bytes": 1302,
+      "sha256": "7c6b4a05b935c06962d19937a87b19e921c0c804e0fbb51bc163867cf3050d79"
+    },
+    "tmp/p02-seventh-20261108/fixed-trace-probe.gd": {
+      "bytes": 1192,
+      "sha256": "a99ac2b70b1a35cff3a4c69584df1fda65ba621717db997d7e924a06af7b4949"
+    },
+    "tmp/p02-seventh-20261108/fixed-trace-run-v2.py": {
+      "bytes": 6103,
+      "sha256": "b6e0c2445f3f848574579a619fc3d542a5fd721a9491a5ec0deb30a3691fed6a"
+    },
+    "tmp/p02-seventh-20261108/fixed-trace-run.py": {
+      "bytes": 5698,
+      "sha256": "46e3731ccdc5bd4e118a07b42e47a7f40678a88377ceec3bcfa72c3c935be8d4"
+    },
+    "tmp/p02-seventh-20261108/FleetBattle3D.gd.attempt01.txt": {
+      "bytes": 37500,
+      "sha256": "f7c4a270ba4adea945103589b320516f6d54b74c74c2c5b71648db0a0ec974f8"
+    },
+    "tmp/p02-seventh-20261108/FleetBattle3D.gd.before.txt": {
+      "bytes": 33704,
+      "sha256": "34908bf325ae06aca22a4ee8f90172cd4dfa91c05b79c054c70a547e245f316a"
+    },
+    "tmp/p02-seventh-20261108/FleetBattle3D.gd.proposed.txt": {
+      "bytes": 37542,
+      "sha256": "604b79308d9b3dbab84dced32456a4f41b28686c8eec748073d3816892cffc5c"
+    },
+    "tmp/p02-seventh-20261108/freeze-live-v4.py": {
+      "bytes": 1910,
+      "sha256": "f093e354c622b62faf70d1f7ae8db6b9cbeb28f29ab0bce372a5317f89406c43"
+    },
+    "tmp/p02-seventh-20261108/freeze.py": {
+      "bytes": 1899,
+      "sha256": "174d1ee3ed69c83437ee4e734ad27fb082a7ac72ba30da4b56b40fefed02a784"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-buttons-v1/command.json": {
+      "bytes": 2430,
+      "sha256": "7cb4bdecd54cdea50c16157fdf337522ba78401ce51ed01dbacbba7c2e1ad6f8"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-buttons-v1/process.json": {
+      "bytes": 67,
+      "sha256": "d0a0df33c8177f19477a4a8219ecbb3ec47a12f2727b60290dd7f949ce21e360"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-14-06-19236-4362645.jsonl": {
+      "bytes": 3236,
+      "sha256": "957a7adaaf5493ea73267446796691361079a9f50e800d9e6d1ddf33192f7f68"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-14-08-19236-6065659.jsonl": {
+      "bytes": 3237,
+      "sha256": "e2bd01c40276727cc534360696aaa073e9ac753ee20f8735f5cb0b43408f9d27"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-14-24-19236-22511569.jsonl": {
+      "bytes": 3237,
+      "sha256": "d503fc8be8e56dde10dda0974cf1010917f2642f598b8a9f905a02baeebaab3f"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-14-28-19236-26566649.jsonl": {
+      "bytes": 3237,
+      "sha256": "6da58bb1a71af58487065f0a82b87f1c99d87c6039ba98855344554e29e310dd"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-14-29-19236-26719453.jsonl": {
+      "bytes": 3238,
+      "sha256": "cbc78195f65bed13363269257bdeb7d8e3903277370ee827e4cc5e00f6fc18e1"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-15-11-19236-68994135.jsonl": {
+      "bytes": 3238,
+      "sha256": "68937f68a8e087908369b0ec0cf03904be7ad83f7c9728bf01f50673dd639bc5"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-15-14-19236-72607762.jsonl": {
+      "bytes": 3238,
+      "sha256": "55100ef3d46685094d30f5824c9e84b554662447d0cf9763a7d5a157ee47c8b4"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-15-18-19236-76207952.jsonl": {
+      "bytes": 3100,
+      "sha256": "a36e62da653cd257afe20a8c0a068c34dfe15ffec6b62718080497e658588725"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-buttons-v1/rows.jsonl": {
+      "bytes": 3626,
+      "sha256": "82c5a0563e9aa1bc051879155dc36d9d62549aef9a2b825ef2d8186509196ca6"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-buttons-v1/stderr": {
+      "bytes": 3228,
+      "sha256": "b9f7b66a2a741103dc5e1a647b360ca4bf83a3b6017a81dd121b0963517e527e"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-buttons-v1/stdout": {
+      "bytes": 7070,
+      "sha256": "7c534643be27674cd2e4a1240cc4d783c2ca1f670ed5f26ec636d92609479a54"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-key-verified/command.json": {
+      "bytes": 2441,
+      "sha256": "5b6fffb851f735ca900b0c9d9f9a849d94859d55d2789347457a06f06368d642"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-key-verified/process.json": {
+      "bytes": 67,
+      "sha256": "d0a0df33c8177f19477a4a8219ecbb3ec47a12f2727b60290dd7f949ce21e360"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-key-verified/rows.jsonl": {
+      "bytes": 316,
+      "sha256": "c168c1d3564055e866b4d96e59d343c332eb54d6bc091f6c1025f8b81936dac6"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-key-verified/stderr": {
+      "bytes": 284,
+      "sha256": "2bee6266474bdc099aa855140c7dc9d860d1b1baa849f5df036f36db7e745b01"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-key-verified/stdout": {
+      "bytes": 517,
+      "sha256": "4efc552910429f9ae7b89444535781f38c92b4e8901be5a2ba9898b828b48119"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-mouse/command.json": {
+      "bytes": 2414,
+      "sha256": "1850c9de6583a95b61d03eba02bb98708ca2cf7c49e0bfb7d5d1ef50369b4b56"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-mouse/process.json": {
+      "bytes": 67,
+      "sha256": "d0a0df33c8177f19477a4a8219ecbb3ec47a12f2727b60290dd7f949ce21e360"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-mouse/rows.jsonl": {
+      "bytes": 229,
+      "sha256": "bf5e4466f98a886773969f42448751c1c40f5df00a22e6781ecb7385c8385f55"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-mouse/stderr": {
+      "bytes": 284,
+      "sha256": "2bee6266474bdc099aa855140c7dc9d860d1b1baa849f5df036f36db7e745b01"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-mouse/stdout": {
+      "bytes": 423,
+      "sha256": "7ae6d25adc0c6780d44e200fe0a88d0ea9e839e451eb987bbb638f51c48cdf95"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-mouse-verified/command.json": {
+      "bytes": 2450,
+      "sha256": "05f085b4ee9cbc701f23c35c366fce5b08b70d194557b182fd3ad9d9aac65943"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-mouse-verified/process.json": {
+      "bytes": 67,
+      "sha256": "d0a0df33c8177f19477a4a8219ecbb3ec47a12f2727b60290dd7f949ce21e360"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-mouse-verified/rows.jsonl": {
+      "bytes": 229,
+      "sha256": "bf5e4466f98a886773969f42448751c1c40f5df00a22e6781ecb7385c8385f55"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-mouse-verified/stderr": {
+      "bytes": 284,
+      "sha256": "2bee6266474bdc099aa855140c7dc9d860d1b1baa849f5df036f36db7e745b01"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-mouse-verified/stdout": {
+      "bytes": 423,
+      "sha256": "7ae6d25adc0c6780d44e200fe0a88d0ea9e839e451eb987bbb638f51c48cdf95"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-render-live/command.json": {
+      "bytes": 2438,
+      "sha256": "300ba6bb2bf5531e8346c350214d9077c115fb390ae25d1ed41277298c8a7d16"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-render-live/process.json": {
+      "bytes": 67,
+      "sha256": "211307e40226677a6d54c201c7b4bef1082e6d8832b15c16127ec22c4d138f55"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-render-live/stderr": {
+      "bytes": 405,
+      "sha256": "7b4072d4bb4976c9a2daa3990bf84afd715aedd62cbd7b9e4a8d27c7309dc94a"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-render-live/stdout": {
+      "bytes": 187,
+      "sha256": "f128984b131725ab39425ee5cd068d9a497240b02155d3ad694f8bd8eaf52b73"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-render-live-v2/command.json": {
+      "bytes": 2459,
+      "sha256": "09753683d6e880f63cbd696afa1af0bb26583c27a3784d1397c1fb1881ef6998"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-render-live-v2/live-warning.png": {
+      "bytes": 717873,
+      "sha256": "d64a58dec407b5ef6b198471e7c636abc31d2713158797db2f6693e2d3774faf"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-render-live-v2/process.json": {
+      "bytes": 67,
+      "sha256": "d0a0df33c8177f19477a4a8219ecbb3ec47a12f2727b60290dd7f949ce21e360"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-render-live-v2/recover.png": {
+      "bytes": 771116,
+      "sha256": "bee818bbb7326c13f1404f33a39f67c2d57b387181cd573d218e31cf488ac93f"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-render-live-v2/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-07-08-5724-2608001.jsonl": {
+      "bytes": 9945,
+      "sha256": "ac330b29dc499ba11ea3e5571975a1ffb39d551ec5ba6e06a840da9255f7179f"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-render-live-v2/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-07-19-5724-12751996.jsonl": {
+      "bytes": 9619,
+      "sha256": "be860e442230b790eb788a04eb06d0206d97f0a7436c1bb2117c86dc65ec78d0"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-render-live-v2/rows.jsonl": {
+      "bytes": 559,
+      "sha256": "87edca3a8dde4892a8f913beaa1d551da61bf6b7b3a926d66d0b58792a5171ef"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-render-live-v2/stderr": {
+      "bytes": 599,
+      "sha256": "dc594f5248d084abd840392cf2677c9014b6282589d6570ff65579b3d970307d"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-render-live-v2/stdout": {
+      "bytes": 1301,
+      "sha256": "2988ba52572f988fb5a2ce02801980065d9d7357e6371b62b2ef04baeaab1049"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-render-routed/command.json": {
+      "bytes": 2444,
+      "sha256": "4f076171fe8f0679f547a5c7d8ccb85275fe7d236852a2bb7af5e9339259da55"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-render-routed/process.json": {
+      "bytes": 67,
+      "sha256": "211307e40226677a6d54c201c7b4bef1082e6d8832b15c16127ec22c4d138f55"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-render-routed/stderr": {
+      "bytes": 405,
+      "sha256": "7b4072d4bb4976c9a2daa3990bf84afd715aedd62cbd7b9e4a8d27c7309dc94a"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-render-routed/stdout": {
+      "bytes": 187,
+      "sha256": "f128984b131725ab39425ee5cd068d9a497240b02155d3ad694f8bd8eaf52b73"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-render-routed-v2/command.json": {
+      "bytes": 2465,
+      "sha256": "5311a00b285808126f9023d55a9d41e2638d488d43c291ec27fd98008a793ce2"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-render-routed-v2/initial.png": {
+      "bytes": 257860,
+      "sha256": "19ba6bdcc39a98be58af01e70b02d044ba6b919b98ce65b8e827eeef098313da"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-render-routed-v2/process.json": {
+      "bytes": 68,
+      "sha256": "f9ce5fd0f95db6f88696ac2cf2c46524dd6eb10314eb0d73b3739b52d0cdc90b"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-render-routed-v2/rows.jsonl": {
+      "bytes": 302,
+      "sha256": "a90f5c9c0abeb406e41ae250c692b5ef52e6a105b54e630905387d28ca0f04ae"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-render-routed-v2/stderr": {
+      "bytes": 284,
+      "sha256": "2bee6266474bdc099aa855140c7dc9d860d1b1baa849f5df036f36db7e745b01"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-render-routed-v2/stdout": {
+      "bytes": 503,
+      "sha256": "5c5de70bcaa7465f26c71b43d8c5a1d98c2d99e376da3ec34a795d71e8b90ea5"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-resumed-key/command.json": {
+      "bytes": 2441,
+      "sha256": "b0bbf7b5ba5302f7ccb9c12ee60d7bf6d1c3b38008762351e385f7a43ad85ecf"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-resumed-key/process.json": {
+      "bytes": 67,
+      "sha256": "d0a0df33c8177f19477a4a8219ecbb3ec47a12f2727b60290dd7f949ce21e360"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-resumed-key/rows.jsonl": {
+      "bytes": 454,
+      "sha256": "6d2e38fb5cd64b8fcdfe61413d77421d3ed1235d30f16d653c72ff8b7b2ca542"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-resumed-key/stderr": {
+      "bytes": 284,
+      "sha256": "2bee6266474bdc099aa855140c7dc9d860d1b1baa849f5df036f36db7e745b01"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-resumed-key/stdout": {
+      "bytes": 683,
+      "sha256": "3f255b049b8bba1f2d2567c16db9c886af2f6936db3534ab0a9d363f6ffb9791"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-resumed-routed-key/command.json": {
+      "bytes": 2465,
+      "sha256": "cf0d5a0e30d6e94c5df1a02f7d5f06c4a2c3acf679c7878f10efedbaa7928613"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-resumed-routed-key/process.json": {
+      "bytes": 67,
+      "sha256": "d0a0df33c8177f19477a4a8219ecbb3ec47a12f2727b60290dd7f949ce21e360"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-resumed-routed-key/rows.jsonl": {
+      "bytes": 456,
+      "sha256": "eae036fb4e238476eda4887f0aad875fd4a28cbddd1b0ff5c29e81af817d00cd"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-resumed-routed-key/stderr": {
+      "bytes": 284,
+      "sha256": "2bee6266474bdc099aa855140c7dc9d860d1b1baa849f5df036f36db7e745b01"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-resumed-routed-key/stdout": {
+      "bytes": 664,
+      "sha256": "6c92077ea2940de197447f280e1a4a3eefa1567821d791095828083c35c8015e"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-resumed-routed-key-v2/command.json": {
+      "bytes": 2477,
+      "sha256": "fa40c335191884ac00e5667e0ee335f02386441a8dcb9a401090c90cc7cc519c"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-resumed-routed-key-v2/process.json": {
+      "bytes": 67,
+      "sha256": "d0a0df33c8177f19477a4a8219ecbb3ec47a12f2727b60290dd7f949ce21e360"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-resumed-routed-key-v2/rows.jsonl": {
+      "bytes": 462,
+      "sha256": "d91977d7ba41c1be6d77e47c4502bb16a069b55a38ffb08a5ffa00a1ee746ef8"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-resumed-routed-key-v2/stderr": {
+      "bytes": 284,
+      "sha256": "2bee6266474bdc099aa855140c7dc9d860d1b1baa849f5df036f36db7e745b01"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-resumed-routed-key-v2/stdout": {
+      "bytes": 677,
+      "sha256": "ff8a198b6333555477e5ea10f56eefd368ae809a438ac3234684357551b047d4"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-resumed-routed-mouse/command.json": {
+      "bytes": 2469,
+      "sha256": "c8a0765cae4c8d5daad29ae695ea2975f143abc114675e49a4f7e006bd1ec95e"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-resumed-routed-mouse/process.json": {
+      "bytes": 67,
+      "sha256": "d0a0df33c8177f19477a4a8219ecbb3ec47a12f2727b60290dd7f949ce21e360"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-resumed-routed-mouse/rows.jsonl": {
+      "bytes": 434,
+      "sha256": "2ed001c084884dc1073d3263c9d5f60ebc6e21d96c9d98dc9eb130f31977eccc"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-resumed-routed-mouse/stderr": {
+      "bytes": 284,
+      "sha256": "2bee6266474bdc099aa855140c7dc9d860d1b1baa849f5df036f36db7e745b01"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-resumed-routed-mouse/stdout": {
+      "bytes": 642,
+      "sha256": "3c8487b1c4edc4600dcd58b8239967e2335782172235c5f8d38057635c6ec434"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-roster-after/command.json": {
+      "bytes": 2369,
+      "sha256": "0dedbc9d1d804c9eaf02276ceaa3e19201d5ec52d85f431d916fcc423b01c11d"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-roster-after/process.json": {
+      "bytes": 67,
+      "sha256": "d0a0df33c8177f19477a4a8219ecbb3ec47a12f2727b60290dd7f949ce21e360"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-roster-after/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-16-56-13732-1633259.jsonl": {
+      "bytes": 3236,
+      "sha256": "241691725067a2fa42bb6e0299e48e8e22817624b277d6e909fa266296d7e7b6"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-roster-after/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-16-58-13732-3430969.jsonl": {
+      "bytes": 3099,
+      "sha256": "3a0261d71ab468d29fd1ebb3b839616bb5ae4154cdf2b4334a8b31fdcff4d977"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-roster-after/rows.jsonl": {
+      "bytes": 922,
+      "sha256": "307cd39f3edcfd9f893cf346634c40e641c9d9f69a25aa9675b6093c54311c5d"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-roster-after/stderr": {
+      "bytes": 1588,
+      "sha256": "40c1b27fbdcc47c54f9d340bf0cbf839938f5ee68f68bed636e502d6235c4a26"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-roster-after/stdout": {
+      "bytes": 505,
+      "sha256": "dce03818aefe43af73935dce24a03af49f0f18cf05c54f38b61ea881ab566471"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-routed-mouse-verified/command.json": {
+      "bytes": 2470,
+      "sha256": "fc2fb6a9f6f76c42c817e6993aee6ee38f32c127ac4f59f2691d1df8119ffe34"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-routed-mouse-verified/process.json": {
+      "bytes": 67,
+      "sha256": "d0a0df33c8177f19477a4a8219ecbb3ec47a12f2727b60290dd7f949ce21e360"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-routed-mouse-verified/rows.jsonl": {
+      "bytes": 369,
+      "sha256": "5319ab8214ef25d4b9aaf16bfb9ec12daed3e2c93f035db6ef67213583caef40"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-routed-mouse-verified/stderr": {
+      "bytes": 284,
+      "sha256": "2bee6266474bdc099aa855140c7dc9d860d1b1baa849f5df036f36db7e745b01"
+    },
+    "tmp/p02-seventh-20261108/gui-after-02-routed-mouse-verified/stdout": {
+      "bytes": 570,
+      "sha256": "fd102e9c47e38b6fb68c4365a605397dc7e4a93fd998dc2088798c4320d5556f"
+    },
+    "tmp/p02-seventh-20261108/gui-before-buttons-v1/command.json": {
+      "bytes": 2417,
+      "sha256": "2bcbae335b92dcef05e57447b46faa673a9630cd0cb70eec172f0882f659ab1a"
+    },
+    "tmp/p02-seventh-20261108/gui-before-buttons-v1/process.json": {
+      "bytes": 67,
+      "sha256": "d0a0df33c8177f19477a4a8219ecbb3ec47a12f2727b60290dd7f949ce21e360"
+    },
+    "tmp/p02-seventh-20261108/gui-before-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-15-33-20528-3394483.jsonl": {
+      "bytes": 3236,
+      "sha256": "6e37f1862bab5d0e60fecbc7bc75702344bf2e5b56fc65e1335e2bc215aa7c62"
+    },
+    "tmp/p02-seventh-20261108/gui-before-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-15-35-20528-4823621.jsonl": {
+      "bytes": 3237,
+      "sha256": "306fbe015eb04d3e077e264795a4d15f815b84a6412ab3f93b0ae6a32537324b"
+    },
+    "tmp/p02-seventh-20261108/gui-before-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-15-51-20528-20748968.jsonl": {
+      "bytes": 3238,
+      "sha256": "314b84dd3143b7277637378eff27fa9a013cd427d766c2a7ad0955911d9b8834"
+    },
+    "tmp/p02-seventh-20261108/gui-before-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-15-58-20528-27689222.jsonl": {
+      "bytes": 3238,
+      "sha256": "bff355c4381b610b77086346a0111b3cac9baab077cc40a7a5ac998efaaad22e"
+    },
+    "tmp/p02-seventh-20261108/gui-before-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-15-58-20528-27828122.jsonl": {
+      "bytes": 3238,
+      "sha256": "f803202bcc1cf476641000f318246c9e9dd43d26d2d2beb78e717c19fd6db491"
+    },
+    "tmp/p02-seventh-20261108/gui-before-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-16-04-20528-33755187.jsonl": {
+      "bytes": 3238,
+      "sha256": "6f956ec4fd5b9b0b8b57392265c0f448a665e61a99a531bfd2ed636592a46b0b"
+    },
+    "tmp/p02-seventh-20261108/gui-before-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-16-10-20528-40096820.jsonl": {
+      "bytes": 3238,
+      "sha256": "d34ed452778d051d5d2d24b79a941fbb6a429269e7ec3765819c6b976ba193bb"
+    },
+    "tmp/p02-seventh-20261108/gui-before-buttons-v1/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-16-14-20528-44062867.jsonl": {
+      "bytes": 3100,
+      "sha256": "a4c82fdd32c4c8abf28b80d9a3217b564c157424136fe4c7ecdf13fb62d85fa0"
+    },
+    "tmp/p02-seventh-20261108/gui-before-buttons-v1/rows.jsonl": {
+      "bytes": 3371,
+      "sha256": "a65e612994373b4b6f2364c3e6d2cf0e803f51fa3331c335a5d07c88a63eb39c"
+    },
+    "tmp/p02-seventh-20261108/gui-before-buttons-v1/stderr": {
+      "bytes": 2384,
+      "sha256": "bc74657a3df24b5136f298fe9806abef0ba82c72002dcb09ec86107dd3b7839a"
+    },
+    "tmp/p02-seventh-20261108/gui-before-buttons-v1/stdout": {
+      "bytes": 6178,
+      "sha256": "251b5954e03439c98cfcba96af76bff3382c6bd2e331138b238afd369b5d526e"
+    },
+    "tmp/p02-seventh-20261108/gui-before-initial/command.json": {
+      "bytes": 2402,
+      "sha256": "464941a5788524a32f54aef59a98256a3e6bf7e80a488292ac4050c3dc8d7466"
+    },
+    "tmp/p02-seventh-20261108/gui-before-initial/process.json": {
+      "bytes": 67,
+      "sha256": "d0a0df33c8177f19477a4a8219ecbb3ec47a12f2727b60290dd7f949ce21e360"
+    },
+    "tmp/p02-seventh-20261108/gui-before-initial/rows.jsonl": {
+      "bytes": 121,
+      "sha256": "9eb497d3b8d3c6b00a7aeab3b4391ae2373eb7de8ce8da73f8e786abf5fe8646"
+    },
+    "tmp/p02-seventh-20261108/gui-before-initial/stderr": {
+      "bytes": 1646,
+      "sha256": "1046f88a0782acb64d7270c2f5b5a973fa9cf14bf1b01ca48a6d81b5e86f0074"
+    },
+    "tmp/p02-seventh-20261108/gui-before-initial/stdout": {
+      "bytes": 315,
+      "sha256": "f9c5af67534cc72129b4e23b81c0a52c463676c12641a5669e02e2cc25ecdccb"
+    },
+    "tmp/p02-seventh-20261108/gui-before-roster-before/command.json": {
+      "bytes": 2360,
+      "sha256": "11f1d3886a19b4d9e762800bd9ea2cc1be463741313087a0f1ecb2b9b10f22dd"
+    },
+    "tmp/p02-seventh-20261108/gui-before-roster-before/process.json": {
+      "bytes": 67,
+      "sha256": "d0a0df33c8177f19477a4a8219ecbb3ec47a12f2727b60290dd7f949ce21e360"
+    },
+    "tmp/p02-seventh-20261108/gui-before-roster-before/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-17-00-7052-1595292.jsonl": {
+      "bytes": 3236,
+      "sha256": "aef05e40e3328d1b47d76ee70d8487ab850ea9f4a952fd00cece7477134e6311"
+    },
+    "tmp/p02-seventh-20261108/gui-before-roster-before/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-17-02-7052-3129913.jsonl": {
+      "bytes": 3099,
+      "sha256": "9d3d92f0ce208595430b7dda4f07f33fe2ee7b5194b6594f1e6640017f1aa4c3"
+    },
+    "tmp/p02-seventh-20261108/gui-before-roster-before/rows.jsonl": {
+      "bytes": 727,
+      "sha256": "337dffbacf5f72526ea5e108d18d05b6ac5d02eac4f7e09871754a5c94a9828f"
+    },
+    "tmp/p02-seventh-20261108/gui-before-roster-before/stderr": {
+      "bytes": 1588,
+      "sha256": "4678a78367500377a9420f91d048b9229350ef60954a486c7faf79ccd8e4cb27"
+    },
+    "tmp/p02-seventh-20261108/gui-before-roster-before/stdout": {
+      "bytes": 501,
+      "sha256": "98a510e1c410418fc2681185889bd9cdeebdcb3e81fb22bbf885c2eaeec88b91"
+    },
+    "tmp/p02-seventh-20261108/gui-probe.gd": {
+      "bytes": 2302,
+      "sha256": "70694de8f6bce89c5ca2d18f606782917ecb1104d32a416ce2a788b13bf0df13"
+    },
+    "tmp/p02-seventh-20261108/GUI-RESUME-EVIDENCE.md": {
+      "bytes": 5182,
+      "sha256": "379a2cd63588b6fe9674ecbedcd73d1f07968748588a9dcaf5953f92b831534d"
+    },
+    "tmp/p02-seventh-20261108/input-probe.gd": {
+      "bytes": 2788,
+      "sha256": "4f6e91c3f98b8a407341f1df47fef86f12d38ee773a3029fa6defd41d5dff176"
+    },
+    "tmp/p02-seventh-20261108/K4-CASES.txt": {
+      "bytes": 665,
+      "sha256": "61480e02e64dce3a7a1b9232bdea0bb5c2dfafb510255d9b91909bdc7687370a"
+    },
+    "tmp/p02-seventh-20261108/k4-compare-observations.py": {
+      "bytes": 3152,
+      "sha256": "afa73a82fd2f0897cce375bf615168925536f17d2125f11fea2cca146b9590bb"
+    },
+    "tmp/p02-seventh-20261108/k4-compare.py": {
+      "bytes": 3095,
+      "sha256": "207e5717dec955352cdc8480608911af700a14c9d3610bdb84b6f5db164ccd14"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-atomic/command.json": {
+      "bytes": 958,
+      "sha256": "0f5d9b28c909c7c6b25cf9a35666839210c33c161a1fbe6fbbb37cb3f821bd8c"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-atomic/process.json": {
+      "bytes": 1004,
+      "sha256": "592c7de3d09275415ece5845333156aeb51400d03fdf85722fd037158dbcecb2"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-atomic/result.json": {
+      "bytes": 6927,
+      "sha256": "d534508fabef796b5d9cd1bb1f5f1123351630fa95b06e3f925bb4f152f6067d"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-atomic/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-37-20-10392-4997088.jsonl": {
+      "bytes": 3236,
+      "sha256": "baec32a1504c3103be2b1e16efaaeb7cce5d945e83dd3edd945f001d67498efb"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-atomic/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-37-22-10392-7198132.jsonl": {
+      "bytes": 3236,
+      "sha256": "3e2ed3de74cc7c4a9120a65f0ed7cd05bae54d267e298df199d4bd67fdc215b8"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-atomic/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-37-22-10392-7332910.jsonl": {
+      "bytes": 3235,
+      "sha256": "6c6d249bb8050a84dc7d41dd505f7491380b0437250a82f95bdf36635c88c281"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-atomic/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-37-23-10392-7777634.jsonl": {
+      "bytes": 3235,
+      "sha256": "eb03d218a462f8f4c80a6e3c72ba2c460dd9e068be217bb9a67bef82c817fc65"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-atomic/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-37-23-10392-7892780.jsonl": {
+      "bytes": 3236,
+      "sha256": "1f87bcb934dc1976b17e093f15cf8288d1182aadb493dda0a7afce38dc7e0fd6"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-atomic/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-37-23-10392-8172474.jsonl": {
+      "bytes": 3092,
+      "sha256": "faba47c566f1fdc4d8341f50f822afe7ac31ccc91049fb04db138bcf02106c0f"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-atomic/stderr": {
+      "bytes": 3928,
+      "sha256": "80fb902b79526ba6a79caf644fa92e1229b08372a0bae18d0853cec4a472554e"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-atomic/stdout": {
+      "bytes": 1394,
+      "sha256": "7d2c29be14395810a112613a370d56671293fab9db06a975bcc3d3ae3e8c3eaa"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-battle/command.json": {
+      "bytes": 930,
+      "sha256": "4ed1983a3bdae35babec47036e94fadd0b13f5ccf9568304f3e985bd4dcd4c14"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-battle/process.json": {
+      "bytes": 593,
+      "sha256": "1be5af30e126b9902cd87a09f9436e1f8289a588a71b2a14eb4a66c0bcb0fa56"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-battle/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-21-36036-3124313.jsonl": {
+      "bytes": 3235,
+      "sha256": "6eb5e070d88b0a3556aa9964dcc366b6b3b4527bdffbd4a4ae56d6a247fd8286"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-battle/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-23-36036-5742396.jsonl": {
+      "bytes": 46072,
+      "sha256": "44dc30488f1a875c4b20ceade76b81657c6fe7488ad8099b22e181ddb6846076"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-battle/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-24-36036-6341392.jsonl": {
+      "bytes": 46687,
+      "sha256": "8c074b9d3c7d48c4ac5299ca267b86e338853b0081256baf541ec6c0d30dcfd5"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-battle/stderr": {
+      "bytes": 252,
+      "sha256": "54388bb9493153c525e5519a3b3bb8c42a600edb11c58048a4c77593e3b0949e"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-battle/stdout": {
+      "bytes": 1171,
+      "sha256": "ea8d4e60078ab8bf055ab43f4c1b968ec2a8c6f4becbe8c5905aec02e8ab3236"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-clean/command.json": {
+      "bytes": 943,
+      "sha256": "b26d0266127f48b090c6944b44f42009351f3d728e8a91a361a7eb26bef2521e"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-clean/process.json": {
+      "bytes": 321,
+      "sha256": "6921f751e4f9fe9126edccf9a27155be68d2d598609c9fdda32dfdc9c8d9b9cf"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-clean/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-37-42-36872-229948737.jsonl": {
+      "bytes": 16091,
+      "sha256": "3a2a8fa2ba8812cfd1075c86320c34067e10a08c6729eab06e5a84a842ce2224"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-clean/stderr": {
+      "bytes": 582,
+      "sha256": "acb6056197fda3f4ce4a014e2aa27c33b79adb711b9b764e321dc97102722bc8"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-clean/stdout": {
+      "bytes": 619,
+      "sha256": "fa39c0ef2f3b188bdbd314c4c333c3f423b8b68232d4160e4da03318c5ca4f42"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-common/command.json": {
+      "bytes": 958,
+      "sha256": "26c63ac4b22ba6041fff114cdf90810a839d22f2d48e9d56686c6778acdc3daa"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-common/process.json": {
+      "bytes": 1363,
+      "sha256": "3bb8df788bb283933c76337d6537c8aaa1cf8685244ac84d8bbadd593317bdf8"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-common/result.json": {
+      "bytes": 24612,
+      "sha256": "d54d30c58bee617288d65c9e567ad4ac52ba041b1e0d9c87435ecb168820f6d0"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-05-4388-5801120.jsonl": {
+      "bytes": 9741,
+      "sha256": "a381fa0dd53291b411055abe1869f5138b45a4c40cda39b78db9cae669f5b2b8"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-09-4388-9739671.jsonl": {
+      "bytes": 3229,
+      "sha256": "ebe7bb604a710b8360c09fa7d7c49f04a436ca8609837d2907355b5b6136b30f"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-09-4388-9859775.jsonl": {
+      "bytes": 3229,
+      "sha256": "f4e31d050d294272e45f8e31345f483e34791e1804251a59a3ad3fd9e27e3ea6"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-09-4388-9950651.jsonl": {
+      "bytes": 15967,
+      "sha256": "1304b5e053606831de317e0126d282dfcd377b0bb28ff07f0e46f1b3598d67fc"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-10-4388-10164703.jsonl": {
+      "bytes": 6218,
+      "sha256": "b5dbf6c2b9960c66b3031fe4a6da5e5da4a785c520c61e8755491d0761d89109"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-10-4388-10432757.jsonl": {
+      "bytes": 3231,
+      "sha256": "14073ac400cbc7d6c3f045df2b1f53f3abb96c09fe984f5565090b9ff20eee0b"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-10-4388-10560605.jsonl": {
+      "bytes": 9612,
+      "sha256": "ba5175bcfdd61c320384ad0262203a4f550421740e6f4642243af89dc464e44d"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-14-4388-14931635.jsonl": {
+      "bytes": 2897,
+      "sha256": "16b899dc73f51236a7d1cf93bb6b17dc98e720050650ca85e9e1afb32d8daa93"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-common/stderr": {
+      "bytes": 1957,
+      "sha256": "03a428027462ba7556064fa361c744cf3f54eba06fdfe46be9f43376e6036c42"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-common/stdout": {
+      "bytes": 1855,
+      "sha256": "8563aa8dc134e5ee07b0a4c2ada27bb80f99143e8c3b0b1d1ace2fe2f21d0b6d"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-fixed/command.json": {
+      "bytes": 954,
+      "sha256": "44b6174f134be2f797bf1c2daf72b327e33945002908071fca20589652a879d5"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-fixed/fixed-session-start.jsonl": {
+      "bytes": 2896,
+      "sha256": "a4123bfbabc7a41dc6a7e61c5756e49cbe46b8bc341ae2c4013cbbf4f4a33826"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-fixed/process.json": {
+      "bytes": 456,
+      "sha256": "5dd78d80ca515b177eb3c3a6a9f0fb7df23a032d4feb29b15324024913f712d4"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-fixed/result.json": {
+      "bytes": 1682,
+      "sha256": "93af5d69bfcea7af2b93be22a8435111d2f0925e93f8fe11f30c4ac48ceee096"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-fixed/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-34-44-28696-4546965.jsonl": {
+      "bytes": 3033,
+      "sha256": "946109be870e987783801b4e3d50ea3cad1b3f774103cf9e31eac6ebb1527043"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-fixed/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-34-50-28696-9730885.jsonl": {
+      "bytes": 2896,
+      "sha256": "a4123bfbabc7a41dc6a7e61c5756e49cbe46b8bc341ae2c4013cbbf4f4a33826"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-fixed/startup-and-close.jsonl": {
+      "bytes": 3033,
+      "sha256": "946109be870e987783801b4e3d50ea3cad1b3f774103cf9e31eac6ebb1527043"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-fixed/stderr": {
+      "bytes": 3212,
+      "sha256": "c4298ae23e337a94e41db77e8f2ac7141fae2017e6aa96d92d7aec9d50b4f9af"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-fixed/stdout": {
+      "bytes": 499,
+      "sha256": "5164edea2a358e184ae507549da72046618d7f980210d67558267fe05eaed2bd"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-inputs.json": {
+      "bytes": 555991,
+      "sha256": "fa31c25fdd254588f8895bbc48dd8df142a1414fb0de794b8f50a867e168f0e5"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-organization/command.json": {
+      "bytes": 958,
+      "sha256": "658c54d1b443cbb75a35076d6564886772c47838b94bd52e8a6f2138e11f41f5"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-organization/process.json": {
+      "bytes": 2236,
+      "sha256": "094e5a5c43145e7f423de334ee84cca5a8ed50821a3a8b662d5c0225afa17e02"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-21-6416-3125138.jsonl": {
+      "bytes": 9749,
+      "sha256": "33bce2bd13c1eade057bb6fb8de9dbdec11cc2d4a24014da51745673a7b0b3fa"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-39-6416-21388001.jsonl": {
+      "bytes": 9757,
+      "sha256": "c5d78db5a8e511caa27390ea267700494acf71d799603575b078c21cdb6213c1"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-39-6416-21757919.jsonl": {
+      "bytes": 3238,
+      "sha256": "d902cc0abfa4e3a58784d0a99878e57fb7d5553b5dc424d03fd895750cd4da9c"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-39-6416-21877053.jsonl": {
+      "bytes": 3238,
+      "sha256": "5bb9cb2206ce6741f0bc7ffa64d91b1f4f3a6bcbd03089818ba20d1fdf4faa11"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-40-6416-22000858.jsonl": {
+      "bytes": 3237,
+      "sha256": "4ab70a9506f36067604e8a9905380619f8e82e2ecf012f32ca19776d81ed8c64"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-40-6416-22157715.jsonl": {
+      "bytes": 9954,
+      "sha256": "bee7ed0d59561110ccf2c6d47a9cebb963906d31cba44a1e4d686ad0c2635049"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-40-6416-22602544.jsonl": {
+      "bytes": 3238,
+      "sha256": "1dc9478982477726e97d7d203b0805291b2f3fe3e7fe5913555f93c01303ee07"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-40-6416-22684230.jsonl": {
+      "bytes": 3238,
+      "sha256": "dc54a09f2c4866d330585e7c16ec6a5e70a3cf8e9830e9a50e7fe39ed04e61d9"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-40-6416-22810148.jsonl": {
+      "bytes": 9954,
+      "sha256": "0bd9b72eeeb70484f48e132085b687a6cb74634b5b5870c780e9ea017563b013"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-41-6416-23200594.jsonl": {
+      "bytes": 9757,
+      "sha256": "901f358999b5013f49dd410d60fecbf92ebf477ee62f853a7bc1a331de5f3086"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-41-6416-23294377.jsonl": {
+      "bytes": 3238,
+      "sha256": "0a1e050143d584d57b8fc27c32e586ba74c8be2c20ebe925e9b60280202ae467"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-43-6416-25868557.jsonl": {
+      "bytes": 3238,
+      "sha256": "7e34f8c652e91c1735667ee931076cc4e2b1dfadbf34c66e5b523f0d824777e2"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-46-6416-28898570.jsonl": {
+      "bytes": 3238,
+      "sha256": "279faa3fa9ba7a54150177beca3db6965484050ad281f7585ce9595c88e2caa8"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-49-6416-31821071.jsonl": {
+      "bytes": 9125,
+      "sha256": "45b808fa08eb5c3fa5b3dd419848de6b4c4ab992f4b75dd6424b76d9c4694d1f"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-33-50-6416-32161724.jsonl": {
+      "bytes": 9619,
+      "sha256": "0d5c5870e01571b78d7e7aa0f1b4e894702d589f5ec7706a54cc5a36b1f75acd"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-organization/stderr": {
+      "bytes": 1821,
+      "sha256": "5eba14ce261c8876f82dbe00482a01411fc2ff1562bb3ce7c476a1f9c6ea1b67"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-organization/stdout": {
+      "bytes": 3460,
+      "sha256": "fd6c9d97b4de99b4f8ccf9a4346b84db484a4abe9e37c3931f574ce4959d60de"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-render-live/command.json": {
+      "bytes": 1153,
+      "sha256": "c129c30da6e0f07d4509cd259d6145a07a1533861c041332dfa9dc971b3aec57"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-render-live/live-warning.png": {
+      "bytes": 718353,
+      "sha256": "20cb3329a37e339444e9adbc0e4d807c14c3256b9916860c455fe0e54c8d53c3"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-render-live/process.json": {
+      "bytes": 3378,
+      "sha256": "b1c0def857c906f1fb0ba47ab4618014bf78b04606d24545ea77fab91c33bc53"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-render-live/recover.png": {
+      "bytes": 770771,
+      "sha256": "a6dcaef4e106655966cf89882ad74080b8f95f05dd60dda11671dae3cf70ef7b"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-render-live/result.json": {
+      "bytes": 559,
+      "sha256": "87edca3a8dde4892a8f913beaa1d551da61bf6b7b3a926d66d0b58792a5171ef"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-render-live/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-32-12-25764-13974211.jsonl": {
+      "bytes": 9955,
+      "sha256": "eaccd295492121ab8c473b1967fb8615b9fd0cc05006d74e79b71413ee6e9edf"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-render-live/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-32-26-25764-28401649.jsonl": {
+      "bytes": 9620,
+      "sha256": "55bd4ae89417dd93d0e4bfef00451d94e608d0df5761381efbcf0962074504f7"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-render-live/stderr": {
+      "bytes": 565,
+      "sha256": "df154a61c94a78321ab16a8677b406f3f851fc245b8147c4f9ab2f4b5f19cb8d"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-render-live/stdout": {
+      "bytes": 1306,
+      "sha256": "efb830e6e6fb5bb3cfc73de2dc117a3f62ccca8791b86fc1ffe781e481a67101"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-render-routed/command.json": {
+      "bytes": 1159,
+      "sha256": "7c64c36eee55dc294c670d9444e678f5b590eafeef8db89ca9416be2565f012c"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-render-routed/initial.png": {
+      "bytes": 257860,
+      "sha256": "19ba6bdcc39a98be58af01e70b02d044ba6b919b98ce65b8e827eeef098313da"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-render-routed/process.json": {
+      "bytes": 1796,
+      "sha256": "b62e4a004825c40c199d88394ffb50f98bf980d86f3377848ac1233918773d08"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-render-routed/result.json": {
+      "bytes": 302,
+      "sha256": "a90f5c9c0abeb406e41ae250c692b5ef52e6a105b54e630905387d28ca0f04ae"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-render-routed/stderr": {
+      "bytes": 284,
+      "sha256": "2bee6266474bdc099aa855140c7dc9d860d1b1baa849f5df036f36db7e745b01"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-render-routed/stdout": {
+      "bytes": 503,
+      "sha256": "5c5de70bcaa7465f26c71b43d8c5a1d98c2d99e376da3ec34a795d71e8b90ea5"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-returning/command.json": {
+      "bytes": 1051,
+      "sha256": "f57ad33e90befad29cc0d59ffbc89d63e072f878e501831e8a4489f6e252ba83"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-returning/process.json": {
+      "bytes": 410,
+      "sha256": "4342956235903b4b7fadc8dbb9acedaf0acbaba9bad082ff177c8341d213bc6b"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-returning/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-38-04-35888-203794050.jsonl": {
+      "bytes": 16091,
+      "sha256": "835dca74f35f9b4ff9732fb1fd21964d5b3df1e9eebd6e278c06bc4034d64fe3"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-returning/stderr": {
+      "bytes": 252,
+      "sha256": "6b4583c5551163f6340fbb3e2066cf020c632195aac365a8a1e723d015cda292"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-returning/stdout": {
+      "bytes": 689,
+      "sha256": "62751b71050de138013f2e4a2d29574c87b8406198d58086a50d6194757fd834"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-roster/command.json": {
+      "bytes": 1057,
+      "sha256": "b89d802d7f107b482bbb3fe27f9a4233ee6cc9af1e72b1bec0a0fca6d196b27d"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-roster/process.json": {
+      "bytes": 546,
+      "sha256": "323e4c77d50d224790e3a1b0aa2f00ddb287c664a0345ee26594f5b8fe3ce44c"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-roster/result.json": {
+      "bytes": 922,
+      "sha256": "307cd39f3edcfd9f893cf346634c40e641c9d9f69a25aa9675b6093c54311c5d"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-roster/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-34-59-35708-7194120.jsonl": {
+      "bytes": 3237,
+      "sha256": "8f8786992fde37dcdf67423c471eaa7187a4a58650c5e35ee2b65045e9fbf95a"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-roster/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-35-06-35708-13566695.jsonl": {
+      "bytes": 3100,
+      "sha256": "8b29ed363d2f41fe779cb9d794130854d5906d1229d043992eb866cd45a0604f"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-roster/stderr": {
+      "bytes": 1452,
+      "sha256": "035aae71820fc3eec1e526ea7db7f1a1db7fc242613bf969f3c2c09897d3b93b"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-roster/stdout": {
+      "bytes": 502,
+      "sha256": "f0f9fcf2d380f07d4db59a691b2b0787bd17d8ffd0132d5285b5e835c90ee4ab"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-routed-key/command.json": {
+      "bytes": 1147,
+      "sha256": "fc9efecce23c47c9a78457aa796d84b7369139eeaa4fa39eaee649275ffec12b"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-routed-key/process.json": {
+      "bytes": 1795,
+      "sha256": "4a17521ddf27b93888f094b5201f4389fde2600b877f0d93389e4b767999bdb3"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-routed-key/result.json": {
+      "bytes": 858,
+      "sha256": "62d2c36c45465154a9ae75987e5d4be0b7634578bdf8a27a50b9c49f141f7f9d"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-routed-key/stderr": {
+      "bytes": 284,
+      "sha256": "2bee6266474bdc099aa855140c7dc9d860d1b1baa849f5df036f36db7e745b01"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-routed-key/stdout": {
+      "bytes": 1136,
+      "sha256": "533a96abdf452e9d287e00afddb9d1b888e931e9c51934cb66d668f218a58af4"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-routed-mouse/command.json": {
+      "bytes": 1151,
+      "sha256": "dfd56efa1d70b372b4b39f970e78a96a82603296aaaa2c2dc4a4494e1772b4fd"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-routed-mouse/process.json": {
+      "bytes": 1795,
+      "sha256": "eed741f2cec563624d29ffa51b4d3cacdda53ee4a3bc35a5ac7d5499183ccd62"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-routed-mouse/result.json": {
+      "bytes": 434,
+      "sha256": "e57aef32425c5024e6a88d87523e07abfb00f0faaf5d18a0466340c879c84165"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-routed-mouse/stderr": {
+      "bytes": 284,
+      "sha256": "2bee6266474bdc099aa855140c7dc9d860d1b1baa849f5df036f36db7e745b01"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-routed-mouse/stdout": {
+      "bytes": 642,
+      "sha256": "a9f32690ebf1c4223aef73c7d51902c30770d4ff844029306f530b8bc48add30"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-world-cancel/command.json": {
+      "bytes": 1085,
+      "sha256": "2aecce5fdbcdcb3c48651ea659e5a6f7b4df1c8ae2668ae171917e6cd8037079"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-world-cancel/process.json": {
+      "bytes": 271,
+      "sha256": "05a050f8955fd77e9dd1e32e9b7bcc6efda27ad8fb8e0798fe7a5b77ebe25d1e"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-world-cancel/result.json": {
+      "bytes": 943,
+      "sha256": "08eb9ea687e6ad96b4c4d4575a006c4a31a8bbd33a1e5f2e000cccaef2ec61dc"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-world-cancel/stderr": {
+      "bytes": 249,
+      "sha256": "38de8241e3b14dfa28f79d02324cef7c65fc0248e579a71e1625aba7062de49a"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-world-cancel/stdout": {
+      "bytes": 75,
+      "sha256": "83cf0b082206af2aa236c83064fbcfa76be1e00a4aa3558574b2f65965d9481c"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-world-complete/command.json": {
+      "bytes": 1095,
+      "sha256": "4dc89edef1042c02cbed029f4e56700ff3c6d29a0106a7f9d5192e6305bd17fc"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-world-complete/process.json": {
+      "bytes": 271,
+      "sha256": "05a050f8955fd77e9dd1e32e9b7bcc6efda27ad8fb8e0798fe7a5b77ebe25d1e"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-world-complete/result.json": {
+      "bytes": 943,
+      "sha256": "08eb9ea687e6ad96b4c4d4575a006c4a31a8bbd33a1e5f2e000cccaef2ec61dc"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-world-complete/stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tmp/p02-seventh-20261108/k4-current/after-world-complete/stdout": {
+      "bytes": 75,
+      "sha256": "83cf0b082206af2aa236c83064fbcfa76be1e00a4aa3558574b2f65965d9481c"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-battle/command.json": {
+      "bytes": 935,
+      "sha256": "e9f0e6a71f8708e6c4f3498473ad58bba07d0bdb686c8138e3679a117471bfef"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-battle/process.json": {
+      "bytes": 595,
+      "sha256": "6f793e84345851d5a13d7a666ae337366e0abc55903bf9a68cb8d98a85fa2b61"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-battle/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-13-27260-5766120.jsonl": {
+      "bytes": 3237,
+      "sha256": "b1da812f00d5dd4ab6f6cae5f99754d4d937b725f02da00c141bc276543dd556"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-battle/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-21-27260-13235784.jsonl": {
+      "bytes": 46098,
+      "sha256": "eeee443f654866c5b0795beccaf91935c00a20d7c49298823aa9bdfba05c7699"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-battle/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-22-27260-14029964.jsonl": {
+      "bytes": 46696,
+      "sha256": "3bdc498a1589aedc17c509b6246f04f7bcbec4ffba452d0105d83dff4d45dabb"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-battle/stderr": {
+      "bytes": 252,
+      "sha256": "54388bb9493153c525e5519a3b3bb8c42a600edb11c58048a4c77593e3b0949e"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-battle/stdout": {
+      "bytes": 1176,
+      "sha256": "2288142339494abb8b1079d488e74c56a445a41d8842dd98d15ddb21058a9e7e"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-clean/command.json": {
+      "bytes": 948,
+      "sha256": "9558f32aff145fa9afc18f6fd2e3f9975997c9a32458f9784b51a37c521924ce"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-clean/process.json": {
+      "bytes": 184,
+      "sha256": "2128cdac88420e98e0f4a01a2e42dfb2afc2cb22f648976dca122c5d2cdb9064"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-clean/stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-clean/stdout": {
+      "bytes": 254,
+      "sha256": "66c6283a7a531e1229ead205cf97333c0e80f7465385dadd611e8857ec5208ea"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-common/command.json": {
+      "bytes": 963,
+      "sha256": "6ce84a8e3266d3249a4987049f74d6cdbe9a4d2db4267d9176d158a6be39ad40"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-common/process.json": {
+      "bytes": 1374,
+      "sha256": "3a7d200a11741a327f82095192a2fe65dcde1689dcb33d6af2291d9f22832600"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-common/result.json": {
+      "bytes": 24612,
+      "sha256": "d54d30c58bee617288d65c9e567ad4ac52ba041b1e0d9c87435ecb168820f6d0"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-13-30216-5755351.jsonl": {
+      "bytes": 9750,
+      "sha256": "f4f4fdc4139035ce6ff00b42396d2e101280ddb51129a25c568b145acab74861"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-21-30216-13196927.jsonl": {
+      "bytes": 3231,
+      "sha256": "9884c11cd65f4fec33cd3516eca3e5732284a09e81fae8b708188775698f86ad"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-21-30216-13348076.jsonl": {
+      "bytes": 3231,
+      "sha256": "b54e44bed5949ba3598a8ec12722cf5ec3d02a3c22ff9f2cbbd462b89b973a3d"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-21-30216-13421689.jsonl": {
+      "bytes": 15979,
+      "sha256": "c7e41afe0f6b25680eda5b5d9252fc0c5aad7f4d2d2c97bab21fe36e70432680"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-21-30216-13546362.jsonl": {
+      "bytes": 6218,
+      "sha256": "c982b3dc5bdbf9404a9d44522ab7bb4922c750fe0addae35355cfeff2c512dda"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-21-30216-13744634.jsonl": {
+      "bytes": 3231,
+      "sha256": "61d119f6aa12f48f7e58ab6b95a073b21f48effc509c77c10737b96dee649110"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-21-30216-13843985.jsonl": {
+      "bytes": 9612,
+      "sha256": "ea876a3170f0cf8537fa423b5a3a8d853759867bc70047f7d71ad8f21b49eb11"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-common/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-26-30216-18289257.jsonl": {
+      "bytes": 2897,
+      "sha256": "135de4a4199ed3d9393fe2b9df25d9a3eb9ee4dfc7a20f50ee2ed924ca70a33e"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-common/stderr": {
+      "bytes": 1957,
+      "sha256": "d3db53b2b34f745cebd8b2fcb5c9c4e73272b856fb935c166472cd638993c25e"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-common/stdout": {
+      "bytes": 1874,
+      "sha256": "4cfa76f0e28961c81e2d004f01363c618be7ae4a5d4701754801861cb0b35166"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-fixed/command.json": {
+      "bytes": 959,
+      "sha256": "45b6bdae66aebf6a4a1957f8f55eadf368ec6b8a415cd19289ef8ae1df01c472"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-fixed/fixed-session-start.jsonl": {
+      "bytes": 2896,
+      "sha256": "4ce4d18d514bbbb1f19818c85fb79b4166d8c0f059070ad645bc061e0ba160b2"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-fixed/process.json": {
+      "bytes": 456,
+      "sha256": "74556a08bc001562d76c73510dbd8fb561a1aae69a6b91a08248407eb281c087"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-fixed/result.json": {
+      "bytes": 1684,
+      "sha256": "cfce9b7ef812c067e230b99c727472b2e6ce81252bd0592970b58d6febd359e3"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-fixed/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-30-32-14620-3436974.jsonl": {
+      "bytes": 3033,
+      "sha256": "b951d00b44f1b0b4febaf57416c499440fca98412db5936a21fde0e5ec473f59"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-fixed/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-30-38-14620-8702312.jsonl": {
+      "bytes": 2896,
+      "sha256": "4ce4d18d514bbbb1f19818c85fb79b4166d8c0f059070ad645bc061e0ba160b2"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-fixed/startup-and-close.jsonl": {
+      "bytes": 3033,
+      "sha256": "b951d00b44f1b0b4febaf57416c499440fca98412db5936a21fde0e5ec473f59"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-fixed/stderr": {
+      "bytes": 3461,
+      "sha256": "b33f971a1f554a5563c0c40dcb8a56e6900b5e336ca22711c2a9aa535568c1cb"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-fixed/stdout": {
+      "bytes": 501,
+      "sha256": "d0f26801e0e5feed8a657ee59249cc37f3c77a0f75cafc1eae60f465c30816bb"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-inputs.json": {
+      "bytes": 555991,
+      "sha256": "822ba06bc017df3b958ae9e01e76b34fdb045e5d4c9051c8a773515f2c39205d"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-organization/command.json": {
+      "bytes": 963,
+      "sha256": "10e8af2d96d58bd3a6fe372c451f99f586c3c81e42034543bd6939a3d0c8a64e"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-organization/process.json": {
+      "bytes": 2236,
+      "sha256": "ff3e72b7cad992f9a1484a7f33ffc4b78e79b91378ddca409937119165c4a638"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-13-2272-5753488.jsonl": {
+      "bytes": 9757,
+      "sha256": "c4663cc6cc1d09ff817613e19bbe394a4cc3f086aea24beac56c0a69defa43a2"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-35-2272-27554891.jsonl": {
+      "bytes": 9758,
+      "sha256": "d561502f5f8ef88053ce20603fdd2abe314c3b386f371c80ae55aae370753d93"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-35-2272-27852956.jsonl": {
+      "bytes": 3238,
+      "sha256": "2a9291378438896c31df5abdb48bf117e5c795537153596993684b33796a7638"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-36-2272-27959292.jsonl": {
+      "bytes": 3238,
+      "sha256": "f0f0e9583e2047c0db3ef5e35639e241215dafa2a72da393e3df688c24d9af89"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-36-2272-28064772.jsonl": {
+      "bytes": 3238,
+      "sha256": "60884f3c3e8cd734ba757c84abc14650c8d8c91551d453521ac8511696390bd7"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-36-2272-28160309.jsonl": {
+      "bytes": 9954,
+      "sha256": "0f9cdca54250fc85ba99cb42e768a0916963cea8860577cb324a367a589e1474"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-36-2272-28524227.jsonl": {
+      "bytes": 3238,
+      "sha256": "4b726cea9fb5ae16c1b293791ee305ddfbb5df53f9f1070583137285e5ef6ced"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-36-2272-28619269.jsonl": {
+      "bytes": 3238,
+      "sha256": "3485e03dc0feedf92e7e2c65c7f36030ab29b07ca9864e8d3e3f7ba7de8e2015"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-36-2272-28694592.jsonl": {
+      "bytes": 9954,
+      "sha256": "3a9aab4899d4d4ae527188a90da4b24fc36300892016d2913362fed7e5b9ca0e"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-37-2272-29070111.jsonl": {
+      "bytes": 9758,
+      "sha256": "5bf0588a47f5e7fa1fa3f9d66593c50b9c0c7d31403fe851b50d340c59ab0f0e"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-37-2272-29174650.jsonl": {
+      "bytes": 3238,
+      "sha256": "449ad61caf185b089f0d71345139823b81299c1f14fd4987c422aa31d2c35ab6"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-39-2272-31625690.jsonl": {
+      "bytes": 3238,
+      "sha256": "c2a2be009b87faa2302cc369d8d2138e82444b49daf45395ec871450f236586c"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-42-2272-34042330.jsonl": {
+      "bytes": 3238,
+      "sha256": "d94e220f6771fbdd1c39dc57cd2fc2cb44c63984722438a8e07047ea944fca74"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-44-2272-36583877.jsonl": {
+      "bytes": 9125,
+      "sha256": "352a4abff5617dc6b8e1c1071b724c28cdd1f81a180d143b4338d6e9ef24cb61"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-organization/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-28-44-2272-36899551.jsonl": {
+      "bytes": 9619,
+      "sha256": "b5b406dbf07d4ccad120e2f3709584295685d4745f54c4a74d99d6f4a6d054bb"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-organization/stderr": {
+      "bytes": 1821,
+      "sha256": "dd74c47853c1e4df06c7b837de8c0f38a45cc8b5018197038944abc6a5645619"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-organization/stdout": {
+      "bytes": 3474,
+      "sha256": "1cc79045ff659175203b1b62264d3e36ec8ab6c31a6297c59176510a061221a1"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-returning/command.json": {
+      "bytes": 1056,
+      "sha256": "b7e375ed35755ed076cf8e414fda443b95d6a31b32ae358f2f6fbdee63e67211"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-returning/process.json": {
+      "bytes": 273,
+      "sha256": "61cc267553c28f3efab53a11aac5648972a9a326bbfc77bffdb6840e6b8e0fc9"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-returning/stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-returning/stdout": {
+      "bytes": 322,
+      "sha256": "95ca41e34de3767157941342d0be08502b5aaf59bf89fc7ed955bd725d5709e7"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-roster/command.json": {
+      "bytes": 1062,
+      "sha256": "c5e7b4c4f4359a149454558c031bf8bd749097eae14bce56be52a6b296350d06"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-roster/process.json": {
+      "bytes": 546,
+      "sha256": "9d45ac4f80f4aeea6d07c7f939174a0b7178787a9f55a52f4988590c604cc50b"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-roster/result.json": {
+      "bytes": 727,
+      "sha256": "337dffbacf5f72526ea5e108d18d05b6ac5d02eac4f7e09871754a5c94a9828f"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-roster/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-30-48-26052-8289082.jsonl": {
+      "bytes": 3237,
+      "sha256": "019402a1a4ba74a0a68833e0962ae4a80145479bb1e58e7384b6d1886aca340f"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-roster/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-30-54-26052-14164417.jsonl": {
+      "bytes": 3100,
+      "sha256": "d39b2d3360ac41f6f6ad899fa13de9a2af7ecea121231cc65eb972874348eaa9"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-roster/stderr": {
+      "bytes": 1452,
+      "sha256": "2c2b79b2d26923c7639ccc26b93db44f70588b229413e64687c4b04532203819"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-roster/stdout": {
+      "bytes": 504,
+      "sha256": "fc6ef1b8d6567d7a524228adfe1221c3846d58be2ee72777c71f8956a433d370"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-world-cancel/command.json": {
+      "bytes": 1090,
+      "sha256": "5ebae3e4ecc268f5394ba6fd09d0d63f04d96fe74347b8a24acfef3dbdd2f559"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-world-cancel/process.json": {
+      "bytes": 271,
+      "sha256": "05a050f8955fd77e9dd1e32e9b7bcc6efda27ad8fb8e0798fe7a5b77ebe25d1e"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-world-cancel/result.json": {
+      "bytes": 943,
+      "sha256": "08eb9ea687e6ad96b4c4d4575a006c4a31a8bbd33a1e5f2e000cccaef2ec61dc"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-world-cancel/stderr": {
+      "bytes": 249,
+      "sha256": "38de8241e3b14dfa28f79d02324cef7c65fc0248e579a71e1625aba7062de49a"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-world-cancel/stdout": {
+      "bytes": 75,
+      "sha256": "83cf0b082206af2aa236c83064fbcfa76be1e00a4aa3558574b2f65965d9481c"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-world-complete/command.json": {
+      "bytes": 1100,
+      "sha256": "8d8be67782421a5d40287696eeecafdb31902575e86776123d41e9d349257138"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-world-complete/process.json": {
+      "bytes": 271,
+      "sha256": "05a050f8955fd77e9dd1e32e9b7bcc6efda27ad8fb8e0798fe7a5b77ebe25d1e"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-world-complete/result.json": {
+      "bytes": 943,
+      "sha256": "08eb9ea687e6ad96b4c4d4575a006c4a31a8bbd33a1e5f2e000cccaef2ec61dc"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-world-complete/stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tmp/p02-seventh-20261108/k4-current/before-world-complete/stdout": {
+      "bytes": 75,
+      "sha256": "83cf0b082206af2aa236c83064fbcfa76be1e00a4aa3558574b2f65965d9481c"
+    },
+    "tmp/p02-seventh-20261108/k4-current/fixed-trace-comparison.json": {
+      "bytes": 22567,
+      "sha256": "1b33f770acd830256eceaabedcb3f3a2fd949fd9ab0583a4835099564ec379a0"
+    },
+    "tmp/p02-seventh-20261108/k4-current/freeze-complete.json": {
+      "bytes": 164,
+      "sha256": "759d5cf741b0e3e74c0cc2d97bcde1d3efe01f1e0d14ca76cb642cc306158d86"
+    },
+    "tmp/p02-seventh-20261108/k4-current/preflight.json": {
+      "bytes": 565387,
+      "sha256": "0bc5bdae2339f3fdd16a659e1f1d9e695a076aaa43c84ac4e409db41e3965474"
+    },
+    "tmp/p02-seventh-20261108/k4-fixed-summary.py": {
+      "bytes": 1298,
+      "sha256": "00d732c720c4246dedf1ef5c9cdebb5d0a24df6d8c690b0ebb4fb508699ab916"
+    },
+    "tmp/p02-seventh-20261108/K4-K5-EVIDENCE.md": {
+      "bytes": 5388,
+      "sha256": "fd342930a9dbacc7fc038f2075e5f58f55ce2a4c7ae63b40685cf9d91b953a0f"
+    },
+    "tmp/p02-seventh-20261108/K4-K5-OBSERVATIONS.json": {
+      "bytes": 38695,
+      "sha256": "48582b86faa85681e653a729d838df15ccb761fb9a0addb2d691f4e070f21c99"
+    },
+    "tmp/p02-seventh-20261108/k4-k5-observations.py": {
+      "bytes": 2741,
+      "sha256": "fbd7dce082f5eac8cd4ed6faebc6694700252408170e662dc1f27786dc811db3"
+    },
+    "tmp/p02-seventh-20261108/k4-run.py": {
+      "bytes": 6268,
+      "sha256": "d046dd191e881dda1084db20dc88799ceb3b56215805c7722062a49d7b6966a4"
+    },
+    "tmp/p02-seventh-20261108/k4-world-product.gd": {
+      "bytes": 3621,
+      "sha256": "7b75d653a3705870e619c0775218bcdafd688416147219e34d5eec6c93201208"
+    },
+    "tmp/p02-seventh-20261108/k5-world-product.gd": {
+      "bytes": 4120,
+      "sha256": "8946cb6f6b9f64cceb8208116feeadba67759748d61084f4d21845575e5e6d07"
+    },
+    "tmp/p02-seventh-20261108/k5-world-retry/after-cancel/command.json": {
+      "bytes": 983,
+      "sha256": "3b3726e11b9cb3a859d1824bb9df802b8f2722e9cf03d9038bdba7d5b8ee916a"
+    },
+    "tmp/p02-seventh-20261108/k5-world-retry/after-cancel/process.json": {
+      "bytes": 67,
+      "sha256": "d0a0df33c8177f19477a4a8219ecbb3ec47a12f2727b60290dd7f949ce21e360"
+    },
+    "tmp/p02-seventh-20261108/k5-world-retry/after-cancel/result.json": {
+      "bytes": 1912,
+      "sha256": "405345065f833b1377dfba8f830f8a5938b8754caa4d72e3f1de7307ea74d068"
+    },
+    "tmp/p02-seventh-20261108/k5-world-retry/after-cancel/stderr": {
+      "bytes": 251,
+      "sha256": "9e67fcc93ea7f9806421104905a3f6fcb3a63a9dc645f93dcbe928286a2f179c"
+    },
+    "tmp/p02-seventh-20261108/k5-world-retry/after-cancel/stdout": {
+      "bytes": 75,
+      "sha256": "83cf0b082206af2aa236c83064fbcfa76be1e00a4aa3558574b2f65965d9481c"
+    },
+    "tmp/p02-seventh-20261108/k5-world-retry/after-complete/command.json": {
+      "bytes": 993,
+      "sha256": "f2d47be5d893c9ad99195adb105c0dc151037df7a07e9b629edf99aefbcde248"
+    },
+    "tmp/p02-seventh-20261108/k5-world-retry/after-complete/process.json": {
+      "bytes": 67,
+      "sha256": "d0a0df33c8177f19477a4a8219ecbb3ec47a12f2727b60290dd7f949ce21e360"
+    },
+    "tmp/p02-seventh-20261108/k5-world-retry/after-complete/result.json": {
+      "bytes": 2186,
+      "sha256": "3c03a0c78dad8cda809c1b38c5076e27dc2ff8bd394d20a3277aabdaa0dad766"
+    },
+    "tmp/p02-seventh-20261108/k5-world-retry/after-complete/stderr": {
+      "bytes": 251,
+      "sha256": "957df8a54b11517a46fcc418532e78e73ad26a7510328f63795427e70ec5eed9"
+    },
+    "tmp/p02-seventh-20261108/k5-world-retry/after-complete/stdout": {
+      "bytes": 75,
+      "sha256": "83cf0b082206af2aa236c83064fbcfa76be1e00a4aa3558574b2f65965d9481c"
+    },
+    "tmp/p02-seventh-20261108/k5-world-retry/before-cancel/command.json": {
+      "bytes": 988,
+      "sha256": "851809d6c6e854f6663349a1d5572eba02ce232398a1ae6c66ae8b34c697af55"
+    },
+    "tmp/p02-seventh-20261108/k5-world-retry/before-cancel/process.json": {
+      "bytes": 67,
+      "sha256": "d0a0df33c8177f19477a4a8219ecbb3ec47a12f2727b60290dd7f949ce21e360"
+    },
+    "tmp/p02-seventh-20261108/k5-world-retry/before-cancel/result.json": {
+      "bytes": 1912,
+      "sha256": "405345065f833b1377dfba8f830f8a5938b8754caa4d72e3f1de7307ea74d068"
+    },
+    "tmp/p02-seventh-20261108/k5-world-retry/before-cancel/stderr": {
+      "bytes": 251,
+      "sha256": "9e67fcc93ea7f9806421104905a3f6fcb3a63a9dc645f93dcbe928286a2f179c"
+    },
+    "tmp/p02-seventh-20261108/k5-world-retry/before-cancel/stdout": {
+      "bytes": 75,
+      "sha256": "83cf0b082206af2aa236c83064fbcfa76be1e00a4aa3558574b2f65965d9481c"
+    },
+    "tmp/p02-seventh-20261108/k5-world-retry/before-complete/command.json": {
+      "bytes": 998,
+      "sha256": "4368ead33dffe37a684ce3d4478652765ec898e278dd054334429acaabf04eba"
+    },
+    "tmp/p02-seventh-20261108/k5-world-retry/before-complete/process.json": {
+      "bytes": 67,
+      "sha256": "d0a0df33c8177f19477a4a8219ecbb3ec47a12f2727b60290dd7f949ce21e360"
+    },
+    "tmp/p02-seventh-20261108/k5-world-retry/before-complete/result.json": {
+      "bytes": 2186,
+      "sha256": "3c03a0c78dad8cda809c1b38c5076e27dc2ff8bd394d20a3277aabdaa0dad766"
+    },
+    "tmp/p02-seventh-20261108/k5-world-retry/before-complete/stderr": {
+      "bytes": 251,
+      "sha256": "8c4de5f59c104e15351f775e8e18176f0e40d7349f3d0ba39f4f65493d9adbed"
+    },
+    "tmp/p02-seventh-20261108/k5-world-retry/before-complete/stdout": {
+      "bytes": 75,
+      "sha256": "83cf0b082206af2aa236c83064fbcfa76be1e00a4aa3558574b2f65965d9481c"
+    },
+    "tmp/p02-seventh-20261108/k5-world-retry/preflight.json": {
+      "bytes": 1664,
+      "sha256": "eccb41b4f72d8572c18b74056f73d9d809efc8183306cb1d4a3631d65f133cc2"
+    },
+    "tmp/p02-seventh-20261108/k5-world-retry/processes.json": {
+      "bytes": 241,
+      "sha256": "07068a3e2ab2e7002e04a38ea41f588ff5643ea2b5f4442943cb33b72e9272a7"
+    },
+    "tmp/p02-seventh-20261108/k5-world-run.py": {
+      "bytes": 2560,
+      "sha256": "92fa760f6400b5b17e28d1b864df888e0f2ffbc26352c448be703e4b5bdd89d4"
+    },
+    "tmp/p02-seventh-20261108/k6-worldlink-retry/after-clean/command.json": {
+      "bytes": 857,
+      "sha256": "0eaee9037b38cb3874ffa28e8ea60351d51ac7942ca7961c91888dc925800269"
+    },
+    "tmp/p02-seventh-20261108/k6-worldlink-retry/after-clean/process.json": {
+      "bytes": 412,
+      "sha256": "6967f73a53faf2f067e723cacbd655b6a0ab5456b07439ea620dcc1bbdd0f633"
+    },
+    "tmp/p02-seventh-20261108/k6-worldlink-retry/after-clean/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-44-26-33040-125427879.jsonl": {
+      "bytes": 16091,
+      "sha256": "d79fb3bfe5fe8129ea865f54842c80d6e02adfca2326678b4b9c0861fd9eb73f"
+    },
+    "tmp/p02-seventh-20261108/k6-worldlink-retry/after-clean/stderr": {
+      "bytes": 582,
+      "sha256": "6181d3dbafaab9a8ea72898f1ee1ed0fbe5bab47de20820ba5291fd86244275f"
+    },
+    "tmp/p02-seventh-20261108/k6-worldlink-retry/after-clean/stdout": {
+      "bytes": 634,
+      "sha256": "db6ffd9af9c116908a3b0e53458d560da5c776ab051d0697f162b1af2dc39133"
+    },
+    "tmp/p02-seventh-20261108/k6-worldlink-retry/after-returning/command.json": {
+      "bytes": 873,
+      "sha256": "8d19787c5cc8a62b7e0690d5a851a02f490c05f03acd53784d69955b1e28139e"
+    },
+    "tmp/p02-seventh-20261108/k6-worldlink-retry/after-returning/process.json": {
+      "bytes": 344,
+      "sha256": "60dc2599265f41339bb7488fe247a67e0983026c23c11b7b524d19a8e1e6bb97"
+    },
+    "tmp/p02-seventh-20261108/k6-worldlink-retry/after-returning/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-46-42-2712-119438106.jsonl": {
+      "bytes": 16091,
+      "sha256": "bce2573fca3824d57e50cd37a7635f2e92ac4cdfa9076c70de979d35a2191860"
+    },
+    "tmp/p02-seventh-20261108/k6-worldlink-retry/after-returning/stderr": {
+      "bytes": 252,
+      "sha256": "6b4583c5551163f6340fbb3e2066cf020c632195aac365a8a1e723d015cda292"
+    },
+    "tmp/p02-seventh-20261108/k6-worldlink-retry/after-returning/stdout": {
+      "bytes": 703,
+      "sha256": "30c5f9750336a7c4407cd69000cf1441acbf4c3fe7fcc168bfc957f77b3a7fff"
+    },
+    "tmp/p02-seventh-20261108/k6-worldlink-retry/before-clean/command.json": {
+      "bytes": 862,
+      "sha256": "116f0df33dfcaa0fad7d9fb6c14b208935049470bb1e20155931e7de5b78d2d9"
+    },
+    "tmp/p02-seventh-20261108/k6-worldlink-retry/before-clean/process.json": {
+      "bytes": 413,
+      "sha256": "d27a887e939bd14fb73c11b0449a55ccc230e6bda33dae082bb6b4307d11a2c9"
+    },
+    "tmp/p02-seventh-20261108/k6-worldlink-retry/before-clean/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-40-02-12068-118298793.jsonl": {
+      "bytes": 16091,
+      "sha256": "b4ad1cebfe1cd49c710231332fda367b668cc4b73d16595c2c87e07039cb4855"
+    },
+    "tmp/p02-seventh-20261108/k6-worldlink-retry/before-clean/stderr": {
+      "bytes": 582,
+      "sha256": "acb6056197fda3f4ce4a014e2aa27c33b79adb711b9b764e321dc97102722bc8"
+    },
+    "tmp/p02-seventh-20261108/k6-worldlink-retry/before-clean/stdout": {
+      "bytes": 636,
+      "sha256": "6fc9314c70501241275931615e9936d1edab30427b8e340847ea387530bb7976"
+    },
+    "tmp/p02-seventh-20261108/k6-worldlink-retry/before-returning/command.json": {
+      "bytes": 878,
+      "sha256": "0f721cbd01636cf8541bca1de3ed83cdb88040bfcd6348d5d0a20832031dc8c5"
+    },
+    "tmp/p02-seventh-20261108/k6-worldlink-retry/before-returning/process.json": {
+      "bytes": 345,
+      "sha256": "12adcc0446ad36b44af2e2c9dd1f3d5332600d9628b78235c02bffe492682bb9"
+    },
+    "tmp/p02-seventh-20261108/k6-worldlink-retry/before-returning/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T17-42-04-32428-105772330.jsonl": {
+      "bytes": 16091,
+      "sha256": "465b442c8814adcf3e2904c3315b2409be85820cb501484bc5d0afa3bd0b7460"
+    },
+    "tmp/p02-seventh-20261108/k6-worldlink-retry/before-returning/stderr": {
+      "bytes": 252,
+      "sha256": "6b4583c5551163f6340fbb3e2066cf020c632195aac365a8a1e723d015cda292"
+    },
+    "tmp/p02-seventh-20261108/k6-worldlink-retry/before-returning/stdout": {
+      "bytes": 706,
+      "sha256": "244ede75b86e1cff7d424a071dfc24a35a2849d8072fcff2521eb64d17ca9434"
+    },
+    "tmp/p02-seventh-20261108/k6-worldlink-retry/preflight.json": {
+      "bytes": 1468,
+      "sha256": "d88afde2fe442b5ebbf7a51d6aefcf06e7691f7c9dcb6f6bbe5a85cbb7ffc918"
+    },
+    "tmp/p02-seventh-20261108/k6-worldlink-retry/processes.json": {
+      "bytes": 1629,
+      "sha256": "a3b3cfa6a6a7f6609d5289dca59209bce5c6b283a95d515c05fcee95cac4958b"
+    },
+    "tmp/p02-seventh-20261108/k6-worldlink.py": {
+      "bytes": 2853,
+      "sha256": "41f8be8cbff9f479914fa3e057a7293777419211ae14cb6eacb51421985812c7"
+    },
+    "tmp/p02-seventh-20261108/live-v4-inputs.json": {
+      "bytes": 869691,
+      "sha256": "da5ef9d7e535ac2390ed8fc55e98bd5f391aafe1774c049401732e1ce63ff05a"
+    },
+    "tmp/p02-seventh-20261108/live-v4-inputs.py": {
+      "bytes": 1828,
+      "sha256": "e612074e4a1f231e85d93e7d34df3d70c7a4dfb81972ea6af0891d46ceedb2c2"
+    },
+    "tmp/p02-seventh-20261108/live-v4-workspace.json": {
+      "bytes": 6109374,
+      "sha256": "0cbfd4f44ad9f250bb5cebed3355d841f060e9bcd2d8c602cea142643fdae928"
+    },
+    "tmp/p02-seventh-20261108/PLAN-v2.md": {
+      "bytes": 10457,
+      "sha256": "b89d18a65229bb3e38c782a19bf6a0bb7e4dcb380e748bb5046bd5b4fc56fcae"
+    },
+    "tmp/p02-seventh-20261108/PLAN-v3.md": {
+      "bytes": 4437,
+      "sha256": "6f1e0a2c53d7cee1f7e34dbfdb279c9ba29fa6ed30dbd809f68cb00fb0f9570a"
+    },
+    "tmp/p02-seventh-20261108/PLAN-v4.md": {
+      "bytes": 7096,
+      "sha256": "e6576f09c49e1cd147ac994f3b8b7ab4dca1bd9afff607285773d2274dc5b976"
+    },
+    "tmp/p02-seventh-20261108/PLAN-v5.md": {
+      "bytes": 4209,
+      "sha256": "d064c3e280345fea1e1c026a8b7941f5fc0bb61ad2d7492d9da3d3249d3bb904"
+    },
+    "tmp/p02-seventh-20261108/PLAN.md": {
+      "bytes": 9490,
+      "sha256": "ee8709a706beccabe02adbfaf1dbf413a5688bc5842e541cc6cb67f3eafb3e5b"
+    },
+    "tmp/p02-seventh-20261108/precopy-workspace.json": {
+      "bytes": 4463,
+      "sha256": "c70eb5f94587772a01e63e442aa0890e53f8bd5b7e687862f79eb17f01b71d13"
+    },
+    "tmp/p02-seventh-20261108/precopy.py": {
+      "bytes": 1835,
+      "sha256": "73d9a06b044f3d0d6c89da134001f44b88d9a49055aad580bba861d9e4a91634"
+    },
+    "tmp/p02-seventh-20261108/render-probe-v2.gd": {
+      "bytes": 2766,
+      "sha256": "7d1a7e47277997dd9b6c1cf56465d8c321c6276bce329a71a24b39b54970803a"
+    },
+    "tmp/p02-seventh-20261108/render-probe.gd": {
+      "bytes": 2777,
+      "sha256": "8241d5806f470ff28db514e9c79abeb83112a27f219603770b1a70d47263942e"
+    },
+    "tmp/p02-seventh-20261108/REVIEW-5B-INDEPENDENT.md": {
+      "bytes": 3805,
+      "sha256": "2ccd62c76805e722f50f5a828ae719be5c135ef5b2b201e583b7dfb8a8787636"
+    },
+    "tmp/p02-seventh-20261108/REVIEW-PLAN-INDEPENDENT.md": {
+      "bytes": 2769,
+      "sha256": "1d473749039336c235c581f65b766cffba385b903aadaf132d9db2ec45d4e5af"
+    },
+    "tmp/p02-seventh-20261108/REVIEW-PLAN-V2-INDEPENDENT.md": {
+      "bytes": 1040,
+      "sha256": "aa61a9836ae6c8612555a9e8b588f363808546db5470be3ffcbe81f7fdb41cf1"
+    },
+    "tmp/p02-seventh-20261108/REVIEW-PLAN-V3-INDEPENDENT.md": {
+      "bytes": 1269,
+      "sha256": "17b00916a268005c93c246f755babbc31c4eca5198516c9adb363f6ad7ac3c35"
+    },
+    "tmp/p02-seventh-20261108/REVIEW-PLAN-V4-INDEPENDENT.md": {
+      "bytes": 1823,
+      "sha256": "894a6ad702a3837d33ea27556354aca77312104c8b00c17989b83c3bbdad0941"
+    },
+    "tmp/p02-seventh-20261108/REVIEW-PLAN-V5-INDEPENDENT.md": {
+      "bytes": 1409,
+      "sha256": "da9176b346f330a838cb6e277fc13d11e486ebadccae318ee6eeb52b7a7fbf61"
+    },
+    "tmp/p02-seventh-20261108/roster-probe.gd": {
+      "bytes": 1535,
+      "sha256": "b2ed7780f354c33c9584de0183ec1561e1835657f8f422a56779dab3be5d4ce4"
+    },
+    "tmp/p02-seventh-20261108/run-buttons.py": {
+      "bytes": 1776,
+      "sha256": "03d2edf08bf6a9a45a8430fc298d6358702a5857fbfc70f80ee0f971a9dab7ee"
+    },
+    "tmp/p02-seventh-20261108/run-gui-v2.py": {
+      "bytes": 1771,
+      "sha256": "196e13f3de4db5c886f054484fd9626efe967a027edc863a0efb3cbc299b51a6"
+    },
+    "tmp/p02-seventh-20261108/run-gui.py": {
+      "bytes": 1710,
+      "sha256": "e230a74704fbe99ec9aac37e34c5b3e2f144ee44d62322dbe3969155cf3c1113"
+    },
+    "tmp/p02-seventh-20261108/run-input.py": {
+      "bytes": 1775,
+      "sha256": "275daa3ba159ee32db98e5e48e7a4f4aff1a4d4e972edf1c531dad3cfc8b5db2"
+    },
+    "tmp/p02-seventh-20261108/run-render-v2.py": {
+      "bytes": 1781,
+      "sha256": "e481d4a724954d7a18e31d6c3a8fcbf11eb3e20cc96ddb42321a0b445c8715da"
+    },
+    "tmp/p02-seventh-20261108/run-render.py": {
+      "bytes": 1776,
+      "sha256": "ebd2c8abaf885584bee6eea5da95c5baec321d60e5b1bf011c44c35831b52abe"
+    },
+    "tmp/p02-seventh-20261108/run-roster.py": {
+      "bytes": 1730,
+      "sha256": "c93da126eeaf9ff8d741aef6d88d59a154a00d4894b5522983784c50ec53aff3"
+    },
+    "tmp/p02-seventh-20261108/run-v2.py": {
+      "bytes": 3990,
+      "sha256": "f31b36e25f63dd6d43ee8708420e10a521dd000248e0f570668a910ef5e87c9d"
+    },
+    "tmp/p02-seventh-20261108/run-world-before.py": {
+      "bytes": 4329,
+      "sha256": "57858d2dc8afe51dad5245ce9100d53c82ff231092a1f63ceeef7adbb202fe4f"
+    },
+    "tmp/p02-seventh-20261108/run.py": {
+      "bytes": 3843,
+      "sha256": "2285e1a31b75fbeb6f0d88fa7bd75bfe78d6e68dfe99e2dc4ef280b3d7c55cc7"
+    },
+    "tmp/p02-seventh-20261108/trace-comparison-detail.json": {
+      "bytes": 13309,
+      "sha256": "3a6f24cb885b5302f48ee434bc7dbcb5826796f8f87f8baac7e5070943fb4c15"
+    },
+    "tmp/p02-seventh-20261108/trace-detail.py": {
+      "bytes": 1186,
+      "sha256": "9892c6388b22ff631969a06448105d83bcd65a64a21639113c8ee7b835140cc3"
+    },
+    "tmp/p02-seventh-20261108/trace-diff.py": {
+      "bytes": 809,
+      "sha256": "68859996a381b5484aab037420c418b366cfef3675607397196fcc78f94de164"
+    },
+    "tmp/p02-sixth-20261108/native-oracle.json": {
+      "bytes": 2915,
+      "sha256": "204bce6ac85a14d559774b5e08ea5a8c73701d2f0d91d21320364355c136e943"
+    },
+    "tmp/p02-sixth-20261108/product-host-atomic-v4.gd": {
+      "bytes": 7767,
+      "sha256": "4aede059bead77b652f0eb5748d7d1eeaf353d424f4853958768723e88f80033"
+    },
+    "tmp/p02-sixth-20261108/product-host-common-v2.gd": {
+      "bytes": 8040,
+      "sha256": "96a14d5977246ceac86664783fe820744240c3b17ef820f81442ec78847be23c"
+    },
+    "tmp/p02-sixth-20261108/returning-settings.cfg": {
+      "bytes": 30,
+      "sha256": "c8b752aba9f5015889c00c5a45db9fef916af2a1e1be3e68d49b8121b2db721b"
+    },
+    "tmp/p02-sixth-20261108/trace-oracle-v4.json": {
+      "bytes": 6482,
+      "sha256": "98912c262c2605497762ed60ac557172144a846c74a5038305010122b2dcd3de"
+    },
+    "tmp/p02-sixth-20261108/verify-trace-v4.py": {
+      "bytes": 1387,
+      "sha256": "6b28306dc53eaf5a772279c5b690e70641a8eca43c9ee50804f4d39b1a6a109a"
+    },
+    "tmp/p02-sixth-20261108/world-probe.gd": {
+      "bytes": 275,
+      "sha256": "adc4a42eb5fe9921cc616bdffd71d7e18a542e2eb9c5b44f6ed7d58ac1332b87"
+    }
+  }
+}

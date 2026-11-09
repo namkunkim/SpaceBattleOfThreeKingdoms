@@ -1,0 +1,11 @@
+[
+  "C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1105-1297-0_26.1105.1297.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.exe",
+  "-NoProfile",
+  "-NonInteractive",
+  "-File",
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-pc-next-20261109\\launch-direct.ps1",
+  "-CommandFile",
+  "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-pc-next-20261109\\attempt-03\\after\\direct\\command.json",
+  "-SourceSha",
+  "07e044b14f063ac2ca2ae63ceb7e947d28d1af6b38413955d1957d9b1ae15260"
+]

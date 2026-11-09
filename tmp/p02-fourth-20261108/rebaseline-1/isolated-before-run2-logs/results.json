@@ -1,0 +1,273 @@
+{
+  "cases": [
+    {
+      "label": "probe",
+      "exit": 0,
+      "timeout": false,
+      "seconds": 1.589,
+      "files": {
+        "probe.stdout": {
+          "bytes": 2433,
+          "sha256": "85c8afe447e70c3cbf129b0a65d1e77e46ff0e82dd94168f4525543fe3c4e51d"
+        },
+        "probe.stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "probe.engine.log": {
+          "bytes": 2259,
+          "sha256": "971583a86d23c85823db1f6de1af11863fa030fa346cbf88e09107abe45d5035"
+        }
+      },
+      "probe": {
+        "cache": "0eb214ebcc65cd2ca7b9d98dc83f61a9c170ca75b1b23acf4c3c58fdfb550ab1",
+        "guard": "",
+        "res": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fourth-20261108/rebaseline-1/isolated-before/",
+        "resources": [
+          "res://core/battle/operation_private_state.gd",
+          "res://core/battle/battle_sim.gd",
+          "res://core/battle/detection.gd",
+          "res://scenes/FleetBattle3D.tscn"
+        ],
+        "uid": "19118dfdf835797d2bcdb8c8d870a3b72d8e3999aac37cdca1f20cff77e24595",
+        "user": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fourth-20261108/rebaseline-1/isolated-before-run2-logs/user/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/",
+        "version": "4.7.2-stable (official)"
+      },
+      "passed": true
+    },
+    {
+      "label": "p02_headless_adapter",
+      "exit": 0,
+      "timeout": false,
+      "seconds": 20.086,
+      "files": {
+        "p02_headless_adapter.stdout": {
+          "bytes": 148,
+          "sha256": "9be87160389ce04ef3fd8d05c5fedcd8887ce232df1ecc08de01845327920c78"
+        },
+        "p02_headless_adapter.stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "p02_headless_adapter.engine.log": {
+          "bytes": 145,
+          "sha256": "61449bc66d177851e3325d5401d85bc17a95a87692235173d79aecf2361f6c6f"
+        }
+      },
+      "markers": [
+        "P02_ADAPTER_PASS cases=8 checks=13417 rejections=32 natural=7 timeout=1"
+      ],
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "loaded_resources": [],
+      "output": {
+        "bytes": 20985,
+        "sha256": "5e77c23183b9a77fa56fbf0dfb829dc27b2104678fa96add8e54a44e77ef89a3"
+      },
+      "passed": true
+    },
+    {
+      "label": "p02_worker_adapter",
+      "exit": 0,
+      "timeout": false,
+      "seconds": 1.437,
+      "files": {
+        "p02_worker_adapter.stdout": {
+          "bytes": 1314,
+          "sha256": "47dc57e02cd6d79e467737f63adc02675c93628143ea94287f7a9e321125f85b"
+        },
+        "p02_worker_adapter.stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "p02_worker_adapter.engine.log": {
+          "bytes": 1308,
+          "sha256": "02cced99fdcb703222b10d09c18fc10689153e90d354d09b4be2b8405462dff4"
+        }
+      },
+      "markers": [
+        "P02_WORKER_CHECKS 59 running_frames_observed=59"
+      ],
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "loaded_resources": [],
+      "passed": true
+    },
+    {
+      "label": "p02_replay_adapter",
+      "exit": 0,
+      "timeout": false,
+      "seconds": 1.611,
+      "files": {
+        "p02_replay_adapter.stdout": {
+          "bytes": 116,
+          "sha256": "b280956957a0224a3894a2007d8caa1c173ea908bfbecfd9bfb26b58ab7c5a70"
+        },
+        "p02_replay_adapter.stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "p02_replay_adapter.engine.log": {
+          "bytes": 113,
+          "sha256": "d8150899aad0ffd9bdaf3caec2fe72d58d62de24a8446f50feb0c295385da712"
+        }
+      },
+      "markers": [
+        "P02_REPLAY_PASS cases=14 assertions=101"
+      ],
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "loaded_resources": [],
+      "passed": true
+    },
+    {
+      "label": "detection_rules",
+      "exit": 0,
+      "timeout": false,
+      "seconds": 41.116,
+      "files": {
+        "detection_rules.stdout": {
+          "bytes": 97,
+          "sha256": "d15d5b1a542db30ab3183f57bc178aeee63ebda48b15898f5d985e4cf292cb50"
+        },
+        "detection_rules.stderr": {
+          "bytes": 252,
+          "sha256": "be53421b8335d42408b49bf36a8d6c5b380de54cc4dff26e0ef4d807cdccc626"
+        },
+        "detection_rules.engine.log": {
+          "bytes": 94,
+          "sha256": "4fb41698c9e3d977a828df94523687cf662705b2f603121ee345285035d41032"
+        }
+      },
+      "markers": [
+        "DETECTION_RULES_PASS"
+      ],
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 1,
+        "WARNING": 1
+      },
+      "loaded_resources": [],
+      "passed": true
+    },
+    {
+      "label": "battle_flow",
+      "exit": 0,
+      "timeout": false,
+      "seconds": 14.999,
+      "files": {
+        "battle_flow.stdout": {
+          "bytes": 1227,
+          "sha256": "5029afebbd1a6b2d07731a43bd79a61d4760d760cefe22f170dbfa2633dfd370"
+        },
+        "battle_flow.stderr": {
+          "bytes": 252,
+          "sha256": "34adaf6dbf4d9e7d0efec99d26e324013ab4b4319b04fefc8a480cd7c2d22827"
+        },
+        "battle_flow.engine.log": {
+          "bytes": 1219,
+          "sha256": "5edd30d9d461098e09382717e81ca2281a612c26b286fec4390e5cc659fc1c45"
+        }
+      },
+      "markers": [
+        "BATTLE_FLOW_PASS"
+      ],
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 1,
+        "WARNING": 1
+      },
+      "loaded_resources": [],
+      "passed": true
+    },
+    {
+      "label": "placement",
+      "exit": 0,
+      "timeout": false,
+      "seconds": 1.338,
+      "files": {
+        "placement.stdout": {
+          "bytes": 91,
+          "sha256": "4656db55de3a9b66da9350827c3650eed419ca3d517dc26a1f6ffaf0b62d07c7"
+        },
+        "placement.stderr": {
+          "bytes": 251,
+          "sha256": "55ac6eb53ea3e6cd0ff34ab96a414dec9ca2b4b918b8ca9da625bb8ea82cd2d8"
+        },
+        "placement.engine.log": {
+          "bytes": 88,
+          "sha256": "4b36059c1cd39ec5597d352448c80e0debc02ff0b10b292586351ae588d10eed"
+        }
+      },
+      "markers": [
+        "PLACEMENT_PASS"
+      ],
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 1,
+        "WARNING": 1
+      },
+      "loaded_resources": [],
+      "passed": true
+    },
+    {
+      "label": "i01b_active_replace",
+      "exit": 0,
+      "timeout": false,
+      "seconds": 11.994,
+      "files": {
+        "i01b_active_replace.stdout": {
+          "bytes": 152,
+          "sha256": "aae30c173c9a0a685839cb3ebeb4d471143f8004a9faf48dac6a8ff3a852a5a9"
+        },
+        "i01b_active_replace.stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "i01b_active_replace.engine.log": {
+          "bytes": 149,
+          "sha256": "bc7b033ccafcf40e5bd53ebcdeee674d50c069c01e7d2dbbabf14b1336a5be16"
+        }
+      },
+      "markers": [
+        "I01B_ACTIVE_REPLACE_PASS cases=20 checks=20099 rejections=8 refusal_calls=9"
+      ],
+      "diagnostics": {
+        "SCRIPT ERROR": 0,
+        "ERROR": 0,
+        "WARNING": 0
+      },
+      "loaded_resources": [],
+      "output": {
+        "bytes": 3510,
+        "sha256": "d2da6302f08ef237788bd6209835d0f22d842208762eb838abacfc8302eed580"
+      },
+      "passed": true
+    }
+  ],
+  "freeze_changes": [],
+  "processes": 8,
+  "user_files": {
+    "roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T14-27-51-23808-959808.jsonl": {
+      "bytes": 3234,
+      "sha256": "8ca20212ade06f2e5970cf3c026bcd25a717c3c2ed3b6e4258e1f0893db395ee"
+    },
+    "roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T14-27-52-23808-2136203.jsonl": {
+      "bytes": 46072,
+      "sha256": "e8690d3a1e916fc29f9063ea586519758e8b6644255abf337df92c04559bd244"
+    },
+    "roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T14-27-52-23808-2437755.jsonl": {
+      "bytes": 46686,
+      "sha256": "5668b1407e9ed8f10c53255e0507694be1c39fb2164ea544e704e6697c32fa65"
+    }
+  }
+}

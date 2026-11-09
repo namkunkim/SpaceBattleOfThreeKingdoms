@@ -1,0 +1,13 @@
+{
+  "utc": "2026-11-08T19:43:18.371483+00:00",
+  "deleted_path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-return-notice-20261109\\attempt-01\\project\\.godot",
+  "deleted_files": 1336,
+  "deleted_bytes": 334714454,
+  "inventory_sha256": "65181402f268de376480fe5fbad8761e2e8b7a0fb9910fb646cd84c6fa92491c",
+  "free_before_bytes": 2926399488,
+  "free_after_bytes": 3261575168,
+  "observed_free_delta_bytes": 335175680,
+  "protected_attempt_paths": 1733,
+  "original_cache_stat_paths": 2660,
+  "requires_reimport": true
+}

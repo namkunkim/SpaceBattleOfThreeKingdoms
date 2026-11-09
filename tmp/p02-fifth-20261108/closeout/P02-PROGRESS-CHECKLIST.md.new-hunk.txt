@@ -1,0 +1,5 @@
+## 한정 수용 완료 — legacy WorldMap 결산 경계
+
+- [x] 실제 legacy 자동 해결 worker의 결산 사본과 메인 join 후 게시 경계를 분리했다. 제품 자동·직접 공통 18행·106단언은 전후 일치했고 사후 경계 7행·33단언은 통과했다. clean-user WorldLink 기존 단일 실패와 returning-user 통과를 따로 기록한다. 독립 5-b 한정 수용이며 제품 operation은 미완료다. [결과](P02-LEGACY-OUTCOME-RESULT-20261108.md) · [전용 체크리스트](P02-LEGACY-OUTCOME-CHECKLIST-20261108.md) · [최신 인계](SESSION-HANDOFF-P02-LEGACY-OUTCOME-20261108.md) · [전달 ZIP](../../../tmp/p02-fifth-20261108/closeout/P02-LEGACY-OUTCOME-DELIVERY-20261108.zip)
+
+## 남은 인수

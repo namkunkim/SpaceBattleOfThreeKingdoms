@@ -1,0 +1,84 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+NORMAL_PREPARE ok=true
+EMPTY_FORM_PREPARE ok=true error=
+EMPTY_FORM_BEFORE_MISSILE size=0 target=2
+SCRIPT ERROR: Modulo by zero error in operator '%'.
+   at: ship_pos (res://core/battle/rules.gd:118)
+   GDScript backtrace (most recent call first):
+       [0] ship_pos (res://core/battle/rules.gd:118)
+       [1] _rand_ship (res://core/battle/battle_sim.gd:262)
+       [2] _fire_missiles (res://core/battle/battle_sim.gd:325)
+       [3] _cmd_weapon (res://core/battle/battle_sim.gd:852)
+       [4] apply (res://core/battle/battle_sim.gd:575)
+       [5] _apply_human (res://core/battle/battle_sim.gd:152)
+       [6] issue (res://core/battle/battle_sim.gd:146)
+       [7] _command (res://core/battle/operation_private_state.gd:219)
+       [8] issue (res://core/battle/operation_private_state.gd:207)
+       [9] _run (res://tmp/i01b-p2c-resume-20261101/empty-form-probe2.gd:29)
+SCRIPT ERROR: Modulo by zero error in operator '%'.
+   at: ship_pos (res://core/battle/rules.gd:118)
+   GDScript backtrace (most recent call first):
+       [0] ship_pos (res://core/battle/rules.gd:118)
+       [1] _rand_ship (res://core/battle/battle_sim.gd:262)
+       [2] _fire_missiles (res://core/battle/battle_sim.gd:325)
+       [3] _cmd_weapon (res://core/battle/battle_sim.gd:852)
+       [4] apply (res://core/battle/battle_sim.gd:575)
+       [5] _apply_human (res://core/battle/battle_sim.gd:152)
+       [6] issue (res://core/battle/battle_sim.gd:146)
+       [7] _command (res://core/battle/operation_private_state.gd:219)
+       [8] issue (res://core/battle/operation_private_state.gd:207)
+       [9] _run (res://tmp/i01b-p2c-resume-20261101/empty-form-probe2.gd:29)
+SCRIPT ERROR: Modulo by zero error in operator '%'.
+   at: ship_pos (res://core/battle/rules.gd:118)
+   GDScript backtrace (most recent call first):
+       [0] ship_pos (res://core/battle/rules.gd:118)
+       [1] _rand_ship (res://core/battle/battle_sim.gd:262)
+       [2] _fire_missiles (res://core/battle/battle_sim.gd:325)
+       [3] _cmd_weapon (res://core/battle/battle_sim.gd:852)
+       [4] apply (res://core/battle/battle_sim.gd:575)
+       [5] _apply_human (res://core/battle/battle_sim.gd:152)
+       [6] issue (res://core/battle/battle_sim.gd:146)
+       [7] _command (res://core/battle/operation_private_state.gd:219)
+       [8] issue (res://core/battle/operation_private_state.gd:207)
+       [9] _run (res://tmp/i01b-p2c-resume-20261101/empty-form-probe2.gd:29)
+SCRIPT ERROR: Modulo by zero error in operator '%'.
+   at: ship_pos (res://core/battle/rules.gd:118)
+   GDScript backtrace (most recent call first):
+       [0] ship_pos (res://core/battle/rules.gd:118)
+       [1] _rand_ship (res://core/battle/battle_sim.gd:262)
+       [2] _fire_missiles (res://core/battle/battle_sim.gd:325)
+       [3] _cmd_weapon (res://core/battle/battle_sim.gd:852)
+       [4] apply (res://core/battle/battle_sim.gd:575)
+       [5] _apply_human (res://core/battle/battle_sim.gd:152)
+       [6] issue (res://core/battle/battle_sim.gd:146)
+       [7] _command (res://core/battle/operation_private_state.gd:219)
+       [8] issue (res://core/battle/operation_private_state.gd:207)
+       [9] _run (res://tmp/i01b-p2c-resume-20261101/empty-form-probe2.gd:29)
+SCRIPT ERROR: Modulo by zero error in operator '%'.
+   at: ship_pos (res://core/battle/rules.gd:118)
+   GDScript backtrace (most recent call first):
+       [0] ship_pos (res://core/battle/rules.gd:118)
+       [1] _rand_ship (res://core/battle/battle_sim.gd:262)
+       [2] _fire_missiles (res://core/battle/battle_sim.gd:325)
+       [3] _cmd_weapon (res://core/battle/battle_sim.gd:852)
+       [4] apply (res://core/battle/battle_sim.gd:575)
+       [5] _apply_human (res://core/battle/battle_sim.gd:152)
+       [6] issue (res://core/battle/battle_sim.gd:146)
+       [7] _command (res://core/battle/operation_private_state.gd:219)
+       [8] issue (res://core/battle/operation_private_state.gd:207)
+       [9] _run (res://tmp/i01b-p2c-resume-20261101/empty-form-probe2.gd:29)
+SCRIPT ERROR: Modulo by zero error in operator '%'.
+   at: ship_pos (res://core/battle/rules.gd:118)
+   GDScript backtrace (most recent call first):
+       [0] ship_pos (res://core/battle/rules.gd:118)
+       [1] _rand_ship (res://core/battle/battle_sim.gd:262)
+       [2] _fire_missiles (res://core/battle/battle_sim.gd:325)
+       [3] _cmd_weapon (res://core/battle/battle_sim.gd:852)
+       [4] apply (res://core/battle/battle_sim.gd:575)
+       [5] _apply_human (res://core/battle/battle_sim.gd:152)
+       [6] issue (res://core/battle/battle_sim.gd:146)
+       [7] _command (res://core/battle/operation_private_state.gd:219)
+       [8] issue (res://core/battle/operation_private_state.gd:207)
+       [9] _run (res://tmp/i01b-p2c-resume-20261101/empty-form-probe2.gd:29)
+EMPTY_FORM_ISSUE result={ "ok": true }

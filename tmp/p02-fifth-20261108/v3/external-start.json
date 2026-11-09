@@ -1,0 +1,1273 @@
+{
+  "utc_observation": "2026-11-08T06:58:12.562830+00:00",
+  "baseline_count": 12281,
+  "owned_drift": {
+    "scripts/world/auto_resolver.gd": {
+      "before": {
+        "bytes": 6488,
+        "sha256": "50fd0ee2d41b0abd5b86d05a76b861b5d63a6275925369e03460dbcc66e2d679",
+        "changed_while_reading": false
+      },
+      "now": {
+        "bytes": 8058,
+        "sha256": "85ec124df59c0c50cee616565e88bcdd978588f28baf36180f8ec2c92eebd9eb",
+        "modified_ns": 1794120640760752900,
+        "created_ns": 1792302382023393100
+      }
+    },
+    "scripts/world/battle_outcome.gd": {
+      "before": {
+        "bytes": 4977,
+        "sha256": "94c90497fedd060e734a41222cad7f090523d723ff14a5bf80b6568e480242b0",
+        "changed_while_reading": false
+      },
+      "now": {
+        "bytes": 5417,
+        "sha256": "1586ec11745640a1aa8b6d9c7fdfacd515553ac8e4be634394c552c03843d162",
+        "modified_ns": 1794120640470011400,
+        "created_ns": 1792302382024952600
+      }
+    }
+  },
+  "new_in_before_run": [
+    "tmp/p03-command-suffix-20261107/HANDOFF.md",
+    "tmp/p03-command-suffix-20261107/P03-CHECKLIST-CLOSEOUT-20261108.md",
+    "tmp/p03-command-suffix-20261107/P03-COMMAND-SUFFIX-DELIVERY-20261108.zip",
+    "tmp/p03-command-suffix-20261107/RESULT.md",
+    "tmp/p03-command-suffix-20261107/REVIEW-CLOSEOUT.md",
+    "tmp/p03-command-suffix-20261107/archive-verification.json",
+    "tmp/p03-command-suffix-20261107/diff-check.stderr",
+    "tmp/p03-command-suffix-20261107/diff-check.stdout",
+    "tmp/p03-command-suffix-20261107/final-status.z",
+    "tmp/p03-command-suffix-20261107/new-file-whitespace.json",
+    "tmp/p03-command-suffix-20261107/preservation.json",
+    "tmp/p03-command-suffix-20261107/record-manifest.json",
+    "tmp/p03-context-metadata-20261108/.gdignore",
+    "tmp/p03-context-metadata-20261108/CHECKLIST.md",
+    "tmp/p03-context-metadata-20261108/HANDOFF.md",
+    "tmp/p03-context-metadata-20261108/P03-CONTEXT-METADATA-DELIVERY-20261108.zip",
+    "tmp/p03-context-metadata-20261108/PLAN-v2.md",
+    "tmp/p03-context-metadata-20261108/PLAN.md",
+    "tmp/p03-context-metadata-20261108/RESULT.md",
+    "tmp/p03-context-metadata-20261108/REVIEW-5B-attempt-03.md",
+    "tmp/p03-context-metadata-20261108/REVIEW-CLOSEOUT.md",
+    "tmp/p03-context-metadata-20261108/REVIEW-PLAN.md",
+    "tmp/p03-context-metadata-20261108/archive-verification.json",
+    "tmp/p03-context-metadata-20261108/attempt-01/engine-version.stderr",
+    "tmp/p03-context-metadata-20261108/attempt-01/engine-version.stdout",
+    "tmp/p03-context-metadata-20261108/attempt-01/input-after.json",
+    "tmp/p03-context-metadata-20261108/attempt-01/input-before.json",
+    "tmp/p03-context-metadata-20261108/attempt-01/run.json",
+    "tmp/p03-context-metadata-20261108/attempt-01/runner.gd.txt",
+    "tmp/p03-context-metadata-20261108/attempt-01/stderr.bin",
+    "tmp/p03-context-metadata-20261108/attempt-01/stdout.bin",
+    "tmp/p03-context-metadata-20261108/attempt-02/engine-version.stderr",
+    "tmp/p03-context-metadata-20261108/attempt-02/engine-version.stdout",
+    "tmp/p03-context-metadata-20261108/attempt-02/input-after.json",
+    "tmp/p03-context-metadata-20261108/attempt-02/input-before.json",
+    "tmp/p03-context-metadata-20261108/attempt-02/run.json",
+    "tmp/p03-context-metadata-20261108/attempt-02/runner.gd.txt",
+    "tmp/p03-context-metadata-20261108/attempt-02/stderr.bin",
+    "tmp/p03-context-metadata-20261108/attempt-02/stdout.bin",
+    "tmp/p03-context-metadata-20261108/attempt-03/engine-version.stderr",
+    "tmp/p03-context-metadata-20261108/attempt-03/engine-version.stdout",
+    "tmp/p03-context-metadata-20261108/attempt-03/input-after.json",
+    "tmp/p03-context-metadata-20261108/attempt-03/input-before.json",
+    "tmp/p03-context-metadata-20261108/attempt-03/run.json",
+    "tmp/p03-context-metadata-20261108/attempt-03/runner.gd.txt",
+    "tmp/p03-context-metadata-20261108/attempt-03/stderr.bin",
+    "tmp/p03-context-metadata-20261108/attempt-03/stdout.bin",
+    "tmp/p03-context-metadata-20261108/context_metadata.gd",
+    "tmp/p03-context-metadata-20261108/diff-check.stderr",
+    "tmp/p03-context-metadata-20261108/diff-check.stdout",
+    "tmp/p03-context-metadata-20261108/dirty-baseline.json",
+    "tmp/p03-context-metadata-20261108/dirty-end.z",
+    "tmp/p03-context-metadata-20261108/dirty-start.z",
+    "tmp/p03-context-metadata-20261108/final-status.z",
+    "tmp/p03-context-metadata-20261108/new-file-whitespace.json",
+    "tmp/p03-context-metadata-20261108/preservation.json",
+    "tmp/p03-context-metadata-20261108/record-manifest.json",
+    "tmp/p03-context-metadata-20261108/run_gate.py",
+    "tmp/p03-context-metadata-20261108/windows_job.py",
+    "tmp/p03-dictionary-context-fix-20261108/PLAN-v2.md",
+    "tmp/p03-dictionary-context-fix-20261108/PLAN.md",
+    "tmp/p03-dictionary-context-fix-20261108/REVIEW-PLAN.md",
+    "tmp/p03-dictionary-value-type-20261108/.gdignore",
+    "tmp/p03-dictionary-value-type-20261108/CHECKLIST.md",
+    "tmp/p03-dictionary-value-type-20261108/HANDOFF.md",
+    "tmp/p03-dictionary-value-type-20261108/P03-DICTIONARY-VALUE-TYPE-DELIVERY-20261108.zip",
+    "tmp/p03-dictionary-value-type-20261108/PLAN.md",
+    "tmp/p03-dictionary-value-type-20261108/RESULT.md",
+    "tmp/p03-dictionary-value-type-20261108/REVIEW-5B-attempt-01.md",
+    "tmp/p03-dictionary-value-type-20261108/REVIEW-CLOSEOUT.md",
+    "tmp/p03-dictionary-value-type-20261108/REVIEW-PLAN.md",
+    "tmp/p03-dictionary-value-type-20261108/archive-verification.json",
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/engine-version.stderr",
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/engine-version.stdout",
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/input-after.json",
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/input-before.json",
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/run.json",
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/runner.gd.txt",
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/stderr.bin",
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/stdout.bin",
+    "tmp/p03-dictionary-value-type-20261108/dictionary_value_type.gd",
+    "tmp/p03-dictionary-value-type-20261108/diff-check.stderr",
+    "tmp/p03-dictionary-value-type-20261108/diff-check.stdout",
+    "tmp/p03-dictionary-value-type-20261108/dirty-baseline.json",
+    "tmp/p03-dictionary-value-type-20261108/dirty-end.z",
+    "tmp/p03-dictionary-value-type-20261108/dirty-start.z",
+    "tmp/p03-dictionary-value-type-20261108/final-status.z",
+    "tmp/p03-dictionary-value-type-20261108/new-file-whitespace.json",
+    "tmp/p03-dictionary-value-type-20261108/preservation.json",
+    "tmp/p03-dictionary-value-type-20261108/record-manifest.json",
+    "tmp/p03-dictionary-value-type-20261108/run_gate.py",
+    "tmp/p03-dictionary-value-type-20261108/windows_job.py",
+    "tmp/p03-terminal-boundary-20261108/.gdignore",
+    "tmp/p03-terminal-boundary-20261108/CHECKLIST.md",
+    "tmp/p03-terminal-boundary-20261108/HANDOFF.md",
+    "tmp/p03-terminal-boundary-20261108/P03-TERMINAL-BOUNDARY-DELIVERY-20261108.zip",
+    "tmp/p03-terminal-boundary-20261108/PLAN.md",
+    "tmp/p03-terminal-boundary-20261108/RESULT.md",
+    "tmp/p03-terminal-boundary-20261108/REVIEW-5B-attempt-01.md",
+    "tmp/p03-terminal-boundary-20261108/REVIEW-CLOSEOUT.md",
+    "tmp/p03-terminal-boundary-20261108/REVIEW-PLAN.md",
+    "tmp/p03-terminal-boundary-20261108/archive-verification.json",
+    "tmp/p03-terminal-boundary-20261108/attempt-01/engine-version.stderr",
+    "tmp/p03-terminal-boundary-20261108/attempt-01/engine-version.stdout",
+    "tmp/p03-terminal-boundary-20261108/attempt-01/input-after.json",
+    "tmp/p03-terminal-boundary-20261108/attempt-01/input-before.json",
+    "tmp/p03-terminal-boundary-20261108/attempt-01/run.json",
+    "tmp/p03-terminal-boundary-20261108/attempt-01/runner.gd.txt",
+    "tmp/p03-terminal-boundary-20261108/attempt-01/stderr.bin",
+    "tmp/p03-terminal-boundary-20261108/attempt-01/stdout.bin",
+    "tmp/p03-terminal-boundary-20261108/diff-check.stderr",
+    "tmp/p03-terminal-boundary-20261108/diff-check.stdout",
+    "tmp/p03-terminal-boundary-20261108/dirty-baseline.json",
+    "tmp/p03-terminal-boundary-20261108/dirty-end.z",
+    "tmp/p03-terminal-boundary-20261108/dirty-start.z",
+    "tmp/p03-terminal-boundary-20261108/final-status.z",
+    "tmp/p03-terminal-boundary-20261108/new-file-whitespace.json",
+    "tmp/p03-terminal-boundary-20261108/preservation.json",
+    "tmp/p03-terminal-boundary-20261108/record-manifest.json",
+    "tmp/p03-terminal-boundary-20261108/run_gate.py",
+    "tmp/p03-terminal-boundary-20261108/terminal_boundary.gd",
+    "tmp/p03-terminal-boundary-20261108/windows_job.py"
+  ],
+  "new_in_after_run": [
+    "output/ship-concepts/battleship-cinematic-v1.png",
+    "tmp/p03-command-suffix-20261107/HANDOFF.md",
+    "tmp/p03-command-suffix-20261107/P03-CHECKLIST-CLOSEOUT-20261108.md",
+    "tmp/p03-command-suffix-20261107/P03-COMMAND-SUFFIX-DELIVERY-20261108.zip",
+    "tmp/p03-command-suffix-20261107/RESULT.md",
+    "tmp/p03-command-suffix-20261107/REVIEW-CLOSEOUT.md",
+    "tmp/p03-command-suffix-20261107/archive-verification.json",
+    "tmp/p03-command-suffix-20261107/diff-check.stderr",
+    "tmp/p03-command-suffix-20261107/diff-check.stdout",
+    "tmp/p03-command-suffix-20261107/final-status.z",
+    "tmp/p03-command-suffix-20261107/new-file-whitespace.json",
+    "tmp/p03-command-suffix-20261107/preservation.json",
+    "tmp/p03-command-suffix-20261107/record-manifest.json",
+    "tmp/p03-context-metadata-20261108/.gdignore",
+    "tmp/p03-context-metadata-20261108/CHECKLIST.md",
+    "tmp/p03-context-metadata-20261108/HANDOFF.md",
+    "tmp/p03-context-metadata-20261108/P03-CONTEXT-METADATA-DELIVERY-20261108.zip",
+    "tmp/p03-context-metadata-20261108/PLAN-v2.md",
+    "tmp/p03-context-metadata-20261108/PLAN.md",
+    "tmp/p03-context-metadata-20261108/RESULT.md",
+    "tmp/p03-context-metadata-20261108/REVIEW-5B-attempt-03.md",
+    "tmp/p03-context-metadata-20261108/REVIEW-CLOSEOUT.md",
+    "tmp/p03-context-metadata-20261108/REVIEW-PLAN.md",
+    "tmp/p03-context-metadata-20261108/archive-verification.json",
+    "tmp/p03-context-metadata-20261108/attempt-01/engine-version.stderr",
+    "tmp/p03-context-metadata-20261108/attempt-01/engine-version.stdout",
+    "tmp/p03-context-metadata-20261108/attempt-01/input-after.json",
+    "tmp/p03-context-metadata-20261108/attempt-01/input-before.json",
+    "tmp/p03-context-metadata-20261108/attempt-01/run.json",
+    "tmp/p03-context-metadata-20261108/attempt-01/runner.gd.txt",
+    "tmp/p03-context-metadata-20261108/attempt-01/stderr.bin",
+    "tmp/p03-context-metadata-20261108/attempt-01/stdout.bin",
+    "tmp/p03-context-metadata-20261108/attempt-02/engine-version.stderr",
+    "tmp/p03-context-metadata-20261108/attempt-02/engine-version.stdout",
+    "tmp/p03-context-metadata-20261108/attempt-02/input-after.json",
+    "tmp/p03-context-metadata-20261108/attempt-02/input-before.json",
+    "tmp/p03-context-metadata-20261108/attempt-02/run.json",
+    "tmp/p03-context-metadata-20261108/attempt-02/runner.gd.txt",
+    "tmp/p03-context-metadata-20261108/attempt-02/stderr.bin",
+    "tmp/p03-context-metadata-20261108/attempt-02/stdout.bin",
+    "tmp/p03-context-metadata-20261108/attempt-03/engine-version.stderr",
+    "tmp/p03-context-metadata-20261108/attempt-03/engine-version.stdout",
+    "tmp/p03-context-metadata-20261108/attempt-03/input-after.json",
+    "tmp/p03-context-metadata-20261108/attempt-03/input-before.json",
+    "tmp/p03-context-metadata-20261108/attempt-03/run.json",
+    "tmp/p03-context-metadata-20261108/attempt-03/runner.gd.txt",
+    "tmp/p03-context-metadata-20261108/attempt-03/stderr.bin",
+    "tmp/p03-context-metadata-20261108/attempt-03/stdout.bin",
+    "tmp/p03-context-metadata-20261108/context_metadata.gd",
+    "tmp/p03-context-metadata-20261108/diff-check.stderr",
+    "tmp/p03-context-metadata-20261108/diff-check.stdout",
+    "tmp/p03-context-metadata-20261108/dirty-baseline.json",
+    "tmp/p03-context-metadata-20261108/dirty-end.z",
+    "tmp/p03-context-metadata-20261108/dirty-start.z",
+    "tmp/p03-context-metadata-20261108/final-status.z",
+    "tmp/p03-context-metadata-20261108/new-file-whitespace.json",
+    "tmp/p03-context-metadata-20261108/preservation.json",
+    "tmp/p03-context-metadata-20261108/record-manifest.json",
+    "tmp/p03-context-metadata-20261108/run_gate.py",
+    "tmp/p03-context-metadata-20261108/windows_job.py",
+    "tmp/p03-dictionary-context-fix-20261108/.gdignore",
+    "tmp/p03-dictionary-context-fix-20261108/CHECKLIST.md",
+    "tmp/p03-dictionary-context-fix-20261108/HANDOFF.md",
+    "tmp/p03-dictionary-context-fix-20261108/P03-DICTIONARY-CONTEXT-BEFORE-DELIVERY-20261108.zip",
+    "tmp/p03-dictionary-context-fix-20261108/PLAN-v2.md",
+    "tmp/p03-dictionary-context-fix-20261108/PLAN.md",
+    "tmp/p03-dictionary-context-fix-20261108/RESULT-BEFORE.md",
+    "tmp/p03-dictionary-context-fix-20261108/REVIEW-5B-before.md",
+    "tmp/p03-dictionary-context-fix-20261108/REVIEW-PLAN.md",
+    "tmp/p03-dictionary-context-fix-20261108/archive-verification.json",
+    "tmp/p03-dictionary-context-fix-20261108/attempt-01/engine-version.stderr",
+    "tmp/p03-dictionary-context-fix-20261108/attempt-01/engine-version.stdout",
+    "tmp/p03-dictionary-context-fix-20261108/attempt-01/input-after.json",
+    "tmp/p03-dictionary-context-fix-20261108/attempt-01/input-before.json",
+    "tmp/p03-dictionary-context-fix-20261108/attempt-01/run.json",
+    "tmp/p03-dictionary-context-fix-20261108/attempt-01/runner.gd.txt",
+    "tmp/p03-dictionary-context-fix-20261108/attempt-01/stderr.bin",
+    "tmp/p03-dictionary-context-fix-20261108/attempt-01/stdout.bin",
+    "tmp/p03-dictionary-context-fix-20261108/dictionary_context_before.gd",
+    "tmp/p03-dictionary-context-fix-20261108/diff-check.stderr",
+    "tmp/p03-dictionary-context-fix-20261108/diff-check.stdout",
+    "tmp/p03-dictionary-context-fix-20261108/dirty-baseline.json",
+    "tmp/p03-dictionary-context-fix-20261108/dirty-end.z",
+    "tmp/p03-dictionary-context-fix-20261108/dirty-start.z",
+    "tmp/p03-dictionary-context-fix-20261108/final-status.z",
+    "tmp/p03-dictionary-context-fix-20261108/new-file-whitespace.json",
+    "tmp/p03-dictionary-context-fix-20261108/preservation.json",
+    "tmp/p03-dictionary-context-fix-20261108/record-manifest.json",
+    "tmp/p03-dictionary-context-fix-20261108/run_gate.py",
+    "tmp/p03-dictionary-context-fix-20261108/windows_job.py",
+    "tmp/p03-dictionary-value-type-20261108/.gdignore",
+    "tmp/p03-dictionary-value-type-20261108/CHECKLIST.md",
+    "tmp/p03-dictionary-value-type-20261108/HANDOFF.md",
+    "tmp/p03-dictionary-value-type-20261108/P03-DICTIONARY-VALUE-TYPE-DELIVERY-20261108.zip",
+    "tmp/p03-dictionary-value-type-20261108/PLAN.md",
+    "tmp/p03-dictionary-value-type-20261108/RESULT.md",
+    "tmp/p03-dictionary-value-type-20261108/REVIEW-5B-attempt-01.md",
+    "tmp/p03-dictionary-value-type-20261108/REVIEW-CLOSEOUT.md",
+    "tmp/p03-dictionary-value-type-20261108/REVIEW-PLAN.md",
+    "tmp/p03-dictionary-value-type-20261108/archive-verification.json",
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/engine-version.stderr",
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/engine-version.stdout",
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/input-after.json",
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/input-before.json",
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/run.json",
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/runner.gd.txt",
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/stderr.bin",
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/stdout.bin",
+    "tmp/p03-dictionary-value-type-20261108/dictionary_value_type.gd",
+    "tmp/p03-dictionary-value-type-20261108/diff-check.stderr",
+    "tmp/p03-dictionary-value-type-20261108/diff-check.stdout",
+    "tmp/p03-dictionary-value-type-20261108/dirty-baseline.json",
+    "tmp/p03-dictionary-value-type-20261108/dirty-end.z",
+    "tmp/p03-dictionary-value-type-20261108/dirty-start.z",
+    "tmp/p03-dictionary-value-type-20261108/final-status.z",
+    "tmp/p03-dictionary-value-type-20261108/new-file-whitespace.json",
+    "tmp/p03-dictionary-value-type-20261108/preservation.json",
+    "tmp/p03-dictionary-value-type-20261108/record-manifest.json",
+    "tmp/p03-dictionary-value-type-20261108/run_gate.py",
+    "tmp/p03-dictionary-value-type-20261108/windows_job.py",
+    "tmp/p03-terminal-boundary-20261108/.gdignore",
+    "tmp/p03-terminal-boundary-20261108/CHECKLIST.md",
+    "tmp/p03-terminal-boundary-20261108/HANDOFF.md",
+    "tmp/p03-terminal-boundary-20261108/P03-TERMINAL-BOUNDARY-DELIVERY-20261108.zip",
+    "tmp/p03-terminal-boundary-20261108/PLAN.md",
+    "tmp/p03-terminal-boundary-20261108/RESULT.md",
+    "tmp/p03-terminal-boundary-20261108/REVIEW-5B-attempt-01.md",
+    "tmp/p03-terminal-boundary-20261108/REVIEW-CLOSEOUT.md",
+    "tmp/p03-terminal-boundary-20261108/REVIEW-PLAN.md",
+    "tmp/p03-terminal-boundary-20261108/archive-verification.json",
+    "tmp/p03-terminal-boundary-20261108/attempt-01/engine-version.stderr",
+    "tmp/p03-terminal-boundary-20261108/attempt-01/engine-version.stdout",
+    "tmp/p03-terminal-boundary-20261108/attempt-01/input-after.json",
+    "tmp/p03-terminal-boundary-20261108/attempt-01/input-before.json",
+    "tmp/p03-terminal-boundary-20261108/attempt-01/run.json",
+    "tmp/p03-terminal-boundary-20261108/attempt-01/runner.gd.txt",
+    "tmp/p03-terminal-boundary-20261108/attempt-01/stderr.bin",
+    "tmp/p03-terminal-boundary-20261108/attempt-01/stdout.bin",
+    "tmp/p03-terminal-boundary-20261108/diff-check.stderr",
+    "tmp/p03-terminal-boundary-20261108/diff-check.stdout",
+    "tmp/p03-terminal-boundary-20261108/dirty-baseline.json",
+    "tmp/p03-terminal-boundary-20261108/dirty-end.z",
+    "tmp/p03-terminal-boundary-20261108/dirty-start.z",
+    "tmp/p03-terminal-boundary-20261108/final-status.z",
+    "tmp/p03-terminal-boundary-20261108/new-file-whitespace.json",
+    "tmp/p03-terminal-boundary-20261108/preservation.json",
+    "tmp/p03-terminal-boundary-20261108/record-manifest.json",
+    "tmp/p03-terminal-boundary-20261108/run_gate.py",
+    "tmp/p03-terminal-boundary-20261108/terminal_boundary.gd",
+    "tmp/p03-terminal-boundary-20261108/windows_job.py",
+    "tmp/p03-viewer-checkpoint-20261108/PLAN.md"
+  ],
+  "new_after_run_before_observation": [
+    "output/ship-concepts/battleship-cinematic-v2.png",
+    "tmp/p03-dictionary-context-fix-20261108/REVIEW-CLOSEOUT-BEFORE.md",
+    "tmp/p03-viewer-checkpoint-20261108/PLAN-v2.md",
+    "tmp/p03-viewer-checkpoint-20261108/REVIEW-PLAN.md",
+    "tmp/p03-viewer-checkpoint-20261108/dirty-baseline.json",
+    "tmp/p03-viewer-checkpoint-20261108/dirty-end.z",
+    "tmp/p03-viewer-checkpoint-20261108/dirty-start.z"
+  ],
+  "observed_files": 158,
+  "files": {
+    "output/ship-concepts/battleship-cinematic-v1.png": {
+      "bytes": 2050102,
+      "sha256": "8007f2640b865645c5961a18b0d9163b72276ca3d03b5488c46767f1cf28a1e2",
+      "modified_ns": 1794120855544977300,
+      "created_ns": 1794120864551859500
+    },
+    "output/ship-concepts/battleship-cinematic-v2.png": {
+      "bytes": 1974856,
+      "sha256": "28e1471b2d323c962c3ddf64c6db1af2c5210dd124c232dc63c9c235e1fee54e",
+      "modified_ns": 1794120963957723400,
+      "created_ns": 1794120970898072900
+    },
+    "tmp/p03-command-suffix-20261107/HANDOFF.md": {
+      "bytes": 1154,
+      "sha256": "c0a73c8b28a0412b305e8020e21a3f2c36566e2ec8ed0c81a7d3e510e8d571d7",
+      "modified_ns": 1794119391190026000,
+      "created_ns": 1794119391190026000
+    },
+    "tmp/p03-command-suffix-20261107/P03-CHECKLIST-CLOSEOUT-20261108.md": {
+      "bytes": 795,
+      "sha256": "8cc0a589caf2773bc981b77f517f0c39ae9165d0bed89e974f3c606d25556fea",
+      "modified_ns": 1794119391447233900,
+      "created_ns": 1794119391447233900
+    },
+    "tmp/p03-command-suffix-20261107/P03-COMMAND-SUFFIX-DELIVERY-20261108.zip": {
+      "bytes": 430750,
+      "sha256": "4ed7d32c1fb0054a252c7843686405ec1256fb957f2c7f144e78cb0ac1b39663",
+      "modified_ns": 1794119392545468600,
+      "created_ns": 1794119392493716000
+    },
+    "tmp/p03-command-suffix-20261107/RESULT.md": {
+      "bytes": 2901,
+      "sha256": "b055030565e2d5dac0215bf5f8236bc94dc10fe5869bf21561977fc6820eec3a",
+      "modified_ns": 1794119390953552400,
+      "created_ns": 1794119390953552400
+    },
+    "tmp/p03-command-suffix-20261107/REVIEW-CLOSEOUT.md": {
+      "bytes": 1456,
+      "sha256": "5e0e42e7f77d75e5f86c595859796b8601fc11222534a064acbc83983889e695",
+      "modified_ns": 1794119472525081800,
+      "created_ns": 1794119472524079200
+    },
+    "tmp/p03-command-suffix-20261107/archive-verification.json": {
+      "bytes": 396,
+      "sha256": "dc7d82c32a0ffcbe2db676333a259ba6743c507a50199dfcf5e7519ed4ba6d1c",
+      "modified_ns": 1794119392577451900,
+      "created_ns": 1794119392576475300
+    },
+    "tmp/p03-command-suffix-20261107/diff-check.stderr": {
+      "bytes": 951,
+      "sha256": "9383227f23e362399d837fdb9c3c96bbd55d9aa7b4797dccb087af7227ca50c7",
+      "modified_ns": 1794119308845557500,
+      "created_ns": 1794119308845557500
+    },
+    "tmp/p03-command-suffix-20261107/diff-check.stdout": {
+      "bytes": 809,
+      "sha256": "91be8367860019a1e276a52b8cd1f1542ff5439ce163f2f84cdd326e0ac08255",
+      "modified_ns": 1794119308844558600,
+      "created_ns": 1794119308844558600
+    },
+    "tmp/p03-command-suffix-20261107/final-status.z": {
+      "bytes": 50047,
+      "sha256": "c4508f72e8fd7f9ec45660eb23346bab3010843e8a5011338d163c0acc9ac2c5",
+      "modified_ns": 1794119308843573300,
+      "created_ns": 1794119308842556400
+    },
+    "tmp/p03-command-suffix-20261107/new-file-whitespace.json": {
+      "bytes": 201,
+      "sha256": "a513e5503361e127f37c10a15963bba9388110527d4012776c1692886a1c4223",
+      "modified_ns": 1794119392419740500,
+      "created_ns": 1794119392419740500
+    },
+    "tmp/p03-command-suffix-20261107/preservation.json": {
+      "bytes": 426896,
+      "sha256": "84ed205a276322e3781c41f4d494f62b88c0471081029cc87e3090e5aea8b02b",
+      "modified_ns": 1794119308957110200,
+      "created_ns": 1794119308954124100
+    },
+    "tmp/p03-command-suffix-20261107/record-manifest.json": {
+      "bytes": 10179,
+      "sha256": "4717a777023c64ef32e6bd96beda874e3d3215a38432444bc5fd360316bd4546",
+      "modified_ns": 1794119392491715500,
+      "created_ns": 1794119392491715500
+    },
+    "tmp/p03-context-metadata-20261108/.gdignore": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "modified_ns": 1794119995970939500,
+      "created_ns": 1794119995970939500
+    },
+    "tmp/p03-context-metadata-20261108/CHECKLIST.md": {
+      "bytes": 564,
+      "sha256": "f5d452aad5569b22ca23705e515658faadf0e45f3d8ed067b5417002eee9808b",
+      "modified_ns": 1794120207804293600,
+      "created_ns": 1794120207803290400
+    },
+    "tmp/p03-context-metadata-20261108/HANDOFF.md": {
+      "bytes": 593,
+      "sha256": "03ae5a4afa24aa09d137d0f3f5680bd9933f0ceed4a5872396d06b92ef9dd16d",
+      "modified_ns": 1794120207382756400,
+      "created_ns": 1794120207382756400
+    },
+    "tmp/p03-context-metadata-20261108/P03-CONTEXT-METADATA-DELIVERY-20261108.zip": {
+      "bytes": 781030,
+      "sha256": "5e5589e54ab7f4f01d4cf74ff2dfd744ad6dd1fc2c105a78b157c9f1ee7d8f4a",
+      "modified_ns": 1794120210385773000,
+      "created_ns": 1794120210326704000
+    },
+    "tmp/p03-context-metadata-20261108/PLAN-v2.md": {
+      "bytes": 1116,
+      "sha256": "3e562283f6cb763fea19ae6eb71cb9f77b0e1c300f732223e1ab31559d492647",
+      "modified_ns": 1794119877020046300,
+      "created_ns": 1794119877020046300
+    },
+    "tmp/p03-context-metadata-20261108/PLAN.md": {
+      "bytes": 4579,
+      "sha256": "c1aeca43543b6fdebef0cffa59e6f8a7a03f36cf40d811d6cb1209e6fd94536b",
+      "modified_ns": 1794119840583885100,
+      "created_ns": 1794119840583885100
+    },
+    "tmp/p03-context-metadata-20261108/RESULT.md": {
+      "bytes": 1822,
+      "sha256": "ea2038c46196fde80859638788c28bdc82e8cbe495b46c291036a04548ef9009",
+      "modified_ns": 1794120207001503600,
+      "created_ns": 1794120207001503600
+    },
+    "tmp/p03-context-metadata-20261108/REVIEW-5B-attempt-03.md": {
+      "bytes": 1642,
+      "sha256": "082989f4434c770c4bf2eca774e8142ef505f9cfefa41deb9f4273272e54278f",
+      "modified_ns": 1794120101148101700,
+      "created_ns": 1794120101147110600
+    },
+    "tmp/p03-context-metadata-20261108/REVIEW-CLOSEOUT.md": {
+      "bytes": 1113,
+      "sha256": "0cadf41382f78a68279d0ecf99baebe907ed5acd4602a74f43236c09ed6a7f7c",
+      "modified_ns": 1794120274443631200,
+      "created_ns": 1794120274441123300
+    },
+    "tmp/p03-context-metadata-20261108/REVIEW-PLAN.md": {
+      "bytes": 1596,
+      "sha256": "ae5a0f5deb761ac417b39311b9f297e76de4fab6c1e0c1fa0b9d8141bf1e22af",
+      "modified_ns": 1794119894179173300,
+      "created_ns": 1794119894177206900
+    },
+    "tmp/p03-context-metadata-20261108/archive-verification.json": {
+      "bytes": 398,
+      "sha256": "4b8760447c0637122bd92eb196acb0b3f8cf35aca1b6ed9e70ebcdc32f748747",
+      "modified_ns": 1794120210423863400,
+      "created_ns": 1794120210422867300
+    },
+    "tmp/p03-context-metadata-20261108/attempt-01/engine-version.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "modified_ns": 1794120006503558300,
+      "created_ns": 1794120006503558300
+    },
+    "tmp/p03-context-metadata-20261108/attempt-01/engine-version.stdout": {
+      "bytes": 33,
+      "sha256": "bf8803022b574250bb04dea65053a46b7c58570725316c1f7fe2aa6735706498",
+      "modified_ns": 1794120006501560800,
+      "created_ns": 1794120006500560600
+    },
+    "tmp/p03-context-metadata-20261108/attempt-01/input-after.json": {
+      "bytes": 8559,
+      "sha256": "3ab169188700f1503cf032f5a2690961a16749039d531bc327518e26bdcc26bd",
+      "modified_ns": 1794120006894169300,
+      "created_ns": 1794120006894169300
+    },
+    "tmp/p03-context-metadata-20261108/attempt-01/input-before.json": {
+      "bytes": 8559,
+      "sha256": "3ab169188700f1503cf032f5a2690961a16749039d531bc327518e26bdcc26bd",
+      "modified_ns": 1794120005954569400,
+      "created_ns": 1794120005953588200
+    },
+    "tmp/p03-context-metadata-20261108/attempt-01/run.json": {
+      "bytes": 951,
+      "sha256": "7de15679e2a83992367c9e2a1cc2fb98d61e63934f1e27a986a46abbd806f556",
+      "modified_ns": 1794120006897167500,
+      "created_ns": 1794120006897167500
+    },
+    "tmp/p03-context-metadata-20261108/attempt-01/runner.gd.txt": {
+      "bytes": 11420,
+      "sha256": "94278ae18bd4a7db2601675c151d4cb00fdbc073d38c0135770514b971a8b224",
+      "modified_ns": 1794120005956569400,
+      "created_ns": 1794120005956569400
+    },
+    "tmp/p03-context-metadata-20261108/attempt-01/stderr.bin": {
+      "bytes": 341,
+      "sha256": "773b703e2f5b1f10048f4742d001432870390bb085094280ca218ba79bc611d0",
+      "modified_ns": 1794120006688435700,
+      "created_ns": 1794120006504564900
+    },
+    "tmp/p03-context-metadata-20261108/attempt-01/stdout.bin": {
+      "bytes": 75,
+      "sha256": "83cf0b082206af2aa236c83064fbcfa76be1e00a4aa3558574b2f65965d9481c",
+      "modified_ns": 1794120006609928700,
+      "created_ns": 1794120006504564900
+    },
+    "tmp/p03-context-metadata-20261108/attempt-02/engine-version.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "modified_ns": 1794120052006414800,
+      "created_ns": 1794120052006414800
+    },
+    "tmp/p03-context-metadata-20261108/attempt-02/engine-version.stdout": {
+      "bytes": 33,
+      "sha256": "bf8803022b574250bb04dea65053a46b7c58570725316c1f7fe2aa6735706498",
+      "modified_ns": 1794120052004908700,
+      "created_ns": 1794120052003907700
+    },
+    "tmp/p03-context-metadata-20261108/attempt-02/input-after.json": {
+      "bytes": 8559,
+      "sha256": "779960edeffc7a081219345ad11d5bf05d7cde864157b86c7e7e557adc3c9d54",
+      "modified_ns": 1794120053190771400,
+      "created_ns": 1794120053190771400
+    },
+    "tmp/p03-context-metadata-20261108/attempt-02/input-before.json": {
+      "bytes": 8559,
+      "sha256": "779960edeffc7a081219345ad11d5bf05d7cde864157b86c7e7e557adc3c9d54",
+      "modified_ns": 1794120051505628300,
+      "created_ns": 1794120051505628300
+    },
+    "tmp/p03-context-metadata-20261108/attempt-02/run.json": {
+      "bytes": 4986,
+      "sha256": "91ea9be9c10a803862de946e4347aea8bb111e0a503b7ba92101023395c8316f",
+      "modified_ns": 1794120053194774200,
+      "created_ns": 1794120053194774200
+    },
+    "tmp/p03-context-metadata-20261108/attempt-02/runner.gd.txt": {
+      "bytes": 11420,
+      "sha256": "eac2680de75d40b5283c8c9d574fe6a87486a06cdc836b7866767ace1cdaa01a",
+      "modified_ns": 1794120051509669700,
+      "created_ns": 1794120051509669700
+    },
+    "tmp/p03-context-metadata-20261108/attempt-02/stderr.bin": {
+      "bytes": 742,
+      "sha256": "662fa564f65d2e75816a5b4d43991c9b6da1d045e09b447318aae9a048dac689",
+      "modified_ns": 1794120053017333400,
+      "created_ns": 1794120052007421800
+    },
+    "tmp/p03-context-metadata-20261108/attempt-02/stdout.bin": {
+      "bytes": 2313,
+      "sha256": "4a8a239aa22a1b71f70b9c1fed06ae51cd6879c2c4e210c8689d89434e3b4ad9",
+      "modified_ns": 1794120053017333400,
+      "created_ns": 1794120052007421800
+    },
+    "tmp/p03-context-metadata-20261108/attempt-03/engine-version.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "modified_ns": 1794120072814501100,
+      "created_ns": 1794120072814501100
+    },
+    "tmp/p03-context-metadata-20261108/attempt-03/engine-version.stdout": {
+      "bytes": 33,
+      "sha256": "bf8803022b574250bb04dea65053a46b7c58570725316c1f7fe2aa6735706498",
+      "modified_ns": 1794120072814501100,
+      "created_ns": 1794120072813497700
+    },
+    "tmp/p03-context-metadata-20261108/attempt-03/input-after.json": {
+      "bytes": 8559,
+      "sha256": "2c391e3d2a9683b4ee105de47a58b1d40115545505a71d5fe11d7b129bf9d306",
+      "modified_ns": 1794120073995765800,
+      "created_ns": 1794120073995765800
+    },
+    "tmp/p03-context-metadata-20261108/attempt-03/input-before.json": {
+      "bytes": 8559,
+      "sha256": "2c391e3d2a9683b4ee105de47a58b1d40115545505a71d5fe11d7b129bf9d306",
+      "modified_ns": 1794120072743178300,
+      "created_ns": 1794120072742177300
+    },
+    "tmp/p03-context-metadata-20261108/attempt-03/run.json": {
+      "bytes": 6105,
+      "sha256": "4b7be3f9fe17a3ba4a7173314991d7e88dda3f64d38874f2f0382cfd446b262d",
+      "modified_ns": 1794120073998202800,
+      "created_ns": 1794120073998202800
+    },
+    "tmp/p03-context-metadata-20261108/attempt-03/runner.gd.txt": {
+      "bytes": 12019,
+      "sha256": "c2f90d1fb6ce9946f4dcfdba55b93352f723c6226b07aaa0f8e13c58c9cb6b64",
+      "modified_ns": 1794120072745705500,
+      "created_ns": 1794120072745705500
+    },
+    "tmp/p03-context-metadata-20261108/attempt-03/stderr.bin": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "modified_ns": 1794120072816004600,
+      "created_ns": 1794120072816004600
+    },
+    "tmp/p03-context-metadata-20261108/attempt-03/stdout.bin": {
+      "bytes": 2632,
+      "sha256": "effb681cd77f5e0b4d8ba7f9c86e64eca455fb7d079b81345e258fcadbd02ff4",
+      "modified_ns": 1794120073795753800,
+      "created_ns": 1794120072816004600
+    },
+    "tmp/p03-context-metadata-20261108/context_metadata.gd": {
+      "bytes": 12019,
+      "sha256": "c2f90d1fb6ce9946f4dcfdba55b93352f723c6226b07aaa0f8e13c58c9cb6b64",
+      "modified_ns": 1794120071816386400,
+      "created_ns": 1794119995960951300
+    },
+    "tmp/p03-context-metadata-20261108/diff-check.stderr": {
+      "bytes": 951,
+      "sha256": "9383227f23e362399d837fdb9c3c96bbd55d9aa7b4797dccb087af7227ca50c7",
+      "modified_ns": 1794120167707768700,
+      "created_ns": 1794120167707768700
+    },
+    "tmp/p03-context-metadata-20261108/diff-check.stdout": {
+      "bytes": 809,
+      "sha256": "91be8367860019a1e276a52b8cd1f1542ff5439ce163f2f84cdd326e0ac08255",
+      "modified_ns": 1794120167705750000,
+      "created_ns": 1794120167705750000
+    },
+    "tmp/p03-context-metadata-20261108/dirty-baseline.json": {
+      "bytes": 2884049,
+      "sha256": "065aba47696d4464e3f785bb9032ab2678fc14571ff017b89c8f30aced22c8e1",
+      "modified_ns": 1794119963593966900,
+      "created_ns": 1794119963516957100
+    },
+    "tmp/p03-context-metadata-20261108/dirty-end.z": {
+      "bytes": 65000,
+      "sha256": "6eef1906f318e46aa69f43c24b0420cde5a86978ff9c2339e0cc76d369129faf",
+      "modified_ns": 1794119963361914400,
+      "created_ns": 1794119963357414800
+    },
+    "tmp/p03-context-metadata-20261108/dirty-start.z": {
+      "bytes": 65000,
+      "sha256": "6eef1906f318e46aa69f43c24b0420cde5a86978ff9c2339e0cc76d369129faf",
+      "modified_ns": 1794119963356427000,
+      "created_ns": 1794119963348228000
+    },
+    "tmp/p03-context-metadata-20261108/final-status.z": {
+      "bytes": 65268,
+      "sha256": "2698c23592398e7512cb65c6e7af32c9dbaa7400d28abacef6046934d9552a90",
+      "modified_ns": 1794120167704238500,
+      "created_ns": 1794120167704238500
+    },
+    "tmp/p03-context-metadata-20261108/new-file-whitespace.json": {
+      "bytes": 181,
+      "sha256": "ba8135b49e4210e6c9c795741afbccc840ee423ba56863855b00a46f90aa74f0",
+      "modified_ns": 1794120210241684800,
+      "created_ns": 1794120210240669900
+    },
+    "tmp/p03-context-metadata-20261108/preservation.json": {
+      "bytes": 4770,
+      "sha256": "81ce157282af18b3826d0f87abccc29548e2bbd509f20755af60d43cbfc57bad",
+      "modified_ns": 1794120167821412400,
+      "created_ns": 1794120167821412400
+    },
+    "tmp/p03-context-metadata-20261108/record-manifest.json": {
+      "bytes": 6144,
+      "sha256": "a0e2c58c7b24a8f1a635579cb50f9c9d301ca3be195dd1164fc86f00f06fa2ce",
+      "modified_ns": 1794120210324624500,
+      "created_ns": 1794120210323621700
+    },
+    "tmp/p03-context-metadata-20261108/run_gate.py": {
+      "bytes": 8348,
+      "sha256": "9ed57c08adfdea54a9aa60c89ca6082d14ea6a2a5fa2755c5327956160fdb580",
+      "modified_ns": 1794119995973627200,
+      "created_ns": 1794119995973627200
+    },
+    "tmp/p03-context-metadata-20261108/windows_job.py": {
+      "bytes": 4907,
+      "sha256": "6c8333ae38b148777d2f1b78bd1c02321f89602054d3f5daa75beb4f4526580f",
+      "modified_ns": 1794119995968944700,
+      "created_ns": 1794119995967954200
+    },
+    "tmp/p03-dictionary-context-fix-20261108/.gdignore": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "modified_ns": 1794120698871507500,
+      "created_ns": 1794120698871507500
+    },
+    "tmp/p03-dictionary-context-fix-20261108/CHECKLIST.md": {
+      "bytes": 756,
+      "sha256": "3e997a7f8c88ade6197f0a88b7925e59adc20f6e2e4556be2e28d6e9227eb21e",
+      "modified_ns": 1794120855480459200,
+      "created_ns": 1794120855480459200
+    },
+    "tmp/p03-dictionary-context-fix-20261108/HANDOFF.md": {
+      "bytes": 620,
+      "sha256": "71aa5cb4ac71ece7d3f6fb9ef7812cc090ea8783bf6a4ca772f0ce00ffcd9728",
+      "modified_ns": 1794120855157843200,
+      "created_ns": 1794120855157843200
+    },
+    "tmp/p03-dictionary-context-fix-20261108/P03-DICTIONARY-CONTEXT-BEFORE-DELIVERY-20261108.zip": {
+      "bytes": 954471,
+      "sha256": "2bdbcaab682e4d5d2f4d50e0a21355880430feece1eb7493906126f866e4f439",
+      "modified_ns": 1794120859728770700,
+      "created_ns": 1794120859675265800
+    },
+    "tmp/p03-dictionary-context-fix-20261108/PLAN-v2.md": {
+      "bytes": 1440,
+      "sha256": "d663818c821161f2397e34934a28fe5d80a27bd1ce80d93b8884b329d6a938f6",
+      "modified_ns": 1794120586570507500,
+      "created_ns": 1794120586570507500
+    },
+    "tmp/p03-dictionary-context-fix-20261108/PLAN.md": {
+      "bytes": 5413,
+      "sha256": "7eeebdda481ebcc3afedcee01d16f7045d985f2631d32b1d731d752445907480",
+      "modified_ns": 1794120539394024400,
+      "created_ns": 1794120539392572800
+    },
+    "tmp/p03-dictionary-context-fix-20261108/RESULT-BEFORE.md": {
+      "bytes": 1619,
+      "sha256": "cba56b65181acd4d33d21c8f5f79634516b01baf84a3419ebfeea646c84659f9",
+      "modified_ns": 1794120854820635000,
+      "created_ns": 1794120854820635000
+    },
+    "tmp/p03-dictionary-context-fix-20261108/REVIEW-5B-before.md": {
+      "bytes": 1570,
+      "sha256": "8ca721b9c537f727b34ba32538f63ecb28173d27340aaf792e2415bb3757d7db",
+      "modified_ns": 1794120732497869700,
+      "created_ns": 1794120732496868800
+    },
+    "tmp/p03-dictionary-context-fix-20261108/REVIEW-CLOSEOUT-BEFORE.md": {
+      "bytes": 1105,
+      "sha256": "1736c19001a182b8d20c4c239def2fdaba60ec3b1fe5f15830f4cdcdfdfc6361",
+      "modified_ns": 1794120933863897800,
+      "created_ns": 1794120933862895000
+    },
+    "tmp/p03-dictionary-context-fix-20261108/REVIEW-PLAN.md": {
+      "bytes": 1413,
+      "sha256": "c66e4fd9b0ca4bdeef486d1592657c1b9158a78d2aa33450a606693498a570a7",
+      "modified_ns": 1794120604761648200,
+      "created_ns": 1794120604760648000
+    },
+    "tmp/p03-dictionary-context-fix-20261108/archive-verification.json": {
+      "bytes": 407,
+      "sha256": "656a5465b358434d560bd794b35447e2ad03cb5d0f2efde16af176a3618e4f0e",
+      "modified_ns": 1794120859764773100,
+      "created_ns": 1794120859764773100
+    },
+    "tmp/p03-dictionary-context-fix-20261108/attempt-01/engine-version.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "modified_ns": 1794120700077648300,
+      "created_ns": 1794120700077648300
+    },
+    "tmp/p03-dictionary-context-fix-20261108/attempt-01/engine-version.stdout": {
+      "bytes": 33,
+      "sha256": "bf8803022b574250bb04dea65053a46b7c58570725316c1f7fe2aa6735706498",
+      "modified_ns": 1794120700075648500,
+      "created_ns": 1794120700075648500
+    },
+    "tmp/p03-dictionary-context-fix-20261108/attempt-01/input-after.json": {
+      "bytes": 8610,
+      "sha256": "393cb4411c45ff8c127f7f62f711531d7d995d2e72882b74ad825cb8ea3dd8bc",
+      "modified_ns": 1794120701923214200,
+      "created_ns": 1794120701922708700
+    },
+    "tmp/p03-dictionary-context-fix-20261108/attempt-01/input-before.json": {
+      "bytes": 8610,
+      "sha256": "393cb4411c45ff8c127f7f62f711531d7d995d2e72882b74ad825cb8ea3dd8bc",
+      "modified_ns": 1794120699746702600,
+      "created_ns": 1794120699746702600
+    },
+    "tmp/p03-dictionary-context-fix-20261108/attempt-01/run.json": {
+      "bytes": 16650,
+      "sha256": "403a127e4a7ef2ccea425bffc3051b4aa90df039cb9c6fb031bf77f6fe1eacd2",
+      "modified_ns": 1794120701926229000,
+      "created_ns": 1794120701926229000
+    },
+    "tmp/p03-dictionary-context-fix-20261108/attempt-01/runner.gd.txt": {
+      "bytes": 14261,
+      "sha256": "fc69a5abf23556723a1e9eff8c5bb97354eed724ae95f41db1993012693caa67",
+      "modified_ns": 1794120699748702500,
+      "created_ns": 1794120699748702500
+    },
+    "tmp/p03-dictionary-context-fix-20261108/attempt-01/stderr.bin": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "modified_ns": 1794120700078647700,
+      "created_ns": 1794120700078647700
+    },
+    "tmp/p03-dictionary-context-fix-20261108/attempt-01/stdout.bin": {
+      "bytes": 7469,
+      "sha256": "1541aeb6f779fcf064a79ebed195b64c0c0a730ccb12bb14e1a113dfc611c960",
+      "modified_ns": 1794120701692503000,
+      "created_ns": 1794120700078647700
+    },
+    "tmp/p03-dictionary-context-fix-20261108/dictionary_context_before.gd": {
+      "bytes": 14261,
+      "sha256": "fc69a5abf23556723a1e9eff8c5bb97354eed724ae95f41db1993012693caa67",
+      "modified_ns": 1794120698860990500,
+      "created_ns": 1794120698860990500
+    },
+    "tmp/p03-dictionary-context-fix-20261108/diff-check.stderr": {
+      "bytes": 951,
+      "sha256": "9383227f23e362399d837fdb9c3c96bbd55d9aa7b4797dccb087af7227ca50c7",
+      "modified_ns": 1794120799355331800,
+      "created_ns": 1794120799355331800
+    },
+    "tmp/p03-dictionary-context-fix-20261108/diff-check.stdout": {
+      "bytes": 809,
+      "sha256": "91be8367860019a1e276a52b8cd1f1542ff5439ce163f2f84cdd326e0ac08255",
+      "modified_ns": 1794120799354324600,
+      "created_ns": 1794120799354324600
+    },
+    "tmp/p03-dictionary-context-fix-20261108/dirty-baseline.json": {
+      "bytes": 3651384,
+      "sha256": "b40236193e0e8311ef79874b52be7fd5fceb9f5c954d3b6baffb8fc72c1d54f0",
+      "modified_ns": 1794120691974155200,
+      "created_ns": 1794120691916961900
+    },
+    "tmp/p03-dictionary-context-fix-20261108/dirty-end.z": {
+      "bytes": 80864,
+      "sha256": "01552beaecc08bcd774e7dcc89ced99f5c05c4432b650084098351eb88cfc3a7",
+      "modified_ns": 1794120691790313200,
+      "created_ns": 1794120691784318000
+    },
+    "tmp/p03-dictionary-context-fix-20261108/dirty-start.z": {
+      "bytes": 80807,
+      "sha256": "730eb0e07e3d718c6f217c593da3e182b787ced2e70cf41e52597a53267a430d",
+      "modified_ns": 1794120691782779900,
+      "created_ns": 1794120691773757800
+    },
+    "tmp/p03-dictionary-context-fix-20261108/final-status.z": {
+      "bytes": 81135,
+      "sha256": "8533ee50332c22a5b137c3a1e052bab9f4da2a7ae0b7f0513b2fd1b615f45586",
+      "modified_ns": 1794120799352814200,
+      "created_ns": 1794120799351816600
+    },
+    "tmp/p03-dictionary-context-fix-20261108/new-file-whitespace.json": {
+      "bytes": 197,
+      "sha256": "5e56498007b0da3c7163f0484928e85c19f72982e52b6d4652633167af234083",
+      "modified_ns": 1794120859622254800,
+      "created_ns": 1794120859622254800
+    },
+    "tmp/p03-dictionary-context-fix-20261108/preservation.json": {
+      "bytes": 5370,
+      "sha256": "ded5f5de538e97f08c5e93bd213ee848233940a1184a3286a25a7e2762a7d954",
+      "modified_ns": 1794120799487582900,
+      "created_ns": 1794120799487582900
+    },
+    "tmp/p03-dictionary-context-fix-20261108/record-manifest.json": {
+      "bytes": 3826,
+      "sha256": "66c77da835a90094e075f033c578caef78c7af3a3a759be4b6da93b5a0a1ad8d",
+      "modified_ns": 1794120859673256700,
+      "created_ns": 1794120859673256700
+    },
+    "tmp/p03-dictionary-context-fix-20261108/run_gate.py": {
+      "bytes": 8371,
+      "sha256": "d0ec6158361f86fa24713782cff7819ae71fc0f652e23f548f9ba1c6ce1d7eb1",
+      "modified_ns": 1794120698872510100,
+      "created_ns": 1794120698872510100
+    },
+    "tmp/p03-dictionary-context-fix-20261108/windows_job.py": {
+      "bytes": 4907,
+      "sha256": "6c8333ae38b148777d2f1b78bd1c02321f89602054d3f5daa75beb4f4526580f",
+      "modified_ns": 1794120698869507100,
+      "created_ns": 1794120698869507100
+    },
+    "tmp/p03-dictionary-value-type-20261108/.gdignore": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "modified_ns": 1794120348874780100,
+      "created_ns": 1794120348874780100
+    },
+    "tmp/p03-dictionary-value-type-20261108/CHECKLIST.md": {
+      "bytes": 527,
+      "sha256": "783250afa145511b00d841bf72a8fa9e23c9f74d1ed480d57909d1c160ae4e71",
+      "modified_ns": 1794120489891064200,
+      "created_ns": 1794120489891064200
+    },
+    "tmp/p03-dictionary-value-type-20261108/HANDOFF.md": {
+      "bytes": 668,
+      "sha256": "2d6edd5b94e7eb1eb16b2e6cbead1057cb2c607a3e3750963446d388ded58b86",
+      "modified_ns": 1794120489400214200,
+      "created_ns": 1794120489400214200
+    },
+    "tmp/p03-dictionary-value-type-20261108/P03-DICTIONARY-VALUE-TYPE-DELIVERY-20261108.zip": {
+      "bytes": 790819,
+      "sha256": "7f8c1577f03e130025b92e475ccb391333565e75e77df3af77553ebe969f1ea7",
+      "modified_ns": 1794120491845030200,
+      "created_ns": 1794120491723246100
+    },
+    "tmp/p03-dictionary-value-type-20261108/PLAN.md": {
+      "bytes": 3925,
+      "sha256": "d385553e7118e2fd4e9be9a829774f2adbedbe78accdca2f7b9a7fa727b76a23",
+      "modified_ns": 1794120244226464700,
+      "created_ns": 1794120244226464700
+    },
+    "tmp/p03-dictionary-value-type-20261108/RESULT.md": {
+      "bytes": 1576,
+      "sha256": "a622f7e94dcd1cab9f9c1ffaaa75052498f07dbebf15da066094a181165401d7",
+      "modified_ns": 1794120489078701400,
+      "created_ns": 1794120489078701400
+    },
+    "tmp/p03-dictionary-value-type-20261108/REVIEW-5B-attempt-01.md": {
+      "bytes": 1549,
+      "sha256": "593adee390fad0d34ec23e76d23a462239189d845d326c4530e036d0eda9cb00",
+      "modified_ns": 1794120391446557600,
+      "created_ns": 1794120391444054200
+    },
+    "tmp/p03-dictionary-value-type-20261108/REVIEW-CLOSEOUT.md": {
+      "bytes": 1119,
+      "sha256": "31f93e9a63a55c2319c4290560885c8a38740fabf9598708daf69977680383e4",
+      "modified_ns": 1794120562098197500,
+      "created_ns": 1794120562097215900
+    },
+    "tmp/p03-dictionary-value-type-20261108/REVIEW-PLAN.md": {
+      "bytes": 1443,
+      "sha256": "68b8a422e9d3207f602a063d17a588c16bfe0cb792a5a7397cec0a89e8ca42d5",
+      "modified_ns": 1794120292040924500,
+      "created_ns": 1794120292039927800
+    },
+    "tmp/p03-dictionary-value-type-20261108/archive-verification.json": {
+      "bytes": 403,
+      "sha256": "5d3e3fad7a4e1feaf97cca7e7414470fd01f073ef674c0ddc8f5e45a843a512e",
+      "modified_ns": 1794120491916486800,
+      "created_ns": 1794120491916486800
+    },
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/engine-version.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "modified_ns": 1794120350883932100,
+      "created_ns": 1794120350883932100
+    },
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/engine-version.stdout": {
+      "bytes": 33,
+      "sha256": "bf8803022b574250bb04dea65053a46b7c58570725316c1f7fe2aa6735706498",
+      "modified_ns": 1794120350881933200,
+      "created_ns": 1794120350880931800
+    },
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/input-after.json": {
+      "bytes": 8393,
+      "sha256": "f1f2da9788eb4454878da50371d79de732c4890c4914beec50e49301303c638b",
+      "modified_ns": 1794120352437521400,
+      "created_ns": 1794120352437521400
+    },
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/input-before.json": {
+      "bytes": 8393,
+      "sha256": "f1f2da9788eb4454878da50371d79de732c4890c4914beec50e49301303c638b",
+      "modified_ns": 1794120350241351500,
+      "created_ns": 1794120350241351500
+    },
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/run.json": {
+      "bytes": 4678,
+      "sha256": "5d0f4696c583265235c65364488959d6aa53182d57daa2a973a17d319b88ae5c",
+      "modified_ns": 1794120352442517500,
+      "created_ns": 1794120352442517500
+    },
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/runner.gd.txt": {
+      "bytes": 11106,
+      "sha256": "4681bc13ee1eba7a95157c530573bf8aeb7a01ff7055a7a6a1d4cdfd04e44f9d",
+      "modified_ns": 1794120350244352500,
+      "created_ns": 1794120350244352500
+    },
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/stderr.bin": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "modified_ns": 1794120350884932700,
+      "created_ns": 1794120350884932700
+    },
+    "tmp/p03-dictionary-value-type-20261108/attempt-01/stdout.bin": {
+      "bytes": 1698,
+      "sha256": "89e100334b62acea18864f38a4390304cb7a017fb260393f3ff6a05f2287be40",
+      "modified_ns": 1794120352113616000,
+      "created_ns": 1794120350884932700
+    },
+    "tmp/p03-dictionary-value-type-20261108/dictionary_value_type.gd": {
+      "bytes": 11106,
+      "sha256": "4681bc13ee1eba7a95157c530573bf8aeb7a01ff7055a7a6a1d4cdfd04e44f9d",
+      "modified_ns": 1794120348864252300,
+      "created_ns": 1794120348863253600
+    },
+    "tmp/p03-dictionary-value-type-20261108/diff-check.stderr": {
+      "bytes": 951,
+      "sha256": "9383227f23e362399d837fdb9c3c96bbd55d9aa7b4797dccb087af7227ca50c7",
+      "modified_ns": 1794120464251330300,
+      "created_ns": 1794120464251330300
+    },
+    "tmp/p03-dictionary-value-type-20261108/diff-check.stdout": {
+      "bytes": 809,
+      "sha256": "91be8367860019a1e276a52b8cd1f1542ff5439ce163f2f84cdd326e0ac08255",
+      "modified_ns": 1794120464248326100,
+      "created_ns": 1794120464248326100
+    },
+    "tmp/p03-dictionary-value-type-20261108/dirty-baseline.json": {
+      "bytes": 2898269,
+      "sha256": "deada0862c05c0956768bba3fdbdc09166986d9012601f1700c060a3a083fd9d",
+      "modified_ns": 1794120358993169000,
+      "created_ns": 1794120358929986400
+    },
+    "tmp/p03-dictionary-value-type-20261108/dirty-end.z": {
+      "bytes": 72523,
+      "sha256": "2659b01a76428249f08886c0e9b435adc61ebac613b6523fb187b4829f6c3f7e",
+      "modified_ns": 1794120358801972500,
+      "created_ns": 1794120358796964500
+    },
+    "tmp/p03-dictionary-value-type-20261108/dirty-start.z": {
+      "bytes": 65446,
+      "sha256": "26243115812bb57db6d2321ff3e24503501696db022007181d98816213ef5362",
+      "modified_ns": 1794120358795955700,
+      "created_ns": 1794120358790447700
+    },
+    "tmp/p03-dictionary-value-type-20261108/final-status.z": {
+      "bytes": 80419,
+      "sha256": "9829d046ecec73a29e356a18d7ce09774c8b972315bacc1e857343bce118a00c",
+      "modified_ns": 1794120464247323200,
+      "created_ns": 1794120464247323200
+    },
+    "tmp/p03-dictionary-value-type-20261108/new-file-whitespace.json": {
+      "bytes": 186,
+      "sha256": "1536a4fc6efa8b35a38bddee795ab28dffdad7befe556ee80c8c3da2adaec840",
+      "modified_ns": 1794120491627061200,
+      "created_ns": 1794120491627061200
+    },
+    "tmp/p03-dictionary-value-type-20261108/preservation.json": {
+      "bytes": 299512,
+      "sha256": "1f2c1ad673ab0395f35f7763222d699866f98eecf121bc4eecd56d2b4f50030a",
+      "modified_ns": 1794120464498567100,
+      "created_ns": 1794120464498567100
+    },
+    "tmp/p03-dictionary-value-type-20261108/record-manifest.json": {
+      "bytes": 3689,
+      "sha256": "f4a835a59b284bec612994aac0aa54798edac02fc289b7c7315b6e77ae0a3990",
+      "modified_ns": 1794120491720727700,
+      "created_ns": 1794120491720727700
+    },
+    "tmp/p03-dictionary-value-type-20261108/run_gate.py": {
+      "bytes": 8348,
+      "sha256": "da23e120a3d4b0c631712a5cac279e7613255b4cf083956b51eeb36567ef3051",
+      "modified_ns": 1794120348875780600,
+      "created_ns": 1794120348875780600
+    },
+    "tmp/p03-dictionary-value-type-20261108/windows_job.py": {
+      "bytes": 4907,
+      "sha256": "6c8333ae38b148777d2f1b78bd1c02321f89602054d3f5daa75beb4f4526580f",
+      "modified_ns": 1794120348872780600,
+      "created_ns": 1794120348871779600
+    },
+    "tmp/p03-terminal-boundary-20261108/.gdignore": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "modified_ns": 1794119581614851800,
+      "created_ns": 1794119581614851800
+    },
+    "tmp/p03-terminal-boundary-20261108/CHECKLIST.md": {
+      "bytes": 647,
+      "sha256": "3f9d3b29a7a5c99ec99906b46338d03269407853968499159f05918fe0d71633",
+      "modified_ns": 1794119738616457900,
+      "created_ns": 1794119738616457900
+    },
+    "tmp/p03-terminal-boundary-20261108/HANDOFF.md": {
+      "bytes": 774,
+      "sha256": "00ef5089dcfc13e38a3e765be98d35a32988556be4cc67d76060534c49b6e9d9",
+      "modified_ns": 1794119738321816200,
+      "created_ns": 1794119738321816200
+    },
+    "tmp/p03-terminal-boundary-20261108/P03-TERMINAL-BOUNDARY-DELIVERY-20261108.zip": {
+      "bytes": 572440,
+      "sha256": "29b6694f854faf21c2115e014b9db1cef35b048b2ebc7d700409e6889c3f2e3f",
+      "modified_ns": 1794119742246100700,
+      "created_ns": 1794119742209960600
+    },
+    "tmp/p03-terminal-boundary-20261108/PLAN.md": {
+      "bytes": 6031,
+      "sha256": "652ab36acfb729223cf60fbf28976cee0d27f2fa824323d84fc19a89d5c4c5ca",
+      "modified_ns": 1794119470744884100,
+      "created_ns": 1794119470743898900
+    },
+    "tmp/p03-terminal-boundary-20261108/RESULT.md": {
+      "bytes": 1851,
+      "sha256": "52e6cbbd6b485fbf8422f987e130600ff8dc124fd3d2f5472e0ea5a7335f5f11",
+      "modified_ns": 1794119737902122800,
+      "created_ns": 1794119737901124400
+    },
+    "tmp/p03-terminal-boundary-20261108/REVIEW-5B-attempt-01.md": {
+      "bytes": 1988,
+      "sha256": "bfe125ef38119c43b3b0ec4dcdc2a915a7452d8f43654c720c580e24210f2b7e",
+      "modified_ns": 1794119639956644000,
+      "created_ns": 1794119639955632200
+    },
+    "tmp/p03-terminal-boundary-20261108/REVIEW-CLOSEOUT.md": {
+      "bytes": 1229,
+      "sha256": "69d76f5bccda5a9644038b8df1ea1afff440e9b0cf3522fe54cc3648b9e48630",
+      "modified_ns": 1794119795028951500,
+      "created_ns": 1794119795027947600
+    },
+    "tmp/p03-terminal-boundary-20261108/REVIEW-PLAN.md": {
+      "bytes": 1822,
+      "sha256": "ef1f9ab31420ef73a43c9b62bc01b80f500098dfa4a9c48dd892cb1aa5892b64",
+      "modified_ns": 1794119503318005500,
+      "created_ns": 1794119503316003500
+    },
+    "tmp/p03-terminal-boundary-20261108/archive-verification.json": {
+      "bytes": 399,
+      "sha256": "b9a91c2569282891a21b64369eb9fef54501ef89ded5e0db298fc5b1622054b6",
+      "modified_ns": 1794119742270349400,
+      "created_ns": 1794119742270349400
+    },
+    "tmp/p03-terminal-boundary-20261108/attempt-01/engine-version.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "modified_ns": 1794119605511110600,
+      "created_ns": 1794119605511110600
+    },
+    "tmp/p03-terminal-boundary-20261108/attempt-01/engine-version.stdout": {
+      "bytes": 33,
+      "sha256": "bf8803022b574250bb04dea65053a46b7c58570725316c1f7fe2aa6735706498",
+      "modified_ns": 1794119605509092000,
+      "created_ns": 1794119605509092000
+    },
+    "tmp/p03-terminal-boundary-20261108/attempt-01/input-after.json": {
+      "bytes": 8364,
+      "sha256": "259d4051fd936911c2b43c38bea2ff301e1db06c0a83f821b9c94319e57c1f9b",
+      "modified_ns": 1794119606605146900,
+      "created_ns": 1794119606605146900
+    },
+    "tmp/p03-terminal-boundary-20261108/attempt-01/input-before.json": {
+      "bytes": 8364,
+      "sha256": "259d4051fd936911c2b43c38bea2ff301e1db06c0a83f821b9c94319e57c1f9b",
+      "modified_ns": 1794119605113219400,
+      "created_ns": 1794119605113219400
+    },
+    "tmp/p03-terminal-boundary-20261108/attempt-01/run.json": {
+      "bytes": 1275,
+      "sha256": "525eb7b0e41a3bb3d286a9819e2353f0561bb48232f7165d11db1c07bc152555",
+      "modified_ns": 1794119606610463700,
+      "created_ns": 1794119606610463700
+    },
+    "tmp/p03-terminal-boundary-20261108/attempt-01/runner.gd.txt": {
+      "bytes": 9292,
+      "sha256": "bebd9f4d6d976d4b2d9506076843d04e5ab9dd759a96b2762436b6203beed523",
+      "modified_ns": 1794119605115218500,
+      "created_ns": 1794119605115218500
+    },
+    "tmp/p03-terminal-boundary-20261108/attempt-01/stderr.bin": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "modified_ns": 1794119605512092300,
+      "created_ns": 1794119605512092300
+    },
+    "tmp/p03-terminal-boundary-20261108/attempt-01/stdout.bin": {
+      "bytes": 361,
+      "sha256": "104b18d1d06b0b7db0e97db74b26394b4b9fb9bad348156bc7f61b43037cabdc",
+      "modified_ns": 1794119606382044300,
+      "created_ns": 1794119605512092300
+    },
+    "tmp/p03-terminal-boundary-20261108/diff-check.stderr": {
+      "bytes": 951,
+      "sha256": "9383227f23e362399d837fdb9c3c96bbd55d9aa7b4797dccb087af7227ca50c7",
+      "modified_ns": 1794119696065253900,
+      "created_ns": 1794119696065253900
+    },
+    "tmp/p03-terminal-boundary-20261108/diff-check.stdout": {
+      "bytes": 809,
+      "sha256": "91be8367860019a1e276a52b8cd1f1542ff5439ce163f2f84cdd326e0ac08255",
+      "modified_ns": 1794119696063260900,
+      "created_ns": 1794119696063260900
+    },
+    "tmp/p03-terminal-boundary-20261108/dirty-baseline.json": {
+      "bytes": 2148659,
+      "sha256": "d4c3c0d7f3db985bc23674a1578a0cf18040439441d558995b052a6fd702800b",
+      "modified_ns": 1794119547601679800,
+      "created_ns": 1794119547570732700
+    },
+    "tmp/p03-terminal-boundary-20261108/dirty-end.z": {
+      "bytes": 50194,
+      "sha256": "7387e1deee37a860b88bd8d50f262f64d9c92429fe68c7ebf152f9ec300701fb",
+      "modified_ns": 1794119547348231000,
+      "created_ns": 1794119547345733800
+    },
+    "tmp/p03-terminal-boundary-20261108/dirty-start.z": {
+      "bytes": 50194,
+      "sha256": "7387e1deee37a860b88bd8d50f262f64d9c92429fe68c7ebf152f9ec300701fb",
+      "modified_ns": 1794119547344723800,
+      "created_ns": 1794119547340745200
+    },
+    "tmp/p03-terminal-boundary-20261108/final-status.z": {
+      "bytes": 50323,
+      "sha256": "8d4178ed7fc0257c980dc443704d9c456a79e287cc51b4b1ba413aa26f353d6e",
+      "modified_ns": 1794119696062252100,
+      "created_ns": 1794119696061251600
+    },
+    "tmp/p03-terminal-boundary-20261108/new-file-whitespace.json": {
+      "bytes": 182,
+      "sha256": "dd88efce3aea12ffe015c6c3d606bceaea287320daadd880f7485c865aaeb73a",
+      "modified_ns": 1794119742170869900,
+      "created_ns": 1794119742170869900
+    },
+    "tmp/p03-terminal-boundary-20261108/preservation.json": {
+      "bytes": 1697,
+      "sha256": "81e96f75665ddd586236c211f84718e8db11e11378aa3c69cb3fb4a10111ec65",
+      "modified_ns": 1794119696180393100,
+      "created_ns": 1794119696180393100
+    },
+    "tmp/p03-terminal-boundary-20261108/record-manifest.json": {
+      "bytes": 3680,
+      "sha256": "86d8bc13f64dde329c1580bc1a9590cdca9756b4ff95935ad1d7d45de2c97098",
+      "modified_ns": 1794119742207946900,
+      "created_ns": 1794119742206946000
+    },
+    "tmp/p03-terminal-boundary-20261108/run_gate.py": {
+      "bytes": 8271,
+      "sha256": "d577a5ee8e844da74cb2dab8f4554ca8fe0a7fba344c9c09db9830de35bc46ce",
+      "modified_ns": 1794119598225333300,
+      "created_ns": 1794119598225333300
+    },
+    "tmp/p03-terminal-boundary-20261108/terminal_boundary.gd": {
+      "bytes": 9292,
+      "sha256": "bebd9f4d6d976d4b2d9506076843d04e5ab9dd759a96b2762436b6203beed523",
+      "modified_ns": 1794119597128734400,
+      "created_ns": 1794119581601829300
+    },
+    "tmp/p03-terminal-boundary-20261108/windows_job.py": {
+      "bytes": 4907,
+      "sha256": "6c8333ae38b148777d2f1b78bd1c02321f89602054d3f5daa75beb4f4526580f",
+      "modified_ns": 1794119581611840100,
+      "created_ns": 1794119581608826800
+    },
+    "tmp/p03-viewer-checkpoint-20261108/PLAN-v2.md": {
+      "bytes": 1798,
+      "sha256": "a5b26590a23cbe530a8c40f119bf905123d2316584accec812d3897b88e70950",
+      "modified_ns": 1794120974057151700,
+      "created_ns": 1794120974056149300
+    },
+    "tmp/p03-viewer-checkpoint-20261108/PLAN.md": {
+      "bytes": 3958,
+      "sha256": "8481139e160584dceb18295718ce173330254f18068adc5a66fa51248c2377b8",
+      "modified_ns": 1794120904057725100,
+      "created_ns": 1794120904057725100
+    },
+    "tmp/p03-viewer-checkpoint-20261108/REVIEW-PLAN.md": {
+      "bytes": 1251,
+      "sha256": "d47fd152b3c4b5b3b2dfd60e1eab33304656f812b9138fc3d926647b8b94ff4e",
+      "modified_ns": 1794121000882309500,
+      "created_ns": 1794121000881204600
+    },
+    "tmp/p03-viewer-checkpoint-20261108/dirty-baseline.json": {
+      "bytes": 3669369,
+      "sha256": "7a6dec885ecc97ec443ed38ecb7cf314056cffa8240ba2ccaf1800a355674793",
+      "modified_ns": 1794121078639120400,
+      "created_ns": 1794121078584551800
+    },
+    "tmp/p03-viewer-checkpoint-20261108/dirty-end.z": {
+      "bytes": 81361,
+      "sha256": "6de3c48dcfe53933086a6cafbf917746d85651845ecc88c3218fda019e65a925",
+      "modified_ns": 1794121078366788900,
+      "created_ns": 1794121078362778800
+    },
+    "tmp/p03-viewer-checkpoint-20261108/dirty-start.z": {
+      "bytes": 81344,
+      "sha256": "3a94e182ff1e57f6c8e7f024260ae028a183f6f3ce495830dc6c90db501e4f75",
+      "modified_ns": 1794121078361797700,
+      "created_ns": 1794121078355775500
+    }
+  },
+  "comparison": null,
+  "arrived_during_read": [],
+  "removed_during_read": [],
+  "attribution": "New non-evidence paths have unverified ownership and origin. No writes by this P02 implementation."
+}

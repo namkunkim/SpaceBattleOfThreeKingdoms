@@ -1,0 +1,67 @@
+{
+  "before_exit": 2,
+  "after_exit": 2,
+  "documents": [
+    {
+      "path": "docs/battle-core/pc-campaign-design/P02-FIRST-HEADLESS-RESULT-20261107.md",
+      "before_sha256": "6369e4f09622f0a73dc0cc382acc12e8b19d615088e4181951f1d1d56580dade",
+      "after_sha256": "7d51ece7b2f388c5c67a45e8cfc5237a907f37ff740c2cacb2714ab030c1d072",
+      "inverse_sha256": "6369e4f09622f0a73dc0cc382acc12e8b19d615088e4181951f1d1d56580dade",
+      "lines": [
+        1,
+        3,
+        47,
+        49,
+        51
+      ]
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/P02-FIRST-HEADLESS-CHECKLIST-20261107.md",
+      "before_sha256": "fbe81cef4b7825372c41e05a24fa6c5a2e922ced724cff81bb0550957be61587",
+      "after_sha256": "98148f6831a9a2ec103a39c0dc9488a00d43ed60324208893a215aafc022bfe6",
+      "inverse_sha256": "fbe81cef4b7825372c41e05a24fa6c5a2e922ced724cff81bb0550957be61587",
+      "lines": [
+        3,
+        10,
+        11,
+        13,
+        20
+      ]
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/SESSION-HANDOFF-P02-FIRST-HEADLESS-20261107.md",
+      "before_sha256": "77160bb8ef9f2cf694b348c347ec38c94fe859ba417a1c516699a8c8635ef03b",
+      "after_sha256": "3eaa010128eb7fedc3b178f43b3d35a7774bc4fad07c76eb9f5b378b474a1ab7",
+      "inverse_sha256": "77160bb8ef9f2cf694b348c347ec38c94fe859ba417a1c516699a8c8635ef03b",
+      "lines": [
+        3,
+        21,
+        34,
+        36
+      ]
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.md",
+      "before_sha256": "6d63f3535c55d6fba8058fa2d6aa414e6c9ccf019a2b01fdf2b2190f011f4cf0",
+      "after_sha256": "a0627a21afa37ca30fa365a3d92691d614f8e607892fe7349c283eaab2a9b723",
+      "inverse_sha256": "6d63f3535c55d6fba8058fa2d6aa414e6c9ccf019a2b01fdf2b2190f011f4cf0",
+      "lines": [
+        5,
+        22,
+        74,
+        103,
+        107,
+        109
+      ]
+    },
+    {
+      "path": "docs/battle-core/CHECKLIST-OPEN.md",
+      "before_sha256": "edc6771c38c844e14bd585da05089905f179c9b87adea639c0ef55bdf7c5eab6",
+      "after_sha256": "a1cf47d1120857e27a82828c902e15be7df5d4d546c2a44273c617362719a3f0",
+      "inverse_sha256": "edc6771c38c844e14bd585da05089905f179c9b87adea639c0ef55bdf7c5eab6",
+      "lines": [
+        35
+      ]
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+P02_RETURN_ASSERT scope PASS
+P02_RETURN_ASSERT arguments PASS
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-pc-next2-20261109/attempt-02/before/result/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-09T04-05-02-2436-1244177.jsonl
+FPS 107.0 ships 411 state end speed 4
+P02_RETURN_ASSERT battle PASS
+P02_RETURN_ASSERT phase PASS
+P02_RETURN_ASSERT state-presence PASS
+P02_RETURN_ASSERT state-value PASS
+P02_RETURN_ASSERT button PASS
+P02_RETURN_ASSERT map-uncached PASS
+P02_RETURN_ASSERT hide-map PASS
+P02_RETURN_ACTION reject-1-
+ERROR: Cannot open file 'res://scenes/WorldMap.tscn'.
+   at: load (scene/resources/resource_format_text.cpp:1442)
+   GDScript backtrace (most recent call first):
+       [0] back_to_world (res://scripts/world_link.gd:39)
+       [1] back_to_world (res://scripts/FleetBattle3D.gd:436)
+       [2] to_title (res://hud/ui_kit/command_deck.gd:290)
+       [3] <anonymous lambda> (res://hud/ui_kit/deck_screens.gd:605)
+       [4] _run (res://tests/p02_return_probe.gd:92)
+ERROR: Failed loading resource: res://scenes/WorldMap.tscn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] back_to_world (res://scripts/world_link.gd:39)
+       [1] back_to_world (res://scripts/FleetBattle3D.gd:436)
+       [2] to_title (res://hud/ui_kit/command_deck.gd:290)
+       [3] <anonymous lambda> (res://hud/ui_kit/deck_screens.gd:605)
+       [4] _run (res://tests/p02_return_probe.gd:92)
+P02_RETURN_ASSERT reject-1-scene PASS
+P02_RETURN_ASSERT reject-1-state-presence PASS
+P02_RETURN_ASSERT reject-1-state-value PASS
+P02_RETURN_ASSERT reject-1-ui PASS
+P02_RETURN_ASSERT reject-1-settings PASS
+P02_RETURN_ASSERT reject-1-brief PASS
+P02_RETURN_ASSERT reject-1-queue PASS
+P02_RETURN_ASSERT restore-map PASS
+P02_RETURN_DONE 17 0

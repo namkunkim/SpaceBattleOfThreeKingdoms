@@ -1,0 +1,103 @@
+diff --git a/core/battle/battle_sim.gd b/core/battle/battle_sim.gd
+index 3995e13..f661f0a 100644
+--- a/core/battle/battle_sim.gd
++++ b/core/battle/battle_sim.gd
+@@ -1016,7 +1016,7 @@ func _fleet_phase(timers: bool) -> void:
+ 		var dest := Vector2.ZERO
+ 		var chase_r: float = f.range_r * R.chase_range_share
+ 		if salvo and assault and f.charge <= 0:
+-			chase_r = maxf(chase_r, float(rs.rt("range_band_hold.engagement_distance", 170.0)))
++			chase_r = maxf(chase_r, float(rs.rt("range_band_hold.engagement_distance", R.chase_engagement_fallback_r)))
+ 		if salvo and f.charge > 0:
+ 			chase_r = float(salvo.C.bands.assault_r)   # 돌격은 강습 거리까지 붙는다
+ 		# AI의 거리 유지/후퇴 이동은 사격 표적과 함께 존재한다. 이동 목적지를 추격으로 덮지 않는다.
+diff --git a/data/profiles/poc_corridor.json b/data/profiles/poc_corridor.json
+index d49009d..3fdcc33 100644
+--- a/data/profiles/poc_corridor.json
++++ b/data/profiles/poc_corridor.json
+@@ -59,6 +59,7 @@
+   "rally_radius": 120,
+   "arrive_r": 10,
+   "chase_range_share": 0.8,
++  "chase_engagement_fallback_r": 170,
+   "settle_speed_share": 0.7,
+   "min_turn_cos": 0.3,
+   "arrive_k_ref": 2.0,
+diff --git a/docs/battle-core/CHECKLIST-OPEN.md b/docs/battle-core/CHECKLIST-OPEN.md
+index aeb5d2c..54d7ede 100644
+--- a/docs/battle-core/CHECKLIST-OPEN.md
++++ b/docs/battle-core/CHECKLIST-OPEN.md
+@@ -21,11 +21,18 @@
+ - [x] H1 사건2항 사용자 선택 기록(2026-10-25): 본대출발과 동일 논리시각 통신소 가동완료 지연 인정·출발후 소급 없음, 유효지연만큼 공개 결산시한 연장·시한동시 유효 목표/탈출 인정. [결정 원본](pc-campaign-design/H1-EVENT-DECISION.md). 지휘상실동시 실패/명시철수성과만 유지, 수치·전체동일틱·O07은 미정.
+ - [x] H2 사용자 선택·인계 기록(2026-10-26): 미정 포함 설계 조건부 수용과 구현 스펙/측정 계획 준비, 전체 상태+후속 명령·초기 동일 규칙 버전 재개·관람/논리 재생 분리, 자기 시설 상실/상대 마지막 확인·적 재고 비공개·필수 일정 공지를 채택했다. [결정·0번 되먹임 원본](pc-campaign-design/H2-DECISION.md). D01~D10 독립 문서 검토·사용자 판단·[H2 기록 독립 수용](pc-campaign-design/REVIEW-H2.md)·0번 되먹임을 근거로 2026-10-26 R18 설계 검토 루프의 조건부 인계를 완료했다. 후속 구현 스펙·측정 계획과 그 검증은 별도다. O07 세부 계약·수치·전체 동시 순서·O06/O08 및 실제 게임 구현/시험은 미완료다.
+ - [ ] 구현 착수 전 시간 기준·작전 종료·사기 회복·지도 범위의 미확정 사항을 정리하고, 확정된 사용자 결정과 설계 가정을 구분한다.
++  - [x] **I01a 설정 구현·기록 이전 완료(2026-10-27):** 순수 설정/고정 fixture 범위와 326 checks를 `8292805`에 반영하고 이전 작업에서 main 푸시를 확인했다. 실제 host/runtime/save 검증을 뜻하지 않는다. [I01a 결과](pc-campaign-design/I01A-IMPLEMENTATION-RESULT-20261027.md).
++  - [x] **기존 data_rules 기준선 실패 해소(2026-10-28 완료, 10-27 착수):** 추격 거리 fallback 170을 POC 데이터 정본으로 옮기고, 누락/override 실제 추격 10사례를 보강했다. data_rules·I01a(326)·hold_distance·commander_ai·core_rules·battle_flow 종료 0. [결과·검증·독립 검토](pc-campaign-design/DATA-RULES-BASELINE-FIX-20261028.md). 독립 5-b 수용. 이번 수정의 커밋·푸시는 하지 않았다.
++  - [x] **I01b-P0 준비 재고(2026-10-28):** 기존 K/S/ST 계약 재사용·확정/관측/미정과 의존성을 정리하고, 현재 21소스 SHA·19모듈 283선언·14앵커를 읽기 전용으로 조사했다. 정상/변조 거부 검사와 독립 5-b 수용. [준비·증거·다음 조각](pc-campaign-design/I01B-PREPARATION-20261028.md). 전체 snapshot/O07 완성이 아니다.
++  - [x] **I01b-P1 신규 부분 시계 검사(2026-10-28):** 실제 BattleSim/TickClock 10seed×배속3×정지유무 60사례 exit0·tick2/clock150 PASS. 신규 코드와 실제 부분 시계 성과는 독립 5-b 수용. [결과·검토](pc-campaign-design/I01B-P1-RESULT-20261028.md).
++  - [x] **I01b-P1 core 종료 증거 보완(원본, 2026-10-28):** 사용자 “원본에서 작업해” 지시 후 실제 core_rules exit0 확보. 원본 clock60/config326/hold/AI/flow도 각각 exit0, P0 도구도 원본 실행 exit0. 기존 관리 작업트리의 core exit=null은 과거 이력이다. [원본 이관 결과](pc-campaign-design/I01B-P1-RESULT-20261028.md).
++  - [ ] **원본 data_rules 전체 gate:** 기존 무관 dirty bundle_layout.gd의 숫자 리터럴11건으로 첫 gate exit1·후속 미실행. 해당 파일 SHA는 이관 전후 동일하며 allowlist/skip을 완화하지 않았다. 위 관리 작업트리 data_rules PASS 이력과 현재 원본 실패를 구분한다. 해당 변경 정리는 별도 후속이다.
++  - [ ] **I01b 후속 실제 통합:** 원 I01/I01b 및 A04/A05/A06는 NOT_READY다. 실제 어댑터·저장/재개·제품 공간은 후속이며, 원본 기존 dirty를 포함한 검사를 전체 캠페인 완료로 표시하지 않는다.
+ - [ ] 기존 PC 피처 브랜치와 최신 기준 브랜치의 차이·미커밋 변경·관련 작업 상태를 확인하고 필요한 변경의 통합 범위를 정한다.
+ - [ ] 1단계 공간·기동 기반 → 2단계 점령·보급 작전 → 3단계 증원·철수·완성 검증 순서로 구현한다. 단계별 검증 결과와 인계 내용을 남긴다.
+ - [ ] 구현 후 저장·재생·기존 적벽 회귀·PC 화면·사람 플레이를 확인한다. 구현 리뷰와 발견 사항 수정을 마친 후 병합 여부를 판단한다.
+ 
+-이번 검토에서는 실행 코드를 수정하거나 테스트·화면 검증 완료로 표시하지 않는다.
++2026-10-25 설계 검토 당시에는 실행 코드를 수정하거나 테스트·화면 검증 완료로 표시하지 않았다. 후속 I01a와 기준선 수정 결과는 위 별도 기록을 따른다.
+ 
+ **진행 현황 (2026-10-07)**
+ - [x] M10 선행(호스트를 적벽 프로필로 연결): main 병합(`ba87606`).
+diff --git a/tests/data_rules.gd b/tests/data_rules.gd
+index 0f516fd..5ee7def 100644
+--- a/tests/data_rules.gd
++++ b/tests/data_rules.gd
+@@ -99,6 +99,7 @@ func _run() -> void:
+ 			if not TestCheck.ok(self, rules.has(k), "%s 프로필에 규칙 키 없음: %s (%s)" % [entry[0], k, used[k]]): return
+ 		for k in rules:
+ 			if not TestCheck.ok(self, used.has(k) or k in ["world_w", "world_h"], "%s 프로필의 안 쓰는 규칙 키: %s" % [entry[0], k]): return
++	if not _chase_fallback(): return
+ 	# --- 3. POC 프로필: 편성이 데이터에서 온다 ---
+ 	if not TestCheck.ok(self, poc.ally.size() == 6 and poc.foe.size() == 7 and poc.reinf.size() == 2, "poc fleets"): return
+ 	var sim0 := BattleSim.new(1)
+@@ -176,6 +177,41 @@ func _run() -> void:
+ 	print("DATA_RULES_PASS keys=%d core=%d proposed=%d first_move=%d" % [used.size(), core.size(), prop.size(), first_move])
+ 	quit(0)
+ 
++# 시나리오 교전 거리 우선, 누락 시 POC 정본의 추격 기본값 170 유지.
++# 실제 이동 분기를 한 번 실행한다. fallback을 지우면 169에서도 추격하므로 실패한다.
++func _chase_fallback() -> bool:
++	if not TestCheck.ok(self, PocSetup.profile().rules.chase_engagement_fallback_r == 170, "chase fallback data = 170"): return false
++	var missing := [
++		{},
++		{"scenario_id": "no-realtime"},
++		{"realtime_rules": {}},
++		{"realtime_rules": {"range_band_hold": {}}},
++	]
++	var cases := []
++	for i in missing.size():
++		cases.append({"label": "missing-%d-inside" % i, "scenario": missing[i], "distance": 169.0, "moves": false})
++		cases.append({"label": "missing-%d-outside" % i, "scenario": missing[i], "distance": 171.0, "moves": true})
++	cases.append({"label": "override-150", "scenario": {"realtime_rules": {"range_band_hold": {"engagement_distance": 150}}}, "distance": 160.0, "moves": true})
++	cases.append({"label": "override-200", "scenario": {"realtime_rules": {"range_band_hold": {"engagement_distance": 200}}}, "distance": 180.0, "moves": false})
++	for c in cases:
++		var s := SalvoFixture.sim(
++			[SalvoFixture.def("chaser", 400, 450, [["SHP-04", 1]], true)],
++			[SalvoFixture.def("target", 400 + float(c.distance), 450, [["SHP-04", 1]], true)])
++		s.rs.scenario = c.scenario.duplicate(true)
++		s.assault = AssaultCore.new(s, s.salvo.C.assault)
++		# 별도 위치 차단은 hold_distance.gd가 검사한다. 누락 데이터에서도 추격 임계만 고립한다.
++		s._hold_d2 = 0.0
++		var f: FleetState = s.st.fleets[0]
++		var target: FleetState = s.st.fleets[1]
++		f.target_id = target.id
++		f.heading = 0.0
++		if not TestCheck.ok(self, s.salvo != null and s.assault != null and f.charge == 0 and s.sight_target(f) == target and f.range_r * s.R.chase_range_share < float(c.distance), "chase branch setup " + c.label): return false
++		var start := f.pos
++		s._fleet_phase(false)
++		var moved := f.pos.x > start.x and is_equal_approx(f.pos.y, start.y)
++		if not TestCheck.ok(self, moved == c.moves and f.moving == c.moves and (bool(c.moves) or f.pos == start), "chase fallback/override " + c.label): return false
++	return true
++
+ # P8a 특기 스키마(REVIEW-P8-0 F-12): 필수 키, 기술 ID 참조, 술어·requires·효과 키 허용 목록, 슬롯 기본값 직책명.
+ # 코어(skills.gd)가 해석하는 키만 허용한다. 슬롯 수·사용 횟수는 데이터에만 있다(코어 리터럴 검사는 1번이 한다)
+ const SK_TOP := ["uses_per_battle", "slots", "slot_default", "use_scope", "no_duplicate_skill_in_fleet", "stacking", "skills", "by_officer", "definitions"]

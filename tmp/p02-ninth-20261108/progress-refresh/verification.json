@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-11-08 23:58 KST",
+  "target": "docs\\battle-core\\pc-campaign-design\\P02-PROGRESS-CHECKLIST.md",
+  "before_sha256": "54c4cf9b82d2e2e63fbb9bd32bcd749adb2981efe41a139fee7fdd8739b93210",
+  "after_sha256": "39896d2bb19e5e8ef7b8b5b10944952a6961a89b14678b4c37ed98aac17062ab",
+  "before_state": {
+    "head": "0be09755b70378286105972f35ac5b7031715664",
+    "index_sha256": "6980bad4df2570c03e76cd964aec5bb0b71ec5cbdef69f4b022e4df1a2aca57a",
+    "protected_sha256": {
+      "core/battle/operation_private_state.gd": "46b6fe191166ec3dcdb620f51c3ccd391a9080f52289517ae804bf86cecc1ea3",
+      "tests/p02_worker_adapter.gd": "393b20d8e72eb86d13ab7ee10d5d36d97a592e9c03b2e4664f380e34c4f3237e"
+    }
+  },
+  "after_state": {
+    "head": "0be09755b70378286105972f35ac5b7031715664",
+    "index_sha256": "6980bad4df2570c03e76cd964aec5bb0b71ec5cbdef69f4b022e4df1a2aca57a",
+    "protected_sha256": {
+      "core/battle/operation_private_state.gd": "46b6fe191166ec3dcdb620f51c3ccd391a9080f52289517ae804bf86cecc1ea3",
+      "tests/p02_worker_adapter.gd": "393b20d8e72eb86d13ab7ee10d5d36d97a592e9c03b2e4664f380e34c4f3237e"
+    }
+  },
+  "added_links": {
+    "../../../tmp/p02-space-cleanup-20261108/commit-plan/final-processes.json": "80e603e640dbd4821d22ded8ba856718e2d9a8bdcf06daf191052ce463bdd97b",
+    "../../../tmp/p02-space-cleanup-20261108/commit-plan/commit-transaction.json": "cd3adc9b42df61b5077458158e0daad19966206405c85d491a3bf2e1da516e47",
+    "../../../tmp/p02-space-cleanup-20261108/commit-plan/commit-postcheck.json": "0e66a48f672d8db9282ecc9c0789edd3685bd95e869385b4db0b928fa4a8f03c",
+    "../../../tmp/p02-space-cleanup-20261108/cleanup-result.json": "8b993215772d8ea8c4950e0eefa415f3c2ebbe2a9ee3b0315b84e792936648d4",
+    "../../../tmp/p02-ninth-20261108/NEXT-PLAN.md": "a0efbbd1aa0fa3aab2fdc9d79aed36c705e7a0578b35676cbb3cf12059e3a0e9",
+    "../../../tmp/p02-ninth-20261108/REVIEW-NEXT-PLAN-INDEPENDENT.md": "a56772ca1786a688455dd0c579dab809cce0aa2ab8694bc7ea8ed19adfa96d93",
+    "../../../tmp/p02-ninth-20261108/prep-ab-sol/PREP-AB.md": "47570d1ac86347a0929fbb0975edd75160fb0c8d721f30108f95f0d3fa347bd6",
+    "../../../tmp/p02-ninth-20261108/REVIEW-PREP-AB-INDEPENDENT.md": "2060305c066390cc2d74358229c79e69e23989b551ac0f808a44cc3511e806ba"
+  }
+}

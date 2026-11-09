@@ -1,0 +1,12 @@
+ERROR: [FleetBattle3D] invalid_candidate_profile at profile.ally
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] init_game (res://scripts/FleetBattle3D.gd:180)
+       [1] _branch (res://multi_host_probe.gd:129)
+       [2] _run (res://multi_host_probe.gd:173)
+ERROR: [FleetBattle3D] invalid_candidate_profile at profile.ally
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] init_game (res://scripts/FleetBattle3D.gd:180)
+       [1] _branch (res://multi_host_probe.gd:129)
+       [2] _run (res://multi_host_probe.gd:175)

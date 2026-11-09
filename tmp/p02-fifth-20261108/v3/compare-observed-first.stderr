@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\WorkSpace\SpaceBattleOfThreeKingdoms\tmp\p02-fifth-20261108\v3\compare-observed.py", line 140, in <module>
+    restored = current[:current.index(start)] + original[original.index(start):original.index(end)] + current[current.index(end):]
+                        ~~~~~~~~~~~~~^^^^^^^
+ValueError: subsection not found

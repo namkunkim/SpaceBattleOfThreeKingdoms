@@ -1,0 +1,83 @@
+diff --git a/scripts/world_link.gd b/scripts/world_link.gd
+index 48f1eeb..ea8c39c 100644
+--- a/scripts/world_link.gd
++++ b/scripts/world_link.gd
+@@ -15,12 +15,22 @@ var last_mode := "direct"
+ func routed() -> bool:
+ 	return brief != null
+ 
+-func go_battle(b: BattleBrief) -> void:
++func go_battle(b: BattleBrief) -> Error:
++	var previous_brief := brief
++	var previous_outcome := outcome
++	var previous_difficulty := last_difficulty
++	var previous_mode := last_mode
+ 	brief = b
+ 	outcome = null
+ 	last_difficulty = b.difficulty
+ 	last_mode = b.mode
+-	get_tree().change_scene_to_file(BATTLE_SCENE)
++	var error := get_tree().change_scene_to_file(BATTLE_SCENE)
++	if error != OK:
++		brief = previous_brief
++		outcome = previous_outcome
++		last_difficulty = previous_difficulty
++		last_mode = previous_mode
++	return error
+ 
+ # 전장에서 천하로 돌아온다. o가 null이면 전투를 끝내지 않고 나온 것이다.
+ func back_to_world(o: BattleOutcome) -> void:
+diff --git a/view/world/world_map_screen.gd b/view/world/world_map_screen.gd
+index c972b8c..3d37b9b 100644
+--- a/view/world/world_map_screen.gd
++++ b/view/world/world_map_screen.gd
+@@ -52,6 +52,7 @@ var _diff_note: Label
+ var _mode_note: Label
+ var _sortie_t := 0.0
+ var _sortie_i := 0
++var _sortie_origin := {}
+ var _difficulty := "표준"
+ var _mode := "direct"
+ var _res_labels := {}
+@@ -550,6 +551,17 @@ func make_brief(seed := -1) -> BattleBrief:
+ func sortie(seed := -1) -> void:
+ 	if state == "sortie" or state == "resolve":
+ 		return
++	_sortie_origin = {
++		"state": state,
++		"brief": brief,
++		"card_visible": _card.visible,
++		"result_visible": _result.visible,
++		"cta_visible": _cta.visible,
++		"legend_visible": _legend.visible,
++		"input_lock": canvas.input_lock,
++		"arrows": canvas.arrows,
++		"owners": canvas.owners_rgn,
++	}
+ 	brief = make_brief(seed)
+ 	sound.play("confirm_heavy")
+ 	state = "sortie"
+@@ -591,9 +603,22 @@ func _finish_sortie() -> void:
+ 	_caption.visible = false
+ 	_skip.visible = false
+ 	var link := _link()
++	var origin := _sortie_origin
++	_sortie_origin = {}
+ 	if brief.mode == "direct" and link:
+ 		state = "leaving"
+-		link.go_battle(brief)
++		if link.go_battle(brief) != OK:
++			state = origin.state
++			brief = origin.brief
++			_card.visible = origin.card_visible
++			_result.visible = origin.result_visible
++			_cta.visible = origin.cta_visible
++			_legend.visible = origin.legend_visible
++			canvas.input_lock = origin.input_lock
++			canvas.arrows = origin.arrows
++			canvas.set_region_owners(origin.owners, false)
++			_update_inset()
++			_show_chip("전장에 들어갈 수 없습니다. 다시 출격해 주세요.")
+ 		return
+ 	_start_resolve()
+ 

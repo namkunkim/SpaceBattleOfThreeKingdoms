@@ -1,0 +1,54 @@
+{
+  "head": "8292805143f4561a4f5258d40b7b94adf4ff5802",
+  "files": [
+    {
+      "path": "core/battle/battle_sim.gd",
+      "sha256": "670916af166c1f67fd58f6ab3007782a598a7a8f6fea72024042e1945beb967a",
+      "bytes": 49068
+    },
+    {
+      "path": "data/profiles/poc_corridor.json",
+      "sha256": "bb7c2dbaa8c258dc8b43f16894502a72cb66a22d2058b5d5314816a0488e9d8e",
+      "bytes": 5047
+    },
+    {
+      "path": "tests/data_rules.gd",
+      "sha256": "e21db4b23e9814bb89cae2fc5f5e8f5751b6dcdb952fb3da01cc68da8af670d3",
+      "bytes": 16924
+    },
+    {
+      "path": "docs/battle-core/CHECKLIST-OPEN.md",
+      "sha256": "bf57778d93488ca546b237838ff8ab5b61b2ec93c4cb690954ecf8ceb581db20",
+      "bytes": 114560
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/DATA-RULES-BASELINE-FIX-20261028.md",
+      "sha256": "cd66eee88a7d30697d64b1583656c5c2dd54f82d7684284abff98b024063ec95",
+      "bytes": 4632
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/REVIEW-DATA-RULES-BASELINE-20261027.md",
+      "sha256": "b92f9baf0354be6ff2d740d34193c73298cad71e2586b815b4d40b171b64174b",
+      "bytes": 6922
+    }
+  ],
+  "diff_check_exit": 0,
+  "tracked_diff_files": [
+    "core/battle/battle_sim.gd",
+    "data/profiles/poc_corridor.json",
+    "docs/battle-core/CHECKLIST-OPEN.md",
+    "tests/data_rules.gd"
+  ],
+  "status_added": [
+    " M core/battle/battle_sim.gd",
+    " M data/profiles/poc_corridor.json",
+    " M docs/battle-core/CHECKLIST-OPEN.md",
+    " M tests/data_rules.gd",
+    "?? docs/battle-core/pc-campaign-design/DATA-RULES-BASELINE-FIX-20261028.md",
+    "?? docs/battle-core/pc-campaign-design/REVIEW-DATA-RULES-BASELINE-20261027.md"
+  ],
+  "status_removed": [],
+  "code_review": "Accepted by independent data_rules_review; raw review SHA preserved",
+  "committed": false,
+  "pushed": false
+}

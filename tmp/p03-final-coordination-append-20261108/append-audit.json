@@ -1,0 +1,37 @@
+{
+  "utc": "2026-11-08T10:13:32.250396+00:00",
+  "writer_check": "Both documents matched previous recorded post-append SHA and were checked immediately before append. No intervening write observed.",
+  "files": {
+    "tmp/p03-progress-20261108/P03-CHECKLIST-REVISION-20261108.md": {
+      "before": "8bd9230ec0775fac5811b9c037840e81c68d679519f59cce4f6d952c28c93ad4",
+      "after": "3a5373f1464a8845c50bd2afdbe9bbfa50f45905b4aeef0af497bc7603fececa",
+      "append_sha256": "e44c6d4938cc9499f4894b7283d5f5bf5e12a036054892dc9c6da7c9323b626d",
+      "prefix_preserved": true
+    },
+    "tmp/p03-progress-20261108/HANDOFF-20261108.md": {
+      "before": "32f6961093c995e36a5bb8efeaab032493b5432a4e7071eb06c8b73fa8babd49",
+      "after": "8a72f0a465340b77e618821d7a4eabeb000df7016e6b1dd1301cb91116dc28ae",
+      "append_sha256": "e44c6d4938cc9499f4894b7283d5f5bf5e12a036054892dc9c6da7c9323b626d",
+      "prefix_preserved": true
+    }
+  },
+  "evidence_sha256": {
+    "p03-parallel-state-20261108/combined-cut/RESULT.md": "9d9ba4472b699b790c5d3cef06242b743dc83de273e483baf88fd03c560e18ba",
+    "p03-parallel-state-20261108/combined-cut/REVIEW-5B.md": "56338556d6e0e50b716e54d479bdeec42469c053ec1debbfc1d84f3f0c1e3da1",
+    "p03-parallel-state-20261108/combined-cut/REVIEW-CLOSEOUT.md": "d75fb7f93f74420eaf818c1b08a3bcd2c4d533384fcd9d49287d7dfa7ca38a57",
+    "p03-parallel-state-20261108/boundary-closure/RESULT.md": "0b25aa496196db913873e4305f01e2719bde1680a8c2adc83b345dcee473baf9",
+    "p03-parallel-state-20261108/boundary-closure/REVIEW-5B.md": "6a282042144f0030c68added7cb7d156ab853a1d770272bd4964be51769ac1b7",
+    "p03-parallel-state-20261108/boundary-closure/REVIEW-CLOSEOUT.md": "20ff4d1331a9d265a5717425a6911a4196c191042db33df0751d57eb6e9b9748",
+    "p03-parallel-state-20261108/policy-ownership/RESULT.md": "a7533127863a590a85931e21e4f43639b2ec8bd8c17a280bdacd3d4a24d55463",
+    "p03-parallel-state-20261108/policy-ownership/REVIEW-5B.md": "9d6b4535313395ee0f4196c8aebf186548a429229769793f7e8ab0b53281a8c3",
+    "p03-parallel-state-20261108/policy-ownership/REVIEW-CLOSEOUT.md": "813f7509f03c8341ab96340581dcb5e91b4ab31bd692dfc2289e8381a6704b3a",
+    "p03-parallel-state-20261108/ui-callpaths/RESULT.md": "a1b02d9c6f8cf4788cbecc90af3d14bb6e4dffb2af2542e7499bf4423c934e15",
+    "p03-parallel-state-20261108/ui-callpaths/REVIEW-5B.md": "36f0705a3d6dbb493a88ce55977f82d2a054a662b8c0ef4a613d4c72c9d04270",
+    "p03-parallel-state-20261108/ui-callpaths/REVIEW-CLOSEOUT.md": "a6a709ad0d28d7b9143de2d5edb9042f65e70d44397ff0cfb8e29be7d6b452a3",
+    "p03-parallel-cursor-20261108/remaining-cursor-drain/RESULT-HANDOFF-ATTEMPT-05.md": "c28173d90e2dfef7285a232273ae3a51e064b4494cd66263a269033bafa6f04f",
+    "p03-parallel-cursor-20261108/remaining-cursor-drain/REVIEW-5B-ATTEMPT-05-TERRA.md": "89caba0723cef0d97372b1cd81cf3b8cadac937c6def7215dbab7b02b95302ee",
+    "p03-parallel-cursor-20261108/remaining-cursor-drain/ATTEMPT-05-5A-AUDIT.json": "35203f3d05e01e3ffa1ecba8c0d9f9a3f30aab747e6222248189d9baeae5b040",
+    "p03-parallel-cursor-20261108/remaining-cursor-drain/attempt-05/run.json": "fd527d284a6e6fc919efd4f9b6c6b5cf21a03e2cbe7f310f9f8d66f2925018cd",
+    "p03-parallel-cursor-20261108/remaining-cursor-drain/REVIEW-ATTEMPT-03-CLOSEOUT-TERRA.md": "b48bf25f5c75e181f3381ff5cb4210dc729848781eaec39eeba0a873523d9dbc"
+  }
+}

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\WorkSpace\SpaceBattleOfThreeKingdoms\tmp\p02-fifth-20261108\v3\audit-external.py", line 45, in <module>
+    assert list_new() == new, "untracked set moved while hashing"
+           ^^^^^^^^^^^^^^^^^
+AssertionError: untracked set moved while hashing

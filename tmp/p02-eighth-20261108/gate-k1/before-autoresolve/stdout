@@ -1,0 +1,4 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+none: {"mean_killed":130.95,"mean_lost":626.19,"mean_reinf_t":95.05,"mean_t":111.8,"n":200,"reasons":{"flagship_lost":200},"win_rate":0.0} (71.4s)
+attack5: {"mean_killed":893.1,"mean_lost":251.07,"mean_reinf_t":75.47,"mean_t":102.55,"n":200,"reasons":{"annihilation":200},"win_rate":1.0} (113.8s)

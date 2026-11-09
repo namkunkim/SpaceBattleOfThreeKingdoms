@@ -1,0 +1,1 @@
+[legacy FleetBattle3D 후보 준비](P02-HOST-PREP-RESULT-20261108.md)는 지정 오류와 동기 호출만 한정 수용. [전투 준비 실패 안내·최초 탈출](P02-PREP-ERROR-RESULT-20261108.md)도 지정 실패에서 한정 수용. [진행표]

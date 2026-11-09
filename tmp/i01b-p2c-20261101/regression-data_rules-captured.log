@@ -1,0 +1,9 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: TEST_FAIL core에 규칙 수치 리터럴:
+res://core/battle/operation_private_state.gd:22  10  <- var _hz := 10
+res://core/battle/operation_private_state.gd:71  4294967295  <- if typeof(seed) != TYPE_INT or seed < 0 or seed > 4294967295: return "invalid_seed"
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] ok (res://tests/lib/check.gd:8)
+       [1] _run (res://tests/data_rules.gd:88)

@@ -1,0 +1,59 @@
+{
+  "nonproduct_attempt": 2,
+  "nonproduct_budget": 3,
+  "run_count_this_turn": 1,
+  "exit": 1,
+  "started_cases": [
+    "normal"
+  ],
+  "passed_cases": [],
+  "primary": "unexpected-owned-image",
+  "raw_image_in_local_evidence": true,
+  "head_before_after": "0be09755b70378286105972f35ac5b7031715664",
+  "raw": {
+    "variant-abi-review/image-diagnostic-exec.stderr.txt": {
+      "bytes": 829,
+      "sha256": "da1788e3be67bd3acce45f9d13796b71c35a7b50dd2b3a1a67e2e316cdf0999f"
+    },
+    "variant-abi-review/image-diagnostic-exec.stdout.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "variant-abi-review/never-run-image-diagnostic-until-independent-approval.guard.jsonl": {
+      "bytes": 340,
+      "sha256": "bf3775065c65fc8058259ba8c4832f2365b9a8bfff98d25572d106db6d5f06b8"
+    },
+    "variant-abi-review/never-run-image-diagnostic-until-independent-approval.stderr.txt": {
+      "bytes": 1467,
+      "sha256": "4d20a15c87f9c4d475ee8e2a3963d807c99abe56644b0a643c9ad8c92a9df9f7"
+    },
+    "variant-abi-review/never-run-image-diagnostic-until-independent-approval.stdout.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "variant-abi-review/never-run-image-diagnostic-until-independent-approval/sentinel.jsonl": {
+      "bytes": 113,
+      "sha256": "8782af1b59069868e00c864f7dfd5825f9643ba99a4aeb9580aa68b6623de36a"
+    },
+    "variant-abi-review/never-run-image-diagnostic-until-independent-approval/normal/controller-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "variant-abi-review/never-run-image-diagnostic-until-independent-approval/normal/controller-stdout.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "variant-abi-review/never-run-image-diagnostic-until-independent-approval/normal/outer.jsonl": {
+      "bytes": 603,
+      "sha256": "d3dd679949bddd70e1b35aa3b885977bcff6ffc30792cc85d5d93802ddcac3bf"
+    },
+    "variant-abi-review/PYTHON-JOB-IMAGE-DIAGNOSTIC-MANIFEST-APPROVED.json": {
+      "bytes": 9364,
+      "sha256": "a7647cca76be8cd5f46681b817765d4816ae1c94f3b7676244cfb949d8fdb375"
+    },
+    "PYTHON-JOB-IMAGE-DIAGNOSTIC-ATTEMPT2-RESULT.md": {
+      "bytes": 2276,
+      "sha256": "eb36a04df185ab0663ce2d0edcb04cb8c017320cea0fb6efdfddd6633f83bbb3"
+    }
+  }
+}

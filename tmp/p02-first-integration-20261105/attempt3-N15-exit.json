@@ -1,0 +1,26 @@
+{
+  "label": "attempt3-N15",
+  "command": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+    "--log-file",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-first-integration-20261105\\attempt3-N15-engine.log",
+    "-s",
+    "tests/autoresolve.gd",
+    "--",
+    "--operation-input",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tests\\fixtures\\p02\\poc.json",
+    "--profile",
+    "red_cliffs",
+    "--out",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-first-integration-20261105\\attempt3-cli-inputs\\default-result.json"
+  ],
+  "actual_exit": 1,
+  "script_errors": 0,
+  "errors": 0,
+  "warnings": 0,
+  "log_sha256": "508df59ac5b0f30e953dabb6fbda9c828239f066a841b539a0640150bc0cfe31",
+  "engine_log_sha256": "c9fd97e4730f4a05ce3177a30fc99125745b1068e161aaf0d5697ea3027ab5e0"
+}

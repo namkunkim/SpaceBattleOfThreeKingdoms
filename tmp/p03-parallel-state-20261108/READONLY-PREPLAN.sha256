@@ -1,0 +1,5 @@
+0c7f4589156e642ade356e0785c3096bb305ac1e2328607e9973e173d1ed9e5b  core/battle/battle_state.gd
+00b39729582cea9f7b66fecd5396c44bdc4b0fa0b2f57516bc4d94cf12d04d6e  core/battle/fleet_state.gd
+dfb9cd4a070995d9aca44f77bf08cab18ae87eb4c678a341ccddc34c5a7ff74e  core/battle/tick_clock.gd
+f5f42abd399bed12d10e8385dc83a1fed6450881fe060fdab8734b5a93e3def6  core/battle/battle_rng.gd
+d3fdb59c06b98b1ff8d292b1cf93d8cc427eba2ea55bc5145fe5e8b676cf662f  tmp/p03-parallel-state-20261108/STATE-LEDGER-S1.md

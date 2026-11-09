@@ -1,0 +1,2 @@
+artifacts/seonghanji-portraits-501-final-20261018.zip filter=lfs diff=lfs merge=lfs -text
+artifacts/seonghanji-portraits-501-western-revised-20261018.zip filter=lfs diff=lfs merge=lfs -text

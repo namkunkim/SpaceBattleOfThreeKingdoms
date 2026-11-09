@@ -1,0 +1,579 @@
+WorkerThreadPool: 8 threads, 2 max low-priority.
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Using "default" pen tablet driver...
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+CORE API HASH: 2004498165
+EDITOR API HASH: 1696660745
+Loading resource: res://multi_host_probe.gd remapped: res://multi_host_probe.gd
+Loading resource: res://scenes/FleetBattle3D.tscn remapped: res://scenes/FleetBattle3D.tscn
+Loading resource: res://scripts/FleetBattle3D.gd remapped: res://scripts/FleetBattle3D.gd
+Loading resource: res://data/i18n/messages.json remapped: res://data/i18n/messages.json
+Completed load for: 'res://data/i18n/messages.json' remapped 'res://data/i18n/messages.json' at thread -1
+Completed load for: 'res://scripts/FleetBattle3D.gd' remapped 'res://scripts/FleetBattle3D.gd' at thread -1
+Completed load for: 'res://scenes/FleetBattle3D.tscn' remapped 'res://scenes/FleetBattle3D.tscn' at thread -1
+Completed load for: 'res://multi_host_probe.gd' remapped 'res://multi_host_probe.gd' at thread -1
+SceneTreeFTI: traversal method DEFAULT
+Loading resource: res://scripts/world_link.gd remapped: res://scripts/world_link.gd
+Completed load for: 'res://scripts/world_link.gd' remapped 'res://scripts/world_link.gd' at thread -1
+Loaded system CA certificates
+ENGINE {"driver":"Dummy","mode":"multi-legacy","path":"C:/Tools/Godot/Godot_v4.7.2-stable_win64.exe","pid":38736}
+Loading resource: res://assets/models/user_ver3_runtime/전열함.glb remapped: res://assets/models/user_ver3_runtime/전열함.glb
+Loading resource: res://.godot/imported/전열함.glb-507afb81a8c02118d1e74baf66ffe3e5.scn remapped: res://.godot/imported/전열함.glb-507afb81a8c02118d1e74baf66ffe3e5.scn
+Loading resource: res://assets/models/user_ver3_runtime/전열함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/전열함_Image_0.jpg
+Loading resource: res://.godot/imported/전열함_Image_0.jpg-bf9e8dbd086ba293a731da2647e2d282.s3tc.ctex remapped: res://.godot/imported/전열함_Image_0.jpg-bf9e8dbd086ba293a731da2647e2d282.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전열함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/전열함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/전열함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/전열함_Image_1.jpg
+Loading resource: res://.godot/imported/전열함_Image_1.jpg-f314280d334a8637a90beb0acbcaea2e.s3tc.ctex remapped: res://.godot/imported/전열함_Image_1.jpg-f314280d334a8637a90beb0acbcaea2e.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전열함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/전열함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/전열함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/전열함_Image_2.jpg
+Loading resource: res://.godot/imported/전열함_Image_2.jpg-abef4bef3eeac7ea2e6188b090612cf1.s3tc.ctex remapped: res://.godot/imported/전열함_Image_2.jpg-abef4bef3eeac7ea2e6188b090612cf1.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전열함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/전열함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/전열함.glb' remapped 'res://assets/models/user_ver3_runtime/전열함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/화력함.glb remapped: res://assets/models/user_ver3_runtime/화력함.glb
+Loading resource: res://.godot/imported/화력함.glb-8f82bd79fac68986bc4ceb6bb2bcfd3a.scn remapped: res://.godot/imported/화력함.glb-8f82bd79fac68986bc4ceb6bb2bcfd3a.scn
+Loading resource: res://assets/models/user_ver3_runtime/화력함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/화력함_Image_0.jpg
+Loading resource: res://.godot/imported/화력함_Image_0.jpg-a7c8fac8927045e68e22508ffe2bd040.s3tc.ctex remapped: res://.godot/imported/화력함_Image_0.jpg-a7c8fac8927045e68e22508ffe2bd040.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/화력함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/화력함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/화력함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/화력함_Image_1.jpg
+Loading resource: res://.godot/imported/화력함_Image_1.jpg-5136ed5cbe393f699e4c711d06d2795a.s3tc.ctex remapped: res://.godot/imported/화력함_Image_1.jpg-5136ed5cbe393f699e4c711d06d2795a.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/화력함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/화력함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/화력함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/화력함_Image_2.jpg
+Loading resource: res://.godot/imported/화력함_Image_2.jpg-ffe274e48841aa9a6f88ee9570be4842.s3tc.ctex remapped: res://.godot/imported/화력함_Image_2.jpg-ffe274e48841aa9a6f88ee9570be4842.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/화력함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/화력함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/화력함.glb' remapped 'res://assets/models/user_ver3_runtime/화력함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/공성함.glb remapped: res://assets/models/user_ver3_runtime/공성함.glb
+Loading resource: res://.godot/imported/공성함.glb-87ed8adbf714b9b9bf9f96c9fac68fdf.scn remapped: res://.godot/imported/공성함.glb-87ed8adbf714b9b9bf9f96c9fac68fdf.scn
+Loading resource: res://assets/models/user_ver3_runtime/공성함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/공성함_Image_0.jpg
+Loading resource: res://.godot/imported/공성함_Image_0.jpg-baea524fc26870a298b3a17c2fbcbdbb.s3tc.ctex remapped: res://.godot/imported/공성함_Image_0.jpg-baea524fc26870a298b3a17c2fbcbdbb.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/공성함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/공성함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/공성함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/공성함_Image_1.jpg
+Loading resource: res://.godot/imported/공성함_Image_1.jpg-39ec29459ab827ff14cd0cb85b1a5b1d.s3tc.ctex remapped: res://.godot/imported/공성함_Image_1.jpg-39ec29459ab827ff14cd0cb85b1a5b1d.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/공성함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/공성함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/공성함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/공성함_Image_2.jpg
+Loading resource: res://.godot/imported/공성함_Image_2.jpg-099c9c8ad592320088c6fa2ff82bfcf5.s3tc.ctex remapped: res://.godot/imported/공성함_Image_2.jpg-099c9c8ad592320088c6fa2ff82bfcf5.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/공성함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/공성함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/공성함.glb' remapped 'res://assets/models/user_ver3_runtime/공성함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/보급_수리함.glb remapped: res://assets/models/user_ver3_runtime/보급_수리함.glb
+Loading resource: res://.godot/imported/보급_수리함.glb-f035912cd0237d606d87a15933dafec6.scn remapped: res://.godot/imported/보급_수리함.glb-f035912cd0237d606d87a15933dafec6.scn
+Loading resource: res://assets/models/user_ver3_runtime/보급_수리함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/보급_수리함_Image_0.jpg
+Loading resource: res://.godot/imported/보급_수리함_Image_0.jpg-d5306680564c87f26f2e98c0af2bfd8f.s3tc.ctex remapped: res://.godot/imported/보급_수리함_Image_0.jpg-d5306680564c87f26f2e98c0af2bfd8f.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/보급_수리함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/보급_수리함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/보급_수리함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/보급_수리함_Image_1.jpg
+Loading resource: res://.godot/imported/보급_수리함_Image_1.jpg-57fc1455f9b6fde817c7e5c903323903.s3tc.ctex remapped: res://.godot/imported/보급_수리함_Image_1.jpg-57fc1455f9b6fde817c7e5c903323903.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/보급_수리함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/보급_수리함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/보급_수리함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/보급_수리함_Image_2.jpg
+Loading resource: res://.godot/imported/보급_수리함_Image_2.jpg-b90124db82781994c24e13ef7f79e0c9.s3tc.ctex remapped: res://.godot/imported/보급_수리함_Image_2.jpg-b90124db82781994c24e13ef7f79e0c9.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/보급_수리함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/보급_수리함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/보급_수리함.glb' remapped 'res://assets/models/user_ver3_runtime/보급_수리함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/전자전함.glb remapped: res://assets/models/user_ver3_runtime/전자전함.glb
+Loading resource: res://.godot/imported/전자전함.glb-ea4f536a277f9bc89e62252268adc90b.scn remapped: res://.godot/imported/전자전함.glb-ea4f536a277f9bc89e62252268adc90b.scn
+Loading resource: res://assets/models/user_ver3_runtime/전자전함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/전자전함_Image_0.jpg
+Loading resource: res://.godot/imported/전자전함_Image_0.jpg-4dcf3ebd5af5e642da06ffce15005428.s3tc.ctex remapped: res://.godot/imported/전자전함_Image_0.jpg-4dcf3ebd5af5e642da06ffce15005428.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전자전함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/전자전함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/전자전함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/전자전함_Image_1.jpg
+Loading resource: res://.godot/imported/전자전함_Image_1.jpg-d9c36e24aba6b37eada080a4a9455c96.s3tc.ctex remapped: res://.godot/imported/전자전함_Image_1.jpg-d9c36e24aba6b37eada080a4a9455c96.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전자전함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/전자전함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/전자전함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/전자전함_Image_2.jpg
+Loading resource: res://.godot/imported/전자전함_Image_2.jpg-48489a990f5c9cfe4005f5203f0d1b03.s3tc.ctex remapped: res://.godot/imported/전자전함_Image_2.jpg-48489a990f5c9cfe4005f5203f0d1b03.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전자전함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/전자전함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/전자전함.glb' remapped 'res://assets/models/user_ver3_runtime/전자전함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/호위함.glb remapped: res://assets/models/user_ver3_runtime/호위함.glb
+Loading resource: res://.godot/imported/호위함.glb-8e19636e9761e78d5d31f0902ba9ba94.scn remapped: res://.godot/imported/호위함.glb-8e19636e9761e78d5d31f0902ba9ba94.scn
+Loading resource: res://assets/models/user_ver3_runtime/호위함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/호위함_Image_0.jpg
+Loading resource: res://.godot/imported/호위함_Image_0.jpg-d548151839d364e10ed0dd460a5dcfb5.s3tc.ctex remapped: res://.godot/imported/호위함_Image_0.jpg-d548151839d364e10ed0dd460a5dcfb5.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/호위함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/호위함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/호위함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/호위함_Image_1.jpg
+Loading resource: res://.godot/imported/호위함_Image_1.jpg-27ee02f080a83af32f5604d0d306f844.s3tc.ctex remapped: res://.godot/imported/호위함_Image_1.jpg-27ee02f080a83af32f5604d0d306f844.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/호위함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/호위함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/호위함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/호위함_Image_2.jpg
+Loading resource: res://.godot/imported/호위함_Image_2.jpg-8e779f9ecbe9ba59936156309c250996.s3tc.ctex remapped: res://.godot/imported/호위함_Image_2.jpg-8e779f9ecbe9ba59936156309c250996.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/호위함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/호위함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/호위함.glb' remapped 'res://assets/models/user_ver3_runtime/호위함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/항모.glb remapped: res://assets/models/user_ver3_runtime/항모.glb
+Loading resource: res://.godot/imported/항모.glb-2e8e1265605f72d93358a7c538945daa.scn remapped: res://.godot/imported/항모.glb-2e8e1265605f72d93358a7c538945daa.scn
+Loading resource: res://assets/models/user_ver3_runtime/항모_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/항모_Image_0.jpg
+Loading resource: res://.godot/imported/항모_Image_0.jpg-756c450b5f6d44abff835d021bc2fe96.s3tc.ctex remapped: res://.godot/imported/항모_Image_0.jpg-756c450b5f6d44abff835d021bc2fe96.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/항모_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/항모_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/항모_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/항모_Image_1.jpg
+Loading resource: res://.godot/imported/항모_Image_1.jpg-dc713d6ee9419e98a8857007aa5741b5.s3tc.ctex remapped: res://.godot/imported/항모_Image_1.jpg-dc713d6ee9419e98a8857007aa5741b5.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/항모_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/항모_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/항모_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/항모_Image_2.jpg
+Loading resource: res://.godot/imported/항모_Image_2.jpg-d1e31d230629bcc8ae74aa7c3ae029c0.s3tc.ctex remapped: res://.godot/imported/항모_Image_2.jpg-d1e31d230629bcc8ae74aa7c3ae029c0.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/항모_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/항모_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/항모.glb' remapped 'res://assets/models/user_ver3_runtime/항모.glb' at thread -1
+Loading resource: res://assets/backgrounds/red_cliffs_starfield_v1.png remapped: res://assets/backgrounds/red_cliffs_starfield_v1.png
+Loading resource: res://.godot/imported/red_cliffs_starfield_v1.png-c70c810e0c0836da746c14bfc8d5ef24.ctex remapped: res://.godot/imported/red_cliffs_starfield_v1.png-c70c810e0c0836da746c14bfc8d5ef24.ctex
+Completed load for: 'res://assets/backgrounds/red_cliffs_starfield_v1.png' remapped 'res://assets/backgrounds/red_cliffs_starfield_v1.png' at thread -1
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-inchat-host-bgm/attempt-05-multi-legacy/appdata/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-09T00-40-08-38736-1232297.jsonl
+Loading resource: res://hud/ui_kit/presentation.gd remapped: res://hud/ui_kit/presentation.gd
+Completed load for: 'res://hud/ui_kit/presentation.gd' remapped 'res://hud/ui_kit/presentation.gd' at thread -1
+Loading resource: res://view/fleet_render/ship_sprite.gdshader remapped: res://view/fleet_render/ship_sprite.gdshader
+Completed load for: 'res://view/fleet_render/ship_sprite.gdshader' remapped 'res://view/fleet_render/ship_sprite.gdshader' at thread -1
+Loading resource: res://assets/ships/silhouette/0.png remapped: res://assets/ships/silhouette/0.png
+Loading resource: res://.godot/imported/0.png-000f3d47a3f63fc2153f1d1a70a99ffa.ctex remapped: res://.godot/imported/0.png-000f3d47a3f63fc2153f1d1a70a99ffa.ctex
+Completed load for: 'res://assets/ships/silhouette/0.png' remapped 'res://assets/ships/silhouette/0.png' at thread -1
+Loading resource: res://assets/ships/silhouette/1.png remapped: res://assets/ships/silhouette/1.png
+Loading resource: res://.godot/imported/1.png-a9f1565be6ae5d13077cffd2c2488cbe.ctex remapped: res://.godot/imported/1.png-a9f1565be6ae5d13077cffd2c2488cbe.ctex
+Completed load for: 'res://assets/ships/silhouette/1.png' remapped 'res://assets/ships/silhouette/1.png' at thread -1
+Loading resource: res://assets/ships/silhouette/2.png remapped: res://assets/ships/silhouette/2.png
+Loading resource: res://.godot/imported/2.png-5e13eaabdaa9decee9c3a3a57b695803.ctex remapped: res://.godot/imported/2.png-5e13eaabdaa9decee9c3a3a57b695803.ctex
+Completed load for: 'res://assets/ships/silhouette/2.png' remapped 'res://assets/ships/silhouette/2.png' at thread -1
+Loading resource: res://assets/ships/silhouette/3.png remapped: res://assets/ships/silhouette/3.png
+Loading resource: res://.godot/imported/3.png-ed3cf9c31def38bd363339ceb1105762.ctex remapped: res://.godot/imported/3.png-ed3cf9c31def38bd363339ceb1105762.ctex
+Completed load for: 'res://assets/ships/silhouette/3.png' remapped 'res://assets/ships/silhouette/3.png' at thread -1
+Loading resource: res://assets/ships/silhouette/4.png remapped: res://assets/ships/silhouette/4.png
+Loading resource: res://.godot/imported/4.png-af051d4ae8d236697fac8ba16a6a55b6.ctex remapped: res://.godot/imported/4.png-af051d4ae8d236697fac8ba16a6a55b6.ctex
+Completed load for: 'res://assets/ships/silhouette/4.png' remapped 'res://assets/ships/silhouette/4.png' at thread -1
+Loading resource: res://assets/ships/silhouette/5.png remapped: res://assets/ships/silhouette/5.png
+Loading resource: res://.godot/imported/5.png-28e2f8cdcee5f173d8b1dbcd7b347bb1.ctex remapped: res://.godot/imported/5.png-28e2f8cdcee5f173d8b1dbcd7b347bb1.ctex
+Completed load for: 'res://assets/ships/silhouette/5.png' remapped 'res://assets/ships/silhouette/5.png' at thread -1
+Loading resource: res://assets/ships/silhouette/6.png remapped: res://assets/ships/silhouette/6.png
+Loading resource: res://.godot/imported/6.png-81d0ac7c6822773fc2c6c16b5333114b.ctex remapped: res://.godot/imported/6.png-81d0ac7c6822773fc2c6c16b5333114b.ctex
+Completed load for: 'res://assets/ships/silhouette/6.png' remapped 'res://assets/ships/silhouette/6.png' at thread -1
+Loading resource: res://view/fleet_render/fx_sprite_mix.gdshader remapped: res://view/fleet_render/fx_sprite_mix.gdshader
+Loading resource: res://view/fleet_render/fx_sprite.gdshaderinc remapped: res://view/fleet_render/fx_sprite.gdshaderinc
+Completed load for: 'res://view/fleet_render/fx_sprite.gdshaderinc' remapped 'res://view/fleet_render/fx_sprite.gdshaderinc' at thread -1
+Completed load for: 'res://view/fleet_render/fx_sprite_mix.gdshader' remapped 'res://view/fleet_render/fx_sprite_mix.gdshader' at thread -1
+Loading resource: res://view/fleet_render/beam.gdshader remapped: res://view/fleet_render/beam.gdshader
+Completed load for: 'res://view/fleet_render/beam.gdshader' remapped 'res://view/fleet_render/beam.gdshader' at thread -1
+Loading resource: res://view/fleet_render/fx_sprite_add.gdshader remapped: res://view/fleet_render/fx_sprite_add.gdshader
+Completed load for: 'res://view/fleet_render/fx_sprite_add.gdshader' remapped 'res://view/fleet_render/fx_sprite_add.gdshader' at thread -1
+Loading resource: res://hud/ui_kit/command_deck.gd remapped: res://hud/ui_kit/command_deck.gd
+Completed load for: 'res://hud/ui_kit/command_deck.gd' remapped 'res://hud/ui_kit/command_deck.gd' at thread -1
+Loading resource: res://assets/fonts/Pretendard-Regular.otf remapped: res://assets/fonts/Pretendard-Regular.otf
+Loading resource: res://.godot/imported/Pretendard-Regular.otf-375f78108183715aa325a9c9dc71177f.fontdata remapped: res://.godot/imported/Pretendard-Regular.otf-375f78108183715aa325a9c9dc71177f.fontdata
+Completed load for: 'res://assets/fonts/Pretendard-Regular.otf' remapped 'res://assets/fonts/Pretendard-Regular.otf' at thread -1
+Loading resource: res://assets/fonts/NotoSansCJKsc-Regular.otf remapped: res://assets/fonts/NotoSansCJKsc-Regular.otf
+Loading resource: res://.godot/imported/NotoSansCJKsc-Regular.otf-234b66ec4f6090cf3cb4fe9bcf1a8765.fontdata remapped: res://.godot/imported/NotoSansCJKsc-Regular.otf-234b66ec4f6090cf3cb4fe9bcf1a8765.fontdata
+Completed load for: 'res://assets/fonts/NotoSansCJKsc-Regular.otf' remapped 'res://assets/fonts/NotoSansCJKsc-Regular.otf' at thread -1
+Loading resource: res://assets/fonts/Pretendard-Medium.otf remapped: res://assets/fonts/Pretendard-Medium.otf
+Loading resource: res://.godot/imported/Pretendard-Medium.otf-38b7e8428b68ea05158620404bacd677.fontdata remapped: res://.godot/imported/Pretendard-Medium.otf-38b7e8428b68ea05158620404bacd677.fontdata
+Completed load for: 'res://assets/fonts/Pretendard-Medium.otf' remapped 'res://assets/fonts/Pretendard-Medium.otf' at thread -1
+Loading resource: res://assets/fonts/NotoSerifKR-Bold.otf remapped: res://assets/fonts/NotoSerifKR-Bold.otf
+Loading resource: res://.godot/imported/NotoSerifKR-Bold.otf-21990f8736afce1e7d7697ba8dc3852f.fontdata remapped: res://.godot/imported/NotoSerifKR-Bold.otf-21990f8736afce1e7d7697ba8dc3852f.fontdata
+Completed load for: 'res://assets/fonts/NotoSerifKR-Bold.otf' remapped 'res://assets/fonts/NotoSerifKR-Bold.otf' at thread -1
+Loading resource: res://assets/fonts/NotoSerifKR-SemiBold.otf remapped: res://assets/fonts/NotoSerifKR-SemiBold.otf
+Loading resource: res://.godot/imported/NotoSerifKR-SemiBold.otf-2190be0e138fd50bde38a01a0579cf40.fontdata remapped: res://.godot/imported/NotoSerifKR-SemiBold.otf-2190be0e138fd50bde38a01a0579cf40.fontdata
+Completed load for: 'res://assets/fonts/NotoSerifKR-SemiBold.otf' remapped 'res://assets/fonts/NotoSerifKR-SemiBold.otf' at thread -1
+Loading resource: res://assets/fonts/Pretendard-SemiBold.otf remapped: res://assets/fonts/Pretendard-SemiBold.otf
+Loading resource: res://.godot/imported/Pretendard-SemiBold.otf-b18e006bb23af1cf92c966e372cc15da.fontdata remapped: res://.godot/imported/Pretendard-SemiBold.otf-b18e006bb23af1cf92c966e372cc15da.fontdata
+Completed load for: 'res://assets/fonts/Pretendard-SemiBold.otf' remapped 'res://assets/fonts/Pretendard-SemiBold.otf' at thread -1
+Loading resource: res://assets/audio/battle/beam_loop.wav remapped: res://assets/audio/battle/beam_loop.wav
+Loading resource: res://.godot/imported/beam_loop.wav-fcba81f46519b58f7e415b1e22932c74.sample remapped: res://.godot/imported/beam_loop.wav-fcba81f46519b58f7e415b1e22932c74.sample
+Completed load for: 'res://assets/audio/battle/beam_loop.wav' remapped 'res://assets/audio/battle/beam_loop.wav' at thread -1
+Loading resource: res://assets/audio/battle/engine_loop.wav remapped: res://assets/audio/battle/engine_loop.wav
+Loading resource: res://.godot/imported/engine_loop.wav-c183ea7b77f2f24bdf82390b0f831e37.sample remapped: res://.godot/imported/engine_loop.wav-c183ea7b77f2f24bdf82390b0f831e37.sample
+Completed load for: 'res://assets/audio/battle/engine_loop.wav' remapped 'res://assets/audio/battle/engine_loop.wav' at thread -1
+Loading resource: res://assets/audio/battle/fire_loop.wav remapped: res://assets/audio/battle/fire_loop.wav
+Loading resource: res://.godot/imported/fire_loop.wav-91881485e171a0ff3b40831c0e52dd91.sample remapped: res://.godot/imported/fire_loop.wav-91881485e171a0ff3b40831c0e52dd91.sample
+Completed load for: 'res://assets/audio/battle/fire_loop.wav' remapped 'res://assets/audio/battle/fire_loop.wav' at thread -1
+Loading resource: res://assets/audio/music/stars_stripes.ogg remapped: res://assets/audio/music/stars_stripes.ogg
+Loading resource: res://.godot/imported/stars_stripes.ogg-b59abb1eef986334bd1d3b3ab6e47e07.oggvorbisstr remapped: res://.godot/imported/stars_stripes.ogg-b59abb1eef986334bd1d3b3ab6e47e07.oggvorbisstr
+Completed load for: 'res://assets/audio/music/stars_stripes.ogg' remapped 'res://assets/audio/music/stars_stripes.ogg' at thread -1
+MUSIC {"ogg":true,"phase":0.0,"playback":true,"playing":true,"reject":true}
+RETIRE {"cleared":true,"frames_before_clear":0,"freed":true,"playing_after_stop":false,"stop_attached":true,"tree_clock_stable":true}
+Loading resource: res://assets/models/user_ver3_runtime/전열함.glb remapped: res://assets/models/user_ver3_runtime/전열함.glb
+Loading resource: res://.godot/imported/전열함.glb-507afb81a8c02118d1e74baf66ffe3e5.scn remapped: res://.godot/imported/전열함.glb-507afb81a8c02118d1e74baf66ffe3e5.scn
+Loading resource: res://assets/models/user_ver3_runtime/전열함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/전열함_Image_0.jpg
+Loading resource: res://.godot/imported/전열함_Image_0.jpg-bf9e8dbd086ba293a731da2647e2d282.s3tc.ctex remapped: res://.godot/imported/전열함_Image_0.jpg-bf9e8dbd086ba293a731da2647e2d282.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전열함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/전열함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/전열함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/전열함_Image_1.jpg
+Loading resource: res://.godot/imported/전열함_Image_1.jpg-f314280d334a8637a90beb0acbcaea2e.s3tc.ctex remapped: res://.godot/imported/전열함_Image_1.jpg-f314280d334a8637a90beb0acbcaea2e.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전열함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/전열함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/전열함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/전열함_Image_2.jpg
+Loading resource: res://.godot/imported/전열함_Image_2.jpg-abef4bef3eeac7ea2e6188b090612cf1.s3tc.ctex remapped: res://.godot/imported/전열함_Image_2.jpg-abef4bef3eeac7ea2e6188b090612cf1.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전열함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/전열함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/전열함.glb' remapped 'res://assets/models/user_ver3_runtime/전열함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/화력함.glb remapped: res://assets/models/user_ver3_runtime/화력함.glb
+Loading resource: res://.godot/imported/화력함.glb-8f82bd79fac68986bc4ceb6bb2bcfd3a.scn remapped: res://.godot/imported/화력함.glb-8f82bd79fac68986bc4ceb6bb2bcfd3a.scn
+Loading resource: res://assets/models/user_ver3_runtime/화력함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/화력함_Image_0.jpg
+Loading resource: res://.godot/imported/화력함_Image_0.jpg-a7c8fac8927045e68e22508ffe2bd040.s3tc.ctex remapped: res://.godot/imported/화력함_Image_0.jpg-a7c8fac8927045e68e22508ffe2bd040.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/화력함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/화력함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/화력함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/화력함_Image_1.jpg
+Loading resource: res://.godot/imported/화력함_Image_1.jpg-5136ed5cbe393f699e4c711d06d2795a.s3tc.ctex remapped: res://.godot/imported/화력함_Image_1.jpg-5136ed5cbe393f699e4c711d06d2795a.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/화력함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/화력함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/화력함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/화력함_Image_2.jpg
+Loading resource: res://.godot/imported/화력함_Image_2.jpg-ffe274e48841aa9a6f88ee9570be4842.s3tc.ctex remapped: res://.godot/imported/화력함_Image_2.jpg-ffe274e48841aa9a6f88ee9570be4842.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/화력함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/화력함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/화력함.glb' remapped 'res://assets/models/user_ver3_runtime/화력함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/공성함.glb remapped: res://assets/models/user_ver3_runtime/공성함.glb
+Loading resource: res://.godot/imported/공성함.glb-87ed8adbf714b9b9bf9f96c9fac68fdf.scn remapped: res://.godot/imported/공성함.glb-87ed8adbf714b9b9bf9f96c9fac68fdf.scn
+Loading resource: res://assets/models/user_ver3_runtime/공성함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/공성함_Image_0.jpg
+Loading resource: res://.godot/imported/공성함_Image_0.jpg-baea524fc26870a298b3a17c2fbcbdbb.s3tc.ctex remapped: res://.godot/imported/공성함_Image_0.jpg-baea524fc26870a298b3a17c2fbcbdbb.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/공성함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/공성함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/공성함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/공성함_Image_1.jpg
+Loading resource: res://.godot/imported/공성함_Image_1.jpg-39ec29459ab827ff14cd0cb85b1a5b1d.s3tc.ctex remapped: res://.godot/imported/공성함_Image_1.jpg-39ec29459ab827ff14cd0cb85b1a5b1d.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/공성함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/공성함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/공성함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/공성함_Image_2.jpg
+Loading resource: res://.godot/imported/공성함_Image_2.jpg-099c9c8ad592320088c6fa2ff82bfcf5.s3tc.ctex remapped: res://.godot/imported/공성함_Image_2.jpg-099c9c8ad592320088c6fa2ff82bfcf5.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/공성함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/공성함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/공성함.glb' remapped 'res://assets/models/user_ver3_runtime/공성함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/보급_수리함.glb remapped: res://assets/models/user_ver3_runtime/보급_수리함.glb
+Loading resource: res://.godot/imported/보급_수리함.glb-f035912cd0237d606d87a15933dafec6.scn remapped: res://.godot/imported/보급_수리함.glb-f035912cd0237d606d87a15933dafec6.scn
+Loading resource: res://assets/models/user_ver3_runtime/보급_수리함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/보급_수리함_Image_0.jpg
+Loading resource: res://.godot/imported/보급_수리함_Image_0.jpg-d5306680564c87f26f2e98c0af2bfd8f.s3tc.ctex remapped: res://.godot/imported/보급_수리함_Image_0.jpg-d5306680564c87f26f2e98c0af2bfd8f.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/보급_수리함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/보급_수리함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/보급_수리함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/보급_수리함_Image_1.jpg
+Loading resource: res://.godot/imported/보급_수리함_Image_1.jpg-57fc1455f9b6fde817c7e5c903323903.s3tc.ctex remapped: res://.godot/imported/보급_수리함_Image_1.jpg-57fc1455f9b6fde817c7e5c903323903.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/보급_수리함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/보급_수리함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/보급_수리함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/보급_수리함_Image_2.jpg
+Loading resource: res://.godot/imported/보급_수리함_Image_2.jpg-b90124db82781994c24e13ef7f79e0c9.s3tc.ctex remapped: res://.godot/imported/보급_수리함_Image_2.jpg-b90124db82781994c24e13ef7f79e0c9.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/보급_수리함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/보급_수리함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/보급_수리함.glb' remapped 'res://assets/models/user_ver3_runtime/보급_수리함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/전자전함.glb remapped: res://assets/models/user_ver3_runtime/전자전함.glb
+Loading resource: res://.godot/imported/전자전함.glb-ea4f536a277f9bc89e62252268adc90b.scn remapped: res://.godot/imported/전자전함.glb-ea4f536a277f9bc89e62252268adc90b.scn
+Loading resource: res://assets/models/user_ver3_runtime/전자전함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/전자전함_Image_0.jpg
+Loading resource: res://.godot/imported/전자전함_Image_0.jpg-4dcf3ebd5af5e642da06ffce15005428.s3tc.ctex remapped: res://.godot/imported/전자전함_Image_0.jpg-4dcf3ebd5af5e642da06ffce15005428.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전자전함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/전자전함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/전자전함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/전자전함_Image_1.jpg
+Loading resource: res://.godot/imported/전자전함_Image_1.jpg-d9c36e24aba6b37eada080a4a9455c96.s3tc.ctex remapped: res://.godot/imported/전자전함_Image_1.jpg-d9c36e24aba6b37eada080a4a9455c96.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전자전함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/전자전함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/전자전함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/전자전함_Image_2.jpg
+Loading resource: res://.godot/imported/전자전함_Image_2.jpg-48489a990f5c9cfe4005f5203f0d1b03.s3tc.ctex remapped: res://.godot/imported/전자전함_Image_2.jpg-48489a990f5c9cfe4005f5203f0d1b03.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전자전함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/전자전함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/전자전함.glb' remapped 'res://assets/models/user_ver3_runtime/전자전함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/호위함.glb remapped: res://assets/models/user_ver3_runtime/호위함.glb
+Loading resource: res://.godot/imported/호위함.glb-8e19636e9761e78d5d31f0902ba9ba94.scn remapped: res://.godot/imported/호위함.glb-8e19636e9761e78d5d31f0902ba9ba94.scn
+Loading resource: res://assets/models/user_ver3_runtime/호위함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/호위함_Image_0.jpg
+Loading resource: res://.godot/imported/호위함_Image_0.jpg-d548151839d364e10ed0dd460a5dcfb5.s3tc.ctex remapped: res://.godot/imported/호위함_Image_0.jpg-d548151839d364e10ed0dd460a5dcfb5.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/호위함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/호위함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/호위함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/호위함_Image_1.jpg
+Loading resource: res://.godot/imported/호위함_Image_1.jpg-27ee02f080a83af32f5604d0d306f844.s3tc.ctex remapped: res://.godot/imported/호위함_Image_1.jpg-27ee02f080a83af32f5604d0d306f844.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/호위함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/호위함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/호위함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/호위함_Image_2.jpg
+Loading resource: res://.godot/imported/호위함_Image_2.jpg-8e779f9ecbe9ba59936156309c250996.s3tc.ctex remapped: res://.godot/imported/호위함_Image_2.jpg-8e779f9ecbe9ba59936156309c250996.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/호위함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/호위함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/호위함.glb' remapped 'res://assets/models/user_ver3_runtime/호위함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/항모.glb remapped: res://assets/models/user_ver3_runtime/항모.glb
+Loading resource: res://.godot/imported/항모.glb-2e8e1265605f72d93358a7c538945daa.scn remapped: res://.godot/imported/항모.glb-2e8e1265605f72d93358a7c538945daa.scn
+Loading resource: res://assets/models/user_ver3_runtime/항모_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/항모_Image_0.jpg
+Loading resource: res://.godot/imported/항모_Image_0.jpg-756c450b5f6d44abff835d021bc2fe96.s3tc.ctex remapped: res://.godot/imported/항모_Image_0.jpg-756c450b5f6d44abff835d021bc2fe96.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/항모_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/항모_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/항모_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/항모_Image_1.jpg
+Loading resource: res://.godot/imported/항모_Image_1.jpg-dc713d6ee9419e98a8857007aa5741b5.s3tc.ctex remapped: res://.godot/imported/항모_Image_1.jpg-dc713d6ee9419e98a8857007aa5741b5.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/항모_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/항모_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/항모_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/항모_Image_2.jpg
+Loading resource: res://.godot/imported/항모_Image_2.jpg-d1e31d230629bcc8ae74aa7c3ae029c0.s3tc.ctex remapped: res://.godot/imported/항모_Image_2.jpg-d1e31d230629bcc8ae74aa7c3ae029c0.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/항모_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/항모_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/항모.glb' remapped 'res://assets/models/user_ver3_runtime/항모.glb' at thread -1
+Loading resource: res://assets/backgrounds/red_cliffs_starfield_v1.png remapped: res://assets/backgrounds/red_cliffs_starfield_v1.png
+Loading resource: res://.godot/imported/red_cliffs_starfield_v1.png-c70c810e0c0836da746c14bfc8d5ef24.ctex remapped: res://.godot/imported/red_cliffs_starfield_v1.png-c70c810e0c0836da746c14bfc8d5ef24.ctex
+Completed load for: 'res://assets/backgrounds/red_cliffs_starfield_v1.png' remapped 'res://assets/backgrounds/red_cliffs_starfield_v1.png' at thread -1
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-inchat-host-bgm/attempt-05-multi-legacy/appdata/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-09T00-40-09-38736-3116368.jsonl
+Loading resource: res://view/fleet_render/ship_sprite.gdshader remapped: res://view/fleet_render/ship_sprite.gdshader
+Completed load for: 'res://view/fleet_render/ship_sprite.gdshader' remapped 'res://view/fleet_render/ship_sprite.gdshader' at thread -1
+Loading resource: res://assets/ships/silhouette/0.png remapped: res://assets/ships/silhouette/0.png
+Loading resource: res://.godot/imported/0.png-000f3d47a3f63fc2153f1d1a70a99ffa.ctex remapped: res://.godot/imported/0.png-000f3d47a3f63fc2153f1d1a70a99ffa.ctex
+Completed load for: 'res://assets/ships/silhouette/0.png' remapped 'res://assets/ships/silhouette/0.png' at thread -1
+Loading resource: res://assets/ships/silhouette/1.png remapped: res://assets/ships/silhouette/1.png
+Loading resource: res://.godot/imported/1.png-a9f1565be6ae5d13077cffd2c2488cbe.ctex remapped: res://.godot/imported/1.png-a9f1565be6ae5d13077cffd2c2488cbe.ctex
+Completed load for: 'res://assets/ships/silhouette/1.png' remapped 'res://assets/ships/silhouette/1.png' at thread -1
+Loading resource: res://assets/ships/silhouette/2.png remapped: res://assets/ships/silhouette/2.png
+Loading resource: res://.godot/imported/2.png-5e13eaabdaa9decee9c3a3a57b695803.ctex remapped: res://.godot/imported/2.png-5e13eaabdaa9decee9c3a3a57b695803.ctex
+Completed load for: 'res://assets/ships/silhouette/2.png' remapped 'res://assets/ships/silhouette/2.png' at thread -1
+Loading resource: res://assets/ships/silhouette/3.png remapped: res://assets/ships/silhouette/3.png
+Loading resource: res://.godot/imported/3.png-ed3cf9c31def38bd363339ceb1105762.ctex remapped: res://.godot/imported/3.png-ed3cf9c31def38bd363339ceb1105762.ctex
+Completed load for: 'res://assets/ships/silhouette/3.png' remapped 'res://assets/ships/silhouette/3.png' at thread -1
+Loading resource: res://assets/ships/silhouette/4.png remapped: res://assets/ships/silhouette/4.png
+Loading resource: res://.godot/imported/4.png-af051d4ae8d236697fac8ba16a6a55b6.ctex remapped: res://.godot/imported/4.png-af051d4ae8d236697fac8ba16a6a55b6.ctex
+Completed load for: 'res://assets/ships/silhouette/4.png' remapped 'res://assets/ships/silhouette/4.png' at thread -1
+Loading resource: res://assets/ships/silhouette/5.png remapped: res://assets/ships/silhouette/5.png
+Loading resource: res://.godot/imported/5.png-28e2f8cdcee5f173d8b1dbcd7b347bb1.ctex remapped: res://.godot/imported/5.png-28e2f8cdcee5f173d8b1dbcd7b347bb1.ctex
+Completed load for: 'res://assets/ships/silhouette/5.png' remapped 'res://assets/ships/silhouette/5.png' at thread -1
+Loading resource: res://assets/ships/silhouette/6.png remapped: res://assets/ships/silhouette/6.png
+Loading resource: res://.godot/imported/6.png-81d0ac7c6822773fc2c6c16b5333114b.ctex remapped: res://.godot/imported/6.png-81d0ac7c6822773fc2c6c16b5333114b.ctex
+Completed load for: 'res://assets/ships/silhouette/6.png' remapped 'res://assets/ships/silhouette/6.png' at thread -1
+Loading resource: res://view/fleet_render/fx_sprite_mix.gdshader remapped: res://view/fleet_render/fx_sprite_mix.gdshader
+Loading resource: res://view/fleet_render/fx_sprite.gdshaderinc remapped: res://view/fleet_render/fx_sprite.gdshaderinc
+Completed load for: 'res://view/fleet_render/fx_sprite.gdshaderinc' remapped 'res://view/fleet_render/fx_sprite.gdshaderinc' at thread -1
+Completed load for: 'res://view/fleet_render/fx_sprite_mix.gdshader' remapped 'res://view/fleet_render/fx_sprite_mix.gdshader' at thread -1
+Loading resource: res://view/fleet_render/beam.gdshader remapped: res://view/fleet_render/beam.gdshader
+Completed load for: 'res://view/fleet_render/beam.gdshader' remapped 'res://view/fleet_render/beam.gdshader' at thread -1
+Loading resource: res://view/fleet_render/fx_sprite_add.gdshader remapped: res://view/fleet_render/fx_sprite_add.gdshader
+Completed load for: 'res://view/fleet_render/fx_sprite_add.gdshader' remapped 'res://view/fleet_render/fx_sprite_add.gdshader' at thread -1
+Loading resource: res://assets/audio/battle/beam_loop.wav remapped: res://assets/audio/battle/beam_loop.wav
+Loading resource: res://.godot/imported/beam_loop.wav-fcba81f46519b58f7e415b1e22932c74.sample remapped: res://.godot/imported/beam_loop.wav-fcba81f46519b58f7e415b1e22932c74.sample
+Completed load for: 'res://assets/audio/battle/beam_loop.wav' remapped 'res://assets/audio/battle/beam_loop.wav' at thread -1
+Loading resource: res://assets/audio/battle/engine_loop.wav remapped: res://assets/audio/battle/engine_loop.wav
+Loading resource: res://.godot/imported/engine_loop.wav-c183ea7b77f2f24bdf82390b0f831e37.sample remapped: res://.godot/imported/engine_loop.wav-c183ea7b77f2f24bdf82390b0f831e37.sample
+Completed load for: 'res://assets/audio/battle/engine_loop.wav' remapped 'res://assets/audio/battle/engine_loop.wav' at thread -1
+Loading resource: res://assets/audio/battle/fire_loop.wav remapped: res://assets/audio/battle/fire_loop.wav
+Loading resource: res://.godot/imported/fire_loop.wav-91881485e171a0ff3b40831c0e52dd91.sample remapped: res://.godot/imported/fire_loop.wav-91881485e171a0ff3b40831c0e52dd91.sample
+Completed load for: 'res://assets/audio/battle/fire_loop.wav' remapped 'res://assets/audio/battle/fire_loop.wav' at thread -1
+MUSIC {"ogg":true,"phase":0.0,"playback":true,"playing":true,"reject":false}
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-inchat-host-bgm/attempt-05-multi-legacy/appdata/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-09T00-40-10-38736-3320262.jsonl
+RETIRE {"cleared":true,"frames_before_clear":0,"freed":true,"playing_after_stop":false,"stop_attached":true,"tree_clock_stable":true}
+Loading resource: res://assets/models/user_ver3_runtime/전열함.glb remapped: res://assets/models/user_ver3_runtime/전열함.glb
+Loading resource: res://.godot/imported/전열함.glb-507afb81a8c02118d1e74baf66ffe3e5.scn remapped: res://.godot/imported/전열함.glb-507afb81a8c02118d1e74baf66ffe3e5.scn
+Loading resource: res://assets/models/user_ver3_runtime/전열함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/전열함_Image_0.jpg
+Loading resource: res://.godot/imported/전열함_Image_0.jpg-bf9e8dbd086ba293a731da2647e2d282.s3tc.ctex remapped: res://.godot/imported/전열함_Image_0.jpg-bf9e8dbd086ba293a731da2647e2d282.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전열함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/전열함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/전열함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/전열함_Image_1.jpg
+Loading resource: res://.godot/imported/전열함_Image_1.jpg-f314280d334a8637a90beb0acbcaea2e.s3tc.ctex remapped: res://.godot/imported/전열함_Image_1.jpg-f314280d334a8637a90beb0acbcaea2e.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전열함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/전열함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/전열함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/전열함_Image_2.jpg
+Loading resource: res://.godot/imported/전열함_Image_2.jpg-abef4bef3eeac7ea2e6188b090612cf1.s3tc.ctex remapped: res://.godot/imported/전열함_Image_2.jpg-abef4bef3eeac7ea2e6188b090612cf1.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전열함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/전열함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/전열함.glb' remapped 'res://assets/models/user_ver3_runtime/전열함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/화력함.glb remapped: res://assets/models/user_ver3_runtime/화력함.glb
+Loading resource: res://.godot/imported/화력함.glb-8f82bd79fac68986bc4ceb6bb2bcfd3a.scn remapped: res://.godot/imported/화력함.glb-8f82bd79fac68986bc4ceb6bb2bcfd3a.scn
+Loading resource: res://assets/models/user_ver3_runtime/화력함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/화력함_Image_0.jpg
+Loading resource: res://.godot/imported/화력함_Image_0.jpg-a7c8fac8927045e68e22508ffe2bd040.s3tc.ctex remapped: res://.godot/imported/화력함_Image_0.jpg-a7c8fac8927045e68e22508ffe2bd040.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/화력함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/화력함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/화력함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/화력함_Image_1.jpg
+Loading resource: res://.godot/imported/화력함_Image_1.jpg-5136ed5cbe393f699e4c711d06d2795a.s3tc.ctex remapped: res://.godot/imported/화력함_Image_1.jpg-5136ed5cbe393f699e4c711d06d2795a.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/화력함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/화력함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/화력함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/화력함_Image_2.jpg
+Loading resource: res://.godot/imported/화력함_Image_2.jpg-ffe274e48841aa9a6f88ee9570be4842.s3tc.ctex remapped: res://.godot/imported/화력함_Image_2.jpg-ffe274e48841aa9a6f88ee9570be4842.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/화력함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/화력함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/화력함.glb' remapped 'res://assets/models/user_ver3_runtime/화력함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/공성함.glb remapped: res://assets/models/user_ver3_runtime/공성함.glb
+Loading resource: res://.godot/imported/공성함.glb-87ed8adbf714b9b9bf9f96c9fac68fdf.scn remapped: res://.godot/imported/공성함.glb-87ed8adbf714b9b9bf9f96c9fac68fdf.scn
+Loading resource: res://assets/models/user_ver3_runtime/공성함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/공성함_Image_0.jpg
+Loading resource: res://.godot/imported/공성함_Image_0.jpg-baea524fc26870a298b3a17c2fbcbdbb.s3tc.ctex remapped: res://.godot/imported/공성함_Image_0.jpg-baea524fc26870a298b3a17c2fbcbdbb.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/공성함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/공성함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/공성함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/공성함_Image_1.jpg
+Loading resource: res://.godot/imported/공성함_Image_1.jpg-39ec29459ab827ff14cd0cb85b1a5b1d.s3tc.ctex remapped: res://.godot/imported/공성함_Image_1.jpg-39ec29459ab827ff14cd0cb85b1a5b1d.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/공성함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/공성함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/공성함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/공성함_Image_2.jpg
+Loading resource: res://.godot/imported/공성함_Image_2.jpg-099c9c8ad592320088c6fa2ff82bfcf5.s3tc.ctex remapped: res://.godot/imported/공성함_Image_2.jpg-099c9c8ad592320088c6fa2ff82bfcf5.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/공성함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/공성함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/공성함.glb' remapped 'res://assets/models/user_ver3_runtime/공성함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/보급_수리함.glb remapped: res://assets/models/user_ver3_runtime/보급_수리함.glb
+Loading resource: res://.godot/imported/보급_수리함.glb-f035912cd0237d606d87a15933dafec6.scn remapped: res://.godot/imported/보급_수리함.glb-f035912cd0237d606d87a15933dafec6.scn
+Loading resource: res://assets/models/user_ver3_runtime/보급_수리함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/보급_수리함_Image_0.jpg
+Loading resource: res://.godot/imported/보급_수리함_Image_0.jpg-d5306680564c87f26f2e98c0af2bfd8f.s3tc.ctex remapped: res://.godot/imported/보급_수리함_Image_0.jpg-d5306680564c87f26f2e98c0af2bfd8f.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/보급_수리함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/보급_수리함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/보급_수리함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/보급_수리함_Image_1.jpg
+Loading resource: res://.godot/imported/보급_수리함_Image_1.jpg-57fc1455f9b6fde817c7e5c903323903.s3tc.ctex remapped: res://.godot/imported/보급_수리함_Image_1.jpg-57fc1455f9b6fde817c7e5c903323903.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/보급_수리함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/보급_수리함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/보급_수리함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/보급_수리함_Image_2.jpg
+Loading resource: res://.godot/imported/보급_수리함_Image_2.jpg-b90124db82781994c24e13ef7f79e0c9.s3tc.ctex remapped: res://.godot/imported/보급_수리함_Image_2.jpg-b90124db82781994c24e13ef7f79e0c9.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/보급_수리함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/보급_수리함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/보급_수리함.glb' remapped 'res://assets/models/user_ver3_runtime/보급_수리함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/전자전함.glb remapped: res://assets/models/user_ver3_runtime/전자전함.glb
+Loading resource: res://.godot/imported/전자전함.glb-ea4f536a277f9bc89e62252268adc90b.scn remapped: res://.godot/imported/전자전함.glb-ea4f536a277f9bc89e62252268adc90b.scn
+Loading resource: res://assets/models/user_ver3_runtime/전자전함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/전자전함_Image_0.jpg
+Loading resource: res://.godot/imported/전자전함_Image_0.jpg-4dcf3ebd5af5e642da06ffce15005428.s3tc.ctex remapped: res://.godot/imported/전자전함_Image_0.jpg-4dcf3ebd5af5e642da06ffce15005428.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전자전함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/전자전함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/전자전함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/전자전함_Image_1.jpg
+Loading resource: res://.godot/imported/전자전함_Image_1.jpg-d9c36e24aba6b37eada080a4a9455c96.s3tc.ctex remapped: res://.godot/imported/전자전함_Image_1.jpg-d9c36e24aba6b37eada080a4a9455c96.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전자전함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/전자전함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/전자전함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/전자전함_Image_2.jpg
+Loading resource: res://.godot/imported/전자전함_Image_2.jpg-48489a990f5c9cfe4005f5203f0d1b03.s3tc.ctex remapped: res://.godot/imported/전자전함_Image_2.jpg-48489a990f5c9cfe4005f5203f0d1b03.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전자전함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/전자전함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/전자전함.glb' remapped 'res://assets/models/user_ver3_runtime/전자전함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/호위함.glb remapped: res://assets/models/user_ver3_runtime/호위함.glb
+Loading resource: res://.godot/imported/호위함.glb-8e19636e9761e78d5d31f0902ba9ba94.scn remapped: res://.godot/imported/호위함.glb-8e19636e9761e78d5d31f0902ba9ba94.scn
+Loading resource: res://assets/models/user_ver3_runtime/호위함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/호위함_Image_0.jpg
+Loading resource: res://.godot/imported/호위함_Image_0.jpg-d548151839d364e10ed0dd460a5dcfb5.s3tc.ctex remapped: res://.godot/imported/호위함_Image_0.jpg-d548151839d364e10ed0dd460a5dcfb5.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/호위함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/호위함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/호위함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/호위함_Image_1.jpg
+Loading resource: res://.godot/imported/호위함_Image_1.jpg-27ee02f080a83af32f5604d0d306f844.s3tc.ctex remapped: res://.godot/imported/호위함_Image_1.jpg-27ee02f080a83af32f5604d0d306f844.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/호위함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/호위함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/호위함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/호위함_Image_2.jpg
+Loading resource: res://.godot/imported/호위함_Image_2.jpg-8e779f9ecbe9ba59936156309c250996.s3tc.ctex remapped: res://.godot/imported/호위함_Image_2.jpg-8e779f9ecbe9ba59936156309c250996.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/호위함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/호위함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/호위함.glb' remapped 'res://assets/models/user_ver3_runtime/호위함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/항모.glb remapped: res://assets/models/user_ver3_runtime/항모.glb
+Loading resource: res://.godot/imported/항모.glb-2e8e1265605f72d93358a7c538945daa.scn remapped: res://.godot/imported/항모.glb-2e8e1265605f72d93358a7c538945daa.scn
+Loading resource: res://assets/models/user_ver3_runtime/항모_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/항모_Image_0.jpg
+Loading resource: res://.godot/imported/항모_Image_0.jpg-756c450b5f6d44abff835d021bc2fe96.s3tc.ctex remapped: res://.godot/imported/항모_Image_0.jpg-756c450b5f6d44abff835d021bc2fe96.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/항모_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/항모_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/항모_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/항모_Image_1.jpg
+Loading resource: res://.godot/imported/항모_Image_1.jpg-dc713d6ee9419e98a8857007aa5741b5.s3tc.ctex remapped: res://.godot/imported/항모_Image_1.jpg-dc713d6ee9419e98a8857007aa5741b5.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/항모_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/항모_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/항모_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/항모_Image_2.jpg
+Loading resource: res://.godot/imported/항모_Image_2.jpg-d1e31d230629bcc8ae74aa7c3ae029c0.s3tc.ctex remapped: res://.godot/imported/항모_Image_2.jpg-d1e31d230629bcc8ae74aa7c3ae029c0.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/항모_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/항모_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/항모.glb' remapped 'res://assets/models/user_ver3_runtime/항모.glb' at thread -1
+Loading resource: res://assets/backgrounds/red_cliffs_starfield_v1.png remapped: res://assets/backgrounds/red_cliffs_starfield_v1.png
+Loading resource: res://.godot/imported/red_cliffs_starfield_v1.png-c70c810e0c0836da746c14bfc8d5ef24.ctex remapped: res://.godot/imported/red_cliffs_starfield_v1.png-c70c810e0c0836da746c14bfc8d5ef24.ctex
+Completed load for: 'res://assets/backgrounds/red_cliffs_starfield_v1.png' remapped 'res://assets/backgrounds/red_cliffs_starfield_v1.png' at thread -1
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-inchat-host-bgm/attempt-05-multi-legacy/appdata/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-09T00-40-10-38736-3593016.jsonl
+Loading resource: res://view/fleet_render/ship_sprite.gdshader remapped: res://view/fleet_render/ship_sprite.gdshader
+Completed load for: 'res://view/fleet_render/ship_sprite.gdshader' remapped 'res://view/fleet_render/ship_sprite.gdshader' at thread -1
+Loading resource: res://assets/ships/silhouette/0.png remapped: res://assets/ships/silhouette/0.png
+Loading resource: res://.godot/imported/0.png-000f3d47a3f63fc2153f1d1a70a99ffa.ctex remapped: res://.godot/imported/0.png-000f3d47a3f63fc2153f1d1a70a99ffa.ctex
+Completed load for: 'res://assets/ships/silhouette/0.png' remapped 'res://assets/ships/silhouette/0.png' at thread -1
+Loading resource: res://assets/ships/silhouette/1.png remapped: res://assets/ships/silhouette/1.png
+Loading resource: res://.godot/imported/1.png-a9f1565be6ae5d13077cffd2c2488cbe.ctex remapped: res://.godot/imported/1.png-a9f1565be6ae5d13077cffd2c2488cbe.ctex
+Completed load for: 'res://assets/ships/silhouette/1.png' remapped 'res://assets/ships/silhouette/1.png' at thread -1
+Loading resource: res://assets/ships/silhouette/2.png remapped: res://assets/ships/silhouette/2.png
+Loading resource: res://.godot/imported/2.png-5e13eaabdaa9decee9c3a3a57b695803.ctex remapped: res://.godot/imported/2.png-5e13eaabdaa9decee9c3a3a57b695803.ctex
+Completed load for: 'res://assets/ships/silhouette/2.png' remapped 'res://assets/ships/silhouette/2.png' at thread -1
+Loading resource: res://assets/ships/silhouette/3.png remapped: res://assets/ships/silhouette/3.png
+Loading resource: res://.godot/imported/3.png-ed3cf9c31def38bd363339ceb1105762.ctex remapped: res://.godot/imported/3.png-ed3cf9c31def38bd363339ceb1105762.ctex
+Completed load for: 'res://assets/ships/silhouette/3.png' remapped 'res://assets/ships/silhouette/3.png' at thread -1
+Loading resource: res://assets/ships/silhouette/4.png remapped: res://assets/ships/silhouette/4.png
+Loading resource: res://.godot/imported/4.png-af051d4ae8d236697fac8ba16a6a55b6.ctex remapped: res://.godot/imported/4.png-af051d4ae8d236697fac8ba16a6a55b6.ctex
+Completed load for: 'res://assets/ships/silhouette/4.png' remapped 'res://assets/ships/silhouette/4.png' at thread -1
+Loading resource: res://assets/ships/silhouette/5.png remapped: res://assets/ships/silhouette/5.png
+Loading resource: res://.godot/imported/5.png-28e2f8cdcee5f173d8b1dbcd7b347bb1.ctex remapped: res://.godot/imported/5.png-28e2f8cdcee5f173d8b1dbcd7b347bb1.ctex
+Completed load for: 'res://assets/ships/silhouette/5.png' remapped 'res://assets/ships/silhouette/5.png' at thread -1
+Loading resource: res://assets/ships/silhouette/6.png remapped: res://assets/ships/silhouette/6.png
+Loading resource: res://.godot/imported/6.png-81d0ac7c6822773fc2c6c16b5333114b.ctex remapped: res://.godot/imported/6.png-81d0ac7c6822773fc2c6c16b5333114b.ctex
+Completed load for: 'res://assets/ships/silhouette/6.png' remapped 'res://assets/ships/silhouette/6.png' at thread -1
+Loading resource: res://view/fleet_render/fx_sprite_mix.gdshader remapped: res://view/fleet_render/fx_sprite_mix.gdshader
+Loading resource: res://view/fleet_render/fx_sprite.gdshaderinc remapped: res://view/fleet_render/fx_sprite.gdshaderinc
+Completed load for: 'res://view/fleet_render/fx_sprite.gdshaderinc' remapped 'res://view/fleet_render/fx_sprite.gdshaderinc' at thread -1
+Completed load for: 'res://view/fleet_render/fx_sprite_mix.gdshader' remapped 'res://view/fleet_render/fx_sprite_mix.gdshader' at thread -1
+Loading resource: res://view/fleet_render/beam.gdshader remapped: res://view/fleet_render/beam.gdshader
+Completed load for: 'res://view/fleet_render/beam.gdshader' remapped 'res://view/fleet_render/beam.gdshader' at thread -1
+Loading resource: res://view/fleet_render/fx_sprite_add.gdshader remapped: res://view/fleet_render/fx_sprite_add.gdshader
+Completed load for: 'res://view/fleet_render/fx_sprite_add.gdshader' remapped 'res://view/fleet_render/fx_sprite_add.gdshader' at thread -1
+Loading resource: res://assets/audio/battle/beam_loop.wav remapped: res://assets/audio/battle/beam_loop.wav
+Loading resource: res://.godot/imported/beam_loop.wav-fcba81f46519b58f7e415b1e22932c74.sample remapped: res://.godot/imported/beam_loop.wav-fcba81f46519b58f7e415b1e22932c74.sample
+Completed load for: 'res://assets/audio/battle/beam_loop.wav' remapped 'res://assets/audio/battle/beam_loop.wav' at thread -1
+Loading resource: res://assets/audio/battle/engine_loop.wav remapped: res://assets/audio/battle/engine_loop.wav
+Loading resource: res://.godot/imported/engine_loop.wav-c183ea7b77f2f24bdf82390b0f831e37.sample remapped: res://.godot/imported/engine_loop.wav-c183ea7b77f2f24bdf82390b0f831e37.sample
+Completed load for: 'res://assets/audio/battle/engine_loop.wav' remapped 'res://assets/audio/battle/engine_loop.wav' at thread -1
+Loading resource: res://assets/audio/battle/fire_loop.wav remapped: res://assets/audio/battle/fire_loop.wav
+Loading resource: res://.godot/imported/fire_loop.wav-91881485e171a0ff3b40831c0e52dd91.sample remapped: res://.godot/imported/fire_loop.wav-91881485e171a0ff3b40831c0e52dd91.sample
+Completed load for: 'res://assets/audio/battle/fire_loop.wav' remapped 'res://assets/audio/battle/fire_loop.wav' at thread -1
+MUSIC {"ogg":true,"phase":0.75,"playback":true,"playing":true,"reject":true}
+RETIRE {"cleared":true,"frames_before_clear":0,"freed":true,"playing_after_stop":false,"stop_attached":true,"tree_clock_stable":true}
+Loading resource: res://assets/models/user_ver3_runtime/전열함.glb remapped: res://assets/models/user_ver3_runtime/전열함.glb
+Loading resource: res://.godot/imported/전열함.glb-507afb81a8c02118d1e74baf66ffe3e5.scn remapped: res://.godot/imported/전열함.glb-507afb81a8c02118d1e74baf66ffe3e5.scn
+Loading resource: res://assets/models/user_ver3_runtime/전열함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/전열함_Image_0.jpg
+Loading resource: res://.godot/imported/전열함_Image_0.jpg-bf9e8dbd086ba293a731da2647e2d282.s3tc.ctex remapped: res://.godot/imported/전열함_Image_0.jpg-bf9e8dbd086ba293a731da2647e2d282.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전열함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/전열함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/전열함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/전열함_Image_1.jpg
+Loading resource: res://.godot/imported/전열함_Image_1.jpg-f314280d334a8637a90beb0acbcaea2e.s3tc.ctex remapped: res://.godot/imported/전열함_Image_1.jpg-f314280d334a8637a90beb0acbcaea2e.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전열함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/전열함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/전열함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/전열함_Image_2.jpg
+Loading resource: res://.godot/imported/전열함_Image_2.jpg-abef4bef3eeac7ea2e6188b090612cf1.s3tc.ctex remapped: res://.godot/imported/전열함_Image_2.jpg-abef4bef3eeac7ea2e6188b090612cf1.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전열함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/전열함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/전열함.glb' remapped 'res://assets/models/user_ver3_runtime/전열함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/화력함.glb remapped: res://assets/models/user_ver3_runtime/화력함.glb
+Loading resource: res://.godot/imported/화력함.glb-8f82bd79fac68986bc4ceb6bb2bcfd3a.scn remapped: res://.godot/imported/화력함.glb-8f82bd79fac68986bc4ceb6bb2bcfd3a.scn
+Loading resource: res://assets/models/user_ver3_runtime/화력함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/화력함_Image_0.jpg
+Loading resource: res://.godot/imported/화력함_Image_0.jpg-a7c8fac8927045e68e22508ffe2bd040.s3tc.ctex remapped: res://.godot/imported/화력함_Image_0.jpg-a7c8fac8927045e68e22508ffe2bd040.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/화력함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/화력함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/화력함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/화력함_Image_1.jpg
+Loading resource: res://.godot/imported/화력함_Image_1.jpg-5136ed5cbe393f699e4c711d06d2795a.s3tc.ctex remapped: res://.godot/imported/화력함_Image_1.jpg-5136ed5cbe393f699e4c711d06d2795a.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/화력함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/화력함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/화력함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/화력함_Image_2.jpg
+Loading resource: res://.godot/imported/화력함_Image_2.jpg-ffe274e48841aa9a6f88ee9570be4842.s3tc.ctex remapped: res://.godot/imported/화력함_Image_2.jpg-ffe274e48841aa9a6f88ee9570be4842.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/화력함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/화력함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/화력함.glb' remapped 'res://assets/models/user_ver3_runtime/화력함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/공성함.glb remapped: res://assets/models/user_ver3_runtime/공성함.glb
+Loading resource: res://.godot/imported/공성함.glb-87ed8adbf714b9b9bf9f96c9fac68fdf.scn remapped: res://.godot/imported/공성함.glb-87ed8adbf714b9b9bf9f96c9fac68fdf.scn
+Loading resource: res://assets/models/user_ver3_runtime/공성함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/공성함_Image_0.jpg
+Loading resource: res://.godot/imported/공성함_Image_0.jpg-baea524fc26870a298b3a17c2fbcbdbb.s3tc.ctex remapped: res://.godot/imported/공성함_Image_0.jpg-baea524fc26870a298b3a17c2fbcbdbb.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/공성함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/공성함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/공성함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/공성함_Image_1.jpg
+Loading resource: res://.godot/imported/공성함_Image_1.jpg-39ec29459ab827ff14cd0cb85b1a5b1d.s3tc.ctex remapped: res://.godot/imported/공성함_Image_1.jpg-39ec29459ab827ff14cd0cb85b1a5b1d.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/공성함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/공성함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/공성함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/공성함_Image_2.jpg
+Loading resource: res://.godot/imported/공성함_Image_2.jpg-099c9c8ad592320088c6fa2ff82bfcf5.s3tc.ctex remapped: res://.godot/imported/공성함_Image_2.jpg-099c9c8ad592320088c6fa2ff82bfcf5.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/공성함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/공성함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/공성함.glb' remapped 'res://assets/models/user_ver3_runtime/공성함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/보급_수리함.glb remapped: res://assets/models/user_ver3_runtime/보급_수리함.glb
+Loading resource: res://.godot/imported/보급_수리함.glb-f035912cd0237d606d87a15933dafec6.scn remapped: res://.godot/imported/보급_수리함.glb-f035912cd0237d606d87a15933dafec6.scn
+Loading resource: res://assets/models/user_ver3_runtime/보급_수리함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/보급_수리함_Image_0.jpg
+Loading resource: res://.godot/imported/보급_수리함_Image_0.jpg-d5306680564c87f26f2e98c0af2bfd8f.s3tc.ctex remapped: res://.godot/imported/보급_수리함_Image_0.jpg-d5306680564c87f26f2e98c0af2bfd8f.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/보급_수리함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/보급_수리함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/보급_수리함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/보급_수리함_Image_1.jpg
+Loading resource: res://.godot/imported/보급_수리함_Image_1.jpg-57fc1455f9b6fde817c7e5c903323903.s3tc.ctex remapped: res://.godot/imported/보급_수리함_Image_1.jpg-57fc1455f9b6fde817c7e5c903323903.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/보급_수리함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/보급_수리함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/보급_수리함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/보급_수리함_Image_2.jpg
+Loading resource: res://.godot/imported/보급_수리함_Image_2.jpg-b90124db82781994c24e13ef7f79e0c9.s3tc.ctex remapped: res://.godot/imported/보급_수리함_Image_2.jpg-b90124db82781994c24e13ef7f79e0c9.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/보급_수리함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/보급_수리함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/보급_수리함.glb' remapped 'res://assets/models/user_ver3_runtime/보급_수리함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/전자전함.glb remapped: res://assets/models/user_ver3_runtime/전자전함.glb
+Loading resource: res://.godot/imported/전자전함.glb-ea4f536a277f9bc89e62252268adc90b.scn remapped: res://.godot/imported/전자전함.glb-ea4f536a277f9bc89e62252268adc90b.scn
+Loading resource: res://assets/models/user_ver3_runtime/전자전함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/전자전함_Image_0.jpg
+Loading resource: res://.godot/imported/전자전함_Image_0.jpg-4dcf3ebd5af5e642da06ffce15005428.s3tc.ctex remapped: res://.godot/imported/전자전함_Image_0.jpg-4dcf3ebd5af5e642da06ffce15005428.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전자전함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/전자전함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/전자전함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/전자전함_Image_1.jpg
+Loading resource: res://.godot/imported/전자전함_Image_1.jpg-d9c36e24aba6b37eada080a4a9455c96.s3tc.ctex remapped: res://.godot/imported/전자전함_Image_1.jpg-d9c36e24aba6b37eada080a4a9455c96.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전자전함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/전자전함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/전자전함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/전자전함_Image_2.jpg
+Loading resource: res://.godot/imported/전자전함_Image_2.jpg-48489a990f5c9cfe4005f5203f0d1b03.s3tc.ctex remapped: res://.godot/imported/전자전함_Image_2.jpg-48489a990f5c9cfe4005f5203f0d1b03.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/전자전함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/전자전함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/전자전함.glb' remapped 'res://assets/models/user_ver3_runtime/전자전함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/호위함.glb remapped: res://assets/models/user_ver3_runtime/호위함.glb
+Loading resource: res://.godot/imported/호위함.glb-8e19636e9761e78d5d31f0902ba9ba94.scn remapped: res://.godot/imported/호위함.glb-8e19636e9761e78d5d31f0902ba9ba94.scn
+Loading resource: res://assets/models/user_ver3_runtime/호위함_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/호위함_Image_0.jpg
+Loading resource: res://.godot/imported/호위함_Image_0.jpg-d548151839d364e10ed0dd460a5dcfb5.s3tc.ctex remapped: res://.godot/imported/호위함_Image_0.jpg-d548151839d364e10ed0dd460a5dcfb5.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/호위함_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/호위함_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/호위함_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/호위함_Image_1.jpg
+Loading resource: res://.godot/imported/호위함_Image_1.jpg-27ee02f080a83af32f5604d0d306f844.s3tc.ctex remapped: res://.godot/imported/호위함_Image_1.jpg-27ee02f080a83af32f5604d0d306f844.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/호위함_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/호위함_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/호위함_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/호위함_Image_2.jpg
+Loading resource: res://.godot/imported/호위함_Image_2.jpg-8e779f9ecbe9ba59936156309c250996.s3tc.ctex remapped: res://.godot/imported/호위함_Image_2.jpg-8e779f9ecbe9ba59936156309c250996.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/호위함_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/호위함_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/호위함.glb' remapped 'res://assets/models/user_ver3_runtime/호위함.glb' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/항모.glb remapped: res://assets/models/user_ver3_runtime/항모.glb
+Loading resource: res://.godot/imported/항모.glb-2e8e1265605f72d93358a7c538945daa.scn remapped: res://.godot/imported/항모.glb-2e8e1265605f72d93358a7c538945daa.scn
+Loading resource: res://assets/models/user_ver3_runtime/항모_Image_0.jpg remapped: res://assets/models/user_ver3_runtime/항모_Image_0.jpg
+Loading resource: res://.godot/imported/항모_Image_0.jpg-756c450b5f6d44abff835d021bc2fe96.s3tc.ctex remapped: res://.godot/imported/항모_Image_0.jpg-756c450b5f6d44abff835d021bc2fe96.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/항모_Image_0.jpg' remapped 'res://assets/models/user_ver3_runtime/항모_Image_0.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/항모_Image_1.jpg remapped: res://assets/models/user_ver3_runtime/항모_Image_1.jpg
+Loading resource: res://.godot/imported/항모_Image_1.jpg-dc713d6ee9419e98a8857007aa5741b5.s3tc.ctex remapped: res://.godot/imported/항모_Image_1.jpg-dc713d6ee9419e98a8857007aa5741b5.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/항모_Image_1.jpg' remapped 'res://assets/models/user_ver3_runtime/항모_Image_1.jpg' at thread -1
+Loading resource: res://assets/models/user_ver3_runtime/항모_Image_2.jpg remapped: res://assets/models/user_ver3_runtime/항모_Image_2.jpg
+Loading resource: res://.godot/imported/항모_Image_2.jpg-d1e31d230629bcc8ae74aa7c3ae029c0.s3tc.ctex remapped: res://.godot/imported/항모_Image_2.jpg-d1e31d230629bcc8ae74aa7c3ae029c0.s3tc.ctex
+Completed load for: 'res://assets/models/user_ver3_runtime/항모_Image_2.jpg' remapped 'res://assets/models/user_ver3_runtime/항모_Image_2.jpg' at thread -1
+Completed load for: 'res://assets/models/user_ver3_runtime/항모.glb' remapped 'res://assets/models/user_ver3_runtime/항모.glb' at thread -1
+Loading resource: res://assets/backgrounds/red_cliffs_starfield_v1.png remapped: res://assets/backgrounds/red_cliffs_starfield_v1.png
+Loading resource: res://.godot/imported/red_cliffs_starfield_v1.png-c70c810e0c0836da746c14bfc8d5ef24.ctex remapped: res://.godot/imported/red_cliffs_starfield_v1.png-c70c810e0c0836da746c14bfc8d5ef24.ctex
+Completed load for: 'res://assets/backgrounds/red_cliffs_starfield_v1.png' remapped 'res://assets/backgrounds/red_cliffs_starfield_v1.png' at thread -1
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-inchat-host-bgm/attempt-05-multi-legacy/appdata/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-09T00-40-10-38736-4070163.jsonl
+Loading resource: res://view/fleet_render/ship_sprite.gdshader remapped: res://view/fleet_render/ship_sprite.gdshader
+Completed load for: 'res://view/fleet_render/ship_sprite.gdshader' remapped 'res://view/fleet_render/ship_sprite.gdshader' at thread -1
+Loading resource: res://assets/ships/silhouette/0.png remapped: res://assets/ships/silhouette/0.png
+Loading resource: res://.godot/imported/0.png-000f3d47a3f63fc2153f1d1a70a99ffa.ctex remapped: res://.godot/imported/0.png-000f3d47a3f63fc2153f1d1a70a99ffa.ctex
+Completed load for: 'res://assets/ships/silhouette/0.png' remapped 'res://assets/ships/silhouette/0.png' at thread -1
+Loading resource: res://assets/ships/silhouette/1.png remapped: res://assets/ships/silhouette/1.png
+Loading resource: res://.godot/imported/1.png-a9f1565be6ae5d13077cffd2c2488cbe.ctex remapped: res://.godot/imported/1.png-a9f1565be6ae5d13077cffd2c2488cbe.ctex
+Completed load for: 'res://assets/ships/silhouette/1.png' remapped 'res://assets/ships/silhouette/1.png' at thread -1
+Loading resource: res://assets/ships/silhouette/2.png remapped: res://assets/ships/silhouette/2.png
+Loading resource: res://.godot/imported/2.png-5e13eaabdaa9decee9c3a3a57b695803.ctex remapped: res://.godot/imported/2.png-5e13eaabdaa9decee9c3a3a57b695803.ctex
+Completed load for: 'res://assets/ships/silhouette/2.png' remapped 'res://assets/ships/silhouette/2.png' at thread -1
+Loading resource: res://assets/ships/silhouette/3.png remapped: res://assets/ships/silhouette/3.png
+Loading resource: res://.godot/imported/3.png-ed3cf9c31def38bd363339ceb1105762.ctex remapped: res://.godot/imported/3.png-ed3cf9c31def38bd363339ceb1105762.ctex
+Completed load for: 'res://assets/ships/silhouette/3.png' remapped 'res://assets/ships/silhouette/3.png' at thread -1
+Loading resource: res://assets/ships/silhouette/4.png remapped: res://assets/ships/silhouette/4.png
+Loading resource: res://.godot/imported/4.png-af051d4ae8d236697fac8ba16a6a55b6.ctex remapped: res://.godot/imported/4.png-af051d4ae8d236697fac8ba16a6a55b6.ctex
+Completed load for: 'res://assets/ships/silhouette/4.png' remapped 'res://assets/ships/silhouette/4.png' at thread -1
+Loading resource: res://assets/ships/silhouette/5.png remapped: res://assets/ships/silhouette/5.png
+Loading resource: res://.godot/imported/5.png-28e2f8cdcee5f173d8b1dbcd7b347bb1.ctex remapped: res://.godot/imported/5.png-28e2f8cdcee5f173d8b1dbcd7b347bb1.ctex
+Completed load for: 'res://assets/ships/silhouette/5.png' remapped 'res://assets/ships/silhouette/5.png' at thread -1
+Loading resource: res://assets/ships/silhouette/6.png remapped: res://assets/ships/silhouette/6.png
+Loading resource: res://.godot/imported/6.png-81d0ac7c6822773fc2c6c16b5333114b.ctex remapped: res://.godot/imported/6.png-81d0ac7c6822773fc2c6c16b5333114b.ctex
+Completed load for: 'res://assets/ships/silhouette/6.png' remapped 'res://assets/ships/silhouette/6.png' at thread -1
+Loading resource: res://view/fleet_render/fx_sprite_mix.gdshader remapped: res://view/fleet_render/fx_sprite_mix.gdshader
+Loading resource: res://view/fleet_render/fx_sprite.gdshaderinc remapped: res://view/fleet_render/fx_sprite.gdshaderinc
+Completed load for: 'res://view/fleet_render/fx_sprite.gdshaderinc' remapped 'res://view/fleet_render/fx_sprite.gdshaderinc' at thread -1
+Completed load for: 'res://view/fleet_render/fx_sprite_mix.gdshader' remapped 'res://view/fleet_render/fx_sprite_mix.gdshader' at thread -1
+Loading resource: res://view/fleet_render/beam.gdshader remapped: res://view/fleet_render/beam.gdshader
+Completed load for: 'res://view/fleet_render/beam.gdshader' remapped 'res://view/fleet_render/beam.gdshader' at thread -1
+Loading resource: res://view/fleet_render/fx_sprite_add.gdshader remapped: res://view/fleet_render/fx_sprite_add.gdshader
+Completed load for: 'res://view/fleet_render/fx_sprite_add.gdshader' remapped 'res://view/fleet_render/fx_sprite_add.gdshader' at thread -1
+Loading resource: res://assets/audio/battle/beam_loop.wav remapped: res://assets/audio/battle/beam_loop.wav
+Loading resource: res://.godot/imported/beam_loop.wav-fcba81f46519b58f7e415b1e22932c74.sample remapped: res://.godot/imported/beam_loop.wav-fcba81f46519b58f7e415b1e22932c74.sample
+Completed load for: 'res://assets/audio/battle/beam_loop.wav' remapped 'res://assets/audio/battle/beam_loop.wav' at thread -1
+Loading resource: res://assets/audio/battle/engine_loop.wav remapped: res://assets/audio/battle/engine_loop.wav
+Loading resource: res://.godot/imported/engine_loop.wav-c183ea7b77f2f24bdf82390b0f831e37.sample remapped: res://.godot/imported/engine_loop.wav-c183ea7b77f2f24bdf82390b0f831e37.sample
+Completed load for: 'res://assets/audio/battle/engine_loop.wav' remapped 'res://assets/audio/battle/engine_loop.wav' at thread -1
+Loading resource: res://assets/audio/battle/fire_loop.wav remapped: res://assets/audio/battle/fire_loop.wav
+Loading resource: res://.godot/imported/fire_loop.wav-91881485e171a0ff3b40831c0e52dd91.sample remapped: res://.godot/imported/fire_loop.wav-91881485e171a0ff3b40831c0e52dd91.sample
+Completed load for: 'res://assets/audio/battle/fire_loop.wav' remapped 'res://assets/audio/battle/fire_loop.wav' at thread -1
+MUSIC {"ogg":true,"phase":0.75,"playback":true,"playing":true,"reject":false}
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-inchat-host-bgm/attempt-05-multi-legacy/appdata/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-09T00-40-11-38736-4287859.jsonl
+RETIRE {"cleared":true,"frames_before_clear":0,"freed":true,"playing_after_stop":false,"stop_attached":true,"tree_clock_stable":true}
+BASE {"fingerprint":"c65540dbac9f03d8d0abecd7c03bdad03acd253d01b9d8243a786e3c81b972a7","preserve":"c65540dbac9f03d8d0abecd7c03bdad03acd253d01b9d8243a786e3c81b972a7","seed":20261109}
+CHECK true same_initial_host_state
+FIRST {"preserve":{"alpha":0.25,"clock":[10,1.0,0.25,0.0],"ms":100,"tick":1},"reset":{"alpha":0.5,"clock":[10,1.0,0.5,0.0],"ms":0,"tick":0}}
+CHECK true actual_first_frame_phase_fork
+CHECK true prepare_rejection_preserves_prior_host
+CHECK true clean_teardown_and_exact_gate
+HOST_CLOCK_RESULT {"checks":[{"name":"same_initial_host_state","pass":true},{"name":"actual_first_frame_phase_fork","pass":true},{"name":"prepare_rejection_preserves_prior_host","pass":true},{"name":"clean_teardown_and_exact_gate","pass":true}],"pass":true}
+XR: Clearing primary interface
+XR: Removed interface "Native mobile"
+XR: Removed interface "OpenXR"

@@ -1,0 +1,299 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PC_DIRECT_ROW F1 PASS
+PC_DIRECT_ROW F2 PASS
+PC_DIRECT_PATHS {"project":"C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-pc-next-20261109/attempt-02/before/reject-project","user":"C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-pc-next-20261109/attempt-02/before/reject/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms"}
+PC_DIRECT_ROW F3 PASS
+ERROR: Cannot open file 'res://scenes/FleetBattle3D.tscn'.
+   at: load (scene/resources/resource_format_text.cpp:1442)
+   GDScript backtrace (most recent call first):
+       [0] go_battle (res://scripts/world_link.gd:23)
+       [1] _pc_reject (res://tests/world_link.gd:343)
+       [2] _frames (res://tests/world_link.gd:20)
+ERROR: Failed loading resource: res://scenes/FleetBattle3D.tscn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] go_battle (res://scripts/world_link.gd:23)
+       [1] _pc_reject (res://tests/world_link.gd:343)
+       [2] _frames (res://tests/world_link.gd:20)
+PC_DIRECT_ROW R1 FAIL
+ERROR: TEST_FAIL R1
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject (res://tests/world_link.gd:344)
+       [3] _frames (res://tests/world_link.gd:20)
+PC_DIRECT_ROW R2 PASS
+PC_DIRECT_ROW R3 FAIL
+ERROR: TEST_FAIL R3
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject (res://tests/world_link.gd:346)
+       [3] _frames (res://tests/world_link.gd:20)
+PC_DIRECT_ROW R4 FAIL
+ERROR: TEST_FAIL R4
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject (res://tests/world_link.gd:347)
+       [3] _frames (res://tests/world_link.gd:20)
+PC_DIRECT_ROW R5 FAIL
+ERROR: TEST_FAIL R5
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject (res://tests/world_link.gd:348)
+       [3] _frames (res://tests/world_link.gd:20)
+PC_DIRECT_ROW R6 FAIL
+ERROR: TEST_FAIL R6
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject (res://tests/world_link.gd:349)
+       [3] _frames (res://tests/world_link.gd:20)
+ERROR: Cannot open file 'res://scenes/FleetBattle3D.tscn'.
+   at: load (scene/resources/resource_format_text.cpp:1442)
+   GDScript backtrace (most recent call first):
+       [0] go_battle (res://scripts/world_link.gd:23)
+       [1] _finish_sortie (res://view/world/world_map_screen.gd:596)
+       [2] _pc_reject (res://tests/world_link.gd:362)
+       [3] _seconds (res://tests/world_link.gd:23)
+ERROR: Failed loading resource: res://scenes/FleetBattle3D.tscn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] go_battle (res://scripts/world_link.gd:23)
+       [1] _finish_sortie (res://view/world/world_map_screen.gd:596)
+       [2] _pc_reject (res://tests/world_link.gd:362)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW A1 PASS
+PC_DIRECT_ROW A2 FAIL
+ERROR: TEST_FAIL A2
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject (res://tests/world_link.gd:364)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW A3 FAIL
+ERROR: TEST_FAIL A3
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject (res://tests/world_link.gd:365)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW A4 FAIL
+ERROR: TEST_FAIL A4
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject (res://tests/world_link.gd:366)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW A5 FAIL
+ERROR: TEST_FAIL A5
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject (res://tests/world_link.gd:367)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW A6 PASS
+PC_DIRECT_ROW A7 FAIL
+ERROR: TEST_FAIL A7
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject (res://tests/world_link.gd:369)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW A8 FAIL
+ERROR: TEST_FAIL A8
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject (res://tests/world_link.gd:370)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW A9 PASS
+PC_DIRECT_ROW A10 FAIL
+ERROR: TEST_FAIL A10
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject (res://tests/world_link.gd:374)
+       [3] _frames (res://tests/world_link.gd:20)
+PC_DIRECT_ROW BS1 PASS
+ERROR: Cannot open file 'res://scenes/FleetBattle3D.tscn'.
+   at: load (scene/resources/resource_format_text.cpp:1442)
+   GDScript backtrace (most recent call first):
+       [0] go_battle (res://scripts/world_link.gd:23)
+       [1] _finish_sortie (res://view/world/world_map_screen.gd:596)
+       [2] _pc_reject_result (res://tests/world_link.gd:415)
+       [3] _seconds (res://tests/world_link.gd:23)
+ERROR: Failed loading resource: res://scenes/FleetBattle3D.tscn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] go_battle (res://scripts/world_link.gd:23)
+       [1] _finish_sortie (res://view/world/world_map_screen.gd:596)
+       [2] _pc_reject_result (res://tests/world_link.gd:415)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW BS2 PASS
+PC_DIRECT_ROW BS3 FAIL
+ERROR: TEST_FAIL BS3
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject_result (res://tests/world_link.gd:417)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW BS4 FAIL
+ERROR: TEST_FAIL BS4
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject_result (res://tests/world_link.gd:418)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW BS5 PASS
+PC_DIRECT_ROW BS6 FAIL
+ERROR: TEST_FAIL BS6
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject_result (res://tests/world_link.gd:420)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW BS7 PASS
+PC_DIRECT_ROW BS8 FAIL
+ERROR: TEST_FAIL BS8
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject_result (res://tests/world_link.gd:424)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW BS9 FAIL
+ERROR: TEST_FAIL BS9
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject_result (res://tests/world_link.gd:425)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW BS10 FAIL
+ERROR: TEST_FAIL BS10
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject_result (res://tests/world_link.gd:426)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW BS11 FAIL
+ERROR: TEST_FAIL BS11
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject_result (res://tests/world_link.gd:427)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW BS12 PASS
+PC_DIRECT_ROW BS13 FAIL
+ERROR: TEST_FAIL BS13
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject_result (res://tests/world_link.gd:431)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW BN1 PASS
+ERROR: Cannot open file 'res://scenes/FleetBattle3D.tscn'.
+   at: load (scene/resources/resource_format_text.cpp:1442)
+   GDScript backtrace (most recent call first):
+       [0] go_battle (res://scripts/world_link.gd:23)
+       [1] _finish_sortie (res://view/world/world_map_screen.gd:596)
+       [2] _pc_reject_result (res://tests/world_link.gd:415)
+       [3] _seconds (res://tests/world_link.gd:23)
+ERROR: Failed loading resource: res://scenes/FleetBattle3D.tscn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] go_battle (res://scripts/world_link.gd:23)
+       [1] _finish_sortie (res://view/world/world_map_screen.gd:596)
+       [2] _pc_reject_result (res://tests/world_link.gd:415)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW BN2 PASS
+PC_DIRECT_ROW BN3 FAIL
+ERROR: TEST_FAIL BN3
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject_result (res://tests/world_link.gd:417)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW BN4 FAIL
+ERROR: TEST_FAIL BN4
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject_result (res://tests/world_link.gd:418)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW BN5 PASS
+PC_DIRECT_ROW BN6 FAIL
+ERROR: TEST_FAIL BN6
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject_result (res://tests/world_link.gd:420)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW BN7 PASS
+PC_DIRECT_ROW BN8 FAIL
+ERROR: TEST_FAIL BN8
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject_result (res://tests/world_link.gd:424)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW BN9 FAIL
+ERROR: TEST_FAIL BN9
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject_result (res://tests/world_link.gd:425)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW BN10 FAIL
+ERROR: TEST_FAIL BN10
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject_result (res://tests/world_link.gd:426)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW BN11 FAIL
+ERROR: TEST_FAIL BN11
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject_result (res://tests/world_link.gd:427)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_ROW BN12 PASS
+PC_DIRECT_ROW BN13 FAIL
+ERROR: TEST_FAIL BN13
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/world_link.gd:16)
+       [1] _pc_check (res://tests/world_link.gd:297)
+       [2] _pc_reject_result (res://tests/world_link.gd:431)
+       [3] _seconds (res://tests/world_link.gd:23)
+PC_DIRECT_REJECT_DONE 28

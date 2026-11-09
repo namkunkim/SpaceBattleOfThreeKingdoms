@@ -1,0 +1,15 @@
+{
+  "order": "Preservation audit, package verification, then authorized P03 progress/handoff update.",
+  "files": [
+    {
+      "path": "tmp/p03-progress-20261108/P03-CHECKLIST-REVISION-20261108.md",
+      "before": "a371f7c31f25a6e0454e14a6d763e3f3dc2c26992736b976a4012145bace343a",
+      "after": "6afe79d0dcbd8b2095cffd6025acfd063cd8e714708c9647ae1781fb489ecfb1"
+    },
+    {
+      "path": "tmp/p03-progress-20261108/HANDOFF-20261108.md",
+      "before": "61eed5ab6913f74a07e11b326f760d9d27a495f5ea3021a42848847a125559d6",
+      "after": "ac620a5d8e992c67d5b72ca8ea41416facde66d2d52709d46dfc87701b1213b5"
+    }
+  ]
+}

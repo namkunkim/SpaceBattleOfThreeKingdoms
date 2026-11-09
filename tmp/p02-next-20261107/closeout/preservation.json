@@ -1,0 +1,636 @@
+{
+  "baseline": 7078,
+  "missing": 0,
+  "groups": {
+    "identical": 7071,
+    "owned_document": 2,
+    "owned_code": 2,
+    "concurrent_p03": 3
+  },
+  "differences": [
+    {
+      "path": "docs/battle-core/CHECKLIST-OPEN.md",
+      "group": "owned_document",
+      "original": {
+        "bytes": 119749,
+        "sha256": "a1cf47d1120857e27a82828c902e15be7df5d4d546c2a44273c617362719a3f0"
+      },
+      "observed": {
+        "bytes": 120274,
+        "sha256": "4cecb714340b2899a6e36c67ee884c920ff8cda7e478dad46306948e94267711"
+      }
+    },
+    {
+      "path": "scripts/world/auto_resolver.gd",
+      "group": "owned_code",
+      "original": {
+        "bytes": 2801,
+        "sha256": "3619547e309b613ef60ec6994a6c08c5ca7a8559ad86d577033c85ccdf4f4221"
+      },
+      "observed": {
+        "bytes": 6488,
+        "sha256": "50fd0ee2d41b0abd5b86d05a76b861b5d63a6275925369e03460dbcc66e2d679"
+      }
+    },
+    {
+      "path": "tests/autoresolve.gd",
+      "group": "owned_code",
+      "original": {
+        "bytes": 25115,
+        "sha256": "a6c3ee903e2365569a31aa0194acb426d87c5856a74a9c7dcaaedeaeea18b5b8"
+      },
+      "observed": {
+        "bytes": 27097,
+        "sha256": "27427c810c3813666b9172ae35d02940b9d1361196632e3970e421f6a3fb21a5"
+      }
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.md",
+      "group": "owned_document",
+      "original": {
+        "bytes": 18790,
+        "sha256": "584da2da0c907a32d43e406b96031e99586a026a0d4227124dba875b0631dafa"
+      },
+      "observed": {
+        "bytes": 18832,
+        "sha256": "27c332574eea29a1f9d5df576b3f9723ea882ee959859802a5c220dcda77d667"
+      }
+    },
+    {
+      "path": "tmp/p03-state-checkpoint-20261105/inventory.py",
+      "group": "concurrent_p03",
+      "original": {
+        "bytes": 14406,
+        "sha256": "a90f8b6f68dffcba37049f633bd3f9a355cc348e39686bd84a1eeacf89748c51"
+      },
+      "observed": {
+        "bytes": 14732,
+        "sha256": "6ce3652bc265b970bd53c3ee9a967109f237660adb592039d7f48d181b57b749"
+      }
+    },
+    {
+      "path": "tmp/p03-state-checkpoint-20261105/run_gate.py",
+      "group": "concurrent_p03",
+      "original": {
+        "bytes": 2821,
+        "sha256": "aa968573581a8b8e28cd9767f24a155cec1499e3310b34857fccdc3dc95d20eb"
+      },
+      "observed": {
+        "bytes": 2903,
+        "sha256": "9b687b3d102454cd5e533fe3bbc4a4e300f3da737950228f2be78c7edf13220a"
+      }
+    },
+    {
+      "path": "tmp/p03-state-checkpoint-20261105/test_inventory.py",
+      "group": "concurrent_p03",
+      "original": {
+        "bytes": 13712,
+        "sha256": "43494b2fd654ee28e336476a645f36d7701d93ceefb4dc4cdb0f8d1f146ff2d0"
+      },
+      "observed": {
+        "bytes": 14075,
+        "sha256": "42be4ac62489712794e016e6cd6cce10341c00ea6cf61b8cb13f37239f5c20d6"
+      }
+    }
+  ],
+  "new_p03_observed": [
+    "tmp/p03-command-suffix-20261107/.gdignore",
+    "tmp/p03-command-suffix-20261107/PLAN-v2.md",
+    "tmp/p03-command-suffix-20261107/PLAN-v3.md",
+    "tmp/p03-command-suffix-20261107/PLAN-v4.md",
+    "tmp/p03-command-suffix-20261107/PLAN-v5.md",
+    "tmp/p03-command-suffix-20261107/PLAN.md",
+    "tmp/p03-command-suffix-20261107/REVIEW-5B-attempt-01.md",
+    "tmp/p03-command-suffix-20261107/REVIEW-5B-attempt-02.md",
+    "tmp/p03-command-suffix-20261107/REVIEW-5B-attempt-05.md",
+    "tmp/p03-command-suffix-20261107/REVIEW-PLAN-v3.md",
+    "tmp/p03-command-suffix-20261107/REVIEW-PLAN-v4.md",
+    "tmp/p03-command-suffix-20261107/REVIEW-PLAN-v5.md",
+    "tmp/p03-command-suffix-20261107/REVIEW-PLAN.md",
+    "tmp/p03-command-suffix-20261107/attempt-01/engine-version.stderr",
+    "tmp/p03-command-suffix-20261107/attempt-01/engine-version.stdout",
+    "tmp/p03-command-suffix-20261107/attempt-01/input-after.json",
+    "tmp/p03-command-suffix-20261107/attempt-01/input-before.json",
+    "tmp/p03-command-suffix-20261107/attempt-01/run.json",
+    "tmp/p03-command-suffix-20261107/attempt-01/runner.gd.txt",
+    "tmp/p03-command-suffix-20261107/attempt-01/stderr.bin",
+    "tmp/p03-command-suffix-20261107/attempt-01/stdout.bin",
+    "tmp/p03-command-suffix-20261107/attempt-02/engine-version.stderr",
+    "tmp/p03-command-suffix-20261107/attempt-02/engine-version.stdout",
+    "tmp/p03-command-suffix-20261107/attempt-02/input-after.json",
+    "tmp/p03-command-suffix-20261107/attempt-02/input-before.json",
+    "tmp/p03-command-suffix-20261107/attempt-02/run.json",
+    "tmp/p03-command-suffix-20261107/attempt-02/runner.gd.txt",
+    "tmp/p03-command-suffix-20261107/attempt-02/stderr.bin",
+    "tmp/p03-command-suffix-20261107/attempt-02/stdout.bin",
+    "tmp/p03-command-suffix-20261107/attempt-03/cleanup.stderr",
+    "tmp/p03-command-suffix-20261107/attempt-03/cleanup.stdout",
+    "tmp/p03-command-suffix-20261107/attempt-03/engine-version.stderr",
+    "tmp/p03-command-suffix-20261107/attempt-03/engine-version.stdout",
+    "tmp/p03-command-suffix-20261107/attempt-03/input-after.json",
+    "tmp/p03-command-suffix-20261107/attempt-03/input-before.json",
+    "tmp/p03-command-suffix-20261107/attempt-03/post-cleanup-process-check.json",
+    "tmp/p03-command-suffix-20261107/attempt-03/run.json",
+    "tmp/p03-command-suffix-20261107/attempt-03/runner.gd.txt",
+    "tmp/p03-command-suffix-20261107/attempt-03/stderr.bin",
+    "tmp/p03-command-suffix-20261107/attempt-03/stdout.bin",
+    "tmp/p03-command-suffix-20261107/attempt-04/engine-version.stderr",
+    "tmp/p03-command-suffix-20261107/attempt-04/engine-version.stdout",
+    "tmp/p03-command-suffix-20261107/attempt-04/input-after.json",
+    "tmp/p03-command-suffix-20261107/attempt-04/input-before.json",
+    "tmp/p03-command-suffix-20261107/attempt-04/run.json",
+    "tmp/p03-command-suffix-20261107/attempt-04/runner.gd.txt",
+    "tmp/p03-command-suffix-20261107/attempt-04/stderr.bin",
+    "tmp/p03-command-suffix-20261107/attempt-04/stdout.bin",
+    "tmp/p03-command-suffix-20261107/attempt-05/engine-version.stderr",
+    "tmp/p03-command-suffix-20261107/attempt-05/engine-version.stdout",
+    "tmp/p03-command-suffix-20261107/attempt-05/input-after.json",
+    "tmp/p03-command-suffix-20261107/attempt-05/input-before.json",
+    "tmp/p03-command-suffix-20261107/attempt-05/run.json",
+    "tmp/p03-command-suffix-20261107/attempt-05/runner.gd.txt",
+    "tmp/p03-command-suffix-20261107/attempt-05/stderr.bin",
+    "tmp/p03-command-suffix-20261107/attempt-05/stdout.bin",
+    "tmp/p03-command-suffix-20261107/command_suffix.gd",
+    "tmp/p03-command-suffix-20261107/dirty-baseline.json",
+    "tmp/p03-command-suffix-20261107/dirty-end.z",
+    "tmp/p03-command-suffix-20261107/dirty-start.z",
+    "tmp/p03-command-suffix-20261107/run_gate.py",
+    "tmp/p03-command-suffix-20261107/windows_job.py",
+    "tmp/p03-state-checkpoint-20261105/.gdignore",
+    "tmp/p03-state-checkpoint-20261105/CHECKLIST.md",
+    "tmp/p03-state-checkpoint-20261105/CONCURRENT-OBSERVATION.md",
+    "tmp/p03-state-checkpoint-20261105/HANDOFF.md",
+    "tmp/p03-state-checkpoint-20261105/P03-DECLARATION-DELIVERY-20261107.zip",
+    "tmp/p03-state-checkpoint-20261105/PLAN-v4.md",
+    "tmp/p03-state-checkpoint-20261105/RESULT.md",
+    "tmp/p03-state-checkpoint-20261105/REVIEW-5B-attempt-02.md",
+    "tmp/p03-state-checkpoint-20261105/REVIEW-5B-attempt-03.md",
+    "tmp/p03-state-checkpoint-20261105/REVIEW-CLOSEOUT.md",
+    "tmp/p03-state-checkpoint-20261105/REVIEW-PLAN-v4.md",
+    "tmp/p03-state-checkpoint-20261105/STATE-REFERENCES-20261107.md",
+    "tmp/p03-state-checkpoint-20261105/archive-verification.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/input-after.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/input-before.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-01/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-01/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-01/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-02/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-02/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-02/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-03/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-03/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-03/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-04/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-04/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-04/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-05/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-05/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-05/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-06/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-06/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-06/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-07/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-07/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-07/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-08/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-08/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-08/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-09/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-09/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-09/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-10/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-10/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-10/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-11/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-11/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-11/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-12/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-12/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-12/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-13/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-13/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-13/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-14/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-14/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-14/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-15/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-15/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-15/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-16/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-16/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-16/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-17/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-17/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-17/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-18/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-18/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-18/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-19/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-19/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-19/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-20/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-20/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-20/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-21/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-21/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-21/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-22/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-22/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-22/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-23/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-23/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-23/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-24/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-24/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-24/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-25/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-25/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-25/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-26/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-26/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-26/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-27/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-27/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-27/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-28/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-28/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-28/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-29/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-29/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-29/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-30/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-30/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-30/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-31/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-31/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-31/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-32/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-32/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-32/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-33/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-33/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-33/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-34/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-34/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-34/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-35/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-35/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-35/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-36/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-36/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-36/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-37/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-37/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-37/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-38/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-38/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-38/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-39/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-39/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-39/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-40/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-40/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-40/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-41/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-41/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-41/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-42/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-42/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-42/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-43/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-43/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-43/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-44/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-44/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-44/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-45/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-45/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-45/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-46/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-46/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-46/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-47/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-47/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-47/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-48/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-48/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-48/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-49/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-49/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-49/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-50/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-50/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-50/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-51/run.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-51/stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/call-51/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/added/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/annotation-inline/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/annotation-split/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/backslash/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/baseline-errors/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/broken-json.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/deterministic/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/duplicate-identity.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/duplicate-path.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/duplicate-source-member/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/function-blank-next/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/function-comment-next/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/function-continuation/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/function-dangling/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/function-nonterminal/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/getter/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/historic-baseline.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/initializer/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/inline-inferred-setter/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/inline-typed-getter/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/inline-typed-uninitialized-getter/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/inline-untyped-uninitialized-setter/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/invalid-utf8/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/local/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/members-inner/core/battle/battle_state.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/missing-key.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/multiline/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/new-file/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/new-file/core/battle/zero.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/new-inner/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/occupied-dir/stdout.bin",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/occupied.out",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/order/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/readonly/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/removed-file/core/battle/zero.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/removed/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/same-line-members/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/sample-baseline.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/setter/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/strings/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/triple/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/two-files-baseline.json",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/type/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/unclosed-delimiter/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/unclosed-string/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/unfinished-var/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/unknown/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/fixtures/wrong-delimiter/core/battle/example.gd",
+    "tmp/p03-state-checkpoint-20261105/attempt-03/suite/suite.json",
+    "tmp/p03-state-checkpoint-20261105/delivery-audit-02-20261107/preservation.json",
+    "tmp/p03-state-checkpoint-20261105/delivery-audit-02-20261107/status.z",
+    "tmp/p03-state-checkpoint-20261105/delivery-audit-final-20261107/preservation.json",
+    "tmp/p03-state-checkpoint-20261105/delivery-audit-final-20261107/status.z",
+    "tmp/p03-state-checkpoint-20261105/delivery_audit.py",
+    "tmp/p03-state-checkpoint-20261105/new-file-whitespace.json",
+    "tmp/p03-state-checkpoint-20261105/record-manifest.json",
+    "tmp/p03-state-checkpoint-20261105/scope-observation-20261107/5-run.json",
+    "tmp/p03-state-checkpoint-20261105/scope-observation-20261107/5-stderr.bin",
+    "tmp/p03-state-checkpoint-20261105/scope-observation-20261107/5-stdout.bin"
+  ],
+  "new_owned_source": [
+    "tests/fixtures/p02/worker-poc.json",
+    "tests/fixtures/p02/worker-services.json",
+    "tests/fixtures/p02/worker-timeout-poc.json",
+    "tests/p02_worker_adapter.gd"
+  ],
+  "new_owned_documents": [
+    "docs/battle-core/pc-campaign-design/P02-WORKER-CHECKLIST-20261107.md",
+    "docs/battle-core/pc-campaign-design/P02-WORKER-RESULT-20261107.md",
+    "docs/battle-core/pc-campaign-design/SESSION-HANDOFF-P02-WORKER-20261107.md"
+  ],
+  "baseline_zip_html": [
+    {
+      "path": "altair-corridor.html",
+      "bytes": 59686,
+      "sha256": "bead5cb675216c3aeb0b4b3a9b2e683c69e560c31eebd228480ab52d29361d62"
+    },
+    {
+      "path": "docs/poc/fleet-motion-ref/index.html",
+      "bytes": 69223,
+      "sha256": "964e0b57aba2584f2aa40d2b3c6b412e01e2a9b02e5d76c81b49436662206992"
+    },
+    {
+      "path": "docs/ui/fleet-formations.fragment.html",
+      "bytes": 331713,
+      "sha256": "125bc008087bb5ea226ee5b0690eeca6785b769e5ef18b434de0cbac5440a575"
+    },
+    {
+      "path": "docs/ui/fleet-formations.html",
+      "bytes": 430132,
+      "sha256": "6a81df1fc8f251c1be3a17898273bd37360d9de8de193e1f7c8e109c287947f2"
+    },
+    {
+      "path": "docs/ui/mockup-battle-v1.html",
+      "bytes": 23150,
+      "sha256": "40bd7feb027d7869ba329ecf2c08071d442e4658a872104d50cd9317d1c3d109"
+    },
+    {
+      "path": "docs/ui/mockup-battle-v2.html",
+      "bytes": 953313,
+      "sha256": "6cc61d566090aca472b4b49defe7523c034878538dde8a91acf27b41e89ec78a"
+    },
+    {
+      "path": "docs/ui/mockup-fleet-organization-v1.html",
+      "bytes": 18888,
+      "sha256": "cea13eb72c8647e56ff03d0f92a6d1b757948fe952ce3c2a1029a3623c618282"
+    },
+    {
+      "path": "docs/ui/mockup-galaxy-map-full-v1.html",
+      "bytes": 203525,
+      "sha256": "8f2dffe3ebc31b1a3089e915bc93b68b7c0880782a9ee5121235d53be3d3b951"
+    },
+    {
+      "path": "docs/ui/mockup-galaxy-map-v1.html",
+      "bytes": 49303,
+      "sha256": "3afb44241017b3bd3a0b2272d72e4d1fafa522080fecb602f3a62b730db0711e"
+    },
+    {
+      "path": "docs/ui/mockup-home-v1.html",
+      "bytes": 159541,
+      "sha256": "15a58bfa7334719f6c38cdfdc676fdce543cba33f8f6c0b106c8f9c21dbf64d0"
+    },
+    {
+      "path": "docs/ui/mockup-home-v2.html",
+      "bytes": 160068,
+      "sha256": "b2d843d6cdb0ed42a3ba8d7e2ed89a701de46ccea0c8a3e0b45994d6f5c6d3e6"
+    },
+    {
+      "path": "evidence/o3c-20261019-ac8b780/raw-results.zip",
+      "bytes": 1090823,
+      "sha256": "ddbe0e04f50d3cff437cae29da29b2f1bd9ed67171567401f4bd316d66141010"
+    },
+    {
+      "path": "output/seonghanji-portraits-distinct-20261017/index.html",
+      "bytes": 171735,
+      "sha256": "d0d9e1b3d9e09371f5e4bbdbdf1aa6275c524af03d26b3af73a5f556121d8b68"
+    },
+    {
+      "path": "tools/ui/home_v1_template.html",
+      "bytes": 70080,
+      "sha256": "c0ab5ad503accaffbf4de088ff84f95548f9f01e1ba724edd5e0cbb76173fee5"
+    },
+    {
+      "path": "tools/ui/home_v2_template.html",
+      "bytes": 70607,
+      "sha256": "c890578548e1a418e468d55e105919dba0932f52ad9f2b47e3133f47263fe427"
+    },
+    {
+      "path": "artifacts/seonghanji-portraits-501-final-20261018.zip",
+      "bytes": 439194743,
+      "sha256": "d080190807d0ae974b4f568f488c291e3dd984019f44e3872700919f1e849c45"
+    },
+    {
+      "path": "artifacts/seonghanji-portraits-501-western-revised-20261018.zip",
+      "bytes": 450874614,
+      "sha256": "6f120d969ef735af4ebed2c7a17a321475375b81200ed6b95c55f747f243c07f"
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.html",
+      "bytes": 43123,
+      "sha256": "9653d4913deff9e2cdb7d5c7db768b29ee2dd53aa80cd67a260378b48263dc1d"
+    },
+    {
+      "path": "tmp/develop-html-port-before-20261019.zip",
+      "bytes": 183098,
+      "sha256": "5fcf3e024d83e2cc96ba981aa411cee4c723eea5526c62df1416384ce889742a"
+    },
+    {
+      "path": "tmp/i01b-active-replace-delivery-20261104.zip",
+      "bytes": 1601850,
+      "sha256": "87a090a8d891391473fd9dfa9627dcd4430af234359e06d0b78e9e7b5f005eae"
+    },
+    {
+      "path": "tmp/i01b-feature-push-20261029/tree/altair-corridor.html",
+      "bytes": 59686,
+      "sha256": "bead5cb675216c3aeb0b4b3a9b2e683c69e560c31eebd228480ab52d29361d62"
+    },
+    {
+      "path": "tmp/i01b-feature-push-20261029/tree/docs/poc/fleet-motion-ref/index.html",
+      "bytes": 62823,
+      "sha256": "b6c1e527d6d62b9e240617e2e65c50034f3ba33cf6579355bb491e3d9697b7f0"
+    },
+    {
+      "path": "tmp/i01b-feature-push-20261029/tree/docs/ui/fleet-formations.fragment.html",
+      "bytes": 330376,
+      "sha256": "c889ea7ed320ff3dd62b0ecd023e26312e63c0ffcaba7fd6679025d49f8b05c3"
+    },
+    {
+      "path": "tmp/i01b-feature-push-20261029/tree/docs/ui/fleet-formations.html",
+      "bytes": 431189,
+      "sha256": "9ea73d38f2f2d9173616a24ff5467595d5e8d8075157e909da66b5549b287474"
+    },
+    {
+      "path": "tmp/i01b-feature-push-20261029/tree/docs/ui/mockup-battle-v1.html",
+      "bytes": 23150,
+      "sha256": "40bd7feb027d7869ba329ecf2c08071d442e4658a872104d50cd9317d1c3d109"
+    },
+    {
+      "path": "tmp/i01b-feature-push-20261029/tree/docs/ui/mockup-battle-v2.html",
+      "bytes": 953313,
+      "sha256": "6cc61d566090aca472b4b49defe7523c034878538dde8a91acf27b41e89ec78a"
+    },
+    {
+      "path": "tmp/i01b-feature-push-20261029/tree/docs/ui/mockup-fleet-organization-v1.html",
+      "bytes": 18888,
+      "sha256": "cea13eb72c8647e56ff03d0f92a6d1b757948fe952ce3c2a1029a3623c618282"
+    },
+    {
+      "path": "tmp/i01b-feature-push-20261029/tree/docs/ui/mockup-galaxy-map-full-v1.html",
+      "bytes": 203525,
+      "sha256": "8f2dffe3ebc31b1a3089e915bc93b68b7c0880782a9ee5121235d53be3d3b951"
+    },
+    {
+      "path": "tmp/i01b-feature-push-20261029/tree/docs/ui/mockup-galaxy-map-v1.html",
+      "bytes": 49303,
+      "sha256": "3afb44241017b3bd3a0b2272d72e4d1fafa522080fecb602f3a62b730db0711e"
+    },
+    {
+      "path": "tmp/i01b-feature-push-20261029/tree/docs/ui/mockup-home-v1.html",
+      "bytes": 159541,
+      "sha256": "15a58bfa7334719f6c38cdfdc676fdce543cba33f8f6c0b106c8f9c21dbf64d0"
+    },
+    {
+      "path": "tmp/i01b-feature-push-20261029/tree/docs/ui/mockup-home-v2.html",
+      "bytes": 160068,
+      "sha256": "b2d843d6cdb0ed42a3ba8d7e2ed89a701de46ccea0c8a3e0b45994d6f5c6d3e6"
+    },
+    {
+      "path": "tmp/i01b-feature-push-20261029/tree/evidence/o3c-20261019-ac8b780/raw-results.zip",
+      "bytes": 1090823,
+      "sha256": "ddbe0e04f50d3cff437cae29da29b2f1bd9ed67171567401f4bd316d66141010"
+    },
+    {
+      "path": "tmp/i01b-feature-push-20261029/tree/output/seonghanji-portraits-distinct-20261017/index.html",
+      "bytes": 171735,
+      "sha256": "d0d9e1b3d9e09371f5e4bbdbdf1aa6275c524af03d26b3af73a5f556121d8b68"
+    },
+    {
+      "path": "tmp/i01b-feature-push-20261029/tree/tools/ui/home_v1_template.html",
+      "bytes": 70080,
+      "sha256": "c0ab5ad503accaffbf4de088ff84f95548f9f01e1ba724edd5e0cbb76173fee5"
+    },
+    {
+      "path": "tmp/i01b-feature-push-20261029/tree/tools/ui/home_v2_template.html",
+      "bytes": 70607,
+      "sha256": "c890578548e1a418e468d55e105919dba0932f52ad9f2b47e3133f47263fe427"
+    },
+    {
+      "path": "tmp/i01b-p2c-20261101/html-before-handoff.html",
+      "bytes": 42781,
+      "sha256": "e1cdfe0332c68dba3c38d21f0e0e4be29dc7b3171fb24c98a6a253a999487875"
+    },
+    {
+      "path": "tmp/i01b-p2c-delivery-20261101.zip",
+      "bytes": 1049694,
+      "sha256": "99a4a1adca1bdc3bf7e56baa9112c1625ab6c6371bfaafa0482b3471903a2971"
+    },
+    {
+      "path": "tmp/p02-first-headless-delivery-20261107-correction.zip",
+      "bytes": 1160158,
+      "sha256": "b2aedaff36bf4d61d2616356aeb8921bb4136af6ab137028861b596dbde67946"
+    },
+    {
+      "path": "tmp/p02-first-headless-delivery-20261107.zip",
+      "bytes": 1041449,
+      "sha256": "fdef242798df7da319552afacab9cce6c2a4aaf6628c0a2a617d51d934079b24"
+    }
+  ],
+  "owned_code_diff_check_exit": 0,
+  "owned_document_hunks_trailing_whitespace": 0,
+  "context": {
+    "head": {
+      "exit": 0,
+      "stdout_sha256": "ede4a431c3923b30a4e5b7b5ab8173e46884c70d4fe030d162f842d5457551fd",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byte_exact_before": true
+    },
+    "branch": {
+      "exit": 0,
+      "stdout_sha256": "54045af95befdd9c98dfbf2c74997e97ae39c0fe533b471ea80d7c91a3936182",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byte_exact_before": true
+    },
+    "index": {
+      "exit": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byte_exact_before": true
+    },
+    "index_tree": {
+      "exit": 0,
+      "stdout_sha256": "1d6b6528766f42f16fad877a5fb54fcd54dd0990d3c5356133451550156f45a3",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byte_exact_before": true
+    },
+    "diff-check": {
+      "exit": 2,
+      "stdout_sha256": "91be8367860019a1e276a52b8cd1f1542ff5439ce163f2f84cdd326e0ac08255",
+      "stderr_sha256": "9383227f23e362399d837fdb9c3c96bbd55d9aa7b4797dccb087af7227ca50c7",
+      "byte_exact_before": true
+    }
+  },
+  "cache": {
+    "bytes": 12738,
+    "sha256": "0eb214ebcc65cd2ca7b9d98dc83f61a9c170ca75b1b23acf4c3c58fdfb550ab1"
+  }
+}

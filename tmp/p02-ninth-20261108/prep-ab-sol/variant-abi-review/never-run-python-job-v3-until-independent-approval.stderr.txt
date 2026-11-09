@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "C:\WorkSpace\SpaceBattleOfThreeKingdoms\tmp\p02-ninth-20261108\prep-ab-sol\variant-abi-review\python_job_qualification_v3.py", line 132, in supervisor
+    owner.observe_owned_engine_handles()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\WorkSpace\SpaceBattleOfThreeKingdoms\tmp\p02-ninth-20261108\prep-ab-sol\variant-abi-review\abi_owned_runner_v3.py", line 77, in observe_owned_engine_handles
+    need(image in self.allowed,"unexpected owned image")
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WorkSpace\SpaceBattleOfThreeKingdoms\tmp\p02-ninth-20261108\prep-ab-sol\legacy_autoresolve_oracle.py", line 16, in need
+    raise ValueError(where)
+ValueError: unexpected owned image
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\WorkSpace\SpaceBattleOfThreeKingdoms\tmp\p02-ninth-20261108\prep-ab-sol\variant-abi-review\python_job_qualification_v3.py", line 208, in <module>
+    main()
+    ~~~~^^
+  File "C:\WorkSpace\SpaceBattleOfThreeKingdoms\tmp\p02-ninth-20261108\prep-ab-sol\variant-abi-review\python_job_qualification_v3.py", line 202, in main
+    supervisor(m,path,pin)
+    ~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\WorkSpace\SpaceBattleOfThreeKingdoms\tmp\p02-ninth-20261108\prep-ab-sol\variant-abi-review\python_job_qualification_v3.py", line 162, in supervisor
+    need(pid in owner.procs,"payload not observed in outer Job")
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WorkSpace\SpaceBattleOfThreeKingdoms\tmp\p02-ninth-20261108\prep-ab-sol\legacy_autoresolve_oracle.py", line 16, in need
+    raise ValueError(where)
+ValueError: payload not observed in outer Job

@@ -1,0 +1,1223 @@
+class_name BattleSim
+extends RefCounted
+
+# 전투 코어: 상태, 고정 틱, 규칙, 승패, 명령 검증, 사건 발행. 유일한 권위다.
+# Node·Input·전역 난수·Time·타이머·프레임 delta를 쓰지 않는다.
+#
+# 명령: {tick, side, ids: Array[int], kind, target_id, point: Vector2, args: Dictionary}
+#   플레이어 명령은 queue()로 넣고 다음 step()의 첫머리에 적용·기록한다. AI 명령은 기록하지 않는다(상태에서 다시 나온다).
+# 사건: {tick, kind, sq, other, pos, value} — drain_events()로 가져간다. 표현과 로그는 사건만 보고 그린다.
+
+var profile_id := ""
+var rs: RuleSet
+var R: Dictionary          # rs.v (규칙 수치, 프로필 JSON)
+var st: BattleState
+var rng: BattleRng
+var dt := BattleRules.TICK_S
+var command_log: Array[Dictionary] = []
+var _queue: Array[Dictionary] = []
+var _events: Array[Dictionary] = []
+var _ai := PocEnemyAi.new()
+# 초 단위 규칙값의 틱 수(틱 폭에 따라)
+var T := {}
+var sub_ms := 0              # 틱마다 정해진다(_tick)
+var _reinf_def: Array = []
+var morale: MoraleCore = null   # M4 사기. 시나리오 프로필(salvo + realtime_rules)에서만 켜진다
+var victory: Victory = null     # M4 승패(§4.12). 없으면 POC 종료 조건(기함 상실·섬멸)
+var salvo: SalvoCombat = null   # M3 사격·피해 규칙. combat 사전이 있는 프로필에서만 켜진다(없으면 POC 규칙)
+var terrain: BattleTerrain = null   # M6 지형. combat.terrain이 있을 때
+var cai: CommanderAi = null     # M7 지휘관 AI. 프로필에 ai 수치가 있을 때(적벽)만. 없으면 POC AI
+var decisions: DecisionBoard = null   # M7 결정 카드(시나리오 realtime_rules.decision_cards가 있을 때)
+var first_hit_tick := -1        # 첫 명중 틱(양측이 아는 공개 사실). AI의 거리대 일정이 이 시각에서 센다
+var detect: Detection = null    # M6 탐지·전쟁 안개. combat.detection이 있을 때만 켜진다(없으면 완전 정보)
+var supply: SupplyCore = null   # M8 보급과 수리. combat.supply가 있을 때만 켜진다
+var chain: ChainOp = null       # M9 화공·위장 항복. 시나리오 chain_operation과 combat.stratagem이 있을 때
+var cmd: CommandCore = null     # M9 장수 사상·지휘 승계·혼선. 시나리오와 combat.command가 있을 때
+var assault: AssaultCore = null # M9 강습(부대 강습·기함 진입). 시나리오와 combat.assault가 있을 때
+var skills: SkillCore = null    # P8a 장수 특기. 시나리오 realtime_rules.special_skills가 있을 때(슬롯은 편성 apply가 넣는다)
+
+# profile: 프로필 사전({profile_id, rules, ally, foe, reinf}). 비우면 POC 프로필(기준선 동등).
+func _init(seed_id: int = 0, hz: int = BattleRules.TICK_HZ, profile: Dictionary = {}) -> void:
+	if profile.is_empty():
+		profile = PocSetup.profile()
+	profile_id = profile.profile_id
+	rs = RuleSet.from_profile(profile)
+	R = rs.v
+	st = BattleState.new()
+	st.hz = hz
+	st.seed_id = seed_id
+	st.cp = R.cp_start_bp
+	st.ecp = R.cp_start_bp
+	dt = 1.0 / hz
+	rng = BattleRng.new("%s|%d" % [profile_id, seed_id])
+	T.MISSILE_CD_S = BattleRules.ticks(R.missile_cd_s, hz)
+	T.FIGHTER_CD_S = BattleRules.ticks(R.fighter_cd_s, hz)
+	T.CHARGE_S = BattleRules.ticks(R.charge_s, hz)
+	T.FLANK_MSG_S = BattleRules.ticks(R.flank_msg_s, hz)
+	T.CP_REGEN = BattleRules.ticks(R.cp_regen_s, hz)
+	T.ECP_REGEN = BattleRules.ticks(R.ecp_regen_s, hz)
+	_reinf_def = profile.get("reinf", [])
+	if not profile.get("combat", {}).is_empty():
+		salvo = SalvoCombat.new(self, profile.combat)
+	for d in profile.ally:
+		_spawn(d, 0)
+	for d in profile.foe:
+		_spawn(d, 1)
+	if salvo:
+		salvo.terrain_class = str(rs.scenario.get("battlefield_class", ""))
+		salvo.finish_setup()
+		st.cp = 0   # CP는 salvo 규칙에서 쓰지 않는다(M4). 자원은 탄약·에너지·열·함재기다
+		st.ecp = 0
+		var cb: Dictionary = profile.combat
+		if cb.has("terrain"):
+			terrain = BattleTerrain.new(cb.terrain)
+			salvo.terr = terrain
+		if cb.has("detection"):
+			detect = Detection.new(self, cb.detection, terrain if terrain else BattleTerrain.new({}))
+		if cb.has("supply"):
+			supply = SupplyCore.new(self, cb.supply)
+		if cb.has("morale") and not rs.scenario.is_empty():
+			morale = MoraleCore.new(self, cb.morale)
+			if cb.has("victory"):
+				victory = Victory.new(self, cb.victory)
+			if cb.has("command"):
+				cmd = CommandCore.new(self, cb.command)
+			if cb.has("stratagem") and not rs.rt("chain_operation", {}).is_empty():
+				chain = ChainOp.new(self, cb.stratagem)
+			if cb.has("assault"):
+				assault = AssaultCore.new(self, cb.assault)
+			if not rs.rt("special_skills", {}).is_empty():
+				skills = SkillCore.new(self, rs.rt("special_skills"))
+	if not profile.get("ai", {}).is_empty() and salvo and morale:
+		enable_commander_ai(profile.ai)
+
+# ============================================================ 공개 API
+func queue(cmd: Dictionary) -> void:
+	_queue.append(cmd)
+
+func drain_events() -> Array[Dictionary]:
+	var out := _events
+	_events = []
+	return out
+
+# 지휘관 AI와 결정 카드를 켠다(프로필 ai 수치가 있을 때 _init이 부른다. 규칙 단위 테스트도 쓴다)
+func enable_commander_ai(cfg: Dictionary) -> void:
+	cai = CommanderAi.new(cfg)
+	var dc: Dictionary = rs.rt("decision_cards", {})
+	if not dc.is_empty() and morale:
+		decisions = DecisionBoard.new(self, dc, cfg.decisions)
+
+# "전 전대 수동" 설정(§5.4): 켜면 모든 아군 전대가 직접 지휘가 된다. 끄면 모두 위임으로 돌아간다
+func set_manual_all(on: bool) -> void:
+	for f in st.fleets:
+		if f.side == 0:
+			f.control = "direct" if on else "delegate"
+
+# 초기 배치(place) 허용 반경(전장 px): 각 함대 시작 위치에서 이 거리 안. 전장 짧은 변 x 규칙 place_radius_ratio(Q70)
+func place_radius() -> float:
+	return minf(rs.world.x, rs.world.y) * R.place_radius_ratio
+
+func projection(side: int) -> Dictionary:
+	return BattleProjection.build(self, side)
+
+func fingerprint() -> String:
+	var extra := ""
+	if cai:
+		var parts := PackedStringArray()
+		for f in st.fleets:
+			parts.append("%d.%s.%s.%d.%d.%d.%d" % [f.id, f.control, f.posture, f.bias_until, roundi(f.bias_mod * 1000.0), f.pursue_id, f.ai_seen])
+		extra = "ai%d|%s|%s" % [first_hit_tick, ",".join(parts), decisions.fingerprint() if decisions else ""]
+	if supply:
+		extra += supply.fingerprint()   # M8. 보급이 없으면 M7 지문과 같다
+	if chain:
+		extra += chain.fingerprint()    # M9
+	if cmd:
+		extra += cmd.fingerprint()
+	if skills:
+		extra += skills.fingerprint()   # P8a. 발동이 없으면 빈 문자열
+	return BattleFingerprint.of(st, detect, extra)
+
+# 즉시 적용 명령. 틱 사이에 상태는 변하지 않으므로 "다음 step() 첫머리에 적용"과 결과가 같고,
+# 재생(replay)도 같은 틱 번호로 같은 결과를 낸다. 화면이 명령 직후 상태를 바로 읽을 수 있다.
+func issue(cmd: Dictionary) -> void:
+	var c := cmd.duplicate(true)
+	c.tick = st.tick
+	command_log.append(c)
+	_apply_human(c)
+
+# 사람 명령 적용: 직접 지휘로 바꾸고 적용. 특기는 거부되면 위임을 유지한다(Q100: 성공한 발동만 직접 지휘)
+func _apply_human(c: Dictionary) -> void:
+	if str(c.kind) != "skill":
+		_mark_direct(c)
+		apply(c)
+		return
+	var n := _events.size()
+	apply(c)
+	for i in range(n, _events.size()):
+		if _events[i].kind == "rejected":
+			return
+	_mark_direct(c)
+
+# 플레이어가 명령한 전대는 직접 지휘가 된다(§5.4). AI 명령은 apply()를 바로 불러 여기를 거치지 않는다.
+const DIRECT_KINDS := ["stop", "move", "face", "attack", "charge", "retreat", "rally", "formation", "restore", "def", "missile", "fighter", "volley",
+	"letter", "withdraw", "ignite", "assault", "skill"]
+
+func _mark_direct(c: Dictionary) -> void:
+	if int(c.side) != 0 or not (str(c.kind) in DIRECT_KINDS):
+		return
+	for f in _cmd_fleets(c):
+		f.control = "direct"
+
+# 한 틱 진행. 대기 중인 명령을 먼저 적용한다.
+func step() -> void:
+	var cmds := _queue
+	_queue = []
+	for c in cmds:
+		c = c.duplicate(true)
+		c.tick = st.tick
+		command_log.append(c)
+		_apply_human(c)
+	_tick()
+
+# 명령 기록으로 다시 돌린다(재생). until_tick까지.
+static func replay(seed_id: int, hz: int, log: Array, until_tick: int, profile := {}) -> BattleSim:
+	var sim := BattleSim.new(seed_id, hz, profile)   # 시나리오 판(안개·AI)은 같은 프로필로 다시 만든다(M6 리뷰 F-2)
+	var i := 0
+	while sim.st.tick < until_tick:
+		while i < log.size() and int(log[i].tick) == sim.st.tick:
+			sim.queue(log[i])
+			i += 1
+		sim.step()
+		sim.drain_events()
+	return sim
+
+static func command(side: int, ids: Array, kind: String, target_id := -1, point := Vector2.ZERO, args := {}) -> Dictionary:
+	return {"tick": -1, "side": side, "ids": ids.duplicate(), "kind": kind, "target_id": target_id, "point": point, "args": args}
+
+# 테스트·도구용 훅(규칙 단위 테스트가 상태를 직접 만든다). 게임 흐름에서는 쓰지 않는다.
+func debug_damage(src_id: int, tgt_id: int, amt: float) -> void:
+	apply_dmg(st.by_id(src_id), st.by_id(tgt_id), amt)
+
+func debug_fire_missiles(src_id: int, tgt_id: int) -> void:
+	_fire_missiles(st.by_id(src_id), st.by_id(tgt_id))
+
+func debug_launch_fighters(src_id: int, tgt_id: int) -> void:
+	_launch_fighters(st.by_id(src_id), st.by_id(tgt_id))
+
+func debug_spawn_reinf() -> void:
+	_spawn_reinf()
+
+func debug_end(win: bool, reason: String) -> void:
+	_end(win, reason)
+
+# ============================================================ 사건
+func emit(kind: String, sq := -1, other := -1, pos := Vector2.ZERO, value: Variant = null) -> void:
+	_events.append({"tick": st.tick, "kind": kind, "sq": sq, "other": other, "pos": pos, "value": value})
+
+# ============================================================ 편성
+func _spawn(d: Dictionary, side: int) -> FleetState:
+	var f := FleetState.new()
+	f.id = st.next_id
+	st.next_id += 1
+	f.side = side
+	f.name = d.name
+	f.role = d.role
+	f.ships = int(d.ships) * BattleRules.MILLI
+	f.max_ships = f.ships
+	f.shown = f.ships
+	f.lv = d.lv
+	f.pos = Vector2(d.x, d.y)
+	f.heading = PI if side == 1 else 0.0
+	f.is_flag = d.get("flag", false)
+	f.spd = d.get("spd", 1.0)
+	f.wait = BattleRules.ticks(float(d.get("wait", 0)), st.hz)
+	f.portrait = d.p
+	f.home = f.pos
+	f.spawn = f.pos
+	f.sq_id = d.get("squadron_id", "")
+	f.morale_group = d.get("morale_group", "")
+	f.faction = d.get("faction_id", "")
+	f.commander_id = d.get("commander_id", "")
+	f.start_morale_bp = int(d.get("start_morale_bp", 0))
+	f.range_r = R.range_r
+	f.form_id = st.form_counter
+	st.form_counter += 1
+	f.form = BattleRules.formation_offsets(f.form_id % BattleRules.FORM_COUNT, R.ship_gap * (1.0 if f.form_id < BattleRules.FORM_COUNT else R.formation_loose_mul))
+	st.fleets.append(f)
+	if salvo:
+		salvo.init_fleet(f, d)
+	emit("spawn", f.id)
+	return f
+
+func _spawn_reinf() -> void:
+	st.reinf = true
+	st.reinf_ms = st.clock_ms
+	for d in _reinf_def:
+		_spawn(d, 1)
+	emit("reinforcements")
+
+# ============================================================ 피해
+func _rand_ship(f: FleetState, eid: int, sub: int) -> Vector2:
+	var i := rng.index(rs.n_ships(f.ships, f.max_ships), st.tick, eid, sub)
+	return BattleRules.ship_pos(f.pos, f.heading, f.form, i)
+
+func apply_dmg(src: FleetState, tgt: FleetState, amt: float) -> void:
+	if tgt.dead:
+		return
+	if tgt.defense:
+		amt *= R.defense_damage_taken_mul
+	var a := mini(roundi(amt), tgt.ships)
+	tgt.ships -= a
+	if src and not src.dead:
+		src.xp += a
+		var need := rs.xp_need_milli(src.lv)
+		if src.xp >= need and src.lv < R.level_max_n:
+			src.xp -= need
+			src.lv += 1
+			emit("level_up", src.id, -1, src.pos)
+	book_loss(src, tgt, a)
+
+# 척 수(1/1000척)가 a만큼 줄어든 것을 기록한다: 누계, 표시 척 수, 손실 사건, 격침. POC 피해와 salvo 피해가 함께 쓴다.
+func book_loss(src: FleetState, tgt: FleetState, a: int) -> void:
+	if tgt.side == 1:
+		st.killed += a
+	else:
+		st.lost += a
+	var n := 0
+	while tgt.shown - tgt.ships >= BattleRules.MILLI:
+		tgt.shown -= BattleRules.MILLI
+		n += 1
+	if n > 0:
+		emit("ship_lost", tgt.id, src.id if src else -1, tgt.pos, n)
+	if tgt.ships <= R.kill_below_milli_n:
+		_kill(tgt, src)
+
+func _kill(f: FleetState, src: FleetState) -> void:
+	if f.dead:
+		return
+	f.dead = true
+	f.out = "sunk"
+	f.died_pos = f.pos
+	f.ships = 0
+	for o in st.fleets:
+		if o.target_id == f.id:
+			o.target_id = -1
+	emit("destroyed", f.id, src.id if src else -1, f.pos)
+
+# 항복·탈출로 전투에서 빠진다(M4). 격침(_kill)과 달리 척 수는 그대로다.
+func remove_fleet(f: FleetState, why: String) -> void:
+	if f.dead:
+		return
+	f.dead = true
+	f.out = why
+	f.died_pos = f.pos
+	f.has_move = false
+	for o in st.fleets:
+		if o.target_id == f.id:
+			o.target_id = -1
+	emit("surrender" if why == "surrender" else "escape", f.id, -1, f.pos)
+
+func _fire_missiles(f: FleetState, tgt: FleetState) -> void:
+	var eid := st.new_event_id()
+	for i: int in R.missile_count_n:
+		var m := BattleState.Missile.new()
+		m.id = st.new_event_id()
+		m.pos = _rand_ship(f, eid, i * 3 + 1)
+		m.target_id = tgt.id
+		m.src_id = f.id
+		m.dmg = roundi(f.ships * R.missile_dmg_share * rs.power(f.lv, f.charge > 0, f.in_cmd, f.defense) / (R.defense_power_mul if f.defense else 1.0))
+		m.v = R.missile_v0 + rng.unit(st.tick, eid, i * 3 + 2) * R.missile_v_rand
+		m.wob = (rng.unit(st.tick, eid, i * 3 + 3) - 0.5) * R.missile_wob
+		m.side = f.side
+		st.missiles.append(m)
+	f.missile_cd = T.MISSILE_CD_S
+	emit("missile_launch", f.id, tgt.id, f.pos)
+
+func _launch_fighters(f: FleetState, tgt: FleetState) -> void:
+	var eid := st.new_event_id()
+	var s := BattleState.Swarm.new()
+	s.id = eid
+	s.src_id = f.id
+	s.target_id = tgt.id
+	s.side = f.side
+	s.life = R.swarm_life_ms
+	s.dps = roundi(f.ships * R.fighter_dps_share * rs.level_mul(f.lv))
+	for i: int in R.swarm_points_n:
+		var k := i * 5
+		s.pts.append({
+			"pos": _rand_ship(f, eid, k + 1),
+			"a": rng.unit(st.tick, eid, k + 2) * TAU,
+			"r": R.swarm_r0 + rng.unit(st.tick, eid, k + 3) * R.swarm_r_rand,
+			"w": (-1.0 if rng.bp(st.tick, eid, k + 4) < BattleRules.BP / 2 else 1.0) * (R.swarm_w0 + rng.unit(st.tick, eid, k + 5) * R.swarm_w_rand),
+		})
+	st.swarms.append(s)
+	f.fighter_cd = T.FIGHTER_CD_S
+	emit("fighter_launch", f.id, tgt.id, f.pos)
+
+# ============================================================ 명령
+func _cmd_fleets(c: Dictionary) -> Array[FleetState]:
+	var out: Array[FleetState] = []
+	for id in c.get("ids", []):
+		var f := st.by_id(int(id))
+		if f and not f.dead and f.side == int(c.side) and not out.has(f):
+			out.append(f)
+	return out
+
+func _lead(s: Array[FleetState]) -> FleetState:
+	for f in s:
+		if f.is_flag:
+			return f
+	return s[0] if s.size() > 0 else null
+
+# 이동 명령의 부속 상태(경유점, 평행 이동, 도착 방향)를 지운다
+func _clear_path(f: FleetState) -> void:
+	f.route.clear()
+	f.strafe = false
+	f.face_set = false
+	f.speed_cap = 0.0
+	f.move_grp = 0
+
+func _reject(lead: FleetState, reason: String, side: int) -> void:
+	emit("rejected", lead.id if lead else -1, side, Vector2.ZERO, reason)
+
+# ============================================================ 시야(M6)
+# 전대가 쏘거나 따라갈 수 있는 적인가: 진영 접촉표의 확인·추정 접촉. 안개가 없으면(POC·테스트) 살아 있으면 된다.
+func sees(f: FleetState, t: FleetState) -> bool:
+	return t != null and not t.dead and (detect == null or detect.can_target(f.side, t.id))
+
+# 지정 표적(살아 있고 보이는 것만)
+func sight_target(f: FleetState) -> FleetState:
+	var t := st.live_target(f)
+	return t if sees(f, t) else null
+
+# 진영이 아는 표적 위치. 접촉이 없거나 안개가 없으면 실제 위치
+func known_pos(f: FleetState, t: FleetState) -> Vector2:
+	if detect == null:
+		return t.pos
+	var r: Dictionary = detect.rec(f.side, t.id)
+	if r.get("state", "") == "confirmed":
+		return t.pos   # 확인 접촉은 실제 위치(§4.9). 평가 시점(1초 주기) 위치를 쓰면 사격 거리 판정·추격이 1초씩 어긋난다
+	return r.get("pos", t.pos)
+
+func sight_foe(f: FleetState, max_r: float) -> FleetState:
+	if detect == null:
+		return st.nearest_foe(f, max_r)
+	var best: FleetState = null
+	var bd := max_r
+	var book: Dictionary = detect.contacts[f.side]
+	for o in st.fleets:
+		if o.side == f.side or o.dead:
+			continue
+		# sees·known_pos와 같은 판정을 접촉 기록 한 번 조회로 한다(성능 C1)
+		var r: Dictionary = book.get(o.id, {})
+		var cs := str(r.get("state", ""))
+		if cs != "confirmed" and cs != "estimated":
+			continue
+		var d := f.pos.distance_to(o.pos if cs == "confirmed" else r.pos)
+		if d < bd:
+			bd = d
+			best = o
+	return best
+
+# 화면용 사건. 보이지 않는 적이 낸 사건은 빼거나 가린다(안개 경계). 안개가 없으면 그대로.
+# 보이지 않는 적의 일제사격은 사격 사실만 남긴다(맞은 쪽은 아군이라 알 수 있다) — 조용한 구간을 끝내는 신호(리뷰 V-2).
+func drain_events_for(side: int) -> Array[Dictionary]:
+	var evs := drain_events()
+	if detect == null:
+		return evs
+	var out: Array[Dictionary] = []
+	for e in evs:
+		var e2 := e
+		if e.kind == "contact":
+			if side != 0:
+				continue
+		elif e.kind.begins_with("skill") and st.by_id(int(e.sq)) and st.by_id(int(e.sq)).side != side:
+			continue   # 적의 특기 발동·해제는 알리지 않는다(슬롯 비공개, P8a)
+		else:
+			var a := st.by_id(int(e.sq))
+			if a and a.side != side and not detect.contacts[side].has(a.id):
+				if e.kind != "salvo":
+					continue
+				e2 = e.duplicate()
+				e2.sq = -1
+			var b := st.by_id(int(e.other))
+			if b and b.side != side and not detect.contacts[side].has(b.id):
+				e2 = e2.duplicate()
+				e2.other = -1
+		out.append(e2)
+	return out
+
+func _cp(side: int) -> int:
+	return st.cp if side == 0 else st.ecp
+
+func _spend(side: int, amt: int) -> void:
+	if side == 0:
+		st.cp -= amt
+	else:
+		st.ecp -= amt
+
+# 명령 적용. 검증에 실패하면 "rejected" 사건(사유 코드)을 내고 상태를 바꾸지 않는다.
+func apply(c: Dictionary) -> void:
+	var side := int(c.side)
+	var kind: String = c.kind
+	if kind == "decide":
+		# 결정 카드 응답(M7). args {id, option}. 전대 선택이 없다
+		var why: String = decisions.resolve(int(c.args.get("id", -1)), str(c.args.get("option", "")), "player") if decisions and side == 0 else "unknown_command"
+		if why != "":
+			_reject(null, why, side)
+		return
+	var s := _cmd_fleets(c)
+	if s.is_empty():
+		_reject(null, "no_selection", side)
+		return
+	if morale:
+		# 강제 퇴각 중인 전대는 명령을 받지 않는다(§4.6)
+		s = s.filter(func(f): return not morale.forced(f))
+		if s.is_empty():
+			if not (kind.begins_with("ai_") or kind == "def_on" or kind == "delegate" or kind == "posture"):
+				_reject(null, "retreating", side)
+			return
+	var L := _lead(s)
+	if morale and kind in ["stop", "move", "face", "attack", "charge"]:
+		for f in s:
+			f.retreat_order = false
+	if kind in ["stop", "attack", "charge", "retreat", "rally", "ai_move", "restore"]:
+		for f in s:
+			_clear_path(f)
+	match kind:
+		"delegate":
+			# 위임으로 돌리기(§5.4): 지휘관 AI가 다시 이동·표적을 정한다. 퇴각 명령은 그대로 둔다
+			if side != 0:
+				return
+			for f in s:
+				f.control = "delegate"
+			emit("say", L.id, -1, L.pos, "delegate")
+		"posture":
+			# 전투 방침 지정(§5.2). args.id = aggressive | balanced | cautious | scheming | delegated(인물 위임)
+			var pid := str(c.get("args", {}).get("id", ""))
+			if cai == null or not cai.A.postures.has(pid):
+				_reject(L, "unknown_command", side)
+				return
+			for f in s:
+				f.posture = pid
+			emit("say", L.id, -1, L.pos, "posture")
+		"stop":
+			for f in s:
+				f.target_id = -1
+				f.has_move = false
+			emit("say", L.id, -1, L.pos, "stop")
+		"formation":
+			# 진형 전환(§4.7). args.id = 진형 ID. 전환 시간 동안 피해 ×0.8, 방어%·노출 배치는 이전 진형
+			if salvo == null:
+				_reject(L, "unknown_command", side)
+				return
+			var done: Array = []
+			var why := ""
+			for f in s:
+				var w := salvo.start_transition(f, str(c.get("args", {}).get("id", "")))
+				if w == "":
+					done.append(f)
+				else:
+					why = w
+			if done.is_empty():
+				_reject(L, why, side)
+				return
+			if done.size() > 1:
+				_bundle_layout(done, str(c.get("args", {}).get("id", "")))   # 전환을 받아들인 함대만 재배치한다
+			emit("say", L.id, -1, L.pos, "formation")
+		"def":
+			if salvo:
+				_reject(L, "unknown_command", side)   # 방어진형은 삭제됐다. 방원진이 대신한다(§9)
+				return
+			var on := false
+			for f in s:
+				if not f.defense:
+					on = true
+			for f in s:
+				f.defense = on
+			emit("say", L.id, -1, L.pos, "def_on" if on else "def_off")
+		"def_on":
+			if salvo:
+				return
+			for f in s:
+				f.defense = true
+			emit("say", L.id, -1, L.pos, "ai_def")
+		"counter_launch":
+			if salvo == null:
+				_reject(L, "unknown_command", side)
+				return
+			var on := false
+			for f in s:
+				if not f.counter_launch:
+					on = true
+			on = bool(c.get("args", {}).get("on", on))
+			for f in s:
+				f.counter_launch = on
+				if not on:
+					f.counter_pending = false
+		"missile", "fighter", "volley":
+			if salvo:
+				var why := ""
+				var pulled := 0
+				for f in s:
+					var r := salvo.pull(f, kind)   # 미사일 = 포격 범주, 함재기 = 함재기 범주, 일제사격 = 전부: 다음 주기를 당긴다(§4.3). 비용은 횟수(Q69)
+					if r == "":
+						pulled += 1
+					elif why == "" or r == "charges":
+						why = r
+				if pulled == 0 and why != "":
+					_reject(L, "%s_%s" % [kind, why], side)   # missile_charges, fighter_none, ... 거부 사유를 토스트로
+					return
+				emit("say", L.id, -1, L.pos, "fighter" if kind == "fighter" else ("missile" if side == 0 else "ai_missile"))
+			elif kind == "volley":
+				_reject(L, "unknown_command", side)
+			else:
+				_cmd_weapon(c, s, L, kind == "missile")
+		"charge":
+			if salvo:
+				_cmd_charge_salvo(s, L, side)
+				return
+			if _cp(side) < R.charge_cost_bp:
+				_reject(L, "cp_charge", side)
+				return
+			_spend(side, R.charge_cost_bp)
+			for f in s:
+				f.charge = T.CHARGE_S
+				f.defense = false
+				if sight_target(f) == null:
+					var t := sight_foe(f, R.charge_seek_r)
+					if t:
+						f.target_id = t.id
+			emit("say", L.id, -1, L.pos, "charge")
+			emit("charge", L.id)
+		"rally":
+			var pf := st.flag(side)
+			if pf == null:
+				_reject(L, "no_flagship", side)
+				return
+			var i := 0
+			for f in s:
+				if f == pf:
+					continue
+				var a := i * TAU / maxf(1.0, s.size() - 1.0) + PI / 2.0
+				i += 1
+				f.target_id = -1
+				f.has_move = true
+				f.move_to = pf.pos + Vector2(cos(a), sin(a)) * R.rally_radius
+			emit("say", L.id, -1, L.pos, "rally")
+		"letter", "withdraw", "ignite":
+			# 화공(M9, §4.11): 서신, 서신 철회, 발동(target_id = 표적). 운용 전대(황개 화공대)만
+			if chain == null or side != 0:
+				_reject(L, "unknown_command", side)
+				return
+			var why := ""
+			match kind:
+				"letter":
+					why = chain.letter(L)
+				"withdraw":
+					why = chain.withdraw(L) if L.sq_id == chain.host_sq else "chain_host"
+				"ignite":
+					why = chain.ignite(L, st.by_id(int(c.target_id)))
+			if why != "":
+				_reject(L, why, side)
+		"supply_first", "supply_hold":
+			# P7 수동 층: 보급함 전대의 우선 대상 지정(target_id, -1 = 해제) / 자동 보급 중지·재개(args.on)
+			var why := "unknown_command"
+			if supply:
+				why = "supply_none"
+				if kind == "supply_first" and int(c.target_id) >= 0 and st.by_id(int(c.target_id)) == null:
+					why = "supply_target"   # 없는 ID는 거부. 해제는 target_id -1로만
+				for f in s:
+					if why == "supply_target":
+						break
+					if supply.ships_of(f) > 0:
+						why = supply.cmd_first(f, st.by_id(int(c.target_id))) if kind == "supply_first" else supply.cmd_hold(f, bool(c.get("args", {}).get("on", true)))
+						if why != "":
+							break
+			if why != "":
+				_reject(L, why, side)
+		"assault":
+			# 강습(M9): args.type = unit(부대 강습) | flagship(기함 진입, 진형이 안 열렸으면 강행 돌입). target_id = 표적
+			if assault == null:
+				_reject(L, "unknown_command", side)
+				return
+			var why := assault.attempt(L, st.by_id(int(c.target_id)), str(c.get("args", {}).get("type", "unit")))
+			if why != "":
+				_reject(L, why, side)
+		"skill":
+			# 장수 특기(P8a): args.slot(슬롯 번호) 또는 args.skill_id, target_id = 대상(-1이면 기본 대상). 첫 함대만 쓴다
+			if skills == null:
+				_reject(L, "unknown_command", side)
+				return
+			var a: Dictionary = c.get("args", {})
+			var id := str(a.get("skill_id", ""))
+			if a.has("slot"):
+				var i := int(a.slot)
+				id = str(L.skill_slots[i]) if i >= 0 and i < L.skill_slots.size() else ""
+			var why := skills.use(L, id, int(c.get("target_id", -1)))
+			if why != "":
+				_reject(L, why, side)
+		"morale_rally":
+			var why := morale.rally(side, str(c.get("args", {}).get("id", ""))) if morale else "unknown_command"
+			if why != "":
+				_reject(L, why, side)
+		"retreat":
+			if morale:
+				# 후퇴는 버튼이 아니라 탈출 지점까지의 이동이다(§4.12)
+				for f in s:
+					f.target_id = -1
+					f.defense = false
+					f.retreat_order = true
+					f.has_move = true
+					f.move_to = morale.exit_point(f.side)
+				emit("say", L.id, -1, L.pos, "retreat")
+				return
+			var W := rs.world
+			for f in s:
+				var t := sight_foe(f, R.retreat_seek_r)
+				f.target_id = -1
+				# 표적이 없으면 바라보는 방향의 반대로 물러난다(M1 목록: 고정 방향(서쪽)이라 적 쪽으로 갈 수 있었다)
+				var a := atan2(f.pos.y - t.pos.y, f.pos.x - t.pos.x) if t else f.heading + PI
+				f.has_move = true
+				f.move_to = Vector2(clampf(f.pos.x + cos(a) * R.retreat_dist, R.retreat_margin, W.x - R.retreat_margin), clampf(f.pos.y + sin(a) * R.retreat_dist, R.retreat_margin, W.y - R.retreat_margin))
+			emit("say", L.id, -1, L.pos, "retreat")
+		"move":
+			# 선택 전체가 현재 배치를 유지한 채 목표 지점으로 이동. salvo 규칙에서는 args로
+			# via(경유점 목록, 경유 + 목적지가 max_waypoints 이하), strafe(평행 이동), facing_deg(도착 방향)를 받는다(§4.2)
+			var W := rs.world
+			var e: float = R.edge
+			var args: Dictionary = c.get("args", {}) if salvo else {}
+			var pts: Array = (args.get("via", []) as Array).duplicate()
+			pts.append(c.point)
+			if salvo and pts.size() > int(salvo.C.movement.max_waypoints):
+				_reject(L, "too_many_waypoints", side)
+				return
+			# 그룹 이동 규칙: 함께 이동하는 함대는 그중 가장 느린 속도로 가서 대형을 유지한 채 같이 도착한다
+			var cap := 0.0
+			if s.size() > 1:
+				cap = 1e9
+				for f in s:
+					cap = minf(cap, f.speed)
+			var grp := (st.tick * 1000 + L.id + 1) if s.size() > 1 else 0
+			var cen := Vector2.ZERO
+			for f in s:
+				cen += f.pos
+			cen /= s.size()
+			for f in s:
+				var o := f.pos - cen
+				f.target_id = -1
+				f.has_move = true
+				_clear_path(f)
+				f.speed_cap = cap
+				f.move_grp = grp
+				for i in pts.size():
+					var w: Vector2 = pts[i]
+					var p := BattleRules.quant_v(Vector2(clampf(w.x + o.x, e, W.x - e), clampf(w.y + o.y, e, W.y - e)))
+					if i == 0:
+						f.move_to = p
+					else:
+						f.route.append(p)
+				f.strafe = bool(args.get("strafe", false))
+				if args.has("facing_deg"):
+					f.face_set = true
+					f.face_to = BattleRules.quant(deg_to_rad(float(args.facing_deg)))
+			emit("say", L.id, -1, L.pos, "move_all" if s.size() > 1 else "move")
+		"place":
+			# 초기 배치(Q70): 틱 0에서만. 선택을 대형째 point(중심)로 옮긴다. 이동량은 모든 함대가 시작 위치 반경·전장 경계 안에
+			# 남는 최대 비율로 줄여(찌그러지지 않게) 일괄 적용한다. 그다음 방향은 가장 가까운 적을 향하게 다시 정하고,
+			# args.facing_deg가 있으면 그 방향이 이긴다(틱 0 즉시 회전)
+			if st.tick != 0:
+				_reject(L, "place_late", side)
+				return
+			var pc := Vector2.ZERO
+			for f in s:
+				pc += f.pos
+			pc /= s.size()
+			var dv: Vector2 = c.point - pc
+			var tk := 1.0
+			var pr := place_radius()
+			var pw := rs.world
+			if dv.length_squared() > 1e-9:
+				for f in s:
+					var a := f.pos - f.spawn
+					var qa := dv.dot(dv)
+					var qb := a.dot(dv)
+					var qc := a.dot(a) - pr * pr
+					tk = minf(tk, (-qb + sqrt(maxf(0.0, qb * qb - qa * qc))) / qa)
+					for ax in 2:
+						var lo: float = R.edge
+						var hi: float = pw[ax] - R.edge
+						if dv[ax] > 1e-9:
+							tk = minf(tk, (hi - f.pos[ax]) / dv[ax])
+						elif dv[ax] < -1e-9:
+							tk = minf(tk, (lo - f.pos[ax]) / dv[ax])
+				tk = maxf(0.0, tk)
+			for f in s:
+				f.pos = BattleRules.quant_v(f.pos + dv * tk)
+				f.home = f.pos
+				f.has_move = false
+				f.target_id = -1
+				_clear_path(f)
+				if salvo:
+					salvo.face_nearest(f)
+				if c.get("args", {}).has("facing_deg"):
+					f.heading = BattleRules.quant(deg_to_rad(float(c.args.facing_deg)))
+		"face":
+			# 제자리 방향 전환: 이동·표적을 풀고 args.facing_deg를 향해 돌아선다(위치 고정). 도착 방향 지정(face_set)을 재사용한다
+			for f in s:
+				f.target_id = -1
+				f.has_move = false
+				_clear_path(f)
+				f.face_set = true
+				f.face_to = BattleRules.quant(deg_to_rad(float(c.get("args", {}).get("facing_deg", 0.0))))
+		"attack":
+			var t := st.by_id(int(c.target_id))
+			if t == null or t.dead or t.side == side:
+				_reject(L, "bad_target", side)
+				return
+			if detect and not detect.can_target(side, t.id):
+				_reject(L, "no_contact", side)   # 접촉이 없는 적은 지정할 수 없다(M6)
+				return
+			for f in s:
+				f.target_id = t.id
+				f.has_move = false
+			emit("say", L.id, t.id, L.pos, "attack")
+		"ai_target":
+			for f in s:
+				f.target_id = int(c.target_id)
+		"ai_move":
+			for f in s:
+				f.has_move = true
+				f.move_to = c.point
+				f.move_grp = 0
+		"restore":
+			# 명령 되돌리기(U2): 직전 명령 상태로 돌아가는 새 명령. args.orders = {id: [has_move, move_to, target_id, defense]}
+			var orders: Dictionary = c.args.get("orders", {})
+			for f in s:
+				var o = orders.get(f.id, orders.get(str(f.id)))
+				if o == null:
+					continue
+				f.has_move = bool(o[0])
+				f.move_to = o[1]
+				var t := st.by_id(int(o[2]))
+				f.target_id = t.id if (t and not t.dead) else -1
+				f.defense = bool(o[3])
+		_:
+			_reject(L, "unknown_command", side)
+
+# 돌격(Q28·Q42): 열 40%와 사기 안정 조건. CP는 쓰지 않는다. 조건을 채우지 못한 전대는 빠지고, 모두 못 채우면 거부한다.
+func _cmd_charge_salvo(s: Array[FleetState], L: FleetState, side: int) -> void:
+	var ok: Array[FleetState] = []
+	var why := ""
+	for f in s:
+		var w := salvo.charge_block(f)
+		if w == "":
+			ok.append(f)
+		else:
+			why = w
+	if ok.is_empty():
+		_reject(L, why, side)
+		return
+	for f in ok:
+		salvo.charge_pay(f)
+		f.charge = T.CHARGE_S
+		f.defense = false
+		if sight_target(f) == null:
+			var t := sight_foe(f, R.charge_seek_r)
+			if t:
+				f.target_id = t.id
+	emit("say", L.id, -1, L.pos, "charge")
+	emit("charge", L.id)
+
+func _cmd_weapon(c: Dictionary, s: Array[FleetState], L: FleetState, missile: bool) -> void:
+	var side := int(c.side)
+	var cost: int = R.missile_cost_bp if missile else R.fighter_cost_bp
+	var reach: float = R.missile_r if missile else R.fighter_r
+	if _cp(side) < cost:
+		_reject(L, "cp_missile" if missile else "cp_fighter", side)
+		return
+	var fixed := st.by_id(int(c.get("target_id", -1)))
+	var n := 0
+	for f in s:
+		if (f.missile_cd if missile else f.fighter_cd) > 0:
+			continue
+		var t: FleetState = null
+		if fixed:
+			t = fixed if not fixed.dead else null
+		else:
+			var ft := st.live_target(f)
+			t = ft if (ft and f.pos.distance_to(ft.pos) <= reach) else st.nearest_foe(f, reach)
+		if t:
+			if missile:
+				_fire_missiles(f, t)
+			else:
+				_launch_fighters(f, t)
+			n += 1
+	if n == 0:
+		var ready := false
+		for f in s:
+			if (f.missile_cd if missile else f.fighter_cd) <= 0:
+				ready = true
+		if missile:
+			_reject(L, "missile_no_target" if ready else "missile_reload", side)
+		else:
+			_reject(L, "fighter_no_target" if ready else "fighter_reload", side)
+		return
+	_spend(side, cost)
+	if side == 1:
+		emit("say", L.id, -1, L.pos, "ai_missile" if missile else "ai_fighter")
+	else:
+		emit("say", L.id, -1, L.pos, "missile" if missile else "fighter")
+		if missile:
+			emit("volley", L.id, -1, L.pos, n)
+
+# ============================================================ 틱
+static func _regen(cur: int, rem: int, period: int, cap: int) -> Array:
+	# 1점(10000bp)을 period 틱에 나눠 채운다. 나머지를 넘겨 누적 오차가 없다.
+	rem += BattleRules.BP
+	cur = mini(cap, cur + rem / period)
+	rem %= period
+	return [cur, rem]
+
+func _turn(f: FleetState, a: float, rate_deg := -1.0) -> void:
+	# salvo 규칙의 선회는 데이터(제자리 180°에 20초, §4.2). POC 규칙은 turn_rate
+	var m: float = (deg_to_rad(float(salvo.C.movement.turn_deg_per_s) if rate_deg < 0.0 else rate_deg) if salvo else float(R.turn_rate)) * dt
+	var dh := BattleRules.ang_diff(f.heading, a)
+	f.heading += dh if absf(dh) < m else signf(dh) * m
+
+# 묶음 진형(PoC E, Q109): 함대 여럿에 진형을 주면 함대 위치도 그 진형 모양으로 평행 재배치한다(방향 유지, 가장 느린 속도로 동시 도착)
+func _bundle_layout(s: Array, fid: String) -> void:
+	var kind: int = BattleRules.FORM_SHAPE[maxi(0, salvo.formation_ids().find(fid))]
+	var pos: Dictionary = BundleLayout.slots(s, kind, float(salvo.C.movement.bundle_gap), R.edge, rs.world)
+	var cap := 1e9
+	for f in s:
+		cap = minf(cap, f.speed)
+	var grp: int = st.tick * 1000 + int(s[0].id) + 1
+	for f in s:
+		f.target_id = -1
+		f.has_move = true
+		_clear_path(f)
+		f.move_to = pos[f.id]
+		f.strafe = true
+		f.speed_cap = cap
+		f.move_grp = grp
+
+# 제자리 반전(PoC): 방향 차이가 flip_over_deg를 넘으면 기준 방향을 180° 뒤집고 배치를 점대칭으로 뒤집는다.
+# 함선 위치는 그대로이고 함대는 flip_s초 멈춘다. 남은 차이는 기존 선회로 맞춘다.
+func _flip(f: FleetState) -> void:
+	f.heading += PI
+	f.flip = not f.flip
+	f.form = BattleRules.mirror(f.form)
+	f.form_t = BattleRules.mirror(f.form_t)
+	f.flip_wait = maxi(1, BattleRules.ticks(float(salvo.C.movement.flip_s), st.hz))
+
+func _retreating(f: FleetState) -> bool:
+	return f.retreat_order or (morale != null and (morale.forced(f) or morale.fleeing(f)))
+
+func _orient(f: FleetState, a: float, rate_deg := -1.0) -> void:
+	if salvo and absf(BattleRules.ang_diff(f.heading, a)) > deg_to_rad(float(salvo.C.movement.flip_over_deg)):
+		_flip(f)
+		return
+	_turn(f, a, rate_deg)
+
+func _tick() -> void:
+	st.tick += 1
+	if not salvo:
+		var r := _regen(st.cp, st.cp_rem, T.CP_REGEN, R.cp_max_bp)
+		st.cp = r[0]
+		st.cp_rem = r[1]
+		r = _regen(st.ecp, st.ecp_rem, T.ECP_REGEN, R.cp_max_bp)
+		st.ecp = r[0]
+		st.ecp_rem = r[1]
+	# 틱 안의 하위 걸음: 한 걸음이 0.05초(기준 POC의 프레임 폭)를 넘지 않게 나눈다. 한 걸음의 순서는 기준과 같다
+	# (증원 → AI → 함대 이동·사격 → 간격 → 미사일 → 함재기 → 승패). 0.1초 한 걸음으로 돌리면 추격·사격 순서의
+	# 이산화로 통계가 어긋난다(charge30에서 killed +15%, KS D 0.83). 틱·명령·기록·난수·사건은 10Hz 그대로이고
+	# 나눠 도는 것도 결정론이다.
+	var n := maxi(1, ceili(dt / BattleRules.REF_DT - 1e-9))
+	var save := dt
+	dt = save / n
+	sub_ms = roundi(dt * 1000.0)
+	for i in n:
+		if st.over:
+			break
+		_substep(i == 0)
+	dt = save
+	for f in st.fleets:
+		f.pos = BattleRules.quant_v(f.pos)
+		f.heading = BattleRules.quant(f.heading)
+
+func _substep(first: bool) -> void:
+	st.clock_ms += sub_ms
+	if not st.reinf and not _reinf_def.is_empty() and st.clock_ms > R.reinf_ms:
+		_spawn_reinf()
+	st.ai_timer -= sub_ms
+	if st.ai_timer <= 0:
+		st.ai_timer += R.ai_period_ms
+		if cai:
+			cai.think(self)
+		else:
+			_ai.think(self)
+	_fleet_phase(first)
+	if salvo and first:
+		if skills:
+			skills.step()   # 특기 효과 만료(P8a)
+		if detect:
+			detect.step()
+		salvo.step()
+		if morale:
+			morale.step()
+		if chain:
+			chain.step()
+		if cmd:
+			cmd.step()
+		if supply:
+			supply.step()
+		if decisions:
+			decisions.step()
+	_separate()
+	_move_missiles()
+	_move_swarms()
+	if victory:
+		if first:
+			victory.check()
+	elif st.flag(0) == null:
+		_end(false, "flagship_lost")
+	elif st.alive(1).is_empty():
+		if not st.reinf and not _reinf_def.is_empty():
+			_spawn_reinf()
+		else:
+			_end(true, "annihilation")
+
+func _fleet_phase(timers: bool) -> void:
+	var flags := [st.flag(0), st.flag(1)]
+	for f in st.fleets:
+		if f.dead:
+			continue
+		if timers:
+			f.missile_cd = maxi(0, f.missile_cd - 1)
+			f.fighter_cd = maxi(0, f.fighter_cd - 1)
+			if f.charge > 0:
+				f.charge -= 1
+			if f.flank_msg > 0:
+				f.flank_msg -= 1
+			if f.flip_wait > 0:
+				f.flip_wait -= 1
+		var fl: FleetState = flags[f.side]
+		f.in_cmd = fl == null or fl == f or f.pos.distance_to(fl.pos) < R.cmd_r
+		if morale and morale.forced(f):
+			f.target_id = -1
+			f.has_move = true
+			f.move_to = morale.exit_point(f.side)
+			_clear_path(f)
+		var tgt := sight_target(f)
+		if tgt == null:
+			f.target_id = -1
+		var has_dest := false
+		var dest := Vector2.ZERO
+		var chase_r: float = f.range_r * R.chase_range_share
+		if salvo and assault and f.charge <= 0:
+			chase_r = maxf(chase_r, float(rs.rt("range_band_hold.engagement_distance", R.chase_engagement_fallback_r)))
+		if salvo and f.charge > 0:
+			chase_r = float(salvo.C.bands.assault_r)   # 돌격은 강습 거리까지 붙는다
+		# AI의 거리 유지/후퇴 이동은 사격 표적과 함께 존재한다. 이동 목적지를 추격으로 덮지 않는다.
+		if f.has_move:
+			if f.pos.distance_to(f.move_to) < R.arrive_r:
+				if f.route.is_empty():
+					f.has_move = false
+					f.strafe = false
+					f.speed_cap = 0.0
+				else:
+					f.move_to = f.route.pop_front()   # 다음 경유점
+			if f.has_move:
+				has_dest = true
+				dest = f.move_to
+		elif tgt:
+			var tp := known_pos(f, tgt)
+			if f.pos.distance_to(tp) > chase_r:
+				has_dest = true
+				dest = tp
+		var frozen := f.flip_wait > 0
+		var cfoe: FleetState = sight_foe(f, float(salvo.C.movement.contact_r)) if salvo else null   # 접적: 가까이 보이는 적 함대가 있다
+		var old_pos := f.pos
+		var spd := rs.move_speed(f.spd, f.defense, f.charge > 0)
+		if salvo:
+			spd = f.speed * (R.charge_speed_mul if f.charge > 0 else 1.0)
+			if f.speed_cap > 0.0 and f.charge <= 0:
+				spd = minf(spd, f.speed_cap)
+			if terrain:
+				spd *= float(BattleRules.BP) / float(terrain.move_cost_bp(f.pos))   # 성운·잔해·그림자는 느리다(§4.10)
+			if cmd:
+				spd *= 1.0 + cmd.penalty(f, "move_pct")   # 승계 혼선·지휘 한도 초과(§4.14)
+			if skills:
+				spd *= skills.mulf(f, "speed_mul_bp")   # 특기 질주·신속(P8a)
+		if frozen:
+			has_dest = false
+		elif has_dest and cfoe != null and not f.strafe and f.move_grp == 0 and not _retreating(f):
+			# 접적 이동(PoC): 진형 방향은 그대로 두고 평행 이동한다. 적 쪽 ±contact_fast_deg 안으로 가면 전진 속도, 옆·뒤는 평행 속도
+			var dd := f.pos.distance_to(dest)
+			var cp := known_pos(f, cfoe)
+			var ea := atan2(cp.y - f.pos.y, cp.x - f.pos.x)
+			var ma := atan2(dest.y - f.pos.y, dest.x - f.pos.x)
+			var mul := 1.0 if absf(BattleRules.ang_diff(ea, ma)) <= deg_to_rad(float(salvo.C.movement.contact_fast_deg)) else float(salvo.C.movement.strafe_speed_bp) / float(BattleRules.BP)
+			f.pos += (dest - f.pos) / maxf(dd, 0.001) * minf(spd * mul * dt, dd)
+		elif has_dest and f.strafe and tgt == null:
+			# 평행 이동: 방향을 유지한 채 전진 속도의 일부로 목적지를 향해 옆으로 간다(§4.2)
+			var dd := f.pos.distance_to(dest)
+			f.pos += (dest - f.pos) / maxf(dd, 0.001) * minf(spd * float(salvo.C.movement.strafe_speed_bp) / float(BattleRules.BP) * dt, dd)
+			if f.face_set:
+				# 이동 명령에 방향이 함께 오면 이동하는 내내 조금씩 돌아 도착할 때 그 방향이 되고, 그 뒤로는 고정이다.
+				# 남은 시간(남은 거리 ÷ 평행 이동 속도)에 맞춰 선회율을 정하고 선회율 한도(turn_deg_per_s)로 막는다
+				var dh := BattleRules.ang_diff(f.heading, f.face_to)
+				var sv := maxf(0.001, spd * float(salvo.C.movement.strafe_speed_bp) / float(BattleRules.BP))
+				var t_left := maxf(dt, f.pos.distance_to(dest) / sv)
+				var step := minf(absf(dh), absf(dh) * dt / t_left)
+				step = minf(step, deg_to_rad(float(salvo.C.movement.turn_deg_per_s)) * dt)
+				f.heading += signf(dh) * step
+				if absf(BattleRules.ang_diff(f.heading, f.face_to)) < deg_to_rad(float(salvo.C.movement.face_tolerance_deg)):
+					f.face_set = false
+		elif has_dest:
+			var a := atan2(dest.y - f.pos.y, dest.x - f.pos.x)
+			_orient(f, a)
+			var dd := f.pos.distance_to(dest)
+			if f.flip_wait > 0:
+				pass   # 방금 반전했다: 이번 걸음은 멈춘다
+			elif dd < spd * R.settle_speed_share:
+				f.pos += (dest - f.pos) * BattleRules.lerp_k(R.arrive_k_ref * BattleRules.REF_DT, dt)
+			else:
+				var k: float = maxf(R.min_turn_cos, cos(BattleRules.ang_diff(f.heading, a)))
+				var stp := minf(spd * dt * k, dd)
+				f.pos += Vector2(cos(f.heading), sin(f.heading)) * stp
+		var blk := _hold_blocker(f, old_pos) if (has_dest and salvo) else Vector2.INF
+		if blk != Vector2.INF:
+			f.pos = old_pos   # 걸음만 막는다. 목적지가 적 쪽일 때만 이동 명령을 접는다(돌아서는 중의 앞쪽 쏠림은 명령을 지키지 않는다)
+			if (dest - old_pos).dot(blk - old_pos) > 0.0:
+				_hold_stop(f)
+				has_dest = false
+		f.moving = has_dest
+		if not has_dest and f.face_set and f.flip_wait == 0:
+			# 도착 방향: 도착한 뒤 지정한 방향으로 돌아선다(§4.2). 맞출 때까지는 자동 조준보다 우선한다
+			# 제자리 선회율은 movement.face_turn_deg_per_s가 있으면 그것(이동 중 선회율과 따로 정할 수 있다)
+			_orient(f, f.face_to, float(salvo.C.movement.get("face_turn_deg_per_s", -1.0)) if salvo else -1.0)
+			if absf(BattleRules.ang_diff(f.heading, f.face_to)) < deg_to_rad(float(salvo.C.movement.face_tolerance_deg)):
+				f.face_set = false
+		var ft: FleetState = tgt if (tgt and f.pos.distance_to(known_pos(f, tgt)) <= f.range_r) else sight_foe(f, f.range_r)
+		f.fire_id = ft.id if ft else -1
+		if ft == null and cfoe != null and not has_dest and not f.face_set and f.flip_wait == 0:
+			var cp := known_pos(f, cfoe)
+			_orient(f, atan2(cp.y - f.pos.y, cp.x - f.pos.x))   # 접적 도착: 사거리 밖이어도 보이는 적 쪽으로 진형을 맞춘다(PoC)
+		if ft:
+			if not has_dest and not f.face_set and f.flip_wait == 0:
+				var fp := known_pos(f, ft)
+				_orient(f, atan2(fp.y - f.pos.y, fp.x - f.pos.x))
+			if salvo:
+				continue   # 사격은 salvo.step()이 범주별 주기로 한다
+			var fm := rs.flank_mul(f.pos, ft.pos, ft.heading)
+			apply_dmg(f, ft, f.ships * R.fire_share * rs.power(f.lv, f.charge > 0, f.in_cmd, f.defense) * fm * dt)
+			if fm > 1.0 and f.flank_msg <= 0:
+				f.flank_msg = T.FLANK_MSG_S
+				emit("flank", f.id, ft.id, ft.pos, fm)
+
+# 평소에는 강습모함 유무와 무관하게 교전 거리(engagement_distance)를 지킨다.
+# 위치를 밀어내지 않고(튕김 방지, _separate 주석) 걸음만 막는다. 이미 안쪽이면 거리를 줄이는 걸음만 막는다.
+# 예외: 실제 돌격·강습 특기, 퇴각, 화공 작전 접근, 플레이어가 직접 지휘하는 뇌격 운용 함대.
+# 막는 적이 없으면 Vector2.INF, 있으면 아군이 아는 그 적의 위치(확인·추정 접촉만, 미탐지 적은 공개 경계라 멈추지 않는다 - M1)
+func _hold_blocker(f: FleetState, old: Vector2) -> Vector2:
+	var close_skill := skills != null and skills.add(f, "assault_bp") > 0 and not salvo.hold_distance(f)
+	if assault == null or f.charge > 0 or close_skill or (morale and morale.fleeing(f)):
+		return Vector2.INF
+	# 수동 뇌격 접근은 명시적 조작으로 허용한다. 위임·적 AI는 돌격 없이 자동 근접하지 않는다.
+	if f.side == 0 and f.control == "direct" and str(salvo.C.fast_craft.equipment_category.get(f.equip, "")) == "torpedo":
+		return Vector2.INF
+	# 화공 예외는 투항(feign)과 발동 창(open) 안의 접근뿐이다. 서신 전(idle)·창 밖은 면제하지 않는다
+	if chain and f.side == 0 and f.sq_id == chain.host_sq and (chain.mode == "feign" or (chain.mode == "open" and chain.window_open())):
+		return Vector2.INF
+	if _hold_d2 < 0.0:
+		_hold_d2 = pow(float(rs.rt("range_band_hold.engagement_distance")), 2)
+	for o in st.fleets:
+		if o.side == f.side or o.dead:
+			continue
+		if not sees(f, o):
+			continue
+		var kp := known_pos(f, o)
+		var dn := f.pos.distance_squared_to(kp)
+		if dn < _hold_d2 and dn < old.distance_squared_to(kp):
+			return kp
+	return Vector2.INF
+
+# 유지 거리 때문에 선 함대: 이동 명령을 접고, 같은 그룹(Q60)은 함께 선다
+func _hold_stop(f: FleetState) -> void:
+	var grp := f.move_grp
+	for g in st.fleets:
+		if g == f or (grp != 0 and g.move_grp == grp and not g.dead):
+			if g.has_move and sight_target(g) == null:
+				if g.side == 0:
+					_reject(g, "hold_distance", 0)   # 토스트 "교전 거리 유지". 명령이 취소될 때 한 번만 나온다. 아군이 아는 접촉에서만 멈추므로 새 정보가 없다
+				g.has_move = false
+				g.route.clear()
+				g.strafe = false
+				g.speed_cap = 0.0
+				g.move_grp = 0
+
+var _hold_d2 := -1.0
+
+func _separate() -> void:
+	# 함대끼리 겹쳐도 밀어내지 않는다(튕김 방지). 전장 경계 안으로만 가둔다.
+	var fl := st.fleets
+	var W := rs.world
+	var e: float = R.edge
+	for f in fl:
+		f.pos.x = clampf(f.pos.x, e, W.x - e)
+		f.pos.y = clampf(f.pos.y, e, W.y - e)
+
+func _move_missiles() -> void:
+	for m in st.missiles:
+		m.age += sub_ms
+		var t := st.by_id(m.target_id)
+		if t == null or t.dead:
+			m.dead = true
+			continue
+		var age_s := m.age / 1000.0
+		var a: float = atan2(t.pos.y - m.pos.y, t.pos.x - m.pos.x) + m.wob * maxf(0.0, R.missile_wob_decay_s - age_s)
+		m.pos = BattleRules.quant_v(m.pos + Vector2(cos(a), sin(a)) * m.v * dt)
+		m.v += R.missile_accel * dt
+		# 명중 판정은 기준 POC와 같은 점 판정이다(이동 뒤 위치가 표적에서 22px 안). 하위 걸음이 0.05초 이하라
+		# 한 걸음 이동(≤20px)이 판정 지름(44px)보다 작아 놓치지 않는다. 선분 판정(§3.3)은 걸음이 더 커질 때 쓴다.
+		var hit: bool = m.pos.distance_to(t.pos) < R.missile_hit_r
+		if hit:
+			m.dead = true
+			apply_dmg(st.by_id(m.src_id), t, m.dmg)
+			emit("missile_hit", t.id, m.src_id, m.pos)
+	st.missiles = st.missiles.filter(func(m): return not m.dead)
+
+func _move_swarms() -> void:
+	var k_goal := BattleRules.lerp_k(R.swarm_goal_k_ref * BattleRules.REF_DT, dt)
+	var k_back := BattleRules.lerp_k(R.swarm_back_k_ref * BattleRules.REF_DT, dt)
+	for s in st.swarms:
+		s.life -= sub_ms
+		var t := st.by_id(s.target_id)
+		var src := st.by_id(s.src_id)
+		if t.dead or src.dead:
+			s.life = mini(s.life, R.swarm_return_ms)
+		for p in s.pts:
+			p.a += p.w * dt
+			var goal: Vector2 = t.pos + Vector2(cos(p.a), sin(p.a)) * p.r
+			if s.life < R.swarm_return_ms:
+				p.pos = BattleRules.quant_v(p.pos + (src.pos - p.pos) * k_back)
+			else:
+				p.pos = BattleRules.quant_v(p.pos + (goal - p.pos) * k_goal)
+		s.striking = not t.dead and s.life > R.swarm_return_ms and s.pts.size() > 0 and (s.pts[0].pos as Vector2).distance_to(t.pos) < R.swarm_hit_r
+		if s.striking:
+			apply_dmg(src, t, s.dps * dt)
+	st.swarms = st.swarms.filter(func(s): return s.life > 0)
+
+var endless := false   # 시험용: true면 승패가 나도 전투를 끝내지 않는다(적 없는 조작 시험)
+
+func _end(win: bool, reason: String) -> void:
+	if endless:
+		return
+	st.over = true
+	st.win = win
+	st.end_reason = reason
+	st.end_tick = st.tick
+	st.end_ms = st.clock_ms
+	emit("battle_end", -1, -1, Vector2.ZERO, reason)

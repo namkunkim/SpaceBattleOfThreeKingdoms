@@ -1,0 +1,6 @@
+scripts\world\auto_resolver.gd:155:func start_operation(input: Variant) -> Dictionary:
+core\battle\operation_private_state.gd:285:func capture_completed() -> Dictionary:
+core\battle\operation_private_state.gd:361:func restore_completed(packet: Variant) -> Dictionary:
+hud\ui_kit\session_guard.gd:4:# 저장(초기 상태 + 명령 기록 + 틱)과 국면별 체크포인트는 코어가 생긴 뒤 suspend_requested에 붙인다.
+hud\ui_kit\session_guard.gd:6:signal suspend_requested(reason: String)
+hud\ui_kit\session_guard.gd:30:	suspend_requested.emit(reason)

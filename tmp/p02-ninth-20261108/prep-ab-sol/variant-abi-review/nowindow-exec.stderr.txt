@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "C:\WorkSpace\SpaceBattleOfThreeKingdoms\tmp\p02-ninth-20261108\prep-ab-sol\variant-abi-review\python_job_nowindow_external_candidate.py", line 140, in <module>
+    run(manifest,path,pin)
+    ~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\WorkSpace\SpaceBattleOfThreeKingdoms\tmp\p02-ninth-20261108\prep-ab-sol\variant-abi-review\python_job_nowindow_external_candidate.py", line 101, in run
+    need(proc.returncode==0 and owner.job.active()==0,"supervisor exit or descendants remained")
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\WorkSpace\SpaceBattleOfThreeKingdoms\tmp\p02-ninth-20261108\prep-ab-sol\legacy_autoresolve_oracle.py", line 16, in need
+    raise ValueError(where)
+ValueError: supervisor exit or descendants remained

@@ -1,0 +1,51 @@
+{
+  "passed": true,
+  "stable_inputs": true,
+  "inputs": 48,
+  "cases": {
+    "normal": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-state-20261108\\policy-ownership\\run_gate.py",
+        "--case",
+        "normal"
+      ],
+      "actual_exit": 0,
+      "expected_exit": 0,
+      "passed": true
+    },
+    "row_omission": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-state-20261108\\policy-ownership\\run_gate.py",
+        "--case",
+        "row_omission"
+      ],
+      "actual_exit": 1,
+      "expected_exit": 1,
+      "passed": true
+    },
+    "eighth_misclassification": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-state-20261108\\policy-ownership\\run_gate.py",
+        "--case",
+        "eighth_misclassification"
+      ],
+      "actual_exit": 1,
+      "expected_exit": 1,
+      "passed": true
+    },
+    "missing_anchor": {
+      "command": [
+        "C:\\Python314\\python.exe",
+        "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p03-parallel-state-20261108\\policy-ownership\\run_gate.py",
+        "--case",
+        "missing_anchor"
+      ],
+      "actual_exit": 2,
+      "expected_exit": 2,
+      "passed": true
+    }
+  }
+}

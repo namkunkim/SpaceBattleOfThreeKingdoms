@@ -1,0 +1,213 @@
+{
+  "appId": "sbt-session-requirements",
+  "formatVersion": 1,
+  "baselineId": "86d088d217ea7631f01003f83690c26b85fe5ae22183e3989566d12f8e6e9656",
+  "exportedAt": "2026-11-01T06:16:50.110Z",
+  "items": [
+    {
+      "id": "W01",
+      "status": "완료",
+      "note": ""
+    },
+    {
+      "id": "W02",
+      "status": "상시준수",
+      "note": ""
+    },
+    {
+      "id": "W03",
+      "status": "상시준수",
+      "note": ""
+    },
+    {
+      "id": "W04",
+      "status": "상시준수",
+      "note": ""
+    },
+    {
+      "id": "W05",
+      "status": "상시준수",
+      "note": ""
+    },
+    {
+      "id": "W06",
+      "status": "상시준수",
+      "note": ""
+    },
+    {
+      "id": "W07",
+      "status": "상시준수",
+      "note": ""
+    },
+    {
+      "id": "W08",
+      "status": "상시준수",
+      "note": ""
+    },
+    {
+      "id": "W09",
+      "status": "완료",
+      "note": ""
+    },
+    {
+      "id": "D01",
+      "status": "완료",
+      "note": ""
+    },
+    {
+      "id": "D02",
+      "status": "완료",
+      "note": ""
+    },
+    {
+      "id": "D03",
+      "status": "완료",
+      "note": ""
+    },
+    {
+      "id": "D04",
+      "status": "완료",
+      "note": ""
+    },
+    {
+      "id": "D05",
+      "status": "완료",
+      "note": ""
+    },
+    {
+      "id": "D06",
+      "status": "완료",
+      "note": ""
+    },
+    {
+      "id": "D07",
+      "status": "완료",
+      "note": ""
+    },
+    {
+      "id": "D08",
+      "status": "완료",
+      "note": ""
+    },
+    {
+      "id": "D09",
+      "status": "완료",
+      "note": ""
+    },
+    {
+      "id": "I01",
+      "status": "완료",
+      "note": ""
+    },
+    {
+      "id": "I02",
+      "status": "완료",
+      "note": ""
+    },
+    {
+      "id": "I03",
+      "status": "완료",
+      "note": ""
+    },
+    {
+      "id": "I04",
+      "status": "완료",
+      "note": ""
+    },
+    {
+      "id": "I05",
+      "status": "완료",
+      "note": ""
+    },
+    {
+      "id": "I06",
+      "status": "완료",
+      "note": ""
+    },
+    {
+      "id": "I07",
+      "status": "완료",
+      "note": ""
+    },
+    {
+      "id": "I08",
+      "status": "완료",
+      "note": ""
+    },
+    {
+      "id": "G01",
+      "status": "완료",
+      "note": ""
+    },
+    {
+      "id": "G02",
+      "status": "완료",
+      "note": ""
+    },
+    {
+      "id": "G03",
+      "status": "완료",
+      "note": ""
+    },
+    {
+      "id": "G04",
+      "status": "상시준수",
+      "note": ""
+    },
+    {
+      "id": "P01",
+      "status": "완료",
+      "note": "메모검증token-OP41-20261031 <img src=x onerror=\"window.__bad=1\"><script>window.__bad=1</script>"
+    },
+    {
+      "id": "P02",
+      "status": "미완료",
+      "note": ""
+    },
+    {
+      "id": "P03",
+      "status": "미완료",
+      "note": ""
+    },
+    {
+      "id": "P04",
+      "status": "미완료",
+      "note": ""
+    },
+    {
+      "id": "P05",
+      "status": "미완료",
+      "note": ""
+    },
+    {
+      "id": "P06",
+      "status": "미완료",
+      "note": ""
+    },
+    {
+      "id": "P07",
+      "status": "미완료",
+      "note": ""
+    },
+    {
+      "id": "P08",
+      "status": "미완료",
+      "note": ""
+    },
+    {
+      "id": "P09",
+      "status": "미완료",
+      "note": ""
+    },
+    {
+      "id": "C01",
+      "status": "완료",
+      "note": ""
+    },
+    {
+      "id": "C02",
+      "status": "완료",
+      "note": ""
+    }
+  ]
+}

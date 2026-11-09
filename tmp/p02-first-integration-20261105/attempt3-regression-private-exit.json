@@ -1,0 +1,19 @@
+{
+  "label": "attempt3-regression-private",
+  "command": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+    "--log-file",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-first-integration-20261105\\attempt3-regression-private-engine.log",
+    "-s",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-first-integration-20261105\\attempt3-private-regression.gd"
+  ],
+  "actual_exit": 0,
+  "script_errors": 0,
+  "errors": 0,
+  "warnings": 0,
+  "log_sha256": "43bf093e407323bec867c56adb24d8454bf91d784d7d09292c8e8dcc0acbc0bc",
+  "engine_log_sha256": "ae8b26e63c2d157ff8703440d3c129c27ee7608ee0c94c01fd5183ec17ba1043"
+}

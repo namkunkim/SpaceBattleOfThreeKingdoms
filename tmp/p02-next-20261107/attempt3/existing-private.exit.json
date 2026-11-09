@@ -1,0 +1,29 @@
+{
+  "label": "existing-private",
+  "command": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+    "--log-file",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt3\\existing-private.engine.log",
+    "-s",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt3\\existing-private.gd"
+  ],
+  "expected_exit": 0,
+  "error": null,
+  "output": null,
+  "expected_diagnostics": null,
+  "actual_exit": 0,
+  "diagnostics": {
+    "script_errors": 0,
+    "errors": 0,
+    "warnings": 0
+  },
+  "log_shas": {
+    "existing-private.stdout": "43bf093e407323bec867c56adb24d8454bf91d784d7d09292c8e8dcc0acbc0bc",
+    "existing-private.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "existing-private.engine.log": "ae8b26e63c2d157ff8703440d3c129c27ee7608ee0c94c01fd5183ec17ba1043"
+  },
+  "pass": true
+}

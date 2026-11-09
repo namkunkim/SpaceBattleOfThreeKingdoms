@@ -1,0 +1,18 @@
+{
+  "utc": "2026-11-08T18:47:51.975177+00:00",
+  "path": "docs/battle-core/pc-campaign-design/P02-PROGRESS-CHECKLIST.md",
+  "before_sha256": "eb6e821190af4513b970761e6692646d1aa847682f3f4a37d0727b457f42bba5",
+  "after_sha256": "3318efe2d9fa9d4c290d0af66d59c40334418ca73441c3ea929ea7fc369fb9ea",
+  "diff_sha256": "22ed7c88a9a5fa82d32a9224b94fe6b47115ba7ba7228653d3acdb6040ffb409",
+  "unchanged_before_after": {
+    "tmp\\p02-pc-next-20261109\\delivery-precloseout\\P02-DIRECT-SCENE-REJECT-DELIVERY-20261109.zip": "491a6d55c2bd870c4f7b3f82b2913a0acf771baf4fe4768a93bd9d0473b1c7bd",
+    "tmp\\p02-pc-next-20261109\\delivery-precloseout\\delivery-manifest.json": "eeb2287b65e06797b5cba4dc36f3d87e2cdafcf03a77fb782189a2455d8924fe",
+    "tmp\\p02-pc-next-20261109\\REVIEW-CLOSEOUT-INDEPENDENT.md": "de85863a38f5311aae53687cc64727130f89f0bc1e73957273311df97db36d1c",
+    "scripts\\world_link.gd": "a3658b7ce2a3b2ba7e28ec9002fc014592cf72a2b6fd09cb27c374a89c2e28f0",
+    "view\\world\\world_map_screen.gd": "e40f0a99954a11942a9256e260b6c40121cac7051ba4db69f33698bbf82b6ba4",
+    "tests\\world_link.gd": "2058f703db8eb86e03f7c4470d9b06c2364565299b7fa5eecd984390591f8080",
+    "core\\battle\\operation_private_state.gd": "46b6fe191166ec3dcdb620f51c3ccd391a9080f52289517ae804bf86cecc1ea3"
+  },
+  "scoped_git_diff_check_exit": 0,
+  "git_diff_diagnostics": "warning: in the working copy of 'docs/battle-core/pc-campaign-design/P02-PROGRESS-CHECKLIST.md', LF will be replaced by CRLF the next time Git touches it\n"
+}

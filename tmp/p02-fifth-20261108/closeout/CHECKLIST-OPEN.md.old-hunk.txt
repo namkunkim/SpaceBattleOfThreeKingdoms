@@ -1,0 +1,1 @@
+  - [ ] **P02 private owner 표시용 사건 회수(2026-11-08):** 독립 재심에서 한정 수용됐다. 기본 17개, 신규 검사 14행·148개 단언, 격리 회귀 14개와 탐침 3개를 확인했다. 전체 P02는 NOT_READY이며 제품 호스트 연결과 공동 인수는 남는다. [결과](pc-campaign-design/P02-VIEWER-EVENTS-RESULT-20261108.md) · [진행표](pc-campaign-design/P02-PROGRESS-CHECKLIST.md) · [최신 인계](pc-campaign-design/SESSION-HANDOFF-P02-VIEWER-EVENTS-20261108.md).

@@ -1,0 +1,10 @@
+{
+  "import.os.tsv": "db64a2abadd77cd4e547341dbdb67d876067e296fad34949bd2393db3a26f30d",
+  "import.log": "6d1c065383a27c36804949b6ffa4b09714470b112e5dacc0bd5aeb7b9c147c4e",
+  "import.argv.json": "4cbd952e167ad6cbb7de573992dbb7f4c5a2847775621493fbc3e9c8fc92ddcc",
+  "isolation.os.tsv": "7e844356daa5e9184c375cbcb4a0b94ecbedd6e6e58de69ecff5fe8326157d8d",
+  "isolation.log": "97dd6468f3e9dfd3993df21026ea3890dd9c5b42449ed8c20581b5651e639b33",
+  "original-before.json": "c6e095a2ca413a2d61c419d7e19ec64ed2c78ca0775370cfb479747b5605a976",
+  "original-after.json": "c6e095a2ca413a2d61c419d7e19ec64ed2c78ca0775370cfb479747b5605a976",
+  "appdata/Godot/app_userdata/SpaceBattleOfThreeKingdoms/.recovery_mode_lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

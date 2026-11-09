@@ -1,0 +1,29 @@
+{
+  "argv": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-pc-next-20261109\\attempt-03\\before\\project",
+    "--log-file",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-pc-next-20261109\\attempt-03\\before\\auto-complete\\engine.log",
+    "--script",
+    "res://tests/p02_k5_world_product_probe.gd",
+    "--",
+    "complete",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-pc-next-20261109\\attempt-03\\before\\auto-complete\\result.json"
+  ],
+  "env": {
+    "APPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-pc-next-20261109\\attempt-03\\before\\auto-complete\\roaming",
+    "LOCALAPPDATA": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-pc-next-20261109\\attempt-03\\before\\auto-complete\\local",
+    "XDG_DATA_HOME": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-pc-next-20261109\\attempt-03\\before\\auto-complete\\roaming",
+    "TEMP": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-pc-next-20261109\\attempt-03\\before\\auto-complete\\temp",
+    "TMP": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-pc-next-20261109\\attempt-03\\before\\auto-complete\\temp",
+    "P02_PC_EXPECT_PROJECT": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-pc-next-20261109/attempt-03/before/project",
+    "P02_PC_EXPECT_USER": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-pc-next-20261109/attempt-03/before/auto-complete/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms"
+  },
+  "cwd": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-pc-next-20261109\\attempt-03\\before\\project",
+  "os_log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-pc-next-20261109\\attempt-03\\before\\auto-complete\\engine.os.tsv",
+  "abort": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-pc-next-20261109\\attempt-03\\abort",
+  "timeout_seconds": 195,
+  "expected_engine_exit": 0
+}

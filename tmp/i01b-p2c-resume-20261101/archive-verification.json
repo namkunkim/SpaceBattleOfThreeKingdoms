@@ -1,0 +1,13 @@
+{
+  "created_utc": "2026-11-01T12:21:50.501352+00:00",
+  "archive": "tmp/i01b-p2c-delivery-20261101.zip",
+  "zip_sha256": "99a4a1adca1bdc3bf7e56baa9112c1625ab6c6371bfaafa0482b3471903a2971",
+  "zip_bytes": 1049694,
+  "entry_count": 254,
+  "crc_failures": 0,
+  "entry_sha_mismatches": 0,
+  "entry_list_exact": true,
+  "archive_contents_sha256": "08abed015e0ee2c3c537a95afe60de0835f7699b3880748efe03b9ea299256cc",
+  "final_audit_sha256": "7846ed7b6faecc8541f65632202aa86f47496df4befb8dca12e0f943f8f6504c",
+  "record_manifest_sha256": "79592b0255b73932b7c41f3668906ca17f223d5e668fce23bd11b4b8e6b77f38"
+}

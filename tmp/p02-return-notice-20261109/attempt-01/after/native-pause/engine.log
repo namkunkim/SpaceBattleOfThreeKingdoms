@@ -1,0 +1,115 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 - Build 32.0.101.8626 - Compatibility - Using Device: Intel - Intel(R) Arc(TM) 130V GPU (8GB)
+
+P02_RETURN_ASSERT scope PASS
+P02_RETURN_ASSERT arguments PASS
+[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-return-notice-20261109/attempt-01/after/native-pause/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-09T04-33-08-40068-3599780.jsonl
+P02_RETURN_ASSERT battle PASS
+P02_RETURN_ASSERT phase PASS
+P02_RETURN_ASSERT state-presence PASS
+P02_RETURN_ASSERT state-value PASS
+P02_RETURN_ASSERT button PASS
+P02_RETURN_ASSERT map-uncached PASS
+P02_RETURN_ASSERT hidden PASS
+P02_NOTICE_RECT button [P: (406.0, 541.0), S: (300.0, 52.0)]
+P02_RETURN_ASSERT capture-initial PASS
+P02_RETURN_ASSERT hide-map PASS
+P02_RETURN_ACTION reject-1-
+ERROR: Cannot open file 'res://scenes/WorldMap.tscn'.
+   at: load (scene/resources/resource_format_text.cpp:1442)
+   GDScript backtrace (most recent call first):
+       [0] back_to_world (res://scripts/world_link.gd:45)
+       [1] back_to_world (res://scripts/FleetBattle3D.gd:449)
+       [2] to_title (res://hud/ui_kit/command_deck.gd:290)
+       [3] <anonymous lambda> (res://hud/ui_kit/deck_screens.gd:333)
+       [4] _run (res://tests/p02_notice_probe.gd:139)
+       [5] _capture (res://tests/p02_notice_probe.gd:20)
+ERROR: Failed loading resource: res://scenes/WorldMap.tscn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] back_to_world (res://scripts/world_link.gd:45)
+       [1] back_to_world (res://scripts/FleetBattle3D.gd:449)
+       [2] to_title (res://hud/ui_kit/command_deck.gd:290)
+       [3] <anonymous lambda> (res://hud/ui_kit/deck_screens.gd:333)
+       [4] _run (res://tests/p02_notice_probe.gd:139)
+       [5] _capture (res://tests/p02_notice_probe.gd:20)
+WARNING: WORLD_RETURN_REJECTED error=19
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] back_to_world (res://scripts/world_link.gd:50)
+       [1] back_to_world (res://scripts/FleetBattle3D.gd:449)
+       [2] to_title (res://hud/ui_kit/command_deck.gd:290)
+       [3] <anonymous lambda> (res://hud/ui_kit/deck_screens.gd:333)
+       [4] _run (res://tests/p02_notice_probe.gd:139)
+       [5] _capture (res://tests/p02_notice_probe.gd:20)
+P02_RETURN_ASSERT reject-1-scene PASS
+P02_RETURN_ASSERT reject-1-state-presence PASS
+P02_RETURN_ASSERT reject-1-state-value PASS
+P02_RETURN_ASSERT reject-1-ui PASS
+P02_RETURN_ASSERT reject-1-settings PASS
+P02_RETURN_ASSERT reject-1-brief PASS
+P02_RETURN_ASSERT reject-1-queue PASS
+P02_RETURN_ASSERT reject-1-sim PASS
+P02_RETURN_ASSERT reject-1-focus-geometry PASS
+P02_RETURN_ASSERT reject-1-guidance PASS
+P02_RETURN_ASSERT reject-1-request PASS
+P02_RETURN_ASSERT reject-1-actual-error PASS
+P02_RETURN_ASSERT reject-1-notice PASS
+P02_RETURN_ASSERT reject-1-layout PASS
+P02_NOTICE_RECT warning [P: (406.0, 651.0), S: (344.0, 32.0)]
+P02_RETURN_ASSERT capture-reject-1 PASS
+P02_RETURN_ACTION reject-2-
+ERROR: Cannot open file 'res://scenes/WorldMap.tscn'.
+   at: load (scene/resources/resource_format_text.cpp:1442)
+   GDScript backtrace (most recent call first):
+       [0] back_to_world (res://scripts/world_link.gd:45)
+       [1] back_to_world (res://scripts/FleetBattle3D.gd:449)
+       [2] to_title (res://hud/ui_kit/command_deck.gd:290)
+       [3] <anonymous lambda> (res://hud/ui_kit/deck_screens.gd:333)
+       [4] _run (res://tests/p02_notice_probe.gd:139)
+       [5] _capture (res://tests/p02_notice_probe.gd:20)
+ERROR: Failed loading resource: res://scenes/WorldMap.tscn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] back_to_world (res://scripts/world_link.gd:45)
+       [1] back_to_world (res://scripts/FleetBattle3D.gd:449)
+       [2] to_title (res://hud/ui_kit/command_deck.gd:290)
+       [3] <anonymous lambda> (res://hud/ui_kit/deck_screens.gd:333)
+       [4] _run (res://tests/p02_notice_probe.gd:139)
+       [5] _capture (res://tests/p02_notice_probe.gd:20)
+WARNING: WORLD_RETURN_REJECTED error=19
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] back_to_world (res://scripts/world_link.gd:50)
+       [1] back_to_world (res://scripts/FleetBattle3D.gd:449)
+       [2] to_title (res://hud/ui_kit/command_deck.gd:290)
+       [3] <anonymous lambda> (res://hud/ui_kit/deck_screens.gd:333)
+       [4] _run (res://tests/p02_notice_probe.gd:139)
+       [5] _capture (res://tests/p02_notice_probe.gd:20)
+P02_RETURN_ASSERT reject-2-scene PASS
+P02_RETURN_ASSERT reject-2-state-presence PASS
+P02_RETURN_ASSERT reject-2-state-value PASS
+P02_RETURN_ASSERT reject-2-ui PASS
+P02_RETURN_ASSERT reject-2-settings PASS
+P02_RETURN_ASSERT reject-2-brief PASS
+P02_RETURN_ASSERT reject-2-queue PASS
+P02_RETURN_ASSERT reject-2-sim PASS
+P02_RETURN_ASSERT reject-2-focus-geometry PASS
+P02_RETURN_ASSERT reject-2-guidance PASS
+P02_RETURN_ASSERT reject-2-request PASS
+P02_RETURN_ASSERT reject-2-actual-error PASS
+P02_RETURN_ASSERT reject-2-notice PASS
+P02_RETURN_ASSERT reject-2-layout PASS
+P02_NOTICE_RECT warning [P: (406.0, 651.0), S: (344.0, 32.0)]
+P02_RETURN_ASSERT capture-reject-2 PASS
+P02_RETURN_ASSERT restore-map PASS
+P02_RETURN_ASSERT reentry-hidden PASS
+P02_RETURN_ACTION accept
+P02_RETURN_ASSERT accept-request PASS
+P02_RETURN_ASSERT accept-old-scene PASS
+P02_RETURN_ASSERT accept-scene PASS
+P02_RETURN_ASSERT accept-queue PASS
+P02_RETURN_ASSERT accept-settings PASS
+P02_RETURN_ASSERT accept-null PASS
+P02_RETURN_ASSERT accept-view PASS
+P02_RETURN_DONE 50 0

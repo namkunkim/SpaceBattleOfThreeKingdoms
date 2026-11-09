@@ -1,0 +1,20 @@
+{
+  "revision": "ac8b780447c4ab156612b89ce1e30c0b04326a2e",
+  "runs_per_difficulty": 1000,
+  "difficulties": [
+    "입문",
+    "표준"
+  ],
+  "seeds": [
+    0,
+    999
+  ],
+  "policy": "none",
+  "organization": "auto",
+  "skills": true,
+  "player_counter_launch": false,
+  "enemy_counter_launch": true,
+  "workers": 8,
+  "chunk": 5,
+  "godot": "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe"
+}

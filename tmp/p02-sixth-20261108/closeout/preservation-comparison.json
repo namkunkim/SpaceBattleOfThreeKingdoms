@@ -1,0 +1,24 @@
+{
+  "counts_before": {
+    "tracked": 2453,
+    "untracked": 17044,
+    "baseline": 19365,
+    "baseline_p03": 915,
+    "baseline_zip": 20,
+    "baseline_html": 30
+  },
+  "counts_after": {
+    "tracked": 2453,
+    "untracked": 17044,
+    "baseline": 19365,
+    "baseline_p03": 915,
+    "baseline_zip": 20,
+    "baseline_html": 30
+  },
+  "owned_files_unchanged": true,
+  "runtime_overlap_with_drift": 0,
+  "unattributed_observed_diff": {},
+  "unattributed_baseline_count": 132,
+  "p03_baseline_drift_count": 121,
+  "ownership_and_prior_bytes": "unverified; sequential observations"
+}

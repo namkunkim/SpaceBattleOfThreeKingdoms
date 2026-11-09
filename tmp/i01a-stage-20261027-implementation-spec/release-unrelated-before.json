@@ -1,0 +1,58 @@
+[
+  {
+    "relative_path": "core/battle/bundle_layout.gd",
+    "sha256": "52fde94aa9d2cca411ee038856643934990aac7de26ad7141ce3f9e61e379101"
+  },
+  {
+    "relative_path": "data/fleet-role-layout.md",
+    "sha256": "3e584d2976197207bdebb14efecd9dd78b1f070222d78a3c1da18b1db1b1a508"
+  },
+  {
+    "relative_path": "docs/battle-core/VIDEO-LOGH7-FLEET-MOTION.md",
+    "sha256": "6ab79060c7517e704130d577f65b4d73d4637375faf749c9f341a84293b6289d"
+  },
+  {
+    "relative_path": "docs/poc/fleet-motion-ref/index.html",
+    "sha256": "964e0b57aba2584f2aa40d2b3c6b412e01e2a9b02e5d76c81b49436662206992"
+  },
+  {
+    "relative_path": "docs/ui/FLEET-ROLE-LAYOUT.md",
+    "sha256": "87396c23ea1f34db97c5667cdc494e1f25928e8a6c95ea5dffbe0cb485cae196"
+  },
+  {
+    "relative_path": "docs/ui/FORMATION-TAB-SPEC.md",
+    "sha256": "9938d65e15e83f8d1882324b63b4f44680de112589d36d17c803c8c6f2e1d952"
+  },
+  {
+    "relative_path": "docs/ui/fleet-formations.fragment.html",
+    "sha256": "125bc008087bb5ea226ee5b0690eeca6785b769e5ef18b434de0cbac5440a575"
+  },
+  {
+    "relative_path": "docs/ui/fleet-formations.html",
+    "sha256": "6a81df1fc8f251c1be3a17898273bd37360d9de8de193e1f7c8e109c287947f2"
+  },
+  {
+    "relative_path": "export_presets.cfg",
+    "sha256": "7ba4a2556b4b6fab394f14de74ede901e1d5bed0029d48a7c2da3657b909050f"
+  },
+  {
+    "relative_path": "hud/ui_kit/formation_guide.gd",
+    "sha256": "f6b6a6fecfbac1f1179ed3f7e5c4b1543653607dd0e359fdc498f77aae183db7"
+  },
+  {
+    "relative_path": "project.godot",
+    "sha256": "0b5a634a44442b90154187431c83da3b755e36a261eb04a29f9a709c529f3fc2"
+  },
+  {
+    "relative_path": "tests/bundle_layout.gd",
+    "sha256": "9ba561bc150b0fa6e3435d53fb31fa20d983bad82e52b00d0c8a28e846ac6c3a"
+  },
+  {
+    "relative_path": "tests/formation_guide_ui.gd",
+    "sha256": "2a824aeb408bd6e58ae5f460e812be034165f9c795130ee56776923797d48540"
+  },
+  {
+    "relative_path": "플레이_조작법.md",
+    "sha256": "74f30a4a72acad14b187f746e525851ea568eeb7bec217c8b87949f3fb007373"
+  }
+]

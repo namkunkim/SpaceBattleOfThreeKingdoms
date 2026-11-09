@@ -1,0 +1,21 @@
+--- tmp/p02-pc-next3-20261109/prepare-01/probe-fix-v2/p02_difficulty_probe.gd
++++ tmp/p02-pc-next3-20261109/focused-01/d02-probe-normalized-v2/p02_difficulty_probe.gd
+@@ -116,6 +116,12 @@
+ 				continue
+ 			var record: Dictionary = row.duplicate()
+ 			record.erase("wait_s")
++			for field in ["wait_ticks", "start_morale_bp"]:
++				var value: Variant = record.get(field)
++				if not (value is float or value is int) or not is_finite(float(value)) or value < 0 or value > 2147483647 or value != floorf(float(value)):
++					check("fixture.oracle_roster_integer", false)
++					continue
++				record[field] = int(value)
+ 			result[side].append(record)
+ 	return result
+ 
+@@ -486,4 +492,4 @@
+ 	await create_timer(0.45).timeout
+ 	check("placement.tick", not b.placing and b.sim.st.tick > 0)
+ 	await RenderingServer.frame_post_draw
+-	check("physical.final_viewport", root.get_texture().get_image().save_png(OS.get_environment("P02_PHYSICAL_DIR") + "/10-playing.viewport.png") == OK)
++	check("physical.final_viewport", root.get_texture().get_image().save_png(OS.get_environment("P02_PHYSICAL_DIR") + "/10-playing.viewport.png") == OK)

@@ -1,0 +1,4 @@
+preserved full synthetic mismatched image; unchanged allowlist; accepted only equivalent spelling
+rejected nonowned, short-lived, reused PID, lost ownership and missing image
+rejected missing cleanup receipt missing cleanup receipt
+preserved primary and cleanup failures separately; synthetic only

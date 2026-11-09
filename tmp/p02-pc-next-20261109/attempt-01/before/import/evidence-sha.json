@@ -1,0 +1,12 @@
+{
+  "command.json": "2d614002673a6be00f47834f26dab45dfb1284b7863bad50351806f4e0984757",
+  "engine.log": "4a4f98d1cb901c1199b98ddffeea74d7a649343f2a0176ced0c4eb898d5a5490",
+  "engine.os.tsv": "467366514533e19d06c39c14e34a5bef32b9f25e9bfe1eb06b680e81bcefa15d",
+  "supervisor-argv.json": "824a1b619efa3dd03d68745fce3c4ed514fc45a6662196858a404b1a87d3e3de",
+  "supervisor-exit.json": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "supervisor.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "supervisor.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "roaming/Godot/editor_settings-4.7.tres": "cbbd7f5db54a1c09f5c986fe350ecc03ec077cec929924b9205ae0d6c6863251",
+  "roaming/Godot/keystores/debug.keystore": "84728e5353f8f4a00921c4005d456ab3f2fa7cbb61345a6e37496a1b15f23f9e",
+  "local/Godot/editor_doc_cache-4.7.res": "deb59a2311230c0a4196631a8ae28a47d57a841778ff143b36f294a16f258964"
+}

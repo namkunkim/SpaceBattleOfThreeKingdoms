@@ -1,0 +1,4 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+I01B_P1_PARTIAL_CLOCK_PASS cases=60 seeds=10 speeds=3 pause_variants=2 trace=50,100,150 tick=2 end_ms=150
+ORIGINAL_I01_A04_A05_A06=NOT_READY; no host/replay adapters, checkpoint restore, or product geometry validation

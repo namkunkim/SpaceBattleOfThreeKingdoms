@@ -1,0 +1,63 @@
+--- run-direct.py
++++ run-direct-v5.py
+@@ -14,6 +14,8 @@
+ ENGINE = Path("C:/Tools/Godot/Godot_v4.7.2-stable_win64.exe")
+ PWSH = Path("C:/Program Files/WindowsApps/OpenAI.CodexPrimaryRuntime.v26-1105-1297-0_26.1105.1297.0_x64__3k8sg7r9htsxt/dependencies/native/powershell/pwsh.exe")
+ SUPERVISOR = BASE / "P02DirectJob.cs"
++FOLDING = ".godot/editor/FleetBattle3D.tscn-folding-6fc9f3aa03723dcea84c2d7516fcefec.cfg"
++FOLDING_SHA = "9b34a7fc95b0f9cd640941851bbb0ebc8777e0666f5560e828143047b26c7c93"
+ LAUNCHER = BASE / "launch-direct.ps1"
+ AUTO = ROOT / "tmp/p02-seventh-20261108/k5-world-product.gd"
+ BATTLE = "scenes/FleetBattle3D.tscn"
+@@ -53,6 +55,41 @@
+ 
+ def inventory(project):
+     return {p.relative_to(project).as_posix(): sha(p) for p in project.rglob("*") if p.is_file()}
++
++
++def verify_reject_metadata(reject, reject_inventory):
++    expected_scene_line = 'run/main_scene="res://scenes/FleetBattle3D.tscn"'
++    allowed_folding_lines = [
++        "[folding]", "",
++        'node_unfolds=[NodePath("."), PackedStringArray("Visibility")]',
++        "resource_unfolds=[]", "nodes_folded=[]", "animation_groups_folded=[]",
++    ]
++    checked = {"folding_metadata": {}, "project_scene_references": {}, "import_or_remap_files_checked": 0}
++    require(BATTLE not in reject_inventory and not (reject / BATTLE).exists(), "Battle scene present in reject project")
++    require(not any(name.casefold() in {"override.cfg", "project.binary"} for name in reject_inventory),
++            "Unexpected project override or compiled project configuration")
++    for name, digest in reject_inventory.items():
++        lowered = name.casefold()
++        if "fleetbattle3d.tscn-" in lowered or lowered.endswith(("fleetbattle3d.tscn.remap", "fleetbattle3d.tscn.import")):
++            require(name == FOLDING and digest == FOLDING_SHA, f"Unknown scene cache/remap candidate: {name}")
++            text = (reject / name).read_text(encoding="utf-8")
++            require(text.splitlines() == allowed_folding_lines, "Unexpected scene folding format")
++            checked["folding_metadata"][name] = {"sha256": digest, "lines": allowed_folding_lines}
++        if lowered.endswith((".import", ".remap")):
++            checked["import_or_remap_files_checked"] += 1
++            content = (reject / name).read_text(encoding="utf-8-sig")
++            require("fleetbattle3d.tscn" not in content.casefold(), f"Scene reference in import/remap metadata: {name}")
++        if lowered.endswith(".godot"):
++            content = (reject / name).read_text(encoding="utf-8-sig")
++            lines = [line for line in content.splitlines() if "fleetbattle3d.tscn" in line.casefold()]
++            if name == "project.godot":
++                require(lines == [expected_scene_line], "Unexpected project scene reference")
++            else:
++                require(not lines, f"Unexpected nested project scene reference: {name}")
++            if lines:
++                checked["project_scene_references"][name] = lines
++    require("project.godot" in checked["project_scene_references"], "Project scene check missing")
++    return checked
+ 
+ 
+ def checkout(manifest, run):
+@@ -229,7 +266,8 @@
+         require(not (reject / BATTLE).exists(), "Reject scene unexpectedly present")
+         reject_inventory = inventory(reject)
+         require(reject_inventory == {k: v for k, v in imported.items() if k != BATTLE}, "Reject closure drift")
+-        require(not any("fleetbattle3d.tscn-" in k.lower() or k.lower().endswith("fleetbattle3d.tscn.remap") for k in reject_inventory), "Possible cached/remapped scene")
++        guard = verify_reject_metadata(reject, reject_inventory)
++        put(output / side / "reject-metadata-review.json", guard)
+         put(output / side / "reject-closure.json", reject_inventory)
+         for lane in LANES:
+             if lane != "import":

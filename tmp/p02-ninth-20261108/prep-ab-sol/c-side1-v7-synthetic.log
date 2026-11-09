@@ -1,0 +1,12 @@
+accepted synthetic ordered 9600 payload events and geometry
+rejected same-tick fake success with false actual result restore actual result false or mistyped
+rejected same-tick success with wrong request identity result not bound to request
+rejected packet replaced with matching new hash request packet replacement
+rejected packet bytes altered without hash packet bytes/hash disagreement
+rejected geometry event contradicts independent witness $.ally.position[0]: value mismatch
+rejected authoritative tick does not match authoritative tick: unexpected value
+rejected monotonic timestamp reused monotonic receipt regression
+rejected process restarted under reused sim ID $.process_created: value mismatch
+rejected duplicate sim ID across instances simulation identity reused
+rejected post-result target state mutated target state drift after restore
+synthetic only, no actual producer or engine

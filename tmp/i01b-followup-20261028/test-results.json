@@ -1,0 +1,298 @@
+{
+  "root": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+  "head": "8292805143f4561a4f5258d40b7b94adf4ff5802",
+  "stage": "4 implementation + 5a complete; independent5b pending",
+  "owned": [
+    {
+      "path": "core/battle/bundle_layout.gd",
+      "sha256": "d9cd27a4688ad58a36f5b82a0b524c437536ef11ef9a18008db36b1d308db148",
+      "bytes": 6024
+    },
+    {
+      "path": "export_presets.cfg",
+      "sha256": "27bd0bba9589235ece6c597b21afdd18c433d03c0fe74918ccbb1e5cb16f8b5a",
+      "bytes": 2725
+    },
+    {
+      "path": "data/bundle-layout.json",
+      "sha256": "b8b373c9d7a91c0e58f75202eb6bce28509aa0c122ce93471e4fe09d889a53e2",
+      "bytes": 1358
+    },
+    {
+      "path": "tests/bundle_layout_data.gd",
+      "sha256": "0afeb7a5f7f09dcfe94e2c3b828091a5f5a3c3a240f5bf8ef48f3d2ca7d394b0",
+      "bytes": 2624
+    }
+  ],
+  "gates": [
+    {
+      "test": "core_rules",
+      "exit_code": 0,
+      "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-followup-20261028/logs/core_rules.log",
+      "output_log": "tmp/i01b-followup-20261028/logs/core_rules-output.log"
+    },
+    {
+      "test": "i01b_logical_clock",
+      "exit_code": 0,
+      "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-followup-20261028/logs/i01b_logical_clock.log",
+      "output_log": "tmp/i01b-followup-20261028/logs/i01b_logical_clock-output.log"
+    },
+    {
+      "test": "i01_operation_config",
+      "exit_code": 0,
+      "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-followup-20261028/logs/i01_operation_config.log",
+      "output_log": "tmp/i01b-followup-20261028/logs/i01_operation_config-output.log"
+    },
+    {
+      "test": "data_rules",
+      "exit_code": 0,
+      "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-followup-20261028/logs/data_rules.log",
+      "output_log": "tmp/i01b-followup-20261028/logs/data_rules-output.log"
+    },
+    {
+      "test": "hold_distance",
+      "exit_code": 0,
+      "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-followup-20261028/logs/hold_distance.log",
+      "output_log": "tmp/i01b-followup-20261028/logs/hold_distance-output.log"
+    },
+    {
+      "test": "commander_ai",
+      "exit_code": 0,
+      "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-followup-20261028/logs/commander_ai.log",
+      "output_log": "tmp/i01b-followup-20261028/logs/commander_ai-output.log"
+    },
+    {
+      "test": "battle_flow",
+      "exit_code": 0,
+      "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-followup-20261028/logs/battle_flow.log",
+      "output_log": "tmp/i01b-followup-20261028/logs/battle_flow-output.log"
+    },
+    {
+      "test": "bundle_layout",
+      "exit_code": 0,
+      "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-followup-20261028/logs/bundle_layout.log",
+      "output_log": "tmp/i01b-followup-20261028/logs/bundle_layout-output.log"
+    },
+    {
+      "test": "group_formation",
+      "exit_code": 0,
+      "log": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/i01b-followup-20261028/logs/group_formation.log",
+      "output_log": "tmp/i01b-followup-20261028/logs/group_formation-output.log"
+    }
+  ],
+  "geometry_checks": 56,
+  "frozen_exact_cases": 3588,
+  "frozen_exact_failures": 0,
+  "geometry_and_exact_exit": 0,
+  "invalid_loader_cases": 3,
+  "invalid_loader_exit": 0,
+  "invalid_loader_harness_attempts": 2,
+  "invalid_loader_first_attempt": "temporary harness path type inference parse failure, exit1, corrected explicit String type; production unchanged",
+  "warnings": [
+    {
+      "log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\battle_flow-output.log",
+      "line": "WARNING: [TRACE] Cannot open log: Can't open file"
+    },
+    {
+      "log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\battle_flow-output.log",
+      "line": "WARNING: [TRACE] Cannot open log: Can't open file"
+    },
+    {
+      "log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\battle_flow-output.log",
+      "line": "WARNING: [TRACE] Cannot open log: Can't open file"
+    },
+    {
+      "log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\battle_flow-output.log",
+      "line": "WARNING: 153 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+    },
+    {
+      "log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\battle_flow-output.log",
+      "line": "ERROR: 18 resources still in use at exit (run with --verbose for details)."
+    },
+    {
+      "log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\bundle_layout-output.log",
+      "line": "WARNING: 41 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+    },
+    {
+      "log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\bundle_layout-output.log",
+      "line": "ERROR: 7 resources still in use at exit (run with --verbose for details)."
+    },
+    {
+      "log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\commander_ai-output.log",
+      "line": "WARNING: 998 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+    },
+    {
+      "log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\commander_ai-output.log",
+      "line": "ERROR: 18 resources still in use at exit (run with --verbose for details)."
+    },
+    {
+      "log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\data_rules-output.log",
+      "line": "WARNING: 280 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+    },
+    {
+      "log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\data_rules-output.log",
+      "line": "ERROR: 18 resources still in use at exit (run with --verbose for details)."
+    },
+    {
+      "log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\group_formation-output.log",
+      "line": "WARNING: [TRACE] Cannot open log: Can't open file"
+    },
+    {
+      "log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\group_formation-output.log",
+      "line": "WARNING: 54 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+    },
+    {
+      "log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\group_formation-output.log",
+      "line": "ERROR: 18 resources still in use at exit (run with --verbose for details)."
+    },
+    {
+      "log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\hold_distance-output.log",
+      "line": "WARNING: 309 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+    },
+    {
+      "log": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\hold_distance-output.log",
+      "line": "ERROR: 18 resources still in use at exit (run with --verbose for details)."
+    }
+  ],
+  "preservation_verification_exit": 0,
+  "android_export_executed": false,
+  "committed": false,
+  "pushed": false,
+  "log_hashes": [
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\battle_flow-output.log",
+      "sha256": "2f607000cf4854f6d0b1052ad6c624b65044d0121586737e988d3a228d37cc9f",
+      "bytes": 1922
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\battle_flow.log",
+      "sha256": "b6ff085dcaa3c70db475bb67c7b3c86d6cb7a9972fb246ee17fd0ac223aa420e",
+      "bytes": 1644
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\bundle_layout-output.log",
+      "sha256": "eb665debfffedf5d6328f6856e442a65f49cb78339a92d7d1dd916ce7b9e99cb",
+      "bytes": 345
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\bundle_layout.log",
+      "sha256": "5f03e668bb5871fe5ac7dc6345b15de0913924a6adaa690cc99bf14d97ad6197",
+      "bytes": 92
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\commander_ai-output.log",
+      "sha256": "42172520187a576dd3edf390082b4187e58a66ce93e75085a242777c629fc52a",
+      "bytes": 437
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\commander_ai.log",
+      "sha256": "7df4d7f42d6bbf8e2c7cf88fd986917d7e45aba265b150d354cd4d50147a31c2",
+      "bytes": 181
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\core_rules-output.log",
+      "sha256": "f5edd78c23b68d37e1b7609e43fb2ee24a2e6612d10ffe500adaaac205b849d8",
+      "bytes": 92
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\core_rules.log",
+      "sha256": "f840d3c0784ee9beff94eea1b3de8aed303664f88fa73b47ccc06b422dfaa4d8",
+      "bytes": 89
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\data_rules-output.log",
+      "sha256": "a250c4b3e46fd434b7bd659bde53b5ef79913aad7d6bc1dd78252b2036c87f12",
+      "bytes": 561
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\data_rules.log",
+      "sha256": "6b08d1876d6725798108a76e12d0c6eab8b5961cb8466477f1014e1a594ba829",
+      "bytes": 301
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\data-before-output.log",
+      "sha256": "4dd282d50ae98f666fa00b0ce2d11e9b1b16d1f7c33c21a561950ef51aa7b646",
+      "bytes": 1273
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\data-before.log",
+      "sha256": "549e2928a9edb664ed86d61db68d6f044657e2f174239d421c35ab3a344ff5ed",
+      "bytes": 1255
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\data-geometry-output.log",
+      "sha256": "7ec4ccb67f9127293c8d330ba40ccbb659df1739647ca10d21ba1f9132153d8f",
+      "bytes": 110
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\data-geometry.log",
+      "sha256": "cd59725942bb1d6f5e3d5ddac9d64a7dab4639090b8e1cbce101ef433e94c9e2",
+      "bytes": 107
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\exact-output.log",
+      "sha256": "f1dbe945384e88a71a309428991de04f5a179d794de547208e86b55b8118e746",
+      "bytes": 123
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\exact.log",
+      "sha256": "eeed18cba3737d355bdf26e116731e8e6c859ae7e3edbecead72bae64e0e075b",
+      "bytes": 120
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\group_formation-output.log",
+      "sha256": "2a43d6a1330d837e9dc2ff2c1964de2a51acef189b77c3398d0775107dae77a9",
+      "bytes": 729
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\group_formation.log",
+      "sha256": "96aab73f79091a149fd7771be28bbe0543a8815665b90a9164cfd8a24321a3b5",
+      "bytes": 468
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\hold_distance-output.log",
+      "sha256": "fae8428c5c541da84e4dbb27c1b1d03fae34ac7c15dc77c14abbcab63a036889",
+      "bytes": 347
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\hold_distance.log",
+      "sha256": "c425df5f35a8dbaad58130bc3d13ba902ea21d054bf7e080b2bec68bd712ea45",
+      "bytes": 92
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\i01_operation_config-output.log",
+      "sha256": "8b1672c088e0b03d24a90bdcff4b90352d6f9bf3fadc39d3a5f753fc1f46c076",
+      "bytes": 298
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\i01_operation_config.log",
+      "sha256": "e4abb51256f8f8dc88db6aa95ddcc57d1612deb8207b155319cf6eb7bcb22bbf",
+      "bytes": 292
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\i01b_logical_clock-output.log",
+      "sha256": "abe6b954a3691267cf440e75f449885e2740a5af5b83acb494d1329bf1b0df95",
+      "bytes": 295
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\i01b_logical_clock.log",
+      "sha256": "58ddc2dc76aa1a559a65aa76788349496b2358644b424399bc4ccf71de2380c2",
+      "bytes": 291
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\invalid-loader-attempt1-output.log",
+      "sha256": "5a653178452a5d33b47b2b3252ebc75fed4457323217743e49d7f21dd22c4c89",
+      "bytes": 441
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\invalid-loader-output.log",
+      "sha256": "f05a2053d1b6df11dda5097ac20f99fd75256291d49089a83c59f442c7052562",
+      "bytes": 1445
+    },
+    {
+      "path": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01b-followup-20261028\\logs\\invalid-loader.log",
+      "sha256": "eadb5d0125577f8e47cb0f97163b1446044bb14a83fd070a1a23fb2103acf1bb",
+      "bytes": 1424
+    }
+  ]
+}

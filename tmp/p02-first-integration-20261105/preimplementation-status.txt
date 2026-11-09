@@ -1,0 +1,13 @@
+ M data/fleet-role-layout.md
+ M docs/battle-core/CHECKLIST-OPEN.md
+ M docs/battle-core/VIDEO-LOGH7-FLEET-MOTION.md
+ M docs/poc/fleet-motion-ref/index.html
+ M docs/ui/FLEET-ROLE-LAYOUT.md
+ M docs/ui/FORMATION-TAB-SPEC.md
+ M docs/ui/fleet-formations.fragment.html
+ M docs/ui/fleet-formations.html
+ M export_presets.cfg
+ M hud/ui_kit/formation_guide.gd
+ M project.godot
+ M tests/formation_guide_ui.gd
+ M "\355\224\214\353\240\210\354\235\264_\354\241\260\354\236\221\353\262\225.md"

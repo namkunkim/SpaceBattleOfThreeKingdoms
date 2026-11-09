@@ -1,0 +1,8 @@
+{
+  "exit": 1,
+  "timeout": false,
+  "user_after": {
+    "battle_traces\\battle-2026-11-08T18-10-20-4008-148693981.jsonl": "05a1ea4fec99f4637cb379d5f98a1f2bb8537571bcaf248ef4fd8e256ba5d263",
+    "logs\\godot.log": "5e92963c8b84ee4dd360e9c0562cb5370e4d756214a2d43b5010dd088ef94976"
+  }
+}

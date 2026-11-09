@@ -1,0 +1,11 @@
+accepted synthetic 9600 raw receipts
+rejected source and target eval interleaved differently event tick: unexpected value
+rejected restore result before request receipt 69: raw causal order
+rejected instance swapped under intact ordinals cross-instance receipt
+rejected missing raw receipt missing raw ordered event
+rejected raw log changed after launcher receipt raw stream drift
+rejected files and manifest jointly replaced unapproved manifest bytes
+rejected matched but unapproved closure before/after source drift
+rejected after closure drift before/after source drift
+rejected approval receipt replaced launcher manifest pin
+synthetic only

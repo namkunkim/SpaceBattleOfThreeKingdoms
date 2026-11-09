@@ -1,0 +1,249 @@
+from pathlib import Path
+import hashlib, json, re, subprocess, sys
+
+root = Path.cwd()
+evidence = root / 'tmp/p02-next-20261107'
+previous = root / 'tmp/p02-first-integration-20261105'
+exe = Path('C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe')
+attempt = int(sys.argv[1])
+assert 1 <= attempt <= 6
+out = evidence / f'attempt{attempt}'
+out.mkdir()
+fixtures = root / 'tests/fixtures/p02'
+cli = 'tests/autoresolve.gd'
+option = '--operation-worker'
+cache = root / '.godot/global_script_class_cache.cfg'
+expected_cache = '0eb214ebcc65cd2ca7b9d98dc83f61a9c170ca75b1b23acf4c3c58fdfb550ab1'
+
+def digest(value):
+    return hashlib.sha256(value).hexdigest()
+
+def sha(path):
+    return digest(path.read_bytes())
+
+def save(path, value):
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2), encoding='utf-8')
+
+def fixture(name):
+    return fixtures / f'{name}.json'
+
+def load(path):
+    return json.loads(path.read_text(encoding='utf-8'))
+
+def input_case(name, **fields):
+    path = out / f'{name}.json'
+    save(path, {**load(fixture('worker-poc')), **fields})
+    return path
+
+def copy_with(src, target, old, new):
+    original = src.read_bytes()
+    assert old in original and new not in original
+    target.write_bytes(original.replace(old, new))
+    assert target.read_bytes().replace(new, old) == original
+
+before_cli = out / 'legacy-before.gd'
+before_cli.write_bytes((evidence / 'before/autoresolve.gd.txt').read_bytes())
+before_resolver = out / 'world-resolver-before.gd'
+resolver_original = (evidence / 'before/auto_resolver.gd.txt').read_bytes()
+resolver_prefix, resolver_body = resolver_original.split(b'\n',1)
+assert resolver_prefix.strip() == b'class_name AutoResolver'
+before_resolver.write_bytes(resolver_body)
+assert resolver_prefix + b'\n' + before_resolver.read_bytes() == resolver_original
+world_source = root / 'tests/world_link.gd'
+world_before = out / 'world-link-before.gd'
+world_source_bytes = world_source.read_bytes()
+world_after = out / 'world-link-after-observation.gd'
+world_probe_line = b'\tprint("P02_WORLD_OUTCOME " + JSON.stringify(r1.outcome.to_dict()))\n'
+world_probe_marker = b'\tvar t1 := Time.get_ticks_msec()'
+assert world_source_bytes.count(world_probe_marker) == 1
+world_after.write_bytes(world_source_bytes.replace(world_probe_marker,world_probe_line+world_probe_marker))
+assert world_after.read_bytes().replace(world_probe_line,b'') == world_source_bytes
+world_prefix = b'\n\nconst PreResolver := preload("res://' + before_resolver.relative_to(root).as_posix().encode() + b'")'
+world_before.write_bytes(world_after.read_bytes().replace(b'AutoResolver.new', b'PreResolver.new').replace(b'extends SceneTree', b'extends SceneTree'+world_prefix, 1))
+assert world_before.read_bytes().replace(world_prefix,b'').replace(b'PreResolver.new',b'AutoResolver.new') == world_after.read_bytes()
+copy_with(root/'tests/p02_headless_adapter.gd', out/'existing-p02.gd', b'res://tmp/p02-first-integration-20261105/attempt1-observations.json', f'res://tmp/p02-next-20261107/attempt{attempt}/existing-p02-observations.json'.encode())
+copy_with(root/'tests/i01b_private_state.gd', out/'existing-private.gd', b'res://tmp/i01b-p2c-resume-20261101/attempt5-observations.json', f'res://tmp/p02-next-20261107/attempt{attempt}/existing-private-observations.json'.encode())
+
+# Fix inputs, expected outcomes, and every invocation before the first child.
+jobs = []
+def job(label, script, args=(), expected_exit=0, error=None, output=None, expected_diagnostics=None):
+    command = [str(exe), '--headless', '--path', str(root), '--log-file', str(out/f'{label}.engine.log'), '-s', str(script)]
+    if args:
+        command += ['--', *map(str,args)]
+    jobs.append(dict(label=label, command=command, expected_exit=expected_exit, error=error, output=str(output) if output else None, expected_diagnostics=expected_diagnostics))
+
+def reject(label, args, reason, path, output=None):
+    job(label, cli, args, expected_exit=1, error=(reason,path), output=output)
+
+poc = fixture('worker-poc')
+malformed = out/'malformed.json'
+malformed.write_bytes(b'{')
+shape = out/'shape.json'
+shape.write_bytes(b'[]')
+modules = load(poc)['profile']
+modules['combat'] = {'morale': {}}
+rogue = load(poc)['profile']
+rogue['combat'] = {'unexpected': True}
+reinf = load(poc)['profile']
+reinf['reinf'] = [{'ships': 1}]
+sentinel = out/'sentinel.json'
+sentinel.write_bytes(b'preserve-existing-output\r\n')
+sentinel_sha = sha(sentinel)
+sentinel_dir = out/'sentinel-dir.json'
+sentinel_dir.mkdir()
+absent_parent = out/'missing-parent'/'result.json'
+
+job('api', 'tests/p02_worker_adapter.gd')
+for name in ('poc','services','timeout-poc'):
+    for mode in ('worker','input'):
+        output = out/f'{mode}-{name}-result.json'
+        job(f'{mode}-{name}', cli, (f'--operation-{mode}',fixture(f'worker-{name}'),'--out',output), output=output)
+
+negative = out/'should-not-exist.json'
+pair = ('--out', negative)
+reject('mixed', (option,poc,'--operation-input',poc,*pair), 'conflicting_option','--operation-input',negative)
+reject('duplicate', (option,poc,option,poc,*pair), 'duplicate_option',option,negative)
+reject('missing-value', (option,*pair), 'missing_option_value',option,negative)
+reject('missing-out', (option,poc), 'missing_option','--out')
+for label, path, reason, field in [
+    ('parse', malformed,'invalid_json','input'),
+    ('shape', shape,'invalid_container','$'),
+    ('attack5',input_case('attack-input',policy='attack5'),'unsupported_worker_policy','policy'),
+    ('empty-controls',input_case('empty-controls-input',initial_controls=[]),'worker_requires_delegate','initial_controls'),
+    ('direct-controls',input_case('direct-controls-input',initial_controls=['direct','delegate']),'worker_requires_delegate','initial_controls'),
+    ('limit',input_case('limit-input',max_ticks=18001),'worker_tick_limit','max_ticks'),
+    ('modules',input_case('modules-input',profile=modules),'unsupported_module_config','profile.combat'),
+    ('combat-content',input_case('combat-content-input',profile=rogue),'unsupported_combat_content','profile'),
+    ('reinforcement',input_case('reinforcement-input',profile=reinf),'unsupported_reinforcement','profile.reinf'),
+    ('checkpoint',input_case('checkpoint-input',checkpoint={}),'unsupported_checkpoint','checkpoint')]:
+    reject(label,(option,path,*pair),reason,field,negative)
+reject('existing-file',(option,poc,'--out',sentinel),'output_exists','out')
+reject('existing-dir',(option,poc,'--out',sentinel_dir),'output_exists','out')
+reject('missing-parent',(option,poc,'--out',absent_parent),'output_parent_missing','out',absent_parent)
+
+for name in ('poc','services'):
+    for side, script in [('before',before_cli),('after',cli)]:
+        output=out/f'sync-{name}-{side}.json'
+        job(f'sync-{name}-{side}',script,('--operation-input',fixture(name),'--out',output),output=output)
+for side, script in [('before',before_cli),('after',cli)]:
+    output=out/f'legacy-{side}.json'
+    job(f'legacy-{side}',script,('--runs','1','--policies','none','--out',output),output=output)
+legacy_opt='--operation-input'
+legacy_poc=fixture('poc')
+charge=out/'charge.json'
+save(charge,{**load(legacy_poc),'policy':'charge30'})
+stock=out/'stock.json'
+save(stock,{**load(legacy_poc),'profile':load(root/'data/profiles/poc_corridor.json'),'initial_controls':[]})
+for label, args, reason, path in [
+    ('N01',[legacy_opt],'missing_option_value',legacy_opt),
+    ('N03',[legacy_opt,malformed,*pair],'invalid_json','input'),
+    ('N14',[legacy_opt,charge,*pair],'unsupported_policy','policy'),
+    ('N15',[legacy_opt,legacy_poc,'--profile','red_cliffs',*pair],'conflicting_option','--profile'),
+    ('Z01',[legacy_opt,legacy_poc],'missing_option','--out'),
+    ('Z02',[legacy_opt,'',*pair],'missing_option_value',legacy_opt),
+    ('Z03',[legacy_opt,legacy_poc,'--bogus',*pair],'unknown_option','--bogus'),
+    ('Z04',[legacy_opt,legacy_poc,*pair,*pair],'duplicate_option','--out'),
+    ('Z05',[legacy_opt,out/'absent.json',*pair],'input_read_failed','input'),
+    ('Z06',[legacy_opt,shape,*pair],'invalid_container','$'),
+    ('Z07',[legacy_opt,stock,*pair],'unsupported_reinforcement','profile.reinf'),
+    ('Z08',[legacy_opt,legacy_poc,'--out',sentinel],'output_exists','out'),
+    ('Z09',[legacy_opt,legacy_poc,'--out',absent_parent],'output_parent_missing','out'),
+    ('Z10',[legacy_opt,legacy_poc,'--out',out/'bad*.json'],'output_open_failed','out'),
+    *[(flag,[legacy_opt,legacy_poc,flag,*pair],'unknown_option',flag) for flag in ('--no-chain','--no-m9','--wind')]]:
+    reject(label,args,reason,path,negative)
+
+job('existing-p02',out/'existing-p02.gd')
+job('existing-private',out/'existing-private.gd')
+job('existing-core','tests/core_rules.gd')
+job('world-before',world_before)
+job('world-after',world_after)
+job('world-stock','tests/world_link.gd')
+
+def freeze_paths():
+    paths = {cache, root/'project.godot', Path(__file__), exe, exe.with_name(exe.name.replace('_console','')),
+             evidence/'PLAN.md', evidence/'REVIEW-PLAN-INDEPENDENT.md'}
+    for sub in ['core','scripts','tests','data','scenes','ui','hud','view','input']:
+        paths.update(p for p in (root/sub).rglob('*') if p.is_file() and p.suffix in {'.gd','.json','.tscn','.tres','.uid'})
+    paths.update(p for p in out.iterdir() if p.is_file())
+    return sorted(paths)
+
+assert sha(cache)==expected_cache
+frozen = {str(p): {'bytes':p.stat().st_size, 'sha256':sha(p)} for p in freeze_paths()}
+save(out/'freeze.json',{'attempt':attempt,'limit':6,'inputs':frozen,'jobs':jobs,
+    'oracles':{'expected_services_events':['contact','salvo','ship_lost','battle_end'],
+               'timeout':{'tick':1,'clock_ms':100,'end_tick':-1,'end_ms':-1,'over':False,'reason':'timeout'},
+               'natural':'POC/services terminal battle_end at summary.end_tick',
+               'fixture_edits':'Only policy none, all delegate controls, max_ticks 18000 for poc/services and 1 for timeout-poc'}})
+for source in [Path(__file__), root/'scripts/world/auto_resolver.gd', root/cli, root/'tests/p02_worker_adapter.gd']:
+    (out/(source.name+'.source.txt')).write_bytes(source.read_bytes())
+
+def run(j):
+    assert sha(cache)==expected_cache
+    label = j['label']
+    stdout=out/f'{label}.stdout'
+    stderr=out/f'{label}.stderr'
+    with stdout.open('wb') as stream, stderr.open('wb') as err:
+        try:
+            proc = subprocess.run(j['command'],cwd=root,stdout=stream,stderr=err,timeout=240)
+            exit_code = proc.returncode
+        except subprocess.TimeoutExpired:
+            exit_code = None
+    assert sha(cache)==expected_cache
+    text=stdout.read_text(encoding='utf-8', errors='replace')
+    errors=stderr.read_text(encoding='utf-8', errors='replace')
+    combined=text+'\n'+errors
+    diagnostics=dict(script_errors=combined.count('SCRIPT ERROR:'), errors=len(re.findall(r'^ERROR:',combined,re.M)), warnings=len(re.findall(r'^WARNING:',combined,re.M)))
+    logs = [stdout,stderr,out/f'{label}.engine.log']
+    row = dict(**j, actual_exit=exit_code,diagnostics=diagnostics, log_shas={x.name:sha(x) for x in logs if x.exists()})
+    ok = exit_code==j['expected_exit'] and not diagnostics['script_errors']
+    if j['error']:
+        observed = [json.loads(line.removeprefix('OPERATION_REJECT ')) for line in text.splitlines() if line.startswith('OPERATION_REJECT ')]
+        ok = ok and observed==[dict(ok=False,error=j['error'][0],path=j['error'][1])] and 'PASS' not in text
+        ok = ok and not diagnostics['errors'] and not diagnostics['warnings']
+        if j['output']:
+            ok = ok and not Path(j['output']).exists()
+        row['observed']=observed
+    elif j['output']:
+        path=Path(j['output'])
+        ok = ok and path.is_file() and 'PASS' in text and not diagnostics['errors'] and not diagnostics['warnings']
+        if path.is_file():
+            row['output_sha256']=sha(path)
+    elif label=='api':
+        ok = ok and 'P02_WORKER_CHECKS ' in text and not diagnostics['errors'] and not diagnostics['warnings']
+    row['pass'] = bool(ok)
+    save(out/f'{label}.exit.json',row)
+    print(label, exit_code, diagnostics, 'pass', bool(ok), flush=True)
+    return row
+
+rows=[]
+for job_spec in jobs:
+    row=run(job_spec)
+    rows.append(row)
+    if row['actual_exit'] is None or row['diagnostics']['script_errors']:
+        break
+
+comparisons = {}
+def compare(name, test):
+    try:
+        comparisons[name]=bool(test())
+    except (OSError,ValueError,KeyError,IndexError):
+        comparisons[name]=False
+def comparable(name):
+    w = load(out/f'worker-{name}-result.json')
+    s = load(out/f'input-{name}-result.json')
+    return w['meta'].pop('executor')=='worker' and w==s and s['meta']['input_file_sha256']==sha(fixture(f'worker-{name}'))
+for name in ('poc','services','timeout-poc'):
+    compare(name+' worker vs sync',lambda:comparable(name))
+for name in ('poc','services'):
+    compare(name+' legacy sync exact bytes',lambda:sha(out/f'sync-{name}-before.json')==sha(out/f'sync-{name}-after.json'))
+compare('legacy stats exact bytes',lambda:sha(out/'legacy-before.json')==sha(out/'legacy-after.json'))
+def world_result(side):
+    text = (out/f'world-{side}.stdout').read_text(encoding='utf-8')
+    line, = re.findall(r'^P02_WORLD_OUTCOME (.*)',text,re.M)
+    return line if 'WORLD_LINK_PASS' in text else None
+compare('world canonical legacy tests', lambda:world_result('before') is not None and world_result('before')==world_result('after'))
+compare('existing target bytes and directory',lambda:sha(sentinel)==sentinel_sha and list(sentinel_dir.iterdir())==[])
+compare('frozen inputs unchanged',lambda:all(sha(Path(p))==record['sha256'] for p,record in frozen.items()))
+passed=len(rows)==len(jobs) and all(row['pass'] for row in rows) and all(comparisons.values())
+save(out/'results.json',dict(rows=rows, comparisons=comparisons, passed=passed))
+sys.exit(0 if passed else 1)

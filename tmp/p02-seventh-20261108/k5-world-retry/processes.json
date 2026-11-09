@@ -1,0 +1,26 @@
+[
+  [
+    "before",
+    "complete",
+    0,
+    true
+  ],
+  [
+    "before",
+    "cancel",
+    0,
+    true
+  ],
+  [
+    "after",
+    "complete",
+    0,
+    true
+  ],
+  [
+    "after",
+    "cancel",
+    0,
+    true
+  ]
+]

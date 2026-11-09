@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "unique_rows": 7,
+  "counterexamples": 3,
+  "input_count": 16,
+  "input_before_sha": "68575CE780744DDE3DC3866BD4E3DD94B80DE719219E1CE23F8776BAEBC929C8",
+  "input_after_sha": "68575CE780744DDE3DC3866BD4E3DD94B80DE719219E1CE23F8776BAEBC929C8",
+  "anchor_mismatches": [],
+  "godot_executed": false
+}

@@ -1,0 +1,23 @@
+[
+  {
+    "lane": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-pc-next2-20261109\\attempt-01\\before\\import",
+    "diagnostics": {},
+    "termination": []
+  },
+  {
+    "lane": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-pc-next2-20261109\\attempt-01\\before\\result",
+    "diagnostics": {
+      "ERROR: Cannot open file 'res://scenes/WorldMap.tscn'.": 1,
+      "ERROR: Failed loading resource: res://scenes/WorldMap.tscn.": 1
+    },
+    "termination": []
+  },
+  {
+    "lane": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-pc-next2-20261109\\attempt-01\\before\\pause",
+    "diagnostics": {
+      "ERROR: Cannot open file 'res://scenes/WorldMap.tscn'.": 1,
+      "ERROR: Failed loading resource: res://scenes/WorldMap.tscn.": 1
+    },
+    "termination": []
+  }
+]

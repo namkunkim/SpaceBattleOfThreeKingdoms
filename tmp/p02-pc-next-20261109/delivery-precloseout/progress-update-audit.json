@@ -1,0 +1,38 @@
+{
+  "before": {
+    "utc": "2026-11-08T18:45:06.866159+00:00",
+    "branch": "codex/feature-i01b-not_remove",
+    "head": "0be09755b70378286105972f35ac5b7031715664",
+    "index_sha256": "6980bad4df2570c03e76cd964aec5bb0b71ec5cbdef69f4b022e4df1a2aca57a",
+    "staged": "",
+    "files": {
+      "docs/battle-core/pc-campaign-design/P02-PROGRESS-CHECKLIST.md": "eb3f612e0cbfa8a99891af8336e78dab74a10733c2318adeedb88ef4d009395a",
+      "view/world/world_map_screen.gd": "e40f0a99954a11942a9256e260b6c40121cac7051ba4db69f33698bbf82b6ba4",
+      "tests/p02_worker_adapter.gd": "393b20d8e72eb86d13ab7ee10d5d36d97a592e9c03b2e4664f380e34c4f3237e",
+      "core/battle/operation_private_state.gd": "46b6fe191166ec3dcdb620f51c3ccd391a9080f52289517ae804bf86cecc1ea3",
+      "project.godot": "0b5a634a44442b90154187431c83da3b755e36a261eb04a29f9a709c529f3fc2",
+      "tests/world_link.gd": "2058f703db8eb86e03f7c4470d9b06c2364565299b7fa5eecd984390591f8080",
+      "scripts/world_link.gd": "a3658b7ce2a3b2ba7e28ec9002fc014592cf72a2b6fd09cb27c374a89c2e28f0"
+    }
+  },
+  "after": {
+    "utc": "2026-11-08T18:45:07.017567+00:00",
+    "branch": "codex/feature-i01b-not_remove",
+    "head": "0be09755b70378286105972f35ac5b7031715664",
+    "index_sha256": "6980bad4df2570c03e76cd964aec5bb0b71ec5cbdef69f4b022e4df1a2aca57a",
+    "staged": "",
+    "files": {
+      "docs/battle-core/pc-campaign-design/P02-PROGRESS-CHECKLIST.md": "eb6e821190af4513b970761e6692646d1aa847682f3f4a37d0727b457f42bba5",
+      "view/world/world_map_screen.gd": "e40f0a99954a11942a9256e260b6c40121cac7051ba4db69f33698bbf82b6ba4",
+      "tests/p02_worker_adapter.gd": "393b20d8e72eb86d13ab7ee10d5d36d97a592e9c03b2e4664f380e34c4f3237e",
+      "core/battle/operation_private_state.gd": "46b6fe191166ec3dcdb620f51c3ccd391a9080f52289517ae804bf86cecc1ea3",
+      "project.godot": "0b5a634a44442b90154187431c83da3b755e36a261eb04a29f9a709c529f3fc2",
+      "tests/world_link.gd": "2058f703db8eb86e03f7c4470d9b06c2364565299b7fa5eecd984390591f8080",
+      "scripts/world_link.gd": "a3658b7ce2a3b2ba7e28ec9002fc014592cf72a2b6fd09cb27c374a89c2e28f0"
+    }
+  },
+  "only_changed_protected_file": "docs/battle-core/pc-campaign-design/P02-PROGRESS-CHECKLIST.md",
+  "added_hunk_sha256": "abcfac0bb50b403c843af6a91bdc724d4e863d837b1acbae135498abaa3008c7",
+  "scoped_diff_check_exit": 0,
+  "diff_check_diagnostics": "warning: in the working copy of 'docs/battle-core/pc-campaign-design/P02-PROGRESS-CHECKLIST.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'scripts/world_link.gd', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'view/world/world_map_screen.gd', LF will be replaced by CRLF the next time Git touches it\n"
+}

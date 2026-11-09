@@ -1,0 +1,14 @@
+{
+  "manifest_sha256": "223EB53C920BD7BD8662962C0196EE2E02056962636ED4306725439D94C48ECD",
+  "executable": "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+  "arguments": [
+    "--path",
+    "C:\\Users\\nk782\\AppData\\Local\\Packages\\openai.codex_2p2nqsd0c76g0\\AC\\#!sandbox.{6ae04bb3-5825-42f0-99ab-a6e7f134566f}\\Temp\\p05-access-cbedcbc9f83c44ada3dd6f01954bf82e",
+    "--log-file",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\campaign-feature-consolidation-20261109\\p05-headless\\Headless.log",
+    "--headless",
+    "--",
+    "--mode=Headless",
+    "--evidence=C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\campaign-feature-consolidation-20261109\\p05-headless"
+  ]
+}

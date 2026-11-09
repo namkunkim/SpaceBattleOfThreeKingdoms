@@ -1,0 +1,4 @@
+{
+  "exit_code": 1,
+  "intent": "Expected explicit data errors and empty offsets, no normal grid fallback"
+}

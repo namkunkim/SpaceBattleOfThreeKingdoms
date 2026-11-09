@@ -1,0 +1,45 @@
+{
+  "label": "--no-m9",
+  "command": [
+    "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms",
+    "--log-file",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt3\\--no-m9.engine.log",
+    "-s",
+    "tests/autoresolve.gd",
+    "--",
+    "--operation-input",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tests\\fixtures\\p02\\poc.json",
+    "--no-m9",
+    "--out",
+    "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt3\\should-not-exist.json"
+  ],
+  "expected_exit": 1,
+  "error": [
+    "unknown_option",
+    "--no-m9"
+  ],
+  "output": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\p02-next-20261107\\attempt3\\should-not-exist.json",
+  "expected_diagnostics": null,
+  "actual_exit": 1,
+  "diagnostics": {
+    "script_errors": 0,
+    "errors": 0,
+    "warnings": 0
+  },
+  "log_shas": {
+    "--no-m9.stdout": "05533b62d13499896af2f519fa6d5b412241c8b93fbe0510682b49f988c28bdf",
+    "--no-m9.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "--no-m9.engine.log": "e04fdefa3f2f9abc27c374d2f4144c34146ce1d5f2855b1d4e301d3c363ee426"
+  },
+  "observed": [
+    {
+      "error": "unknown_option",
+      "ok": false,
+      "path": "--no-m9"
+    }
+  ],
+  "pass": true
+}

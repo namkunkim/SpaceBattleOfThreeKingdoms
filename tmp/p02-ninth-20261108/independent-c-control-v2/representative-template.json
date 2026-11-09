@@ -1,0 +1,21 @@
+{
+  "schema": "independent-source-representative-transcript-v1",
+  "status": "SOURCE_TEMPLATE_ONLY_NOT_RUNTIME_OR_APPROVED_ORACLE",
+  "representative_case": {"seed": {"type": "int", "value": 0}, "kind": {"type": "String", "value": "estimated"}, "lane_count": 2, "actors_per_lane": ["a", "b"], "roster": [{"id": {"type": "int", "value": 1}, "side": {"type": "int", "value": 0}, "name": "A", "initial_position": {"type": "Vector2", "x": 400, "y": 450}, "composition": [["SHP-01", 10]]}, {"id": {"type": "int", "value": 2}, "side": {"type": "int", "value": 1}, "name": "B", "initial_position": {"type": "Vector2", "x": 500, "y": 450}, "moved_position": {"type": "Vector2", "x": 1500, "y": 450}, "composition": [["SHP-02", 4]]}]},
+  "config": {"hz": 10, "eval_period_s": 1, "period_ticks": 10, "suffix_length": 11, "view_r": 0, "radar_r": 0, "ship_points_div": 1},
+  "order_per_lane": [
+    {"sequence": 1, "operation": "capture_a", "packet_raw": null, "packet_sha256": null},
+    {"sequence": 2, "operation": "clear_b_contacts_then_check_fingerprint_divergence", "fingerprints": null},
+    {"sequence": 3, "operation": "restore_first", "request_id": null, "result_ok_required": true, "identity_pairs": null, "source_and_target_typed_all": null},
+    {"sequence": 4, "operation": "restore_repeat", "request_id": null, "result_ok_required": true, "target_all_unchanged_required": true},
+    {"sequence": 5, "operation": "mutate_original_packet", "path": ["detection", "contacts", 0, 2, "pos"], "path_key_types": ["String", "String", "int", "int", "String"], "new_value": {"type": "Vector2", "x": 0, "y": 0}, "before_after_packet_raw": null, "before_after_a_and_b_all": null},
+    {"sequence": 6, "operation": "capture_wrong_set_live_position_then_restore_wrong", "request_id": null, "result_ok_required": true, "position": {"type": "Vector2", "x": 1500, "y": 450}, "fingerprints_diverge_required": true},
+    {"sequence": 7, "operation": "capture_a_then_restore_repaired_first", "request_id": null, "result_ok_required": true, "identity_pairs": null},
+    {"sequence": 8, "operation": "restore_repaired_repeat", "request_id": null, "result_ok_required": true, "target_all_unchanged_required": true},
+    {"sequence": 9, "operation": "suffix", "iterations": 11, "iteration_order": ["a.step", "b.step", "a.fingerprint", "b.fingerprint", "a.all", "b.all", "a.drain_events", "b.drain_events"], "each_iteration_observation": null}
+  ],
+  "identity_schema": {"required_container_pairs": ["target.root/source.root", "target.root/packet.root", "target.side[0]/source.side[0]", "target.side[0]/packet.side[0]", "target.side[1]/source.side[1]", "target.side[1]/packet.side[1]"], "required_record_pairs": "for every independently approved typed pre-call packet key in each side, match corresponding target/source and target/packet", "expected_is_same": false, "keys_and_actual_results": null},
+  "suffix_observation_schema": {"iteration_index": "int 0..10", "tick_a": null, "tick_b": null, "fingerprint_a": null, "fingerprint_b": null, "typed_all_a": null, "typed_all_b": null, "drain_a_ordered": null, "drain_b_ordered": null, "command_log_before_after": null, "pending_queue_before_after": null},
+  "envelope_schema": {"run_receipt": null, "os_process_receipt": null, "lane_id": null, "case_id": null, "actor_id": null, "request_id": null, "global_ordinal": null, "raw_stdout_sha256": null, "ordered_raw_line_offsets": null, "case_pin": null},
+  "unresolved": ["actual records and side key sets", "actual ticks, events and fingerprints", "actual identity booleans", "actual packet and all bytes and serialization metadata", "all opaque IDs and process receipts", "independent runtime oracle and explicit approval"]
+}

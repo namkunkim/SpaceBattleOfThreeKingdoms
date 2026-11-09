@@ -1,0 +1,12 @@
+{
+  "tracked": [],
+  "untracked": [
+    "core/battle/operation_profile.gd",
+    "tests/fixtures/i01/invalid_definitions.json",
+    "tests/fixtures/i01/valid_definition.json",
+    "tests/i01_operation_config.gd"
+  ],
+  "generated_backed_up": 44,
+  "metadata_probe_raw_match": true,
+  "backup": "C:\\WorkSpace\\SpaceBattleOfThreeKingdoms\\tmp\\i01a-stage-20261027-implementation-spec\\generated-metadata-backup-2e8641a264014c24bf47a61c8f9ec506"
+}

@@ -1,0 +1,35 @@
+{
+  "created_utc": "2026-11-04T14:14:36.395498+00:00",
+  "new_stage_main_runner_attempts": 2,
+  "limit": 6,
+  "previous_p2c_main_runner_attempts": 5,
+  "attempt1": {
+    "actual_exit": 1,
+    "outcome": "ParseError: direct class resource_path access in canonical fixture check; no cases executed"
+  },
+  "attempt2": {
+    "actual_exit": 0,
+    "case_count": 20,
+    "case_kinds": {
+      "poc": 10,
+      "services": 10
+    },
+    "checks": 20099,
+    "rejections": {
+      "busy": "busy",
+      "closed": "unprepared_owner",
+      "different_controls": "replacement_context_mismatch",
+      "different_profile": "replacement_context_mismatch",
+      "different_seed": "replacement_context_mismatch",
+      "late_empty_form": "fleet_empty_form",
+      "unprepared": "unprepared_owner",
+      "unsupported_hz": "unsupported_hz"
+    },
+    "named_rejection_count": 8,
+    "refusal_calls": 9,
+    "failed": false,
+    "script_error_count": 0,
+    "error_lines": [],
+    "leak_lines": []
+  }
+}
