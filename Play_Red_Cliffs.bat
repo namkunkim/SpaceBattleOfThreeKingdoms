@@ -1,6 +1,6 @@
 @echo off
 setlocal
-set "GAME_DIR=C:\WorkSpace\SpaceBattleOfThreeKingdoms"
+set "GAME_DIR=%~dp0."
 set "GAME_EXE=C:\Tools\Godot\Godot_v4.7.2-stable_win64.exe"
 
 if not exist "%GAME_DIR%\project.godot" (
