@@ -52,6 +52,7 @@ var _diff_note: Label
 var _mode_note: Label
 var _sortie_t := 0.0
 var _sortie_i := 0
+var _sortie_origin := {}
 var _difficulty := "표준"
 var _mode := "direct"
 var _res_labels := {}
@@ -550,6 +551,17 @@ func make_brief(seed := -1) -> BattleBrief:
 func sortie(seed := -1) -> void:
 	if state == "sortie" or state == "resolve":
 		return
+	_sortie_origin = {
+		"state": state,
+		"brief": brief,
+		"card_visible": _card.visible,
+		"result_visible": _result.visible,
+		"cta_visible": _cta.visible,
+		"legend_visible": _legend.visible,
+		"input_lock": canvas.input_lock,
+		"arrows": canvas.arrows,
+		"owners": canvas.owners_rgn,
+	}
 	brief = make_brief(seed)
 	sound.play("confirm_heavy")
 	state = "sortie"
@@ -591,9 +603,22 @@ func _finish_sortie() -> void:
 	_caption.visible = false
 	_skip.visible = false
 	var link := _link()
+	var origin := _sortie_origin
+	_sortie_origin = {}
 	if brief.mode == "direct" and link:
 		state = "leaving"
-		link.go_battle(brief)
+		if link.go_battle(brief) != OK:
+			state = origin.state
+			brief = origin.brief
+			_card.visible = origin.card_visible
+			_result.visible = origin.result_visible
+			_cta.visible = origin.cta_visible
+			_legend.visible = origin.legend_visible
+			canvas.input_lock = origin.input_lock
+			canvas.arrows = origin.arrows
+			canvas.set_region_owners(origin.owners, false)
+			_update_inset()
+			_show_chip("전장에 들어갈 수 없습니다. 다시 출격해 주세요.")
 		return
 	_start_resolve()
 

@@ -5,15 +5,25 @@ extends RefCounted
 
 const W := preload("res://hud/ui_kit/deck_widgets.gd")
 
+const WORLD_RETURN_NOTICE := "천하로 돌아가지 못했습니다. 다시 눌러 주세요."
+
+static func world_return_notice() -> Label:
+	var notice := UiTheme.label(WORLD_RETURN_NOTICE, "Body", 16, UiTheme.WARN)
+	notice.name = "WorldReturnNotice"
+	notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	notice.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	notice.hide()
+	return notice
+
 static func build_all(deck: Control) -> Dictionary:
 	var out := {
 		"title": TitleScreen.new(deck),
 		"prologue": PrologueScreen.new(deck),
 		"brief": BriefScreen.new(deck),
-		"pause": PauseScreen.new(deck),
+		"pause": PauseScreen.new(deck, world_return_notice()),
 		"settings": SettingsScreen.new(deck, "title"),
 		"settings_pause": SettingsScreen.new(deck, "pause"),
-		"result": ResultScreen.new(deck),
+		"result": ResultScreen.new(deck, world_return_notice()),
 		"roster": preload("res://hud/ui_kit/roster_screen.gd").new(deck),
 		"org": preload("res://hud/ui_kit/org_screen.gd").new(deck),
 		"formation_guide": preload("res://hud/ui_kit/formation_guide.gd").new(deck),
@@ -305,7 +315,8 @@ class BriefScreen extends Control:
 class PauseScreen extends Control:
 	var deck: Control
 	var title_btn: Button
-	func _init(d: Control) -> void:
+	var return_notice: Label
+	func _init(d: Control, notice: Label) -> void:
 		deck = d
 		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		mouse_filter = Control.MOUSE_FILTER_STOP
@@ -315,7 +326,11 @@ class PauseScreen extends Control:
 		col.position = Vector2(36, 150)
 		col.add_theme_constant_override("separation", 2)
 		p.add_child(col)
-		var specs := [["계속", func(): deck.resume()], ["설정", func(): deck.show_screen("settings_pause")], ["처음부터", func(): deck.restart()], ["타이틀로", func(): deck.to_title()], ["종료", func(): deck.get_tree().quit()]]
+		return_notice = notice
+		return_notice.position = Vector2(36, 436)
+		return_notice.size = Vector2(344, 32)
+		p.add_child(return_notice)
+		var specs := [["계속", func(): deck.resume()], ["설정", func(): deck.show_screen("settings_pause")], ["처음부터", func(): deck.restart()], ["타이틀로", func(): deck.to_title(return_notice)], ["종료", func(): deck.get_tree().quit()]]
 		for i in specs.size():
 			var b := ScreenKit.menu_button(specs[i][0], i == 0)
 			b.custom_minimum_size = Vector2(300, 56 if i == 0 else 52)
@@ -356,6 +371,7 @@ class PauseScreen extends Control:
 			UiDraw.diamond(c, Vector2(x + 5, c.size.y - 49), 4.0, UiTheme.GOLD)
 			UiDraw.text(c, Vector2(x + 18, c.size.y - 44), "자리를 비워 자동으로 멈췄습니다. 전황은 그대로입니다.", "regular", 13, UiTheme.INK_2)
 	func on_show() -> void:
+		return_notice.hide()
 		if title_btn:
 			title_btn.text = deck.title_label()
 		queue_redraw()
@@ -585,7 +601,8 @@ class ResultScreen extends Control:
 	var deck: Control
 	var t := 0.0
 	var title_btn: Button
-	func _init(d: Control) -> void:
+	var return_notice: Label
+	func _init(d: Control, notice: Label) -> void:
 		deck = d
 		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		mouse_filter = Control.MOUSE_FILTER_STOP
@@ -602,19 +619,28 @@ class ResultScreen extends Control:
 		title.text = "타이틀로"
 		title.custom_minimum_size = Vector2(150, 54)
 		title.focus_mode = Control.FOCUS_NONE
-		title.pressed.connect(func(): deck.to_title())
+		title.pressed.connect(func(): deck.to_title(return_notice))
 		hb.add_child(title)
 		title_btn = title
 		var again := ScreenKit.menu_button("다시 출격", true)
 		again.custom_minimum_size = Vector2(240, 54)
 		again.pressed.connect(func(): deck.restart())
 		hb.add_child(again)
+		return_notice = notice
+		return_notice.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		add_child(return_notice)
+		return_notice.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+		return_notice.offset_left = -230
+		return_notice.offset_right = 230
+		return_notice.offset_top = -48
+		return_notice.offset_bottom = -8
 	func _process(delta: float) -> void:
 		delta = UiDraw.real_dt(delta)
 		t += delta
 		queue_redraw()
 	func on_show() -> void:
 		t = 0.0
+		return_notice.hide()
 		title_btn.text = deck.title_label()
 	func _draw() -> void:
 		var b: Node = deck.battle

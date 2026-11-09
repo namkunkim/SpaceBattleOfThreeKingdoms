@@ -15,18 +15,35 @@ var last_mode := "direct"
 func routed() -> bool:
 	return brief != null
 
-func go_battle(b: BattleBrief) -> void:
+func go_battle(b: BattleBrief) -> Error:
+	var previous_brief := brief
+	var previous_outcome := outcome
+	var previous_difficulty := last_difficulty
+	var previous_mode := last_mode
 	brief = b
 	outcome = null
 	last_difficulty = b.difficulty
 	last_mode = b.mode
-	get_tree().change_scene_to_file(BATTLE_SCENE)
+	var error := get_tree().change_scene_to_file(BATTLE_SCENE)
+	if error != OK:
+		brief = previous_brief
+		outcome = previous_outcome
+		last_difficulty = previous_difficulty
+		last_mode = previous_mode
+	return error
 
 # 전장에서 천하로 돌아온다. o가 null이면 전투를 끝내지 않고 나온 것이다.
-func back_to_world(o: BattleOutcome) -> void:
+func back_to_world(o: BattleOutcome) -> Error:
+	var previous_brief := brief
+	var previous_outcome := outcome
 	outcome = o
 	brief = null
-	get_tree().change_scene_to_file(WORLD_SCENE)
+	var error := get_tree().change_scene_to_file(WORLD_SCENE)
+	if error != OK:
+		brief = previous_brief
+		outcome = previous_outcome
+		push_warning("WORLD_RETURN_REJECTED error=%d" % error)
+	return error
 
 # 천하 지도가 결과를 한 번 가져간다.
 func take_outcome() -> BattleOutcome:

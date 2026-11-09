@@ -285,9 +285,11 @@ func restart() -> void:
 func title_label() -> String:
 	return "천하로" if battle.has_method("routed") and battle.routed() else "타이틀로"
 
-func to_title() -> void:
+func to_title(return_notice: Label = null) -> void:
 	if battle.has_method("routed") and battle.routed():
-		battle.back_to_world()
+		var error: Error = battle.back_to_world()
+		if error != OK and return_notice != null:
+			return_notice.show()
 		return
 	if not battle.init_game().ok:
 		return
