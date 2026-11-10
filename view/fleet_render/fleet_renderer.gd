@@ -11,6 +11,11 @@ signal fx_event(kind: String)
 
 const CLASS_NAMES := ["전열함", "화력함", "공성함", "보급_수리함", "전자전함", "호위함", "항모"]
 enum { LINE, FIRE, SIEGE, SUPPLY, EW, ESCORT, CARRIER }
+# 보고서 v2.5 도판의 함종. 고속정은 기존 호위함 분류를 공유하지만 별도 선체를 쓴다.
+const HULL_ROLES := ["line", "artillery", "siege", "supply", "electronic-warfare", "interceptor", "carrier", "fast-craft"]
+const FAST_HULL := 7
+const HULL_ROOT := "res://assets/ships/fleet-report-v25/"
+const HULL_FACTIONS := ["wei", "shu", "wu"]
 const CLASS_LABEL := ["전열", "화력", "공성", "보급", "전자전", "호위", "항모"]
 const RoleLayout := preload("res://view/fleet_render/fleet_role_layout.gd")
 var _role_layout: Dictionary = RoleLayout.load_config()
@@ -61,7 +66,8 @@ const C_FLASH := Color(2.4, 2.4, 2.6)
 
 class Slot:
 	var cls := 0
-	var ship_type := ""          # 같은 호위함 모델을 쓰는 요격함·고속정의 배치 역할을 구분한다
+	var hull := 0
+	var ship_type := ""
 	var idx := 0
 	var pos := Vector3.ZERO      # 현재 월드 위치(대형 추종 결과)
 	var home := Vector3.ZERO     # 진형 슬롯(전대 로컬: 전방 -Z, 측면 +X). 전환 중에는 from→goal 진행률 보간값
@@ -106,7 +112,7 @@ class FleetVis:
 
 var src: BattleSource
 var meshes := [[], []]
-var mats := [[], [], []]   # skin별 함종 재질(0 아군, 1 적, 2 손권군)
+var mats := [{}, {}, {}]   # 전투 소속 색상 → 진영 → 함선 재질
 var wreck_mat: StandardMaterial3D
 var vis := {}
 var shots: Array = []
@@ -139,24 +145,34 @@ func _load_assets() -> void:
 	plane.center_offset = Vector3(MODEL_LEN * (PLANE_K - 1.0) * 0.5, 0.0, 0.0)   # 선체 중심이 원점에 오게
 	for lod in 2:
 		meshes[lod] = []
-		for n in CLASS_NAMES:
+		for hull in HULL_ROLES:
 			meshes[lod].append(plane)
 	var sh := load("res://view/fleet_render/ship_sprite.gdshader") as Shader
-	for side in 3:
-		var arr := []
-		for c in CLASS_NAMES.size():
+	for side in mats.size():
+		var fallback: Array[ShaderMaterial] = []
+		for hull in HULL_ROLES.size():
+			var c := ESCORT if hull == FAST_HULL else hull
 			var m := ShaderMaterial.new()
 			m.shader = sh
 			m.set_shader_parameter("hull_color", [C_ALLY_HULL, C_FOE_HULL, C_WU_HULL][side])
 			m.set_shader_parameter("rim_color", [C_ALLY_OUTLINE, C_FOE_OUTLINE, C_WU_OUTLINE][side])
 			m.set_shader_parameter("fat", CLASS_FAT[c])
-			m.set_shader_parameter("kind", c)   # 함종 번호 = 실루엣 종류
+			m.set_shader_parameter("kind", c)
 			var tex_path := "res://assets/ships/silhouette/%d.png" % c
 			if ResourceLoader.exists(tex_path):
 				m.set_shader_parameter("ship_tex", load(tex_path))
 				m.set_shader_parameter("use_tex", true)
-			arr.append(m)
-		mats[side] = arr
+			fallback.append(m)
+		mats[side][""] = fallback
+		for faction in HULL_FACTIONS:
+			var faction_mats: Array[ShaderMaterial] = []
+			for hull in HULL_ROLES.size():
+				var m := fallback[hull].duplicate() as ShaderMaterial
+				var texture := load(HULL_ROOT + faction + "/" + HULL_ROLES[hull] + ".png") as Texture2D
+				m.set_shader_parameter("ship_tex", texture)
+				m.set_shader_parameter("use_tex", true)
+				faction_mats.append(m)
+			mats[side][faction] = faction_mats
 	wreck_mat = StandardMaterial3D.new()
 	wreck_mat.albedo_color = Color(0.09, 0.08, 0.08)
 	wreck_mat.emission_enabled = true
@@ -277,7 +293,7 @@ func _real_ship_ids(counts: Dictionary) -> Array:
 	for c in REAL_ORDER:
 		for t in ids:
 			var model: String = ScenarioRoster.SHIP_TYPES.get(t, {}).get("model", "")
-			var k := CLASS_NAMES.find(model) if model != "" else ESCORT   # 고속정은 모델이 없어 호위함 선체로 그린다
+			var k := CLASS_NAMES.find(model) if model != "" else ESCORT   # 고속정은 편제상 호위함으로 분류한다
 			if k == c:
 				for i in (counts[t] as Array).reduce(func(a, b): return a + b, 0):
 					out.append(t)
@@ -448,7 +464,7 @@ func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 		maxyaw = maxf(maxyaw, absf(wrapf(want - s.yaw, -PI, PI)))
 		var c := cos(s.yaw)
 		var sn := sin(s.yaw)
-		var mm: MultiMesh = v.mmis[s.cls].multimesh
+		var mm: MultiMesh = v.mmis[s.hull].multimesh
 		mm.set_instance_transform(s.idx, _xform_cs(s, c, sn))
 		s.trail += (smoothstep(MOVE_EPS, 2.5, s.vel.length()) - s.trail) * 0.3
 		maxtr = maxf(maxtr, s.trail)
@@ -531,7 +547,7 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 	var cls := _assign_real(pts, types, sq.flagship, true) if not types.is_empty() else _assign_class(pts, sq.flagship, sq.id * 7919)
 	var S := src.unit_scale()
 	var per_class := []
-	per_class.resize(CLASS_NAMES.size())
+	per_class.resize(HULL_ROLES.size())
 	for i in per_class.size():
 		per_class[i] = []
 	var jr := RandomNumberGenerator.new()
@@ -540,6 +556,7 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 		var s := Slot.new()
 		s.cls = cls[i].cls
 		s.ship_type = ship_ids[i] if not ship_ids.is_empty() else ""
+		s.hull = FAST_HULL if s.ship_type == "SHP-08" else s.cls
 		s.rank = cls[i].rank
 		s.flag = cls[i].get("flag", false)
 		var p: Vector3 = pts[i]
@@ -550,8 +567,8 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 		s.half_len = L * 0.5
 		s.scl = HULL_STRETCH * ((CLASS_LEN[s.cls] / MODEL_LEN) * (1.8 if s.flag else 1.0))
 		s.gsz = s.half_len * (0.6 if s.cls != ESCORT else 0.5)
-		s.idx = per_class[s.cls].size()
-		per_class[s.cls].append(s)
+		s.idx = per_class[s.hull].size()
+		per_class[s.hull].append(s)
 		v.slots.append(s)
 	var fpos := src.to3(sq.pos)
 	var frot := -float(sq.heading) - PI * 0.5
@@ -560,7 +577,10 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 		s.yaw = -float(sq.heading) - PI
 	v.last_pos = fpos
 	v.last_rot = frot
-	for c in CLASS_NAMES.size():
+	var faction: String = sq.get("faction", "")
+	faction = ScenarioRoster.FACTION_KEY.get(faction, faction)
+	var hull_materials: Array = mats[v.skin].get(faction, mats[v.skin][""])
+	for c in HULL_ROLES.size():
 		var list: Array = per_class[c]
 		if list.is_empty():
 			v.mmis.append(null)
@@ -578,7 +598,7 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 		var mi := MultiMeshInstance3D.new()
 		mi.multimesh = mm
 		mi.custom_aabb = WORLD_AABB
-		mi.material_override = mats[v.skin][c]
+		mi.material_override = hull_materials[c]
 		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		v.node.add_child(mi)
 		v.mmis.append(mi)
@@ -632,7 +652,7 @@ func _target(s: Slot, fpos: Vector3, frot: float, flip := false) -> Vector3:
 func _hide_slot(v: FleetVis, s: Slot) -> void:
 	s.alive = false
 	v.alive_n -= 1
-	var mi: MultiMeshInstance3D = v.mmis[s.cls]
+	var mi: MultiMeshInstance3D = v.mmis[s.hull]
 	if mi:
 		mi.multimesh.set_instance_transform(s.idx, Transform3D(Basis.from_scale(Vector3.ZERO), s.pos))
 	var gi := v.slots.find(s)
@@ -693,8 +713,9 @@ func update(dt: float) -> void:
 	if absf(detail - _detail) > 0.01:
 		_detail = detail
 		for side in mats:
-			for m in side:
-				(m as ShaderMaterial).set_shader_parameter("detail", detail)
+			for hull_materials in side.values():
+				for m: ShaderMaterial in hull_materials:
+					m.set_shader_parameter("detail", detail)
 	for sq in sqs:
 		var v: FleetVis = vis[sq.id]
 		var aim_id: int = sq.firing_at if sq.firing_at >= 0 else sq.target_id
@@ -769,14 +790,14 @@ func _update_flash(v: FleetVis) -> void:
 	for s in v.slots:
 		if s.flash_until > 0.0 and clock >= s.flash_until:
 			s.flash_until = 0.0
-			if s.alive and v.mmis[s.cls]:
-				v.mmis[s.cls].multimesh.set_instance_color(s.idx, tint)
+			if s.alive and v.mmis[s.hull]:
+				v.mmis[s.hull].multimesh.set_instance_color(s.idx, tint)
 
 func _flash(v: FleetVis, s: Slot) -> void:
-	if not s.alive or v.mmis[s.cls] == null:
+	if not s.alive or v.mmis[s.hull] == null:
 		return
 	s.flash_until = clock + 0.08
-	v.mmis[s.cls].multimesh.set_instance_color(s.idx, C_FLASH)
+	v.mmis[s.hull].multimesh.set_instance_color(s.idx, C_FLASH)
 
 # 격침 대상: 최근 피격 함선, 없으면 조준 중인 적에게 가장 가까운 함선(없으면 앞쪽 슬롯). 난수 없음, 빈자리는 메우지 않는다.
 func _pick_victim(v: FleetVis, allow_flag := false) -> Slot:
