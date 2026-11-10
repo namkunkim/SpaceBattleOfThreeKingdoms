@@ -16,6 +16,7 @@ static func build_all(deck: Control) -> Dictionary:
 		"result": ResultScreen.new(deck),
 		"roster": preload("res://hud/ui_kit/roster_screen.gd").new(deck),
 		"org": preload("res://hud/ui_kit/org_screen.gd").new(deck),
+		"fleet_catalog": preload("res://hud/ui_kit/fleet_catalog.gd").new(deck),
 		"formation_guide": preload("res://hud/ui_kit/formation_guide.gd").new(deck),
 	}
 	for k in out:
@@ -42,7 +43,7 @@ class TitleScreen extends Control:
 		var spacer := Control.new()
 		spacer.custom_minimum_size = Vector2(0, 10)
 		col.add_child(spacer)
-		for spec in [["서막", func(): deck.open_prologue()], ["진형 배치도", func(): deck.screens["formation_guide"].open_guide()], ["설정", func(): deck.show_screen("settings")], ["종료", func(): deck.get_tree().quit()]]:
+		for spec in [["서막", func(): deck.open_prologue()], ["진형 배치도", func(): deck.screens["formation_guide"].open_guide()], ["함대 도감", func(): deck.screens["fleet_catalog"].open_catalog()], ["설정", func(): deck.show_screen("settings")], ["종료", func(): deck.get_tree().quit()]]:
 			var b := ScreenKit.menu_button(spec[0])
 			b.custom_minimum_size = Vector2(280, 52)
 			b.pressed.connect(spec[1])
@@ -309,13 +310,13 @@ class PauseScreen extends Control:
 		deck = d
 		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		mouse_filter = Control.MOUSE_FILTER_STOP
-		var p := ScreenKit.centered(self, Vector2(860, 470), UiTheme.ornate())
+		var p := ScreenKit.centered(self, Vector2(860, 520), UiTheme.ornate())
 		p.painter = _draw_panel
 		var col := VBoxContainer.new()
 		col.position = Vector2(36, 150)
 		col.add_theme_constant_override("separation", 2)
 		p.add_child(col)
-		var specs := [["계속", func(): deck.resume()], ["설정", func(): deck.show_screen("settings_pause")], ["처음부터", func(): deck.restart()], ["타이틀로", func(): deck.to_title()], ["종료", func(): deck.get_tree().quit()]]
+		var specs := [["계속", func(): deck.resume()], ["함대 도감", func(): deck.screens["fleet_catalog"].open_catalog()], ["설정", func(): deck.show_screen("settings_pause")], ["처음부터", func(): deck.restart()], ["타이틀로", func(): deck.to_title()], ["종료", func(): deck.get_tree().quit()]]
 		for i in specs.size():
 			var b := ScreenKit.menu_button(specs[i][0], i == 0)
 			b.custom_minimum_size = Vector2(300, 56 if i == 0 else 52)
