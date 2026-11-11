@@ -81,6 +81,7 @@ var _operation_auto_cancelling := false
 var _operation_auto_pending: BattleOutcome
 var _operation_auto_save_error := ""
 var _title_button: Button
+var _atlas_resume_button: Button
 var _difficulty := "표준"
 var _mode := "direct"
 var _res_labels := {}
@@ -146,6 +147,7 @@ func _ready() -> void:
 	_title_button.offset_bottom = -M
 	_title_button.hide()
 	_title_button.pressed.connect(_return_to_title)
+	_build_atlas_resume()
 	_build_chip()
 	_build_caption()
 	_build_resolve()
@@ -486,6 +488,24 @@ func _build_cta() -> void:
 	h.add_child(b)
 	_cta.visible = false
 
+func _build_atlas_resume() -> void:
+	if not OperationHost.product_save_supported() \
+			or OS.get_cmdline_user_args().has(BattleBrief.FIRST_OPERATION_DEV_ARG):
+		return
+	var path := OperationHost.PRODUCT_SLOT_PATH
+	if not FileAccess.file_exists(path) and not FileAccess.file_exists(path + ".previous"):
+		return
+	_atlas_resume_button = _resume_action(false)
+	_atlas_resume_button.focus_mode = Control.FOCUS_ALL
+	hud.add_child(_atlas_resume_button)
+	_atlas_resume_button.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	_atlas_resume_button.offset_right = _title_button.offset_left - 12.0
+	_atlas_resume_button.offset_left = _atlas_resume_button.offset_right - 176.0
+	_atlas_resume_button.offset_top = _title_button.offset_top
+	_atlas_resume_button.offset_bottom = _title_button.offset_bottom
+	_atlas_resume_button.hide()
+
+
 func _open_atlas_red_cliffs() -> void:
 	if state != "browse" or not _sortie_available():
 		return
@@ -727,10 +747,7 @@ func _add_restore_actions(container: Container) -> void:
 	var row := HBoxContainer.new()
 	container.add_child(row)
 	if development or OperationHost.product_save_supported():
-		var resume := _btn("Resume saved battle" if development else "첫 작전 이어하기")
-		resume.name = "ResumeSavedBattle" if development else "ResumeProductBattle"
-		resume.pressed.connect(_resume_saved_battle.bind(not development))
-		row.add_child(resume)
+		row.add_child(_resume_action(development))
 	if development:
 		var imported := _btn("Import battle\u2026")
 		imported.name = "ImportBattle"
@@ -741,6 +758,13 @@ func _add_restore_actions(container: Container) -> void:
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		if development:
 			button.add_theme_font_size_override("font_size", 14)
+
+
+func _resume_action(development: bool) -> Button:
+	var resume := _btn("Resume saved battle" if development else "첫 작전 이어하기")
+	resume.name = "ResumeSavedBattle" if development else "ResumeProductBattle"
+	resume.pressed.connect(_resume_saved_battle.bind(not development))
+	return resume
 
 
 func _watch_replay_action(development: bool) -> Button:
@@ -1209,6 +1233,9 @@ func _process(delta: float) -> void:
 	var fl := canvas.flying()
 	var show_atlas := state == "browse" and canvas.level() == "z0" and not fl and not _card.visible
 	_title_button.visible = show_atlas and _sortie_available()
+	if _atlas_resume_button != null:
+		_atlas_resume_button.visible = show_atlas
+		_atlas_resume_button.disabled = not _sortie_available() or _replay_dialog != null or _replay_overlay != null
 	if _atlas.visible != show_atlas:
 		_atlas.visible = show_atlas
 		_atlas_backdrop.visible = show_atlas
