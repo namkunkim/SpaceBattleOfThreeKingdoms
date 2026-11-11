@@ -1,0 +1,12 @@
+extends "res://tests/world_link.gd"
+func _run() -> void:
+	change_scene_to_file("res://scenes/WorldMap.tscn")
+	await _frames(8)
+	var result := BattleOutcome.new()
+	result.kind = "alliance_win"
+	result.win = true
+	result.seed = 777
+	current_scene._show_result(result)
+	await _prepare_failure_return()
+	print("ENTRY_FAILURE_BASELINE_%s failures=%d" % ["PASS" if fails == 0 else "FAIL", fails])
+	quit(0 if fails == 0 else 1)

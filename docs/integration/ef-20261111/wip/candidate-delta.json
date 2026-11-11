@@ -1,0 +1,667 @@
+{
+  "baseline": "c9338f2c739af6bdcd362c39bf4a54cd9471c28a",
+  "previous_candidate": "0a6abf9d478969b05a2076af9640d08b5daa89f7",
+  "source_sha256": "e25157b20af5ea18d5225cc33809c261dd5d233df0a7ee2fc297755bb0995652",
+  "counts": {
+    "candidate-only": 76,
+    "overlap": 208,
+    "exact-match": 140,
+    "line-ending-only": 203,
+    "different-content-both": 5
+  },
+  "remaining_rows": [
+    {
+      "path": ".gitattributes",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 0bddc7fdf490f0da2e794a01120a308426019c46",
+      "remote": null,
+      "disposition": "separate checkout-fingerprint handoff"
+    },
+    {
+      "path": "assets/branding/game-icon-192.png.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 25cef71cf7037cd3deef230fb853bc57f7169946",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/branding/game-icon-source.png.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob c56a47d13ae7a1ee50b9b1c11248bce1ef51dd24",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/branding/game-icon.png.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 6bef664dc6edbf97ccf3890c28d9d937dd0001c0",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/SYS-01.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 608a1086f9b9b5eef3d3adc8b87743958c3e98b8",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/SYS-02.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 900c46dc8c02fe11dbdcd2f68e73dc020c4e345a",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/SYS-03.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob c3292a587c744bad5a9e3409b76c258b76ed85ad",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/SYS-04.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob b29902bb8c675b42c251cb888f906c33bfda2d83",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/SYS-05.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 490751d2a5d8c7a00128e5af796a77c14e93d123",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/SYS-06.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 7198fe32f59411d3ac0cd21fac035b52fad1346d",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/SYS-07.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob ed6d3dc811011ce1a4f1174cd73e379f6a21c2e7",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/SYS-08.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 87de35cf21b9cafeaebb77ddb48dc7f71ee79adc",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/SYS-09.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 328062b963c7c023c815e4b18463fb52d946a223",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/SYS-10.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 415803784a402ad082730c7e2c80386d8ea301a2",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/SYS-11.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob c12818a4a05adec9d7fbec411ee73e20e35503a4",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/SYS-12.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob ce8b77c1ceb3ec9287742fb4aec55e4fb8178441",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/SYS-13.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob e9d560bfaae3cff1b5bca33ff43596358aa2c66f",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/SYS-14.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob a906c336c93c7705c47e7313bdf7610ba93eff4c",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/SYS-15.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob b809808322514e8b11a4ff8a282218212447b752",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/SYS-16.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 2bd41f45dde7f883475bd63775d61229ade81050",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/SYS-17.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 5c9e614f869805fc36394906c7b88a76e6e39956",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/SYS-18.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob b7d88ef411df600d9167589d7a749ef30e44ba01",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/SYS-19.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 0354307af0cfc423517248c191e977855ee198c6",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/galaxy-strategy-background.png.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 37655477e23acf105976d1483a94fc21edc84b86",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/overview.png.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 16b24277a135f9daec43685b804b2a02a4e1cd6b",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/red-cliffs-navigation-overview.png.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 9d112e0be633ae49484c80a6c2194e3f99b4288e",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/red-cliffs-orbit.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob ac10751875c811dbd2759105e9e395da2547fce4",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/red-cliffs-reference-sky.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob a79745a78a9e609544b3bc7449e098aa9361e513",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/red-cliffs-rock-material.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 14cc3ce2d0749fab9ad764da66a5dbf2e21b6025",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "assets/world_atlas/red-cliffs-terrain.png.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob e9ea5ddeb4f7432ac6c5f14d550fde38a9434ed2",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "core/battle/operation_profile.gd.uid",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 0f54bd34aba10c3d8f782bb8504b82fd81d8f31a",
+      "remote": null,
+      "disposition": "separate checkout-fingerprint handoff"
+    },
+    {
+      "path": "docs/battle-core/evidence/p10b-20261016/pc-org.png.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 835cf6d1789d399fec566e946aff6eba9eb97944",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "docs/battle-core/evidence/p10b-20261016/pc-recon.png.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 14043ae8b3651f2d6d5c577d31b7561539fcaeef",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/I01-BASELINE-AUDIT-20261026.md",
+      "status": "candidate-only",
+      "base": "100644 blob dd1eac3fcf14d726afd4a5d3eb7819568d2ec4d9",
+      "candidate": "100644 blob bb8f59c17e62fb546e3f2c898eba258c44641906",
+      "remote": "100644 blob dd1eac3fcf14d726afd4a5d3eb7819568d2ec4d9",
+      "disposition": "historical main document with local user-profile redaction"
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/I01A-DECISION-20261026.md",
+      "status": "candidate-only",
+      "base": "100644 blob 0c090b3a8928af4cbc2f88233b65e08d6154c29b",
+      "candidate": "100644 blob 18748230fd821c5ea6fcff0babb7aabdf187fd15",
+      "remote": "100644 blob 0c090b3a8928af4cbc2f88233b65e08d6154c29b",
+      "disposition": "historical main document with local user-profile redaction"
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/REVIEW-DATA-RULES-BASELINE-20261027.md",
+      "status": "overlap",
+      "base": null,
+      "candidate": "100644 blob b55fa0d20a661d6cc11f68895e3bff11c0948786",
+      "remote": "100644 blob 6b8d946959f68c01a18396989228e0c4a2673449",
+      "content_category": "different-content-both",
+      "disposition": "current document with local user-profile redaction"
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/REVIEW-I01A-IMPLEMENTATION-20261027.md",
+      "status": "candidate-only",
+      "base": "100644 blob d25c6c8750e8dae25ea28e2ba069f9a2fe6da62f",
+      "candidate": "100644 blob dd9f74f943fa3e302474c16b8125bd9187f2067a",
+      "remote": "100644 blob d25c6c8750e8dae25ea28e2ba069f9a2fe6da62f",
+      "disposition": "historical main document with local user-profile redaction"
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/REVIEW-I01B-P0-20261028.md",
+      "status": "overlap",
+      "base": null,
+      "candidate": "100644 blob bf1edcd0b66bd6eed929161d7c069538b7883d93",
+      "remote": "100644 blob 4a546e236041422ec5dad1ad24cdfe414228ba71",
+      "content_category": "different-content-both",
+      "disposition": "current document with local user-profile redaction"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/DHTK6i7ZR-8/left-wing-20m00s.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 1094ae7434e52871b403e6166729658564548940",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/DHTK6i7ZR-8/melee-headings-17m00s.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob ac7203ce0914b4aeebb78617692832ec09f573ee",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/DHTK6i7ZR-8/move-marker-03m00s.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 61b47a35cc90d037c289dba2bcb07e9c4c3b1a14",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/DHTK6i7ZR-8/rings-ahead-08m00s.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob e59e0302565c1b4ed4dc088285ab6040bf6c7148",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/HGh5vL6y79I/asteroids-23m00s.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 0b489533febfcd2b3e1e8f06b61f858020e58520",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/HGh5vL6y79I/crescent-07m30s.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 3babdb132db0f07848f17e3a5fa86671a9fbac24",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/HGh5vL6y79I/order-done-log-19m00s.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 165fb5534e032f8ac505e14f191b91040a69bae7",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/JzDUgHrVivQ/briefing-01m30s.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob db446bf9af0cf31b93bd616740dd0b4361a69bdd",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/JzDUgHrVivQ/rings-12m00s.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 0ae35b5010d4f69e3b9dd3f8fbd127060bbb85cc",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/JzDUgHrVivQ/ship-rows-16m40s.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 181693806861896290dd803886501ff23697ab59",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/JzDUgHrVivQ/split-07m30s.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 0a142e7cf86950e3cbd79cc4f32d7684cf855acc",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/JzDUgHrVivQ/wing-select-09m00s.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob a13781cad22c8ce0828ed3de6c3599324938a88c",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/_IKHU38xL1E/play3-11m33s.png.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 5f6f5980f32a7ac79588dd03b9752408114fdf21",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/_IKHU38xL1E/play3-11m43s.png.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 9dcfef1cfde0b43892106ac110f1b2b873928f5e",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/_IKHU38xL1E/play3-11m53s.png.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 1f83c1536417bd51c6e30d761e4ee9ee45f17e8e",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/_IKHU38xL1E/play3-12m13s.png.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 399c889af7212f719bb49bd61b0ed442c20ecdd5",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/_IKHU38xL1E/verified-02m56s.png.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob cf79a649ebf2ff8155970002b167bb1b880e10cb",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/_IKHU38xL1E/verified-03m06s.png.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 8d2ade1691473cdff01588068711cec0e29a6867",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/_IKHU38xL1E/verified-06m40s.png.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob dd4eeab4b6f42d5bc9de34f0edb8261882a947a8",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/_IKHU38xL1E/verified-06m50s.png.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 0f957b049ceb2ca03e10fce089acbf2b600cfe73",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/b-7crU8CS18/arc-06m30s.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 15dc5f52872ac6968b94d0e4e5a4f372bd670255",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/b-7crU8CS18/column-marker-11m40s.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 0859fc06f17e78518b67b6859f0158b2cf93d8f2",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/b-7crU8CS18/echelon-03m45s.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 3d5c1c1264ce71282af35eec834b80d5df4c9c61",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/b-7crU8CS18/reform-13m50s.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob b3e21d309a5f7756df4ded49441954b0156c63c3",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/b-7crU8CS18/slot-preview-11m30s.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob e328872e115a001f17a57a6281e15949eae3f3c6",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/q9AyxvhML04/arrived-13m30s.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob db3f966d93ced57269c867f59848b07ce6863ef5",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/q9AyxvhML04/retreat-09m00s.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob ecf320018bf4308e183d8f2c890a6fb080da3d7f",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/q9AyxvhML04/rotate-formation-06m00s.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 69bf21d035466d3f2e074a3348a81ebc8c174e67",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/q9AyxvhML04/slot-preview-12m50s.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob d21feea8f23ca6675740e273a7f4bfa2a8a8fd64",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/battle-core/reference-assets/q9AyxvhML04/slot-preview-14m00s.jpg.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 13d079cac3044daafa677c788614a0189eea28e7",
+      "remote": null,
+      "disposition": "reference directory covered by .gdignore"
+    },
+    {
+      "path": "docs/ui/evidence/fleet-role-layout/formation-battle-close.png.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 9d282a8f0099dd4c1eba3a2efea16300c91e0a89",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "docs/ui/evidence/fleet-role-layout/formation-battle-overview.png.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 9217b2d11a6bc8008022d29c6978ca17bd63d635",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "docs/ui/evidence/fleet-role-layout/formation-guide-highlight.png.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob a52868def3cbf74bfe07d860e753f70d567c874f",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "docs/ui/evidence/fleet-role-layout/formation-guide-portrait.png.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 3ed381c8ae8367ff94a9bd9eb591e25af00908fb",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "docs/ui/evidence/fleet-role-layout/formation-guide.png.import",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 48074020b217d0f77029d20d3b23aa5eab863dd3",
+      "remote": null,
+      "disposition": "generated import metadata; source asset in main"
+    },
+    {
+      "path": "export_presets.cfg",
+      "status": "overlap",
+      "base": "100644 blob e2e6a72d0041e4251b53fbb4aa15c42355154ff2",
+      "candidate": "100644 blob f821e061ac8fa6004b3623b526d8b97b9451737f",
+      "remote": "100644 blob 3a87150f0abba2a99dedd6a12207c460105587a5",
+      "content_category": "different-content-both",
+      "disposition": "current Android temp/evidence exclusion retained"
+    },
+    {
+      "path": "hud/ui_kit/deck_screens.gd",
+      "status": "overlap",
+      "base": "100644 blob f393a41a315754c21f3a7854f502c82e9f8b5060",
+      "candidate": "100644 blob dbc9eb82d6d5979ae0260ce52475f8350be1a50b",
+      "remote": "100644 blob 85aa292000ac34d332a2d72747e40fd13ceaa667",
+      "content_category": "different-content-both",
+      "disposition": "preserved in WIP UI patch"
+    },
+    {
+      "path": "native/o07_win32/o07_win32.dll",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 95497e67092837e81fecad50281824f108196d77",
+      "remote": null,
+      "disposition": "Windows build output; source and build script in main"
+    },
+    {
+      "path": "tests/fleet_size_review.gd.uid",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 757f1f8339072d92e10202b448ca303febdfb6d7",
+      "remote": null,
+      "disposition": "historical test UID; script exists in main"
+    },
+    {
+      "path": "tests/i01_operation_config.gd.uid",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob bfe867a4d98ed5f149391859d717e0bc99af8ac9",
+      "remote": null,
+      "disposition": "historical test UID; script exists in main"
+    },
+    {
+      "path": "tests/localization_coverage.gd.uid",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 21034debf4ea605a4ba64206a5df52485224dcd5",
+      "remote": null,
+      "disposition": "historical test UID; script exists in main"
+    },
+    {
+      "path": "tests/result_roster.gd.uid",
+      "status": "candidate-only",
+      "base": null,
+      "candidate": "100644 blob 5b105078c01fe386598d0e1c302f89658ab51aba",
+      "remote": null,
+      "disposition": "historical test UID; script exists in main"
+    },
+    {
+      "path": "view/world/world_map_screen.gd",
+      "status": "overlap",
+      "base": "100644 blob 5c205395e4b66cf550c3f6f107488cfd518ab983",
+      "candidate": "100644 blob bba0afe7b7969c7a6df38bff5fd749c0608d07ef",
+      "remote": "100644 blob 9d3a7a87ace3962edd4fdbd0abdae6733f702e8d",
+      "content_category": "different-content-both",
+      "disposition": "preserved in WIP UI patch"
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+extends SceneTree
+const Store = preload("res://scripts/first_operation_save_store.gd")
+var failures := 0
+func _initialize():
+	_run.call_deferred()
+func check(ok: bool, message: String):
+	print("CHECK ", ok, " ", message)
+	if not ok: failures += 1
+func frames():
+	for i in 8: await process_frame
+func _run():
+	var brief := BattleBrief.new()
+	brief.select_first_operation_product()
+	check(brief.operation_request().capability == "pc/first-operation/1", "approved product capability, no dev flag")
+	var link = root.get_node("WorldLink")
+	check(link.go_battle(brief) == OK, "WorldLink product transition")
+	await frames()
+	var host = current_scene.get_node_or_null("FirstOperationHost")
+	if host == null or host.operation_owner == null:
+		check(false, "product owner published")
+		quit(1)
+		return
+	await frames()
+	check(host.frame.tick == 0 and not host.started and not host.is_processing(), "explicit begin required, remains tick zero")
+	host._commands[1].pressed.emit()
+	var pre: Dictionary = host.operation_owner.capture_checkpoint()
+	check(pre.ok and pre.packet.pending.is_empty() and pre.packet.commands.is_empty(), "pre-start command ignored")
+	host._start.pressed.emit()
+	host._start.pressed.emit()
+	host.set_process(false)
+	host._commands[1].pressed.emit()
+	var queued: Dictionary = host.operation_owner.capture_checkpoint()
+	check(queued.ok and queued.packet.pending.size() == 1, "first command queued once")
+	host.step_operation()
+	var first: Dictionary = host.operation_owner.capture_checkpoint()
+	check(first.ok and first.packet.tick == 1 and first.packet.pending.is_empty() and first.packet.commands.size() == 1 and first.packet.commands[0].batch.size() == 1, "first tick applies exactly one command")
+	host.step_operation()
+	var second: Dictionary = host.operation_owner.capture_checkpoint()
+	check(second.ok and second.packet.tick == 2 and second.packet.commands == first.packet.commands, "next tick does not repeat command")
+	host._save.pressed.emit()
+	var saved: Dictionary = host.read_saved_battle(true)
+	check(saved.ok and saved.payload.tick == 2, "product slot saves committed tick")
+	var before := FileAccess.get_sha256(host.PRODUCT_SLOT_PATH)
+	host.step_operation()
+	var uninterrupted: Dictionary = host.frame.duplicate(true)
+	host._load.pressed.emit()
+	await frames()
+	check(host.frame.tick == 2 and not host.started and not host.is_processing(), "product restore pauses at same saved tick")
+	check(before == FileAccess.get_sha256(host.PRODUCT_SLOT_PATH), "restore preserves slot SHA")
+	host._start.pressed.emit()
+	host.set_process(false)
+	host.step_operation()
+	check(host.frame == uninterrupted, "post-resume first frame equals uninterrupted frame")
+	print("ENTRY_PRODUCT_BASELINE_", "PASS" if failures == 0 else "FAIL", " failures=", failures, " user=", OS.get_user_data_dir())
+	quit(0 if failures == 0 else 1)

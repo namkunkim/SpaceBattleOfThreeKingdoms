@@ -13,7 +13,7 @@
 | B01 | `git branch --show-current`, `git rev-parse HEAD origin/main` | 현재 checkout은 `main`. HEAD와 로컬 `origin/main` 참조 모두 `93e60e6a957ffdb002a1cb06bc796c4c46496736`. fetch하지 않았으므로 원격 서버 최신성 증거가 아니다. |
 | B02 | `git log -5 --oneline` | main 최근 3개는 `93e60e6` 결과 UI, `e1afc3a` 적 후방 편성/역할, `ce6eb51` 다국어. 공통조상 `254e056` 이후 변경이다. 구 PC 15판을 현재 밸런스 기준선으로 사용하지 않는다. |
 | B03 | `git status --short --untracked-files=no`, `git diff --cached --name-status`, `git diff --numstat` | tracked dirty 15개, staged 출력 없음, 합계391추가/44삭제. untracked도 다수 관측됐지만 이번 감사에서 전 파일 소유·완전 목록을 확정하지 않았다. |
-| B04 | `git worktree list --porcelain` | 현재 경로 외 PC checkout 등록: `C:/Users/nk782/.codex/worktrees/pc-ten-minute-battle-review/SpaceBattleOfThreeKingdoms`, 등록 HEAD `5264543b58919f906bcc8cf81a6be08dc55acc2a`, branch `codex/pc-ten-minute-battle-review`. 등록 메타데이터이지 실제 작업 내용 청결 증거가 아니다. |
+| B04 | `git worktree list --porcelain` | 현재 경로 외 PC checkout 등록: `%USERPROFILE%/.codex/worktrees/pc-ten-minute-battle-review/SpaceBattleOfThreeKingdoms`, 등록 HEAD `5264543b58919f906bcc8cf81a6be08dc55acc2a`, branch `codex/pc-ten-minute-battle-review`. 등록 메타데이터이지 실제 작업 내용 청결 증거가 아니다. |
 | B05 | `git merge-base HEAD codex/pc-ten-minute-battle-review`, `git rev-list --left-right --count HEAD...codex/pc-ten-minute-battle-review` | 공통조상 `254e056f133e50aff8773d0a8209c98b2a4c1d6c`, main쪽3/PC쪽1 커밋. 브랜치 분기 정보이며 병합 가능 판정이 아니다. |
 | B06 | `git diff --name-status HEAD...codex/pc-ten-minute-battle-review` | PC쪽 고유 변경14파일. 새 실험 모듈/보고서/JSON/검사/실행 도구와 기존 host·pacing·trace 수정. 삼중점 비교는 공통조상→PC쪽 변화이며 전체 현재 checkout 차이가 아니다. |
 | B07 | I01 후보 경로를 명시한 `git status --short --untracked-files=all -- <paths>` | §3의 명시 후보에는 출력 없음. 이번 경로 집합의 tracked/untracked 변경 부재만 의미하며 저장소 전체 청결·소유 해결을 뜻하지 않는다. |

@@ -6,7 +6,7 @@
 
 ## 기준과 범위
 
-대상은 `C:/Users/nk782/.codex/worktrees/i01a-operation-config/SpaceBattleOfThreeKingdoms`, 감사 HEAD `8292805143f4561a4f5258d40b7b94adf4ff5802`다. 입력은 저장소 CLAUDE.md·워크플로우-플레이북.md·SESSION-HANDOFF.md·CHECKLIST-OPEN.md의 PC 캠페인 블록, I01a 결과/독립 리뷰와 기존 326 PASS·170.0 FAIL 로그다. 적용 경로·확인한 상위 폴더에서 추가 AGENTS.md는 발견하지 못했다. 원 프로젝트의 무관한 dirty나 PC 실험 변경을 통합하지 않는다.
+대상은 `%USERPROFILE%/.codex/worktrees/i01a-operation-config/SpaceBattleOfThreeKingdoms`, 감사 HEAD `8292805143f4561a4f5258d40b7b94adf4ff5802`다. 입력은 저장소 CLAUDE.md·워크플로우-플레이북.md·SESSION-HANDOFF.md·CHECKLIST-OPEN.md의 PC 캠페인 블록, I01a 결과/독립 리뷰와 기존 326 PASS·170.0 FAIL 로그다. 적용 경로·확인한 상위 폴더에서 추가 AGENTS.md는 발견하지 못했다. 원 프로젝트의 무관한 dirty나 PC 실험 변경을 통합하지 않는다.
 
 기존 data_rules는 리터럴 검사 첫 실패 후 반환하여 후속 항목이 미검증이었다. 이번 수정은 추격 기본값 170과 시나리오 override 우선권을 보존하며 그 차단과 후속 gate를 해소하는 범위다. 실제 캠페인 구현·I01b·원 A04/A05/A06 완료를 뜻하지 않는다.
 

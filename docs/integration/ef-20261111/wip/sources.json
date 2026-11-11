@@ -1,0 +1,102 @@
+{
+  "F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/O07/main-handoff-c9338f2c/apply-manifest.json": {
+    "sha256": "e8b67a91ee6f2acb4057609beb9b9ee39a3fe9f75458ed63f0c85d7f68414f94",
+    "bytes": 719
+  },
+  "F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/O07/main-handoff-c9338f2c/candidate/docs/entry/o07-windows-release-and-operations-ko.md": {
+    "sha256": "4c7ddebf67e97b8572a603aa1e8a709e1b68d70e42284ceac1d942ba24d79564",
+    "bytes": 4476
+  },
+  "F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/O07/main-handoff-c9338f2c/o07-main-docs.patch": {
+    "sha256": "2e03415614d3f096f0753e4ca77d2410d183197ffec1de469b86b99906d5e20f",
+    "bytes": 4741
+  },
+  "F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/P02-K6-MAIN-HANDOFF-C9338F2C-20261111.md": {
+    "sha256": "533a7689b62e8c5114370ef4201f8575b767b22075bcf7a1c7c9603be0d5ddf0",
+    "bytes": 3322
+  },
+  "F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-c9338f2c-review-01/MAIN-K6-WIP-HANDOFF.json": {
+    "sha256": "f25f4309c0ab8663b014c8dd3814cf71009bbad648346472a2e26ca63a8c74f4",
+    "bytes": 3310
+  },
+  "%USERPROFILE%/.codex/visualizations/2026/11/11/01a1c9b5-ad48-7b62-906d-8a043e066fd9/red-cliffs-detail.html": {
+    "sha256": "988cbf5e6449e2868df0ba2e8f994b1567f52e637d996b4265a36e5f38a824db",
+    "bytes": 223583
+  },
+  "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/ef-isolated-merge-20261111/followup-platform/remote-delta-reviewed.json": {
+    "sha256": "e25157b20af5ea18d5225cc33809c261dd5d233df0a7ee2fc297755bb0995652",
+    "bytes": 129202
+  },
+  "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/ef-isolated-merge-20261111/review/RESULTS.md": {
+    "sha256": "491801e2fb6bba2161936ed2f1e3da13428050686ee4dd756884f85f2a276bcb",
+    "bytes": 13695
+  },
+  "0a6abf9d478969b05a2076af9640d08b5daa89f7:docs/battle-core/pc-campaign-design/I01-BASELINE-AUDIT-20261026.md": {
+    "sha256": "2dd0669702787c0aa90b24d60b98126a01bab285e52ead1d8336d9903e38ce94",
+    "bytes": 10477
+  },
+  "0a6abf9d478969b05a2076af9640d08b5daa89f7:docs/battle-core/pc-campaign-design/I01A-DECISION-20261026.md": {
+    "sha256": "8baefe4d1dece42b4e303d2f7619bc214727f7d79f3a9b27375bcfe62bf061f7",
+    "bytes": 7214
+  },
+  "0a6abf9d478969b05a2076af9640d08b5daa89f7:docs/battle-core/pc-campaign-design/REVIEW-I01A-IMPLEMENTATION-20261027.md": {
+    "sha256": "bd3fcfcf5d5c60ef01c9614831b3fce884aca80eb1e2f6e3e87ae71b80d1b18f",
+    "bytes": 7198
+  },
+  "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/ef-isolated-merge-20261111/followup-platform/remote-key-source.diff": {
+    "sha256": "d074e23d6969fdef5d3c0785e99b099bd9cb809acd5b0bae3732d8c4550c6a10",
+    "bytes": 6372
+  },
+  "F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-barrier-scope-01a1c98b-20261111/diagnostic-only.patch": {
+    "sha256": "34a59bdf7828ca3b3090166eb372c2caaa120171bbfcabc1f5b9b287aa2ff398",
+    "bytes": 2635
+  },
+  "F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p02-p03-entry-baseline-01a1c9c0/entry_product_baseline.gd": {
+    "sha256": "78f339c632e221ce700dec2cf66d07c095f3dc5910a292730643b7c7ff2a5764",
+    "bytes": 2835
+  },
+  "F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p02-p03-entry-baseline-01a1c9c0/entry_failure_baseline.gd": {
+    "sha256": "269c3f9f92c98c63d6008ea5b9d030cca062668ef003cb5e78624d3d7f8c178d",
+    "bytes": 422
+  },
+  "F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p02-p03-entry-baseline-01a1c9c0/RESULTS.md": {
+    "sha256": "457b8756c033987b730119dcf46419f2a2686a71015b2a6194b3a1266394f55c",
+    "bytes": 4399
+  },
+  "F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p02-p03-entry-baseline-01a1c9c0/HANDOFF.md": {
+    "sha256": "3ec5eb4520fa0ee2ccdd1b536a4d386ccb20153b1437a82b89d03749041b952f",
+    "bytes": 4602
+  },
+  "F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-barrier-scope-01a1c98b-20261111/RESULTS.md": {
+    "sha256": "4857f8bf41a8855540c932ac414397d4dfc711d4d4737d97115526ec6d718a78",
+    "bytes": 9213
+  },
+  "F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-audio-boundary-01a1c981-20261111/RESULTS.md": {
+    "sha256": "5650067215f1b3e0e698ed0bf273633d51d71ec2c5eb5919777bd2cb9faca91f",
+    "bytes": 9680
+  },
+  "F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-flow-group-01a1c95b-20261111/RESULTS.md": {
+    "sha256": "fa57e1c639f7725d41c3518d190b694af729cc9a1cc397968b88b8a1adf8766f",
+    "bytes": 6576
+  },
+  "F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/i01-main-c9338f2c-01a1c8da/RESULTS.md": {
+    "sha256": "f4e1f1f02973d9bd7725d916a676b4275267952ffe8ac3fc3fbd091692d78469",
+    "bytes": 4695
+  },
+  "F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/i01-main-c9338f2c-01a1c8da/verified-candidate.patch": {
+    "sha256": "7c1535defda47f3174da19dd1f6078406c9462af92316837b17c78318e0e4e4c",
+    "bytes": 274691
+  },
+  "F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/i01-data-rules-residual-20261111-01/RESULTS.md": {
+    "sha256": "a0f69be3484b0a49fe80d162d2a804a6686510704d1fafbb4be4fe3907e958b6",
+    "bytes": 24142
+  },
+  "F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p02-checklists-closeout-01a1c907-20261111.md": {
+    "sha256": "d9ddfce79b840d82eb8cd9641362d1767d0541b946d6dcc725e5763528562a3a",
+    "bytes": 7781
+  },
+  "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/ef-isolated-merge-20261111/followup-platform/android/apk-contents-check.json": {
+    "sha256": "f3aa8f45b1d69210e92a1a8aa577a88d6e2a27b04a3e26833ca316c342c2f06c",
+    "bytes": 418
+  }
+}

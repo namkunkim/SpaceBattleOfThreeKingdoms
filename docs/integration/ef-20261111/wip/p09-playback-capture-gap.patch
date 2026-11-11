@@ -1,0 +1,71 @@
+--- /dev/null
++++ b/tests/capture_gap.gd
+@@ -0,0 +1,68 @@
++extends SceneTree
++var refs: Array[WeakRef] = []
++var finished_count := 0
++func _initialize() -> void:
++	call_deferred("_run")
++func alive() -> int:
++	var n := 0
++	for r in refs:
++		if r.get_ref() != null:
++			n += 1
++	return n
++func _run() -> void:
++	print("ENGINE=", Engine.get_version_info(), " DRIVER=", AudioServer.get_driver_name())
++	print("PLAYER_SIGNALS=", ClassDB.class_get_signal_list("AudioStreamPlayer", true))
++	var p := AudioStreamPlayer.new()
++	root.add_child(p)
++	p.finished.connect(func(): finished_count += 1)
++	var s := AudioStreamWAV.new()
++	s.format = AudioStreamWAV.FORMAT_16_BITS
++	s.mix_rate = 22050
++	s.loop_mode = AudioStreamWAV.LOOP_FORWARD
++	s.loop_end = 22050
++	var data := PackedByteArray()
++	data.resize(44100)
++	for i in 22050:
++		data.encode_s16(i * 2, int(sin(float(i) * 0.1) * 2000))
++	s.data = data
++	refs.append(weakref(s))
++	p.stream = s
++	s = null
++	# The oracle sees the creation sites; a process_frame observer cannot run here.
++	p.play()
++	if not p.playing:
++		push_error("FIRST_PLAY_FAILED")
++		quit(1)
++		return
++	refs.append(weakref(p.get_stream_playback()))
++	var first_id := p.get_stream_playback().get_instance_id()
++	p.stop()
++	print("AFTER_STOP has_current=", p.has_stream_playback(), " old_alive=", refs[1].get_ref() != null, " finished=", finished_count)
++	p.play()
++	refs.append(weakref(p.get_stream_playback()))
++	var second_id := p.get_stream_playback().get_instance_id()
++	print("RESTART first_id=", first_id, " current_id=", second_id, " distinct=", first_id != second_id)
++	p.stop()
++	var missing_old: bool = refs[1].get_ref() != null
++	var missing_new: bool = refs[2].get_ref() != null
++	print("SAMPLE has_current=", p.has_stream_playback(), " missed_old=", missing_old, " missed_new=", missing_new, " finished=", finished_count)
++	var witness: bool = missing_old and missing_new and not p.has_stream_playback() and first_id != second_id and finished_count == 0
++	var node_ref: WeakRef = weakref(p)
++	p.free()
++	p = null
++	var start := Time.get_ticks_msec()
++	var frames := 0
++	while alive() > 0:
++		if Time.get_ticks_msec() - start >= 2000:
++			push_error("ORACLE_RELEASE_TIMEOUT remaining=" + str(alive()))
++			quit(1)
++			return
++		await process_frame
++		frames += 1
++	print("ORACLE_DRAIN nodes_null=", node_ref.get_ref() == null, " audio_alive=", alive(), " frames=", frames)
++	if not witness:
++		push_error("GAP_WITNESS_NOT_OBSERVED")
++		quit(1)
++		return
++	print("CAPTURE_GAP_WITNESS_PASS (not a flow/group barrier acceptance)")
++	quit(0)

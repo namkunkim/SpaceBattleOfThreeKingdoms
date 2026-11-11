@@ -6,7 +6,7 @@
 
 ## 대상·무결성
 
-대상은 detached 관리 작업트리 `C:/Users/nk782/.codex/worktrees/i01a-operation-config/SpaceBattleOfThreeKingdoms`, 로컬 HEAD `93e60e6a957ffdb002a1cb06bc796c4c46496736`의 승인된 신규4파일이다. 원격 최신성은 확인하지 않았다. 아래 SHA-256은 검토자가 target/staging/manifest 일치를 직접 확인했다.
+대상은 detached 관리 작업트리 `%USERPROFILE%/.codex/worktrees/i01a-operation-config/SpaceBattleOfThreeKingdoms`, 로컬 HEAD `93e60e6a957ffdb002a1cb06bc796c4c46496736`의 승인된 신규4파일이다. 원격 최신성은 확인하지 않았다. 아래 SHA-256은 검토자가 target/staging/manifest 일치를 직접 확인했다.
 
 | 파일 | SHA-256 |
 |---|---|
