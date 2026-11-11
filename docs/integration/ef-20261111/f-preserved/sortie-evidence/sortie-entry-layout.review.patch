@@ -1,0 +1,101 @@
+--- a/view/world/world_map_screen.gd
++++ b/view/world/world_map_screen.gd
+@@ -39,6 +39,7 @@
+ var _sub: Label
+ var _crumbs := {}
+ var _card: PanelContainer
++var _product_sortie: Button
+ var _result: PanelContainer
+ var _cta: PanelContainer
+ var _chip: PanelContainer
+@@ -368,7 +369,16 @@
+ 	sp.size_flags_vertical = Control.SIZE_EXPAND_FILL
+ 	v.add_child(sp)
+ 	if not development:
+-		v.add_child(go)
++		var actions := HBoxContainer.new()
++		actions.add_theme_constant_override("separation", 10)
++		v.add_child(actions)
++		go.size_flags_horizontal = Control.SIZE_EXPAND_FILL
++		actions.add_child(go)
++		_product_sortie = _btn("적벽 첫 작전 · 정면")
++		_product_sortie.name = "FirstOperationProduct"
++		_product_sortie.size_flags_horizontal = Control.SIZE_EXPAND_FILL
++		_product_sortie.pressed.connect(_start_product_sortie)
++		actions.add_child(_product_sortie)
+ 	_set_difficulty(_difficulty)
+ 	_set_mode(_mode)
+ 	_card.visible = false
+@@ -644,6 +654,7 @@
+ 	for k in _diff_btns:
+ 		(_diff_btns[k] as Button).set_pressed_no_signal(k == d)
+ 	_diff_note.text = BattleBrief.difficulty_note(d)
++	_update_product_sortie()
+ 
+ func _set_mode(m: String) -> void:
+ 	_mode = m
+@@ -651,6 +662,14 @@
+ 		(_mode_btns[k] as Button).set_pressed_no_signal(k == m)
+ 	_mode_note.text = "전장에서 직접 지휘한다. 지금 전장은 시연 편성으로 진행된다." if m == "direct" \
+ 		else "지휘관 AI가 적벽 편성으로 끝까지 싸우고 결과만 보여 준다. 수십 초 걸릴 수 있다."
++	_update_product_sortie()
++
++func _product_sortie_allowed() -> bool:
++	return _difficulty == "표준" and _mode == "direct"
++
++func _update_product_sortie() -> void:
++	if _product_sortie != null:
++		_product_sortie.disabled = not _product_sortie_allowed()
+ 
+ func make_brief(seed := -1) -> BattleBrief:
+ 	var b := BattleBrief.new()
+@@ -877,12 +896,27 @@
+ 	}
+ 
+ func sortie(seed := -1, development_route := "") -> void:
+-	if _restore_job != null or _import_dialog != null or state == "sortie" or state == "resolve":
+-		return
++	if _sortie_blocked():
++		return
++	var next := make_brief(seed)
++	if not development_route.is_empty():
++		next.select_first_operation_dev(development_route)
++	_begin_sortie(next)
++
++func _start_product_sortie() -> void:
++	if _sortie_blocked() or state not in ["browse", "result"] or _product_sortie == null \
++			or not _product_sortie.is_visible_in_tree() or not _product_sortie_allowed():
++		return
++	var next := make_brief(BattleBrief.Product.REQUEST.seed)
++	next.select_first_operation_product()
++	_begin_sortie(next)
++
++func _sortie_blocked() -> bool:
++	return _restore_job != null or _import_dialog != null or state == "sortie" or state == "resolve"
++
++func _begin_sortie(next: BattleBrief) -> void:
+ 	_sortie_origin = _capture_sortie_origin()
+-	brief = make_brief(seed)
+-	if not development_route.is_empty():
+-		brief.select_first_operation_dev(development_route)
++	brief = next
+ 	sound.play("confirm_heavy")
+ 	state = "sortie"
+ 	_card.visible = false
+@@ -925,13 +959,14 @@
+ 	var link := _link()
+ 	var origin := _sortie_origin
+ 	_sortie_origin = {}
+-	var operation := not brief.operation_request().is_empty()
++	var brief_request := brief.operation_request()
++	var operation := not brief_request.is_empty()
+ 	if operation or (brief.mode == "direct" and link):
+ 		state = "leaving"
+ 		var error: Error = link.go_battle(brief, origin) if link else ERR_UNAVAILABLE
+ 		if error != OK:
+ 			_restore_sortie_origin(origin)
+-			if operation and error == ERR_UNAVAILABLE:
++			if brief_request.get("capability") == BattleBrief.FIRST_OPERATION_DEV_REQUEST.capability and error == ERR_UNAVAILABLE:
+ 				_show_chip("PC 개발 작전을 지금은 시작할 수 없습니다.")
+ 				return
+ 			_show_chip("전장에 들어갈 수 없습니다. 다시 출격해 주세요.")

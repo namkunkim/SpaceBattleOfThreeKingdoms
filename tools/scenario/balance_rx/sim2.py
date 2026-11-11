@@ -8,6 +8,7 @@
 """
 import json, math, random, sys, statistics as st
 from collections import Counter, defaultdict
+from pathlib import Path
 
 D = r"C:\WorkSpace\Seonghanji\data"
 def J(n): return json.load(open(f"{D}\\{n}", encoding="utf-8"))
@@ -334,8 +335,12 @@ def time_limit(sqs):
     c0 = sum(s.cost0() for s in sqs if s.side == "cao"); cr = sum(s.cost_now() for s in sqs if s.side == "cao")
     return dict(reason="time", winner="alliance" if ar * c0 > cr * a0 else "cao")
 
+# The shared scenario builder is one directory above this script.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import make_red_cliffs_208 as MS
-SC = json.load(open(r"C:\WorkSpace\SpaceBattleOfThreeKingdoms\data\scenarios\red_cliffs_208_realtime.json", encoding="utf-8"))
+scenario_path = Path(__file__).resolve().parents[3] / "data" / "scenarios" / "red_cliffs_208_realtime.json"
+with scenario_path.open(encoding="utf-8") as scenario_file:
+    SC = json.load(scenario_file)
 HOST = SC["chain_explosion_override"]["host_squadron_id"]
 BASE = dict(ai={"cao_cao": "advance", "sun_quan": "defend", "liu_bei": "defend"}, standoff=100)
 

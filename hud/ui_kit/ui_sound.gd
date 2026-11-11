@@ -64,6 +64,8 @@ static func vibrate(ms: int) -> void:
 	if GameSettings.vibrate:
 		Input.vibrate_handheld(ms)
 
+var play_one_shots := true
+
 var _streams := {}
 var _last := {}
 var _players: Array[AudioStreamPlayer] = []
@@ -102,6 +104,9 @@ func _ready() -> void:
 		add_child(lp)
 		_loops[l] = lp
 	apply_volume()
+	# Headless shutdown can retain an active Ogg playback in the audio server.
+	if DisplayServer.get_name() == "headless":
+		return
 	_music = AudioStreamPlayer.new()
 	_music.bus = "Music"
 	_music.finished.connect(_next_music)
@@ -156,6 +161,8 @@ func play(ev: String) -> void:
 		history.pop_front()
 	if spec.has("vibrate"):
 		vibrate(int(spec.vibrate))
+	if not play_one_shots:
+		return
 	var p := _free_player()
 	if p == null:
 		return

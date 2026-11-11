@@ -1,0 +1,6 @@
+[configuration]
+entry_symbol = "o07_win32_init"
+compatibility_minimum = "4.7"
+
+[libraries]
+windows.x86_64 = "res://native/o07_win32/o07_win32.dll"

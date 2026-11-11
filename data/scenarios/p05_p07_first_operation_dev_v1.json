@@ -1,0 +1,290 @@
+{
+  "schema": "p05-p07-first-operation/1",
+  "id": "red-cliffs-first-operation-dev-v1",
+  "status": "development_candidate",
+  "seed": 208,
+  "difficulty_id": "standard",
+  "inputs": {
+    "roster": "res://data/scenarios/red_cliffs_208_realtime.json",
+    "combat_rules": "res://data/profiles/combat_m3.json",
+    "movement_rules": "res://data/profiles/poc_corridor.json",
+    "inheritance": "roster_composition_only_and_referenced_rule_values; operation_definition_owns_space_spawns_timing_and_outcomes"
+  },
+  "space": {
+    "kind": "source",
+    "transform": "identity",
+    "origin": [
+      0,
+      0
+    ],
+    "size": [
+      1700,
+      1150
+    ],
+    "nodes": {
+      "E": [
+        250,
+        830
+      ],
+      "J": [
+        520,
+        490
+      ],
+      "A": [
+        895,
+        240
+      ],
+      "B": [
+        690,
+        875
+      ],
+      "D": [
+        1060,
+        865
+      ],
+      "C": [
+        1320,
+        640
+      ],
+      "R": [
+        1450,
+        290
+      ]
+    },
+    "envelope": "p05-layout-disks-v1",
+    "center_tolerance": 2.0,
+    "safety_margin": 1.0,
+    "center_inset": 40,
+    "corridor_half_width": 155.0,
+    "ally_pair_offset": 67.0,
+    "regions": {
+      "E": {
+        "deployment_radius": 155.0,
+        "exit_radius": 75.0
+      },
+      "A": {
+        "service_radius": 75.0
+      },
+      "B": {
+        "service_radius": 75.0
+      },
+      "C": {
+        "objective_radius": 320.0
+      },
+      "R": {
+        "deployment_radius": 60.0
+      }
+    },
+    "routes": {
+      "front": {
+        "nodes": [
+          "E",
+          "J",
+          "A",
+          "C"
+        ],
+        "service": "A",
+        "approach_standoff": 245.0
+      },
+      "flank": {
+        "nodes": [
+          "E",
+          "J",
+          "B",
+          "D",
+          "C"
+        ],
+        "service": "B",
+        "approach_standoff": 245.0
+      },
+      "reinforcement": {
+        "nodes": [
+          "R",
+          "C"
+        ],
+        "approach_standoff": 155.0
+      }
+    },
+    "motion": {
+      "max_step_ms": 100,
+      "max_speed_per_s": 20,
+      "max_turn_deg_per_s": 36,
+      "boundaries": "inclusive",
+      "turn": "while_stopped",
+      "blocked_step": "hold_and_retry"
+    }
+  },
+  "fleets": [
+    {
+      "id": "RC-LIU-SQ-01",
+      "roster_id": "RC-LIU-SQ-01",
+      "side": 0,
+      "spawn": "E",
+      "offset_xy": [
+        0,
+        -67
+      ],
+      "heading_deg": -51.54629078329403,
+      "formation_id": "FRM-03",
+      "allowed_formations": [
+        "FRM-03",
+        "FRM-01"
+      ],
+      "ship_count": 39,
+      "outer_radius": 75.45785180543258,
+      "initial_ammo_bp": 9000
+    },
+    {
+      "id": "RC-LIU-SQ-02",
+      "roster_id": "RC-LIU-SQ-02",
+      "side": 0,
+      "spawn": "E",
+      "offset_xy": [
+        0,
+        67
+      ],
+      "heading_deg": -51.54629078329403,
+      "formation_id": "FRM-01",
+      "allowed_formations": [
+        "FRM-01",
+        "FRM-03"
+      ],
+      "ship_count": 21,
+      "outer_radius": 50.05925429507219,
+      "initial_ammo_bp": 9000
+    },
+    {
+      "id": "RC-CAO-SQ-04",
+      "roster_id": "RC-CAO-SQ-04",
+      "side": 1,
+      "spawn": "C",
+      "offset_xy": [
+        0,
+        0
+      ],
+      "heading_deg": 0,
+      "formation_id": "FRM-04",
+      "allowed_formations": [
+        "FRM-04"
+      ],
+      "ship_count": 45,
+      "outer_radius": 87.17965055178861,
+      "initial_ammo_bp": 10000
+    },
+    {
+      "id": "RC-CAO-SQ-05",
+      "roster_id": "RC-CAO-SQ-05",
+      "side": 1,
+      "spawn": "R",
+      "offset_xy": [
+        0,
+        0
+      ],
+      "heading_deg": 110.37643521383642,
+      "formation_id": "FRM-03",
+      "allowed_formations": [
+        "FRM-03"
+      ],
+      "ship_count": 30,
+      "outer_radius": 47.92788247833137,
+      "initial_ammo_bp": 10000
+    }
+  ],
+  "capture": {
+    "initial_control": {
+      "A": "neutral",
+      "B": "neutral",
+      "C": "enemy"
+    },
+    "facility_capture_ms": 20000,
+    "facility_activate_ms": 10000,
+    "objective_capture_ms": 20000,
+    "eligibility": "stopped_ally_center_in_region",
+    "contested": "enemy_center_in_region_pauses_capture_and_disables_service",
+    "resume": "same_actor_and_ownership_epoch",
+    "objective_defender_id": "RC-CAO-SQ-04",
+    "objective_defender_condition": "no_combat_capable_ships",
+    "region_radius_fields": {
+      "A": "service_radius",
+      "B": "service_radius",
+      "C": "objective_radius"
+    }
+  },
+  "supply": {
+    "kind": "m8_ammo_only",
+    "stationary_ms": 60000,
+    "still_eps_per_s": 0.5,
+    "materials_per_refill": 1,
+    "rate_bp": 10000,
+    "priority": [
+      "ammo_ratio_asc",
+      "still_since_asc",
+      "squadron_id_asc"
+    ],
+    "slots_per_facility": 1,
+    "stock_by_facility": {
+      "A": {
+        "ammo": 1000,
+        "materials": 2
+      },
+      "B": {
+        "ammo": 1000,
+        "materials": 2
+      }
+    },
+    "ammo_rule": "full_positive_deficit_to_live_m8_cap",
+    "ineligible_cycle": "discard_incomplete_progress",
+    "completion_key": [
+      "operation_id",
+      "facility_id",
+      "ownership_epoch",
+      "fleet_id",
+      "cycle_id"
+    ],
+    "initial_ammo_rule": "floor_each_m8_ammo_cap_times_initial_ammo_bp_over_10000"
+  },
+  "reinforcement": {
+    "id": "first-operation-r-01",
+    "fleet_id": "RC-CAO-SQ-05",
+    "route_id": "reinforcement",
+    "scheduled_ms": 125000,
+    "time_comparison": "gt",
+    "blocked": "wait_for_legal_r_placement"
+  },
+  "settlement": {
+    "deadline_ms": 1200000,
+    "command_fleet_id": "RC-LIU-SQ-01",
+    "succession": "disabled",
+    "command_loss": "flagship_lost_before_valid_e_exit",
+    "withdrawal_min_survival_bp": 5000,
+    "entry_cost": "one_per_ship_actually_deployed",
+    "surviving_cost": "one_per_present_ship_on_valid_e_exit",
+    "withdrawal_commit": "explicit_finalize_or_deadline",
+    "event_order": [
+      "movement_and_combat",
+      "command_loss",
+      "capture_and_activation",
+      "withdrawal_exit",
+      "objective_or_explicit_finalize",
+      "deadline",
+      "supply",
+      "reinforcement"
+    ],
+    "outcomes": [
+      "objective_success",
+      "withdrawal_success",
+      "failure"
+    ],
+    "after_terminal": "freeze_all_operation_effects",
+    "withdrawal_route": "reverse_selected_ally_route_to_e"
+  },
+  "product_adoption_required": {
+    "difficulty_id": "Freeze the supported PC selection and existing difficulty mapping.",
+    "space": "Freeze candidate geometry and motion against dynamic runtime formations and sweep.",
+    "fleets": "Confirm selection, initial headings and ammo ratio. Floor per current M8 ammo cap.",
+    "capture": "Approve eligibility, contest, defender neutralization and capture/activation durations.",
+    "supply": "Approve campaign stock, slots and ownership-epoch interruption. M8 supply values are reused.",
+    "reinforcement": "Approve schedule, strict boundary, roster and blocked placement.",
+    "settlement": "Approve deadline, command loss, costs, survival threshold and global event order."
+  }
+}

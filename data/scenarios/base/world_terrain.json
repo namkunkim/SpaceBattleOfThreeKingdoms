@@ -1,0 +1,83 @@
+{
+  "factions": {
+    "wei": {
+      "name": "북해 테라 성단",
+      "english": "Tera Cluster",
+      "region": "중원 / 하북",
+      "description": "은하계에서 가장 오래되고 안정된 고밀도 행성계 군락. 광물과 인구가 풍부하지만, 넓은 영토 때문에 여러 전선이 동시에 위협받기 쉽다.",
+      "systems": [
+        "SYS-01",
+        "SYS-02",
+        "SYS-03",
+        "SYS-04",
+        "SYS-05",
+        "SYS-06",
+        "SYS-07",
+        "SYS-08",
+        "SYS-14"
+      ]
+    },
+    "shu": {
+      "name": "파촉 성운 암흑대",
+      "english": "Nebula Abyss",
+      "region": "파촉 / 익주",
+      "description": "암흑 성운과 초신성 잔해로 둘러싸인 천연 요새. 소수의 초공간 항로 덕분에 방어에 유리하고 외부로 진출하기도 어렵다.",
+      "systems": [
+        "SYS-11",
+        "SYS-12",
+        "SYS-19"
+      ]
+    },
+    "wu": {
+      "name": "양자강 이온 성류",
+      "english": "Ion River Matrix",
+      "region": "강남 / 양주·형주",
+      "description": "이온 전류와 우주 폭풍을 따라 이어진 성계 사슬. 대형 함선은 진입하기 어렵고 고속 기동함은 기습과 게릴라전에 유리하다.",
+      "systems": [
+        "SYS-13",
+        "SYS-15",
+        "SYS-16"
+      ]
+    }
+  },
+  "landmarks": [
+    {
+      "id": "holo-gate",
+      "system": "SYS-01",
+      "name": "호로관 거대 웜홀",
+      "english": "Holo Gate",
+      "description": "위 성단으로 향하는 유일한 초공간 도약 관문.",
+      "mechanic": "웜홀 입구를 막은 거대 우주 요새를 돌파해야 중원으로 진출할 수 있다.",
+      "map_offset": [
+        -81,
+        62
+      ]
+    },
+    {
+      "id": "chibi-gas-sector",
+      "system": "SYS-13",
+      "region": "RGN-04",
+      "body": "BODY-RGN-04-01",
+      "name": "적벽 가스 행성계",
+      "english": "Chibi Gas Sector",
+      "description": "위·촉·오의 접경에 펼쳐진 가스 행성 밀집 지역.",
+      "mechanic": "플라즈마 화공으로 인화성 가스의 연쇄 폭발을 유도할 수 있다. 대함대를 일소할 수 있지만 아군도 폭발에 휘말릴 수 있다.",
+      "map_offset": [
+        -40,
+        61
+      ]
+    },
+    {
+      "id": "wuzhang-belt",
+      "system": "SYS-12",
+      "name": "오장원 소행성대",
+      "english": "Wuzhang Asteroid Belt",
+      "description": "위와 촉의 접경에 펼쳐진 거대 소행성대.",
+      "mechanic": "상시 전자기 교란이 레이더와 통신을 마비시켜 시야 확보가 어렵고 매복에 유리하다.",
+      "map_offset": [
+        108,
+        -34
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+--- a/view/world/world_map_screen.gd
++++ b/view/world/world_map_screen.gd
+@@ -369,11 +369,16 @@
+ 	sp.size_flags_vertical = Control.SIZE_EXPAND_FILL
+ 	v.add_child(sp)
+ 	if not development:
+-		v.add_child(go)
++		var actions := HBoxContainer.new()
++		actions.add_theme_constant_override("separation", 10)
++		v.add_child(actions)
++		go.size_flags_horizontal = Control.SIZE_EXPAND_FILL
++		actions.add_child(go)
+ 		_product_sortie = _btn("적벽 첫 작전 · 정면")
+ 		_product_sortie.name = "FirstOperationProduct"
++		_product_sortie.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+ 		_product_sortie.pressed.connect(_start_product_sortie)
+-		v.add_child(_product_sortie)
++		actions.add_child(_product_sortie)
+ 	_set_difficulty(_difficulty)
+ 	_set_mode(_mode)
+ 	_card.visible = false

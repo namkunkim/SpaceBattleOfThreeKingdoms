@@ -1,0 +1,16 @@
+config_version=5
+
+[application]
+config/name="P05 PC Access Validation"
+run/main_scene="res://main.tscn"
+
+[display]
+window/size/viewport_width=1050
+window/size/viewport_height=760
+window/size/window_width_override=1050
+window/size/window_height_override=760
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.043, 0.063, 0.10, 1)

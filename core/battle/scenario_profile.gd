@@ -28,6 +28,14 @@ static func load_profile(def_path: String, difficulty := "", dprof_override := {
 		combat = ProfileLoader.read_json(def.combat_rules_path).get("combat", {})
 		if combat.is_empty():
 			return {}
+	if def.has("movement_field_path"):
+		var movement := ProfileLoader.read_json(def.movement_field_path)
+		if not BattleTerrain.valid_movement_field(movement):
+			push_error("Invalid movement field: %s" % def.movement_field_path)
+			return {}
+		var terrain: Dictionary = combat.get("terrain", {})
+		terrain["movement_field"] = movement
+		combat["terrain"] = terrain
 	var p := build(def, scn, base, difficulty if difficulty != "" else def.default_difficulty, combat)
 	if def.has("ai_rules_path") and not p.is_empty():
 		p.ai = ProfileLoader.read_json(def.ai_rules_path).get("ai", {})   # M7 지휘관 AI 수치. 없으면 POC AI

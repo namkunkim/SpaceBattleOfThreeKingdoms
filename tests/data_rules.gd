@@ -16,6 +16,87 @@ const UNIT_CONSTS := ["FORM_COUNT", "FORM_SHAPE", "TICK_HZ", "TICK_S", "REF_DT",
 # rules.gd에서 이 함수 안은 진형 슬롯 기하라 검사에서 뺀다(M3에서 본편 진형 7종으로 교체)
 const EXEMPT_FUNCS := {"rules.gd": ["formation_offsets"]}
 
+# Packaged checkpoint engine ID and SHA-256 source digest shape.
+const HASH_FORMAT_PATH := "res://core/battle/operation_private_state.gd"
+const HASH_FORMAT_PATTERNS := {
+	"engine hash prefix width": r'''(?mx)
+		^[ \t]+ var \s+ engine \s* := \s*
+		(?<quote>["']) %d\.%d\.%d\.%s\.%s \k<quote> \s* % \s* \[ \s*
+		version \s* \. \s* major \s* , \s* version \s* \. \s* minor \s* , \s*
+		version \s* \. \s* patch \s* , \s* version \s* \. \s* status \s* , \s*
+		str \s* \( \s* version \s* \. \s* hash \s* \) \s* \. \s* left \s* \( \s*
+		(?<width>9) \s* \) \s* ,? \s* \] [ \t]* \r?$''',
+	"source SHA-256 digest width": r'''(?mx)
+		^[ \t]+ if \s+ not \s+ digest \s+ is \s+ String \s+ or \s+
+		digest \s* \. \s* length \s* \( \s* \) \s* != \s* (?<width>64) \s+ or \s+
+		not \s+ digest \s* \. \s* is_valid_hex_number \s* \( \s* \) \s* or \s+
+		digest \s* \. \s* begins_with \s* \( \s* (?: "\+" | '\+' ) \s* \) \s* or \s+
+		digest \s* \. \s* begins_with \s* \( \s* (?: "-" | '-' ) \s* \) \s* or \s+
+		digest \s* != \s* digest \s* \. \s* to_lower \s* \( \s* \) \s* : [ \t]* \r?$''',
+}
+
+# Approved checkpoint, replay, and adapter format literals. An empty function
+# name selects top-level declarations. Named captures identify only the literals
+# belonging to each role. A missing or duplicate statement is a separate error.
+const STRUCTURE_PATTERNS := {
+	"res://core/battle/first_operation_checkpoint.gd": {
+		"": {
+			"checkpoint tick limit": 'const \\s+ MAX_TICKS \\s* := \\s* (?<value>12000)',
+			"checkpoint counter limit": 'const \\s+ MAX_COUNT \\s* := \\s* (?<value>2147483647)',
+			"checkpoint command batch limit": 'const \\s+ MAX_BATCH \\s* := \\s* (?<value>256)',
+		},
+		"prepare_restore": {
+			"initial restore step budget": 'var \\s+ result \\s* := \\s* job \\s* \\. \\s* step \\s* \\( \\s* (?<value>100000) \\s* \\)',
+			"repeated restore step budget": 'result \\s* = \\s* job \\s* \\. \\s* step \\s* \\( \\s* (?<value>100000) \\s* \\)',
+		},
+		"_normalize": {
+			"checkpoint digest width": 'if \\s+ not \\s+ _hex \\s* \\( \\s* packet \\s* \\[ \\s* key \\s* \\] \\s* , \\s* (?<value>64) \\s* \\) \\s* :',
+			"operation ID suffix width": r'''if \s+ not \s+ operation_id \s+ is \s+ String \s+ or \s+ not \s+ operation_id \s* \. \s* begins_with \s* \( \s* prefix \s* \) \s+ or \s+ not \s+ _hex \s* \( \s* operation_id \s* \. \s* trim_prefix \s* \( \s* prefix \s* \) \s* , \s* (?<value>32) \s* \) \s* :''',
+			"checkpoint request uint32 limit": 'if \\s+ not \\s+ _uint \\s* \\( \\s* field \\s* , \\s* (?<value>4294967295) \\s* \\) \\s* :',
+			"checkpoint request string limit": 'if \\s+ not \\s+ field \\s+ is \\s+ String \\s+ or \\s+ field \\s* \\. \\s* length \\s* \\( \\s* \\) \\s* > \\s* (?<value>128) \\s* :',
+			"checkpoint tick to clock conversion": r'''if \s+ not \s+ _uint \s* \( \s* packet \s* \. \s* tick \s* , \s* MAX_TICKS \s* \) \s+ or \s+ not \s+ _uint \s* \( \s* packet \s* \. \s* clock_ms \s* , \s* MAX_TICKS \s* \* \s* (?<limit>100) \s* \) \s+ or \s+ int \s* \( \s* packet \s* \. \s* clock_ms \s* \) \s* != \s* int \s* \( \s* packet \s* \. \s* tick \s* \) \s* \* \s* (?<match>100) \s* :''',
+		},
+	},
+	"res://core/battle/first_operation_dev.gd": {
+		"_build_runtime": {
+			"operation ID random byte count": r'''operation_id \s* = \s* DEFINITION_ID \s* \+ \s* (?: "/" | '/' ) \s* \+ \s* Crypto \s* \. \s* new \s* \( \s* \) \s* \. \s* generate_random_bytes \s* \( \s* (?<value>16) \s* \) \s* \. \s* hex_encode \s* \( \s* \)''',
+		},
+	},
+	"res://core/battle/first_operation_preparer.gd": {
+		"_validate_request": {
+			"preparer seed uint32 limit": r'''if \s+ typeof \s* \( \s* request \s* \. \s* seed \s* \) \s* != \s* TYPE_INT \s+ or \s+ request \s* \. \s* seed \s* < \s* 0 \s+ or \s+ request \s* \. \s* seed \s* > \s* (?<value>4294967295) \s* :''',
+		},
+		"_initial_clock_matches": {
+			"initial projection clock frequency": r'''
+				return \s* \( \s* typeof \s* \( \s* summary \s* \. \s* get \s* \( \s* "tick" \s* \) \s* \) \s* == \s* TYPE_INT \s+ and \s+ summary \s* \. \s* tick \s* == \s* 0
+				\s+ and \s+ typeof \s* \( \s* summary \s* \. \s* get \s* \( \s* "clock_ms" \s* \) \s* \) \s* == \s* TYPE_INT \s+ and \s+ summary \s* \. \s* clock_ms \s* == \s* 0
+				\s+ and \s+ typeof \s* \( \s* summary \s* \. \s* get \s* \( \s* "over" \s* \) \s* \) \s* == \s* TYPE_BOOL \s+ and \s+ not \s+ summary \s* \. \s* over
+				\s+ and \s+ typeof \s* \( \s* projection \s* \. \s* get \s* \( \s* "tick" \s* \) \s* \) \s* == \s* TYPE_INT \s+ and \s+ projection \s* \. \s* tick \s* == \s* summary \s* \. \s* tick
+				\s+ and \s+ typeof \s* \( \s* projection \s* \. \s* get \s* \( \s* "side" \s* \) \s* \) \s* == \s* TYPE_INT \s+ and \s+ projection \s* \. \s* side \s* == \s* 0
+				\s+ and \s+ typeof \s* \( \s* projection \s* \. \s* get \s* \( \s* "hz" \s* \) \s* \) \s* == \s* TYPE_INT \s+ and \s+ projection \s* \. \s* hz \s* == \s* (?<value>10)
+				\s+ and \s+ projection \s* \. \s* get \s* \( \s* "clock_s" \s* \) \s* == \s* 0\.0
+				\s+ and \s+ projection \s* \. \s* get \s* \( \s* "squadrons" \s* \) \s+ is \s+ Array \s* \)''',
+		},
+	},
+	"res://core/battle/operation_replay.gd": {
+		"": {
+			"replay byte limit": 'const \\s+ MAX_BYTES \\s* := \\s* (?<mib>16) \\s* \\* \\s* (?<kib>1024) \\s* \\* \\s* (?<bytes>1024)',
+			"replay tick limit": 'const \\s+ MAX_TICKS \\s* := \\s* (?<value>18000)',
+			"replay command limit": 'const \\s+ MAX_COMMANDS \\s* := \\s* (?<value>18000)',
+			"replay ID limit": 'const \\s+ MAX_ID \\s* := \\s* (?<value>2147483647)',
+		},
+	},
+	"res://core/battle/operation_runtime_adapter.gd": {
+		"": {
+			"adapter integer limit": 'const \\s+ LIMIT \\s* := \\s* (?<value>2147483647)',
+		},
+		"normalize": {
+			"adapter seed uint32 limit": r'''var \s+ maximum \s* := \s* (?<value>4294967295) \s+ if \s+ key \s* == \s* "seed" \s+ else \s+ LIMIT''',
+			"adapter supported clock frequency": r'''if \s+ value \s* \. \s* hz \s* != \s* (?<value>10) \s* : \s* return \s+ fail \s* \( \s* "unsupported_hz" \s* , \s* "hz" \s* \)''',
+		},
+	},
+}
+
 func _initialize() -> void:
 	call_deferred("_run")
 
@@ -44,17 +125,122 @@ static func _code(line: String) -> String:
 		out += ch
 	return out
 
-func _scan_literals(path: String, hits: Array) -> void:
+
+# Keep quoted tokens and physical line numbers for the two statement matches.
+func _hash_format_lines(source: String, remaining: Dictionary) -> Dictionary:
+	var trivia := RegEx.create_from_string("(?m)(\"\"\"[\\s\\S]*?\"\"\"|'''[\\s\\S]*?''')|(\"(?:\\\\[^\\r\\n]|[^\"\\\\\\r\\n])*\"|'(?:\\\\[^\\r\\n]|[^'\\\\\\r\\n])*')|#[^\\r\\n]*|\\\\(?=[ \\t]*\\r?$)")
+	var code := ""
+	var offset := 0
+	for token in trivia.search_all(source):
+		code += source.substr(offset, token.get_start() - offset)
+		if token.get_string(1) != "":
+			code += "~" + "\n~".repeat(token.get_string(1).count("\n"))
+		else:
+			code += token.get_string(2)
+		offset = token.get_end()
+	code += source.substr(offset)
+	var header := RegEx.create_from_string("(?m)^static[ \\t]+func[ \\t]+_packaged_code[ \\t]*\\([ \\t]*\\)[ \\t]*->[ \\t]*Dictionary[ \\t]*:[ \\t]*\\r?$").search(code)
+	var lines := {}
+	if header == null:
+		return lines
+	var start := header.get_end()
+	var next_top_level := RegEx.create_from_string("(?m)^(?:(?:static[ \\t]+)?func|class|class_name|extends|const|var|enum|signal)\\b|^@").search(code, start)
+	var end := code.length() if next_top_level == null else next_top_level.get_start()
+	for name in HASH_FORMAT_PATTERNS:
+		var occurrence := RegEx.create_from_string(HASH_FORMAT_PATTERNS[name]).search(code, start, end)
+		if occurrence != null:
+			var line := code.count("\n", 0, occurrence.get_start("width")) + 1
+			lines[line] = occurrence.get_string("width")
+			remaining.erase(name)
+	return lines
+
+# Preserve offsets while treating explicit continuations as part of the same
+# logical statement. Quoted tokens are kept for matching; multiline strings are opaque.
+func _structure_source(source: String) -> String:
+	var trivia := RegEx.create_from_string(r'''(?x)
+		(?<multiline> (?<delimiter> "{3} | '{3} )
+			(?: \\ [\s\S] | (?! \k<delimiter> | \\ ) [\s\S] )* \k<delimiter> )
+		| (?<quoted> "(?: \\ [^\r\n] | [^"\\\r\n] )*" | '(?: \\ [^\r\n] | [^'\\\r\n] )*' )
+		| \# [^\r\n]*
+		| \\ [ \t]* \r?\n
+	''')
+	var code := ""
+	var offset := 0
+	for token in trivia.search_all(source):
+		code += source.substr(offset, token.get_start() - offset)
+		if token.get_string("multiline") != "":
+			for ch in token.get_string():
+				code += ch if ch == "\n" or ch == "\r" else "~"
+		elif token.get_string("quoted") != "":
+			code += token.get_string("quoted")
+		else:
+			code += " ".repeat(token.get_end() - token.get_start())
+		offset = token.get_end()
+	return code + source.substr(offset)
+
+
+func _structure_occurrences(path: String, source: String, code: String, findings: Array, errors: Array) -> Dictionary:
+	var lines := {}
+	var declarations := RegEx.create_from_string(
+		r'(?m)^(?:(?:static[ \t]+)?func[ \t]+([A-Za-z_][A-Za-z_0-9]*)|class\b|class_name\b|extends\b|const\b|var\b|enum\b|signal\b|@)'
+	).search_all(code)
+	var scopes: Dictionary = STRUCTURE_PATTERNS[path]
+	for scope in scopes:
+		var ranges: Array[Vector2i] = []
+		var indent := "[ \t]+"
+		if scope == "":
+			ranges.append(Vector2i(0, code.length()))
+			indent = ""
+		else:
+			for i in declarations.size():
+				if declarations[i].get_string(1) == scope:
+					var end: int = declarations[i + 1].get_start() if i + 1 < declarations.size() else code.length()
+					ranges.append(Vector2i(declarations[i].get_end(), end))
+		for role in scopes[scope]:
+			var pattern := RegEx.create_from_string("(?mx)^" + indent + scopes[scope][role] + "[ \t]*\\r?$")
+			var matches: Array[RegExMatch] = []
+			for span in ranges:
+				matches.append_array(pattern.search_all(code, span.x, span.y))
+			if matches.size() != 1:
+				errors.append("%s  missing, changed or duplicate structure  <- %s (%d matches)" % [path, role, matches.size()])
+				continue
+			var occurrence := matches[0]
+			for name in occurrence.get_names():
+				var offset := occurrence.get_start(name)
+				var line := source.count("\n", 0, offset) + 1
+				var column := offset - source.rfind("\n", offset) - 1
+				var literal := occurrence.get_string(name)
+				if not lines.has(line):
+					lines[line] = []
+				lines[line].append(Vector2i(column, literal.length()))
+				findings.append("%s:%d  %s  <- %s" % [path, line, literal, role])
+	return lines
+
+func _scan_literals(path: String, hits: Array, remaining_hash_format: Dictionary, structure: Array, structure_errors: Array) -> void:
 	var base := path.get_file()
 	if EXEMPT_FILES.has(base):
 		return
 	var skip_funcs: Array = EXEMPT_FUNCS.get(base, [])
 	var re := RegEx.create_from_string("(?<![\\w.])(\\d+\\.?\\d*(?:e-?\\d+)?)\\b")
 	var in_skip := false
+	var source := FileAccess.get_file_as_string(path)
+	var syntax := source
+	var structure_lines := {}
+	if STRUCTURE_PATTERNS.has(path):
+		syntax = _structure_source(source)
+		structure_lines = _structure_occurrences(path, source, syntax, structure, structure_errors)
+	var format_lines := {}
+	if path == HASH_FORMAT_PATH:
+		format_lines = _hash_format_lines(source, remaining_hash_format)
 	var n := 0
-	for raw in FileAccess.get_file_as_string(path).split("\n"):
+	var offset := 0
+	for raw in source.split("\n"):
 		n += 1
-		var line := _code(raw)
+		var masked := syntax.substr(offset, raw.length())
+		offset += raw.length() + 1
+		for span in structure_lines.get(n, []):
+			masked = masked.substr(0, span.x) + " ".repeat(span.y) + masked.substr(span.x + span.y)
+		var line := _code(masked)
 		if line.begins_with("static func ") or line.begins_with("func "):
 			in_skip = false
 			for fn in skip_funcs:
@@ -69,8 +255,9 @@ func _scan_literals(path: String, hits: Array) -> void:
 		if is_unit:
 			continue
 		for m in re.search_all(line):
-			if not ALLOWED_NUMBERS.has(m.get_string(1)):
-				hits.append("%s:%d  %s  <- %s" % [path, n, m.get_string(1), raw.strip_edges()])
+			var literal := m.get_string(1)
+			if not ALLOWED_NUMBERS.has(literal) and format_lines.get(n) != literal:
+				hits.append("%s:%d  %s  <- %s" % [path, n, literal, raw.strip_edges()])
 
 func _used_keys(path: String, keys: Dictionary) -> void:
 	var re := RegEx.create_from_string("(?:\\bR|\\.R|\\brs\\.v|\\bv)\\.([a-z][a-z0-9_]*)(?![\\w(])")
@@ -83,9 +270,21 @@ func _run() -> void:
 	_files("res://core", core)
 	# --- 1. 정적: 규칙 수치 리터럴 0건 ---
 	var hits: Array = []
+	var remaining_hash_format := HASH_FORMAT_PATTERNS.duplicate()
+	var structure: Array = []
+	var structure_errors: Array = []
 	for f in core:
-		_scan_literals(f, hits)
-	if not TestCheck.ok(self, hits.is_empty(), "core에 규칙 수치 리터럴:\n" + "\n".join(hits)): return
+		_scan_literals(f, hits, remaining_hash_format, structure, structure_errors)
+	if not structure.is_empty():
+		print("data_rules structure literals (%d):\n%s" % [structure.size(), "\n".join(structure)])
+	var errors := PackedStringArray()
+	if not hits.is_empty():
+		errors.append("core에 규칙 수치 리터럴:\n" + "\n".join(hits))
+	for name in remaining_hash_format:
+		errors.append("%s  missing or changed hash format  <- %s" % [HASH_FORMAT_PATH, name])
+	if not structure_errors.is_empty():
+		errors.append("data_rules structure errors:\n" + "\n".join(structure_errors))
+	if not TestCheck.ok(self, errors.is_empty(), "\n".join(errors)): return
 	# --- 2. 코어가 읽는 키가 프로필에 있고, 프로필에 안 쓰는 키가 없다 ---
 	var used := {}
 	for f in core:
@@ -99,6 +298,7 @@ func _run() -> void:
 			if not TestCheck.ok(self, rules.has(k), "%s 프로필에 규칙 키 없음: %s (%s)" % [entry[0], k, used[k]]): return
 		for k in rules:
 			if not TestCheck.ok(self, used.has(k) or k in ["world_w", "world_h"], "%s 프로필의 안 쓰는 규칙 키: %s" % [entry[0], k]): return
+	if not _chase_fallback(): return
 	# --- 3. POC 프로필: 편성이 데이터에서 온다 ---
 	if not TestCheck.ok(self, poc.ally.size() == 6 and poc.foe.size() == 7 and poc.reinf.size() == 2, "poc fleets"): return
 	var sim0 := BattleSim.new(1)
@@ -175,6 +375,41 @@ func _run() -> void:
 	if not TestCheck.ok(self, other.fingerprint() != BattleSim.new(5, 10, foes["표준"]).fingerprint(), "difficulty changes state"): return
 	print("DATA_RULES_PASS keys=%d core=%d proposed=%d first_move=%d" % [used.size(), core.size(), prop.size(), first_move])
 	quit(0)
+
+# 시나리오 교전 거리 우선, 누락 시 POC 정본의 추격 기본값 170 유지.
+# 실제 이동 분기를 한 번 실행한다. fallback을 지우면 169에서도 추격하므로 실패한다.
+func _chase_fallback() -> bool:
+	if not TestCheck.ok(self, PocSetup.profile().rules.chase_engagement_fallback_r == 170, "chase fallback data = 170"): return false
+	var missing := [
+		{},
+		{"scenario_id": "no-realtime"},
+		{"realtime_rules": {}},
+		{"realtime_rules": {"range_band_hold": {}}},
+	]
+	var cases := []
+	for i in missing.size():
+		cases.append({"label": "missing-%d-inside" % i, "scenario": missing[i], "distance": 169.0, "moves": false})
+		cases.append({"label": "missing-%d-outside" % i, "scenario": missing[i], "distance": 171.0, "moves": true})
+	cases.append({"label": "override-150", "scenario": {"realtime_rules": {"range_band_hold": {"engagement_distance": 150}}}, "distance": 160.0, "moves": true})
+	cases.append({"label": "override-200", "scenario": {"realtime_rules": {"range_band_hold": {"engagement_distance": 200}}}, "distance": 180.0, "moves": false})
+	for c in cases:
+		var s := SalvoFixture.sim(
+			[SalvoFixture.def("chaser", 400, 450, [["SHP-04", 1]], true)],
+			[SalvoFixture.def("target", 400 + float(c.distance), 450, [["SHP-04", 1]], true)])
+		s.rs.scenario = c.scenario.duplicate(true)
+		s.assault = AssaultCore.new(s, s.salvo.C.assault)
+		# 별도 위치 차단은 hold_distance.gd가 검사한다. 누락 데이터에서도 추격 임계만 고립한다.
+		s._hold_d2 = 0.0
+		var f: FleetState = s.st.fleets[0]
+		var target: FleetState = s.st.fleets[1]
+		f.target_id = target.id
+		f.heading = 0.0
+		if not TestCheck.ok(self, s.salvo != null and s.assault != null and f.charge == 0 and s.sight_target(f) == target and f.range_r * s.R.chase_range_share < float(c.distance), "chase branch setup " + c.label): return false
+		var start := f.pos
+		s._fleet_phase(false)
+		var moved := f.pos.x > start.x and is_equal_approx(f.pos.y, start.y)
+		if not TestCheck.ok(self, moved == c.moves and f.moving == c.moves and (bool(c.moves) or f.pos == start), "chase fallback/override " + c.label): return false
+	return true
 
 # P8a 특기 스키마(REVIEW-P8-0 F-12): 필수 키, 기술 ID 참조, 술어·requires·효과 키 허용 목록, 슬롯 기본값 직책명.
 # 코어(skills.gd)가 해석하는 키만 허용한다. 슬롯 수·사용 횟수는 데이터에만 있다(코어 리터럴 검사는 1번이 한다)

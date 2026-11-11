@@ -59,7 +59,7 @@ var _backdrop: Array[Node] = []
 
 # 전장 배경판: 실제 전장(rig.limit) 크기로 깐다. 판이 전장보다 크면 경계가 안 보여 목적지가 보이지 않는 벽에서 잘리고 레이더와 어긋난다.
 # 전장이 바뀌면(init_game) 다시 부른다. 바깥은 전투장 원경판이 어둡게 채운다.
-func build_backdrop() -> void:
+func build_backdrop(terrain_field := {}) -> void:
 	for n in _backdrop:
 		n.queue_free()
 	_backdrop.clear()
@@ -69,17 +69,20 @@ func build_backdrop() -> void:
 	plane.size = W * CameraRig.S
 	var material := StandardMaterial3D.new()
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	material.albedo_texture = load("res://assets/backgrounds/red_cliffs_starfield_v1.png") as Texture2D
+	var background := "res://assets/backgrounds/red_cliffs_starfield_v1.png" if terrain_field.is_empty() else "res://assets/world_atlas/red-cliffs-reference-sky.jpg"
+	material.albedo_texture = load(background) as Texture2D
 	material.albedo_color = Color(0.7, 0.8, 0.9, 1.0)
 	plane.material = material
 	backdrop.mesh = plane
 	backdrop.position = rig.w3(W * 0.5, -1.0)
 	host.add_child(backdrop)
 	_backdrop.append(backdrop)
+	if not terrain_field.is_empty():
+		_add_terrain_overlay(str(terrain_field.get("overlay", "")), W)
 	# 200px 격자
 	var mesh := ImmediateMesh.new()
 	mesh.surface_begin(Mesh.PRIMITIVE_LINES)
-	var col := Color(0.63, 0.75, 1.0, 0.16)
+	var col := Color(0.63, 0.75, 1.0, 0.16 if terrain_field.is_empty() else 0.065)
 	var x := 0.0
 	while x <= W.x:
 		mesh.surface_set_color(col)
@@ -104,6 +107,29 @@ func build_backdrop() -> void:
 	grid.material_override = gm
 	host.add_child(grid)
 	_backdrop.append(grid)
+
+func _add_terrain_overlay(path: String, extent: Vector2) -> void:
+	if path.is_empty():
+		return
+	var texture := load(path) as Texture2D
+	if texture == null:
+		return
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for uv: Vector2 in [Vector2.ZERO, Vector2.RIGHT, Vector2.ONE, Vector2.ZERO, Vector2.ONE, Vector2.DOWN]:
+		surface.set_uv(uv)
+		surface.add_vertex(rig.w3(uv * extent, -0.975))
+	var overlay := MeshInstance3D.new()
+	overlay.name = "BattleTerrainOverlay"
+	overlay.mesh = surface.commit()
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	material.albedo_texture = texture
+	overlay.material_override = material
+	host.add_child(overlay)
+	_backdrop.append(overlay)
 
 # 전대 하나의 3D 노드(28척)를 만든다. FleetView의 root·nodes에 채운다.
 func build_fleet(f: BattleViewModel.FleetView) -> void:

@@ -9,6 +9,19 @@ const PROFILE_DEF := "res://data/profiles/red_cliffs_rt.json"
 const SCENARIO := "res://data/scenarios/red_cliffs_208_realtime.json"
 const MODES := ["direct", "auto"]
 
+# Mirrors the development composition root without loading its unfinished backend.
+const Product := preload("res://scripts/first_operation_source_reference.gd")
+const FIRST_OPERATION_DEV_ARG := "--pc-first-operation-dev"
+const FIRST_OPERATION_DEV_REQUEST := {
+	"capability": "pc/first-operation-dev/1",
+	"definition_id": "red-cliffs-first-operation-dev-v1",
+	"definition_version": 1,
+	"roster_id": "red-cliffs-dev-roster-v1",
+	"seed": 208,
+	"difficulty": "standard",
+	"mode": "direct",
+}
+
 var scenario_id := "RED-CLIFFS-208-RT"
 var seed := 0
 var difficulty := "표준"
@@ -16,6 +29,30 @@ var mode := "direct"
 var whatif_cards: Array = []   # M9(계략) 전까지 비어 있다. 카드 ID는 realtime_rules.what_if_cards
 var anchor := {"system": "SYS-13", "region": "RGN-04", "body": "BODY-RGN-04-01"}
 var edge_labels := {}
+
+# Transient handoff. The legacy Brief serializer is used for legacy replays.
+var _operation_request := {}
+
+func select_first_operation_dev(route_id: String) -> void:
+	_operation_request = FIRST_OPERATION_DEV_REQUEST.duplicate()
+	_operation_request.route_id = route_id
+	_operation_request.make_read_only()
+	seed = _operation_request.seed
+	mode = _operation_request.mode
+
+func select_first_operation_product() -> void:
+	_operation_request = Product.REQUEST
+	seed = Product.REQUEST.seed
+	difficulty = "표준"
+	mode = Product.REQUEST.mode
+
+func operation_route() -> String:
+	if _operation_request.get("capability") == Product.CAPABILITY:
+		return Product.ROUTE
+	return _operation_request.get("route_id", "")
+
+func operation_request() -> Dictionary:
+	return _operation_request
 
 static func difficulties() -> Array:
 	var scn := ProfileLoader.read_json(SCENARIO)

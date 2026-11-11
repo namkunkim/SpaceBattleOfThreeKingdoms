@@ -1,0 +1,69 @@
+extends SceneTree
+
+const Replay := preload("res://core/battle/operation_replay.gd")
+const Adapter := preload("res://core/battle/operation_runtime_adapter.gd")
+const Evidence := "res://tmp/p02-third-20261108/"
+var checks := 0
+var failed := 0
+
+func _initialize() -> void:
+	call_deferred("_run")
+
+func check(value: bool, label: String) -> void:
+	checks += 1
+	if not value:
+		failed += 1
+		push_error("P02_REPLAY_FAIL " + label)
+
+func fixture(name: String) -> Dictionary:
+	return JSON.parse_string(FileAccess.get_file_as_string(Evidence + "matrix/" + name + ".json"))
+
+func check_closed(name: String, expected: Dictionary) -> void:
+	var data := fixture(name)
+	var created := Adapter.create(data.input)
+	check(created.ok, name + " factory creation")
+	if not created.ok:
+		return
+	var owner: OperationPrivateState = created.owner
+	var result := Replay._play_and_close(created, data.commands)
+	check(result.get("ok") == expected.ok, name + " completion status")
+	if expected.ok and result.ok:
+		check(var_to_bytes(result.summary) == var_to_bytes(expected.summary), name + " native summary types")
+		check(var_to_bytes(result.events) == var_to_bytes(expected.events), name + " native event types and order")
+		check(result.event_count == expected.event_count and result.commands_consumed == expected.commands_consumed, name + " native counts")
+	elif not expected.ok:
+		check(result == expected, name + " exact failure")
+	check(owner.summary() == Adapter.fail("unprepared_owner", "owner"), name + " owner closed")
+	check(owner._sim == null, name + " sim detached")
+
+func _run() -> void:
+	var file := FileAccess.open(Evidence + "oracle.native", FileAccess.READ)
+	var oracle: Dictionary = file.get_var()
+	file.close()
+	for name in ["commands", "reordered", "removed", "defaults", "one-tick", "natural", "direct", "delegate"]:
+		var oracle_key: String = {"commands": "expected", "one-tick": "one_tick"}.get(name, name)
+		var expected: Dictionary = oracle[oracle_key].duplicate()
+		expected["ok"] = true
+		check_closed(name, expected)
+		var created := Adapter.create(fixture(name).input)
+		if created.ok:
+			var owner: OperationPrivateState = created.owner
+			var initial := owner.observe()
+			var expected_initial: Array = ["delegate", "delegate"] if name == "defaults" else expected.controls
+			check(initial.ok and initial.fleets.map(func(fleet: Dictionary): return fleet.control) == expected_initial, name + " initial native controls")
+			owner.close()
+	check_closed("late", Adapter.fail("replay_unconsumed_command", "commands[0].tick"))
+	check_closed("order", Adapter.fail("replay_command_order", "commands[1].tick"))
+	check_closed("policy", Adapter.fail("unsupported_replay_policy", "input.policy"))
+	check_closed("limit", Adapter.fail("replay_tick_limit", "input.max_ticks"))
+	check_closed("rows", Adapter.fail("replay_command_limit", "commands"))
+	check_closed("commands-shape", Adapter.fail("invalid_replay_command", "commands"))
+	check(oracle.reordered.summary.fp != oracle.expected.summary.fp and oracle.reordered.events != oracle.expected.events, "reorder changes native state and events")
+	check(oracle.removed.events != oracle.expected.events and oracle.removed.commands_consumed + 1 == oracle.expected.commands_consumed, "removal changes native events and count")
+	check(oracle.defaults.summary.fp == oracle.legacy_fingerprint, "legacy default controls common window")
+	check(oracle.expected.events[-1].kind == "rejected" and oracle.expected.events[-1].tick == 2 and typeof(oracle.expected.events[-1].pos) == TYPE_VECTOR2, "last processed tick native rejection")
+	check(oracle.natural.events[-1].kind == "battle_end" and oracle.natural.events[-1].tick == oracle.natural.summary.end_tick, "natural end event preserved")
+	check(oracle.one_tick.summary.tick == 1 and oracle.one_tick.summary.clock_ms == 100 and not oracle.one_tick.summary.over and oracle.one_tick.summary.end_tick == -1 and oracle.one_tick.summary.end_ms == -1, "one tick cap remains non-terminal")
+	check(oracle.direct.controls != oracle.delegate.controls, "explicit controls differ in native state")
+	print("P02_REPLAY_%s cases=14 assertions=%d" % ["PASS" if failed == 0 else "FAIL", checks])
+	quit(0 if failed == 0 else 1)

@@ -4,6 +4,18 @@ extends SceneTree
 func _initialize() -> void:
 	call_deferred("_run")
 
+func _click(button: Button) -> void:
+	var point := button.get_global_rect().get_center()
+	var motion := InputEventMouseMotion.new()
+	motion.position = point
+	root.push_input(motion, true)
+	for down in [true, false]:
+		var click := InputEventMouseButton.new()
+		click.position = point
+		click.button_index = MOUSE_BUTTON_LEFT
+		click.pressed = down
+		root.push_input(click, true)
+
 func _run() -> void:
 	var battle := (load("res://scenes/FleetBattle3D.tscn") as PackedScene).instantiate()
 	root.add_child(battle)
@@ -28,12 +40,29 @@ func _run() -> void:
 		await process_frame
 	if not TestCheck.ok(self, guide.visible and deck.screen == "formation_guide" and battle.G.state == "formation_guide", "배치도 열기"): return
 	if not TestCheck.ok(self, guide.chart_ids.size() == 56 and guide.formation_picker.item_count == 7 and guide.textures.size() == 8, "예시 56척·7종 진형·함종 이미지"): return
+	var initial_points: Array = guide.chart_points.duplicate()
+	for type in 8:
+		_click(guide.legend_buttons[type])
+		await process_frame
+		if not TestCheck.ok(self, guide.selected_type == type and guide.legend_buttons[type].button_pressed and "강조" in guide.summary.text, "범례 클릭으로 함종 %d 강조" % type): return
+		for other in 8:
+			if not TestCheck.ok(self, is_equal_approx(guide.ship_alpha(other), 1.0 if other == type else 0.18), "선택 함종만 강조"): return
+	if not TestCheck.ok(self, guide.chart_points == initial_points, "강조는 함선 위치를 바꾸지 않음"): return
 	var previous: Array = []
 	for i in 7:
 		guide.formation_picker.select(i)
 		guide.formation_picker.item_selected.emit(i)
 		if not TestCheck.ok(self, guide.chart_points.size() == 56 and guide.chart_points != previous, "진형 %d 배치 갱신" % i): return
 		previous = guide.chart_points.duplicate()
+		if not TestCheck.ok(self, guide.selected_type == 7, "진형 변경에도 선택한 고속정 강조 유지"): return
+	_click(guide.legend_buttons[7])
+	await process_frame
+	if not TestCheck.ok(self, guide.selected_type == -1 and guide.ship_alpha(0) == 1.0 and guide.clear_button.disabled, "동일 범례 다시 클릭으로 해제"): return
+	_click(guide.legend_buttons[0])
+	await process_frame
+	_click(guide.clear_button)
+	await process_frame
+	if not TestCheck.ok(self, guide.selected_type == -1, "전체 표시로 강조 해제"): return
 	guide.close_guide()
 	if not TestCheck.ok(self, deck.screen == "title" and battle.G.state == state, "타이틀 상태 복원"): return
 	var ally = battle.vm.alive(0)[0]
@@ -54,6 +83,9 @@ func _run() -> void:
 	if not TestCheck.ok(self, tick == battle.sim.st.tick, "열람 중 전투 틱 정지"): return
 	var sq: Dictionary = deck.src.squadron(ally.id)
 	if not TestCheck.ok(self, guide.fleet_picker.get_selected_metadata() == ally.id and guide.chart_ids == deck.renderer._real_ship_ids(sq.counts), "선택 아군 실제 편성 표시"): return
+	if not guide.chart_ids.has("SHP-02"):
+		guide.legend_buttons[1].pressed.emit()
+		if not TestCheck.ok(self, "편성에 없음" in guide.summary.text, "보유하지 않은 함종 안내"): return
 	for i in guide.fleet_picker.item_count:
 		var id: int = guide.fleet_picker.get_item_metadata(i)
 		if not TestCheck.ok(self, id < 0 or deck.src.squadron(id).side == 0, "적 편성 비공개"): return
@@ -62,6 +94,8 @@ func _run() -> void:
 		guide.fleet_picker.select(0)
 		guide.formation_picker.select(1)
 		guide._sync()
+		if "highlight" in args:
+			guide._select_type(6)
 		for i in 6:
 			await process_frame
 		await create_timer(0.35).timeout

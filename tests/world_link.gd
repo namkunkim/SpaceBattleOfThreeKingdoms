@@ -29,7 +29,9 @@ func _run() -> void:
 	if not OS.get_cmdline_user_args().has("--quick"):
 		await _determinism()
 	await _screen()
+	await _development_sortie()
 	await _round_trip()
+	await _prepare_failure_return()
 	if fails == 0:
 		print("WORLD_LINK_PASS")
 		quit(0)
@@ -190,11 +192,15 @@ func _screen() -> void:
 	_check(s.state == "browse" and s.canvas.level() == "z0", "시작은 천하 Z0")
 	_check(s._cta.visible and not s._card.visible, "Z0 안내 띠")
 	_touch_sizes(s, "Z0")
-	# 전장 표식을 손가락으로 탭 → 카드와 형주로 확대
-	var mp := s.canvas.w2s(s.canvas.focus_pos())
-	_touch_tap(mp)
+	var atlas := s.find_child("WorldAtlas", true, false) as Control
+	_check(atlas != null and atlas.visible, "홈에서 전체 항로도 표시")
+	var actions: Array = []
+	_buttons(s._cta, actions)
+	_check(actions.size() == 1, "홈의 적벽 시나리오 진입 버튼")
+	if not actions.is_empty():
+		(actions[0] as Button).pressed.emit()
 	await _seconds(1.6)
-	_check(s._card.visible and s.canvas.level() == "z2", "표식 탭 → 형주 Z2·시나리오 카드 (%s)" % s.canvas.level())
+	_check(s._card.visible and s.canvas.level() == "z2", "적벽 버튼 → 형주 Z2·시나리오 카드 (%s)" % s.canvas.level())
 	_touch_sizes(s, "카드")
 	# 두 손가락 벌리기 → 확대
 	var z0 := s.canvas.zoom
@@ -215,6 +221,88 @@ func _screen() -> void:
 	await _frames(2)
 
 # ------------------------------------------------------------ 6 왕복
+func _development_sortie() -> void:
+	var map := _screen_new()
+	await _frames()
+	var enabled := OS.get_cmdline_user_args().has("--pc-first-operation-dev")
+	for route_id: String in ["front", "flank"]:
+		var button := map.find_child("FirstOperationDev_" + route_id, true, false) as Button
+		_check((button != null) == enabled, "development route is opt-in: " + route_id)
+		if button == null:
+			continue
+		map.open_card()
+		map.canvas.jump_to("z2")
+		map._set_mode("auto")
+		button.pressed.emit()
+		var request := map.brief.operation_request()
+		_check(request.is_read_only() and request == {
+			"capability": "pc/first-operation-dev/1",
+			"definition_id": "red-cliffs-first-operation-dev-v1",
+			"definition_version": 1,
+			"roster_id": "red-cliffs-dev-roster-v1",
+			"seed": 208, "difficulty": "standard", "mode": "direct", "route_id": route_id,
+		}, "development request matches P03 for " + route_id)
+		map._skip.pressed.emit()
+		await _frames(6)
+		var battle := current_scene
+		var host := battle.get_node_or_null("FirstOperationHost") if battle else null
+		_check(host != null and host.operation_owner != null and battle.sim == null, "dedicated owner published for " + route_id)
+		if host == null or host.operation_owner == null:
+			if host != null:
+				print("operation preparation failure: ", host.failure)
+			return
+		_check(host.frame.tick == 0 and host.frame.clock_ms == 0 and host._markers.size() == 2
+			and host.frame.events.size() == 2 and host.operation_owner.drain_events().events.is_empty(),
+			"initial frame and events install exactly once")
+		host._start.pressed.emit()
+		host.set_process(false)
+		host._commands[1].pressed.emit()
+		_check(host.frame.tick == 0 and host._status.text == "move", "command accepted without advancing")
+		_drive_operation(host, 900 if route_id == "front" else 1500)
+		_check(host.frame.clock_ms == host.frame.tick * 100, "displayed clock uses the owner tick")
+		if route_id == "front":
+			host._commands[2].pressed.emit()
+			_drive_operation(host, 11100)
+		else:
+			host.find_child("Operation_withdraw", true, false).pressed.emit()
+			_drive_operation(host, 650)
+			host.find_child("Operation_finalize_withdrawal", true, false).pressed.emit()
+			host.step_operation()
+		var expected := "objective_success" if route_id == "front" else "withdrawal_success"
+		var reason := "objective_conditions_met" if route_id == "front" else "withdrawal_conditions_met"
+		var settled: BattleOutcome = host.settlement
+		_check(settled != null and settled.kind == expected and settled.reason == reason and host.failure.is_empty(),
+			"native policy settles " + route_id + ": " + str(host.failure))
+		if settled == null:
+			return
+		print("WORLD_LINK_OPERATION %s %s %s tick=%d" % [route_id, settled.kind, settled.reason, host.frame.tick])
+		var dto: Dictionary = host.frame.projection.operation.settlement
+		var events: Array = host.frame.events.filter(func(event): return event.kind == "operation_settled")
+		var summary: Dictionary = host.operation_owner.summary().summary
+		_check(summary.settlement == dto and dto.id == settled.settlement_id and dto.kind == settled.kind
+			and dto.reason == settled.reason and dto.clock_ms == host.frame.clock_ms and events.size() == 1
+			and events[0].fact == dto and not host.step_operation(), "terminal DTO and one settlement event")
+		host._return.pressed.emit()
+		host._return.pressed.emit()
+		await _frames(8)
+		map = current_scene as WorldMapScreen
+		var link := root.get_node("WorldLink")
+		_check(map != null and map.outcome == settled and map.state == "result"
+			and map._res_labels.ending.text == dto.reason and map._res_labels.src.text == dto.id
+			and is_equal_approx(map.outcome.t_s, dto.clock_ms / 1000.0)
+			and link.take_outcome() == null and not link.routed(),
+			"settlement returns exactly once to the map")
+		if map == null:
+			return
+		map._result_to_world()
+	map.queue_free()
+	await _frames(2)
+
+func _drive_operation(host: Node, ticks: int) -> void:
+	for i in ticks:
+		if not host.step_operation():
+			return
+
 func _round_trip() -> void:
 	var link := root.get_node("WorldLink")
 	var s := _screen_new()
@@ -224,12 +312,18 @@ func _round_trip() -> void:
 	s._set_difficulty("표준")
 	s._set_mode("direct")
 	s.sortie(777)
+	_check(s.brief.operation_request().is_empty(), "legacy sortie has no operation request")
 	await _frames(2)
 	_check(s.state == "sortie" and s._skip.visible and s.canvas.input_lock, "출격 연출")
 	await _seconds(2.5)
 	_check(s.canvas.level() != "z0", "연출 중 확대 (%s)" % s.canvas.level())
+	# 왕복은 기존 이용자의 브리핑 경로로 고정한다. 설정 파일에는 쓰지 않는다.
+	GameSettings.load_cfg()
+	var prologue_seen := GameSettings.prologue_seen
+	GameSettings.prologue_seen = true
 	s._skip.emit_signal("pressed")
 	await _frames(8)
+	GameSettings.prologue_seen = prologue_seen
 	var battle := current_scene
 	_check(battle != null and battle.name == "FleetBattle3D", "직접 지휘 → 전장 장면 (%s)" % (battle.name if battle else "null"))
 	if battle == null or battle.name != "FleetBattle3D":
@@ -259,3 +353,91 @@ func _round_trip() -> void:
 	await _seconds(2.3)
 	_check(w.canvas.owners_rgn.get("RGN-02") == "wu", "연합 승리 → 강릉권 손권 색")
 	_touch_sizes(w, "결과 카드")
+
+# Reject only the requested transition while keeping the real scenes and buttons.
+class RejectingWorldLink extends "res://scripts/world_link.gd":
+	var rejected_path := ""
+
+	func _request_scene(path: String) -> Error:
+		if path == rejected_path:
+			rejected_path = ""
+			return ERR_CANT_OPEN
+		return super._request_scene(path)
+
+func _prepare_failure_return() -> void:
+	var map := current_scene as WorldMapScreen
+	if map == null or map.outcome == null:
+		_check(false, "prepare failure fixture needs the previous result")
+		return
+	var original_link := root.get_node("WorldLink")
+	root.remove_child(original_link)
+	var link := RejectingWorldLink.new()
+	link.name = "WorldLink"
+	root.add_child(link)
+	await _exercise_map_restore(map, link)
+	root.remove_child(link)
+	link.free()
+	root.add_child(original_link)
+
+func _exercise_map_restore(map: WorldMapScreen, link: RejectingWorldLink) -> void:
+	var result := map.outcome
+	var pending := BattleOutcome.new()
+	pending.seed = 456
+	var previous := map.make_brief(123)
+	map.brief = previous
+	link.brief = previous
+	link.outcome = pending
+	link.rejected_path = link.BATTLE_SCENE
+	map.sortie(787)
+	map._skip.pressed.emit()
+	_check(current_scene == map and map.state == "result" and map._result.visible
+		and map.outcome == result and map.brief == previous and not map.canvas.input_lock,
+		"immediate sortie rejection preserves the result and input")
+	_check(link.brief == previous and link.outcome == pending
+		and link.take_map_restore().is_empty(), "immediate sortie rejection preserves the handoff")
+
+	for show_result in [true, false]:
+		if not show_result:
+			map._result_to_world()
+			map.open_card()
+			map.canvas.jump_to("z2")
+		map.sortie(788)
+		map.brief.difficulty = "invalid-for-test"
+		map._skip.pressed.emit()
+		await _frames(8)
+		var battle := current_scene
+		var exit_button := battle.find_child("ExitBattlePrepareError", true, false) as Button if battle else null
+		_check(exit_button != null and battle.sim == null, "initial prepare failure exposes return button")
+		if exit_button == null:
+			return
+		link.rejected_path = link.WORLD_SCENE
+		exit_button.pressed.emit()
+		_check(current_scene == battle and link.brief.seed == 788 and link.outcome == null
+			and link.take_map_restore().is_empty(), "rejected return keeps the battle and defers restoration")
+		exit_button.pressed.emit()
+		await _frames(8)
+		map = current_scene as WorldMapScreen
+		_check(map != null, "retry returns to the map")
+		if map == null:
+			return
+		_check(map.state == ("result" if show_result else "browse")
+			and map._result.visible == show_result and map._card.visible != show_result
+			and map.outcome == result and map.brief == previous and not map.canvas.input_lock
+			and map._difficulty == previous.difficulty and map._mode == previous.mode,
+			"retry restores the original result or card")
+		_check(not link.routed() and link.outcome == pending and link.take_map_restore().is_empty(),
+			"map snapshot consumed once and pending result still queued")
+
+	map.sortie(789)
+	map._skip.pressed.emit()
+	await _frames(8)
+	var battle := current_scene
+	_check(battle != null and battle.sim != null, "normal sortie still prepares after rollback")
+	if battle == null or battle.sim == null:
+		return
+	_check(battle.back_to_world() == OK, "normal early exit returns to the map")
+	await _frames(8)
+	map = current_scene as WorldMapScreen
+	_check(map != null and map.state == "browse" and map._cta.visible
+		and not map._card.visible and map.outcome == null and link.outcome == null
+		and link.take_map_restore().is_empty(), "normal early exit opens the default map")

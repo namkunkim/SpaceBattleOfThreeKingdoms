@@ -22,18 +22,52 @@ var fingerprint := ""
 var seed := 0
 var mode := ""
 var difficulty := ""
+var settlement_id := ""
+# The approved product outcome is handed directly from the host to the map.
+var is_product_operation := false
+
+static func from_operation(facts: Dictionary, brief: BattleBrief, clock_ms: int) -> BattleOutcome:
+	if not facts.get("id") is String or facts.id.is_empty() \
+			or facts.get("kind") not in ["objective_success", "withdrawal_success", "failure"] \
+			or not facts.get("reason") is String or facts.reason.is_empty() or facts.get("clock_ms") != clock_ms:
+		return null
+	var o := BattleOutcome.new()
+	o.settlement_id = facts.id
+	o.kind = facts.kind
+	o.reason = facts.reason
+	o.win = o.kind != "failure"
+	o.t_s = clock_ms / 1000.0
+	o.seed = brief.seed
+	o.mode = brief.mode
+	var request := brief.operation_request()
+	o.difficulty = request.difficulty
+	o.is_product_operation = request == BattleBrief.Product.REQUEST
+	return o
 
 static func from_sim(sim: BattleSim, brief: BattleBrief) -> BattleOutcome:
-	var o := BattleOutcome.new()
+	return from_facts(facts_from_sim(sim), brief)
+
+# Capture the legacy simulation result while its owner still has exclusive access.
+static func facts_from_sim(sim: BattleSim) -> Dictionary:
 	var st := sim.st
+	return {
+		"win": st.win,
+		"reason": st.end_reason,
+		"t_s": st.clock_s(),
+		"result": st.result.duplicate(true),
+		"fingerprint": sim.fingerprint(),
+	}
+
+static func from_facts(facts: Dictionary, brief: BattleBrief) -> BattleOutcome:
+	var o := BattleOutcome.new()
 	o.seed = brief.seed if brief else 0
 	o.mode = brief.mode if brief else ""
 	o.difficulty = brief.difficulty if brief else ""
-	o.win = st.win
-	o.reason = st.end_reason
-	o.t_s = st.clock_s()
-	o.fingerprint = sim.fingerprint()
-	var r: Dictionary = st.result
+	o.win = facts.win
+	o.reason = facts.reason
+	o.t_s = facts.t_s
+	o.fingerprint = facts.fingerprint
+	var r: Dictionary = facts.result
 	o.limited = bool(r.get("limited", false))
 	o.kind = ("alliance_limited" if o.limited else "alliance_win") if o.win else "cao_win"
 	if not r.is_empty():
@@ -114,14 +148,18 @@ func line_text() -> Array:
 	return EpilogueText.LINES.get(line, ["", ""])
 
 func to_dict() -> Dictionary:
-	return {"kind": kind, "win": win, "limited": limited, "reason": reason, "grade": grade, "cao_status": cao_status,
+	var result := {"kind": kind, "win": win, "limited": limited, "reason": reason, "grade": grade, "cao_status": cao_status,
 		"liu_status": liu_status, "t_s": t_s, "loss_pct": loss_pct.duplicate(), "ending": ending, "line": line,
 		"fingerprint": fingerprint, "seed": seed, "mode": mode, "difficulty": difficulty}
+	if not settlement_id.is_empty():
+		result.settlement_id = settlement_id
+	return result
 
 static func from_dict(d: Dictionary) -> BattleOutcome:
 	var o := BattleOutcome.new()
 	for k in ["kind", "reason", "grade", "cao_status", "liu_status", "ending", "line", "fingerprint", "mode", "difficulty"]:
 		o.set(k, str(d.get(k, "")))
+	o.settlement_id = str(d.get("settlement_id", ""))
 	o.win = bool(d.get("win", false))
 	o.limited = bool(d.get("limited", false))
 	o.t_s = float(d.get("t_s", 0.0))

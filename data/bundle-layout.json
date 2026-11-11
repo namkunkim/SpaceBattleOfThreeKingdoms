@@ -1,0 +1,72 @@
+{
+  "0": {
+    "pattern": "grid",
+    "columns_mode": "half",
+    "forward_scale": 0.0,
+    "shear": 0.0,
+    "stagger": 0.0
+  },
+  "1": {
+    "pattern": "wedge",
+    "columns_mode": "auto",
+    "forward_scale": -0.9,
+    "shear": 0.0,
+    "stagger": 0.0
+  },
+  "2": {
+    "pattern": "grid",
+    "columns_mode": "auto",
+    "forward_scale": 0.0,
+    "shear": 0.0,
+    "stagger": 0.0
+  },
+  "3": {
+    "pattern": "grid",
+    "columns_mode": "pair",
+    "forward_scale": 0.0,
+    "shear": 0.0,
+    "stagger": 0.0
+  },
+  "4": {
+    "pattern": "ring",
+    "columns_mode": "auto",
+    "forward_scale": 0.0,
+    "shear": 0.0,
+    "stagger": 0.0
+  },
+  "5": {
+    "pattern": "arc",
+    "columns_mode": "auto",
+    "forward_scale": 0.45,
+    "shear": 0.0,
+    "stagger": 0.0
+  },
+  "6": {
+    "pattern": "grid",
+    "columns_mode": "auto",
+    "forward_scale": 0.0,
+    "shear": 0.7,
+    "stagger": 0.0
+  },
+  "7": {
+    "pattern": "grid",
+    "columns_mode": "auto",
+    "forward_scale": 0.0,
+    "shear": 0.0,
+    "stagger": 0.25
+  },
+  "8": {
+    "pattern": "wedge",
+    "columns_mode": "auto",
+    "forward_scale": 0.9,
+    "shear": 0.0,
+    "stagger": 0.0
+  },
+  "9": {
+    "pattern": "grid",
+    "columns_mode": "pair",
+    "forward_scale": 0.0,
+    "shear": 0.0,
+    "stagger": 0.0
+  }
+}

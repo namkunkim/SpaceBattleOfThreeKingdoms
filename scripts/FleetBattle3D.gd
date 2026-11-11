@@ -102,6 +102,9 @@ var rig := CameraRig.new()
 var view3d := BattleView3D.new()
 var fx: FxLayer
 var ui: FleetLabels
+var _legacy_canvas: CanvasLayer
+var _prepare_error_layer: CanvasLayer
+var _prepare_error_reason: Label
 var radar: BattleRadar
 var hud := BattleHud.new()
 var cmds: BattleCommands
@@ -134,7 +137,24 @@ var camera: Camera3D:
 	get: return rig.camera
 var _ptex := {}
 
+const O07_HOST := preload("res://scripts/restricted_operation_host.gd")
+const LegacyBattleLifetime := preload("res://scripts/legacy_battle_lifetime.gd")
+
+func _exit_tree() -> void:
+	LegacyBattleLifetime.release(sim)
+	sim = null
+
 func _ready() -> void:
+	var link := get_node_or_null("/root/WorldLink")
+	if link != null and link.routed() and not link.brief.operation_request().is_empty():
+		set_process(false)
+		var host := preload("res://scripts/first_operation_host.gd").new()
+		host.name = "FirstOperationHost"
+		add_child(host)
+		return
+	if (link == null or not link.routed()) and _o07_product_requested():
+		_open_o07_host.call_deferred()
+		return
 	randomize()
 	vsize = get_viewport().get_visible_rect().size
 	rig.vsize = vsize
@@ -145,15 +165,40 @@ func _ready() -> void:
 	input_node.name = "BattleInput"
 	add_child(input_node)
 	input_node.setup(self, cmds)
-	init_game()
+	if not init_game().ok:
+		set_process(false)
+		input_node.process_mode = Node.PROCESS_MODE_DISABLED
+		return
 	# 상품화 표현 계층이 있으면 POC 3D 함대와 HUD를 대신한다.
 	if ResourceLoader.exists(PRESENTATION):
 		presentation = load(PRESENTATION).new()
 		add_child(presentation)
 		presentation.setup(self)
 
+func _o07_product_requested() -> bool:
+	if not OS.has_feature("windows"):
+		return false
+	var args := OS.get_cmdline_user_args()
+	if args.size() == 1:
+		return args[0] == O07_HOST.SUPPLY_ARG
+	if args.size() != 3:
+		return false
+	var input_index := 1 if args[0] == O07_HOST.SUPPLY_ARG else 0
+	var supply_index := 0 if input_index == 1 else 2
+	if args[supply_index] != O07_HOST.SUPPLY_ARG or args[input_index] != O07_HOST.INPUT_ARG:
+		return false
+	var path := args[input_index + 1]
+	return not path.strip_edges().is_empty() and not path.begins_with("--")
+
+func _open_o07_host() -> void:
+	var error := get_tree().change_scene_to_file("res://scenes/RestrictedOperationHost.tscn")
+	if error != OK:
+		push_error("Could not open O07 supply host: %s" % error_string(error))
+
+
 func _build_canvas() -> void:
 	var canvas := CanvasLayer.new()
+	_legacy_canvas = canvas
 	add_child(canvas)
 	fx = FxLayer.new()
 	canvas.add_child(fx)
@@ -166,48 +211,188 @@ func _build_canvas() -> void:
 	hud.build(self, ui, vsize, radar)
 
 # ============================================================ 시작·종료 흐름
-func init_game() -> void:
-	for f in fleets:
-		view3d.free_fleet(f)
-	vm.reset()
-	placing = false   # 시작 경로(_start)가 다시 정한다. 타이틀·천하로 나가도 참으로 남지 않게
-	fx.clear()
+func init_game(proposed_org: Variant = null) -> Dictionary:
+	var candidate_org: Dictionary = org if proposed_org == null else proposed_org
+	var candidate := _prepare_game(candidate_org)
+	if not candidate.ok:
+		push_error("[FleetBattle3D] %s at %s" % [candidate.error, candidate.path])
+		_show_prepare_error(candidate.path)
+		return candidate
+	_publish_game(candidate, candidate_org)
+	_clear_prepare_error()
+	return {"ok": true}
+
+func _show_prepare_error(path: String) -> void:
+	if _prepare_error_layer == null:
+		_build_prepare_error(sim == null)
+	_prepare_error_reason.text = ("전투 프로필이 비어 있습니다." if path == "profile"
+		else "난이도가 올바르지 않습니다." if path == "brief.difficulty"
+		else "함대 편성 데이터가 올바르지 않습니다.")
+
+func _build_prepare_error(initial: bool) -> void:
+	_prepare_error_layer = CanvasLayer.new()
+	_prepare_error_layer.name = "BattlePrepareError"
+	_prepare_error_layer.layer = 6
+	_prepare_error_layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(_prepare_error_layer)
+	if initial:
+		_legacy_canvas.hide()
+		_legacy_canvas.process_mode = Node.PROCESS_MODE_DISABLED
+		ui.hide()
+		var backdrop := ColorRect.new()
+		backdrop.color = UiTheme.BG_DEEP
+		backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_prepare_error_layer.add_child(backdrop)
+		backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var safe_root := MarginContainer.new()
+	safe_root.name = "SafeContent"
+	safe_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	safe_root.theme = UiTheme.build()
+	for edge in ["left", "top", "right", "bottom"]:
+		safe_root.add_theme_constant_override("margin_" + edge, 16)
+	_prepare_error_layer.add_child(safe_root)
+	safe_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var safe := SafeArea.new()
+	safe_root.add_child(safe)
+	safe.setup(safe_root)
+	var card := PanelContainer.new()
+	card.name = "PrepareErrorCard"
+	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	card.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	card.size_flags_vertical = Control.SIZE_SHRINK_CENTER if initial else Control.SIZE_SHRINK_BEGIN
+	card.custom_minimum_size.x = minf(480.0, get_viewport().get_visible_rect().size.x * 0.44)
+	var style := UiTheme.flat(UiTheme.BG_DEEP, UiTheme.WARN, 1, 6)
+	style.set_content_margin_all(16)
+	card.add_theme_stylebox_override("panel", style)
+	safe_root.add_child(card)
+	var content := VBoxContainer.new()
+	content.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	content.add_theme_constant_override("separation", 8)
+	card.add_child(content)
+	var heading := UiTheme.label("전투를 준비하지 못했습니다.", "Heading", 22, UiTheme.WARN)
+	heading.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	content.add_child(heading)
+	_prepare_error_reason = UiTheme.label("", "Body", 17)
+	_prepare_error_reason.name = "Reason"
+	_prepare_error_reason.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	content.add_child(_prepare_error_reason)
+	var in_world := initial and routed()
+	var guidance := "기존 전투는 유지됩니다. 다시 시도해 주세요."
+	if initial:
+		guidance = "전투 결과 없이 천하로 돌아갑니다." if in_world else "전투를 시작하지 않고 게임을 종료합니다."
+	var hint := UiTheme.label(guidance, "Body", 17)
+	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	content.add_child(hint)
+	if initial:
+		var return_notice: Label
+		if in_world:
+			const screens := preload("res://hud/ui_kit/deck_screens.gd")
+			return_notice = screens.world_return_notice()
+			var notice_slot := Control.new()
+			notice_slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			notice_slot.custom_minimum_size.y = 42
+			content.add_child(notice_slot)
+			notice_slot.add_child(return_notice)
+			return_notice.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		var exit := Button.new()
+		exit.name = "ExitBattlePrepareError"
+		exit.theme_type_variation = "PrimaryButton"
+		exit.text = "천하로" if in_world else "종료"
+		exit.custom_minimum_size.y = 48
+		exit.add_theme_stylebox_override("focus", UiTheme.flat(Color.TRANSPARENT, UiTheme.GOLD_HI, 2, 4))
+		content.add_child(exit)
+		if in_world:
+			exit.pressed.connect(func():
+				var link := get_node("/root/WorldLink")
+				if link.back_to_world(null, link.ReturnReason.INITIAL_PREPARE_FAILED) != OK:
+					return_notice.show()
+			)
+		else:
+			exit.pressed.connect(_quit)
+		exit.grab_focus()
+
+func _clear_prepare_error() -> void:
+	if _prepare_error_layer == null:
+		return
+	_prepare_error_layer.hide()
+	_prepare_error_layer.queue_free()
+	_prepare_error_layer = null
+	_prepare_error_reason = null
+
+func _prepare_game(candidate_org: Dictionary) -> Dictionary:
 	# 천하 지도에서 들어온 전투면 BattleBrief의 시드를 쓴다(같은 Brief = 같은 전투, WORLD-MAP-LINK §3).
 	var link := get_node_or_null("/root/WorldLink")
-	battle_seed = link.brief.seed if link and link.routed() else randi()
+	var has_brief: bool = link != null and link.routed()
+	var candidate_seed: int = link.brief.seed if has_brief else randi()
+	var candidate_difficulty := difficulty
+	if has_brief and profile_def == BattleBrief.PROFILE_DEF:
+		candidate_difficulty = link.brief.difficulty
+		if not BattleBrief.difficulties().has(candidate_difficulty):
+			return {"ok": false, "error": "invalid_brief_difficulty", "path": "brief.difficulty"}
 	# Q83: 편성 사본이 없으면 세 세력 자동 편성(load_auto). 편성 화면의 사본(O4)이 있으면 기본 프로필에 apply
-	org_errors = []
-	var profile := (ScenarioProfile.load_profile(profile_def, difficulty) if not org.is_empty() else Organization.load_auto(profile_def, difficulty)) if profile_def != "" else PocSetup.profile()
-	if not org.is_empty() and not profile.is_empty():
-		var applied := Organization.apply(profile, org, ProfileLoader.read_json(ProfileLoader.read_json(profile_def).scenario_path))
+	var errors := []
+	var profile := (ScenarioProfile.load_profile(profile_def, candidate_difficulty) if not candidate_org.is_empty() else Organization.load_auto(profile_def, candidate_difficulty)) if profile_def != "" else PocSetup.profile()
+	if not candidate_org.is_empty() and not profile.is_empty():
+		var applied := Organization.apply(profile, candidate_org, ProfileLoader.read_json(ProfileLoader.read_json(profile_def).scenario_path))
 		if applied.has("errors"):   # 난이도 변경 등: 전장은 자동 편성으로 세워 두되 시작 경로(command_deck)가 편성 화면으로 돌린다
-			org_errors = applied.errors
-			profile = Organization.load_auto(profile_def, difficulty)
+			errors = applied.errors
+			profile = Organization.load_auto(profile_def, candidate_difficulty)
 		else:
 			profile = applied
-	load_error = "편성이 지금 전투와 맞지 않습니다. 편성 화면에서 다시 확정하십시오" if not org_errors.is_empty() else ""
+	var message := "편성이 지금 전투와 맞지 않습니다. 편성 화면에서 다시 확정하십시오" if not errors.is_empty() else ""
+	var fallback := false
 	if profile_def != "" and profile.is_empty():   # 자동 편성 검증 실패(load_auto = {}) 등: 편성 없는 프로필, 그것도 없으면 POC로 연다
-		profile = ScenarioProfile.load_profile(profile_def, difficulty)
-		load_error = "자동 편성에 실패해 시나리오 기본 편성으로 엽니다" if not profile.is_empty() else "시나리오를 읽지 못해 시험 전장으로 엽니다"
-		push_error("%s (%s, %s)" % [load_error, profile_def, difficulty])
+		profile = ScenarioProfile.load_profile(profile_def, candidate_difficulty)
+		message = "자동 편성에 실패해 시나리오 기본 편성으로 엽니다" if not profile.is_empty() else "시나리오를 읽지 못해 시험 전장으로 엽니다"
+		fallback = true
 		if profile.is_empty():
 			profile = PocSetup.profile()
 	var scen := profile_def != "" and profile.has("combat")   # 시나리오 전장(POC로 대체됐으면 아니다)
 	if scen:
 		ScenarioProfile.enlarge_field(profile, FIELD_SIZE)   # 전장을 FIELD_SIZE로 맞추고 배치를 비율대로 늘린다. 미니맵은 이 전장을 비례 축소해 보여 준다
-	if scen:
-		rig.margin = 0.4   # 시작 배율에서도 두 손가락으로 화면을 옮길 수 있게
-		GameSettings.slow_mode = GameSettings.SLOW_OFF   # 선택 감속 끔(저장 설정은 건드리지 않는다)
 		ScenarioProfile.tune_for_play(profile, move_mul, turn_mul)
 	if profile_patch.is_valid() and not profile.is_empty():
 		profile_patch.call(profile)
-	sim = BattleSim.new(battle_seed, BattleRules.TICK_HZ, profile)
+		var invalid_path := "profile" if profile.is_empty() else ""
+		if invalid_path.is_empty():
+			for roster in ["ally", "foe"]:
+				if not profile.get(roster) is Array:
+					invalid_path = "profile." + roster
+					break
+		if not invalid_path.is_empty():
+			return {"ok": false, "error": "invalid_candidate_profile", "path": invalid_path}
+	var candidate_sim := BattleSim.new(candidate_seed, BattleRules.TICK_HZ, profile)
 	# 플레이어 유비군은 처음부터 직접 지휘한다. 손권군·적군은 기존 위임 AI를 쓴다.
-	for f in sim.st.fleets:
+	for f in candidate_sim.st.fleets:
 		if f.side == 0 and f.faction == "liu_bei":
 			f.control = "direct"
-	ALLY_DEF = profile.ally.map(_with_portrait)
-	FOE_DEF = profile.foe.filter(func(d): return int(d.wait) == 0).map(_with_portrait)
+	return {"ok": true, "seed": candidate_seed, "sim": candidate_sim,
+		"difficulty": candidate_difficulty if scen else difficulty,
+		"ally": profile.ally.map(_with_portrait),
+		"foe": profile.foe.filter(func(d): return int(d.wait) == 0).map(_with_portrait),
+		"errors": errors, "message": message, "fallback": fallback, "scenario": scen}
+
+func _publish_game(candidate: Dictionary, candidate_org: Dictionary) -> void:
+	for f in fleets:
+		view3d.free_fleet(f)
+	vm.reset()
+	placing = false   # 시작 경로(_start)가 다시 정한다. 타이틀·천하로 나가도 참으로 남지 않게
+	fx.clear()
+	org = candidate_org
+	battle_seed = candidate.seed
+	difficulty = candidate.difficulty
+	LegacyBattleLifetime.release(sim)
+	sim = candidate.sim
+	ALLY_DEF = candidate.ally
+	FOE_DEF = candidate.foe
+	org_errors = candidate.errors
+	load_error = candidate.message
+	if candidate.fallback:
+		push_error("%s (%s, %s)" % [load_error, profile_def, difficulty])
+	var scen: bool = candidate.scenario
+	if scen:
+		rig.margin = 0.4   # 시작 배율에서도 두 손가락으로 화면을 옮길 수 있게
+		GameSettings.slow_mode = GameSettings.SLOW_OFF   # 선택 감속 끔(저장 설정은 건드리지 않는다)
 	clock = TickClock.new()
 	_sim_acc_clock = TickClock.new()
 	selected.clear()
@@ -221,7 +406,7 @@ func init_game() -> void:
 	_sync()
 	_assign_default_groups()
 	rig.limit = sim.rs.world
-	view3d.build_backdrop()
+	view3d.build_backdrop(sim.rs.c.get("terrain", {}).get("movement_field", {}))
 	rig.cam_pos = _field_center()
 	_brief_x = rig.cam_pos.x
 	var mine := alive(0)
@@ -292,7 +477,8 @@ func _start() -> void:
 	get_tree().create_timer(0.9).timeout.connect(func(): if G.state == "play": add_log("조조군 선봉, 적벽 진입 확인.", "foe", foe))
 
 func _restart() -> void:
-	init_game()
+	if not init_game().ok:
+		return
 	_start()
 
 func _quit() -> void:
@@ -304,11 +490,12 @@ func routed() -> bool:
 	return link != null and link.routed()
 
 # 천하 지도로 돌아간다. 전투가 끝났으면 결과(BattleOutcome)를, 아니면 결과 없이.
-func back_to_world() -> void:
+func back_to_world() -> Error:
 	var link := get_node_or_null("/root/WorldLink")
 	if link == null:
-		return
-	link.back_to_world(BattleOutcome.from_sim(sim, link.brief) if sim.st.over else null)
+		return ERR_UNAVAILABLE
+	var outcome := BattleOutcome.from_sim(sim, link.brief) if sim != null and sim.st.over else null
+	return link.back_to_world(outcome)
 
 func _toggle_menu() -> void:
 	if G.state == "play":
@@ -418,7 +605,9 @@ func update_sim(dt: float) -> void:
 # ============================================================ 코어 ↔ 화면
 # 투영을 화면 모델에 반영하고 새 전대의 3D 노드를 만든다.
 func _sync() -> void:
-	var projection := sim.projection(0)
+	_apply_projection(sim.projection(0))
+
+func _apply_projection(projection: Dictionary) -> void:
 	for squadron in projection.squadrons:
 		# 확인된 접촉과 아군만 인물이 공개된다. 추정·상실 접촉에는 인물 정보를 추가하지 않는다.
 		if squadron.has("commander_id"):

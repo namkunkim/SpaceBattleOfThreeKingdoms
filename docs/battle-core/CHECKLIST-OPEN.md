@@ -1,5 +1,97 @@
 # 더 파악해야 할 것 (컨셉 세션 체크리스트)
 
+## K6 정식 실행 보류 해제 — 2026-11-11
+
+최신 후속 상태: K6 무입력 revision 02 독립 PASS. 양성4·음성15·경계9 및 예제16 바이트 대조. 30초 경과 캡처에서 클릭/Space 각각 0건, 캡처25초와 사용자 만료 중 이른 경계부터 입력0건. 무입력 준비 범위 마감. 실제 MAIN 도구 원문, Win32/Godot 및 16-after 제목 증거는 차후 승인된 정식 실행에 남는다. [독립 재심](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/review15-main-input-dry-check-02/P02-INDEPENDENT-REVIEW.md), SHA `3111cf2ea9eba1b150ec03456c2f294d3280c9d4080285133ffc96cbc8733d17`.
+
+무입력 독립 검토: 모의 양성 4·음성 15 재현. 30초 지난 사전 캡처가 사용자 입력 시간 안이면 모의 클릭을 호출하는 추가 반례를 확인했다. 클릭 직전 사전 캡처 25초 제한과 사용자 입력 만료를 함께 확인하고 오래된 캡처의 입력 호출 0건을 재검증하도록 기존 담당에 배정했다. 실제 MAIN 도구 원문 검증은 별도 조건이다. [독립 기록](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/review15-main-input-dry-check-01/P02-INDEPENDENT-REVIEW.md), SHA `71ef8c5ff7a425cb986cf4dec746da6a634d01dddf39748cac1ce76e1b5daece`.
+
+REVIEW-15 후속 무입력 준비: 작성자 모의 Sky 양성 4건 통과, 음성 15건 거부, 기존 원본 act 실패 재현. 동일 MAIN turn·도구 반환 스키마 검증 자료를 독립 재심에 인계했다. 실제 입력이나 정식 재실행 인수가 아니다. [무입력 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/review15-main-input-dry-check-01/RESULT.json).
+
+실행 결과 독립 판정: 계획 21행/58작업/27비교 중 1작업 관측, 통과 0/58·0/21, 비교 0/27. 18:29:24 claim, 18:43:16 STOP, 첫 작업 exit125 및 Job 잔류 0, 18:48:04 런처 exit1(모두 KST). 첫 좌클릭·카드 전환은 확인했다. act 결과/인수/post nonce와 버튼 형식 문제로 정식 귀속 실패. 16행 지도 복귀 및 후속 행은 미실행이다. [독립 종료 판정](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/P02-REVIEW15-EXECUTION-INDEPENDENT-REVIEW-20261111.md), SHA `4fe0668dd94fab5fcb09ab55d83643fda49bc5f7bd647b76f0b4f454c8d55365`. 다음 후보 준비는 실제 입력 없는 형식 사전 검증으로 제한한다.
+
+최신 정식 결과(2026-11-11 KST): REVIEW-15 SHA `19991b5b473e9185303dfdf3b900cbfb52968390238320b74d5dcc27b87054f4` 독립 ACCEPT 및 1회 승인 후 실행. 첫 15행 before에서 MAIN 실제 클릭 1회와 카드 열림을 Godot 원문으로 확인했다. MAIN의 도구 반환 기록이 고정 스키마와 달라 귀속 검증을 충족하지 못해 STOP으로 종료했다. 첫 작업 exit125, 집계 FAIL·관측 1/58, 그 이후 작업 미실행. 키보드·마우스 반환 및 런처·시험 창 종료 확인. 해당 1회 권한 소진, 본선 반영 없음. 정식 재실행 전에는 정확한 기록 형식의 사전 검증·독립 확인과 별도 실행 승인 필요. [공식 집계](E:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p03-k6-review-20261109/review15/run-once/aggregate.json) SHA `fc9cac1c907455cda41c8a7a6bd5381bb0ef98d68108da85854470dcec68a80f`.
+
+- [x] 사용자 명시 지시로 K6 정식 실행 보류 해제. 아래 과거 보류 기록보다 이 지시가 우선한다.
+- [ ] 기존 실행 담당 `(ING)` 01a1c45c-fe91-7a50-9c34-975d02be61a9: 17행 현행 11,350틱·연합군과 역사 10,550틱·조조군 기대값의 입력 차이 및 근거를 정리하고, F 사본의 21행 계획·입력 SHA를 재동결한다. 통과를 위한 임의 기대값 변경은 하지 않는다.
+- [ ] 기존 독립 검토 담당 `(ING)` 01a1be56-78b2-7cb2-a937-1a49615fa2e0: 역사 증거 보존, 승인 현행 입력, before/after 동등성, 15·16행 실제 입력 출처와 정식 실행 계획을 재심한다. 현재 두 담당의 작업 재개를 확인했으며 재심·정식 실행은 아직 미완료다.
+- 사전 검토 증거 확인(2026-11-11 17:46 KST): 현행 11,350틱·연합군 결과의 이동장 입력 근거를 확인했다. 최신 지도에서는 과거 SYS-13/SystemPicker 경로를 그대로 사용할 수 없어 행17/18 및 GUI15/16을 새 manifest에 재결속해야 한다. 최종 재심은 후보 인계 대기이며 통과 판정이 아니다. [독립 사전 검토](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/P02-ROW17-SUCCESSOR-PRE-REVIEW-20261111.md), SHA `ac3c00219a4b5a443826811c119a02815bb8f790adb44f9ffedfeb0e4c2a3d95`.
+- K6 재심 후보 인계(2026-11-11 18:02 KST): [REVIEW-MANIFEST](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/k6-current-product-review-01/REVIEW-MANIFEST.json) SHA42b7190bb1728eb2e9557b3d9e44a20de2aac9746d8633c40db1ba589c913166 확인. 작성자 행17 현행 before/after 및 잘못된 승자/지문 거부, 행18 두 lane24단언, 행15/16 내부 합성입력 경로 확인 보고. 기존 독립 담당01a1be56에 재심 인계했으며 물리입력 인수·정식실행은 미완료다. 최종 체크리스트 바이트/실행기 결속과 Windows 입력75분 창 확인이 남으며 사용자에게 시간대를 문의했다.
+- 현행 후보 독립 재심: [판정 보고서](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/P02-42B7190-INDEPENDENT-REVIEW-20261111.md), SHA80eb39de2bb2818cd476bdaaaf6fd33dfd95263782167756f18d37d08b313948 확인. 1028의존성·21/58/27·현행 행17 oracle 및 행18 격리 결과 수용. 다만 양 lane을 동일11351틱으로 바꾼 반례를 비교기가 수용하므로 11350틱/1134950ms 직접 검사 보완을 기존 실행 담당이 진행 중이다. successor 실행기·최종 문서·GUI 실제 입력 결속에 대한 최소 재심과 입력 시간 확정이 남았다. 정식 실행 완료가 아니다.
+- [ ] 독립 재심 통과 후 정식 실행. Windows 실제 조작 준비와 필요한 입력 시간을 확인한다. 실패 시 무단 반복하지 않고 결과·원인을 기록한다.
+- 신규 진입 구현 01a1c9b9-6356-7953-bb0e-0c1697c15a96와 독립 검토 01a1c9ce-efd1-7db3-8c3e-3bd3ca470280는 R1 수정·재심 범위 (DONE), 단일 통합01a1c9dd-2cc7-7ce1-8bf1-241ca4eb5ad3는 (ING), P02·P03 기준선 회귀 01a1c9c0-1427-7e82-a1a4-071641f31d73는 담당 범위 (DONE). K6는 고정 F 사본을 사용하고 공통 연결부 동시 편집을 금지한다. 차단된 다중호스트 시험 재실행 금지와 부수 검사기 작업 범위 제한은 유지한다.
+
+
+## 신규 진입 화면 병행 조율 — 2026-11-11
+
+Windows 전경 시험 완료: 후보 EXE 2f353f27…에서 1600×900·800×600·800×450·480×270 실제 창과 키보드·마우스를 확인했다. 주요 버튼의 잘림·겹침은 관찰되지 않았다. 1600×900에서 실제 전장 준비 Tick 0, 800×450에서 아니오 정상 종료를 확인했다. 800폭에서 글자가 작고, 480×270은 본문·버튼·지도 라벨이 지나치게 작아 가독성 미수용이다. 최소 지원 크기 판정·개선이 남는다. 시험 창 종료와 입력 반환 확인. [전경 검증 기록](E:/WorkSpace/SpaceBattleOfThreeKingdoms/docs/entry/windows-foreground-verification-20261111-ko.md).
+
+Windows 검증 후보 준비 완료: 담당 01a1ca22는 패키지·전경 인계 범위 (DONE). 후보 EXE SHA `2f353f27429151090193f95931e5da16b0e029690181a1ac71e2c7757c9426d3`를 실제 파일에서 확인했다. E 런타임 1,855개 일치, 후보 EXE 기본 headless exit0, 내장 최종 PCK 합성 진입 15/15. release EXE 외부 탐침 120초 timeout은 별도 기록. 후보 준비 당시의 상태이며 전경 시험 결과는 위 최신 기록에 있다. [후보 보고서](F:/WorkSpace/entry-windows-01a1ca22/RESULTS.md), [전경 인계](F:/WorkSpace/entry-windows-01a1ca22/FOREGROUND-HANDOFF.md).
+
+E 소스 반영 담당 01a1c9dd는 제품 5파일과 의존성 사후 대조 및 1,855파일 일치 F 화면 검증 사본 준비를 마쳐 (DONE). 후속 Windows 화면·EXE 검증을 새 `(ING)` 01a1ca22-76b0-77e0-ae5d-7618951b9740에 배정했다. 격리 사본에서 배포 후보와 창 크기별 화면을 확인하고, 실제 입력이 필요하면 입력 시간과 절차를 조율한다. [검증 사본 인계](F:/WorkSpace/entry-integration-01a1c9dd/render-prep-E-01/PREPARE.md).
+
+E 소스 반영 완료: 독립 R3 통과한 revision-02 제품 5파일을 단일 통합 담당이 반영했다. 오케스트레이터가 E에서 실제 SHA 5/5를 기대값과 별도 대조했다. 소스 독립 검토 채팅 01a1c9fd는 (DONE). 화면 검증용 F 사본 준비는 통합 담당이 이어가며 실제 화면·물리 입력·배포 EXE 인수는 미완료다. [E 반영 기록](F:/WorkSpace/entry-integration-01a1c9dd/apply-E-01/RESULTS.md), SHA `02e96a612f37049ae73e844ffea01b69e63499491aa586aa7c7aa85f7c817bdb`.
+
+최신 독립 R3: revision-02 정확한 패치 SHA `3591fe713c46cffa55ffaeceaaf56b0b5c6d0161f1ad4434e9d104b22e988ba3`로 P3 13/13·통합 24/24·복구 6/6·새 프로세스 8/8 모두 exit0. 제품5파일·원장 1건·저장 SHA를 확인했다. E 소스 반영 가능 판정에 따라 단일 통합 담당에 사전 SHA 확인과 5파일 반영을 배정했다. 반영 결과 및 실제 화면·물리 입력·배포 EXE 인수는 대기. [독립 R3 최종](F:/WorkSpace/entry-review-01a1c9fd-r02/REVIEW-R3-FINAL.txt), SHA `7a6b32f148bcc5ddf2b39e480d9907de08e67a18a71fda0e3bcb9b46400ddad2`.
+
+통합 최신 후보 revision-02: 반복 부트 오류 패널 누적 수정, 3회 실패 후 재시도·포커스 13/13 PID23384 exit0, 패치 5/5 SHA 일치. 패치 SHA `3591fe713c46cffa55ffaeceaaf56b0b5c6d0161f1ad4434e9d104b22e988ba3`. 수정 전 결산 7/7 및 실제 재부트 8/8을 독립 R2로 수용했고 새 후보의 최소 재심을 인계했다. E 반영과 화면·물리 입력은 남았다. [후보 보고서](F:/WorkSpace/entry-integration-01a1c9dd/revision-02/RESULTS.md).
+
+통합 결산 후속: 작성자 격리 실행에서 결산 7/7·새 프로세스 재부트 8/8, 모두 exit 0. 완료 슬롯 반복 거부와 원장 1건·슬롯/원장 SHA 보존을 보고했다. [결산 후속 증거](F:/WorkSpace/entry-integration-01a1c9dd/followup-20261111-02/RESULTS.md). 독립 R1은 패치 5/5와 기존 시험 증거를 확인했고 반복 부트 실패 시 오류 UI가 누적되는 P3를 발견했다. 기존 통합 담당이 F에서 이를 수정 중이며 독립 담당이 결산 증거 및 수정본을 재심한다. 화면·물리 입력 인수와 E 반영은 남았다.
+
+통합 후보 패치 `ebe3ef76…`는 F 격리본에서 실제 연결 24/24·준비 실패 복구 6/6·진입 21/21·손상 190/190을 보고했다. 자연 종료 후 지도 결과 화면까지 관측했으나 결산 탐침 원장 키 오류로 재부트·중복 방지·완료 슬롯 거부 재검증이 남았다. 기존 통합 담당이 후속을 진행하며 [후보 결과](F:/WorkSpace/entry-integration-01a1c9dd/RESULTS.md)를 독립 검토 `(ING)` 01a1c9fd-edb1-7cc2-84a9-43ebd37a1eac에 인계했다.
+
+최신 판정: R1 손상 지도 결함은 수정 SHA에 대해 독립 재심 통과. 원래 반례·복구9/9·정상21/21·손상190/190 실제 exit0, ERROR/WARNING0. [재심 보고서](F:/WorkSpace/new-entry-fix-20261111-review-01/REVIEW.md), SHA256 9DFDEDB066A4F3B198EE2B8BC4E7082FBF96A27B6116BD4085C4CF01530DCD4F 확인. 아래 최초 차단 기록은 과거 증거로 보존한다. 독립검토01a1c9ce는 해당범위 (DONE). 새 단일 통합 담당 `(ING)` 01a1c9dd-2cc7-7ce1-8bf1-241ca4eb5ad3가 F 사본에서 실제 캠페인 연결·회귀·패치를 작성하며 독립 검토 전 E 공통 연결부에 반영하지 않는다. 표시용 준비와 실제 제품0틱, 저장/재개/결산·물리입력 인수는 구분한다.
+
+과거 R1 차단 기록(위 재심으로 해소): 손상 operation routes.front 삭제 시 prepare 성공·READY(5)·prepared_count1 이후 entry_map.gd:104 Invalid access, atlas width 삭제도 prepare 성공. 독립 재현 로그 F:/WorkSpace/new-entry-review-20261111/review-negative-final.log, exit1. 기존 구현 담당에게 필수 데이터 선검증·오류/재시도 처리 수정을 배정했으며, 같은 독립 검토 담당이 수정 SHA를 재심한다. 정상21/21 통과만으로 이 오류를 인수하지 않는다. [독립 검토 R1/P2](F:/WorkSpace/new-entry-review-20261111/REVIEW.md), SHA256 F83C884821A85B2BD0F4192E4F67D93C26EFC6C20BFED14F1AD04249B20CB1F5 확인. 검토 담당은 수정 후보 재심을 위해 (ING) 유지.
+
+사용자가 신규 진입 구현과 기존 P02·P03 체크리스트 작업의 병행을 승인했다. P02·P03 최우선이며 K6 정식 보류는 사용자 지시로 해제했다.
+
+- [x] 신규 독립 진입 UI 구현·자체 검증: 01a1c9b9-6356-7953-bb0e-0c1697c15a96. R1 후속 수정과 독립 재심 통과로 구현 범위 (DONE) 마감 확인. 작성자 보고 기준 상태 회귀 21/21·합성 입력·정상 종료 확인. 표시용 준비 화면이며 실제 전투·저장 연결 및 물리 입력 인수는 미완료다. [구현 계약](E:/WorkSpace/SpaceBattleOfThreeKingdoms/docs/entry/implementation-contract-20261111-ko.md), 증거 F:/WorkSpace/new-entry-20261111/SHA256.csv.
+- [x] 캠페인 연결 계약 검토: 01a1c907-1cf5-7680-8dbc-4eb530ab3f99 및 충돌검토01a1c9b5-3a46-7bf3-bdb7-128666be56f2는 `(DONE)`. 승인 적벽v1 요청·seed208·표준/direct/front 유지, 상세맵 준비0틱과 명시 시작 분리, 재개/결산은 기존지도 경유, 오류/취소 복구 계약을 화면 담당에게 전달했다. 검토 범위 완료이며 통합 인수 완료가 아니다.
+- [x] P02·P03 통합 전 캠페인 기준선 회귀: `(DONE)` 01a1c9c0-1427-7e82-a1a4-071641f31d73. 승인 입력4/core40 SHA 일치, 개발 플래그 없는 제품 경로12/12·실제 PID23404·exit0: 준비0틱, 첫명령1회, tick2 저장/복원과 재개 프레임 일치. 실패 경계 단언PASS는 초기 F import 오류를 포함하며 무오류 실행으로 확대하지 않는다. 취소는 기존 개발 분기, 결산은 기존67f9 전경 증거를 재사용했다. E 공통 파일 미수정. [결과·제한](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p02-p03-entry-baseline-01a1c9c0/RESULTS.md). 새 화면 실제 연결 검증은 미완료이며 독립 검토 담당01a1c9ce에 인계했다.
+- [ ] 통합·독립 검토·회귀: 독립 검토01a1c9ce는 R1 재심까지 (DONE). 단일 통합 `(ING)` 01a1c9dd-2cc7-7ce1-8bf1-241ca4eb5ad3를 배정했다. 실제 연결 후보·회귀 후 독립 통합 검토와 E 반영이 남았다. project.godot, WorldLink, FleetBattle3D, world_map_screen, deck_screens, first_operation_host의 동시 편집을 금지한다. 화면 담당은 공통 연결부 패치 제안만 제출하며 원장·저장·규칙·논리맵 수치를 변경하지 않는다.
+- 체크리스트 공통 편집은 오케스트레이터 단독 담당. 과거 '독립 착수 가능한 추가 작업 없음'은 당시 승인 범위의 기록이며 신규 진입 구현은 이번 승인으로 추가됐다. 검증된 실행본과 사용자 저장은 보존하고 검증 임시물은 F:/WorkSpace를 사용한다.
+
+
+## 현재 상태 요약 — 2026-11-11 KST
+
+**사용자 우선순위: P02·P03 최우선.** 관련 채팅을 5분마다 점검하며 직접 필요한 승인 작업부터 조율한다. K6 정식 재실행은 사용자 지시로 보류 중이다.
+
+- [x] 승인 적벽 v1: 첫 PC 플레이·같은 규칙 버전 저장/재개·결산 복구 검증 완료. 현행 전경 인수는 EXE `67f9cb20…` 한정이다.
+- [x] P09 재생 객체 정리: `tests/battle_flow.gd` 한 파일 E 반영, 독립 검토 및 최소 flow 회귀 통과. SHA `afa999ba1e3d6bde19293999aab2f79034a30312b19ce11ea6fa604cda468826`. [반영 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-rp-apply-01a1c966-20261111/RESULTS.md)
+- [ ] P09 오디오 종료: 이전 playback 전체 추적을 보장하지 못해 종료 장벽 후보 인수 차단. 임의 시간 대기를 해결책으로 반영하지 않았다. [차단 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-barrier-scope-01a1c98b-20261111/RESULTS.md)
+- [ ] O07 운영 전환·외부 지급·전원 상실: 대상/슬롯 지문·전환 승인, 수신자/계약 및 시험 환경 조건이 남았다.
+- [ ] 일반 I01/P03~P08: 공통 입력·운영 상태/커밋·공간/작전 정책·출시 대상 인수 조건이 남았다. 승인된 적벽 한 건의 완료를 전체 인수로 확대하지 않는다.
+- [ ] **K6 정식 검증 미완료.** REVIEW-15는 15행 첫 조작 후 입력 기록 형식 불일치로 공식 FAIL. 1/58 실행, 0/58 통과, 16행과 후속 작업 미실행. 입력 기록·만료 처리 revision 02는 모의 독립 검증 완료. 사용자의 최신 지시에 따라 K6 정식 재실행은 보류한다.
+- [x] **신규 진입 Windows 후보 전경 시험.** EXE 2f353f27…에서 네 창 크기, 키보드·마우스, 전장 준비 0틱과 아니오 정상 종료를 확인했다. [전경 검증 기록](../entry/windows-foreground-verification-20261111-ko.md)
+- [ ] **신규 진입 작은 창 가독성.** 480×270은 글자와 지도 라벨이 지나치게 작아 미수용. 800폭에서도 가독성이 저하된다. 최소 지원 크기 또는 화면 개선 결정이 남았다.
+
+관련 검증·수정·검토 담당 채팅은 담당 범위 기준 `(DONE)`이다. 전체 P02/I01b는 **미완료**다. 두 우선 체크리스트 재대조 결과 현재 승인 범위에서 독립 착수 가능한 추가 필수 작업은 확인되지 않았다. [인수 부족·담당·필요 입력 대조](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p02-checklists-closeout-01a1c907-20261111.md)
+
+아래 시각별 기록은 이력이며, 현재 상태는 두 우선 체크리스트와 위 조율 상태를 따른다.
+
+**P02 현행 복구 배포 전경 검증 완료 (2026-11-11 15:28 KST).** EXE67f9cb20…을 Windows 실제 입력으로 15:13:51–15:27:15 검증했다. 정면 표준 직접지휘 Tick113 저장→동일/새 프로세스113 복원→A활성/C점령→Tick5603(560.3초) 목표달성→지도 복귀를 확인했다. 정상 창 종료 후 새 프로세스의 같은 결산ID/사유/시각 재표시, 완료슬롯 checkpoint_already_settled 거부, 같은 실행 왕복 중복표시 없음, 원장1건·주슬롯/백업SHA 보존을 확인했다. UI 담당 (DONE), 마지막 시험 창 정상 종료. 앞선 입력 대기·전경 진행 기록은 이 결과로 대체한다. 항로도 포함 현 E 전체 배포, 일반 정의 전체·K6·외부 지급·전원상실 인수로 확대하지 않는다. [실제 입력·화면·원장 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/r5-dimensions-canonical-windows-ui-prep-01a1c838/run-67f9cb20-20261111-01/RESULTS.md)
+
+**단일 시험 프로세스 강제 종료 복구 제한 인수 (2026-11-11 15:20 KST).** 합성 완료 결과로 실제 원장 기록·잠금 해제 후 지도 게시 전 소유PID39436 종료(exit1), 순차 재실행2회(exit0) 동일 결과·원장1건·진행슬롯/백업 바이트 보존·왕복 중복표시 없음을 독립 대조했다. 실행·검토 담당 (DONE). 기존 원장백업 동반 종료·자연전투 종료경계·전원상실은 미검증이다. 별도 Windows 실제 플레이는 진행 중이다. [독립 종료 복구 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/r5-settlement-independent-01a1c915/KILL-REVIEW.md)
+
+**시험 프로세스 강제 종료 복구 완료 보고 (2026-11-11 15:16 KST).** 실제 원장 기록·잠금 해제·지도 미게시 뒤 소유 시험PID39436만 종료하고 새 프로세스2회 동일ID/사유/294.9초·원장1건·슬롯/진행백업SHA 보존을 확인했다. 합성 완료DTO와 외부 대기 탐침을 사용했으며 자연전투·전원상실·기존 원장백업 보존은 범위 밖이다. 실행 담당 (DONE), 기존 독립 검토01a1c915에서 증거 대조 중. Windows 실제 UI는 별도 담당이 Tick113 저장/동일전장 복원 후 새 프로세스 재개를 검증 중이다. [강제 종료 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/r5-settlement-kill-01a1c93a/RESULTS.md)
+
+**Windows 실제 검증 재개 승인 (2026-11-11).** 사용자가 지금부터 실행 및 키보드·마우스 사용을 직접 승인했다. 기존 UI 담당01a1c838-6ef7-7dc0-ba62-06e476c74a98을 유일한 전경 담당 (ING)으로 재개했다. 대상은 복구 배포67f9cb20…의 고유 F 프로필이며 약30분 출격/저장/재개/C점령/결산·지도/재실행 결과 재표시를 검증한다. 강제 종료 담당01a1c93a는 별도 headless PID·프로필만 사용한다. 이전 입력 대기 기록은 해소됐으며 K6 정식 보류는 유지한다.
+
+**복구 배포 제한 독립 인수 완료·다음 작업 (2026-11-11 15:08 KST).** EXE67f9cb20…·DLL·PCK1538항목을 독립 대조해 WorldLink 단독 변경 및 규칙지문 동일, 결산7/7·O07최소5/5 로그/파일 보존을 수용했다. 검토 담당 (DONE). 실제 전경은 사용자가 가능한 시간을 나중에 알리기로 하여 입력 대기다. 새 (ING) 01a1c93a-4759-7880-b0f3-c5610e11c491에서 F 시험 프로세스만의 순차 강제 종료 후 복구 검증을 배정했다. 시스템 전원차단·전경입력·K6정식·차단된 다중호스트 시험은 금지한다. [독립 배포 인수](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/r5-settlement-independent-01a1c915/DEPLOYMENT-REVIEW.md)
+
+**전경 인계 최신화 완료 (2026-11-11 15:04 KST).** UI 담당은 복구 배포본67f9cb20…의 EXE/DLL SHA를 대조하고 새 프로세스 결과 복원·같은 프로세스 중복 표시 없음·완료 슬롯 거부·원장/파일 보존 절차를 준비했다. 준비 담당 (DONE). 실제 입력은 미실행이며 복구 관측을 포함한 권장 시간은 연속30분이다(이전25분 계획을 대체). 배포 독립 증거 검토는 진행 중이다. [최신 전경 계획](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/r5-dimensions-canonical-windows-ui-prep-01a1c838/UI-VERIFICATION-PREP.md)
+
+**결산 복구 배포 검증 완료·독립 대조 진행 (2026-11-11 15:00 KST).** WorldLink 단독 EXE67f9cb20…에서 결산복구7/7·O07최소5/5 exit0 보고를 확인했다. 직전d267012a 대비 PCK 변경은 world_link.gdc 한 개, 저장/리플레이 지문은 동일하다. 배포 담당 (DONE); 기존 독립 검토 채팅01a1c915…와 UI 준비 채팅01a1c838…에서 증거 대조·인계 갱신을 진행한다. 항로도 포함 현 E 전체 출력5a849441…는 대조용이며 이번 인수 대상이 아니다. 실제 전경·강제 종료·전원 상실·K6는 미실행이다. [배포 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/r5-settlement-canonical-windows-01a1c7c7/RESULTS.md)
+
+**결산 복구 E 설치 검증 완료 (2026-11-11 14:42 KST).** world_link.gd 승인SHA7e3b1d42… 설치를 오케스트레이터가 재대조했다. F 원본 백업, E 소스 직접 헤드리스3/3·exit0 및 복구/거부/보존 확인. 설치 담당 (DONE), 기존 배포 채팅 01a1c7c7-8c4f-73c0-b1f5-485b7346b766에서 (ING) 새 빌드·패키지 검증을 시작했다. 배포 대조에서 별도 항로도 스크립트·데이터·이미지와 Android 프리셋 변경을 확인했다. P02 복구 인수는 직전 d267012a… 고정 입력+승인 WorldLink만의 F 배포본으로 분리하고 현 E 전체 출력은 대조용으로 유지한다. 현 E의 추가 변경은 되돌리지 않으며 해당 작업 전체를 인수한 것으로 표시하지 않는다. 새 배포 및 실제 강제 종료·전경 인수는 미완료다. [적용 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/r5-settlement-e-applied-01a1c908/RESULTS.md)
+
+**결산 복구 독립 수용·E 반영 진행 (2026-11-11 14:36 KST).** 독립 기준 공백 재현, 후보8/8·추가6/6 모두 exit0. 동일 결과 재표시·바이트 보존·잠금 해제 후 재시도·새 결산 우선 표시를 확인했다. 확정 파일 복제 경계의 한정 수용이며 실제 강제 종료·전원 상실은 미검증이다. 검토 담당 (DONE), 구현 채팅 01a1c908-13c7-72a1-9123-acc63d325f5c를 (ING)으로 재개해 world_link.gd 한 파일의 기준SHA 확인·F 백업·E 설치·검증을 배정했다. 설치 완료·배포 전경 인수는 아직 아니다. [독립 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/r5-settlement-independent-01a1c915/REVIEW.md)
+
+**결산 복구 후보 구현 마감·독립 심사 진행 (2026-11-11 14:28 KST).** 구현 채팅 01a1c908-13c7-72a1-9123-acc63d325f5c는 (DONE). F 후보의 순차 Windows 헤드리스8/8·exit0, 동일 결과 재표시·원장/슬롯/백업 보존을 보고했다. 확정 파일 복제 시험이며 실제 강제 종료·전원 상실은 미검증이다. 새 (ING) 독립 검토 01a1c915-0255-7393-bf97-d5939cd40e17에서 심사 중이며 E 미반영이다. [후보·인계 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/r5-settlement-redisplay-01a1c908/RESULTS.md)
+
+**전경 검증 준비 완료 (2026-11-11 14:24 KST).** 담당 01a1c838-6ef7-7dc0-ba62-06e476c74a98은 준비 범위 (DONE). EXE·DLL SHA 대조, F 격리 프로필, 실제 클릭 순서·관측값·실패 기준을 정리했다. 실제 실행은 미착수이며 예상15–18분·권장 연속25분 입력 시간이 필요하다. 결산 복구 후보가 재빌드되면 새 SHA·지문으로 계획을 갱신한다. [준비 문서](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/r5-dimensions-canonical-windows-ui-prep-01a1c838/UI-VERIFICATION-PREP.md)
+
 갱신: 2026-10-09 (§8 본편 대조 리뷰 추가). 범위는 적벽 시나리오 하나다.
 확인하면 `[x]`로 바꾸고, 결과가 문서에 들어간 곳을 적는다. 결정이 필요하면 `BATTLE_DECISIONS.md`에 Q번호로 남긴다.
 
@@ -8,6 +100,76 @@
 - **UI-2:** UI-2 세션의 다음 병합을 기다린다.
 - **구현:** M1 이후 구현 세션의 결과를 기다린다.
 - **본편:** 본편(Seonghanji) 쪽의 답을 기다린다.
+
+세션 요구사항 통합 추적: [완료·미완료·상시준수 체크리스트](pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.md).
+
+## PC 캠페인 후속 인수 현황 (2026-11-11)
+
+**사용자 우선순위 변경 (2026-11-11):** 최우선 실행·인수 기준은 [P02 필수 작업](pc-campaign-design/P02-PROGRESS-CHECKLIST.md)과 [사용자 요구사항 통합](pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.md)이다. 이 문서는 종합 증거 이력으로 유지한다. 2분 조율 자동화도 두 문서 우선으로 갱신했다.
+- (DONE) 01a1c907-1cf5-7680-8dbc-4eb530ab3f99: 두 우선 문서의 11/11 증거 대조·갱신 완료. 다음 필수 작업은 진행 중인 결산 복구와 새 EXE 전경 인수 준비로 확정했다.
+- (ING) 01a1c908-13c7-72a1-9123-acc63d325f5c: 결산 기록 직후 종료 시 다음 지도 결과 복구 후보 구현·검증. F 격리 작업, 독립 검토 전 E 미반영.
+- 검사기 r2 6fd27664…는 독립 재심에서 무효 비교 분기·세미콜론 뒤 조기 반환의 두 새 반례로 미통과. E 미적용이며 추가 수정은 우선 두 문서의 필수 의존성 확인 전 보류한다. [재심 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/i01-data-rules-r5-hash-format-r2-review-01a1c841/RESULTS.md)
+- (DONE) 01a1c838-6ef7-7dc0-ba62-06e476c74a98: 새 EXE 전경 인수 준비 완료. SHA·격리 프로필·클릭 순서·필요 시간을 F에 정리하며 실제 입력은 새 시간 확보 전 실행하지 않는다.
+- K6 정식 실행은 계속 보류한다.
+
+### 최신 조율 요약 (2026-11-11 14:06 KST)
+
+- [x] E 반영: r5 저장·결산·메뉴 6파일과 승인 치수 2파일 설치 및 SHA 대조 완료. 기존 실행본·사용자 저장 보존.
+- [x] 통합 배포 검증: F EXE d267012a…의 저장·재개·리플레이 8/8, O07 10/10·exit0. 외부 계측 검증이며 새 EXE의 Windows 전경 실제 조작 완료를 뜻하지 않는다.
+- [x] 통합 배포 제한 독립 인수 (14:09 KST): 실제 EXE·DLL·내장 패키지·저장 SHA와 제품8/8·O07 10/10 로그를 대조해 수용했다. 담당 (DONE). 초기 접근 위반의 직접 원인은 미확정이며 최종 동일 EXE 실행에서는 재현되지 않았다. 전경 조작·전체 인수 완료는 아니다. [독립 인수 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/r5-dimensions-canonical-windows-review-01a1c8e0/RESULTS.md)
+- [ ] 검사기 r2 독립 재심 미통과: 기존 반례·fixture66개는 통과했으나 추가 두 반례를 놓쳤다. 후보 SHA 6fd27664…는 F에만 있으며 E 미적용. 검토 담당 (DONE), 추가 수정은 우선순위 판단 전 보류. [수정 후보 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/i01-data-rules-r5-hash-format-r2-01a1c835/RESULTS.md)
+- [ ] 현 E 정적 게이트: 구조23·제품15·exit1. 검사기 후보의 제품13은 미적용 결과이며 전체 I01 통과가 아니다. 잔여13은 시드/identity 설계3건과 교전·이동 규약10건.
+- [ ] 남은 제품 조건: 결산 기록 직후 종료 시 결과 재표시 경로, 새 EXE 전경 조작, 독립 동시 게시 미검증 범위, O07 외부 지급 계약·실기기 전원 상실 검증. 기존 차단 실행은 반복하지 않는다.
+- [ ] K6 정식 실행: 사용자 지시에 따라 계속 보류.
+
+아래는 시점별 증거 이력이다. 이전 후보의 대기·실패 기록은 최신 완료 기록과 구분한다.
+
+**현재 데이터 검사 상태 (13:45 KST):** r5 포함 기준 제품21건에서 승인 치수6건 제거 후 제품15건·구조23건, exit1이다. 제품15건에는 기존13건과 r5 해시 형식 리터럴9·64 진단2건이 포함된다. 이전13/19/42건 기록은 각 후보·시점의 이력이다.
+
+- [x] **A06 저장 교체 중단 복구 E 반영.** 주 슬롯 부재 시 쓰기도 이전 복구본을 검증해 손상·지원 불가 복구본을 보존하며 거부한다. 설치본 30/30, 체크포인트 40/40, 제한 슬롯 19/19, 결산 18/18, 외부 저장 36/36, 파일 잠금 2/2 통과. [적용 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/a06-local-rotation-20261111-01/RESULTS.md)
+- [x] **해시 형식 검사 보완 E 반영.** 공백·주석·줄바꿈을 허용하며 두 해시 위치만 구문으로 식별한다. 저장·리플레이 회귀 통과. 현행 전체 data_rules는 일반 수치 42건/7파일로 exit 1이다. 아래 이전 44건 및 정확 문장 후보 기록은 이전 상태다. [최종 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/O07/i02-data-rules-hash-format-20261111-01/RESULTS.md)
+- [x] **A06 수정 후 배포 검증.** 새 Windows 릴리스 SHA 73d14a66…에서 A06 11/11, O07 10/10 모두 exit 0. 이전 82453917… 결산 저장을 복원했고 손상·지원 불가 복구본은 기본·native 게시 양쪽에서 보존하며 거부했다. DLL과 O07·리플레이 지문은 동일하다. [배포 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/O07/a06-canonical-windows-01a1c7c7/RESULTS.md)
+- [x] **A06 ST01~18 대조와 사건 참조 검증 E 반영.** 필드·ID 참조표를 작성하고 제한 슬롯의 미해결 함대 참조·잘못된 진영 참조를 라이브 교체 전에 거부하도록 수정했다. E 체크포인트 38/38, 호스트 19/19, 이전 정상 슬롯 새 프로세스 재개 6/6·exit 0. [증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/a06-st-reference-20261111-01/RESULTS.md)
+- [x] **A06 사건 참조 배포 검증.** 새 EXE SHA 9ba2609d…에서 제한 슬롯 10/10 및 O07 10/10·exit 0. 이전 EXE의 정상 저장을 재개했고 잘못된 사건 참조 네 건을 거부하며 활성 전투·슬롯 바이트와 다음 틱 결과를 보존했다. DLL 및 기존 O07·리플레이 지문 일치. [새 배포 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/O07/a06-st-reference-canonical-windows-01a1c7c7/RESULTS.md)
+- [x] **적벽 v1 승인 저장 경계 대조.** 증원·철수 명령 대기·보급 전후·탈출 후 다섯 저장의 기록 23/23, 새 프로세스 복원 61/61·exit 0. 사건 순서·결산 ID와 보급 1회 지급, 파일 SHA 보존을 확인했다. 구버전 보존 실행본 재개와 현행의 다른 규칙 거부를 확인했다. [증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/a06-approved-front-20261111-01/RESULTS.md)
+- [ ] **적벽 v1 배포 진행 저장 연결.** EXE 9ba2609d…의 진행 체크포인트 캡처가 checkpoint_rules_unavailable을 반환했다. 제품 저장 버튼·지도 재개 연결도 남았다. 승인된 동일 규칙 저장 재개 목표의 구현 공백으로 후속 수정한다. 09:43 KST 현재 F 후보 네 파일의 버튼 시험 28/28은 구현 채팅 보고이며 패키지·새 프로세스 검증은 진행 중이다. 독립 검토 채팅 01a1c80f-3fad-75c3-8e7f-707c869736b0을 배정했다. 후보 SHA·검증 원문·독립 판정 확인 전 인수 및 E 반영 완료로 표시하지 않는다.
+- [ ] **제품 저장 후보 배포 검증·독립 재심 진행 (09:49 KST).** F 후보 EXE 82be5efe… 보고서에서 버튼 신호 저장 28/28, 새 프로세스 지도 재개 12/12, 소스 저장 열기 12/12, O07 10/10과 공유 회귀 통과를 확인했다. Windows 전경 클릭은 아니다. 변경 원천 지문 b67d9dff…의 구버전 거부·기존 실행본 보존을 기록했다. 09:51 KST 구현·독립 검토 양쪽에서 결산 후 같은 1,802틱 진행 슬롯을 재개하면 동일 결산 ID가 다시 표시되는 문제를 소스와 Windows EXE에서 재현했다. 현재 후보는 이 결함으로 독립 검토 미통과다. 1차 검토 채팅은 담당 검토 마감으로 (DONE) 처리했으며 제품 인수 완료를 뜻하지 않는다. [독립 재현·SHA 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/a06-product-local-review-20261111-01/RESULTS.md) 09:55 KST 수정 후보 다섯 파일이 고정됐다. 소스 결산 23/23·새 프로세스 12/12 보고를 확인하고 기존 검토 채팅을 (ING)으로 재개해 영속 중복 방지 재심을 배정했다. 09:59 KST 최종 EXE b053d3dc…의 실제 SHA와 16개 실행 종료 코드 0을 대조했다. 후보 보고상 EXE 결산 23/23·새 프로세스 완료 ID 거부 12/12·O07 10/10이며 독립 재심에 최종 EXE 증거를 전달했다. 10:01 KST 독립 재심에서 기존 결산 후 재개 차단은 확인했으나, 같은 저장을 미리 연 두 프로세스의 순차 지도 복귀 시 두 번째도 이미 기록된 결산을 표시하는 결함을 소스·최종 EXE에서 재현했다. 2차 독립 판정은 first_operation_host.gd의 applied=false 미처리에 따른 미통과다. [2차 재심 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/a06-product-terminal-review-20261111-01/RESULTS.md) F에서 최초 기록 전장의 게시 권한과 지도 전환 재시도를 수정 중이며, 10:07 KST 독립 검토에서 동시 consume의 잠금·단일 적용을 확인했다. host 491d6c14… 수정 후보는 두 프로세스 게시 시험 각 11/11, 동시 기록 6쌍 단일 적용을 보고했으며 같은 검토 채팅에 재심을 이어 배정했다. 10:11 KST 독립 재심 턴이 사이버 위험 탐지 systemError로 중단돼, 차단 실행 반복 없이 기존 코드·로그·SHA의 읽기 전용 검토로 후속 범위를 제한했다. 미완료 재현은 통과로 처리하지 않는다. 구현 채팅은 10:17 KST r4 후보 증거 정리를 마감해 (DONE) 처리했다. E 반영을 뜻하지 않는다. [게시 수정 후보](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/a06-product-local-20261111-01/PUBLISH-ONCE-CANDIDATE.md) E 미반영·최종 인수 미완료다. [수정 후보 SHA·검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/a06-product-local-20261111-01/FINAL-CANDIDATE.md) [후보 보고서](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/a06-product-local-20261111-01/RESULTS.md)
+- [ ] **r4 독립 증거 검토 마감 (10:15 KST).** EXE 562c8040…에서 최초 호스트 지도 실패 후 재시도와 완료 ID 주 슬롯·백업 거부는 독립 확인했다. 두 번째 호스트의 결과 없는 복귀는 구현 측 소스·EXE 각 11/11이나 독립 탐침의 신호 경로 불일치로 시간 초과되어 독립 재현 미완료다. 위험 탐지 중단 이후 새 실행 없이 기존 증거만 검토했다. 검토 채팅은 담당 범위 마감으로 (DONE); 제품 인수와 E 반영은 보류한다. r4 비계측 기본 시작은 이후 10:35 KST Windows 실제 UI에서 확인했다. 캠페인 진입은 아래 연결 공백으로 미검증이다. [r4 완료·미완료 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/a06-product-local-20261111-01/PUBLISH-ONCE-CANDIDATE.md)
+- [x] **I01 잔여 데이터 검사 적용 범위 검토.** 42건/7파일의 실제 행·값·승인 키를 대조했다. 구조23건 분리와 승인 치수 참조6건은 구현 가능하며 나머지13건은 시드/identity 설계3건 및 교전·이동 규약10건이다. 13건은 적용 후 산술 예상으로 현재 게이트는 여전히 exit 1이다. 검토 채팅은 (DONE). [항목별 근거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/i01-data-rules-residual-20261111-01/RESULTS.md)
+- [ ] **I01 구조 진단 분리 구현 (10:25 KST).** 새 (ING) 채팅 01a1c835-e0af-7610-9ea6-50b2896b0d53에 검사기 한정 후보와 정적 fixture 검증을 배정했다. 제품 수치19건을 남기고 구조23건만 정확히 분류한다. 제품 코드·저장·r4 및 K6 실행은 범위 밖이다. 10:39 KST 후보 구현은 마감됐으며 Python 정적 재생37fixture 통과·잔여19건·exit1을 보고했다. 10:47 KST 독립 Godot 검사에서 기준42·구조23·잔여19 및 제공37fixture를 재현했지만 MAX_TICKS 값 변경을 놓치는 추가 반례 두 건(백슬래시 줄 연결 +1, 이스케이프 삼중 문자열 속 선언 오인)으로 적용 보류했다. [독립 Godot 반례 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/i01-data-rules-structure-review-01a1c841/RESULTS.md) 검토 채팅은 이 판정 범위 (DONE)이며 수정 후보 재심 시 재개한다. 10:53 KST r2 후보 e0021416…의 두 반례 수정과 Godot44/44 보고를 받아 기존 독립 검토 채팅을 (ING)으로 재개했다. 구조23·제품19·exit1은 유지되며 E 미반영이다. [r2 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/i01-data-rules-structure-r2-01a1c835/RESULTS.md) [후보 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/i01-data-rules-structure-01a1c835/RESULTS.md)
+- [ ] **r4 Windows 실제 UI 검증 배정 (10:28 KST).** 사용자 두 시간 입력 사용 승인에 따라 새 (ING) 채팅 01a1c838-6ef7-7dc0-ba62-06e476c74a98를 단독 전경 입력 담당으로 배정했다. 12:27 KST까지 F 격리 프로필의 r4 비계측 시작·실제 저장/재개 버튼·정상 결산 지도 복귀를 확인한다. 차단된 계측 재현은 반복하지 않으며 K6 정식 실행은 보류한다.
+- [ ] **배포 기본 메뉴 캠페인 진입 공백 (10:35 KST).** 실제 UI에서 기본 출격 준비는 기존 전투 브리핑으로 연결되며 제품 지도 진입을 찾지 못했다. 같은 EXE의 장면 경로 재지정도 엔진 미지원으로 실패했다. 새 (ING) 채팅 01a1c83e-7e08-7f41-b8e6-b52005e66e3e에 정상 메뉴→기존 캠페인 지도 연결 후보를 배정했다. r5 EXE 5f53225d… 빌드·지문 검증과 소스1,882개 대조가 완료됐다. 10:47 KST 기존 UI 담당 채팅을 (ING)으로 재개해 정상 메뉴 실제 클릭 검증을 인계했다. 기존 r4·사용자 저장 보존, E 미반영, 입력 사용은 12:27 KST까지다. [r5 인계 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/a06-campaign-menu-20261111-01/RESULTS.md)
+- [x] **r4 비계측 기본 시작 실기 확인.** F 격리 프로필에서 SHA 일치 EXE를 인수 없이 실행해 기본 메뉴·기존 전투 HUD를 실제 입력으로 확인했다. 담당 채팅은 이 범위 (DONE)이며 I01 저장·재개·결산 지도 복귀 완료를 뜻하지 않는다. 수정 메뉴 EXE가 준비되면 같은 채팅에서 후속한다. [실제 UI 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/a06-r4-normal-ui-20261111-01/RESULTS.md)
+- [x] **r5 Windows 실제 저장·재개·철수 결산·지도 복귀.** 10:47–10:56 KST 실제 버튼으로 지도/타이틀 왕복, 정면 출격, Tick70 저장·동일 프로세스 복원·새 프로세스 재개를 확인했다. Tick2949 철수 성공 후 지도에 같은 결과가 표시됐고 원장1건·진행 슬롯SHA 보존을 대조했다. 기존 출격 준비→서막→브리핑도 확인했다. C 점령 승리나 다중 프로세스 독립 시험의 완료를 뜻하지 않는다. UI 담당 범위 (DONE), E 통합은 별도 대기. [실제 입력·캡처·원장 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/a06-r5-normal-ui-20261111-01/RESULTS.md)
+- [x] **검사기 r2 독립 통과·E 적용 완료.** tests/data_rules.gd 한 파일의 설치 SHA e002141623c9e72a2291164855fd95559e2987687cad7528d6164d3bb8f75fc0를 오케스트레이터가 대조했다. 이전 파일 F 보존, 설치본 Godot 파싱 exit0, 구조23·제품 수치19·구조/해시 오류0의 정적 게이트 exit1을 확인했다. 구현·독립 검토 담당 범위는 (DONE). 전체 I01 게이트 통과는 아니다. [설치 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/i01-data-rules-structure-r2-applied-01a1c835/RESULTS.md)
+- [x] **r5 정면 C 점령 실제 UI 검증.** 표준·직접 지휘로 A 활성화→C 진군 후 Tick6170에 C:ally와 objective_success를 확인했다. 실제 Return to map으로 목표 달성 지도 결산·천하 개요 복귀, 화면과 동일한 원장1건을 대조했다. UI 담당은 (DONE). F 후보 검증이며 E 반영은 별도 대기. [캡처·실행·원장 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/a06-r5-c-objective-ui-20261111-01/RESULTS.md)
+- [ ] **r5 E 통합 범위 독립 검토 (11:17 KST).** 새 (ING) 채팅 01a1c864-cd74-7fc3-ab47-9208ef4e4ab0에 저장·결산·메뉴 후보와 실제 UI 증거의 읽기 전용 종합 검토를 배정했다. 정확한 최소 적용 파일·SHA·잔여 검증 조건을 확인하며 차단된 다중 프로세스 시험은 반복하지 않는다. 사용량 제한으로 중단된 뒤 사용자 재개 지시에 따라 같은 채팅에서 읽기 전용 독립 검토를 재개했다. 기존 Windows 입력 허용12:27 KST는 종료됐으며 추가 실제 조작은 하지 않는다.
+- [ ] **I01 승인 치수 중복6건 후보 재개.** 새 (ING) 채팅 01a1c8da-6867-7813-a7a6-e56b70579b3e에 기존 승인 space.size 참조를 이용한 최소 F 후보·동작 보존 검증을 배정했다. r5 통합 검토와 별도 후보로 유지하며 E 소스·규칙값·사용자 저장은 변경하지 않는다. 구버전 보존 정책을 적용하고 Windows 입력·K6 실행은 하지 않는다. F 후보 검증은 제품19→13·구조23·exit1, fresh100/100·정책39/39로 마감됐다. 후보2파일은 r5와 직접 중복하지 않는다. 새 독립 검토를 배정했으며 E 적용과 새 배포 지문·구버전 호환 검증은 남았다. [치수 후보 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/i01-data-rules-dimensions-01a1c8da-r2/RESULTS.md)
+- [x] **r5 제한 통합 독립 검토 완료.** 현행 E 대상6파일 기준SHA 일치, r5 실제 UI·원장 증거 대조를 마쳤으며 제한 통합 가능 판정이다. 전체 인수는 미완료: 원장 기록 직후 종료시 결과 재표시 경로, 두번째호스트 독립 재현, 설치·배포 확인이 남는다. [독립 판정](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/a06-r5-integration-review-20261111-01a1c864/RESULTS.md)
+- [x] **I01 승인 치수6건 독립 검토 통과 (13:39 KST).** 기준·후보 fresh125/125·정책48/48, 치수 정규화·effective_digest·오류 우선순위 일치를 확인했다. 정책 직접 Vector2 호출 오류는 양쪽 기존 한계이며 정상 경로는 정수 배열이다. 검토 담당 (DONE). 기존 구현 채팅을 (ING)으로 재개해 검토된2파일의 E 기준SHA 확인·F 백업·설치 및 통합 검증을 배정했다. E 적용 완료와 배포 인수를 뜻하지 않는다. 새 패키지 저장/리플레이 성공 및 구버전 지문 거부·슬롯/원장 보존 검증은 후속이다. [독립 검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/i01-data-rules-dimensions-review-01a1c8e0/RESULTS.md)
+- [x] **I01 승인 치수2파일 E 적용·통합 검증 완료 (13:45 KST).** F 원본 보존과 설치SHA2/2를 오케스트레이터가 재확인했다. r5 포함 전후 제품21→15건·구조23·exit1, fresh76/76·정책37/37 통과. 구현 담당 (DONE). 기존 배포 검증 채팅을 (ING)으로 재개해 F 통합 빌드·새 저장/리플레이·구버전 지문 거부 검증을 배정했다. K6 정식·전경 입력은 보류한다. [설치 및 통합 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/i01-data-rules-dimensions-e-applied-01a1c8da/RESULTS.md)
+- [ ] **I01 r5 해시 형식 진단2건 후속 (13:47 KST).** 기존 검사기 채팅 01a1c835-e0af-7610-9ea6-50b2896b0d53을 (ING)으로 재개했다. 체크포인트의 version.hash.left(9)·digest.length()!=64를 기존 정확 구문 분류 원칙에 따라 검토하고 F 한정 후보·변조 반례 검증을 수행한다. 배포 빌드와 충돌하지 않도록 E 변경은 금지하며 독립 재심 후 반영한다. 13:53 KST F 후보 9f19c483…의 Godot fixture58/58·구조23/해시형식4/제품13·exit1 보고를 확인했다. 구현 담당 범위 (DONE), 기존 독립 검토 채팅 01a1c841-faa9-7421-a05a-b432c78f0bd2를 (ING)으로 재개했다. E는 기존 검사기를 유지한다. [후보 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/i01-data-rules-r5-hash-format-01a1c835/RESULTS.md)
+- [ ] **I01 해시 검사기 후보 재심 반례 발견 (13:57 KST).** 독립 검토에서 기존58fixture는 통과했지만 정상 해시 구문을 미호출 람다·비실행 분기에 두고 실제 폭을1로 변조한 두 파싱 가능 반례를 놓쳤다. 후보 E 적용은 보류하며 기존 구현 채팅을 (ING)으로 재개해 F 수정·회귀를 배정했다. 13:59 KST 독립 미통과 판정이 마감됐고 검토 담당은 (DONE)이다. 실제 게이트는 exit1을 유지했으나 해시 변조 오류가 누락됐다. 수정 후보 재심이 남았다. [독립 반례 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/i01-data-rules-r5-hash-format-review-01a1c841/RESULTS.md)
+- [ ] **통합 배포 동적 검증 진행 (13:59 KST).** 담당 채팅은 직전/새 EXE의 b67d9dff→b7189ae8 지문 변경 및 구버전 슬롯 거부·활성 전투/파일 보존을 보고했다. 정상 지도 재개는 양 EXE의 headless 접근 위반으로 아직 미통과이며 씬 전환 대기 탐침을 확인 중이다. 최종 증거와 제품/탐침 원인 분리 전 완료로 표시하지 않는다.
+- [x] **r5·승인 치수 통합 배포 매트릭스 완료 (14:01 KST).** F EXE d267012a…에서 제품 저장/새 프로세스 재개/리플레이8/8 및 O07 10/10·exit0 보고서와 검증 범위를 확인했다. 구버전3종 지문 거부 및 활성 전투·입력/주슬롯/백업/원장 보존을 확인했다. 초기 접근 위반은 탐침의 씬 전환 대기 수정 후 같은 EXE에서 재현되지 않았다. 전경 클릭이 아닌 외부 override·버튼 신호 계측이며 재생/외부 가져오기는 개발 메뉴다. 배포 담당 (DONE), 기존 치수 독립 검토 채팅을 (ING)으로 재개해 실파일·로그·비교 논리의 읽기 전용 인수를 배정했다. 전경 새 EXE·결과 기록 직후 종료 복구·차단된 동시 게시·실제 지급·전체 인수는 미완료다. [통합 배포 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/r5-dimensions-canonical-windows-01a1c7c7/RESULTS.md)
+- [x] **r5 E 작업본6파일 제한 통합 완료.** 적용 전 기준6/6·설치 후보6/6 일치, F 원본 보존, 오케스트레이터 실파일SHA6/6 재대조를 마쳤다. E/F 공통322파일 중 검사기만 별도 선행 변경이며 r5 지문 원천과 DLL은 일치한다. 담당 (DONE). E 재빌드·실행과 전체 인수는 아직 미완료다. [설치·백업·diff 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/a06-r5-e-integration-20261111-01/RESULTS.md)
+- [ ] **A06 일반 인수 후속.** 일반 배포 저장 지원·이전 범위, 전역 커밋과 안정 ID·효과 수명, 운영 지급 수신 계약의 결정이 남는다. 실제 Windows 전경 클릭과 전원 상실은 미검증이며 K6 정식 실행은 보류한다.
+
+
+- [x] **I01 적벽 v1 제한 인수.** 승인 정의로 직접 출격·자동 결산, 공통 초기 상태와 11,999틱 저장·복원을 검증했다. 지도 종료 시 Godot 참조 순환 정리와 Windows debug 지문 빌더를 E 작업본에 반영했다.
+- [x] **I01 적벽 v1 A04 승인 범위.** Windows headless에서 실제 정면 배치·보급·철수와 E/R 내부 배치 가드 및 A·B·C·E 중심 경계 정책을 합쳐 61/61·exit 0. A 보급 탄약 +14, R 진입 125,100ms, E 탈출 후 180,300ms 철수 성공을 확인했다. 정면 C 목표는 5,487틱에 달성했고 미승인 우회 요청과 변조 정의는 거부됐다. [검증 보고서](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/a04-er-center-20261111-01/RESULTS.md)
+- [x] **I01 지도 결산 표시 E 작업본 반영.** 독립 검증에서 기준 8/9, 수정·설치본 각 9/9. 두 파일의 기준·후보·설치 SHA를 대조하고 복원 원본을 보존했다. 설치 바이트로 A04 61/61, 체크포인트 40/40, 리플레이 지도 19/19, 저장 호스트, 자동 지도 두 경로와 O07 결산 표시를 통과했다. 동일 철수 재생 출력 SHA를 확인했다. [적용 기록](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/a04-map-settlement-integration-20261111-01/apply-verification.json)
+- [x] **I01 적벽 v1 정면 추종·선회 계측.** A 경유 제품 owner 17/17·exit 0, 5,487틱 C 목표, 최대 중심 추종 편차 0, 승인 팽창 원판 최소 통로 여유 2.151752. 제품 진형 전환 명령은 거부됐으며, 일반 전투 코어에서는 발사 앵커 전환 경계 0·49·50틱 3/3을 확인했다. [계측 보고서](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/a04-live-hull-20261111-01/RESULTS.md)
+- [ ] **I01/K01~08 일반 제품 인수.** 실제 개별 선체 외곽 판정에는 함종별 논리 외곽, 전체 개별 배치점, 전환 중 위치·방향 및 틱 사이 외곽 계산 규약이 필요하다. 추가 편성·일반 정의, 교전·이동 규약, A06 운영 저장이 남았다. 현행 data_rules는 구조 진단 r2가 E에 적용돼 제품 수치19건·구조23건으로 구분되며 exit1이다. 42건/7파일은 구조 분리 이전 기록이다. 이전 정확 문장 후보의 한계는 공백·주석·줄바꿈을 허용하는 구문 검사로 보완했고 정상·변조 및 저장·리플레이 회귀를 확인했다. [해시 형식 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/O07/i01-data-rules-hash-20261111-01/RESULTS.md) [데이터 검사 원문](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/a04-er-center-20261111-01/data-rules-classified/engine.log)
+- [x] **O07 로컬 복구 제한 인수.** 배포 EXE 호스트 진입과 결산 지도 복귀를 격리 검증했다. 로컬 게시 경계 강제 종료 복구 6/6, 배포 DLL의 동일 ID 재시도 2/2가 통과했다.
+- [x] **O07 결산 저장·재개 경계.** 현행 E 소스 격리본과 배포용 Win32 DLL의 Windows headless 4/4·exit 0. 정상 슬롯은 호스트와 지도에서 같은 결산 ID·세대 2·영수증 1건으로 재개했고 재결산은 거부됐다. 영수증 다이제스트 또는 결산 키 불일치 두 건을 두 경로에서 거부했으며 주 슬롯과 조회 전용 백업을 보존했다. [검증 보고서](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/O07/o07-terminal-receipt-authority-01a1c7a8/RESULTS.md)
+- [x] **O07 Windows 배포 EXE 결산 슬롯 검증.** 기존 릴리스 SHA a9dda414…에서 비계측 호스트 시작 3/3, 동일 바이트 EXE 외부 계측 7/7. 정상 슬롯은 같은 ID·2틱·세대 2·영수증 1건으로 호스트와 지도에서 복원했고, 불일치 두 건은 양쪽에서 거부됐다. 9개 대조 프로필의 주 슬롯·백업 바이트가 동일했고 최종 10개 프로세스가 exit 0이었다. 호스트 재개·지도 복귀는 제품 버튼 신호로 검증했다. [배포 검증 보고서](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/O07/o07-windows-terminal-receipt-01a1c7bb/RESULTS.md)
+- [x] **최신 E 기준 Windows 릴리스·O07 회귀.** I01 결산 표시 두 파일이 들어간 새 F 릴리스 SHA 82453917…에서 비계측 3건·외부 계측 7건, 합계 10/10·exit 0. 별도 기본 시작 통과, 9개 대조 프로필 슬롯 바이트 보존. 직전 릴리스와 DLL 및 O07·리플레이 지문이 일치한다. 내보내기 두 로그에 하위 프로젝트 생략 경고가 각각 한 건 있었고 최종 런타임 진단은 0건이었다. [새 릴리스 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/O07/i01-labels-canonical-windows-01a1c7c7/RESULTS.md)
+- [ ] **O07 운영 외부 지급 및 실기기 확인.** 실제 수신자·연동 설정, 동일 ID의 영속적 중복 제거 및 다른 효과 충돌 계약, 승인된 시험 환경이 필요하다. 현재 호출은 `external_payment_contract_missing`을 반환한다. 새 비계측 EXE의 전경 재개 클릭과 실제 전원 상실은 미검증이다.
+- [x] **K6 I01 지도 변경 비실행 재기준.** F 격리 사본 세 lane에서 I01 두 파일을 모의 적용·복원했고, 14·17행 지도 overlay 다섯 건의 Git 정·역적용 SHA를 대조했다. 기존 lane 인벤토리 10,657개와 의존성 1,006개는 일치했다. 전체 체크리스트도 입력 목록에 있으므로 후속 정식 동결 시 당시 바이트를 결속한다. [재기준 기록](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/i01-a04-k6-input-rebase-review-20261111-cd718c9e5a40/REBASE-READBACK.json)
+- [ ] **K6 정식 인수.** 현행 18행의 before/after 헤드리스가 각각 24/24로 독립 통과했다. 17행의 현행 11,350틱 연합군 승리가 기존 10,550틱 조조군 승리 기대값과 달라 고정 비교는 실패 상태다. 17행 기대값 결정·재동결·독립 재심, 현행 Windows 15·16행 실제 사전 시험 네 건, 정식 실행 및 본선 반영이 남았다.
+
+[후속 검증표와 독립 증거](../../tmp/p03-k6-review-20261109/REVIEW-13-COORDINATION-CHECKLIST.md)
 
 ## 추가 검토: PC 맵·캠페인 연계 (2026-10-25)
 
@@ -21,11 +183,29 @@
 - [x] H1 사건2항 사용자 선택 기록(2026-10-25): 본대출발과 동일 논리시각 통신소 가동완료 지연 인정·출발후 소급 없음, 유효지연만큼 공개 결산시한 연장·시한동시 유효 목표/탈출 인정. [결정 원본](pc-campaign-design/H1-EVENT-DECISION.md). 지휘상실동시 실패/명시철수성과만 유지, 수치·전체동일틱·O07은 미정.
 - [x] H2 사용자 선택·인계 기록(2026-10-26): 미정 포함 설계 조건부 수용과 구현 스펙/측정 계획 준비, 전체 상태+후속 명령·초기 동일 규칙 버전 재개·관람/논리 재생 분리, 자기 시설 상실/상대 마지막 확인·적 재고 비공개·필수 일정 공지를 채택했다. [결정·0번 되먹임 원본](pc-campaign-design/H2-DECISION.md). D01~D10 독립 문서 검토·사용자 판단·[H2 기록 독립 수용](pc-campaign-design/REVIEW-H2.md)·0번 되먹임을 근거로 2026-10-26 R18 설계 검토 루프의 조건부 인계를 완료했다. 후속 구현 스펙·측정 계획과 그 검증은 별도다. O07 세부 계약·수치·전체 동시 순서·O06/O08 및 실제 게임 구현/시험은 미완료다.
 - [ ] 구현 착수 전 시간 기준·작전 종료·사기 회복·지도 범위의 미확정 사항을 정리하고, 확정된 사용자 결정과 설계 가정을 구분한다.
+  - [x] **I01a 설정 구현·기록 이전 완료(2026-10-27):** 순수 설정/고정 fixture 범위와 326 checks를 `8292805`에 반영하고 이전 작업에서 main 푸시를 확인했다. 실제 host/runtime/save 검증을 뜻하지 않는다. [I01a 결과](pc-campaign-design/I01A-IMPLEMENTATION-RESULT-20261027.md).
+  - [x] **기존 data_rules 기준선 실패 해소(2026-10-28 완료, 10-27 착수):** 추격 거리 fallback 170을 POC 데이터 정본으로 옮기고, 누락/override 실제 추격 10사례를 보강했다. data_rules·I01a(326)·hold_distance·commander_ai·core_rules·battle_flow 종료 0. [결과·검증·독립 검토](pc-campaign-design/DATA-RULES-BASELINE-FIX-20261028.md). 독립 5-b 수용. 이번 수정의 커밋·푸시는 하지 않았다.
+  - [x] **I01b-P0 준비 재고(2026-10-28):** 기존 K/S/ST 계약 재사용·확정/관측/미정과 의존성을 정리하고, 현재 21소스 SHA·19모듈 283선언·14앵커를 읽기 전용으로 조사했다. 정상/변조 거부 검사와 독립 5-b 수용. [준비·증거·다음 조각](pc-campaign-design/I01B-PREPARATION-20261028.md). 전체 snapshot/O07 완성이 아니다.
+  - [x] **I01b-P1 신규 부분 시계 검사(2026-10-28):** 실제 BattleSim/TickClock 10seed×배속3×정지유무 60사례 exit0·tick2/clock150 PASS. 신규 코드와 실제 부분 시계 성과는 독립 5-b 수용. [결과·검토](pc-campaign-design/I01B-P1-RESULT-20261028.md).
+  - [x] **I01b-P1 core 종료 증거 보완(원본, 2026-10-28):** 사용자 “원본에서 작업해” 지시 후 실제 core_rules exit0 확보. 원본 clock60/config326/hold/AI/flow도 각각 exit0, P0 도구도 원본 실행 exit0. 기존 관리 작업트리의 core exit=null은 과거 이력이다. [원본 이관 결과](pc-campaign-design/I01B-P1-RESULT-20261028.md).
+  - [x] **원본 data_rules 전체 gate 기준선 해소(2026-10-28):** 기존 dirty bundle 기하의 식별자·계수를 전용 JSON으로 분리하고 allowlist/skip·기존 검사 SHA·slots 함수를 보존했다. 원본7종+bundle/group 9종 실제 exit0, 기하56·동결전후 정확비교3588·잘못된 데이터 거부3 통과. 기존1008경로 중 허용2개 외1006 SHA 동일·누락0, 독립5-b 수용. [결과·검증·보존경계](pc-campaign-design/DATA-RULES-GEOMETRY-RESULT-20261028.md). 종료 리소스 진단/TRACE 경고는 남고 Android export는 미실행이다. 과거 이관시 첫 gate 실패 이력은 유지하며 전체 I01b/A04~A06는 NOT_READY다.
+  - [x] **I01b-P2a B0 부분 runtime 관측(2026-10-28):** POC/적벽 표준×10seed×fresh2 역순 40관측·신규2352체크와 core/data/config/clock/detection/supply 6종 실제 exit0, 독립5-b 수용. B0≠C0·선택필드 관측이며 save_policy=UNCLASSIFIED, 운영 저장/복원·실제 어댑터·제품 공간은 미완료다. [결과·검토·압축 인계](pc-campaign-design/I01B-P2A-RESULT-20261028.md).
+  - [x] **I01b-P2b 부분 복원 구성요소(2026-10-31):** 탐지 기억·보급 sup_*10의 인메모리 capture/검증/준비된 target 복원과 신규40사례·2202체크·33거부, 관련6회귀 실제 exit0 및 독립5-b 수용. 비대상 상태는 caller 선행 책임이며 전체 checkpoint/host·replay/제품 공간과 I01b/A04~A06는 NOT_READY다. [진행 체크리스트](pc-campaign-design/I01B-P2B-CHECKLIST-20261031.md) · [결과·후속 인계](pc-campaign-design/I01B-P2B-RESULT-20261031.md).
+  - [x] **I01b-P2c 제한 private runtime(2026-11-01):** 독립 빈 form 반례를 스펙 보완·최소 수정하고 정본 attempt5 70사례/11553체크/45거부·변경 후 최소3회귀 exit0, 선행4정본 회귀 연속성 및 다른 모델 최종5b 수용. 기존3660/source35·가역격리77 최종감사·SHA묶음·압축 인계/6 기록 마감. 전체 I01b/A04~A06 NOT_READY. [결과](pc-campaign-design/I01B-P2C-RESULT-20261101.md) · [독립 심사](pc-campaign-design/REVIEW-I01B-P2C-20261101.md) · [전용 체크리스트](pc-campaign-design/I01B-P2C-CHECKLIST-20261101.md) · [이관 자료](pc-campaign-design/SESSION-HANDOFF-I01B-P2C-20261101.md). [독립 마감 확인](../../tmp/i01b-p2c-20261101/REVIEW-CLOSEOUT-20261102.md).
+  - [x] **제한 활성 owner 교체(2026-11-04):** 같은 원입력의 기존 owner handle에서 private runtime을 검증 후 교체하고 실패 시 현재 상태를 보존한다. actual exit0 정상20/20099체크/명명8·거부9, 최소P2c/core/data3회귀 exit0·독립5b 제한 수용·6 기록/감사/압축 마감. 전체 diff-check는 기존P2c행CRLF로 actual exit2이며 전체PASS가 아니다. 전체 I01b/A04~A06 NOT_READY. [결과](pc-campaign-design/I01B-ACTIVE-REPLACE-RESULT-20261104.md) · [독립 심사](pc-campaign-design/REVIEW-I01B-ACTIVE-REPLACE-20261104.md) · [체크리스트](pc-campaign-design/I01B-ACTIVE-REPLACE-CHECKLIST-20261104.md) · [이관](pc-campaign-design/SESSION-HANDOFF-I01B-ACTIVE-REPLACE-20261104.md). [독립 마감 확인](../../tmp/i01b-active-replace-20261102/REVIEW-CLOSEOUT-20261104.md).
+  - [ ] **P02 첫 실제 headless opt-in 한정 연결(2026-11-07):** 명시 제한 runtime-ready JSON을 공통 factory/private owner와 실제 autoresolve CLI에 연결했다. 정본 attempt3/K6 정상8/13417체크·정책9·timeout2·명명46(API32+CLI14), CLI2성공/legacy1쌍 exact·P2c/core 회귀 exit0·비-Astra 독립 5b 재심사 수용 보류. 옵션3 진단분류 편차·supply 완료 E2E 미검증을 공개하며 전체 P02/I01/I01b/A04~A06 NOT_READY다. [결과](pc-campaign-design/P02-FIRST-HEADLESS-RESULT-20261107.md) · [체크리스트](pc-campaign-design/P02-FIRST-HEADLESS-CHECKLIST-20261107.md) · [최신 인계](pc-campaign-design/SESSION-HANDOFF-P02-FIRST-HEADLESS-20261107.md). 정정 감사와 압축 검증은 결과 문서를 따른다.
+  - [ ] **P02 제한 CLI worker 연결(2026-11-07):** `--operation-worker`를 실제 AutoResolver 별도 스레드에 연결했고 독립 5-b 한정 수용을 받았다. Worker K6 attempt 3에서 실제 프로세스 53개 및 비교 9개 통과. 전체 P02와 제품 WorldMap operation·UI host·replay는 미완료다. [결과](pc-campaign-design/P02-WORKER-RESULT-20261107.md) · [체크리스트](pc-campaign-design/P02-WORKER-CHECKLIST-20261107.md) · [인계](pc-campaign-design/SESSION-HANDOFF-P02-WORKER-20261107.md).
+  - [ ] **P02 제한 fresh replay CLI(2026-11-08):** 기존 실행기의 명시 입력·명령 재생 경로가 독립 5-b 한정 수용됐다. 2/K6 74/75 및 3/K6 단일 재실행 통과. 전체 P02 NOT_READY이며 제품 host/UI·WorldMap·replay 인수가 남는다. [결과](pc-campaign-design/P02-REPLAY-RESULT-20261108.md) · [진행표](pc-campaign-design/P02-PROGRESS-CHECKLIST.md) · [최신 인계](pc-campaign-design/SESSION-HANDOFF-P02-REPLAY-20261108.md).
+  - [ ] **P02 private owner 표시용 사건 회수(2026-11-08):** 독립 재심에서 한정 수용됐다. 기본 17개, 신규 검사 14행·148개 단언, 격리 회귀 14개와 탐침 3개를 확인했다. 전체 P02는 NOT_READY이며 제품 호스트 연결과 공동 인수는 남는다. [결과](pc-campaign-design/P02-VIEWER-EVENTS-RESULT-20261108.md) · [진행표](pc-campaign-design/P02-PROGRESS-CHECKLIST.md) · [최신 인계](pc-campaign-design/SESSION-HANDOFF-P02-VIEWER-EVENTS-20261108.md).
+  - [ ] **P02 legacy WorldMap 결산 경계(2026-11-08)**. 실제 legacy worker 결산 사본과 메인 join 후 게시를 분리하고 독립 5-b 한정 수용을 받았다. 제품 WorldMap operation·FleetBattle3D host·제품 replay는 미완료다. [결과](pc-campaign-design/P02-LEGACY-OUTCOME-RESULT-20261108.md) · [진행표](pc-campaign-design/P02-PROGRESS-CHECKLIST.md) · [인계](pc-campaign-design/SESSION-HANDOFF-P02-LEGACY-OUTCOME-20261108.md).
+  - [ ] **P02 legacy FleetBattle3D 후보 준비(2026-11-08)**. 지정 bench patch 두 오류와 제품 동기 호출 경계는 독립 5-b 한정 수용됐다. 제품 operation host와 전체 P02 인수는 남는다. [결과](pc-campaign-design/P02-HOST-PREP-RESULT-20261108.md) · [진행표](pc-campaign-design/P02-PROGRESS-CHECKLIST.md) · [인계](pc-campaign-design/SESSION-HANDOFF-P02-HOST-PREP-20261108.md).
+  - [ ] **P02 전투 준비 실패 안내와 최초 탈출(2026-11-08)**. 지정 준비 실패 안내 및 최초 종료·천하 복귀는 독립 5-b 한정 수용됐다. 전체 P02와 제품 operation은 미완료다. [결과](pc-campaign-design/P02-PREP-ERROR-RESULT-20261108.md) · [진행표](pc-campaign-design/P02-PROGRESS-CHECKLIST.md) · [인계](pc-campaign-design/SESSION-HANDOFF-P02-PREP-ERROR-20261108.md).
+  - [ ] **I01b 후속 실제 통합:** 원 I01/I01b 및 A04/A05/A06는 NOT_READY다. 실제 어댑터·저장/재개·제품 공간은 후속이며, 원본 기존 dirty를 포함한 검사를 전체 캠페인 완료로 표시하지 않는다.
 - [ ] 기존 PC 피처 브랜치와 최신 기준 브랜치의 차이·미커밋 변경·관련 작업 상태를 확인하고 필요한 변경의 통합 범위를 정한다.
 - [ ] 1단계 공간·기동 기반 → 2단계 점령·보급 작전 → 3단계 증원·철수·완성 검증 순서로 구현한다. 단계별 검증 결과와 인계 내용을 남긴다.
 - [ ] 구현 후 저장·재생·기존 적벽 회귀·PC 화면·사람 플레이를 확인한다. 구현 리뷰와 발견 사항 수정을 마친 후 병합 여부를 판단한다.
 
-이번 검토에서는 실행 코드를 수정하거나 테스트·화면 검증 완료로 표시하지 않는다.
+2026-10-25 설계 검토 당시에는 실행 코드를 수정하거나 테스트·화면 검증 완료로 표시하지 않았다. 후속 I01a와 기준선 수정 결과는 위 별도 기록을 따른다.
 
 **진행 현황 (2026-10-07)**
 - [x] M10 선행(호스트를 적벽 프로필로 연결): main 병합(`ba87606`).

@@ -70,7 +70,7 @@ func _init(seed_id: int = 0, hz: int = BattleRules.TICK_HZ, profile: Dictionary 
 		st.ecp = 0
 		var cb: Dictionary = profile.combat
 		if cb.has("terrain"):
-			terrain = BattleTerrain.new(cb.terrain)
+			terrain = BattleTerrain.new(cb.terrain, rs.world)
 			salvo.terr = terrain
 		if cb.has("detection"):
 			detect = Detection.new(self, cb.detection, terrain if terrain else BattleTerrain.new({}))
@@ -1016,7 +1016,7 @@ func _fleet_phase(timers: bool) -> void:
 		var dest := Vector2.ZERO
 		var chase_r: float = f.range_r * R.chase_range_share
 		if salvo and assault and f.charge <= 0:
-			chase_r = maxf(chase_r, float(rs.rt("range_band_hold.engagement_distance", 170.0)))
+			chase_r = maxf(chase_r, float(rs.rt("range_band_hold.engagement_distance", R.chase_engagement_fallback_r)))
 		if salvo and f.charge > 0:
 			chase_r = float(salvo.C.bands.assault_r)   # 돌격은 강습 거리까지 붙는다
 		# AI의 거리 유지/후퇴 이동은 사격 표적과 함께 존재한다. 이동 목적지를 추격으로 덮지 않는다.
@@ -1050,6 +1050,10 @@ func _fleet_phase(timers: bool) -> void:
 				spd *= 1.0 + cmd.penalty(f, "move_pct")   # 승계 혼선·지휘 한도 초과(§4.14)
 			if skills:
 				spd *= skills.mulf(f, "speed_mul_bp")   # 특기 질주·신속(P8a)
+		if has_dest and terrain != null:
+			var waypoint := terrain.next_waypoint(f.pos, dest)
+			if waypoint != Vector2.INF:
+				dest = waypoint
 		if frozen:
 			has_dest = false
 		elif has_dest and cfoe != null and not f.strafe and f.move_grp == 0 and not _retreating(f):
@@ -1087,6 +1091,8 @@ func _fleet_phase(timers: bool) -> void:
 				var k: float = maxf(R.min_turn_cos, cos(BattleRules.ang_diff(f.heading, a)))
 				var stp := minf(spd * dt * k, dd)
 				f.pos += Vector2(cos(f.heading), sin(f.heading)) * stp
+		if f.pos != old_pos and terrain != null and not terrain.can_traverse(old_pos, f.pos):
+			f.pos = old_pos
 		var blk := _hold_blocker(f, old_pos) if (has_dest and salvo) else Vector2.INF
 		if blk != Vector2.INF:
 			f.pos = old_pos   # 걸음만 막는다. 목적지가 적 쪽일 때만 이동 명령을 접는다(돌아서는 중의 앞쪽 쏠림은 명령을 지키지 않는다)

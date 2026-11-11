@@ -134,35 +134,47 @@ static func start_org(profile: Dictionary, scenario: Dictionary, player_auto := 
 			o = Organization.auto_fill(o, f.id, scenario, profile)
 	return o
 
-func _load() -> void:
+func _load() -> Dictionary:
 	var b: Node = deck.battle
-	scn = ProfileLoader.read_json(ProfileLoader.read_json(b.profile_def).scenario_path)
-	prof = ScenarioProfile.load_profile(b.profile_def, b.difficulty)
-	skill_defs = {}
-	for d in scn.get("realtime_rules", {}).get("special_skills", {}).get("skills", []):
-		skill_defs[d.id] = d
+	var scenario := ProfileLoader.read_json(ProfileLoader.read_json(b.profile_def).scenario_path)
+	var profile := ScenarioProfile.load_profile(b.profile_def, b.difficulty)
+	var skills := {}
+	for d in scenario.get("realtime_rules", {}).get("special_skills", {}).get("skills", []):
+		skills[d.id] = d
+	return {"scenario": scenario, "profile": profile, "skills": skills}
+
+func _apply_load(candidate: Dictionary) -> void:
+	scn = candidate.scenario
+	prof = candidate.profile
+	skill_defs = candidate.skills
 
 # 브리핑 "자동 편성으로 시작"(건너뛰기): 화면을 거치지 않고 세 세력 자동 편성으로 전투
 func start_auto() -> void:
-	_load()
-	deck.begin_battle(start_org(prof, scn))
+	var candidate := _load()
+	var result: Dictionary = deck.begin_battle(start_org(candidate.profile, candidate.scenario))
+	if not result.ok:
+		return
+	_apply_load(candidate)
 
 # 브리핑에서 연다. 지금 전투에 걸린 편성(없으면 세 세력 자동 편성 = 건너뛰기와 같은 편성)에서 시작한다.
 func open_org() -> void:
 	var b: Node = deck.battle
-	_load()
+	var candidate := _load()
+	# 걸린 편성이 지금 전투(난이도 등)와 맞지 않으면(REVIEW-O4 #1) 유효한 유비군 함대는 두고 나머지만 채워(O4b F-3)
+	# 걸린 편성과 전장도 고친 편성으로 바꾼다(뒤로 → 출격해도 같은 화면이 반복되지 않게)
+	var repair_errors: Array = b.org_errors.duplicate(true)
+	var repaired_squadrons := []
+	if not repair_errors.is_empty():
+		var r := Organization.repair(b.org, candidate.profile, candidate.scenario)
+		repaired_squadrons = r.changed
+		if not b.init_game(r.org.duplicate(true)).ok:
+			return
+	_apply_load(candidate)
 	officers = Organization._officers(scn, PLAYER)
 	names = {}
 	for sq in scn.squadrons:
 		names[sq.id] = sq.name
-	# 걸린 편성이 지금 전투(난이도 등)와 맞지 않으면(REVIEW-O4 #1) 유효한 유비군 함대는 두고 나머지만 채워(O4b F-3)
-	# 걸린 편성과 전장도 고친 편성으로 바꾼다(뒤로 → 출격해도 같은 화면이 반복되지 않게)
-	notice = ""
-	if not b.org_errors.is_empty():
-		var r := Organization.repair(b.org, prof, scn)
-		notice = _repair_text(r.changed, b.org_errors)
-		b.org = r.org.duplicate(true)
-		b.init_game()
+	notice = "" if repair_errors.is_empty() else _repair_text(repaired_squadrons, repair_errors)
 	org = b.org.duplicate(true) if not b.org.is_empty() else start_org(prof, scn)
 	sel = -1
 	picked = {}

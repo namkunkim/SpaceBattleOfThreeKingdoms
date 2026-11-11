@@ -1,0 +1,28 @@
+--- a/view/world/world_map_screen.gd
++++ b/view/world/world_map_screen.gd
+@@ -692,6 +692,25 @@
+ func _product_sortie_allowed() -> bool:
+ 	return _mode == BattleBrief.Product.REQUEST.mode and _difficulty == "표준"
+ 
++# Integration candidate only: caller must be an explicit sortie action,
++# never detail_prepared. Existing selected card/map origin remain authoritative.
++func entry_campaign_sortie(scenario_id: String) -> Error:
++	if scenario_id != "RED-CLIFFS-208-RT":
++		return ERR_INVALID_PARAMETER
++	if state != "browse" or not _card.visible or not _product_sortie_allowed() or not _sortie_available():
++		return ERR_BUSY
++	var candidate := make_brief(BattleBrief.Product.REQUEST.seed)
++	candidate.select_first_operation_product()
++	if candidate.scenario_id != scenario_id:
++		return ERR_INVALID_DATA
++	_begin_sortie(candidate)
++	return OK
++
++# Resume remains on the existing map until its restore job validates the owner.
++# Cancellation/failure retains the map selection; WorldLink owns settlement.
++func entry_campaign_resume() -> void:
++	_resume_saved_battle(true)
++
+ func _sortie_first_operation() -> void:
+ 	if state != "browse" or not _card.visible or not _product_sortie_allowed() or not _sortie_available():
+ 		return

@@ -102,7 +102,10 @@ func _run() -> void:
 		ScenarioProfile.enlarge_field(rprof, battle.FIELD_SIZE)   # 호스트와 같은 전장
 		ScenarioProfile.tune_for_play(rprof, battle.move_mul, battle.turn_mul)   # 호스트와 같은 이동 배율
 	var rp := BattleSim.replay(battle.battle_seed, 10, log, battle.sim.st.tick, rprof)
-	if not TestCheck.ok(self, rp.fingerprint() == battle.sim.fingerprint(), "live game replays to the same fingerprint"): return
+	var replay_matches: bool = rp.fingerprint() == battle.sim.fingerprint()
+	preload("res://scripts/legacy_battle_lifetime.gd").release(rp)
+	rp = null
+	if not TestCheck.ok(self, replay_matches, "live game replays to the same fingerprint"): return
 	battle.queue_free()
 	await process_frame
 	print("BATTLE_FLOW_PASS")

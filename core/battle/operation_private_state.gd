@@ -1,0 +1,539 @@
+class_name OperationPrivateState
+extends RefCounted
+
+# Restricted in-memory owner. This is not a host adapter, operating checkpoint,
+# external save schema, stock POC support, or full Red Cliffs restore.
+const Service := preload("res://core/battle/operation_service_state.gd")
+const FORMAT := "i01b/private-runtime/1"
+const UNSUPPORTED := ["morale", "victory", "cai", "decisions", "chain", "cmd", "assault", "skills"]
+const KINDS := ["stop", "move", "attack", "formation", "missile", "fighter", "volley", "def", "supply_first", "supply_hold"]
+const STATE := ["hz", "seed_id", "tick", "clock_ms", "cp", "ecp", "cp_rem", "ecp_rem", "killed", "lost", "reinf", "reinf_ms", "ai_timer", "next_id", "form_counter", "next_event_id", "over", "win", "end_reason", "army_ev", "result", "end_tick", "end_ms"]
+const FLEET := ["id", "side", "name", "role", "portrait", "form_id", "form", "ships", "max_ships", "shown", "lv", "xp", "pos", "heading", "target_id", "has_move", "move_to", "missile_cd", "fighter_cd", "counter_launch", "counter_pending", "fighter_fired_tick", "charge", "flank_msg", "defense", "dead", "fire_id", "in_cmd", "spd", "wait", "is_flag", "home", "spawn", "range_r", "ranges", "sq_id", "morale_group", "start_morale_bp", "faction", "commander_id", "cmd_stat", "morale_bp", "stats", "formation_id", "equip", "comp0", "stages", "hull", "max_hull", "lost_ships", "loss_total", "loss_exposed", "ammo", "energy_m", "energy_rem", "heat_m", "heat_rem", "wch", "wmax", "next_fire", "supp", "moving", "speed", "mstate", "out", "retreat_order", "retreat_counted", "loss_mul_until", "loss_mul_bp", "cost0", "chain_sunk", "died_pos", "arrived", "fired", "form_to", "form_left", "route", "strafe", "face_set", "speed_cap", "move_grp", "face_to", "flip", "flip_wait", "traits", "shape_to", "form_t", "shape", "control", "posture", "bias_mod", "bias_until", "pursue_id", "pursue_until", "ai_seen", "hit_tick", "healed_wound", "healed_mod", "sup_src", "sup_prog", "sup_since", "sup_still", "sup_pos", "sup_n", "sup_ammo", "sup_mat", "sup_hold", "sup_first", "supplied", "level", "vice", "staff", "cmdr_state", "cmdr_sub", "confuse_until", "fr_hits", "assault_cd", "boarded", "skill_slots", "skill_used", "fx"]
+const MISSILE := ["id", "pos", "target_id", "src_id", "dmg", "v", "wob", "age", "side", "dead"]
+const SWARM := ["id", "src_id", "target_id", "life", "side", "dps", "pts", "striking"]
+const SIM_DATA := ["command_log", "_queue", "_events", "sub_ms", "_reinf_def", "first_hit_tick", "_hold_d2", "endless"]
+const SIM_REBUILT := ["profile_id", "rs", "R", "st", "rng", "dt", "_ai", "T", "morale", "victory", "salvo", "terrain", "cai", "decisions", "detect", "supply", "chain", "cmd", "assault", "skills"]
+const CODE := ["operation_private_state.gd", "operation_service_state.gd", "battle_sim.gd", "battle_state.gd", "fleet_state.gd", "battle_rng.gd", "rule_set.gd", "salvo.gd", "terrain.gd", "detection.gd", "supply.gd", "ai/poc_enemy_ai.gd", "battle_projection.gd", "rules.gd", "bundle_layout.gd", "poc_setup.gd", "profile_loader.gd", "tick_clock.gd"]
+
+var _sim: BattleSim = null
+var _profile := {}
+var _controls: Array = []
+var _seed := 0
+var _hz := BattleRules.TICK_HZ
+var _ready := false
+var _busy := false
+
+static func _fail(code: String) -> Dictionary:
+	return {"ok": false, "error": code}
+
+static func _copy(value: Variant) -> Variant:
+	return value.duplicate(true) if value is Array or value is Dictionary else value
+
+static func _keys(value: Variant, keys: Array) -> bool:
+	return Service._keys(value, keys)
+
+static func _vars(value: Object) -> Array:
+	var out: Array = []
+	for entry in value.get_property_list():
+		if int(entry.usage) & PROPERTY_USAGE_SCRIPT_VARIABLE: out.append(str(entry.name))
+	return out
+
+static func _coverage(value: Object, fields: Array) -> bool:
+	var actual := _vars(value)
+	return actual.size() == fields.size() and fields.all(func(key): return key in actual)
+
+static func _take(value: Object, fields: Array) -> Dictionary:
+	var out := {}
+	for key in fields: out[key] = _copy(value.get(key))
+	return out
+
+static func _put(value: Object, data: Dictionary, fields: Array) -> void:
+	for key in fields: value.set(key, _copy(data[key]))
+
+static func _shape(data: Variant, prototype: Object, fields: Array) -> bool:
+	if not _keys(data, fields): return false
+	for key in fields:
+		if typeof(data[key]) != typeof(prototype.get(key)): return false
+		if data[key] is Array:
+			var expected: Array = prototype.get(key)
+			if data[key].get_typed_builtin() != expected.get_typed_builtin(): return false
+	return true
+
+static func _code() -> Dictionary:
+	var packaged := {}
+	if OS.has_feature("template"):
+		packaged = _packaged_code()
+		if packaged.is_empty():
+			return {}
+	var sources := {}
+	for path in CODE:
+		var source := "res://core/battle/" + str(path)
+		if FileAccess.file_exists(source):
+			var digest := FileAccess.get_sha256(source)
+			if digest.is_empty():
+				return {}
+			sources[path] = digest
+	if sources.is_empty():
+		return packaged
+	if sources.size() != CODE.size() or (not packaged.is_empty() and not Service._same(sources, packaged)):
+		return {}
+	return sources
+
+
+static func _packaged_code() -> Dictionary:
+	const MANIFEST := "res://data/operation_checkpoint_fingerprint.json"
+	const ANCHOR := "res://data/operation_checkpoint_anchor.gd"
+	if not FileAccess.file_exists(MANIFEST) or not ResourceLoader.exists(ANCHOR):
+		return {}
+	var text := FileAccess.get_file_as_string(MANIFEST)
+	var anchor := load(ANCHOR) as Script
+	if anchor == null or anchor.get_script_constant_map().get("SHA256") != text.sha256_text():
+		return {}
+	var manifest: Variant = JSON.parse_string(text)
+	if not _keys(manifest, ["format", "engine", "sources", "tokens", "remaps"]) \
+			or manifest.format != "operation-checkpoint-fingerprint/1":
+		return {}
+	var version := Engine.get_version_info()
+	var engine := "%d.%d.%d.%s.%s" % [version.major, version.minor, version.patch, version.status, str(version.hash).left(9)]
+	if manifest.engine != engine or not _keys(manifest.sources, CODE) \
+			or not _keys(manifest.tokens, CODE) or not _keys(manifest.remaps, CODE):
+		return {}
+	for path in CODE:
+		var source := "res://core/battle/" + str(path)
+		var digest: Variant = manifest.sources[path]
+		if not digest is String or digest.length() != 64 or not digest.is_valid_hex_number() \
+				or digest.begins_with("+") or digest.begins_with("-") or digest != digest.to_lower():
+			return {}
+		var token := FileAccess.get_sha256(source + "c")
+		var remap := FileAccess.get_sha256(source + ".remap")
+		if token.is_empty() or remap.is_empty() or token != manifest.tokens[path] or remap != manifest.remaps[path]:
+			return {}
+	return manifest.sources
+
+
+static func _classes() -> String:
+	# The editor scans nested snapshots too. A content hash of canonical files
+	# does not prove that Godot actually resolved the global classes to them.
+	var classes := [BattleSim, BattleState, FleetState, BattleRng, RuleSet, SalvoCombat, BattleTerrain, Detection, SupplyCore, PocEnemyAi, BattleProjection, BattleRules, BundleLayout, PocSetup, ProfileLoader, TickClock]
+	var paths := ["battle_sim.gd", "battle_state.gd", "fleet_state.gd", "battle_rng.gd", "rule_set.gd", "salvo.gd", "terrain.gd", "detection.gd", "supply.gd", "ai/poc_enemy_ai.gd", "battle_projection.gd", "rules.gd", "bundle_layout.gd", "poc_setup.gd", "profile_loader.gd", "tick_clock.gd"]
+	for i in classes.size():
+		if classes[i].resource_path != "res://core/battle/" + paths[i]: return "noncanonical_runtime_class"
+	return ""
+
+# Supported config is deliberately narrow: current trusted combat contents,
+# optional D/S/terrain removal, and current POC rules with finite world extent.
+# No arbitrary malformed config reaches constructors with unchecked indexing.
+static func _profile_error(profile: Variant, seed: Variant, hz: Variant, controls: Variant) -> String:
+	if typeof(seed) != TYPE_INT or seed < 0 or seed > (1 << (4 * 4 * 2)) - 1: return "invalid_seed"
+	if typeof(hz) != TYPE_INT or hz != BattleRules.TICK_HZ: return "unsupported_hz"
+	if not profile is Dictionary or not Service._data(profile) or not controls is Array: return "invalid_profile"
+	for key in ["profile_id", "rules", "ally", "foe", "reinf"]:
+		if not profile.has(key): return "profile_fields"
+	if not profile.profile_id is String or profile.profile_id.is_empty(): return "profile_id"
+	if not profile.reinf is Array or not profile.reinf.is_empty(): return "unsupported_reinforcement"
+	if profile.has("scenario") and (not profile.scenario is Dictionary or not profile.scenario.is_empty()): return "unsupported_scenario"
+	if profile.has("ai") and (not profile.ai is Dictionary or not profile.ai.is_empty()): return "unsupported_commander_ai"
+	var allowed := ["profile_id", "rules", "ally", "foe", "reinf", "combat", "scenario", "ai", "schema_version", "note", "place_radius_ratio_status"]
+	for key in profile:
+		if key not in allowed: return "unsupported_profile_field"
+	var trusted: Dictionary = PocSetup.profile().rules
+	if not _keys(profile.rules, trusted.keys()): return "rules_fields"
+	for key in trusted:
+		if key in ["world_w", "world_h"]:
+			if typeof(profile.rules[key]) not in [TYPE_INT, TYPE_FLOAT] or profile.rules[key] <= 2.0 * float(trusted.edge): return "world_extent"
+		elif not Service._same(profile.rules[key], trusted[key]): return "unsupported_rules_content"
+	var combat: Variant = profile.get("combat", {})
+	if not combat is Dictionary: return "combat_type"
+	if not combat.is_empty():
+		var original: Dictionary = ProfileLoader.read_json("res://data/profiles/combat_m3.json").combat
+		for key in combat:
+			if key in ["morale", "victory", "command", "stratagem", "assault"]: return "unsupported_module_config"
+			if not original.has(key) or not Service._same(combat[key], original[key]): return "unsupported_combat_content"
+		for key in original:
+			if key not in ["morale", "victory", "command", "stratagem", "assault", "terrain", "detection", "supply"] and not combat.has(key): return "combat_fields"
+	if not profile.ally is Array or not profile.foe is Array or profile.ally.is_empty() or profile.foe.is_empty(): return "roster_type"
+	var count: int = profile.ally.size() + profile.foe.size()
+	if controls.size() not in [0, count]: return "initial_controls"
+	for control in controls:
+		if typeof(control) != TYPE_STRING or control not in ["direct", "delegate"]: return "initial_controls"
+	for fleet in profile.ally + profile.foe:
+		if not fleet is Dictionary: return "fleet_definition"
+		for key in ["name", "role", "ships", "lv", "x", "y", "p"]:
+			if not fleet.has(key): return "fleet_definition"
+		for key in fleet:
+			if key in ["name", "role", "squadron_id", "morale_group", "faction_id", "commander_id", "formation_id"]:
+				if typeof(fleet[key]) != TYPE_STRING: return "fleet_definition_type"
+			elif key in ["ships", "lv", "p", "command", "might", "intellect", "level", "start_morale_bp"]:
+				if typeof(fleet[key]) != TYPE_INT or fleet[key] < 0: return "fleet_definition_type"
+			elif key in ["x", "y", "spd", "wait"]:
+				if typeof(fleet[key]) not in [TYPE_INT, TYPE_FLOAT]: return "fleet_definition_type"
+			elif key in ["flag", "counter_launch"]:
+				if typeof(fleet[key]) != TYPE_BOOL: return "fleet_definition_type"
+			elif key != "composition": return "unsupported_fleet_definition"
+		if fleet.ships <= 0 or fleet.lv <= 0: return "fleet_definition_range"
+		if not combat.is_empty():
+			if not fleet.get("composition") is Array or fleet.composition.is_empty(): return "composition"
+			var total := 0
+			for item in fleet.composition:
+				if not item is Dictionary or not item.has("ship_type_id") or not item.has("count"): return "composition"
+				for key in item:
+					if key not in ["ship_type_id", "count", "mission_equipment_id"]: return "composition"
+				if typeof(item.ship_type_id) != TYPE_STRING or not combat.ship_types.has(item.ship_type_id): return "composition"
+				if typeof(item.count) != TYPE_INT or item.count <= 0: return "composition"
+				if item.has("mission_equipment_id") and typeof(item.mission_equipment_id) != TYPE_STRING: return "composition"
+				total += item.count
+			if total != fleet.ships: return "composition_count"
+			if not combat.formations.has(fleet.get("formation_id", combat.default_formation)): return "formation_definition"
+	return ""
+
+static func create(profile: Variant, seed: Variant, hz: Variant, initial_controls: Variant = []) -> Dictionary:
+	var error := _classes()
+	if error == "": error = _profile_error(profile, seed, hz, initial_controls)
+	if error != "": return _fail(error)
+	var owner := OperationPrivateState.new()
+	owner._busy = true
+	owner._profile = profile.duplicate(true)
+	owner._controls = initial_controls.duplicate(true)
+	owner._seed = seed
+	owner._hz = hz
+	# Runtime receives another copy so neither stored config nor caller aliases it.
+	owner._sim = BattleSim.new(seed, hz, profile.duplicate(true))
+	if not initial_controls.is_empty():
+		for i in initial_controls.size(): owner._sim.st.fleets[i].control = initial_controls[i]
+	error = owner._bindings()
+	if error != "":
+		owner.close()
+		return _fail(error)
+	owner._sim.projection(0)
+	owner._ready = true
+	owner._busy = false
+	return {"ok": true, "owner": owner}
+
+func _guard() -> String:
+	if _busy: return "busy"
+	if not _ready or _sim == null: return "unprepared_owner"
+	return ""
+
+func _bindings() -> String:
+	var class_error := _classes()
+	if class_error != "": return class_error
+	for field in UNSUPPORTED:
+		if _sim.get(field) != null: return "unsupported_active_" + field
+	if not _coverage(_sim, SIM_DATA + SIM_REBUILT): return "sim_field_coverage"
+	if not _coverage(_sim.st, STATE + ["fleets", "missiles", "swarms", "_idx", "_idx_n"]): return "state_field_coverage"
+	for fleet in _sim.st.fleets:
+		if not _coverage(fleet, FLEET): return "fleet_field_coverage"
+	if not _coverage(_sim.rng, ["profile_id"]) or not _coverage(_sim._ai, []): return "rng_ai_coverage"
+	if not _coverage(_sim.rs, ["v", "world", "scenario", "c"]): return "rules_coverage"
+	if _sim.salvo != null:
+		if not _coverage(_sim.salvo, ["sim", "C", "terr", "terrain_class"]): return "salvo_coverage"
+		if not is_same(_sim.salvo.sim, _sim) or not is_same(_sim.salvo.C, _sim.rs.c) or not is_same(_sim.salvo.terr, _sim.terrain): return "salvo_binding"
+	if _sim.terrain != null and not _coverage(_sim.terrain, ["zones", "_movement_field", "_extent", "_blockers", "_waypoints"]): return "terrain_coverage"
+	if _sim.detect != null and not _coverage(_sim.detect, ["sim", "D", "terr", "contacts", "_period", "_conf0"]): return "detection_coverage"
+	if _sim.supply != null and not _coverage(_sim.supply, ["sim", "S", "ship", "need", "light_ticks", "still_eps", "bases"]): return "supply_coverage"
+	return Service._bindings(_sim)
+
+static func _command_error(command: Variant) -> String:
+	if not Service._data(command) or not _keys(command, ["tick", "side", "ids", "kind", "target_id", "point", "args"]): return "invalid_command"
+	if typeof(command.tick) != TYPE_INT or command.tick < -1 or typeof(command.side) != TYPE_INT or command.side not in [0, 1]: return "invalid_command"
+	if not command.ids is Array or not command.args is Dictionary or typeof(command.kind) != TYPE_STRING: return "invalid_command"
+	if typeof(command.target_id) != TYPE_INT or command.target_id < -1 or typeof(command.point) != TYPE_VECTOR2: return "invalid_command"
+	var ids := {}
+	for id in command.ids:
+		if typeof(id) != TYPE_INT or id < 0 or ids.has(id): return "invalid_command"
+		ids[id] = true
+	if command.kind not in KINDS: return "unsupported_command"
+	if command.kind == "formation":
+		if not _keys(command.args, ["id"]) or typeof(command.args.id) != TYPE_STRING: return "invalid_command"
+	elif command.kind == "supply_hold":
+		if not _keys(command.args, ["on"]) or typeof(command.args.on) != TYPE_BOOL: return "invalid_command"
+	elif not command.args.is_empty(): return "unsupported_command_args"
+	return ""
+
+func issue(command: Variant) -> Dictionary:
+	return _command(command, false)
+
+func queue(command: Variant) -> Dictionary:
+	return _command(command, true)
+
+func _command(command: Variant, pending: bool) -> Dictionary:
+	var error := _guard()
+	if error == "": error = _command_error(command)
+	if error != "": return _fail(error)
+	var detached: Dictionary = command.duplicate(true)
+	_busy = true
+	if pending: _sim.queue(detached)
+	else: _sim.issue(detached)
+	_busy = false
+	return {"ok": true}
+
+func advance() -> Dictionary:
+	var error := _guard()
+	if error != "": return _fail(error)
+	_busy = true
+	_sim.step()
+	_busy = false
+	return {"ok": true}
+
+func drain_events() -> Dictionary:
+	var error := _guard()
+	if error != "": return _fail(error)
+	_busy = true
+	var events := _sim.drain_events().duplicate(true)
+	_busy = false
+	return {"ok": true, "events": events}
+
+# Serial display drain. This consumes the same queue as the raw drain.
+func drain_events_for(side: Variant) -> Dictionary:
+	var error := _guard()
+	if error != "": return {"ok": false, "error": error, "path": "owner"}
+	if typeof(side) != TYPE_INT or side not in [0, 1]: return {"ok": false, "error": "invalid_side", "path": "side"}
+	_busy = true
+	var events := _sim.drain_events_for(side).duplicate(true)
+	_busy = false
+	return {"ok": true, "events": events}
+
+# Read-only consumer DTOs. Neither read consumes events or exposes the sim.
+func read_projection(side: Variant) -> Dictionary:
+	var error := _guard()
+	if error != "": return {"ok": false, "error": error, "path": "owner"}
+	if typeof(side) != TYPE_INT or side not in [0, 1]: return {"ok": false, "error": "invalid_side", "path": "side"}
+	return {"ok": true, "projection": _sim.projection(side).duplicate(true)}
+
+func summary() -> Dictionary:
+	var error := _guard()
+	if error != "": return {"ok": false, "error": error, "path": "owner"}
+	var st := _sim.st
+	return {"ok": true, "summary": {"tick": st.tick, "clock_ms": st.clock_ms, "over": st.over,
+		"win": st.over and st.win, "reason": st.end_reason if st.over else "timeout",
+		"t": st.end_ms / 1000.0 if st.over else st.clock_s(), "end_tick": st.end_tick, "end_ms": st.end_ms,
+		"lost": st.lost / 1000.0, "killed": st.killed / 1000.0,
+		"reinf_t": st.reinf_ms / 1000.0 if st.reinf else -1.0,
+		"ally_alive": st.alive(0).size(), "foe_alive": st.alive(1).size(),
+		"fp": _sim.fingerprint(), "commands": _sim.command_log.size()}}
+
+func _derived() -> Dictionary:
+	return {"profile_id": _sim.profile_id, "R": _sim.R.duplicate(true), "rs": _take(_sim.rs, ["v", "world", "scenario", "c"]), "dt": _sim.dt, "T": _sim.T.duplicate(true), "rng": _sim.rng.profile_id,
+		"salvo": {"terrain_class": _sim.salvo.terrain_class} if _sim.salvo else {}, "terrain": _sim.terrain.zones.duplicate(true) if _sim.terrain else [], "layout": [_sim.salvo != null, _sim.terrain != null, _sim.detect != null, _sim.supply != null]}
+
+func observe() -> Dictionary:
+	var error := _guard()
+	if error != "": return _fail(error)
+	var fleets: Array = []
+	for fleet in _sim.st.fleets: fleets.append(_take(fleet, FLEET))
+	var missiles: Array = []
+	for item in _sim.st.missiles: missiles.append(_take(item, MISSILE))
+	var swarms: Array = []
+	for item in _sim.st.swarms: swarms.append(_take(item, SWARM))
+	var service := Service.capture_partial(_sim)
+	if not service.ok: return service
+	return {"ok": true, "state": _take(_sim.st, STATE), "fleets": fleets, "missiles": missiles, "swarms": swarms, "sim": _take(_sim, SIM_DATA), "derived": _derived(), "service": service.packet}
+
+func capture_completed() -> Dictionary:
+	var error := _guard()
+	if error == "": error = _bindings()
+	if error != "": return _fail(error)
+	var view := observe()
+	if not view.ok: return view
+	var code := _code()
+	if code.is_empty(): return _fail("code_unavailable")
+	var packet := {"format": FORMAT, "code": code, "profile": _profile.duplicate(true), "controls": _controls.duplicate(true), "seed": _seed, "hz": _hz, "view": view}
+	if not Service._data(packet): return _fail("unsupported_value")
+	return {"ok": true, "packet": packet}
+
+static func _packet_error(packet: Dictionary) -> String:
+	if not Service._data(packet): return "unsupported_value"
+	if not _keys(packet, ["format", "code", "profile", "controls", "seed", "hz", "view"]) or packet.format != FORMAT: return "packet_fields"
+	var code := _code()
+	if code.is_empty(): return "code_unavailable"
+	if not Service._same(packet.code, code): return "code_mismatch"
+	var error := _profile_error(packet.profile, packet.seed, packet.hz, packet.controls)
+	if error != "": return error
+	var view: Variant = packet.view
+	if not _keys(view, ["ok", "state", "fleets", "missiles", "swarms", "sim", "derived", "service"]) or typeof(view.ok) != TYPE_BOOL or not view.ok: return "view_fields"
+	if not view.service is Dictionary: return "service_type"
+	if not _shape(view.state, BattleState.new(), STATE): return "state_fields"
+	if not _keys(view.sim, SIM_DATA): return "sim_fields"
+	for key in ["command_log", "_queue", "_events", "_reinf_def"]:
+		if not view.sim[key] is Array: return "sim_container"
+	for key in ["fleets", "missiles", "swarms"]:
+		if not view[key] is Array: return "object_array"
+	for command in view.sim.get("command_log", []):
+		if _command_error(command) != "": return "log_command"
+	for command in view.sim.get("_queue", []):
+		if _command_error(command) != "": return "pending_command"
+	return ""
+
+static func prepare(packet: Variant) -> Dictionary:
+	if not packet is Dictionary: return _fail("packet_type")
+	var error := _packet_error(packet)
+	if error != "": return _fail(error)
+	var created := create(packet.profile, packet.seed, packet.hz, packet.controls)
+	if not created.ok: return created
+	var owner: OperationPrivateState = created.owner
+	owner._busy = true
+	error = owner._restore(packet.view)
+	if error != "":
+		owner.close()
+		return _fail(error)
+	owner._busy = false
+	# Capture exactness is an internal consistency guard; tests use another oracle.
+	if not Service._same(owner.observe(), packet.view):
+		owner.close()
+		return _fail("restored_state_mismatch")
+	return {"ok": true, "owner": owner}
+
+# A local replacement context includes container typing and insertion order.
+# Service._same intentionally does not compare Array container metadata.
+static func _context_same(a: Variant, b: Variant) -> bool:
+	if typeof(a) != typeof(b): return false
+	if a is Dictionary:
+		if (a.get_typed_key_builtin() != b.get_typed_key_builtin()
+			or a.get_typed_key_class_name() != b.get_typed_key_class_name()
+			or not is_same(a.get_typed_key_script(), b.get_typed_key_script())
+			or a.get_typed_value_builtin() != b.get_typed_value_builtin()
+			or a.get_typed_value_class_name() != b.get_typed_value_class_name()
+			or not is_same(a.get_typed_value_script(), b.get_typed_value_script())):
+			return false
+		if not _context_same(a.keys(), b.keys()): return false
+		for key in a:
+			if not _context_same(a[key], b[key]): return false
+		return true
+	if a is Array:
+		if a.get_typed_builtin() != b.get_typed_builtin() or a.get_typed_class_name() != b.get_typed_class_name() or not is_same(a.get_typed_script(), b.get_typed_script()): return false
+		if a.size() != b.size(): return false
+		for i in a.size():
+			if not _context_same(a[i], b[i]): return false
+		return true
+	return a == b
+
+# Same-input, synchronous runtime replacement on the existing owner handle.
+# This does not replace a host's UI/clock or deduplicate external effects.
+func restore_completed(packet: Variant) -> Dictionary:
+	var error := _guard()
+	if error != "": return _fail(error)
+	if _sim.decisions != null:
+		return _fail("unsupported_active_decisions")
+	_busy = true
+	var prepared := prepare(packet)
+	if not prepared.ok:
+		_busy = false
+		return prepared
+	var candidate: OperationPrivateState = prepared.owner
+	if _seed != candidate._seed or _hz != candidate._hz or not _context_same(_profile, candidate._profile) or not _context_same(_controls, candidate._controls):
+		candidate.close()
+		_busy = false
+		return _fail("replacement_context_mismatch")
+	var retired: BattleSim = _sim
+	_sim = candidate._sim
+	candidate._sim = null
+	candidate.close()
+	for field in ["salvo", "detect", "supply"]:
+		var module: Variant = retired.get(field)
+		if module != null: module.sim = null
+	_busy = false
+	return {"ok": true}
+
+func _restore(view: Dictionary) -> String:
+	if not _shape(view.sim, _sim, SIM_DATA): return "sim_types"
+	if not Service._same(view.derived, _derived()): return "derived_mismatch"
+	if view.fleets.size() != _sim.st.fleets.size(): return "roster_count"
+	var ids := {}
+	for i in view.fleets.size():
+		var fleet: Variant = view.fleets[i]
+		if not _shape(fleet, _sim.st.fleets[i], FLEET): return "fleet_fields"
+		for key in ["id", "side", "faction", "sq_id"]:
+			if not Service._same(fleet[key], _sim.st.fleets[i].get(key)): return "roster_identity"
+		if ids.has(fleet.id): return "duplicate_id"
+		ids[fleet.id] = true
+		for key in ["form", "route", "form_t"]:
+			for point in fleet[key]:
+				if typeof(point) != TYPE_VECTOR2: return "fleet_vector_array"
+		if fleet.form.is_empty(): return "fleet_empty_form"
+		for key in ["target_id", "pursue_id", "fire_id", "sup_first"]:
+			if fleet[key] < -1: return "fleet_reference"
+		if fleet.control not in ["direct", "delegate"]: return "fleet_control"
+		if fleet.max_ships <= 0 or fleet.ships < 0 or fleet.ships > fleet.max_ships or fleet.lv <= 0: return "fleet_range"
+		for key in ["max_ships", "max_hull", "comp0"]:
+			if not Service._same(fleet[key], _sim.st.fleets[i].get(key)): return "fleet_initial_constant"
+		if fleet.hull < 0 or fleet.hull > fleet.max_hull: return "fleet_hull"
+		if _sim.salvo != null:
+			if fleet.max_hull <= 0 or not _sim.salvo.C.formations.has(fleet.formation_id): return "fleet_formation"
+			if fleet.form_to != "" and not _sim.salvo.C.formations.has(fleet.form_to): return "fleet_formation"
+		# These key sets are stable across combat; a missing category can pass a
+		# generic Dictionary check yet crash a later Salvo.step direct lookup.
+		for key in ["comp0", "stages", "ammo", "wch", "wmax", "next_fire", "supp", "stats"]:
+			var initial: Dictionary = _sim.st.fleets[i].get(key)
+			if not Service._same(fleet[key].keys(), initial.keys()): return "fleet_nested_keys"
+		for key in fleet.stats:
+			if typeof(fleet.stats[key]) != TYPE_INT: return "fleet_stats"
+		for key in fleet.supp:
+			if typeof(fleet.supp[key]) != TYPE_STRING: return "fleet_supp"
+		for key in ["comp0", "ammo", "wch", "wmax", "next_fire"]:
+			for category in fleet[key]:
+				if typeof(category) != TYPE_STRING or typeof(fleet[key][category]) != TYPE_INT or fleet[key][category] < 0: return "fleet_resource"
+		for category in fleet.wch:
+			if not fleet.wmax.has(category) or fleet.wch[category] > fleet.wmax[category]: return "fleet_charges"
+		for category in fleet.stages:
+			if not fleet.stages[category] is Array or fleet.stages[category].size() != 5: return "fleet_stages"
+			for count in fleet.stages[category]:
+				if typeof(count) != TYPE_INT or count < 0: return "fleet_stages"
+	var state: Dictionary = view.state
+	if state.seed_id != _seed or state.hz != _hz or state.tick < 0 or state.clock_ms < 0 or state.next_event_id < 1 or state.next_id <= ids.size() or state.form_counter < ids.size(): return "state_context"
+	if state.reinf or state.reinf_ms != -1 or not view.sim._reinf_def.is_empty(): return "unsupported_reinforcement"
+	if state.army_ev.size() != 2 or state.army_ev.any(func(item): return typeof(item) != TYPE_INT): return "army_state"
+	for fleet in view.fleets:
+		for key in ["target_id", "pursue_id", "fire_id", "sup_first"]:
+			if fleet[key] != -1 and not ids.has(fleet[key]): return "fleet_reference"
+	var attack_ids := {}
+	for kind in ["missiles", "swarms"]:
+		for item in view[kind]:
+			var prototype: RefCounted = BattleState.Missile.new() if kind == "missiles" else BattleState.Swarm.new()
+			var fields: Array = MISSILE if kind == "missiles" else SWARM
+			if not _coverage(prototype, fields) or not _shape(item, prototype, fields): return "projectile_fields"
+			# Projectile IDs come from next_event_id, not the fleet next_id space.
+			if item.id < 1 or item.id >= state.next_event_id or attack_ids.has(item.id): return "projectile_id"
+			attack_ids[item.id] = true
+			if not ids.has(item.src_id) or not ids.has(item.target_id) or item.side not in [0, 1]: return "projectile_reference"
+			if kind == "missiles":
+				if item.age < 0 or item.v < 0 or item.dmg < 0: return "projectile_range"
+			else:
+				if item.life < 0 or item.dps < 0: return "projectile_range"
+				for point in item.pts:
+					if not _keys(point, ["pos", "a", "r", "w"]) or typeof(point.pos) != TYPE_VECTOR2: return "swarm_point"
+					for key in ["a", "r", "w"]:
+						if typeof(point[key]) != TYPE_FLOAT: return "swarm_point_number"
+	for event in view.sim._events:
+		if not _keys(event, ["tick", "kind", "sq", "other", "pos", "value"]) or typeof(event.tick) != TYPE_INT or event.tick < 0 or event.tick > state.tick or typeof(event.kind) != TYPE_STRING or typeof(event.sq) != TYPE_INT or typeof(event.other) != TYPE_INT or typeof(event.pos) != TYPE_VECTOR2: return "event_fields"
+	for command in view.sim.command_log:
+		if command.tick < 0 or command.tick > state.tick: return "log_time"
+	# All entries have passed before private writes. No source/live owner is used.
+	_put(_sim.st, state, STATE)
+	for i in view.fleets.size():
+		for key in FLEET:
+			if key not in Service.SUP_FIELDS: _sim.st.fleets[i].set(key, _copy(view.fleets[i][key]))
+	_sim.st.missiles.clear()
+	_sim.st.swarms.clear()
+	for item in view.missiles:
+		var missile := BattleState.Missile.new()
+		_put(missile, item, MISSILE)
+		_sim.st.missiles.append(missile)
+	for item in view.swarms:
+		var swarm := BattleState.Swarm.new()
+		_put(swarm, item, SWARM)
+		_sim.st.swarms.append(swarm)
+	_put(_sim, view.sim, SIM_DATA)
+	_sim.st._idx.clear()
+	_sim.st._idx_n = -1
+	var service := Service.restore_into_prepared_target(_sim, view.service)
+	if not service.ok: return "service_" + str(service.error)
+	return _bindings()
+
+func close() -> void:
+	_ready = false
+	_busy = false
+	if _sim != null:
+		for field in ["salvo", "detect", "supply"]:
+			var module: Variant = _sim.get(field)
+			if module != null: module.sim = null
+	_sim = null

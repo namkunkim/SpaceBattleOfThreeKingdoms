@@ -258,21 +258,23 @@ func open_prologue() -> void:
 	show_screen("prologue")
 
 # org: 편성 화면의 사본(O4). {}는 정사 편성, null은 지금 걸린 편성 그대로. 편성이 바뀌면 전장을 그 편성으로 다시 만든다
-func begin_battle(org: Variant = null) -> void:
-	if org != null and org != battle.org:
-		battle.org = org
-		battle.init_game()
-	elif battle.G.state != "brief":
-		battle.init_game()
+func begin_battle(org: Variant = null) -> Dictionary:
+	if (org != null and org != battle.org) or battle.G.state != "brief":
+		var changed_org: Variant = org if org != battle.org else null
+		var result: Dictionary = battle.init_game(changed_org)
+		if not result.ok:
+			return result
 	if battle.org_blocked():   # _start도 막지만 로그·화면을 건드리기 전에 본다
-		return
+		return {"ok": true}
 	_clear_log()
 	battle._start()
 	show_screen("")
 	_cutin_fleet(battle.flag(0), Commanders.OPEN_LINE)
+	return {"ok": true}
 
 func restart() -> void:
-	battle.init_game()
+	if not battle.init_game().ok:
+		return
 	if battle.org_blocked():   # _start도 막지만 로그·화면을 건드리기 전에 본다
 		return
 	_clear_log()
@@ -283,11 +285,14 @@ func restart() -> void:
 func title_label() -> String:
 	return "천하로" if battle.has_method("routed") and battle.routed() else "타이틀로"
 
-func to_title() -> void:
+func to_title(return_notice: Label = null) -> void:
 	if battle.has_method("routed") and battle.routed():
-		battle.back_to_world()
+		var error: Error = battle.back_to_world()
+		if error != OK and return_notice != null:
+			return_notice.show()
 		return
-	battle.init_game()
+	if not battle.init_game().ok:
+		return
 	_clear_log()
 	show_screen("title")
 

@@ -59,6 +59,7 @@
   "rally_radius": 120,
   "arrive_r": 10,
   "chase_range_share": 0.8,
+  "chase_engagement_fallback_r": 170,
   "settle_speed_share": 0.7,
   "min_turn_cos": 0.3,
   "arrive_k_ref": 2.0,

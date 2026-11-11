@@ -1,0 +1,16 @@
+# P02 제한 private owner 표시용 사건 회수 결과
+
+2026-11-08 KST. 독립 구현 재심에서 **한정 수용**됐다. 전체 P02/I01/I01b/A04~A06 **NOT_READY**, 외부 save schema **UNCLASSIFIED**. 문서와 ZIP의 독립 마감은 생성 시점에 대기 중이다. [독립 재심](../../../tmp/p02-fourth-20261108/REVIEW-5B-REBASELINE-INDEPENDENT.md)
+
+## 표시용 사건 경계
+
+`OperationPrivateState.drain_events_for(side)`는 owner 가드를 먼저 확인한 뒤 정수 0 또는 1을 받는다. 실패 시 큐를 보존한다. 성공 시 기존 BattleSim 표시용 drain을 한 번 호출해 typed 사건 배열을 깊게 복사한다. 안개가 켜져 있으면 회수 시점의 contacts를 적용한다. raw와 filtered는 같은 파괴적 큐를 쓰므로 숨긴 사건도 소진되고 이어서 호출하는 쪽은 빈 배열을 받는다. 한 소유 스레드에서 직렬 호출하며 busy는 재진입 가드다. raw drain과 observe가 있어 권한 보안 경계로 사용할 수 없다. [구현](../../../core/battle/operation_private_state.gd)
+
+## 실행과 진단
+
+- 직접 typed BattleSim 오라클과 대조한 14개 논리 행과 148개 단언이 통과했다. contact는 side 0에서 1개, side 1에서 0개였다. 자연 발생 salvo 주체 2건과 ship_lost·destroyed 상대 ID 각 1건이 마스킹됐다. 오류·busy에서 상태를 보존했고 실제 owner의 중첩 payload를 보관해 반환 사본을 검사했다. raw 대체와 side 교환을 한 보조 실행은 둘 다 안개 검사에서 실패했다. [신규 검사](../../../tmp/p02-fourth-20261108/attempt1/viewer.stdout) · [반례](../../../tmp/p02-fourth-20261108/negative-oracle/results.json)
+- 기본 17개 프로세스는 exit 0 15개와 의도한 exit 1 2개, timeout 0이었다. CLI 성공 3쌍은 출력 SHA가 일치했고 지원 밖 입력은 error/path와 출력 부재가 일치했다. 변경 전 회귀의 실행기 동결 위반과 그 stage를 빠뜨린 첫 종합 판정은 독립 심사에서 반려됐다. 기존 증거를 남기고 격리 전후 회귀 14개와 탐침 3개를 추가했다. 회귀는 전부 exit 0이며 최초 탐침 파싱 실패 exit 1을 보존했다. 새 집계기는 참조 5 stage를 검증하고 새 기준선 누락 및 오염 stage 주입을 각각 거부했다. [최초 반려](../../../tmp/p02-fourth-20261108/REVIEW-5B-INDEPENDENT.md) · [격리 보완](../../../tmp/p02-fourth-20261108/rebaseline-1/REBASELINE-NOTES.md) · [새 판정](../../../tmp/p02-fourth-20261108/rebaseline-1/verdict.json)
+- 기존 원작업트리 i01b 회귀는 원래 OUT에 실제로 기록했다. 사후 SHA 일치는 바이트가 같았다는 관측이다. 새 회귀의 고정 OUT 두 개와 trace는 격리 경로에만 생성됐다. worker는 양쪽 59개 검사를 통과했고 관측 프레임은 59와 57이었다. [보호 감사](../../../tmp/p02-fourth-20261108/rebaseline-1/additional-protection.json)
+- WorldLink는 변경 전 보조 실행에서 90초 timeout 후 240초 상한 재실행에서 통과했다. 이후 비교에서 기존 종료 진단 154 ObjectDB/20 resource가 일치했다. 격리 BattleFlow는 전후 161/22였고, 이전 원작업트리 변경 후 153/18은 별도 역사 로그와 일치했다. detection_rules와 placement의 기존 종료 진단도 보존했다. 최초 후처리 진단 정규식 오류를 교정하기 전 판정은 남겼다. 전체 diff-check는 기존 CHECKLIST-OPEN.md 33행 후행 공백으로 exit 2다. [이전 판정 이력](../../../tmp/p02-fourth-20261108/IMPLEMENTATION-5A-NOTES.md) · [재심 진단](../../../tmp/p02-fourth-20261108/REVIEW-5B-REBASELINE-INDEPENDENT.md)
+
+실제 FleetBattle3D, WorldMap·BattleOutcome, 제품 replay, K01~08 공동 인수, 공급 완료 E2E, OS·엔진 장애, 동시 호출, Android·성능은 미검증이다. [진행표](P02-PROGRESS-CHECKLIST.md) · [전용 체크리스트](P02-VIEWER-EVENTS-CHECKLIST-20261108.md) · [최신 인계](SESSION-HANDOFF-P02-VIEWER-EVENTS-20261108.md)

@@ -1,0 +1,79 @@
+$ErrorActionPreference = 'Stop'
+$base = $PSScriptRoot
+$root = Split-Path (Split-Path $base -Parent) -Parent
+$p = Join-Path $base 'scene-regression'
+$engine = 'C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe'
+$map = 'view/world/world_map_screen.gd'
+$definition = 'data/scenarios/p05_p07_first_operation_dev_v1.json'
+$m = Get-Content "$base/manifest-layout.json" -Raw | ConvertFrom-Json
+$patch = "$base/sortie-entry-layout.review.patch"
+$out = (New-Item -ItemType Directory "$base/layout-recheck-$([Guid]::NewGuid().ToString('N'))").FullName
+$env:APPDATA = (New-Item -ItemType Directory "$out/roaming").FullName
+$env:GIT_CEILING_DIRECTORIES = $base
+$files = @('view/world/world_atlas.gd', 'view/world/world_atlas_region.gd', 'view/world/red_cliffs_battlefield_map.gd',
+    'data/scenarios/base/world_atlas_regions.json', 'scripts/world_link.gd', 'scripts/world/battle_brief.gd')
+function Get-Sha($file) { (Get-FileHash -LiteralPath $file).Hash.ToLowerInvariant() }
+$sharedBefore = Get-Sha "$root/$map"
+$mapBytes = [IO.File]::ReadAllBytes("$p/$map")
+if ((Get-Sha "$p/$map") -ne $m.source_sha256 -or (Get-Sha $m.source) -ne $m.source_sha256) { throw 'base map SHA mismatch' }
+if ((Get-Sha "$base/world_map_screen.layout.gd") -ne $m.proposed_sha256) { throw 'proposed map SHA mismatch' }
+$atlasBefore = @{}
+foreach ($file in $files) { $atlasBefore[$file] = Get-Sha "$p/$file" }
+Copy-Item "$base/scene_probe_layout.gd" "$p/tests/i01_sortie_scene_probe_layout.gd" -Force
+function Test-Scene($name, $userArgs) {
+    $log = "$out/$name.log"
+    & $engine --headless --path $p --script tests/i01_sortie_scene_probe_layout.gd -- @userArgs > $log 2>&1
+    $code = $LASTEXITCODE
+    $markers = Get-Content $log | Select-String '^(ATLAS_PROFILE|CARD_MIN|SORTIE_SCENE|LAYOUT_|AUTO_RESULT)'
+    Write-Output $name
+    $markers | ForEach-Object Line
+    $errors = Get-Content $log | Select-String '^(SCRIPT ERROR|ERROR:)' | Where-Object { $_.Line -notmatch '^ERROR: \d+ resources still in use at exit' }
+    if ($code -ne 0 -or $errors -or -not ($markers.Line -match '^SORTIE_SCENE checks=\d+ failures=0$')) {
+        Get-Content $log -Tail 45
+        throw "$name failed ($code)"
+    }
+}
+try {
+    & git -C $p apply --check $patch
+    if ($LASTEXITCODE -ne 0) { throw 'patch check failed' }
+    Test-Scene 'base-default' @()
+    Test-Scene 'base-dev' @('--pc-first-operation-dev')
+    Test-Scene 'base-auto' @('--legacy-auto')
+    Test-Scene 'base-auto-result' @('--legacy-auto-result')
+    & git -C $p apply $patch
+    if ($LASTEXITCODE -ne 0) { throw 'patch application failed' }
+    $reviewPatchSha = Get-Sha "$p/$map"
+    $patchText = [IO.File]::ReadAllText("$p/$map").Replace("`r`n", "`n")
+    $verifiedText = [IO.File]::ReadAllText("$base/world_map_screen.layout.gd").Replace("`r`n", "`n")
+    if ($patchText -cne $verifiedText) { throw 'textual patch differs beyond line endings' }
+    Copy-Item "$base/world_map_screen.layout.gd" "$p/$map" -Force
+    if ((Get-Sha "$p/$map") -ne $m.proposed_sha256) { throw 'runtime map SHA mismatch' }
+    Test-Scene 'patched-default' @('--patched')
+    Test-Scene 'patched-dev' @('--patched', '--pc-first-operation-dev')
+    Test-Scene 'patched-auto' @('--patched', '--legacy-auto')
+    Test-Scene 'patched-auto-result' @('--patched', '--legacy-auto-result')
+    $bytes = [IO.File]::ReadAllBytes("$p/$definition")
+    $definitionSha = Get-Sha "$p/$definition"
+    try {
+        [IO.File]::AppendAllText("$p/$definition", ' ')
+        Test-Scene 'patched-tampered' @('--patched', '--tampered')
+    } finally {
+        [IO.File]::WriteAllBytes("$p/$definition", $bytes)
+    }
+    if ((Get-Sha "$p/$definition") -ne $definitionSha) { throw 'definition restoration failed' }
+    foreach ($file in $files) { if ((Get-Sha "$p/$file") -ne $atlasBefore[$file]) { throw "changed $file" } }
+    $profiles = @(Get-ChildItem $out -Filter '*.log' | Select-String '^ATLAS_PROFILE ' | ForEach-Object Line | Sort-Object -Unique)
+    if ($profiles.Count -ne 1) { throw 'Atlas profile mismatch' }
+    $results = @(Get-ChildItem $out -Filter '*-auto-result.log' | Select-String '^AUTO_RESULT ' | ForEach-Object Line)
+    if ($results.Count -ne 2 -or $results[0] -ne $results[1]) { throw 'Legacy auto result mismatch' }
+    $baseCard = (Select-String -LiteralPath "$out/base-default.log" -Pattern '^CARD_MIN .*?( CARD_RECT .*?) VIEW ').Matches[0].Groups[1].Value
+    $patchedCard = (Select-String -LiteralPath "$out/patched-default.log" -Pattern '^CARD_MIN .*?( CARD_RECT .*?) VIEW ').Matches[0].Groups[1].Value
+    if ($baseCard -ne $patchedCard) { throw 'Ordinary card rectangle changed' }
+    if ((Get-Sha "$root/$map") -ne $sharedBefore) { throw 'F shared map changed during review' }
+    [ordered]@{ base_sha256 = $m.source_sha256; applied_sha256 = Get-Sha "$p/$map"; review_patch_sha256 = $reviewPatchSha; review_patch_text_matches = $true; f_shared_map_sha256 = $sharedBefore;
+        original_proposal_sha256 = $m.previous_sha256; card_rect = $patchedCard; auto_result = $results[0].Split(' ')[1]; untouched = $atlasBefore; atlas_profile = $profiles[0].Split(' ')[1] } | ConvertTo-Json -Depth 4 | Set-Content "$out/verified.json" -Encoding utf8
+} finally {
+    [IO.File]::WriteAllBytes("$p/$map", $mapBytes)
+}
+Write-Output "SCENE_REGRESSION_PASS $out"
+

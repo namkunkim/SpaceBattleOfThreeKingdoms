@@ -48,13 +48,39 @@ var _caption: PanelContainer
 var _caption_label: Label
 var _skip: Button
 var _resolve: Control
+var _resolve_cancel: Button
+var _resolve_retry: Button
 var _legend: Control
 var _diff_btns := {}
 var _mode_btns := {}
 var _diff_note: Label
 var _mode_note: Label
+var _product_sortie: Button
 var _sortie_t := 0.0
 var _sortie_i := 0
+var _sortie_origin := {}
+var _restore_job: RefCounted
+var _import_dialog: FileDialog
+var _replay_dialog: FileDialog
+var _replay_overlay: ColorRect
+var _replay_input_lock := false
+var _replay_hud_visible := true
+var _replay_focus: Control
+var _restore_overlay: Control
+var _restore_label: Label
+var _restore_input_lock := false
+const OperationHost := preload("res://scripts/first_operation_host.gd")
+const ReplayCodec := preload("res://scripts/first_operation_replay_codec.gd")
+const ReplayViewer := preload("res://scenes/FirstOperationReplayViewer.tscn")
+const FirstOperationAutoWorker := preload("res://scripts/world/first_operation_auto_worker.gd")
+
+var _operation_worker: FirstOperationAutoWorker
+var _operation_auto_origin := {}
+var _operation_auto_progress := {}
+var _operation_auto_cancelling := false
+var _operation_auto_pending: BattleOutcome
+var _operation_auto_save_error := ""
+var _title_button: Button
 var _difficulty := "표준"
 var _mode := "direct"
 var _res_labels := {}
@@ -88,6 +114,8 @@ func _ready() -> void:
 	add_child(safe)
 	safe.setup(hud)
 	sound = UiSound.new()
+	# Keep event history without starting audio playback in a headless map.
+	sound.play_one_shots = DisplayServer.get_name() != "headless"
 	sound.name = "UiSound"
 	add_child(sound)
 	_atlas_backdrop = ColorRect.new()
@@ -108,19 +136,51 @@ func _ready() -> void:
 	_build_card()
 	_build_result()
 	_build_cta()
+	_title_button = _btn("타이틀로", false, 144)
+	hud.add_child(_title_button)
+	_title_button.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	_title_button.offset_left = -M - 144
+	_title_button.offset_right = -M
+	_title_button.offset_top = -M - BTN_H
+	_title_button.offset_bottom = -M
+	_title_button.hide()
+	_title_button.pressed.connect(_return_to_title)
 	_build_chip()
 	_build_caption()
 	_build_resolve()
 	await get_tree().process_frame
+	var restore: Dictionary = link.take_map_restore() if link else {}
+	if not restore.is_empty():
+		if restore.result_visible:
+			_show_result(restore.outcome, false)
+		else:
+			_enter_browse()
+		outcome = restore.outcome
+		canvas.jump_to(restore.level)
+		_restore_sortie_origin(restore)
+		return
 	var o: BattleOutcome = link.take_outcome() if link else null
 	if o:
 		_show_result(o)
 	else:
+		var restored: Dictionary = link.restore_operation_settlement() if link else {"ok": true, "outcome": null}
+		if restored.ok and restored.outcome != null:
+			_show_result(restored.outcome)
+			return
+		if link:
+			var native: Dictionary = link.restore_native_o07_settlement()
+			if native.ok and native.outcome != null:
+				_show_result(native.outcome)
+				return
+			if restored.ok:
+				restored = native
 		_enter_browse()
 		_cta.visible = true
 		_update_inset()
 		canvas.jump_to("z0")
 		canvas.arrows = "advance"
+		if not restored.ok:
+			_show_chip(OperationHost.error_text(restored))
 
 static func read_world() -> Dictionary:
 	var f := FileAccess.open(WORLD_PATH, FileAccess.READ)
@@ -184,10 +244,10 @@ func _section(parent: Control, text: String) -> void:
 
 func _build_header() -> void:
 	var col := VBoxContainer.new()
+	_header = col
 	col.position = Vector2(M, 22)
 	col.add_theme_constant_override("separation", 2)
 	hud.add_child(col)
-	_header = col
 	col.add_child(UiTheme.label(str(world.get("era", "")), "Eyebrow", 13))
 	_title = UiTheme.label("천하", "Title", 34)
 	col.add_child(_title)
@@ -235,6 +295,35 @@ func _build_card() -> void:
 	_card.add_child(v)
 	v.add_child(UiTheme.label("시나리오 · 건안 13년 겨울", "Eyebrow", 13))
 	v.add_child(UiTheme.label("적벽", "Display", 52))
+	var development := OS.get_cmdline_user_args().has(BattleBrief.FIRST_OPERATION_DEV_ARG)
+	if development:
+		v.add_child(_restore_actions())
+	elif OperationHost.product_save_supported():
+		v.add_child(_product_resume_action())
+	var go := _btn("출  격", true)
+	go.custom_minimum_size.y = 66
+	go.pressed.connect(func(): sortie())
+	if development:
+		var routes := HBoxContainer.new()
+		v.add_child(routes)
+		go.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		routes.add_child(go)
+		var labels := {"front": "PC 개발 · 정면", "flank": "PC 개발 · 우회"}
+		for route_id: String in labels:
+			var dev := _btn(labels[route_id])
+			dev.name = "FirstOperationDev_" + route_id
+			dev.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			dev.pressed.connect(func(): sortie(-1, route_id))
+			routes.add_child(dev)
+		var automatic := HBoxContainer.new()
+		v.add_child(automatic)
+		var auto_labels := {"front": "자동 해결 · 정면", "flank": "자동 해결 · 우회"}
+		for route_id: String in auto_labels:
+			var auto := _btn(auto_labels[route_id])
+			auto.name = "FirstOperationAuto_" + route_id
+			auto.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			auto.pressed.connect(_start_operation_auto.bind(route_id))
+			automatic.add_child(auto)
 	v.add_child(_wrap(UiTheme.label("유비와 손권의 연합 함대가 오림에 머문 조조의 대군을 맞는다. 사기를 꺾어 이기고, 제한은 20분이다.", "Body", 16)))
 	v.add_child(HSeparator.new())
 	_section(v, "난이도")
@@ -291,10 +380,18 @@ func _build_card() -> void:
 	var sp := Control.new()
 	sp.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	v.add_child(sp)
-	var go := _btn("출  격", true)
-	go.custom_minimum_size.y = 66
-	go.pressed.connect(func(): sortie())
-	v.add_child(go)
+	if not development:
+		var actions := HBoxContainer.new()
+		actions.add_theme_constant_override("separation", 10)
+		v.add_child(actions)
+		go.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		actions.add_child(go)
+		_product_sortie = _btn("첫 작전 · 정면", true)
+		_product_sortie.name = "FirstOperationProduct"
+		_product_sortie.custom_minimum_size.y = go.custom_minimum_size.y
+		_product_sortie.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_product_sortie.pressed.connect(_sortie_first_operation)
+		actions.add_child(_product_sortie)
 	_set_difficulty(_difficulty)
 	_set_mode(_mode)
 	_card.visible = false
@@ -316,6 +413,10 @@ func _build_result() -> void:
 	v.add_child(_res_labels.eyebrow)
 	_res_labels.title = UiTheme.label("", "Display", 46)
 	v.add_child(_res_labels.title)
+	if OS.get_cmdline_user_args().has(BattleBrief.FIRST_OPERATION_DEV_ARG):
+		v.add_child(_restore_actions())
+	elif OperationHost.product_save_supported():
+		v.add_child(_product_resume_action())
 	_res_labels.ending = _wrap(UiTheme.label("", "Serif", 19))
 	v.add_child(_res_labels.ending)
 	var grid := GridContainer.new()
@@ -323,6 +424,7 @@ func _build_result() -> void:
 	grid.add_theme_constant_override("h_separation", 18)
 	grid.add_theme_constant_override("v_separation", 4)
 	v.add_child(grid)
+	_res_labels.legacy_grid = grid
 	for k in [["time", "교전 시간"], ["loss_a", "연합 손실"], ["loss_f", "조조군 손실"], ["cao", "조조"]]:
 		grid.add_child(UiTheme.label(k[1], "Muted", 15))
 		var l := UiTheme.label("", "Strong", 16)
@@ -354,10 +456,12 @@ func _build_result() -> void:
 	same.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	same.pressed.connect(func(): sortie(outcome.seed if outcome else -1))
 	row.add_child(same)
+	_res_labels.same = same
 	var again := _btn("새 판", true)
 	again.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	again.pressed.connect(func(): sortie())
 	row.add_child(again)
+	_res_labels.again = again
 	_result.visible = false
 
 func _build_cta() -> void:
@@ -378,6 +482,12 @@ func _build_cta() -> void:
 	b.pressed.connect(func(): open_card())
 	h.add_child(b)
 	_cta.visible = false
+
+func _return_to_title() -> void:
+	if not _title_button.visible or not _sortie_available():
+		return
+	if get_tree().change_scene_to_file(WorldLink.BATTLE_SCENE) != OK:
+		_show_chip("타이틀로 돌아가지 못했습니다. 다시 눌러 주세요.")
 
 func _build_chip() -> void:
 	_chip = _panel(UiTheme.ornate(false))
@@ -429,14 +539,33 @@ func _build_resolve() -> void:
 	bars.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	bars.custom_minimum_size = Vector2(0, 120)
 	v.add_child(bars)
-	var stop := _btn("중단하고 돌아가기", false)
-	stop.pressed.connect(_cancel_resolve)
-	v.add_child(stop)
+	_resolve_retry = _btn("결산 저장 다시 시도", true)
+	_resolve_retry.name = "RetryAutoSettlement"
+	_resolve_retry.pressed.connect(_publish_pending_operation_settlement)
+	_resolve_retry.hide()
+	v.add_child(_resolve_retry)
+	_resolve_cancel = _btn("중단하고 돌아가기", false)
+	_resolve_cancel.name = "CancelAutoResolve"
+	_resolve_cancel.pressed.connect(_cancel_resolve)
+	v.add_child(_resolve_cancel)
 	_resolve = p
 	_resolve.set_meta("bars", bars)
 	_resolve.visible = false
 
 func _draw_resolve(c: Control) -> void:
+	if _operation_auto_pending != null:
+		UiDraw.text(c, Vector2(0, 32), "작전 완료 · 결산 저장 대기", "serif_bold", 22, UiTheme.INK)
+		UiDraw.text(c, Vector2(0, 70), _operation_auto_save_error, "medium", 16, UiTheme.INK_2)
+		return
+	if _operation_worker != null:
+		var progress := _operation_auto_progress
+		var route := "정면" if brief.operation_request().route_id == "front" else "우회"
+		var title := "중단 중" if _operation_auto_cancelling else "자동 해결 · " + route
+		UiDraw.text(c, Vector2(0, 32), title, "serif_bold", 22, UiTheme.INK)
+		UiDraw.text(c, Vector2(0, 70), "Tick %d / %d   %.1f s" % [progress.tick, progress.limit_ticks, progress.clock_ms / 1000.0], "medium", 18, UiTheme.INK_2)
+		c.draw_rect(Rect2(0, 114, c.size.x, 4), UiTheme.SLOT)
+		c.draw_rect(Rect2(0, 114, c.size.x * float(progress.tick) / progress.limit_ticks, 4), UiTheme.GOLD)
+		return
 	if resolver == null:
 		return
 	var w := c.size.x
@@ -546,6 +675,7 @@ func _set_difficulty(d: String) -> void:
 	for k in _diff_btns:
 		(_diff_btns[k] as Button).set_pressed_no_signal(k == d)
 	_diff_note.text = BattleBrief.difficulty_note(d)
+	_update_product_sortie()
 
 func _set_mode(m: String) -> void:
 	_mode = m
@@ -553,6 +683,21 @@ func _set_mode(m: String) -> void:
 		(_mode_btns[k] as Button).set_pressed_no_signal(k == m)
 	_mode_note.text = "전장에서 직접 지휘한다. 지금 전장은 시연 편성으로 진행된다." if m == "direct" \
 		else "지휘관 AI가 적벽 편성으로 끝까지 싸우고 결과만 보여 준다. 수십 초 걸릴 수 있다."
+	_update_product_sortie()
+
+func _update_product_sortie() -> void:
+	if _product_sortie != null:
+		_product_sortie.disabled = not _product_sortie_allowed()
+
+func _product_sortie_allowed() -> bool:
+	return _mode == BattleBrief.Product.REQUEST.mode and _difficulty == "표준"
+
+func _sortie_first_operation() -> void:
+	if state != "browse" or not _card.visible or not _product_sortie_allowed() or not _sortie_available():
+		return
+	var candidate := make_brief(BattleBrief.Product.REQUEST.seed)
+	candidate.select_first_operation_product()
+	_begin_sortie(candidate)
 
 func make_brief(seed := -1) -> BattleBrief:
 	var b := BattleBrief.new()
@@ -564,10 +709,241 @@ func make_brief(seed := -1) -> BattleBrief:
 	return b
 
 # 출격: 연출(건너뛰기 가능) 뒤 전장 또는 자동 해결
-func sortie(seed := -1) -> void:
-	if state == "sortie" or state == "resolve":
+func _product_resume_action() -> Button:
+	var resume := _btn("첫 작전 이어하기")
+	resume.name = "ResumeProductBattle"
+	resume.pressed.connect(_resume_saved_battle.bind(true))
+	return resume
+
+
+func _restore_actions() -> HBoxContainer:
+	var row := HBoxContainer.new()
+	var resume := _btn("Resume saved battle")
+	resume.name = "ResumeSavedBattle"
+	resume.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	resume.pressed.connect(_resume_saved_battle)
+	row.add_child(resume)
+	var imported := _btn("Import battle\u2026")
+	imported.name = "ImportBattle"
+	imported.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	imported.pressed.connect(_select_import_file)
+	row.add_child(imported)
+	var watch := _btn("Watch replay…")
+	watch.name = "WatchReplay"
+	watch.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	watch.pressed.connect(_select_replay_file)
+	row.add_child(watch)
+	watch.focus_mode = Control.FOCUS_ALL
+	for button: Button in [resume, imported, watch]:
+		button.add_theme_font_size_override("font_size", 14)
+	return row
+
+func _select_replay_file() -> void:
+	if (not OS.get_cmdline_user_args().has(BattleBrief.FIRST_OPERATION_DEV_ARG)
+			or _replay_dialog != null or _replay_overlay != null or _restore_job != null
+			or _import_dialog != null or state not in ["browse", "result"]):
 		return
-	brief = make_brief(seed)
+	_replay_focus = get_viewport().gui_get_focus_owner()
+	_replay_dialog = FileDialog.new()
+	_replay_dialog.access = FileDialog.ACCESS_FILESYSTEM
+	_replay_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	_replay_dialog.title = "Watch replay"
+	_replay_dialog.filters = PackedStringArray(["*" + ReplayCodec.EXTENSION + " ; Space Battle replay"])
+	add_child(_replay_dialog)
+	_replay_dialog.canceled.connect(_cancel_replay_dialog)
+	_replay_dialog.file_selected.connect(_replay_file_selected)
+	_replay_dialog.popup_centered_ratio(0.7)
+	_replay_dialog.get_line_edit().grab_focus()
+
+
+func _close_replay_dialog() -> void:
+	if _replay_dialog != null:
+		_replay_dialog.hide()
+		_replay_dialog.queue_free()
+		_replay_dialog = null
+
+
+func _cancel_replay_dialog() -> void:
+	_close_replay_dialog()
+	_restore_replay_focus()
+
+
+func _replay_file_selected(path: String) -> void:
+	if _replay_dialog == null:
+		return
+	_close_replay_dialog()
+	var viewer := ReplayViewer.instantiate()
+	_replay_input_lock = canvas.input_lock
+	_replay_hud_visible = hud.visible
+	hud.hide()
+	canvas.input_lock = true
+	_replay_overlay = ColorRect.new()
+	_replay_overlay.color = Color("#101925")
+	_replay_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	_replay_overlay.focus_mode = Control.FOCUS_ALL
+	add_child(_replay_overlay)
+	_replay_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_replay_overlay.add_child(viewer)
+	_replay_overlay.grab_focus()
+	viewer.exit_requested.connect(_close_replay_overlay)
+	var opened: Dictionary = viewer.open_file(path)
+	if not opened.ok:
+		_close_replay_overlay()
+		_show_chip(OperationHost.error_text(opened))
+
+
+func _close_replay_overlay() -> void:
+	if _replay_overlay == null:
+		return
+	remove_child(_replay_overlay)
+	_replay_overlay.queue_free()
+	_replay_overlay = null
+	hud.visible = _replay_hud_visible
+	canvas.input_lock = _replay_input_lock
+	_restore_replay_focus()
+
+
+func _restore_replay_focus() -> void:
+	if is_instance_valid(_replay_focus) and _replay_focus.is_visible_in_tree():
+		_replay_focus.grab_focus()
+	_replay_focus = null
+
+
+func _select_import_file() -> void:
+	if _restore_job != null or _import_dialog != null or state not in ["browse", "result"]:
+		return
+	_import_dialog = OperationHost.external_save_dialog(false)
+	add_child(_import_dialog)
+	_import_dialog.canceled.connect(_close_import_dialog)
+	_import_dialog.file_selected.connect(_import_file_selected)
+	_import_dialog.popup_centered_ratio(0.7)
+	_import_dialog.get_line_edit().grab_focus()
+
+func _close_import_dialog() -> void:
+	if _import_dialog != null:
+		_import_dialog.queue_free()
+		_import_dialog = null
+
+func _import_file_selected(path: String) -> void:
+	if _import_dialog == null:
+		return
+	_close_import_dialog()
+	var imported := OperationHost.read_external_battle(path)
+	if imported.ok:
+		_restore_saved_packet(imported.payload)
+	else:
+		_show_chip(OperationHost.error_text(imported))
+
+func _resume_saved_battle(product := false) -> void:
+	if _restore_job != null or _import_dialog != null or state not in ["browse", "result"]:
+		return
+	var saved := OperationHost.read_saved_battle(product)
+	if not saved.ok:
+		_show_chip(OperationHost.error_text(saved))
+		return
+	_restore_saved_packet(saved.payload)
+
+func _restore_saved_packet(packet: Dictionary) -> void:
+	var link := _link()
+	if link == null:
+		_show_chip("operation_backend_unavailable / runtime")
+		return
+	var pending := OperationHost.begin_restore(packet, make_brief())
+	if not pending.ok:
+		_show_chip(OperationHost.error_text(pending))
+		return
+	var job: RefCounted = pending.job
+	_restore_job = job
+	_restore_input_lock = canvas.input_lock
+	canvas.input_lock = true
+	_show_restore_progress(int(packet.tick))
+	while _restore_job == job:
+		await get_tree().process_frame
+		if _restore_job != job:
+			return
+		var next: Dictionary = job.step(OperationHost.RESTORE_BUDGET_USEC)
+		if not next.ok:
+			job.cancel()
+			_finish_map_restore()
+			_show_chip(OperationHost.error_text(next))
+			return
+		if next.done:
+			_finish_map_restore()
+			var checked := OperationHost.validate_restored_owner(next.owner, pending.brief)
+			if not checked.ok:
+				_show_chip(OperationHost.error_text(checked))
+				return
+			var error: Error = link.go_battle(pending.brief, _capture_sortie_origin(), next.owner)
+			if error != OK:
+				next.owner.close()
+				_show_chip("world_resume_rejected / %d" % error)
+				return
+			state = "leaving"
+			return
+		_restore_label.text = OperationHost.restore_progress(next.tick, next.total)
+
+func _show_restore_progress(total: int) -> void:
+	_restore_overlay = CenterContainer.new()
+	_restore_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_restore_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	hud.add_child(_restore_overlay)
+	var panel := _panel()
+	panel.reparent(_restore_overlay, false)
+	var box := VBoxContainer.new()
+	panel.add_child(box)
+	_restore_label = UiTheme.label(OperationHost.restore_progress(0, total), "Body", 18)
+	box.add_child(_restore_label)
+	var cancel := _btn("Cancel restore")
+	cancel.name = "CancelMapRestore"
+	cancel.pressed.connect(_cancel_map_restore)
+	box.add_child(cancel)
+
+func _finish_map_restore() -> void:
+	_restore_job = null
+	canvas.input_lock = _restore_input_lock
+	_restore_overlay.hide()
+	_restore_overlay.queue_free()
+	_restore_overlay = null
+	_restore_label = null
+
+func _cancel_map_restore() -> void:
+	if _restore_job == null:
+		return
+	_restore_job.cancel()
+	_finish_map_restore()
+	_show_chip("Restore cancelled")
+
+func _capture_sortie_origin() -> Dictionary:
+	return {
+		"state": state,
+		"brief": brief,
+		"outcome": outcome,
+		"difficulty": _difficulty,
+		"mode": _mode,
+		"level": "z2" if _card.visible and canvas.level() == "z0" else canvas.level(),
+		"card_visible": _card.visible,
+		"result_visible": _result.visible,
+		"cta_visible": _cta.visible,
+		"legend_visible": _legend.visible,
+		"input_lock": canvas.input_lock,
+		"arrows": canvas.arrows,
+		"owners": canvas.owners_rgn.duplicate(),
+	}
+
+func sortie(seed := -1, development_route := "") -> void:
+	if not _sortie_available():
+		return
+	var candidate := make_brief(seed)
+	if not development_route.is_empty():
+		candidate.select_first_operation_dev(development_route)
+	_begin_sortie(candidate)
+
+func _sortie_available() -> bool:
+	return _restore_job == null and _import_dialog == null and state != "sortie" and state != "resolve"
+
+func _begin_sortie(candidate: BattleBrief) -> void:
+	_sortie_origin = _capture_sortie_origin()
+	brief = candidate
 	sound.play("confirm_heavy")
 	state = "sortie"
 	_card.visible = false
@@ -608,11 +984,108 @@ func _finish_sortie() -> void:
 	_caption.visible = false
 	_skip.visible = false
 	var link := _link()
-	if brief.mode == "direct" and link:
+	var origin := _sortie_origin
+	_sortie_origin = {}
+	var operation := not brief.operation_request().is_empty()
+	if operation or (brief.mode == "direct" and link):
 		state = "leaving"
-		link.go_battle(brief)
+		var error: Error = link.go_battle(brief, origin) if link else ERR_UNAVAILABLE
+		if error != OK:
+			_restore_sortie_origin(origin)
+			if operation and error == ERR_UNAVAILABLE:
+				_show_chip("PC 개발 작전을 지금은 시작할 수 없습니다.")
+				return
+			_show_chip("전장에 들어갈 수 없습니다. 다시 출격해 주세요.")
 		return
 	_start_resolve()
+
+func _restore_sortie_origin(origin: Dictionary) -> void:
+	state = origin.state
+	brief = origin.brief
+	_card.visible = origin.card_visible
+	_result.visible = origin.result_visible
+	_cta.visible = origin.cta_visible
+	_legend.visible = origin.legend_visible
+	canvas.input_lock = origin.input_lock
+	canvas.arrows = origin.arrows
+	canvas.set_region_owners(origin.owners, false)
+	_update_inset()
+
+func _start_operation_auto(route_id: String) -> void:
+	if not OS.get_cmdline_user_args().has(BattleBrief.FIRST_OPERATION_DEV_ARG):
+		return
+	if state not in ["browse", "result"] or _restore_job != null or _import_dialog != null:
+		return
+	var candidate := make_brief(208)
+	candidate.select_first_operation_dev(route_id)
+	var worker := FirstOperationAutoWorker.new()
+	var started := worker.start(candidate.operation_request())
+	if not started.ok:
+		_show_chip(OperationHost.error_text(started))
+		return
+	_operation_worker = worker
+	_operation_auto_origin = _capture_sortie_origin()
+	_operation_auto_progress = {"tick": 0, "clock_ms": 0, "limit_ticks": FirstOperationAutoWorker.LIMIT_TICKS}
+	_operation_auto_cancelling = false
+	brief = candidate
+	state = "resolve"
+	_card.hide()
+	_result.hide()
+	_cta.hide()
+	_chip.hide()
+	canvas.input_lock = true
+	canvas.arrows = ""
+	_resolve.show()
+	_update_inset()
+
+func _poll_operation_auto() -> void:
+	var result := _operation_worker.poll()
+	if result.get("status") in ["running", "cancelling"]:
+		_operation_auto_progress = result.progress
+		return
+	_operation_worker = null
+	if result.get("status") == "completed":
+		var settled := BattleOutcome.from_operation(result.settlement, brief, result.settlement.clock_ms)
+		if settled != null:
+			settled.mode = "auto"
+			_operation_auto_pending = settled
+			_publish_pending_operation_settlement()
+			return
+		result = {"ok": false, "error": "invalid_worker_settlement", "path": "worker.settlement"}
+	_restore_operation_auto_origin()
+	if not result.ok:
+		_show_chip(OperationHost.error_text(result))
+
+
+func _publish_pending_operation_settlement() -> void:
+	if state != "resolve" or _operation_auto_pending == null:
+		return
+	var published: Dictionary = _link().publish_operation_settlement(_operation_auto_pending)
+	if not published.ok:
+		_operation_auto_save_error = OperationHost.error_text(published)
+		_resolve.offset_top = -M - 300
+		_resolve_retry.show()
+		_resolve_cancel.text = "저장하지 않고 돌아가기"
+		(_resolve.get_meta("bars") as Control).queue_redraw()
+		return
+	_clear_pending_operation_settlement()
+	_show_result(published.outcome, published.applied)
+
+
+func _clear_pending_operation_settlement() -> void:
+	_operation_auto_pending = null
+	_operation_auto_save_error = ""
+	_operation_auto_origin = {}
+	_resolve_retry.hide()
+	_resolve.offset_top = -M - 236
+	_resolve_cancel.text = "중단하고 돌아가기"
+
+
+func _restore_operation_auto_origin() -> void:
+	var origin := _operation_auto_origin
+	_clear_pending_operation_settlement()
+	_resolve.hide()
+	_restore_sortie_origin(origin)
 
 func _start_resolve() -> void:
 	resolver = AutoResolver.new(brief)
@@ -629,16 +1102,23 @@ func _start_resolve() -> void:
 	canvas.fly_to("z2", 1.4)
 
 func _cancel_resolve() -> void:
-	if resolver:
-		resolver.cancel()
-		resolver = null
+	if state != "resolve":
+		return
+	if _operation_auto_pending != null:
+		_restore_operation_auto_origin()
+		return
+	if _operation_worker != null:
+		_operation_auto_cancelling = true
+		_operation_worker.request_cancel()
+		return
+	_close_legacy_resolver()
 	_enter_browse()
 	_card.visible = true
 	_update_inset()
 
-func _show_result(o: BattleOutcome) -> void:
+func _show_result(o: BattleOutcome, animate := true) -> void:
 	outcome = o
-	resolver = null
+	_close_legacy_resolver()
 	state = "result"
 	canvas.input_lock = false
 	canvas.battle_live = false
@@ -648,6 +1128,30 @@ func _show_result(o: BattleOutcome) -> void:
 	_cta.visible = false
 	_legend.visible = true
 	_update_inset()
+	var operation := not o.settlement_id.is_empty()
+	_res_labels.same.visible = not operation
+	_res_labels.again.visible = not operation
+	_res_labels.legacy_grid.visible = not operation
+	if operation:
+		var native := o.mode == "o07_native"
+		if native:
+			_res_labels.eyebrow.text = "O07 operation settlement"
+		elif o.is_product_operation:
+			_res_labels.eyebrow.text = "PC operation settlement"
+		else:
+			_res_labels.eyebrow.text = "PC development operation"
+		_res_labels.title.text = KIND_TITLE.get(o.kind, "") if native else {"objective_success": "\ubaa9\ud45c \ub2ec\uc131", "withdrawal_success": "\ucca0\uc218 \uc131\uacf5", "failure": "\uc791\uc804 \uc2e4\ud328"}[o.kind]
+		_res_labels.title.add_theme_color_override("font_color", Factions.of("wu").rim if o.win else Factions.of("wei").rim)
+		_res_labels.ending.text = o.reason
+		_res_labels.regions.text = ""
+		_res_labels.line.text = ""
+		_res_labels.src.text = o.settlement_id
+		_res_labels.seed.text = "%d ms / seed %d" % [roundi(o.t_s * 1000), o.seed] if native else "%.1f s / seed %d" % [o.t_s, o.seed]
+		_result.visible = true
+		_update_inset()
+		if animate:
+			canvas.jump_to("z2")
+		return
 	_res_labels.eyebrow.text = "%s · %s · %s" % [o.grade, "직접 지휘" if o.mode == "direct" else "자동 해결", o.difficulty]
 	_res_labels.title.text = KIND_TITLE.get(o.kind, "")
 	_res_labels.title.add_theme_color_override("font_color", Factions.of("wu").rim if o.win else Factions.of("wei").rim)
@@ -670,6 +1174,8 @@ func _show_result(o: BattleOutcome) -> void:
 	_res_labels.regions.text = "\n".join(lines) if not lines.is_empty() else "형주의 주인은 바뀌지 않았다."
 	_result.visible = true
 	_update_inset()
+	if not animate:
+		return
 	canvas.set_region_owners(_initial_owners(), false)
 	canvas.jump_to("z2")
 	sound.play("decision")
@@ -689,12 +1195,13 @@ func _result_to_world() -> void:
 func _process(delta: float) -> void:
 	var fl := canvas.flying()
 	var show_atlas := state == "browse" and canvas.level() == "z0" and not fl and not _card.visible
+	_title_button.visible = show_atlas and _sortie_available()
 	if _atlas.visible != show_atlas:
 		_atlas.visible = show_atlas
 		_atlas_backdrop.visible = show_atlas
 		_header.visible = not show_atlas
 		canvas.visible = not show_atlas
-		_legend.visible = not show_atlas and state != "sortie"
+		_legend.visible = not show_atlas
 		if show_atlas:
 			_atlas.show_overview()
 	if _was_flying and not fl and state == "browse":
@@ -706,6 +1213,9 @@ func _process(delta: float) -> void:
 			_chip.visible = false
 	if state == "sortie":
 		_step_sortie(delta)
+	elif state == "resolve" and _operation_worker != null:
+		_poll_operation_auto()
+		(_resolve.get_meta("bars") as Control).queue_redraw()
 	elif state == "resolve" and resolver:
 		(_resolve.get_meta("bars") as Control).queue_redraw()
 		if resolver.poll():
@@ -722,6 +1232,18 @@ func _unhandled_input(ev: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 func back() -> void:
+	if _replay_dialog != null:
+		_cancel_replay_dialog()
+		return
+	if _replay_overlay != null:
+		_close_replay_overlay()
+		return
+	if _restore_job != null:
+		_cancel_map_restore()
+		return
+	if _operation_worker != null or _operation_auto_pending != null:
+		_cancel_resolve()
+		return
 	match state:
 		"sortie":
 			_finish_sortie()
@@ -737,5 +1259,15 @@ func back() -> void:
 				_go_level("z0")
 
 func _exit_tree() -> void:
-	if resolver:
-		resolver.cancel()
+	if _operation_worker != null:
+		_operation_worker.cancel_and_join()
+		_operation_worker = null
+	if _restore_job != null:
+		_restore_job.cancel()
+		_restore_job = null
+	_close_legacy_resolver()
+
+func _close_legacy_resolver() -> void:
+	if resolver != null:
+		resolver.close()
+		resolver = null

@@ -1,0 +1,935 @@
+{
+  "source": "Seonghanji/data/maps/galaxy-map.json",
+  "source_sha256": "adfc66d69e0a6e0c488c42ca489f287da6558fe4dc420e0c3d1b34935c6f79ce",
+  "projection": {
+    "axes": "east-right,north-up; y increases south; units are not km",
+    "extent_lonlat": [
+      90,
+      16,
+      134,
+      46
+    ],
+    "units_per_degree": [
+      848,
+      1000
+    ]
+  },
+  "cities": {
+    "SYS-01": {
+      "장안": {
+        "name": "장안",
+        "position": [
+          16061.12,
+          11740.0
+        ],
+        "basis": "region-anchor"
+      },
+      "경조": {
+        "name": "경조",
+        "position": [
+          16013.79,
+          11654.19
+        ],
+        "basis": "authored-local-offset"
+      },
+      "하동": {
+        "name": "하동",
+        "position": [
+          17799.52,
+          10970.0
+        ],
+        "basis": "region-anchor"
+      },
+      "홍농": {
+        "name": "홍농",
+        "position": [
+          17678.49,
+          11191.03
+        ],
+        "basis": "authored-local-offset"
+      },
+      "낙양": {
+        "name": "낙양",
+        "position": [
+          19037.6,
+          11380.0
+        ],
+        "basis": "region-anchor"
+      },
+      "하남": {
+        "name": "하남",
+        "position": [
+          18898.65,
+          11376.13
+        ],
+        "basis": "authored-local-offset"
+      }
+    },
+    "SYS-02": {
+      "허": {
+        "name": "허",
+        "position": [
+          20224.8,
+          11960.0
+        ],
+        "basis": "region-anchor"
+      },
+      "영천": {
+        "name": "영천",
+        "position": [
+          19978.83,
+          11892.75
+        ],
+        "basis": "authored-local-offset"
+      },
+      "여남": {
+        "name": "여남",
+        "position": [
+          20648.8,
+          12990.0
+        ],
+        "basis": "region-anchor"
+      },
+      "진국": {
+        "name": "진국",
+        "position": [
+          20601.13,
+          13021.25
+        ],
+        "basis": "authored-local-offset"
+      },
+      "초": {
+        "name": "초",
+        "position": [
+          20384.54,
+          13129.89
+        ],
+        "basis": "authored-local-offset"
+      }
+    },
+    "SYS-03": {
+      "복양": {
+        "name": "복양",
+        "position": [
+          20765.34,
+          11384.7
+        ],
+        "basis": "authored-local-offset"
+      },
+      "진류": {
+        "name": "진류",
+        "position": [
+          20648.8,
+          11210.0
+        ],
+        "basis": "region-anchor"
+      },
+      "동군": {
+        "name": "동군",
+        "position": [
+          20427.3,
+          11195.07
+        ],
+        "basis": "authored-local-offset"
+      },
+      "태산": {
+        "name": "태산",
+        "position": [
+          22980.8,
+          9800.0
+        ],
+        "basis": "region-anchor"
+      },
+      "제읍": {
+        "name": "제음",
+        "position": [
+          22805.03,
+          10036.91
+        ],
+        "basis": "authored-local-offset"
+      }
+    },
+    "SYS-04": {
+      "제남": {
+        "name": "제남",
+        "position": [
+          24087.92,
+          9001.15
+        ],
+        "basis": "authored-local-offset"
+      },
+      "임치": {
+        "name": "임치",
+        "position": [
+          23998.4,
+          9180.0
+        ],
+        "basis": "region-anchor"
+      },
+      "평원": {
+        "name": "평원",
+        "position": [
+          24181.91,
+          8984.68
+        ],
+        "basis": "authored-local-offset"
+      },
+      "동래": {
+        "name": "동래",
+        "position": [
+          25779.2,
+          8900.0
+        ],
+        "basis": "region-anchor"
+      },
+      "북해": {
+        "name": "북해",
+        "position": [
+          25789.38,
+          8946.91
+        ],
+        "basis": "authored-local-offset"
+      }
+    },
+    "SYS-05": {
+      "팽성": {
+        "name": "팽성",
+        "position": [
+          23988.15,
+          11614.23
+        ],
+        "basis": "authored-local-offset"
+      },
+      "하비": {
+        "name": "하비",
+        "position": [
+          23710.08,
+          11700.0
+        ],
+        "basis": "region-anchor"
+      },
+      "동해": {
+        "name": "동해",
+        "position": [
+          23868.2,
+          11790.13
+        ],
+        "basis": "authored-local-offset"
+      },
+      "광릉": {
+        "name": "광릉",
+        "position": [
+          24948.16,
+          13610.0
+        ],
+        "basis": "region-anchor"
+      },
+      "낭야": {
+        "name": "낭야",
+        "position": [
+          24913.03,
+          13567.68
+        ],
+        "basis": "authored-local-offset"
+      }
+    },
+    "SYS-06": {
+      "한단": {
+        "name": "한단",
+        "position": [
+          20767.52,
+          9380.0
+        ],
+        "basis": "region-anchor"
+      },
+      "중산": {
+        "name": "중산",
+        "position": [
+          20858.34,
+          9505.61
+        ],
+        "basis": "authored-local-offset"
+      },
+      "업": {
+        "name": "업",
+        "position": [
+          20877.76,
+          9720.0
+        ],
+        "basis": "region-anchor"
+      },
+      "위군": {
+        "name": "위군",
+        "position": [
+          20958.48,
+          9624.55
+        ],
+        "basis": "authored-local-offset"
+      },
+      "발해": {
+        "name": "발해",
+        "position": [
+          22751.84,
+          7700.0
+        ],
+        "basis": "region-anchor"
+      },
+      "하간": {
+        "name": "하간",
+        "position": [
+          22903.33,
+          7593.81
+        ],
+        "basis": "authored-local-offset"
+      }
+    },
+    "SYS-07": {
+      "어양": {
+        "name": "어양",
+        "position": [
+          23235.2,
+          5950.0
+        ],
+        "basis": "region-anchor"
+      },
+      "우북평": {
+        "name": "우북평",
+        "position": [
+          23314.19,
+          5967.91
+        ],
+        "basis": "authored-local-offset"
+      },
+      "계": {
+        "name": "계",
+        "position": [
+          22387.2,
+          6100.0
+        ],
+        "basis": "region-anchor"
+      },
+      "탁군": {
+        "name": "탁군",
+        "position": [
+          22629.53,
+          6209.7
+        ],
+        "basis": "authored-local-offset"
+      }
+    },
+    "SYS-08": {
+      "안문": {
+        "name": "안문",
+        "position": [
+          19453.12,
+          6930.0
+        ],
+        "basis": "region-anchor"
+      },
+      "서하": {
+        "name": "서하",
+        "position": [
+          19407.42,
+          7017.82
+        ],
+        "basis": "authored-local-offset"
+      },
+      "오원": {
+        "name": "오원",
+        "position": [
+          19602.21,
+          7017.76
+        ],
+        "basis": "authored-local-offset"
+      },
+      "진양": {
+        "name": "진양",
+        "position": [
+          19122.4,
+          8130.0
+        ],
+        "basis": "region-anchor"
+      },
+      "상당": {
+        "name": "상당",
+        "position": [
+          19294.51,
+          7997.84
+        ],
+        "basis": "authored-local-offset"
+      }
+    },
+    "SYS-09": {
+      "천수": {
+        "name": "천수",
+        "position": [
+          13330.56,
+          11420.0
+        ],
+        "basis": "region-anchor"
+      },
+      "부풍": {
+        "name": "부풍",
+        "position": [
+          15179.2,
+          11620.0
+        ],
+        "basis": "region-anchor"
+      },
+      "안정": {
+        "name": "안정",
+        "position": [
+          15309.5,
+          11485.87
+        ],
+        "basis": "authored-local-offset"
+      },
+      "장안서부": {
+        "name": "장안 서부",
+        "position": [
+          14951.95,
+          11661.44
+        ],
+        "basis": "authored-local-offset"
+      },
+      "무도": {
+        "name": "무도",
+        "position": [
+          12660.64,
+          12600.0
+        ],
+        "basis": "region-anchor"
+      }
+    },
+    "SYS-10": {
+      "돈황": {
+        "name": "돈황",
+        "position": [
+          3951.68,
+          5860.0
+        ],
+        "basis": "region-anchor"
+      },
+      "주천": {
+        "name": "주천",
+        "position": [
+          3881.97,
+          5718.21
+        ],
+        "basis": "authored-local-offset"
+      },
+      "금성": {
+        "name": "금성",
+        "position": [
+          10830.14,
+          7801.18
+        ],
+        "basis": "authored-local-offset"
+      },
+      "무위": {
+        "name": "무위",
+        "position": [
+          10718.72,
+          8070.0
+        ],
+        "basis": "region-anchor"
+      }
+    },
+    "SYS-11": {
+      "성도": {
+        "name": "성도",
+        "position": [
+          11931.36,
+          15330.0
+        ],
+        "basis": "region-anchor"
+      },
+      "건위": {
+        "name": "건위",
+        "position": [
+          11898.3,
+          15398.43
+        ],
+        "basis": "authored-local-offset"
+      },
+      "재동": {
+        "name": "재동",
+        "position": [
+          12855.68,
+          14360.0
+        ],
+        "basis": "region-anchor"
+      },
+      "강유": {
+        "name": "강유",
+        "position": [
+          12712.29,
+          14134.77
+        ],
+        "basis": "authored-local-offset"
+      },
+      "파군": {
+        "name": "파군",
+        "position": [
+          14034.4,
+          16440.0
+        ],
+        "basis": "region-anchor"
+      },
+      "강주": {
+        "name": "강주",
+        "position": [
+          13824.55,
+          16377.36
+        ],
+        "basis": "authored-local-offset"
+      }
+    },
+    "SYS-12": {
+      "면양": {
+        "name": "면양",
+        "position": [
+          14346.36,
+          12887.87
+        ],
+        "basis": "authored-local-offset"
+      },
+      "남정": {
+        "name": "남정",
+        "position": [
+          14441.44,
+          12930.0
+        ],
+        "basis": "region-anchor"
+      },
+      "양평관": {
+        "name": "양평관",
+        "position": [
+          14545.67,
+          12775.95
+        ],
+        "basis": "authored-local-offset"
+      },
+      "상용": {
+        "name": "상용",
+        "position": [
+          17299.2,
+          13780.0
+        ],
+        "basis": "region-anchor"
+      },
+      "방릉": {
+        "name": "방릉",
+        "position": [
+          17336.49,
+          13842.76
+        ],
+        "basis": "authored-local-offset"
+      },
+      "무도": {
+        "name": "무도",
+        "position": [
+          17101.1,
+          13710.3
+        ],
+        "basis": "authored-local-offset"
+      }
+    },
+    "SYS-13": {
+      "양양": {
+        "name": "양양",
+        "position": [
+          18774.72,
+          13960.0
+        ],
+        "basis": "region-anchor"
+      },
+      "번성": {
+        "name": "번성",
+        "position": [
+          18922.6,
+          13954.1
+        ],
+        "basis": "authored-local-offset"
+      },
+      "강릉": {
+        "name": "강릉",
+        "position": [
+          18859.52,
+          15670.0
+        ],
+        "basis": "region-anchor"
+      },
+      "강하": {
+        "name": "강하",
+        "position": [
+          19000.23,
+          15551.43
+        ],
+        "basis": "authored-local-offset"
+      },
+      "공안": {
+        "name": "공안",
+        "position": [
+          18587.52,
+          15748.15
+        ],
+        "basis": "authored-local-offset"
+      },
+      "구지": {
+        "name": "구지",
+        "position": [
+          20394.4,
+          16750.0
+        ],
+        "basis": "region-anchor"
+      },
+      "장사": {
+        "name": "장사",
+        "position": [
+          19487.04,
+          17800.0
+        ],
+        "basis": "region-anchor"
+      },
+      "무릉": {
+        "name": "무릉",
+        "position": [
+          19479.9,
+          17729.36
+        ],
+        "basis": "authored-local-offset"
+      },
+      "계양": {
+        "name": "계양",
+        "position": [
+          19759.32,
+          17706.15
+        ],
+        "basis": "authored-local-offset"
+      },
+      "영릉": {
+        "name": "영릉",
+        "position": [
+          19695.61,
+          17837.99
+        ],
+        "basis": "authored-local-offset"
+      }
+    },
+    "SYS-14": {
+      "완": {
+        "name": "완",
+        "position": [
+          19105.44,
+          13010.0
+        ],
+        "basis": "region-anchor"
+      },
+      "섭": {
+        "name": "섭",
+        "position": [
+          19255.56,
+          13101.87
+        ],
+        "basis": "authored-local-offset"
+      },
+      "육양": {
+        "name": "육양",
+        "position": [
+          18990.17,
+          13529.13
+        ],
+        "basis": "authored-local-offset"
+      },
+      "신야": {
+        "name": "신야",
+        "position": [
+          18961.28,
+          13480.0
+        ],
+        "basis": "region-anchor"
+      },
+      "박망": {
+        "name": "박망",
+        "position": [
+          18919.69,
+          13652.04
+        ],
+        "basis": "authored-local-offset"
+      }
+    },
+    "SYS-15": {
+      "건업": {
+        "name": "건업",
+        "position": [
+          24405.44,
+          13940.0
+        ],
+        "basis": "region-anchor"
+      },
+      "단양": {
+        "name": "단양",
+        "position": [
+          24515.48,
+          13771.8
+        ],
+        "basis": "authored-local-offset"
+      },
+      "오정": {
+        "name": "오정",
+        "position": [
+          25731.63,
+          14633.39
+        ],
+        "basis": "authored-local-offset"
+      },
+      "오": {
+        "name": "오",
+        "position": [
+          25931.84,
+          14700.0
+        ],
+        "basis": "region-anchor"
+      },
+      "회계": {
+        "name": "회계",
+        "position": [
+          25904.71,
+          14524.08
+        ],
+        "basis": "authored-local-offset"
+      },
+      "예장": {
+        "name": "예장",
+        "position": [
+          21929.28,
+          17320.0
+        ],
+        "basis": "region-anchor"
+      }
+    },
+    "SYS-16": {
+      "종리": {
+        "name": "종리",
+        "position": [
+          22711.16,
+          13371.39
+        ],
+        "basis": "authored-local-offset"
+      },
+      "수춘": {
+        "name": "수춘",
+        "position": [
+          22717.92,
+          13430.0
+        ],
+        "basis": "region-anchor"
+      },
+      "구강": {
+        "name": "구강",
+        "position": [
+          22901.74,
+          13346.26
+        ],
+        "basis": "authored-local-offset"
+      },
+      "합비": {
+        "name": "합비",
+        "position": [
+          23091.04,
+          14180.0
+        ],
+        "basis": "region-anchor"
+      },
+      "여강": {
+        "name": "여강",
+        "position": [
+          22931.63,
+          14035.73
+        ],
+        "basis": "authored-local-offset"
+      }
+    },
+    "SYS-17": {
+      "교지": {
+        "name": "교지",
+        "position": [
+          13440.8,
+          24970.0
+        ],
+        "basis": "region-anchor"
+      },
+      "구진": {
+        "name": "구진",
+        "position": [
+          13431.17,
+          25038.33
+        ],
+        "basis": "authored-local-offset"
+      },
+      "일남": {
+        "name": "일남",
+        "position": [
+          13501.25,
+          24998.88
+        ],
+        "basis": "authored-local-offset"
+      },
+      "남해": {
+        "name": "남해",
+        "position": [
+          19724.48,
+          22870.0
+        ],
+        "basis": "region-anchor"
+      },
+      "창오": {
+        "name": "창오",
+        "position": [
+          19653.53,
+          22825.02
+        ],
+        "basis": "authored-local-offset"
+      }
+    },
+    "SYS-18": {
+      "양평": {
+        "name": "양평",
+        "position": [
+          28128.16,
+          4730.0
+        ],
+        "basis": "region-anchor"
+      },
+      "현도": {
+        "name": "현도",
+        "position": [
+          28396.6,
+          4620.28
+        ],
+        "basis": "authored-local-offset"
+      },
+      "요서": {
+        "name": "요서",
+        "position": [
+          30376.22,
+          6970.26
+        ],
+        "basis": "authored-local-offset"
+      },
+      "낙랑": {
+        "name": "낙랑",
+        "position": [
+          30316.0,
+          6980.0
+        ],
+        "basis": "region-anchor"
+      },
+      "대방": {
+        "name": "대방",
+        "position": [
+          30063.41,
+          7116.27
+        ],
+        "basis": "authored-local-offset"
+      }
+    },
+    "SYS-19": {
+      "월수": {
+        "name": "월수",
+        "position": [
+          10404.96,
+          18100.0
+        ],
+        "basis": "region-anchor"
+      },
+      "장가": {
+        "name": "장가",
+        "position": [
+          10585.92,
+          18279.66
+        ],
+        "basis": "authored-local-offset"
+      },
+      "익주군": {
+        "name": "익주군",
+        "position": [
+          11702.4,
+          20500.0
+        ],
+        "basis": "region-anchor"
+      },
+      "진녕": {
+        "name": "건녕",
+        "position": [
+          11910.98,
+          20468.12
+        ],
+        "basis": "authored-local-offset"
+      }
+    }
+  },
+  "gates": {
+    "함곡회랑": [
+      17172.0,
+      11400.0
+    ],
+    "검각회랑": [
+      13186.4,
+      13830.0
+    ],
+    "진령삼도": [
+      15688.0,
+      12200.0
+    ],
+    "이릉협도": [
+      17256.8,
+      15100.0
+    ],
+    "합비회랑": [
+      23532.0,
+      14300.0
+    ],
+    "양번관문": [
+      18757.76,
+      13900.0
+    ],
+    "정형회랑": [
+      20140.0,
+      8250.0
+    ],
+    "호뢰관문": [
+      19648.16,
+      11200.0
+    ],
+    "관도관문": [
+      20436.8,
+      10850.0
+    ],
+    "무관회랑": [
+      17511.2,
+      12400.0
+    ],
+    "기산도": [
+      13101.6,
+      12250.0
+    ],
+    "노룡회랑": [
+      24804.0,
+      5350.0
+    ],
+    "오령회랑": [
+      19334.4,
+      20450.0
+    ],
+    "하서회랑": [
+      5088.0,
+      5750.0
+    ],
+    "남중산도": [
+      11066.4,
+      17900.0
+    ]
+  }
+}

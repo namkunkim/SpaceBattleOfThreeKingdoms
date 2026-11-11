@@ -1,0 +1,224 @@
+extends SceneTree
+
+const Checkpoint := preload("res://core/battle/first_operation_checkpoint.gd")
+const Host := preload("res://scripts/first_operation_host.gd")
+
+var failures := 0
+var checks := 0
+var layout_checks := 0
+var layout_failures := 0
+var auto_result_checks := 0
+
+func _initialize() -> void:
+	run.call_deferred()
+
+func wait_frames() -> void:
+	for i in 8:
+		await process_frame
+
+func check(value: bool, label: String) -> bool:
+	checks += 1
+	if not value:
+		failures += 1
+		printerr("SORTIE_FAIL ", label)
+	return value
+
+func verify_layout(value: bool, label: String) -> void:
+	layout_checks += 1
+	if not value:
+		layout_failures += 1
+		printerr("LAYOUT_FAIL ", label)
+
+func finish() -> void:
+	print("LAYOUT_CHECKS ", layout_checks, " failures=", layout_failures)
+	print("AUTO_RESULT_CHECKS ", auto_result_checks)
+	print("SORTIE_SCENE checks=", checks, " failures=", failures)
+	quit(1 if failures or layout_failures else 0)
+
+func run() -> void:
+	var args := OS.get_cmdline_user_args()
+	var patched := "--patched" in args
+	var dev := BattleBrief.FIRST_OPERATION_DEV_ARG in args
+	var tampered := "--tampered" in args
+	var verify_auto_result := "--legacy-auto-result" in args
+	var legacy_auto := "--legacy-auto" in args or verify_auto_result
+	var link := root.get_node("WorldLink")
+	change_scene_to_file("res://scenes/WorldMap.tscn")
+	await wait_frames()
+	var map := current_scene as WorldMapScreen
+	if not check(map != null and not link.routed(), "actual WorldMap ready"):
+		finish()
+		return
+	var atlas: Control = map._atlas
+	var region: Variant = null
+	for row in atlas._system_data(13).get("regions", []):
+		if row.id == map.world.focus.region:
+			region = row
+			break
+	if not check(region is Dictionary and atlas.is_visible_in_tree(), "Atlas selected region available"):
+		finish()
+		return
+	atlas._open_region(region)
+	var preview_brief: BattleBrief = atlas._make_brief.call()
+	atlas._battle_button.pressed.emit()
+	var profile: Dictionary = atlas._battlefield._profile
+	check(atlas._tabs.current_tab == 4 and not profile.is_empty(), "actual Atlas battlefield tab")
+	check(preview_brief.seed == 208 and preview_brief.operation_request().is_empty()
+		and not link.routed() and map.state == "browse", "Atlas keeps legacy preview without sortie")
+	print("ATLAS_PROFILE ", Checkpoint.digest_value(profile))
+	atlas.show_overview()
+	root.size = Vector2i(1600, 900)
+	await wait_frames()
+	map.open_card()
+	await wait_frames()
+	var product := map.find_child("FirstOperationProduct", true, false) as Button
+	var dev_front := map.find_child("FirstOperationDev_front", true, false) as Button
+	var dev_flank := map.find_child("FirstOperationDev_flank", true, false) as Button
+	check((product != null) == (patched and not dev), "product button presence")
+	check((dev_front != null and dev_flank != null) == dev, "development buttons preserve gate")
+	print("CARD_MIN ", map._card.get_combined_minimum_size(), " CARD_RECT ", map._card.get_global_rect(),
+		" VIEW ", map.get_viewport_rect(), " CARD_BOTTOM ", map._card.get_global_rect().end.y,
+		" PRODUCT_BOTTOM ", product.get_global_rect().end.y if product != null else -1.0)
+	if product != null:
+		var card_rect := map._card.get_global_rect()
+		var view_rect := map.get_viewport_rect()
+		var legacy_button := product.get_parent().get_child(0) as Button
+		var legacy_rect := legacy_button.get_global_rect()
+		var product_rect := product.get_global_rect()
+		print("LAYOUT_RECTS card=", card_rect, " legacy=", legacy_rect, " product=", product_rect, " client=", view_rect)
+		verify_layout(view_rect.size == Vector2(1600, 900), "client is the design viewport")
+		verify_layout(view_rect.encloses(card_rect) and card_rect.end.y <= view_rect.end.y - 28.0, "card fits client with original inset")
+		verify_layout(card_rect.encloses(legacy_rect) and card_rect.encloses(product_rect), "both buttons inside card")
+		verify_layout(view_rect.encloses(legacy_rect) and view_rect.encloses(product_rect), "both buttons inside client")
+		verify_layout(legacy_rect.end.x <= product_rect.position.x and legacy_rect.position.y == product_rect.position.y
+			and legacy_rect.size.y >= 58.0 and product_rect.size.y >= 58.0, "same row with disjoint 58px targets")
+	if legacy_auto:
+		map._set_mode("auto")
+		if verify_auto_result:
+			map._set_difficulty("입문")
+		map.sortie(11 if verify_auto_result else 208)
+		check(map.brief.mode == "auto" and map.brief.operation_request().is_empty(), "legacy auto request")
+		map._skip.pressed.emit()
+		check(map.state == "resolve" and map.resolver != null and not link.routed(), "legacy auto starts map resolver")
+		if verify_auto_result:
+			(map._resolve.get_meta("bars") as Control).hide()
+			var deadline := Time.get_ticks_msec() + 180000
+			while map.state == "resolve" and Time.get_ticks_msec() < deadline:
+				await create_timer(0.02).timeout
+			var outcome := map.outcome
+			if not check(map.state == "result" and map._result.visible and outcome != null and not link.routed(), "legacy auto result visible"):
+				map._cancel_resolve()
+				finish()
+				return
+			auto_result_checks = 1
+			print("AUTO_RESULT ", Checkpoint.digest_value([outcome.to_dict(), map._res_labels.title.text,
+				map._res_labels.seed.text, map._res_labels.same.visible, map._res_labels.again.visible]))
+		else:
+			map._cancel_resolve()
+			check(map.state == "browse" and map.resolver == null, "legacy auto cancel")
+		finish()
+		return
+	if dev:
+		if not check(dev_flank != null, "developer flank button"):
+			finish()
+			return
+		dev_flank.pressed.emit()
+		check(map.state == "sortie" and map.brief.operation_request().route_id == "flank", "developer flank selection")
+		map._skip.pressed.emit()
+		await wait_frames()
+		var dev_host := current_scene.get_node_or_null("FirstOperationHost") as Host
+		check(dev_host != null and dev_host.operation_owner != null and dev_host.frame.meta.capability == BattleBrief.FIRST_OPERATION_DEV_REQUEST.capability
+			and dev_host.frame.projection.operation.route_id == "flank", "developer flank actual host")
+		if dev_host != null:
+			dev_host.return_to_map()
+			await wait_frames()
+			map = current_scene as WorldMapScreen
+			map.open_card()
+			dev_front = map.find_child("FirstOperationDev_front", true, false) as Button
+			if check(dev_front != null, "developer front button"):
+				dev_front.pressed.emit()
+				map._skip.pressed.emit()
+				await wait_frames()
+				dev_host = current_scene.get_node_or_null("FirstOperationHost") as Host
+				check(dev_host != null and dev_host.operation_owner != null
+					and dev_host.frame.projection.operation.route_id == "front", "developer front actual host")
+		finish()
+		return
+	if product != null:
+		check(product.is_visible_in_tree() and not product.disabled, "standard direct product enabled")
+		map._set_mode("auto")
+		product.pressed.emit()
+		check(product.disabled and map.state == "browse" and not link.routed(), "auto selection rejects product")
+		map._set_mode("direct")
+		map._set_difficulty("상급")
+		product.pressed.emit()
+		check(product.disabled and map.state == "browse" and not link.routed(), "unapproved difficulty rejects product")
+		map._set_difficulty("표준")
+	if not tampered:
+		var legacy: Button
+		for child in map._card.find_children("*", "Button", true, false):
+			if child.text == "출  격":
+				legacy = child
+				break
+		if not check(legacy != null, "legacy sortie button"):
+			finish()
+			return
+		legacy.pressed.emit()
+		check(map.state == "sortie" and map.brief.operation_request().is_empty(), "default button retains legacy request")
+		map._skip.pressed.emit()
+		await wait_frames()
+		check(current_scene.scene_file_path == "res://scenes/FleetBattle3D.tscn" and current_scene.get_node_or_null("FirstOperationHost") == null
+			and link.brief.operation_request().is_empty(), "default enters legacy battle")
+		check(link.back_to_world(null) == OK, "legacy returns to map")
+		await wait_frames()
+		map = current_scene as WorldMapScreen
+		map.open_card()
+		product = map.find_child("FirstOperationProduct", true, false) as Button
+		map.sortie(208)
+		check(map.brief.seed == 208 and map.brief.operation_request().is_empty(), "same-seed legacy remains legacy")
+		map._skip.pressed.emit()
+		await wait_frames()
+		check(current_scene.get_node_or_null("FirstOperationHost") == null and link.brief.operation_request().is_empty(), "same-seed legacy enters legacy battle")
+		check(link.back_to_world(null) == OK, "same-seed battle returns")
+		await wait_frames()
+		map = current_scene as WorldMapScreen
+		map.open_card()
+		product = map.find_child("FirstOperationProduct", true, false) as Button
+	if not patched:
+		finish()
+		return
+	if not check(product != null, "product button after map creation"):
+		finish()
+		return
+	product.pressed.emit()
+	check(map.state == "sortie" and map.brief.seed == 208 and map.brief.operation_request() == BattleBrief.Product.REQUEST
+		and not map.brief.operation_request().has("route_id"), "explicit product request locked")
+	map._skip.pressed.emit()
+	await wait_frames()
+	var host := current_scene.get_node_or_null("FirstOperationHost") as Host
+	if not check(host != null, "product enters actual host"):
+		finish()
+		return
+	if tampered:
+		check(host.operation_owner == null and host.failure.get("error") == "source_reference_mismatch", "tampered source fails closed")
+		host.return_to_map()
+		await wait_frames()
+		var recovered := current_scene as WorldMapScreen
+		check(recovered != null and recovered.state == "browse" and recovered._card.visible and not link.routed(), "initial failure restores card")
+		finish()
+		return
+	if check(host.operation_owner != null and host.frame.tick == 0 and host.frame.clock_ms == 0
+			and host.frame.meta.capability == BattleBrief.Product.CAPABILITY
+			and host.frame.projection.operation.route_id == "front", "product host C0 front"):
+		host._start.pressed.emit()
+		host.set_process(false)
+		host.find_child("Operation_withdraw", true, false).pressed.emit()
+		check(host.step_operation(), "host commits first command")
+		var first: Dictionary = host.operation_owner.capture_checkpoint().packet
+		check(first.tick == 1 and first.clock_ms == 100 and first.pending.is_empty()
+			and first.commands == [{"tick": 0, "batch": [{"kind": "withdraw"}]}], "first command committed once")
+		host.return_to_map()
+		await wait_frames()
+		check(current_scene is WorldMapScreen and not link.routed(), "normal product return")
+	finish()
+
