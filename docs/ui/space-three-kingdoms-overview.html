@@ -282,7 +282,6 @@ const externalPoints = [westernRegions,easternSolarSystem,...frontierFactions];
 const externalPointById = new Map(externalPoints.map(point => [point.id,point]));
 const easternRoad = ['양평',easternSolarSystem.id];
 const sectorColors = ['','#f5c77a','#92e9b3','#a5b7ff','#f5a3b7','#d6acff','#73e4f4'];
-const systemNebulaColors = ['#804a4f','#2d705f','#364b9b','#753e69','#4d397b','#206a8e'];
 // Each chain follows one uninterrupted stroke. Shared anchors are real junctions.
 const roadJunctions = {
   '@1':[568,201], '@2':[1213,90], '@3':[1123,200], '@4':[1159,313],
@@ -382,15 +381,24 @@ function drawStarChart() {
   svgNode('rect',{width:chartWidth,height:chartHeight,fill:'url(#space)'},terrain);
   const terrainImage = document.querySelector('#galaxy-terrain-png').textContent.trim();
   svgNode('image',{
-    width:chartWidth,height:chartHeight,preserveAspectRatio:'none',
-    href:'data:image/png;base64,'+terrainImage,'aria-hidden':'true'
-  },terrain);
-  systemNebulaColors.forEach((color,index) => {
-    const id = 'nebula-' + index;
-    const gradient = svgNode('radialGradient',{id},defs);
-    svgNode('stop',{offset:'0%','stop-color':color,'stop-opacity':.68},gradient);
-    svgNode('stop',{offset:'100%','stop-color':color,'stop-opacity':0},gradient);
-  });
+    id:'galaxy-terrain',width:chartWidth,height:chartHeight,preserveAspectRatio:'none',
+    href:'data:image/png;base64,'+terrainImage
+  },defs);
+  svgNode('use',{href:'#galaxy-terrain','aria-hidden':'true'},terrain);
+  for (const [axis,fade] of [['x',2],['y',3.5]]) {
+    const gradient = svgNode('linearGradient',{
+      id:'galaxy-fade-'+axis,x2:axis==='x'?'100%':'0%',y2:axis==='y'?'100%':'0%'
+    },defs);
+    for (const [offset,opacity] of [[0,0],[fade,1],[100-fade,1],[100,0]]) {
+      svgNode('stop',{offset:offset+'%','stop-color':'white','stop-opacity':opacity},gradient);
+    }
+    const mask = svgNode('mask',{
+      id:'galaxy-mask-'+axis,maskUnits:'userSpaceOnUse',width:chartWidth,height:chartHeight
+    },defs);
+    svgNode('rect',{width:chartWidth,height:chartHeight,fill:'url(#galaxy-fade-'+axis+')'},mask);
+  }
+  const detailImage = svgNode('g',{id:'galaxy-detail-terrain',mask:'url(#galaxy-mask-x)'},defs);
+  svgNode('use',{href:'#galaxy-terrain',mask:'url(#galaxy-mask-y)'},detailImage);
   const grid = svgNode('pattern',{id:'chart-grid',width:100,height:100,patternUnits:'userSpaceOnUse'},defs);
   svgNode('path',{d:'M100 0H0V100',fill:'none',stroke:'#98bfdc','stroke-opacity':.13},grid);
   svgNode('rect',{width:chartWidth,height:chartHeight,fill:'url(#chart-grid)'},terrain);
@@ -717,16 +725,33 @@ function centralClearance(angle) {
   return 1/Math.hypot(Math.cos(angle)/clearSpace.x,Math.sin(angle)/clearSpace.y);
 }
 
-function drawSystemTerrain(layer,city) {
+function drawSystemBackdrop(layer,point,center) {
+  const [x,y] = routePoint(point);
+  const magnification = 3.2;
+  // Translate the chart point to the local star without rotating or stretching the terrain.
+  const viewport = svgNode('svg',{
+    width:chartWidth,height:chartHeight,viewBox:'0 0 '+chartWidth+' '+chartHeight,
+    'aria-hidden':'true'
+  },layer);
+  svgNode('rect',{width:chartWidth,height:chartHeight,fill:'#000'},viewport);
+  const blocked = svgNode('g',{'clip-path':'url(#system-blocked-terrain)'},viewport);
+  svgNode('rect',{width:chartWidth,height:chartHeight,fill:'#070d1c'},blocked);
+  svgNode('use',{
+    href:'#galaxy-detail-terrain',
+    transform:'translate('+center.x+' '+center.y+') scale('+magnification+') translate('+(-x)+' '+(-y)+')'
+  },blocked);
+  svgNode('rect',{width:chartWidth,height:chartHeight,fill:'url(#chart-grid)'},blocked);
+}
+
+function drawSystemTerrain(layer,city,center) {
+  const point = city.id || city.name;
+  const openings = systemApproaches(point);
   const indexSeed = systemIndexSeed(city);
   const random = seededRandom(7309+indexSeed*19277);
-  const openings = systemApproaches(city.id || city.name);
+  const defs = svgNode('defs',{},layer);
+  const blockedTerrain = svgNode('clipPath',{id:'system-blocked-terrain'},defs);
+  drawSystemBackdrop(layer,point,center);
   const landscape = svgNode('g',{'aria-label':'연결 항로 사이의 장애 지형'},layer);
-  const defs = svgNode('defs',{},landscape);
-  const colors = [
-    ['#202745','#7766b4'],['#172d41','#527f9f'],
-    ['#142d3e','#488f91'],['#25263d','#9577a6']
-  ];
   for (const [index,opening] of openings.entries()) {
     const next = openings[(index+1)%openings.length];
     const start = opening.angle+opening.halfWidth;
@@ -741,14 +766,11 @@ function drawSystemTerrain(layer,city) {
     const contour = 'M'+inner.map(point => point.join(' ')).join(' L');
     const shape = contour+' L'+outer.reverse().map(point => point.join(' ')).join(' L')+'Z';
     const id = 'system-terrain-'+index;
-    const [fill,gas] = colors[index%colors.length];
     const clip = svgNode('clipPath',{id},defs);
     svgNode('path',{d:shape},clip);
-    const cloud = svgNode('radialGradient',{id:id+'-cloud'},defs);
-    svgNode('stop',{offset:'0%','stop-color':gas,'stop-opacity':.8},cloud);
-    svgNode('stop',{offset:'100%','stop-color':gas,'stop-opacity':0},cloud);
+    svgNode('path',{d:shape},blockedTerrain);
     const texture = svgNode('g',{'clip-path':'url(#'+id+')'},landscape);
-    svgNode('path',{d:shape,fill,'fill-opacity':.88},texture);
+    svgNode('path',{d:shape,fill:'#111c30','fill-opacity':.18},texture);
 
     function sample() {
       const angle = start+random()*(end-start);
@@ -757,15 +779,11 @@ function drawSystemTerrain(layer,city) {
       return terrainPoint(angle,edge+(limit-edge)*random());
     }
     const share = (end-start)/fullTurn;
-    for (let i = 0; i < Math.max(2,Math.ceil(share*23)); i++) {
-      const [cx,cy] = sample();
-      svgNode('ellipse',{cx,cy,rx:105+random()*165,ry:55+random()*95,fill:'url(#'+id+'-cloud)'},texture);
-    }
-    for (let i = 0; i < Math.ceil(share*470); i++) {
+    for (let i = 0; i < Math.ceil(share*230); i++) {
       const [cx,cy] = sample();
       svgNode('circle',{cx,cy,r:.6+random()*2.4,fill:'#a8d8ed','fill-opacity':.16+random()*.42},texture);
     }
-    for (let i = 0; i < Math.ceil(share*105); i++) {
+    for (let i = 0; i < Math.ceil(share*70); i++) {
       const [x,y] = sample();
       const radius = 3+random()*9;
       const points = Array.from({length:6},(_,side) => {
@@ -784,11 +802,7 @@ function drawSystem(system) {
   detailLayer?.remove();
   detailLayer = svgNode('g',{'aria-label':system.city.name+' 내부 지도'},terrain);
   const layer = detailLayer;
-  svgNode('rect',{width:chartWidth,height:chartHeight,fill:'#0b1428'},layer);
-  svgNode('rect',{width:chartWidth,height:chartHeight,fill:'url(#chart-grid)'},layer);
-  svgNode('ellipse',{cx:orbitCenter.x,cy:orbitCenter.y,rx:620,ry:372,
-    fill:'url(#nebula-'+(system.city.region-1)+')',opacity:.55},layer);
-  drawSystemTerrain(layer,system.city);
+  drawSystemTerrain(layer,system.city,system.displayCenter);
   const bodies = svgNode('g',{'aria-label':'중심별과 행성 궤도',
     transform:'translate('+system.displayCenter.x+' '+system.displayCenter.y+') scale('+systemScale+') translate('+
       (-orbitCenter.x)+' '+(-orbitCenter.y)+')'},layer);
@@ -970,9 +984,7 @@ function openRelay(id) {
   }));
   detailLayer?.remove();
   detailLayer = svgNode('g',{'aria-label':station.name+' 상세 지도'},terrain);
-  svgNode('rect',{width:chartWidth,height:chartHeight,fill:'#0b1428'},detailLayer);
-  svgNode('rect',{width:chartWidth,height:chartHeight,fill:'url(#chart-grid)'},detailLayer);
-  drawSystemTerrain(detailLayer,city);
+  drawSystemTerrain(detailLayer,city,activeSystem.displayCenter);
   const {x,y} = activeSystem.displayCenter;
   const icon = svgNode('g',{transform:'translate('+x+' '+y+')'},detailLayer);
   svgNode('circle',{r:63,fill:'#142943',stroke:'#85bfd9','stroke-width':2,'stroke-dasharray':'5 8'},icon);
@@ -1015,10 +1027,9 @@ function openExternalPoint(region) {
   detailLayer?.remove();
   detailLayer = svgNode('g',{'aria-label':region.name+' 상세 지도'},terrain);
   terrain.setAttribute('viewBox','0 0 1600 900');
-  svgNode('rect',{width:chartWidth,height:chartHeight,fill:'#0b1428'},detailLayer);
-  svgNode('rect',{width:chartWidth,height:chartHeight,fill:'url(#chart-grid)'},detailLayer);
-  drawSystemTerrain(detailLayer,region);
-  const {x,y} = systemDisplayCenter(region);
+  const center = systemDisplayCenter(region);
+  drawSystemTerrain(detailLayer,region,center);
+  const {x,y} = center;
   svgNode('circle',{cx:x,cy:y,r:62,fill:'#2d2430',stroke:'#e8bf82','stroke-width':2,
     'stroke-dasharray':'5 8'},detailLayer);
   const label = svgNode('text',{x,y:y+8,fill:'#ffe1ad','font-size':24,'text-anchor':'middle'},detailLayer);
@@ -1131,8 +1142,7 @@ function drawFortressBattlefield(fortress) {
   const bottomEdge = corridorEdge(lower);
   const topArea = 'M0 0H1600 V'+upper.at(-1)[1]+corridorEdge([...upper].reverse())+'Z';
   const bottomArea = 'M0 900H1600 V'+lower.at(-1)[1]+corridorEdge([...lower].reverse())+'Z';
-  svgNode('rect',{width:chartWidth,height:chartHeight,fill:'#080f21'},layer);
-  svgNode('rect',{width:chartWidth,height:chartHeight,fill:'url(#chart-grid)'},layer);
+  svgNode('rect',{width:chartWidth,height:chartHeight,fill:'#000'},layer);
 
   const defs = svgNode('defs',{},layer);
   const bands = [{id:'battle-upper',d:topArea,color:'#252647',cloud:'#7770bc'},
