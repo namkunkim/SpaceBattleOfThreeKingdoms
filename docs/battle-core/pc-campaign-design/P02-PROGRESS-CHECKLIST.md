@@ -6,6 +6,8 @@
 
 **5ef3537b 집중 검증 — 2026-11-12.** 격리 입력 3종의 임포트가 통과했고, 별도 모델이 실행 5건의 증거·로그 해시와 경로 코드를 독립 검토했다. 공개 적벽 버튼은 EntryBoot와 승인 첫 작전으로 연결됐다(10/10). 구형 카드 준비를 합성한 격리 실행은 17행 완료 전후 각각 16/16, 18행 취소 전후 각각 24/24였다. 17행은 양쪽 11,350틱·1,134,950ms·연합군 승리이며 같은 오답을 양쪽에 넣은 반례를 거부했다. 공개 경로 변경으로 현재 main의 기존 정식 15~18행을 같은 조건에서 실행할 수 없다. 정식 실행기와 실제 Windows 입력은 이 검증에 포함되지 않았다. [집중 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-5ef3537b-successor-01/FOCUSED-MAIN-RESULTS.json)
 
+**264f47b9 호환성 사전검증 — 2026-11-12.** 구형 공개 브리핑을 여는 마지막 main 커밋에 기존 21행·58작업·27비교를 결속했다. 14~18행 사전 시험 11/11 및 비교 3건이 통과했다. GUI 15·16행은 합성 viewport 입력을 사용했다. 별도 현행 Godot 창은 시작됐으나 Computer Use 앱 접근 승인이 시간 초과돼 실제 캡처와 입력은 0건이었다. 실제 입력 증거를 요구하는 정식 실행기는 시작하지 않았다. [역사 사전검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-review-01/HISTORICAL-FOCUSED-RESULTS-R02.json) · [Windows 입력 사전확인](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-5ef3537b-successor-01/windows-entry-smoke-01/INPUT-PREFLIGHT-RESULT.json)
+
 최신 후속 상태: K6 무입력 revision 02 독립 PASS. 양성4·음성15·경계9 및 예제16 바이트 대조. 30초 경과 캡처에서 클릭/Space 각각 0건, 캡처25초와 사용자 만료 중 이른 경계부터 입력0건. 무입력 준비 범위 마감. 실제 MAIN 도구 원문, Win32/Godot 및 16-after 제목 증거는 차후 승인된 정식 실행에 남는다. [독립 재심](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/review15-main-input-dry-check-02/P02-INDEPENDENT-REVIEW.md), SHA `3111cf2ea9eba1b150ec03456c2f294d3280c9d4080285133ffc96cbc8733d17`.
 
 무입력 독립 검토: 모의 양성 4·음성 15 재현. 30초 지난 사전 캡처가 사용자 입력 시간 안이면 모의 클릭을 호출하는 추가 반례를 확인했다. 클릭 직전 사전 캡처 25초 제한과 사용자 입력 만료를 함께 확인하고 오래된 캡처의 입력 호출 0건을 재검증하도록 기존 담당에 배정했다. 실제 MAIN 도구 원문 검증은 별도 조건이다. [독립 기록](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/review15-main-input-dry-check-01/P02-INDEPENDENT-REVIEW.md), SHA `71ef8c5ff7a425cb986cf4dec746da6a634d01dddf39748cac1ce76e1b5daece`.
@@ -58,7 +60,11 @@ E 소스 반영 완료: 독립 R3 통과한 revision-02 제품 5파일을 단일
 - 체크리스트 공통 편집은 오케스트레이터 단독 담당. 과거 '독립 착수 가능한 추가 작업 없음'은 당시 승인 범위의 기록이며 신규 진입 구현은 이번 승인으로 추가됐다. 검증된 실행본과 사용자 저장은 보존하고 검증 임시물은 F:/WorkSpace를 사용한다.
 
 
-**2026-11-12 P03 제한 회귀 재확인.** GitHub main `5ef3537b`에서 제한 체크포인트 38/38, 비공개 상태 70건, 활성 교체 20건, 개발 호스트의 새 프로세스 4틱 재개 및 동일 슬롯 SHA를 별도 모델이 독립 확인했다. 개발 플래그 없는 제품 WorldLink 직접 경로는 첫 명령 1회, 2틱 저장·복원과 다음 프레임 일치까지 11/11을 통과했다. 이 제품 시험의 범위는 동일 호스트 내부 복원이다. EntryBoot 이어하기, 제품 새 프로세스 복원, 전체 운영 Cn·전역 명령 커서 인수는 남았다. [제한 회귀](F:/WorkSpace/campaign-p03-20261111/tmp/p03-main-5ef3537/summary.json) · [제품 경로](F:/WorkSpace/campaign-p03-20261111/tmp/p03-main-5ef3537/product.receipt.json)
+**P02 기본 지도 리플레이 — 2026-11-12.** Windows 공개 항로도의 리플레이 보기를 승인된 적벽 v1 재생과 연결했다. 독립 헤드리스 재실행에서 제품 지도 26/26, 개발 지도 19/19, 개발 뷰어 23/23을 통과했다. 1600×900·800×450 버튼 배치, 취소·오류 뒤 지도와 포커스 복원, Enter의 적벽 진입을 확인했다. 실제 Windows 파일 선택과 배포 인수는 남았다. [GitHub 변경](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/60b51f2e44c356e5daf4fb448c25bdbf7f2e458b)
+
+**2026-11-12 P03 제한 회귀 재확인.** GitHub main `5ef3537b`에서 제한 체크포인트 38/38, 비공개 상태 70건, 활성 교체 20건, 개발 호스트의 새 프로세스 4틱 재개 및 동일 슬롯 SHA를 별도 모델이 독립 확인했다. 개발 플래그 없는 제품 WorldLink 직접 경로는 첫 명령 1회, 2틱 저장·복원과 다음 프레임 일치까지 11/11을 통과했다. 이 제품 시험의 범위는 동일 호스트 내부 복원이다. 이후 공개 항로도 새 프로세스 복원은 아래 결과에 기록했다. [제한 회귀](F:/WorkSpace/campaign-p03-20261111/tmp/p03-main-5ef3537/summary.json) · [제품 경로](F:/WorkSpace/campaign-p03-20261111/tmp/p03-main-5ef3537/product.receipt.json)
+
+**2026-11-12 P03 공개 항로도 이어하기.** 저장이 있는 새 프로세스의 기본 Windows 항로도에 첫 작전 이어하기를 노출했다. 독립 코드·증거 검토에서 정상 31/31, 백업만 있는 저장 17/17, 손상 슬롯 오류 후 재시도 18/18, 빈 프로필 6/6을 확인했다. 공개 EntryBoot에서 만든 2틱 저장을 새 프로세스가 복원했고, 저장 바이트와 대기 명령을 보존해 다음 프레임에서 명령을 한 번 적용했다. 헤드리스 시험 범위이며 Windows 실제 입력, 전체 운영 Cn 및 전역 명령 커서 인수는 남았다. [GitHub 변경](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/b2ba73ff5b3c18a7ab0885d00cebf0c25be7fed1)
 
 ## 현재 상태 요약 — 2026-11-11 KST
 
