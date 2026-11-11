@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>삼국지8 REMAKE · 지도 탐색</title>
+<style>
+:root{color-scheme:dark;--text:#f1eadb;--muted:#b7ad98;--gold:#e6bf76;--line:#484135;--panel:#24241f}
+*{box-sizing:border-box}
+body{margin:0;background:#191b18;color:var(--text);font:15px/1.55 system-ui,sans-serif}
+main{width:min(1500px,100%);margin:auto;padding:clamp(14px,3vw,42px)}
+h1,h2,p{margin:0}
+.eyebrow{color:var(--gold);font-size:.8rem;letter-spacing:.13em}
+h1{font-size:clamp(1.75rem,4vw,3rem);line-height:1.2;margin:.3rem 0 .6rem}
+header p,footer,.hint{color:var(--muted)}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 14px}
+button,input{font:inherit}
+button{cursor:pointer;color:inherit}
+nav button,.toggle{padding:.45em .85em;border:1px solid var(--line);border-radius:7px;background:var(--panel)}
+nav button[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:#20180c;font-weight:700}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:14px;align-items:start}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.toolbar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;gap:10px}
+.toolbar h2,aside h2{font-size:1.05rem}
+.map-controls{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.map-controls output{min-width:3.5em;text-align:center;font-variant-numeric:tabular-nums}
+.map-controls button:disabled{opacity:.45;cursor:default}
+.map-viewport{position:relative;overflow:auto;aspect-ratio:16/9;background:#242d23}
+.map-viewport.zoomed{cursor:grab}
+.map-viewport.dragging{cursor:grabbing;user-select:none}
+.map{position:relative;width:var(--map-width,100%);aspect-ratio:16/9}
+.map svg{user-select:none}
+.toolbar{flex-wrap:wrap}
+.map svg{display:block;width:100%;height:100%;pointer-events:none}
+.labels{position:absolute;inset:0}
+.label{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);white-space:nowrap;padding:.05em .38em;border:1px solid #332619;background:#211b16e8;border-radius:3px;color:#fff7e9;line-height:1.28;font-size:clamp(8px,1.15vw,17px)}
+.label.c{z-index:1}.label.p{background:#192721e8;border-color:#849385;color:#f1eadb;pointer-events:none}
+.label.r{background:#e6bf76;color:#20180c;border-color:#2c2111;font-size:clamp(10px,1.45vw,21px);font-weight:800}
+.label.c[aria-pressed=true],.label.c:hover{background:#fae3aa;color:#22170a;z-index:1}
+aside{padding:14px}
+aside input{width:100%;padding:.55em .7em;border:1px solid #746b56;border-radius:6px;background:#191b18;color:var(--text);margin:8px 0}
+.hint{font-size:.85rem}
+ul{list-style:none;margin:8px 0 0;padding:0;max-height:420px;overflow:auto}
+li button{display:flex;justify-content:space-between;align-items:center;gap:.6em;text-align:left;width:100%;padding:.38em .5em;border:0;border-bottom:1px solid var(--line);background:none}
+li button:hover,li button[aria-pressed=true]{background:#453a29;color:#ffdd95}
+li small{color:var(--muted)}
+footer{margin-top:16px;font-size:.83rem}
+a{color:var(--gold)}
+:focus-visible{outline:2px solid #fff4cb;outline-offset:2px;z-index:2}
+@media(max-width:850px){.layout{grid-template-columns:1fr}ul{max-height:240px}}
+[hidden]{display:none!important}
+.map-hint{padding:8px 14px}
+</style>
+<main>
+<header><p class="eyebrow">삼국지8 REMAKE</p><h1>전체지도와 지방별 확대지도</h1><p>지방을 선택하거나 지도 위에서 Ctrl + 휠로 확대하세요. 확대하면 산등성이, 하천과 도시 이름을 더 자세히 볼 수 있습니다.</p></header>
+<nav id="regions" aria-label="지도 선택"></nav>
+<div class="layout">
+<section class="panel" aria-labelledby="map-title">
+<div class="toolbar"><h2 id="map-title"></h2>
+<div class="map-controls" aria-label="지도 확대 조작">
+<button class="toggle" id="zoom-out" type="button" aria-label="지도 축소">−</button>
+<output id="zoom-level" aria-label="지도 배율">100%</output>
+<button class="toggle" id="zoom-in" type="button" aria-label="지도 확대">+</button>
+<button class="toggle" id="zoom-reset" type="button">화면 맞춤</button>
+<button class="toggle" id="toggle" type="button" aria-pressed="true">이름표 표시</button>
+</div>
+</div>
+<div class="map-viewport" id="viewport" tabindex="0" aria-label="지도. 확대 후 방향키로 이동할 수 있습니다."><div class="map" id="map"><svg id="terrain" xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="none"></svg><div class="labels" id="labels"></div></div></div>
+<p class="hint map-hint" id="map-hint" aria-live="polite"></p>
+</section>
+<aside class="panel" aria-labelledby="city-title">
+<h2 id="city-title">도시 찾기</h2>
+<input id="search" type="search" aria-label="도시 이름 검색" placeholder="예: 장안">
+<p class="hint" id="status" aria-live="polite"></p>
+<ul id="cities"></ul>
+</aside>
+</div>
+<footer>지방 및 도시 배치 참고 · <a href="https://www.gamecity.ne.jp/manual/sangokushi8-re/kr/6100.html">삼국지8 REMAKE 공식 웹매뉴얼</a> · <a href="https://www.koeitecmoamerica.com/manual/rtk8-remake/en/6100.html">영문 도시명 대조</a> · 도시·연결로·분기점·관문은 공식 전체지도를 기준으로 옮겼으며, 세부 지형은 도식입니다.</footer>
+</main>
+<script>
+const regions = [
+  ['전체지도', [
+    ['서북',16,14,1],['파촉',31,54,2],['하북',54,9,3],['중원',86,24,4],['형초',53,54,5],['오월',76,59,6],
+    ['량주',25,18],['옹주',36,28],['익주',32,40],['남중',23,70],['병주',54,17],['유주',71,7],['기주',66,17],['사례',51,29],['청주',76,22],['연주',64,27],['서주',71,35],['예주',61,35],['형북',48,38],['형남',51,70],['회남',76,42],['양주',71,70],['교주',39,85]
+  ]],
+  ['서북', [
+    ['량주',48.4,20.3],['옹주',65.4,48.3],['무위',24.8,24.4,'량주'],['서평',28.8,40.4,'량주'],['천수',46.8,56.8,'옹주'],['장안',64.8,74.4,'옹주']
+  ]],
+  ['파촉', [
+    ['익주',33.4,19.3],['남중',11.4,73.3],['무도',52.8,8.4,'익주'],['한중',59.8,14.4,'익주'],['자동',49.8,27.3,'익주'],['성도',35.8,40.4,'익주'],['강주',54.8,51.3,'익주'],['영안',65.8,36.4,'익주'],['영창',21.8,58.4,'남중'],['건녕',53.8,67.3,'남중'],['운남',34.8,84.4,'남중']
+  ]],
+  ['하북', [
+    ['유주',70.4,28.3],['병주',13.4,21.3],['기주',29.4,73.3],['상당',16.8,61.3,'병주'],['진양',14.8,40.4,'병주'],['계',36.4,22.4,'유주'],['북평',57.8,20.4,'유주'],['양평',89.2,22.4,'유주'],['남피',37.8,36.4,'기주'],['평원',50.8,48.4,'기주'],['업',25.4,57.3,'기주']
+  ]],
+  ['중원', [
+    ['사례',5.4,31.3],['청주',88.4,17.3],['연주',38.4,27.3],['서주',63.4,70.3],['예주',19.4,67.3],['홍농',7.8,42.4,'사례'],['낙양',20.8,52.4,'사례'],['진류',36.8,48.4,'연주'],['복양',51.8,30.4,'연주'],['북해',80.8,27.3,'청주'],['제남',58.8,25.3,'청주'],['초',48.4,59.3,'예주'],['허창',32.8,65.3,'예주'],['여남',37.8,83.3,'예주'],['소패',60.8,46.4,'서주'],['하비',73.8,60.4,'서주']
+  ]],
+  ['형초', [
+    ['형북',25.4,25.3],['형남',73.4,65.3],['완',51.4,14.4,'형북'],['상용',37.8,19.3,'형북'],['양양',52.8,35.3,'형북'],['신야',53.8,25.3,'형북'],['강하',62.8,30.4,'형북'],['강릉',49.8,47.3,'형남'],['무릉',43.8,56.4,'형남'],['장사',60.8,54.4,'형남'],['계양',62.8,76.4,'형남'],['영릉',41.8,76.4,'형남']
+  ]],
+  ['오월', [
+    ['회남',63.4,15.3],['양주',63.4,60.3],['교주',28.4,67.3],['수춘',72.8,12.4,'회남'],['광릉',90.8,12.4,'회남'],['여강',71.8,27.3,'회남'],['말릉',81.8,29.3,'양주'],['오',97.4,23.3,'양주'],['회계',95.8,40.4,'양주'],['파양',72.8,51.3,'양주'],['시상',62.8,42.4,'양주'],['교지',34.8,87.3,'교주']
+  ]]
+];
+const nav = document.querySelector('#regions');
+const title = document.querySelector('#map-title');
+const terrain = document.querySelector('#terrain');
+const labels = document.querySelector('#labels');
+const search = document.querySelector('#search');
+const status = document.querySelector('#status');
+const list = document.querySelector('#cities');
+const toggle = document.querySelector('#toggle');
+const viewport = document.querySelector('#viewport');
+const map = document.querySelector('#map');
+const zoomOut = document.querySelector('#zoom-out');
+const zoomIn = document.querySelector('#zoom-in');
+const zoomReset = document.querySelector('#zoom-reset');
+const zoomLevel = document.querySelector('#zoom-level');
+const zoomSteps = [1, 1.25, 1.5, 2, 2.5, 3, 4];
+const mapHint = document.querySelector('#map-hint');
+
+let zoomIndex = 0;
+let drag = null;
+const cities = regions.flatMap(([, names], region) => names
+  .filter(([, , , group]) => typeof group === 'string')
+  .map(([name, , , province]) => ({name, province, region})));
+let region = 0;
+let selected = '';
+let showLabels = true;
+
+// City and route anchors were traced in the official overview's 1920 × 1080 coordinates.
+const sourceScale = 5 / 6;
+const cityPoints = [
+  [],
+  [[449,162],[450,231],[540,293],[715,326]],
+  [[566,369],[663,431],[529,507],[446,602],[614,612],[730,578],[275,734],[572,747],[404,837]],
+  [[978,230],[1008,144],[1138,104],[1299,102],[1530,58],[1144,172],[1255,176],[1078,213]],
+  [[862,325],[956,313],[1080,302],[1164,265],[1372,239],[1248,245],[1168,387],[1044,369],[1099,447],[1254,333],[1356,346]],
+  [[957,391],[778,475],[917,519],[942,454],[1052,540],[903,597],[873,672],[1041,700],[1028,814],[855,796]],
+  [[1236,456],[1411,443],[1236,545],[1348,503],[1490,520],[1458,592],[1249,677],[1142,628],[772,932]]
+].map(points => points.map(([x,y]) => [x*sourceScale,y*sourceScale]));
+const landPath = 'M0 0H1600V60L1340 78 1302 39 1263 14 1200 10 1151 32 1110 40 1073 54 1037 61 1072 90 1124 111 1177 108 1226 95 1249 106 1231 123 1195 129 1221 151 1260 152 1284 168 1283 185 1247 197 1206 204 1182 223 1158 229 1164 251 1140 268 1160 299 1168 327 1200 354 1227 369 1260 389 1253 402 1226 394 1198 403 1224 420 1273 431 1255 448 1220 461 1217 475 1250 475 1284 491 1268 520 1240 533 1220 555 1211 589 1182 614 1160 648 1122 673 1090 697 1048 719 1037 746 1008 763 963 784 917 799 885 812 851 825 817 830 792 852 755 860 703 866 674 885 648 889 638 872 603 861 551 873 482 868 430 849 388 835 352 800 326 789 299 768 267 761 236 730 222 709 186 700 140 705 114 689 90 660 0 660Z';const rivers = [
+  ['황하','M164 350Q212 328 241 290T311 263Q357 260 387 236T429 203Q469 173 508 146T580 125Q619 126 620 169L609 222Q596 267 605 310T646 347Q673 356 711 349T792 339Q833 324 872 333T951 323Q1016 317 1086 284', 777,325, 8],
+  ['장강','M231 513Q277 559 302 568T378 559Q405 546 429 524T505 527Q554 542 589 514T650 520Q696 536 731 523T793 524Q830 523 857 553T916 555Q967 526 1008 527T1090 532Q1150 527 1239 507', 975,540, 10],
+  ['한수','M486 392Q526 399 559 429T620 454Q657 457 675 481T741 503L798 524', 610,442, 5],
+  ['위수','M367 313Q406 312 435 324T507 324Q556 326 604 316', 473,313, 5],
+  ['민강','M365 400Q359 432 386 459T411 506L429 524', 370,467, 4],
+  ['가릉강','M429 365Q470 407 468 442T492 488L505 527', 478,462, 4],
+  ['회수','M794 446Q833 447 866 463T942 464Q1007 462 1088 421', 934,448, 5],
+  ['상강','M724 701Q758 676 749 647T758 594L769 530', 739,635, 5],
+  ['감강','M948 706Q930 667 947 636T974 590L962 547', 941,661, 5],
+  ['홍하','M531 736Q578 756 618 780T687 814Q731 832 824 856', 638,798, 5],
+  ['서강','M595 699Q654 714 709 711T808 735Q859 760 924 753T1049 752', 847,735, 5]
+];
+const ridges = [
+  ['기련산맥',[[130,209],[200,221],[255,244],[320,242],[374,270]],32],
+  ['진령산맥',[[370,355],[441,353],[498,363],[567,369],[633,385]],27],
+  ['대파산',[[476,421],[527,426],[583,455],[621,472]],20],
+  ['횡단산맥',[[205,415],[229,468],[247,522],[269,585],[299,655],[320,713]],40],
+  ['운귀고원',[[307,624],[371,611],[429,605],[488,621],[552,610]],31],
+  ['태행산맥',[[721,186],[723,232],[735,273],[726,319]],26],
+  ['연산산맥',[[786,124],[866,130],[949,116],[1036,103],[1127,89]],29],
+  ['무릉산맥',[[546,555],[580,587],[610,612],[642,634]],24],
+  ['남령산맥',[[641,693],[720,683],[803,692],[866,690],[916,708]],24],
+  ['무이산맥',[[1002,653],[1044,627],[1075,592],[1087,565]],25],
+  ['대별산',[[835,505],[870,510],[907,498],[950,489]],19]
+];
+// Each chain follows one uninterrupted stroke. Shared anchors are real junctions.
+const roadJunctions = {
+  '@1':[568,201], '@2':[1213,90], '@3':[1123,200], '@4':[1159,313],
+  '@5':[1300,225], '@6':[1025,304], '@7':[994,426], '@8':[1107,372],
+  '@9':[870,583], '@10':[1055,571], '@11':[954,743], '@12':[1293,512],
+  '@13':[1191,596]
+};
+const gates = {
+  '#1':[451,553], '#2':[544,459], '#3':[630,422], '#4':[677,350],
+  '#5':[798,358], '#6':[832,321], '#7':[920,313], '#8':[1010,304],
+  '#9':[1027,214], '#10':[1258,89]
+};
+const roads = [
+  ['무위',[491,150],[537,166],'@1',[564,251],'천수',[620,317],'장안','#6','홍농','#7','낙양','#8','@6','진류','@4','소패','하비',[1386,382],'광릉',[1396,472],'말릉',[1422,521],'오',[1492,571],'회계'],
+  ['서평',[484,227],[528,208],'@1'],
+  ['천수',[558,337],'무도',[582,414],[611,434],'한중',[716,447],'상용',[854,499],'양양','강하',[1135,553],'여강','@12','말릉'],
+  ['장안','#4',[638,371],[619,397],'#3','한중',[638,455],[585,457],'#2',[533,480],'자동',[483,520],'#1','성도',[369,628],[323,675],'영창',[352,755],[388,792],'운남',[462,819],[517,778],'건녕',[476,729],[436,690],[425,650],'성도',[537,607],'강주',[685,590],'영안',[814,577],'@9','강릉'],
+  ['자동',[578,537],[602,570],'강주'],
+  ['건녕',[597,829],[675,904],'교지',[828,903],[961,874],[1009,851],'계양',[1040,757],'장사',[1097,672],'시상','@13','여강'],
+  ['회계',[1446,677],[1370,774],[1270,858],[1142,904],[972,925],'교지'],
+  ['계양',[966,813],[915,804],'영릉',[885,770],'@11','장사'],
+  ['@11',[920,707],'무릉',[872,633],'@9'],
+  ['양양','강릉',[969,603],[1003,619],[1043,605],'@10','강하'],
+  ['@10',[1080,578],[1115,615],'시상'],
+  ['@13',[1207,618],[1219,663],'파양',[1273,604],[1325,556],'말릉'],
+  ['낙양','상당',[995,184],'진양',[1070,123],'계','@2','#10','북평',[1362,64],[1430,34],[1494,39],'양평'],
+  ['상당','#9','업','@3','남피',[1183,150],'@2'],
+  ['@3',[1183,204],'평원',[1293,189],'@5'],
+  ['업','진류'], ['업',[1114,249],'복양','제남','@5',[1338,228],'북해',[1353,276],[1347,312],'하비'],
+  ['복양','@4'], ['장안','#5',[887,383],'완','허창','@8','초',[1207,364],[1239,354],'소패'],
+  ['@6','허창'], ['완','@7','신야',[910,476],'양양'],
+  ['@7','여남','수춘','광릉'], ['@8','여남'],
+  ['수춘',[1257,483],'@12']
+];const svgNamespace = 'http://www.w3.org/2000/svg';
+const chartWidth = 1600;
+const chartHeight = 900;
+const cityLocations = new Map();
+regions.forEach(([, entries], index) => {
+  const regionalCities = entries.filter(([, , , group]) => typeof group === 'string');
+  regionalCities.forEach(([name], cityIndex) => cityLocations.set(name, cityPoints[index][cityIndex]));
+});
+
+function svgNode(tag, attributes, parent) {
+  const node = document.createElementNS(svgNamespace, tag);
+  for (const [key, value] of Object.entries(attributes)) node.setAttribute(key, value);
+  parent.append(node);
+  return node;
+}
+
+function drawTerrain() {
+  const defs = svgNode('defs', {}, terrain);
+  const land = svgNode('linearGradient', {id:'land-wash', x2:'90%', y2:'100%'}, defs);
+  svgNode('stop', {offset:'0%', 'stop-color':'#c1ae80'}, land);
+  svgNode('stop', {offset:'100%', 'stop-color':'#a5b38b'}, land);
+  const coast = svgNode('clipPath', {id:'coast'}, defs);
+  svgNode('path', {d:landPath}, coast);
+  svgNode('rect', {width:chartWidth,height:chartHeight,fill:'#2b535c'}, terrain);
+  svgNode('path', {d:landPath,fill:'none',stroke:'#7aa49f','stroke-width':13}, terrain);
+  svgNode('path', {d:landPath,fill:'url(#land-wash)',stroke:'#3d5d54','stroke-width':4}, terrain);
+  svgNode('path', {d:'M1322 650q23-19 36 5l-8 53-21 30-15-24Z M837 876q19-19 42-10l11 14-33 15Z',fill:'#a4ad87',stroke:'#789b8d','stroke-width':3}, terrain);
+  const features = svgNode('g', {'clip-path':'url(#coast)'}, terrain);
+  let seed = 8241;
+  function random() {
+    seed = (Math.imul(1664525, seed) + 1013904223) >>> 0;
+    return seed / 4294967296;
+  }
+  function caption(text, x, y, color, size) {
+    const label = svgNode('text', {x,y,fill:color,'font-size':size,'font-weight':700,'letter-spacing':1.2,
+      'paint-order':'stroke','stroke':'#d9d4ae','stroke-width':2.5,'stroke-linejoin':'round'}, features);
+    label.textContent = text;
+  }
+  for (const [name, route, spread] of ridges) {
+    const axis = route.map(([x,y]) => x + ',' + y).join(' ');
+    svgNode('polyline',{points:axis,fill:'none',stroke:'#677456','stroke-width':spread*2,
+      'stroke-opacity':.26,'stroke-linecap':'round','stroke-linejoin':'round'},features);
+    for (let i = 1; i < route.length; i++) {
+      const [x1,y1] = route[i-1];
+      const [x2,y2] = route[i];
+      const peaks = Math.ceil(Math.hypot(x2-x1,y2-y1)/8);
+      for (let j = 0; j < peaks; j++) {
+        const t = j/peaks;
+        const x = Math.round(x1+(x2-x1)*t+(random()-.5)*spread);
+        const y = Math.round(y1+(y2-y1)*t+(random()-.5)*spread);
+        const h = 7+Math.round(random()*19);
+        const w = 5+Math.round(random()*9);
+        svgNode('path',{d:'M'+(x-w)+' '+(y+4)+'L'+x+' '+(y-h)+' '+(x+w)+' '+(y+5)+'Z',
+          fill:'#657457','fill-opacity':.82,stroke:'#4e6048','stroke-width':.7},features);
+        svgNode('path',{d:'M'+x+' '+(y-h)+'l-3 '+(h+2)+' '+(-w+3)+' 2Z',
+          fill:'#e1d9b4','fill-opacity':.77},features);
+      }
+    }
+    const [x,y] = route[Math.floor((route.length-1)/2)];
+    caption(name,x-23,y-spread*.65-12,'#46543e',13);
+  }
+  svgNode('path',{d:'M753 542q12-15 19-7t-6 22q-12 6-13-15Z M955 557q22 2 20 15l-12 13-5-18Z',
+    fill:'#55929c',stroke:'#d1d5ab','stroke-width':2},features);
+  for (const [name,path,x,y,width] of rivers) {
+    svgNode('path',{d:path,fill:'none',stroke:'#d0d3a9','stroke-width':width+4,'stroke-linecap':'round'},features);
+    svgNode('path',{d:path,fill:'none',stroke:'#4b8791','stroke-width':width,'stroke-linecap':'round'},features);
+    svgNode('path',{d:path,fill:'none',stroke:'#a9c4b5','stroke-width':Math.max(1,width/4),'stroke-linecap':'round'},features);
+    caption(name,x,y,'#285765',width>6?17:12);
+  }
+  const roadLayer = svgNode('g', {'aria-label':'도시 연결로와 회랑'}, terrain);
+  for (const road of roads) {
+    const points = road.map(point => {
+      if (Array.isArray(point)) return point.map(value => value*sourceScale);
+      const sourcePoint = roadJunctions[point] || gates[point];
+      return sourcePoint ? sourcePoint.map(value => value*sourceScale) : cityLocations.get(point);
+    }).map(([x,y]) => x + ',' + y).join(' ');
+    const style = {points,fill:'none','stroke-linecap':'round','stroke-linejoin':'round'};
+    svgNode('polyline',{...style,stroke:'#584532','stroke-width':5.3},roadLayer);
+    svgNode('polyline',{...style,stroke:'#f7e0a8','stroke-width':2.9},roadLayer);
+  }
+  const featuresLayer = svgNode('g', {'aria-label':'회랑 분기점과 관문'}, terrain);
+  for (const [x,y] of Object.values(roadJunctions)) {
+    svgNode('circle',{cx:x*sourceScale,cy:y*sourceScale,r:2.7,fill:'#f7e0a8',stroke:'#584532','stroke-width':1},featuresLayer);
+  }
+  Object.values(gates).forEach(([x,y], index) => {
+    const gate = svgNode('g',{transform:'translate('+x*sourceScale+' '+y*sourceScale+')'},featuresLayer);
+    const label = svgNode('title',{},gate);
+    label.textContent = '관문 ' + (index+1);
+    svgNode('path',{d:'M-5 4V-4H-2V-2H2V-4H5V4H1.7V1a1.7 1.7 0 0 0-3.4 0v3Z',
+      fill:'#fff0ca',stroke:'#403121','stroke-width':1.15,'stroke-linejoin':'round'},gate);
+  });  const cityLayer = svgNode('g', {'aria-label':'도시 위치'}, terrain);
+  for (const [x,y] of cityLocations.values()) {
+    svgNode('circle',{cx:x,cy:y,r:3.5,fill:'#733d2a',stroke:'#fff4ce','stroke-width':1.2},cityLayer);
+  }
+}
+
+function regionFrame(index) {
+  if (!index) return [0,0,chartWidth,chartHeight];
+  const points = cityPoints[index];
+  const xs = points.map(([x]) => x), ys = points.map(([,y]) => y);
+  const x0 = Math.min(...xs), x1 = Math.max(...xs);
+  const y0 = Math.min(...ys), y1 = Math.max(...ys);
+  const width = Math.max(380, x1-x0+108, (y1-y0+94)*16/9);
+  const height = width*9/16;
+  return [Math.max(0,Math.min(chartWidth-width,(x0+x1-width)/2)),
+    Math.max(0,Math.min(chartHeight-height,(y0+y1-height)/2)),width,height];
+}
+
+function button(text, action) {
+  const item = document.createElement('button');
+  item.type = 'button';
+  item.textContent = text;
+  item.addEventListener('click', action);
+  return item;
+}
+
+function setView(index, city = '', focusLabel = false) {
+  const changedRegion = region !== index;
+  region = index;
+  selected = city;
+  if (city) showLabels = true;
+  renderMap();
+  renderCities();
+  if (changedRegion) setZoom(0);
+  if (focusLabel) {
+    const marker = labels.querySelector('[aria-pressed="true"]');
+    marker?.focus({preventScroll: true});
+    marker?.scrollIntoView({block: 'nearest', inline: 'nearest'});
+  }
+}
+
+function renderMap() {
+  const [name] = regions[region];
+  const [left, top, width, height] = regionFrame(region);
+  terrain.setAttribute('viewBox', [left, top, width, height].join(' '));
+  title.textContent = region ? name + ' 지방 확대지도' : name;
+  terrain.setAttribute('aria-label', title.textContent + ' 산맥과 하천');
+  [...nav.children].forEach((item, index) => item.setAttribute('aria-pressed', index === region));
+  toggle.setAttribute('aria-pressed', showLabels);
+  mapHint.textContent = region
+    ? '황금색 선은 연결로와 회랑, 작은 원은 분기점, 성벽 표시는 관문입니다. 도시 이름을 누르면 강조됩니다. 100%에서 −를 누르면 전체지도로 돌아갑니다.'
+    : '황금색 선은 연결로와 회랑, 작은 원은 분기점, 성벽 표시는 관문입니다. 지방을 선택하거나 확대하면 도시 이름이 표시됩니다.';
+  labels.hidden = !showLabels;
+  const entries = [];
+  if (!region && !zoomIndex) {
+    for (const [name, x, y, group] of regions[0][1]) {
+      if (typeof group === 'number') entries.push([name, x, y, group]);
+    }
+  }
+  for (const city of cities) {
+    if (region && city.region !== region) continue;
+    if (!region && !zoomIndex) continue;
+    const [x,y] = cityLocations.get(city.name);
+    entries.push([city.name, 100*(x-left)/width, 100*(y-top)/height, city.province, city.region]);
+  }
+  labels.replaceChildren(...entries.map(([text, x, y, group, cityRegion]) => {
+    let item;
+    if (typeof group === 'number') {
+      item = button(text, () => {
+        setView(group);
+        nav.children[group].focus();
+      });
+      item.className = 'label r';
+    } else if (group) {
+      item = button(text, () => setView(cityRegion, text, true));
+      item.className = 'label c';
+      item.setAttribute('aria-pressed', selected === text);
+      item.title = group + ' · ' + text;
+    } else {
+      item = document.createElement('span');
+      item.textContent = text;
+      item.className = 'label p';
+    }
+    item.style.setProperty('--x', x + '%');
+    item.style.setProperty('--y', (group && typeof group === 'string' ? 'calc(' + y + '% - .9em)' : y + '%'));
+    return item;
+  }));
+}
+
+function renderCities() {
+  const query = search.value.trim().normalize();
+  const matches = cities.filter(city => query ? city.name.includes(query) : !region || city.region === region);
+  status.textContent = (query ? '전체 지방 검색' : regions[region][0]) + ' · ' + matches.length + '개 항목';
+  list.replaceChildren(...matches.map(({name, province, region: index}) => {
+    const row = document.createElement('li');
+    const item = button(name, () => setView(index, name, true));
+    item.setAttribute('aria-pressed', index === region && name === selected);
+    const place = document.createElement('small');
+    place.textContent = regions[index][0] + ' · ' + province;
+    item.append(place);
+    row.append(item);
+    return row;
+  }));
+}
+
+function setZoom(index, anchorX = viewport.clientWidth / 2, anchorY = viewport.clientHeight / 2) {
+  const wasOverview = !region && zoomIndex === 0;
+  zoomIndex = Math.min(zoomSteps.length - 1, Math.max(0, index));
+  const oldWidth = map.offsetWidth;
+  const oldHeight = map.offsetHeight;
+  const x = (viewport.scrollLeft + anchorX) / oldWidth;
+  const y = (viewport.scrollTop + anchorY) / oldHeight;
+  const scale = zoomSteps[zoomIndex];
+
+  map.style.setProperty('--map-width', scale * 100 + '%');
+  viewport.scrollLeft = x * map.offsetWidth - anchorX;
+  viewport.scrollTop = y * map.offsetHeight - anchorY;
+  viewport.classList.toggle('zoomed', zoomIndex > 0);
+  zoomLevel.value = scale * 100 + '%';
+  zoomOut.disabled = !region && zoomIndex === 0;
+  zoomReset.disabled = zoomIndex === 0;
+  zoomIn.disabled = zoomIndex === zoomSteps.length - 1;
+  if (!region && wasOverview !== (zoomIndex === 0)) renderMap();
+}
+
+function zoomMap(direction, x = viewport.clientWidth / 2, y = viewport.clientHeight / 2) {
+  if (region && !zoomIndex && direction < 0) {
+    setView(0);
+    return;
+  }
+  setZoom(zoomIndex + direction, x, y);
+}
+
+zoomOut.addEventListener('click', () => zoomMap(-1));
+zoomIn.addEventListener('click', () => zoomMap(1));
+zoomReset.addEventListener('click', () => setZoom(0));
+
+viewport.addEventListener('wheel', event => {
+  if (!(event.ctrlKey || event.metaKey) || !event.deltaY) return;
+  event.preventDefault();
+  const bounds = viewport.getBoundingClientRect();
+  zoomMap(-Math.sign(event.deltaY), event.clientX - bounds.left, event.clientY - bounds.top);
+}, {passive: false});
+
+viewport.addEventListener('pointerdown', event => {
+  if (!zoomIndex || event.pointerType !== 'mouse' || event.button !== 0 || event.target.closest('button')) return;
+  if (!map.contains(event.target)) return;
+  drag = {id: event.pointerId, x: event.clientX, y: event.clientY, left: viewport.scrollLeft, top: viewport.scrollTop};
+  viewport.setPointerCapture(event.pointerId);
+  viewport.classList.add('dragging');
+});
+viewport.addEventListener('pointermove', event => {
+  if (drag?.id !== event.pointerId) return;
+  viewport.scrollLeft = drag.left + drag.x - event.clientX;
+  viewport.scrollTop = drag.top + drag.y - event.clientY;
+});
+viewport.addEventListener('lostpointercapture', event => {
+  if (drag?.id !== event.pointerId) return;
+  drag = null;
+  viewport.classList.remove('dragging');
+});
+
+regions.forEach(([name], index) => nav.append(button(name, () => setView(index))));
+setZoom(0);
+search.addEventListener('input', renderCities);
+toggle.addEventListener('click', () => {
+  showLabels = !showLabels;
+  renderMap();
+});
+drawTerrain();
+setView(0);
+</script>
+</html>

@@ -1,0 +1,1291 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>우주 삼국지 · 항성 항로도</title>
+<style>
+:root{color-scheme:dark;--text:#f1eadb;--muted:#b7ad98;--gold:#e6bf76;--line:#484135;--panel:#24241f}
+*{box-sizing:border-box}
+body{margin:0;background:#191b18;color:var(--text);font:15px/1.55 system-ui,sans-serif}
+main{width:min(1500px,100%);margin:auto;padding:clamp(14px,3vw,42px)}
+h1,h2,p{margin:0}
+.eyebrow{color:var(--gold);font-size:.8rem;letter-spacing:.13em}
+h1{font-size:clamp(1.75rem,4vw,3rem);line-height:1.2;margin:.3rem 0 .6rem}
+header p,footer,.hint{color:var(--muted)}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 14px}
+button,input{font:inherit}
+button{cursor:pointer;color:inherit}
+nav button,.toggle{padding:.45em .85em;border:1px solid var(--line);border-radius:7px;background:var(--panel)}
+nav button[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:#20180c;font-weight:700}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:14px;align-items:start}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.toolbar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;gap:10px}
+.toolbar h2,aside h2{font-size:1.05rem}
+.map-controls{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.map-controls output{min-width:3.5em;text-align:center;font-variant-numeric:tabular-nums}
+.map-controls button:disabled{opacity:.45;cursor:default}
+.map-viewport{position:relative;overflow:auto;aspect-ratio:16/9;background:#242d23}
+.map-viewport.zoomed{cursor:grab}
+.map-viewport.dragging{cursor:grabbing;user-select:none}
+.map{position:relative;width:var(--map-width,100%);aspect-ratio:16/9}
+.map svg{user-select:none}
+.toolbar{flex-wrap:wrap}
+.map svg{display:block;width:100%;height:100%;pointer-events:none}
+.labels{position:absolute;inset:0}
+.label{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);white-space:nowrap;padding:.05em .38em;border:1px solid #332619;background:#211b16e8;border-radius:3px;color:#fff7e9;line-height:1.28;font-size:clamp(8px,1.15vw,17px)}
+.label.c{z-index:1}.label.p{background:#192721e8;border-color:#849385;color:#f1eadb;pointer-events:none}
+.label.r{background:#e6bf76;color:#20180c;border-color:#2c2111;font-size:clamp(10px,1.45vw,21px);font-weight:800}
+.label.c[aria-pressed=true],.label.c:hover{background:#fae3aa;color:#22170a;z-index:1}
+aside{padding:14px}
+aside input{width:100%;padding:.55em .7em;border:1px solid #746b56;border-radius:6px;background:#191b18;color:var(--text);margin:8px 0}
+.hint{font-size:.85rem}
+ul{list-style:none;margin:8px 0 0;padding:0;max-height:420px;overflow:auto}
+li button{display:flex;justify-content:space-between;align-items:center;gap:.6em;text-align:left;width:100%;padding:.38em .5em;border:0;border-bottom:1px solid var(--line);background:none}
+li button:hover,li button[aria-pressed=true]{background:#453a29;color:#ffdd95}
+li small{color:var(--muted)}
+footer{margin-top:16px;font-size:.83rem}
+a{color:var(--gold)}
+:focus-visible{outline:2px solid #fff4cb;outline-offset:2px;z-index:2}
+@media(max-width:850px){.layout{grid-template-columns:1fr}ul{max-height:240px}}
+[hidden]{display:none!important}
+.map-hint{padding:8px 14px}
+:root{--text:#e4f2ff;--muted:#9db2cd;--gold:#8ae8ff;--line:#304562;--panel:#101b2e}
+body{background:radial-gradient(ellipse at top,#182847 0,#080e1a 60%);}
+nav button[aria-pressed=true]{color:#091423}
+.map-viewport{background:#090f22}
+.label.r{background:#112740f5;border-color:#77bcd8;color:#c8f4ff}
+.label.c{background:#0b172bec;border-color:#58789e;color:#eff9ff}
+.label.c[aria-pressed=true],.label.c:hover{background:#c9f3ff;color:#0b1c30}
+aside input{background:#0a1425;border-color:#435a79}
+li button:hover,li button[aria-pressed=true]{background:#233956;color:#bef2ff}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;padding:8px 14px 0;font-size:.78rem;color:var(--muted)}
+.legend span{white-space:nowrap}.legend b{margin-right:5px}.route-key{color:#8ae8ff}.junction-key{color:#8ae8ff}.gate-key{color:#ffd58e}
+.eyebrow{letter-spacing:.2em}
+.chart-object{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);z-index:2;
+  background:transparent;border:0;padding:0;width:26px;height:26px;border-radius:50%}
+.planet-marker{width:42px;height:42px}
+.chart-object span{position:absolute;left:50%;bottom:95%;transform:translateX(-50%);padding:1px 5px;
+  color:#eff9ff;background:#0b172bf2;border:1px solid #58789e;border-radius:3px;white-space:nowrap;
+  font-size:clamp(9px,1.05vw,15px);pointer-events:none}
+.chart-object[aria-pressed=true],.chart-object:hover{outline:2px solid #8ae8ff;z-index:3}
+.chart-object[aria-pressed=true] span,.chart-object:hover span{background:#c9f3ff;color:#0b1c30}
+.detail-info{background:#0a1425;border:1px solid #304562;border-radius:6px;padding:9px;margin:9px 0}
+.detail-info p{margin:3px 0;color:var(--muted);font-size:.85rem}
+#detail-panel h3{font-size:.9rem;margin:12px 0 2px}
+.relay-label{position:absolute;left:var(--x);top:var(--y);transform:translate(9px,-50%);z-index:1;
+  color:#b9edff;background:#102137f0;border:1px solid #46708d;border-radius:3px;padding:1px 5px;
+  font-size:clamp(9px,1vw,13px);white-space:nowrap}
+.chart-object.satellite{width:20px;height:20px;z-index:4}
+.chart-object.satellite span{background:#221d2bee;color:#ffe1ad;border-color:#a78151}
+.chart-object.satellite.below span{bottom:auto;top:95%}
+.chart-object.satellite:hover span,.chart-object.satellite:focus-visible span{background:#ffe1ad;color:#221d2b}
+.terrain-gas{color:#adbcff}.terrain-rock{color:#e3b48c}.terrain-dust{color:#90cbda}
+.approach-button{position:absolute;inset:0;z-index:1;border:0;padding:0;background:transparent;
+  clip-path:var(--approach-shape);cursor:pointer}
+.approach-button:hover,.approach-button:focus-visible{background:#87dff233;outline:0}
+.approach-tip{position:absolute;z-index:5;pointer-events:none;visibility:hidden;
+  left:clamp(89px,var(--x),calc(100% - 89px));top:clamp(28px,var(--y),calc(100% - 28px));
+  width:max-content;max-width:172px;transform:translate(-50%,-50%);padding:5px 8px;
+  color:#eafaff;background:#0c1c32f5;border:1px solid #75bfd6;border-radius:5px;font-size:.8rem}
+.approach-button:hover+.approach-tip,.approach-button:focus-visible+.approach-tip{visibility:visible}
+.chart-object.relay-station{width:20px;height:20px;z-index:3}
+.chart-object.relay-station span{color:#c4f1ff;border-color:#46708d}
+#system-legend[data-relay=true] .system-body-key{display:none}
+#route-choice{margin:10px 0;padding:8px;border:1px solid var(--line);border-radius:6px}
+#route-choice h3{margin:0}
+#route-choice ul{margin-top:4px}
+</style>
+<main>
+<header><p class="eyebrow">SPACE THREE KINGDOMS · NAVIGATION CHART</p><h1>우주 삼국지 항로도</h1><p>6개 성역 · 51개 항성계 · 요새 위성 10곳</p></header>
+<nav id="regions" aria-label="지도 선택"></nav>
+<div class="layout">
+<section class="panel" aria-labelledby="map-title">
+<div class="toolbar"><h2 id="map-title"></h2>
+<div class="map-controls" aria-label="지도 확대 조작">
+<button class="toggle" id="back-chart" type="button" hidden>← 상위 항로도</button>
+<button class="toggle" id="zoom-out" type="button" aria-label="지도 축소">−</button>
+<output id="zoom-level" aria-label="지도 배율">100%</output>
+<button class="toggle" id="zoom-in" type="button" aria-label="지도 확대">+</button>
+<button class="toggle" id="zoom-reset" type="button">화면 맞춤</button>
+<button class="toggle" id="toggle" type="button" aria-pressed="true">이름표 표시</button>
+</div>
+</div>
+<div class="map-viewport" id="viewport" tabindex="0" aria-label="지도. 확대 후 방향키로 이동할 수 있습니다."><div class="map" id="map"><svg id="terrain" xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="none"></svg><div class="labels" id="labels"></div></div></div>
+<div class="legend" id="chart-legend" aria-label="항로도 범례"><span><b class="route-key">━</b>항로</span><span><b class="junction-key">▣</b>중계 정거장</span><span><b class="gate-key">⬡</b>요새 위성</span><span><b>✦</b>항성계</span></div>
+<div class="legend" id="system-legend" aria-label="상세 지도 범례" hidden><span class="system-body-key"><b>●</b>행성</span><span class="system-body-key"><b style="color:#c7b49d">⋯</b>소행성대</span><span class="system-body-key"><b style="color:#9ef6b9">◉</b>거주 가능 행성</span><span><b class="junction-key">▣</b>정거장</span>
+<span><b class="terrain-gas">◉</b>가스 구역</span>
+<span><b class="terrain-rock">◆</b>소행성</span><span><b class="terrain-dust">⋯</b>우주 먼지</span></div>
+<div class="legend" id="fortress-legend" aria-label="전투 지형 범례" hidden>
+<span><b class="route-key">━</b>통행 회랑</span><span><b class="terrain-gas">◉</b>가스 구역</span>
+<span><b class="terrain-rock">◆</b>소행성</span><span><b class="terrain-dust">⋯</b>우주 먼지</span>
+</div>
+<p class="hint map-hint" id="map-hint" aria-live="polite"></p>
+</section>
+<aside class="panel" id="search-panel" aria-labelledby="city-title">
+<h2 id="city-title">항로도 검색</h2>
+<input id="search" type="search" aria-label="항성계, 요새 위성 또는 중계 정거장 이름 검색" placeholder="예: 장안, 검각">
+<p class="hint" id="status" aria-live="polite"></p>
+<ul id="cities"></ul>
+</aside>
+<aside class="panel" id="detail-panel" aria-labelledby="detail-title" hidden>
+<h2 id="detail-title"></h2>
+<p class="hint" id="system-summary"></p>
+<div class="detail-info" id="object-info" aria-live="polite"></div>
+<section id="route-choice" aria-labelledby="route-choice-title" hidden>
+<h3 id="route-choice-title">연결 목적지</h3>
+<ul id="route-choice-list"></ul>
+</section>
+<h3 id="detail-list-title">행성과 정거장</h3>
+<ul id="local-objects"></ul>
+</aside>
+</div>
+<footer>항성계 이름과 항로 연결 기준 · <a href="https://www.gamecity.ne.jp/manual/sangokushi8-re/kr/6100.html">삼국지8 REMAKE 공식 웹매뉴얼</a> · <a href="https://www.koeitecmoamerica.com/manual/rtk8-remake/en/6100.html">영문 도시명 대조</a> · 요새 위성은 원작 관문 지명을 따릅니다. 중계 정거장 이름은 주변 지형과 지명을 바탕으로 붙였습니다. 항성계 내부는 창작 설정입니다.</footer>
+</main>
+<script>
+const regions = [
+  ['전체 항로도', [
+    ['서북',16,14,1],['파촉',31,54,2],['하북',54,9,3],['중원',86,24,4],['형초',53,54,5],['오월',76,59,6],
+    ['량주',25,18],['옹주',36,28],['익주',32,40],['남중',23,70],['병주',54,17],['유주',71,7],['기주',66,17],['사례',51,29],['청주',76,22],['연주',64,27],['서주',71,35],['예주',61,35],['형북',48,38],['형남',51,70],['회남',76,42],['양주',71,70],['교주',39,85]
+  ]],
+  ['서북', [
+    ['량주',48.4,20.3],['옹주',65.4,48.3],['무위',24.8,24.4,'량주'],['서평',28.8,40.4,'량주'],['천수',46.8,56.8,'옹주'],['장안',64.8,74.4,'옹주']
+  ]],
+  ['파촉', [
+    ['익주',33.4,19.3],['남중',11.4,73.3],['무도',52.8,8.4,'익주'],['한중',59.8,14.4,'익주'],['자동',49.8,27.3,'익주'],['성도',35.8,40.4,'익주'],['강주',54.8,51.3,'익주'],['영안',65.8,36.4,'익주'],['영창',21.8,58.4,'남중'],['건녕',53.8,67.3,'남중'],['운남',34.8,84.4,'남중']
+  ]],
+  ['하북', [
+    ['유주',70.4,28.3],['병주',13.4,21.3],['기주',29.4,73.3],['상당',16.8,61.3,'병주'],['진양',14.8,40.4,'병주'],['계',36.4,22.4,'유주'],['북평',57.8,20.4,'유주'],['양평',89.2,22.4,'유주'],['남피',37.8,36.4,'기주'],['평원',50.8,48.4,'기주'],['업',25.4,57.3,'기주']
+  ]],
+  ['중원', [
+    ['사례',5.4,31.3],['청주',88.4,17.3],['연주',38.4,27.3],['서주',63.4,70.3],['예주',19.4,67.3],['홍농',7.8,42.4,'사례'],['낙양',20.8,52.4,'사례'],['진류',36.8,48.4,'연주'],['복양',51.8,30.4,'연주'],['북해',80.8,27.3,'청주'],['제남',58.8,25.3,'청주'],['초',48.4,59.3,'예주'],['허창',32.8,65.3,'예주'],['여남',37.8,83.3,'예주'],['소패',60.8,46.4,'서주'],['하비',73.8,60.4,'서주']
+  ]],
+  ['형초', [
+    ['형북',25.4,25.3],['형남',73.4,65.3],['완',51.4,14.4,'형북'],['상용',37.8,19.3,'형북'],['양양',52.8,35.3,'형북'],['신야',53.8,25.3,'형북'],['강하',62.8,30.4,'형북'],['강릉',49.8,47.3,'형남'],['무릉',43.8,56.4,'형남'],['장사',60.8,54.4,'형남'],['계양',62.8,76.4,'형남'],['영릉',41.8,76.4,'형남']
+  ]],
+  ['오월', [
+    ['회남',63.4,15.3],['양주',63.4,60.3],['교주',28.4,67.3],['수춘',72.8,12.4,'회남'],['광릉',90.8,12.4,'회남'],['여강',71.8,27.3,'회남'],['말릉',81.8,29.3,'양주'],['오',97.4,23.3,'양주'],['회계',95.8,40.4,'양주'],['파양',72.8,51.3,'양주'],['시상',62.8,42.4,'양주'],['교지',34.8,87.3,'교주']
+  ]]
+];
+const nav = document.querySelector('#regions');
+const title = document.querySelector('#map-title');
+const terrain = document.querySelector('#terrain');
+const labels = document.querySelector('#labels');
+const search = document.querySelector('#search');
+const status = document.querySelector('#status');
+const list = document.querySelector('#cities');
+const toggle = document.querySelector('#toggle');
+const viewport = document.querySelector('#viewport');
+const map = document.querySelector('#map');
+const zoomOut = document.querySelector('#zoom-out');
+const zoomIn = document.querySelector('#zoom-in');
+const zoomReset = document.querySelector('#zoom-reset');
+const zoomLevel = document.querySelector('#zoom-level');
+const zoomSteps = [1, 1.25, 1.5, 2, 2.5, 3, 4];
+const relayLabelScale = 1.5;
+const systemEntryScale = 3;
+const systemEntryRadius = 16;
+const backChart = document.querySelector('#back-chart');
+const chartLegend = document.querySelector('#chart-legend');
+const systemLegend = document.querySelector('#system-legend');
+const fortressLegend = document.querySelector('#fortress-legend');
+const detailListTitle = document.querySelector('#detail-list-title');
+const routeChoice = document.querySelector('#route-choice');
+const routeChoiceList = document.querySelector('#route-choice-list');
+const searchPanel = document.querySelector('#search-panel');
+const detailPanel = document.querySelector('#detail-panel');
+const detailTitle = document.querySelector('#detail-title');
+const systemSummary = document.querySelector('#system-summary');
+const objectInfo = document.querySelector('#object-info');
+const localObjects = document.querySelector('#local-objects');
+let activeSystem = null;
+let activeFortress = null;
+let chartPosition = null;
+let detailLayer;
+let selectedObject = null;
+const mapHint = document.querySelector('#map-hint');
+
+let zoomIndex = 0;
+let drag = null;
+const cities = regions.flatMap(([, names], region) => names
+  .filter(([, , , group]) => typeof group === 'string')
+  .map(([name, , , province]) => ({name, province, region})));
+let region = 0;
+let showLabels = true;
+
+// City and route anchors were traced in the official overview's 1920 × 1080 coordinates.
+const sourceScale = 5 / 6;
+const cityPoints = [
+  [],
+  [[449,162],[450,231],[540,293],[715,326]],
+  [[566,369],[663,431],[529,507],[446,602],[614,612],[730,578],[275,734],[572,747],[404,837]],
+  [[978,230],[1008,144],[1138,104],[1299,102],[1530,58],[1144,172],[1255,176],[1078,213]],
+  [[862,325],[956,313],[1080,302],[1164,265],[1372,239],[1248,245],[1168,387],[1044,369],[1099,447],[1254,333],[1356,346]],
+  [[957,391],[778,475],[917,519],[942,454],[1052,540],[903,597],[873,672],[1041,700],[1028,814],[855,796]],
+  [[1236,456],[1411,443],[1236,545],[1348,503],[1490,520],[1458,592],[1249,677],[1142,628],[772,932]]
+].map(points => points.map(([x,y]) => [x*sourceScale,y*sourceScale]));
+const sectorColors = ['','#f5c77a','#92e9b3','#a5b7ff','#f5a3b7','#d6acff','#73e4f4'];
+const nebulae = [
+  [380,194,360,158,'#804a4f',-18],
+  [430,503,313,177,'#2d705f',28],
+  [910,143,387,129,'#364b9b',-12],
+  [955,345,306,150,'#753e69',13],
+  [820,530,298,166,'#4d397b',-16],
+  [1120,611,326,187,'#206a8e',-36]
+];// Each chain follows one uninterrupted stroke. Shared anchors are real junctions.
+const roadJunctions = {
+  '@1':[568,201], '@2':[1213,90], '@3':[1123,200], '@4':[1159,313],
+  '@5':[1300,225], '@6':[1025,304], '@7':[994,426], '@8':[1107,372],
+  '@9':[870,583], '@10':[1055,571], '@11':[954,743], '@12':[1293,512],
+  '@13':[1191,596]
+};
+const gates = {
+  '#1':[451,553], '#2':[544,459], '#3':[630,422], '#4':[677,350],
+  '#5':[798,358], '#6':[832,321], '#7':[920,313], '#8':[1010,304],
+  '#9':[1027,214], '#10':[1258,89]
+};
+// Station names are adapted from geographic features near the corresponding game routes.
+const relayNames = {
+  '@1':['오초령','烏鞘嶺'],
+  '@2':['연산','燕山'],
+  '@3':['청하','清河'],
+  '@4':['제수','濟水'],
+  '@5':['치수','淄水'],
+  '@6':['형양','滎陽'],
+  '@7':['방성','方城'],
+  '@8':['영수','潁水'],
+  '@9':['장강삼협','長江三峽'],
+  '@10':['동정호','洞庭湖'],
+  '@11':['자수','資水'],
+  '@12':['우저','牛渚'],
+  '@13':['팽려택','彭蠡澤']
+};
+// On the 장안–한중 road, 산관 is nearer 장안 and 양평관 is nearer 한중.
+const satelliteNames = {
+  '#1':['면죽관','綿竹關'],
+  '#2':['검각','劍閣'],
+  '#3':['양평관','陽平關'],
+  '#4':['산관','散關'],
+  '#5':['무관','武關'],
+  '#6':['동관','潼關'],
+  '#7':['함곡관','函谷關'],
+  '#8':['호로관','虎牢關'],
+  '#9':['호관','壺關'],
+  '#10':['역경','易京']
+};
+
+const roads = [
+  ['무위',[491,150],[537,166],'@1',[564,251],'천수',[620,317],'장안','#6','홍농','#7','낙양','#8','@6','진류','@4','소패','하비',[1386,382],'광릉',[1396,472],'말릉',[1422,521],'오',[1492,571],'회계'],
+  ['서평',[484,227],[528,208],'@1'],
+  ['천수',[558,337],'무도',[582,414],[611,434],'한중',[716,447],'상용',[854,499],'양양','강하',[1135,553],'여강','@12','말릉'],
+  ['장안','#4',[638,371],[619,397],'#3','한중',[638,455],[585,457],'#2',[533,480],'자동',[483,520],'#1','성도',[369,628],[323,675],'영창',[352,755],[388,792],'운남',[462,819],[517,778],'건녕',[476,729],[436,690],[425,650],'성도',[537,607],'강주',[685,590],'영안',[814,577],'@9','강릉'],
+  ['자동',[578,537],[602,570],'강주'],
+  ['건녕',[597,829],[675,904],'교지',[828,903],[961,874],[1009,851],'계양',[1040,757],'장사',[1097,672],'시상','@13','여강'],
+  ['회계',[1446,677],[1370,774],[1270,858],[1142,904],[972,925],'교지'],
+  ['계양',[966,813],[915,804],'영릉',[885,770],'@11','장사'],
+  ['@11',[920,707],'무릉',[872,633],'@9'],
+  ['양양','강릉',[969,603],[1003,619],[1043,605],'@10','강하'],
+  ['@10',[1080,578],[1115,615],'시상'],
+  ['@13',[1207,618],[1219,663],'파양',[1273,604],[1325,556],'말릉'],
+  ['낙양','상당',[995,184],'진양',[1070,123],'계','@2','#10','북평',[1362,64],[1430,34],[1494,39],'양평'],
+  ['상당','#9','업','@3','남피',[1183,150],'@2'],
+  ['@3',[1183,204],'평원',[1293,189],'@5'],
+  ['업','진류'], ['업',[1114,249],'복양','제남','@5',[1338,228],'북해',[1353,276],[1347,312],'하비'],
+  ['복양','@4'], ['장안','#5',[887,383],'완','허창','@8','초',[1207,364],[1239,354],'소패'],
+  ['@6','허창'], ['완','@7','신야',[910,476],'양양'],
+  ['@7','여남','수춘','광릉'], ['@8','여남'],
+  ['수춘',[1257,483],'@12']
+];const svgNamespace = 'http://www.w3.org/2000/svg';
+const chartWidth = 1600;
+const chartHeight = 900;
+const cityLocations = new Map();
+regions.forEach(([, entries], index) => {
+  const regionalCities = entries.filter(([, , , group]) => typeof group === 'string');
+  regionalCities.forEach(([name], cityIndex) => cityLocations.set(name, cityPoints[index][cityIndex]));
+});
+
+function svgNode(tag, attributes, parent) {
+  const node = document.createElementNS(svgNamespace, tag);
+  for (const [key, value] of Object.entries(attributes)) node.setAttribute(key, value);
+  parent.append(node);
+  return node;
+}
+
+function routePoint(point) {
+  const source = Array.isArray(point) ? point : roadJunctions[point] || gates[point];
+  return source ? source.map(value => value*sourceScale) : cityLocations.get(point);
+}
+
+function drawStarChart() {
+  const defs = svgNode('defs', {}, terrain);
+  const sun = svgNode('radialGradient',{id:'system-star'},defs);
+  svgNode('stop',{offset:'0%','stop-color':'#ffd79c','stop-opacity':.9},sun);
+  svgNode('stop',{offset:'100%','stop-color':'#ffc477','stop-opacity':0},sun);
+  const space = svgNode('linearGradient', {id:'space',x2:'100%',y2:'100%'}, defs);
+  svgNode('stop',{offset:'0%','stop-color':'#060b1d'},space);
+  svgNode('stop',{offset:'58%','stop-color':'#0d1932'},space);
+  svgNode('stop',{offset:'100%','stop-color':'#060d1b'},space);
+  svgNode('rect',{width:chartWidth,height:chartHeight,fill:'url(#space)'},terrain);
+  nebulae.forEach(([x,y,rx,ry,color,angle],index) => {
+    const id = 'nebula-' + index;
+    const gradient = svgNode('radialGradient',{id},defs);
+    svgNode('stop',{offset:'0%','stop-color':color,'stop-opacity':.68},gradient);
+    svgNode('stop',{offset:'100%','stop-color':color,'stop-opacity':0},gradient);
+    svgNode('ellipse',{cx:x,cy:y,rx,ry,fill:'url(#'+id+')',transform:'rotate('+angle+' '+x+' '+y+')'},terrain);
+  });
+  const grid = svgNode('pattern',{id:'chart-grid',width:100,height:100,patternUnits:'userSpaceOnUse'},defs);
+  svgNode('path',{d:'M100 0H0V100',fill:'none',stroke:'#98bfdc','stroke-opacity':.13},grid);
+  svgNode('rect',{width:chartWidth,height:chartHeight,fill:'url(#chart-grid)'},terrain);
+
+  let seed = 7159;
+  function random() {
+    seed = (Math.imul(1664525,seed)+1013904223) >>> 0;
+    return seed/4294967296;
+  }
+  const stars = svgNode('g',{'aria-hidden':'true'},terrain);
+  for(let i=0;i<520;i++) {
+    const x = Math.round(random()*chartWidth);
+    const y = Math.round(random()*chartHeight);
+    const bright = i%41===0;
+    const radius = bright ? 1.7 : .35+random()*.9;
+    svgNode('circle',{cx:x,cy:y,r:radius,fill:i%4===0?'#8ac6fd':'#dcefff','fill-opacity':.19+random()*.56},stars);
+    if(bright) svgNode('path',{d:'M'+(x-4)+' '+y+'h8 M'+x+' '+(y-4)+'v8',
+      stroke:'#bde5ff','stroke-opacity':.45,'stroke-width':.65},stars);
+  }  const roadLayer = svgNode('g', {'aria-label':'항성계 연결 항로와 회랑'}, terrain);
+  for (const road of roads) {
+    const points = road.map(point => {
+      return routePoint(point);
+    }).map(([x,y]) => x + ',' + y).join(' ');
+    const style = {points,fill:'none','stroke-linecap':'round','stroke-linejoin':'round'};
+    svgNode('polyline',{...style,stroke:'#163f60','stroke-width':6},roadLayer);
+    svgNode('polyline',{...style,stroke:'#82dcf1','stroke-width':2},roadLayer);
+  }
+  const featuresLayer = svgNode('g', {'aria-label':'중계 정거장과 요새 위성'}, terrain);
+  Object.entries(roadJunctions).forEach(([id,[x,y]]) => {
+    const node = svgNode('g',{transform:'translate('+x*sourceScale+' '+y*sourceScale+')'},featuresLayer);
+    const label = svgNode('title',{},node);
+    const [name,hanja] = relayNames[id];
+    label.textContent = name+'('+hanja+') 중계 정거장';
+    stationSymbol(node, .32);
+  });
+  Object.entries(gates).forEach(([id,[x,y]]) => {
+    const satellite = svgNode('g',{transform:'translate('+x*sourceScale+' '+y*sourceScale+')'},featuresLayer);
+    const label = svgNode('title',{},satellite);
+    const [name,hanja] = satelliteNames[id];
+    label.textContent = name+'('+hanja+')';
+    drawFortressSatellite(satellite);
+  });  const systemLayer = svgNode('g',{'aria-label':'항성계 위치'},terrain);
+  for(const {name,region} of cities) {
+    const [x,y] = cityLocations.get(name);
+    const color = sectorColors[region];
+    const node = svgNode('g',{transform:'translate('+x+' '+y+')'},systemLayer);
+    const title = svgNode('title',{},node);
+    title.textContent = name + ' 항성계';
+    svgNode('circle',{r:8,fill:color,'fill-opacity':.14,stroke:color,'stroke-opacity':.45,'stroke-width':.65},node);
+    svgNode('path',{d:'M0-5 1.55-1.55 5 0 1.55 1.55 0 5-1.55 1.55-5 0-1.55-1.55Z',
+      fill:'#effaff',stroke:color,'stroke-width':.85},node);
+  }
+}
+function stationSymbol(parent, scale = 1) {
+  const icon = svgNode('g',{transform:'scale('+scale+')'},parent);
+  svgNode('path',{d:'M-15-15H15V15H-15Z M-21 0H21 M0-21V21',
+    fill:'#102b45',stroke:'#9eeeff','stroke-width':3},icon);
+  svgNode('circle',{r:5,fill:'#deffff'},icon);
+}
+
+function drawFortressSatellite(parent) {
+  svgNode('ellipse',{rx:10.5,ry:3.6,transform:'rotate(-30)',fill:'none',
+    stroke:'#ffd58e','stroke-opacity':.7,'stroke-width':1.15},parent);
+  svgNode('path',{d:'M0-6.5 5.5-3.2 5.5 3.2 0 6.5-5.5 3.2-5.5-3.2Z',
+    fill:'#2d233a',stroke:'#ffd58e','stroke-width':1.3,'stroke-linejoin':'round'},parent);
+  svgNode('circle',{r:2.15,fill:'#fff2ce'},parent);
+}
+const orbitCenter = {x:800, y:450};
+const innerOrbitRadius = 128;
+const outerOrbitRadius = 650;
+const maxStars = 3;
+const minimumPlanets = 3;
+const planetTypes = [
+  ['암석형','#a9a4a2',12], ['암석형','#deb188',17], ['암석형','#4babc9',20],
+  ['암석형','#c58064',14], ['가스 거대형','#d5a879',35], ['가스 거대형','#e3c99b',29],
+  ['얼음 거대형','#91d5d8',24], ['얼음 거대형','#7797dd',24]
+];
+const namePrefixes = [
+  ['청','靑'],['현','玄'],['자','紫'],['연','燕'],['명','明'],['휘','輝'],
+  ['진','震'],['소','昭'],['창','蒼'],['금','錦'],['백','白'],['태','太'],
+  ['화','華'],['벽','碧'],['서','瑞'],['영','映'],['광','光'],['운','雲'],
+  ['월','月'],['단','丹'],['은','銀'],['유','幽'],['경','景'],['순','順']
+];
+const nameSuffixes = [
+  ['연','淵'],['림','林'],['궁','宮'],['호','湖'],['천','川'],['령','嶺'],
+  ['원','原'],['석','石'],['산','山'],['휘','暉'],['영','瑛'],['성','城'],
+  ['하','河'],['양','陽'],['관','關'],['곡','谷'],['옥','玉'],['해','海'],
+  ['봉','峰'],['암','巖']
+];
+
+function seededRandom(seed) {
+  return () => {
+    seed = (Math.imul(1664525,seed)+1013904223) >>> 0;
+    return seed / 4294967296;
+  };
+}
+
+const reservedNames = new Set(cities.map(city => city.name));
+const planetNames = namePrefixes.flatMap(([prefix,first]) => nameSuffixes
+  .filter(([suffix]) => suffix !== prefix && !reservedNames.has(prefix+suffix))
+  .map(([suffix,last]) => ({name:prefix+suffix, hanja:first+last})));
+const nameRandom = seededRandom(521903);
+for (let i = planetNames.length-1; i > 0; i--) {
+  const j = Math.floor(nameRandom()*(i+1));
+  [planetNames[i],planetNames[j]] = [planetNames[j],planetNames[i]];
+}
+
+const layoutRandom = seededRandom(178942);
+let nextExtraName = 0;
+const systemLayouts = cities.map(() => {
+  const total = 4 + Math.floor(layoutRandom()*17);
+  const starCount = 1 + Math.floor(layoutRandom()*Math.min(maxStars,total-minimumPlanets));
+  const planetCount = total-starCount;
+  const extraNameStart = nextExtraName;
+  nextExtraName += Math.max(0,planetCount-8);
+  return {starCount,planetCount,extraNameStart};
+});
+
+// Additional names come from a separate pool so the first eight keep their identities.
+const extraPrefixes = [
+  ['철','鐵'],['선','宣'],['용','龍'],['학','鶴'],['봉','鳳'],['설','雪'],
+  ['벽','璧'],['강','剛'],['송','松'],['비','飛'],['상','翔'],['운','雲'],
+  ['성','星'],['해','海'],['옥','玉'],['심','深'],['무','武'],['단','端'],
+  ['화','火'],['록','祿'],['건','建'],['곤','坤'],['정','正'],['청','晴']
+];
+const usedNames = new Set([...reservedNames,...planetNames.map(planet => planet.name)]);
+const extraPlanetNames = [];
+for (const [prefix,first] of extraPrefixes) {
+  for (const [suffix,last] of nameSuffixes) {
+    const name = prefix+suffix;
+    if (prefix === suffix || usedNames.has(name)) continue;
+    usedNames.add(name);
+    extraPlanetNames.push({name,hanja:first+last});
+  }
+}
+for (let i = extraPlanetNames.length-1; i > 0; i--) {
+  const j = Math.floor(nameRandom()*(i+1));
+  [extraPlanetNames[i],extraPlanetNames[j]] = [extraPlanetNames[j],extraPlanetNames[i]];
+}
+
+function orbitPosition(radius, angle) {
+  const radians = angle*Math.PI/180;
+  return {
+    x:orbitCenter.x+radius*Math.cos(radians),
+    y:orbitCenter.y+radius*.52*Math.sin(radians)
+  };
+}
+
+function buildSystem(city) {
+  const sequence = cities.indexOf(city);
+  const {starCount,planetCount,extraNameStart} = systemLayouts[sequence];
+  const random = seededRandom(8827+sequence*2039);
+  const orientation = random()*360;
+  const orbitGap = (outerOrbitRadius-innerOrbitRadius)/(planetCount-1);
+  const stars = Array.from({length:starCount},(_,index) => {
+    const angle = (orientation+index*360/starCount)*Math.PI/180;
+    const offset = starCount === 1 ? 0 : starCount === 2 ? 27 : 33;
+    return {
+      x:orbitCenter.x+offset*Math.cos(angle),
+      y:orbitCenter.y+offset*Math.sin(angle),
+      radius:starCount === 1 ? 33 : 17+Math.floor(random()*5),
+      color:['#fff0b6','#ffd5a5','#c5e3ff'][index]
+    };
+  });
+  let nameIndex = sequence*7;
+  let extraNameIndex = extraNameStart;
+  const planets = Array.from({length:planetCount},(_,index) => {
+    const orbit = innerOrbitRadius+index*orbitGap;
+    const typeIndex = index < planetTypes.length ? index : 4+Math.floor(random()*4);
+    const [classification,color,size] = planetTypes[typeIndex];
+    const habitable = index === 2;
+    const identity = habitable ? {name:city.name}
+      : index < 8 ? planetNames[nameIndex++] : extraPlanetNames[extraNameIndex++];
+    const angle = orientation+index*137.508+(random()-.5)*22;
+    return {
+      ...identity, type:'행성', orbit, order:index+1, habitable, classification,
+      color, radius:Math.round(size*(planetCount >= 13 ? .8 : 1)),
+      ringed:index === 5, ...orbitPosition(orbit,angle)
+    };
+  });
+
+  const beltSlots = Array.from({length:planetCount-1},(_,index) => index+1);
+  const beltCount = planetCount <= 4 ? 1 : 1+Math.floor(random()*3);
+  const belts = Array.from({length:beltCount},() => {
+    const after = planetCount <= 4 ? planetCount
+      : beltSlots.splice(Math.floor(random()*beltSlots.length),1)[0];
+    const radius = planets[after-1].orbit+(planetCount <= 4 ? 48 : orbitGap/2);
+    const width = planetCount <= 4 ? 18 : Math.min(20,orbitGap*.6);
+    return {
+      after,
+      asteroids:Array.from({length:180},(_,index) => ({
+        ...orbitPosition(radius+(random()-.5)*width,index*2+(random()-.5)*6),
+        radius:.7+random()*1.8,
+        opacity:.26+random()*.55
+      }))
+    };
+  }).sort((first,second) => first.after-second.after);  const home = planets.find(planet => planet.habitable);
+  const nearbyPositions = [[66,24],[-66,24],[66,-24],[-66,-24],[0,70],[0,-70]];
+  const clearance = ([dx,dy]) => Math.min(...[...stars,...planets].map(body =>
+    Math.hypot(home.x+dx-body.x,home.y+dy-body.y)-body.radius));
+  const [dx,dy] = nearbyPositions.reduce((best,position) =>
+    clearance(position) > clearance(best) ? position : best);
+  const station = {
+    name:city.name+' 정거장', type:'정거장', x:home.x+dx, y:home.y+dy, home:home.name
+  };
+  return {city, stars, planets, belts, station, displayCenter:systemDisplayCenter(city)};
+}
+const fullTurn = 2*Math.PI;
+const systemScale = 2/3;
+const clearSpace = {x:680,y:370};
+
+function systemDisplayCenter(city) {
+  const indexSeed = city.id ? cities.length+Number(city.id.slice(1)) : cities.indexOf(city)+1;
+  const random = seededRandom(17381+indexSeed*37273);
+  const angle = random()*fullTurn;
+  // Limit the offset so even the widest displayed belt fits inside the terrain boundary.
+  const offset = .08+random()*.08;
+  return {
+    x:orbitCenter.x+clearSpace.x*offset*Math.cos(angle),
+    y:orbitCenter.y+clearSpace.y*offset*Math.sin(angle)
+  };
+}
+
+const routeConnections = new Map();
+for (const road of roads) {
+  const stops = road.filter(point => typeof point === 'string');
+  for (let index = 1; index < stops.length; index++) {
+    const from = stops[index-1], to = stops[index];
+    if (!routeConnections.has(from)) routeConnections.set(from,new Set());
+    if (!routeConnections.has(to)) routeConnections.set(to,new Set());
+    routeConnections.get(from).add(to);
+    routeConnections.get(to).add(from);
+  }
+}
+
+function approachDestinations(origin,firstStop) {
+  const seen = new Set([origin]);
+  const pending = [firstStop];
+  const destinations = [];
+  for (let index = 0; index < pending.length; index++) {
+    const stop = pending[index];
+    if (seen.has(stop)) continue;
+    seen.add(stop);
+    destinations.push(stop);
+    if (Object.hasOwn(relayNames,stop)) pending.push(...routeConnections.get(stop));
+  }
+  return destinations;
+}
+
+function systemApproaches(origin) {
+  const [x,y] = routePoint(origin);
+  const openings = [];
+  for (const road of roads) {
+    road.forEach((point,index) => {
+      if (point !== origin) return;
+      for (const step of [-1,1]) {
+        const adjacent = road[index+step];
+        if (!adjacent) continue;
+        const [nx,ny] = routePoint(adjacent);
+        const angle = (Math.atan2(ny-y,nx-x)+fullTurn)%fullTurn;
+        let cursor = index+step;
+        while (Array.isArray(road[cursor])) cursor += step;
+        const destinations = approachDestinations(origin,road[cursor]);
+        const existing = openings.find(opening => Math.abs(opening.angle-angle)<1e-8);
+        if (existing) {
+          existing.destinations = [...new Set([...existing.destinations,...destinations])];
+        } else {
+          openings.push({angle,destinations});
+        }
+      }
+    });
+  }
+  openings.sort((first,second) => first.angle-second.angle);
+  return openings.map((opening,index) => {
+    const {angle} = opening;
+    const previous = index ? openings[index-1].angle : openings.at(-1).angle-fullTurn;
+    const next = index+1 < openings.length ? openings[index+1].angle : openings[0].angle+fullTurn;
+    return {...opening,halfWidth:Math.min(Math.PI/15,(angle-previous)*.37,(next-angle)*.37)};
+  });
+}
+
+function terrainPoint(angle,radius) {
+  return [orbitCenter.x+radius*Math.cos(angle),orbitCenter.y+radius*Math.sin(angle)];
+}
+
+function centralClearance(angle) {
+  return 1/Math.hypot(Math.cos(angle)/clearSpace.x,Math.sin(angle)/clearSpace.y);
+}
+
+function drawSystemTerrain(layer,city) {
+  const indexSeed = city.id ? cities.length+Number(city.id.slice(1)) : cities.indexOf(city)+1;
+  const random = seededRandom(7309+indexSeed*19277);
+  const openings = systemApproaches(city.id || city.name);
+  const landscape = svgNode('g',{'aria-label':'연결 항로 사이의 장애 지형'},layer);
+  const defs = svgNode('defs',{},landscape);
+  const colors = [
+    ['#202745','#7766b4'],['#172d41','#527f9f'],
+    ['#142d3e','#488f91'],['#25263d','#9577a6']
+  ];
+  for (const [index,opening] of openings.entries()) {
+    const next = openings[(index+1)%openings.length];
+    const start = opening.angle+opening.halfWidth;
+    const end = next.angle-next.halfWidth+(index===openings.length-1 ? fullTurn : 0);
+    const steps = Math.max(1,Math.ceil((end-start)/(Math.PI/32)));
+    const inner = [], outer = [];
+    for (let step = 0; step <= steps; step++) {
+      const angle = start+(end-start)*step/steps;
+      inner.push(terrainPoint(angle,centralClearance(angle)*(.93+random()*.17)));
+      outer.push(terrainPoint(angle,1900));
+    }
+    const contour = 'M'+inner.map(point => point.join(' ')).join(' L');
+    const shape = contour+' L'+outer.reverse().map(point => point.join(' ')).join(' L')+'Z';
+    const id = 'system-terrain-'+index;
+    const [fill,gas] = colors[index%colors.length];
+    const clip = svgNode('clipPath',{id},defs);
+    svgNode('path',{d:shape},clip);
+    const cloud = svgNode('radialGradient',{id:id+'-cloud'},defs);
+    svgNode('stop',{offset:'0%','stop-color':gas,'stop-opacity':.8},cloud);
+    svgNode('stop',{offset:'100%','stop-color':gas,'stop-opacity':0},cloud);
+    const texture = svgNode('g',{'clip-path':'url(#'+id+')'},landscape);
+    svgNode('path',{d:shape,fill,'fill-opacity':.88},texture);
+
+    function sample() {
+      const angle = start+random()*(end-start);
+      const edge = centralClearance(angle);
+      const limit = Math.min(800/Math.abs(Math.cos(angle)),450/Math.abs(Math.sin(angle)));
+      return terrainPoint(angle,edge+(limit-edge)*random());
+    }
+    const share = (end-start)/fullTurn;
+    for (let i = 0; i < Math.max(2,Math.ceil(share*23)); i++) {
+      const [cx,cy] = sample();
+      svgNode('ellipse',{cx,cy,rx:105+random()*165,ry:55+random()*95,fill:'url(#'+id+'-cloud)'},texture);
+    }
+    for (let i = 0; i < Math.ceil(share*470); i++) {
+      const [cx,cy] = sample();
+      svgNode('circle',{cx,cy,r:.6+random()*2.4,fill:'#a8d8ed','fill-opacity':.16+random()*.42},texture);
+    }
+    for (let i = 0; i < Math.ceil(share*105); i++) {
+      const [x,y] = sample();
+      const radius = 3+random()*9;
+      const points = Array.from({length:6},(_,side) => {
+        const angle = side*Math.PI/3;
+        const size = radius*(.7+random()*.45);
+        return (x+Math.cos(angle)*size)+','+(y+Math.sin(angle)*size);
+      });
+      svgNode('polygon',{points:points.join(' '),fill:'#9b796e',stroke:'#e0b896',
+        'stroke-width':.9,'stroke-opacity':.58,'fill-opacity':.65},texture);
+    }
+    svgNode('path',{d:contour,fill:'none',stroke:'#83b6cd','stroke-width':2,
+      'stroke-opacity':.6,'stroke-dasharray':'10 7'},landscape);
+  }
+}
+function drawSystem(system) {
+  detailLayer?.remove();
+  detailLayer = svgNode('g',{'aria-label':system.city.name+' 내부 지도'},terrain);
+  const layer = detailLayer;
+  svgNode('rect',{width:chartWidth,height:chartHeight,fill:'#0b1428'},layer);
+  svgNode('rect',{width:chartWidth,height:chartHeight,fill:'url(#chart-grid)'},layer);
+  svgNode('ellipse',{cx:orbitCenter.x,cy:orbitCenter.y,rx:620,ry:372,
+    fill:'url(#nebula-'+(system.city.region-1)+')',opacity:.55},layer);
+  drawSystemTerrain(layer,system.city);
+  const bodies = svgNode('g',{'aria-label':'중심별과 행성 궤도',
+    transform:'translate('+system.displayCenter.x+' '+system.displayCenter.y+') scale('+systemScale+') translate('+
+      (-orbitCenter.x)+' '+(-orbitCenter.y)+')'},layer);
+  for (const planet of system.planets) {
+    svgNode('ellipse',{cx:orbitCenter.x,cy:orbitCenter.y,rx:planet.orbit,ry:planet.orbit*.52,
+      fill:'none',stroke:planet.habitable?'#76dba0':'#92a8cb',
+      'stroke-opacity':planet.habitable ? .63 : .34,'stroke-width':planet.habitable?2.6:1.25},bodies);
+  }
+  const beltLayer = svgNode('g',{'aria-label':'소행성대'},bodies);
+  for (const asteroid of system.belts.flatMap(belt => belt.asteroids)) {
+    svgNode('circle',{cx:asteroid.x,cy:asteroid.y,r:asteroid.radius,fill:'#c7b49d',
+      'fill-opacity':asteroid.opacity},beltLayer);
+  }
+  for (const star of system.stars) {
+    svgNode('circle',{cx:star.x,cy:star.y,r:star.radius*3.1,fill:'url(#system-star)'},bodies);
+    svgNode('circle',{cx:star.x,cy:star.y,r:star.radius,fill:star.color,stroke:'#ffd188','stroke-width':2},bodies);
+  }
+  for (const object of [...system.planets,system.station]) {
+    const node = svgNode('g',{transform:'translate('+object.x+' '+object.y+')'},bodies);
+    if (object.type === '행성') {
+      svgNode('circle',{r:object.radius+6,fill:'none',stroke:object.habitable?'#9ef6b9':object.color,
+        'stroke-opacity':object.habitable?1:.35,'stroke-width':object.habitable?3:2},node);
+      if (object.ringed) {
+        svgNode('ellipse',{rx:object.radius*1.75,ry:object.radius*.47,fill:'none',
+          transform:'rotate(-17)',stroke:'#e8d8b1','stroke-width':4,'stroke-opacity':.85},node);
+      }
+      svgNode('circle',{r:object.radius,fill:object.color,stroke:'#d8ecff','stroke-width':2},node);
+      svgNode('path',{d:'M0 '+(-object.radius)+' A'+object.radius+' '+object.radius+
+        ' 0 0 1 0 '+object.radius+' Q'+(object.radius*.64)+' 0 0 '+(-object.radius)+'Z',
+        fill:'#111c39','fill-opacity':.55},node);
+    } else {
+      stationSymbol(node);
+    }
+  }
+}
+
+function chartMarker(object, x, y, activate, current = false) {
+  const marker = button('', activate);
+  marker.className = object.type === '행성' ? 'chart-object planet-marker' : 'chart-object';
+  marker.setAttribute('aria-label', object.name);
+  if (activeSystem || activeFortress) marker.setAttribute('aria-pressed', current);
+  marker.title = object.name;
+  marker.style.setProperty('--x',x+'%');
+  marker.style.setProperty('--y',y+'%');
+  const caption = document.createElement('span');
+  caption.textContent = object.name;
+  caption.hidden = !showLabels || (!activeSystem && !activeFortress && !region && !zoomIndex);
+  marker.append(caption);
+  return marker;
+}
+
+function destinationName(id) {
+  return relayNames[id]?.[0] || satelliteNames[id]?.[0] || id;
+}
+
+function visitDestination(id) {
+  if (Object.hasOwn(relayNames,id)) openRelay(id);
+  else if (Object.hasOwn(satelliteNames,id)) openFortress(id);
+  else enterSystem(id);
+}
+
+function chooseDestination(destinations) {
+  if (destinations.length === 1) {
+    visitDestination(destinations[0]);
+    return;
+  }
+  const rows = destinations.map(id => {
+    const row = document.createElement('li');
+    const item = button(destinationName(id),() => visitDestination(id));
+    const type = document.createElement('small');
+    type.textContent = relayNames[id] ? '중계 정거장' : satelliteNames[id] ? '요새 위성' : '항성계';
+    item.append(type);
+    row.append(item);
+    return row;
+  });
+  routeChoiceList.replaceChildren(...rows);
+  routeChoice.hidden = false;
+  rows[0].firstElementChild.focus();
+}
+
+function approachControls(origin) {
+  return systemApproaches(origin).flatMap(({angle,halfWidth,destinations}) => {
+    const routeNames = destinations.map(destinationName).join(' · ');
+    const hit = button('',() => chooseDestination(destinations));
+    hit.className = 'approach-button';
+    hit.setAttribute('aria-label','진입로 · '+routeNames);
+    if (destinations.length > 1) hit.setAttribute('aria-controls','route-choice');
+    const points = [];
+    const steps = 8;
+    for (let index = 0; index <= steps; index++) {
+      const bearing = angle-halfWidth+2*halfWidth*index/steps;
+      points.push(terrainPoint(bearing,centralClearance(bearing)*1.04));
+    }
+    points.push(terrainPoint(angle+halfWidth,1900),terrainPoint(angle-halfWidth,1900));
+    const shape = points.map(([x,y]) => 100*x/chartWidth+'% '+100*y/chartHeight+'%').join(',');
+    hit.style.setProperty('--approach-shape','polygon('+shape+')');
+    const tip = document.createElement('span');
+    tip.className = 'approach-tip';
+    tip.setAttribute('aria-hidden','true');
+    tip.textContent = routeNames;
+    const edge = Math.min(800/Math.abs(Math.cos(angle)),450/Math.abs(Math.sin(angle)));
+    const [x,y] = terrainPoint(angle,edge-40);
+    tip.style.setProperty('--x',100*x/chartWidth+'%');
+    tip.style.setProperty('--y',100*y/chartHeight+'%');
+    return [hit,tip];
+  });
+}
+
+function renderSystem() {
+  terrain.setAttribute('viewBox','0 0 1600 900');
+  title.textContent = activeSystem.city.name+(activeSystem.relay ? ' 중계 정거장' : ' 항성계');
+  terrain.setAttribute('aria-label',title.textContent+' 내부 지도');
+  mapHint.textContent = '진입로 위에 마우스를 올리면 목적지가 표시됩니다. 진입로를 누르면 연결된 곳으로 이동할 수 있습니다.';
+  const objects = [...activeSystem.planets,activeSystem.station];
+  const {x,y} = activeSystem.displayCenter;
+  const scale = activeSystem.relay ? 1 : systemScale;
+  labels.replaceChildren(...approachControls(activeSystem.city.id || activeSystem.city.name),
+    ...objects.map(object =>
+      chartMarker(object,100*(x+(object.x-orbitCenter.x)*scale)/chartWidth,
+        100*(y+(object.y-orbitCenter.y)*scale)/chartHeight,
+        () => inspectObject(object),selectedObject === object)));
+}
+
+function inspectObject(object) {
+  selectedObject = object;
+  for (const marker of labels.children) {
+    if (marker.classList.contains('chart-object')) {
+      marker.setAttribute('aria-pressed',marker.title === object.name);
+    }
+  }
+  const heading = document.createElement('strong');
+  heading.textContent = object.name;
+  const description = document.createElement('p');
+  description.textContent = object.order
+    ? object.classification+(object.habitable?' · 거주 가능':'')
+    : object.home ? object.home+' 행성 인근 우주 정거장' : '여러 항로가 만나는 회랑 중계 정거장';
+  if (object.hanja) heading.textContent += ' ('+object.hanja+')';
+  objectInfo.replaceChildren(heading,description);
+}
+
+function enterSystem(name) {
+  openSystem(cities.find(city => city.name === name));
+}
+
+function openRelay(id) {
+  rememberChartPosition();
+  activeFortress = null;
+  selectedObject = null;
+  const [name,hanja] = relayNames[id];
+  const city = {id,name};
+  const station = {name:name+' 중계 정거장',type:'정거장',x:orbitCenter.x,y:orbitCenter.y};
+  activeSystem = {city,station,planets:[],displayCenter:systemDisplayCenter(city),relay:true};
+  showDetailPanels(systemLegend);
+  systemLegend.dataset.relay = 'true';
+  detailTitle.textContent = station.name;
+  const openings = systemApproaches(id);
+  systemSummary.textContent = hanja+' · 연결 진입로 '+openings.length+'곳';
+  detailListTitle.textContent = '진입로';
+  localObjects.replaceChildren(...openings.map(({destinations}) => {
+    const row = document.createElement('li');
+    row.append(button(destinations.map(destinationName).join(' · '),() => chooseDestination(destinations)));
+    return row;
+  }));
+  detailLayer?.remove();
+  detailLayer = svgNode('g',{'aria-label':station.name+' 상세 지도'},terrain);
+  svgNode('rect',{width:chartWidth,height:chartHeight,fill:'#0b1428'},detailLayer);
+  svgNode('rect',{width:chartWidth,height:chartHeight,fill:'url(#chart-grid)'},detailLayer);
+  drawSystemTerrain(detailLayer,city);
+  const {x,y} = activeSystem.displayCenter;
+  const icon = svgNode('g',{transform:'translate('+x+' '+y+')'},detailLayer);
+  svgNode('circle',{r:63,fill:'#142943',stroke:'#85bfd9','stroke-width':2,'stroke-dasharray':'5 8'},icon);
+  stationSymbol(icon,2.2);
+  setZoom(0);
+  renderMap();
+  inspectObject(station);
+  backChart.focus({preventScroll:true});
+  animateMapTransition();
+}
+
+function openSystem(city) {
+  rememberChartPosition();
+  activeFortress = null;
+  activeSystem = buildSystem(city);
+  selectedObject = null;
+  showDetailPanels(systemLegend);
+  systemLegend.dataset.relay = 'false';
+  detailListTitle.textContent = '행성과 정거장';
+  detailTitle.textContent = city.name+' 항성계 상세';
+  const {stars,planets,belts} = activeSystem;
+  const beltLocations = belts.map(({after}) => after === planets.length ? '최외곽 궤도 바깥'
+    : planets[after-1].name+'–'+planets[after].name+' 사이');
+  systemSummary.textContent = '중심별 '+stars.length+'개 · 행성 '+planets.length+'개 · 소행성대 '+belts.length+'곳 ('+beltLocations.join(', ')+')';
+  drawSystem(activeSystem);
+  const rows = objects => objects.map(object => {
+    const row = document.createElement('li');
+    const item = button(object.name,() => inspectObject(object));
+    const meta = document.createElement('small');
+    meta.textContent = object.habitable ? '거주 가능' : object.hanja || object.type;
+    item.append(meta);
+    row.append(item);
+    return row;
+  });
+  localObjects.replaceChildren(...rows([...activeSystem.planets,activeSystem.station]));
+  setZoom(0);
+  renderMap();
+  inspectObject(activeSystem.planets.find(planet => planet.habitable));
+  backChart.focus({preventScroll:true});
+  animateMapTransition();
+}
+
+function rememberChartPosition() {
+  if (!activeSystem && !activeFortress) {
+    chartPosition = {zoomIndex,left:viewport.scrollLeft,top:viewport.scrollTop};
+  }
+}
+
+function showDetailPanels(legend) {
+  routeChoice.hidden = true;
+  searchPanel.hidden = chartLegend.hidden = true;
+  detailPanel.hidden = backChart.hidden = false;
+  systemLegend.hidden = legend !== systemLegend;
+  fortressLegend.hidden = legend !== fortressLegend;
+}
+
+function closeDetail(restore = true) {
+  if (!activeSystem && !activeFortress) return;
+  activeSystem = activeFortress = null;
+  selectedObject = null;
+  detailLayer.remove();
+  detailLayer = null;
+  searchPanel.hidden = chartLegend.hidden = false;
+  detailPanel.hidden = systemLegend.hidden = fortressLegend.hidden = backChart.hidden = routeChoice.hidden = true;
+  setZoom(restore ? chartPosition.zoomIndex : 0);
+  if (restore) {
+    viewport.scrollLeft = chartPosition.left;
+    viewport.scrollTop = chartPosition.top;
+    viewport.focus({preventScroll:true});
+  }
+  chartPosition = null;
+  renderMap();
+  if (restore) animateMapTransition();
+}
+
+const battlefieldTerrain = [
+  {name:'통행 회랑', description:'요새가 놓인 개방 구역입니다. 양옆의 장애 지형 사이로 이어집니다.'},
+  {name:'가스 구역', description:'회랑 외곽의 짙은 가스 구름입니다.'},
+  {name:'소행성', description:'회랑 바깥에 흩어진 암석 지형입니다.'},
+  {name:'우주 먼지', description:'가스 구역과 소행성 주변에 퍼진 미세 입자입니다.'}
+];
+
+function corridorEdge(points) {
+  let path = '';
+  for (let index = 1; index < points.length; index++) {
+    const [x0,y0] = points[index-1];
+    const [x,y] = points[index];
+    const middle = (x0+x)/2;
+    path += ' C'+middle+' '+y0+' '+middle+' '+y+' '+x+' '+y;
+  }
+  return path;
+}
+
+function drawFortressBattlefield(fortress) {
+  detailLayer?.remove();
+  const layer = svgNode('g',{'aria-label':fortress.name+' 전투 지형'},terrain);
+  detailLayer = layer;
+  const random = seededRandom(8011+Number(fortress.id.slice(1))*9173);
+  const xCoordinates = [0,180,375,580,800,1000,1220,1400,1600];
+  const centers = xCoordinates.map((x,index) =>
+    450+Math.sin(index*.86)*92+(random()-.5)*94);
+  const halfWidths = xCoordinates.map((x,index) =>
+    x === 800 ? 80 : 115+random()*85);
+  const upper = xCoordinates.map((x,index) => [x,centers[index]-halfWidths[index]]);
+  const lower = xCoordinates.map((x,index) => [x,centers[index]+halfWidths[index]]);
+  const topEdge = corridorEdge(upper);
+  const bottomEdge = corridorEdge(lower);
+  const topArea = 'M0 0H1600 V'+upper.at(-1)[1]+corridorEdge([...upper].reverse())+'Z';
+  const bottomArea = 'M0 900H1600 V'+lower.at(-1)[1]+corridorEdge([...lower].reverse())+'Z';
+  svgNode('rect',{width:chartWidth,height:chartHeight,fill:'#080f21'},layer);
+  svgNode('rect',{width:chartWidth,height:chartHeight,fill:'url(#chart-grid)'},layer);
+
+  const defs = svgNode('defs',{},layer);
+  const bands = [{id:'battle-upper',d:topArea,color:'#252647',cloud:'#7770bc'},
+    {id:'battle-lower',d:bottomArea,color:'#152f3e',cloud:'#427d90'}];
+  for (const [index,band] of bands.entries()) {
+    const clip = svgNode('clipPath',{id:band.id},defs);
+    svgNode('path',{d:band.d},clip);
+    const gas = svgNode('radialGradient',{id:band.id+'-gas'},defs);
+    svgNode('stop',{offset:'0%','stop-color':band.cloud,'stop-opacity':.76},gas);
+    svgNode('stop',{offset:'100%','stop-color':band.cloud,'stop-opacity':0},gas);
+    const group = svgNode('g',{'clip-path':'url(#'+band.id+')'},layer);
+    svgNode('path',{d:band.d,fill:band.color},group);
+    for (let cloud = 0; cloud < 8; cloud++) {
+      const shape = {cx:cloud*225+(random()-.5)*170,cy:index ? 640+random()*260 : random()*300,
+        rx:160+random()*240,ry:75+random()*115};
+      svgNode('ellipse',{...shape,fill:'url(#'+band.id+'-gas)'},group);
+    }
+    for (let dust = 0; dust < 255; dust++) {
+      svgNode('circle',{cx:random()*chartWidth,cy:random()*chartHeight,
+        r:.6+random()*2.1,fill:'#a5d5e7','fill-opacity':.16+random()*.4},group);
+    }
+    for (let rock = 0; rock < 115; rock++) {
+      const x = random()*chartWidth, y = random()*chartHeight, radius = 3+random()*12;
+      const points = Array.from({length:6},(_,corner) => {
+        const angle = corner*Math.PI/3;
+        const size = radius*(.65+random()*.55);
+        return (x+Math.cos(angle)*size)+','+(y+Math.sin(angle)*size);
+      }).join(' ');
+      svgNode('polygon',{points,fill:'#a78172',stroke:'#e7b995',
+        'stroke-width':1,'fill-opacity':.65,'stroke-opacity':.5},group);
+    }
+  }
+  for (const [points,edge] of [[upper,topEdge],[lower,bottomEdge]]) {
+    svgNode('path',{d:'M'+points[0].join(' ')+edge,fill:'none',
+      stroke:'#80b5ca','stroke-width':2,'stroke-opacity':.7,'stroke-dasharray':'11 8'},layer);
+  }
+
+  const station = svgNode('g',{transform:'translate(800 '+centers[4]+')'},layer);
+  svgNode('circle',{r:57,fill:'#1d2239',stroke:'#e6c48c','stroke-width':2,
+    'stroke-opacity':.55,'stroke-dasharray':'5 7'},station);
+  const symbol = svgNode('g',{transform:'scale(4)'},station);
+  drawFortressSatellite(symbol);
+  fortress.x = 800;
+  fortress.y = centers[4];
+}
+
+function renderFortress() {
+  title.textContent = activeFortress.name+' 전투 지형';
+  terrain.setAttribute('viewBox','0 0 1600 900');
+  terrain.setAttribute('aria-label',title.textContent);
+  mapHint.textContent = '점선 사이가 통행 회랑입니다. 양옆에 가스 구역, 소행성, 우주 먼지가 있습니다.';
+  const {name,x,y} = activeFortress;
+  labels.replaceChildren(chartMarker({name},100*x/chartWidth,100*y/chartHeight,
+    () => describeTerrain(battlefieldTerrain[0])));
+}
+
+function describeTerrain(feature) {
+  const heading = document.createElement('strong');
+  heading.textContent = feature.name;
+  const description = document.createElement('p');
+  description.textContent = feature.description;
+  objectInfo.replaceChildren(heading,description);
+}
+
+function openFortress(id) {
+  rememberChartPosition();
+  activeSystem = null;
+  selectedObject = null;
+  const [name,hanja] = satelliteNames[id];
+  activeFortress = {id,name};
+  showDetailPanels(fortressLegend);
+  detailTitle.textContent = name;
+  systemSummary.textContent = hanja+' · 전투 지형';
+  detailListTitle.textContent = '지형 요소';
+  localObjects.replaceChildren(...battlefieldTerrain.map(feature => {
+    const row = document.createElement('li');
+    row.append(button(feature.name,() => describeTerrain(feature)));
+    return row;
+  }));
+  drawFortressBattlefield(activeFortress);
+  setZoom(0);
+  renderMap();
+  describeTerrain(battlefieldTerrain[0]);
+  backChart.focus({preventScroll:true});
+  animateMapTransition();
+}
+
+function animateMapTransition() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  map.animate?.([{opacity:.45},{opacity:1}],{duration:180,easing:'ease-out'});
+}
+
+function regionFrame(index) {
+  if (!index) return [0,0,chartWidth,chartHeight];
+  const points = cityPoints[index];
+  const xs = points.map(([x]) => x), ys = points.map(([,y]) => y);
+  const x0 = Math.min(...xs), x1 = Math.max(...xs);
+  const y0 = Math.min(...ys), y1 = Math.max(...ys);
+  const width = Math.max(380, x1-x0+108, (y1-y0+94)*16/9);
+  const height = width*9/16;
+  return [Math.max(0,Math.min(chartWidth-width,(x0+x1-width)/2)),
+    Math.max(0,Math.min(chartHeight-height,(y0+y1-height)/2)),width,height];
+}
+
+function button(text, action) {
+  const item = document.createElement('button');
+  item.type = 'button';
+  item.textContent = text;
+  item.addEventListener('click', action);
+  return item;
+}
+
+function setView(index) {
+  closeDetail(false);
+  const changedRegion = region !== index;
+  region = index;
+  if (changedRegion) setZoom(0);
+  renderMap();
+  renderCities();
+}
+function renderMap() {
+  toggle.setAttribute('aria-pressed',showLabels);
+  if (activeSystem) {
+    renderSystem();
+    return;
+  }
+  if (activeFortress) {
+    renderFortress();
+    return;
+  }
+  const [name] = regions[region];
+  const [left, top, width, height] = regionFrame(region);
+  terrain.setAttribute('viewBox', [left, top, width, height].join(' '));
+  title.textContent = region ? name + ' 성역' : name;
+  terrain.setAttribute('aria-label', title.textContent + ' 항성계와 워프 항로');
+  [...nav.children].forEach((item, index) => item.setAttribute('aria-pressed', index === region));
+  mapHint.textContent = region
+    ? '항성계, 중계 정거장 또는 요새 위성을 누르면 상세 지도가 열립니다.'
+    : '항성계, 중계 정거장 또는 요새 위성을 누르면 상세 지도가 열립니다. 150%부터 중계 정거장과 요새 위성의 이름이 표시됩니다.';
+  const entries = [];
+  if (!region && !zoomIndex && showLabels) {
+    for (const [name, x, y, group] of regions[0][1]) {
+      if (typeof group === 'number') entries.push([name, x, y, group]);
+    }
+  }
+  for (const city of cities) {
+    if (region && city.region !== region) continue;
+    const [x,y] = cityLocations.get(city.name);
+    entries.push([city.name, 100*(x-left)/width, 100*(y-top)/height, city.province]);
+  }
+  const markers = entries.map(([text, x, y, group]) => {
+    let item;
+    if (typeof group === 'number') {
+      item = button(text, () => {
+        setView(group);
+        nav.children[group].focus();
+      });
+      item.className = 'label r';
+    } else {
+      return chartMarker({name:text},x,y,() => enterSystem(text));
+    }
+    item.style.setProperty('--x', x + '%');
+    item.style.setProperty('--y', (group && typeof group === 'string' ? 'calc(' + y + '% - .9em)' : y + '%'));
+    return item;
+  });
+  const showFacilityNames = showLabels && zoomSteps[zoomIndex] >= relayLabelScale;
+  for (const [id,[name,hanja]] of Object.entries({...relayNames,...satelliteNames})) {
+    const isFortress = Object.hasOwn(satelliteNames,id);
+    const [sourceX,sourceY] = isFortress ? gates[id] : roadJunctions[id];
+    const x = 100*(sourceX*sourceScale-left)/width;
+    const y = 100*(sourceY*sourceScale-top)/height;
+    if (x < 0 || x > 100 || y < 0 || y > 100) continue;
+    if (isFortress) {
+      const marker = chartMarker({name},x,y,() => openFortress(id));
+      marker.classList.add('satellite');
+      if (['#4','#7','#8'].includes(id)) marker.classList.add('below');
+      marker.lastElementChild.hidden = !showFacilityNames;
+      marker.title = name+'('+hanja+')';
+      markers.push(marker);
+    } else {
+      const marker = chartMarker({name:name+' 중계 정거장'},x,y,() => openRelay(id));
+      marker.classList.add('relay-station');
+      marker.lastElementChild.hidden = !showFacilityNames;
+      marker.title = name+'('+hanja+') 중계 정거장';
+      markers.push(marker);
+    }
+  }  labels.replaceChildren(...markers);
+}
+
+function renderCities() {
+  const query = search.value.trim().normalize();
+  const matches = cities.filter(city => query ? city.name.includes(query) : !region || city.region === region);
+  const facilityMatches = query ? Object.entries({...relayNames,...satelliteNames}).filter(([, [name,hanja]]) =>
+    name.includes(query) || hanja.includes(query)) : [];
+  status.textContent = (query ? '전체 성역 검색' : regions[region][0])
+    +' · '+(matches.length+facilityMatches.length)+'개 항목';
+  list.replaceChildren(...matches.map(({name, province, region: index}) => {
+    const row = document.createElement('li');
+    const item = button(name, () => enterSystem(name));
+    const place = document.createElement('small');
+    place.textContent = regions[index][0] + ' · ' + province;
+    item.append(place);
+    row.append(item);
+    return row;
+  }),...facilityMatches.map(([id,[name]]) => {
+    const row = document.createElement('li');
+    const item = button(name,() => visitDestination(id));
+    const type = document.createElement('small');
+    type.textContent = relayNames[id] ? '중계 정거장' : '전투 지형';
+    item.append(type);
+    row.append(item);
+    return row;
+  }));
+}
+
+function setZoom(index, anchorX = viewport.clientWidth / 2, anchorY = viewport.clientHeight / 2) {
+  const wasOverview = !region && zoomIndex === 0;
+  const showedRelays = zoomSteps[zoomIndex] >= relayLabelScale;
+  zoomIndex = Math.min(zoomSteps.length - 1, Math.max(0, index));
+  const oldWidth = map.offsetWidth;
+  const oldHeight = map.offsetHeight;
+  const x = (viewport.scrollLeft + anchorX) / oldWidth;
+  const y = (viewport.scrollTop + anchorY) / oldHeight;
+  const scale = zoomSteps[zoomIndex];
+
+  map.style.setProperty('--map-width', scale * 100 + '%');
+  viewport.scrollLeft = x * map.offsetWidth - anchorX;
+  viewport.scrollTop = y * map.offsetHeight - anchorY;
+  viewport.classList.toggle('zoomed', zoomIndex > 0);
+  zoomLevel.value = scale * 100 + '%';
+  zoomOut.disabled = !activeSystem && !activeFortress && !region && zoomIndex === 0;
+  zoomReset.disabled = zoomIndex === 0;
+  zoomIn.disabled = zoomIndex === zoomSteps.length - 1;
+  const overviewChanged = !region && wasOverview !== (zoomIndex === 0);
+  const relaysChanged = showedRelays !== (scale >= relayLabelScale);
+  if (!activeSystem && !activeFortress && (overviewChanged || relaysChanged)) renderMap();
+}
+
+function zoomMap(direction, x = viewport.clientWidth / 2, y = viewport.clientHeight / 2) {
+  if ((activeSystem || activeFortress) && !zoomIndex && direction < 0) {
+    closeDetail();
+    return;
+  }
+  const targetScale = zoomSteps[Math.min(zoomIndex + 1, zoomSteps.length - 1)];
+  if (!activeSystem && !activeFortress && direction > 0 && targetScale >= systemEntryScale) {
+    const [left,top,width,height] = regionFrame(region);
+    const targetX = viewport.scrollLeft+x;
+    const targetY = viewport.scrollTop+y;
+    let closest;
+    let distance = systemEntryRadius;
+    for (const city of cities) {
+      if (region && city.region !== region) continue;
+      const [cx,cy] = cityLocations.get(city.name);
+      const screenX = (cx-left)*map.offsetWidth/width;
+      const screenY = (cy-top)*map.offsetHeight/height;
+      const delta = Math.hypot(screenX-targetX,screenY-targetY);
+      if (delta < distance) {
+        closest = city;
+        distance = delta;
+      }
+    }
+    if (closest) {
+      openSystem(closest);
+      return;
+    }
+  }
+  if (region && !zoomIndex && direction < 0) {
+    setView(0);
+    return;
+  }
+  setZoom(zoomIndex + direction, x, y);
+}
+
+backChart.addEventListener('click',() => closeDetail());
+document.addEventListener('keydown',event => {
+  if (event.key === 'Escape' && (activeSystem || activeFortress)) closeDetail();
+});
+zoomOut.addEventListener('click', () => zoomMap(-1));
+zoomIn.addEventListener('click', () => zoomMap(1));
+zoomReset.addEventListener('click', () => setZoom(0));
+
+viewport.addEventListener('wheel', event => {
+  if (!(event.ctrlKey || event.metaKey) || !event.deltaY) return;
+  event.preventDefault();
+  const bounds = viewport.getBoundingClientRect();
+  zoomMap(-Math.sign(event.deltaY), event.clientX - bounds.left, event.clientY - bounds.top);
+}, {passive: false});
+
+viewport.addEventListener('pointerdown', event => {
+  if (!zoomIndex || event.pointerType !== 'mouse' || event.button !== 0 || event.target.closest('button')) return;
+  if (!map.contains(event.target)) return;
+  drag = {id: event.pointerId, x: event.clientX, y: event.clientY, left: viewport.scrollLeft, top: viewport.scrollTop};
+  viewport.setPointerCapture(event.pointerId);
+  viewport.classList.add('dragging');
+});
+viewport.addEventListener('pointermove', event => {
+  if (drag?.id !== event.pointerId) return;
+  viewport.scrollLeft = drag.left + drag.x - event.clientX;
+  viewport.scrollTop = drag.top + drag.y - event.clientY;
+});
+viewport.addEventListener('lostpointercapture', event => {
+  if (drag?.id !== event.pointerId) return;
+  drag = null;
+  viewport.classList.remove('dragging');
+});
+
+regions.forEach(([name], index) => nav.append(button(name, () => setView(index))));
+setZoom(0);
+search.addEventListener('input', renderCities);
+toggle.addEventListener('click', () => {
+  showLabels = !showLabels;
+  renderMap();
+});
+drawStarChart();
+setView(0);
+</script>
+</html>
