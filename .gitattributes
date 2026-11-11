@@ -1,0 +1,29 @@
+# Preserve the reviewed bytes used by checkpoint, replay, and source-reference SHA-256 checks.
+core/battle/**/*.gd -text
+core/battle/ai/commander_ai.gd text eol=crlf
+core/battle/ai/poc_enemy_ai.gd text eol=crlf
+core/battle/assault.gd text eol=crlf
+core/battle/battle_fingerprint.gd text eol=crlf
+core/battle/battle_projection.gd text eol=crlf
+core/battle/battle_rng.gd text eol=crlf
+core/battle/battle_state.gd text eol=crlf
+core/battle/command.gd text eol=crlf
+core/battle/decisions.gd text eol=crlf
+core/battle/detection.gd text eol=crlf
+core/battle/fleet_state.gd text eol=crlf
+core/battle/morale.gd text eol=crlf
+core/battle/organization.gd text eol=crlf
+core/battle/poc_setup.gd text eol=crlf
+core/battle/profile_loader.gd text eol=crlf
+core/battle/rule_set.gd text eol=crlf
+core/battle/rules.gd text eol=crlf
+core/battle/salvo.gd text eol=crlf
+core/battle/skills.gd text eol=crlf
+core/battle/stratagem.gd text eol=crlf
+core/battle/supply.gd text eol=crlf
+core/battle/tick_clock.gd text eol=crlf
+core/battle/victory.gd text eol=crlf
+data/profiles/combat_m3.json text eol=crlf
+data/profiles/poc_corridor.json -text
+data/scenarios/p05_p07_first_operation_dev_v1.json -text
+data/scenarios/red_cliffs_208_realtime.json text eol=crlf
