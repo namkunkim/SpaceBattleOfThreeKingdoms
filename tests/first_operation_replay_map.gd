@@ -15,46 +15,84 @@ func _run() -> void:
 	change_scene_to_file("res://scenes/WorldMap.tscn")
 	await _frames()
 	var map := current_scene as WorldMapScreen
-	map.open_card()
-	await _frames()
-	var watch := map._card.find_child("WatchReplay", true, false) as Button
 	var enabled := OS.get_cmdline_user_args().has("--pc-first-operation-dev")
-	var watch_available := enabled or OS.has_feature("windows")
-	if _check((watch != null and watch.is_visible_in_tree()) == watch_available, "watch available in browse"):
-		if enabled:
+	if enabled:
+		map.open_card()
+		await _frames()
+		var watch := map._card.find_child("WatchReplay", true, false) as Button
+		if _check(watch != null and watch.is_visible_in_tree(), "development card watch available"):
 			await _development(map, watch)
-		elif watch_available:
-			await _product(map, watch)
+	elif OS.has_feature("windows"):
+		if await _atlas_browse(map):
+			change_scene_to_file("res://scenes/WorldMap.tscn")
+			await _frames()
+			map = current_scene as WorldMapScreen
+			map.open_card()
+			await _frames()
+			await _product(map)
+	else:
+		_check(map._cta.find_child("WatchReplay", true, false) == null, "product replay requires Windows paths")
 	print("FIRST_OPERATION_REPLAY_MAP %d/%d" % [_checks - _failed, _checks])
 	quit(0 if _failed == 0 else 1)
 
 
-func _product(map: WorldMapScreen, watch: Button) -> void:
-	var folder := ProjectSettings.globalize_path("user://")
-	var record_path := folder.path_join("approved-front.pcopreplay")
+func _atlas_browse(map: WorldMapScreen) -> bool:
+	var watch := map._cta.find_child("WatchReplay", true, false) as Button
+	var primary := map._cta.find_child("OpenRedCliffs", true, false) as Button
+	if not _check(map._atlas.is_visible_in_tree() and not map._card.visible and watch != null
+		and watch.is_visible_in_tree() and primary != null, "default atlas shows Windows replay and Red Cliffs actions"):
+		return false
+	var original_size := root.size
+	for size: Vector2i in [Vector2i(1600, 900), Vector2i(800, 450)]:
+		root.size = size
+		await _frames()
+		var visible := root.get_visible_rect()
+		var watch_rect := watch.get_global_rect()
+		var primary_rect := primary.get_global_rect()
+		_check(visible.encloses(watch_rect) and visible.encloses(primary_rect)
+			and not watch_rect.intersects(primary_rect), "atlas actions fit %s" % size)
+	root.size = original_size
+	await _frames()
+
 	var original_lock := map.canvas.input_lock
 	watch.grab_focus()
 	watch.pressed.emit()
-	if not _check(map._replay_dialog != null, "product watch opens picker without dev flag"):
-		return
+	if not _check(map._replay_dialog != null, "atlas watch opens picker without dev flag"):
+		return false
 	map.back()
 	await _frames()
-	_check(map._replay_dialog == null and map._card.visible and watch.has_focus(),
-		"cancel restores browse focus")
+	_check(map._replay_dialog == null and map._atlas.visible and not map._card.visible and watch.has_focus(),
+		"cancel restores atlas focus")
 
+	var folder := ProjectSettings.globalize_path("user://")
 	var corrupt_path := folder.path_join("corrupt-product.pcopreplay")
 	var corrupt := FileAccess.open(corrupt_path, FileAccess.WRITE)
 	if not _check(corrupt != null, "write malformed replay fixture"):
-		return
+		return false
 	corrupt.store_string("damaged")
 	corrupt.close()
 	watch.pressed.emit()
 	map._replay_dialog.file_selected.emit(corrupt_path)
 	await _frames()
-	_check(map._replay_overlay == null and map.state == "browse" and map.hud.visible
-		and map.canvas.input_lock == original_lock and watch.has_focus()
-		and map._chip_label.text.begins_with("replay_invalid_json"), "invalid file restores browse state")
+	_check(map._replay_overlay == null and map.state == "browse" and map.hud.visible and map._atlas.visible
+		and not map._card.visible and map.canvas.input_lock == original_lock and watch.has_focus()
+		and map._chip_label.text.begins_with("replay_invalid_json"), "invalid file restores atlas state")
 
+	primary.grab_focus()
+	var accept := InputEventKey.new()
+	accept.keycode = KEY_ENTER
+	accept.pressed = true
+	root.push_input(accept, true)
+	accept.pressed = false
+	root.push_input(accept, true)
+	await _frames()
+	return _check(current_scene != null and current_scene.scene_file_path == "res://scenes/entry/EntryBoot.tscn",
+		"focused Red Cliffs action still opens entry detail with Enter")
+
+
+func _product(map: WorldMapScreen) -> void:
+	var folder := ProjectSettings.globalize_path("user://")
+	var record_path := folder.path_join("approved-front.pcopreplay")
 	map._product_sortie.pressed.emit()
 	map._skip.pressed.emit()
 	await _frames()

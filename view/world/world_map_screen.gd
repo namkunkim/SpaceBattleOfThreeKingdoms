@@ -473,7 +473,15 @@ func _build_cta() -> void:
 	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	h.add_child(l)
+	var product_replay_available := OS.has_feature("windows") and not OS.get_cmdline_user_args().has(BattleBrief.FIRST_OPERATION_DEV_ARG)
+	if product_replay_available:
+		var watch := _watch_replay_action(false)
+		watch.custom_minimum_size.x = 140
+		h.add_child(watch)
 	var b := _btn("적벽으로", true, 168)
+	b.name = "OpenRedCliffs"
+	if product_replay_available:
+		b.focus_mode = Control.FOCUS_ALL
 	b.pressed.connect(_open_atlas_red_cliffs)
 	h.add_child(b)
 	_cta.visible = false
@@ -728,15 +736,20 @@ func _add_restore_actions(container: Container) -> void:
 		imported.name = "ImportBattle"
 		imported.pressed.connect(_select_import_file)
 		row.add_child(imported)
-	var watch := _btn("Watch replay…" if development else "리플레이 보기…")
-	watch.name = "WatchReplay"
-	watch.pressed.connect(_select_replay_file)
-	watch.focus_mode = Control.FOCUS_ALL
-	row.add_child(watch)
+	row.add_child(_watch_replay_action(development))
 	for button: Button in row.get_children():
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		if development:
 			button.add_theme_font_size_override("font_size", 14)
+
+
+func _watch_replay_action(development: bool) -> Button:
+	var watch := _btn("Watch replay…" if development else "리플레이 보기…")
+	watch.name = "WatchReplay"
+	watch.pressed.connect(_select_replay_file)
+	watch.focus_mode = Control.FOCUS_ALL
+	return watch
+
 
 func _select_replay_file() -> void:
 	if (_replay_dialog != null or _replay_overlay != null or _restore_job != null
