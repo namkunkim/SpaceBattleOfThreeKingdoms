@@ -280,14 +280,8 @@ const externalPoints = [westernRegions,easternSolarSystem,...frontierFactions];
 const externalPointById = new Map(externalPoints.map(point => [point.id,point]));
 const easternRoad = ['양평',easternSolarSystem.id];
 const sectorColors = ['','#f5c77a','#92e9b3','#a5b7ff','#f5a3b7','#d6acff','#73e4f4'];
-const nebulae = [
-  [380,194,360,158,'#804a4f',-18],
-  [430,503,313,177,'#2d705f',28],
-  [910,143,387,129,'#364b9b',-12],
-  [955,345,306,150,'#753e69',13],
-  [820,530,298,166,'#4d397b',-16],
-  [1120,611,326,187,'#206a8e',-36]
-];// Each chain follows one uninterrupted stroke. Shared anchors are real junctions.
+const systemNebulaColors = ['#804a4f','#2d705f','#364b9b','#753e69','#4d397b','#206a8e'];
+// Each chain follows one uninterrupted stroke. Shared anchors are real junctions.
 const roadJunctions = {
   '@1':[568,201], '@2':[1213,90], '@3':[1123,200], '@4':[1159,313],
   '@5':[1300,225], '@6':[1025,304], '@7':[994,426], '@8':[1107,372],
@@ -374,6 +368,50 @@ function routePoint(point) {
   return source ? source.map(value => value*sourceScale) : cityLocations.get(point);
 }
 
+function drawGalaxy(defs) {
+  const gradients = [
+    ['galaxy-disc','#4e65a6',.44],
+    ['galaxy-core','#e6bc9e',.56],
+    ['galaxy-arm','#858ecb',.13],
+    ['galaxy-dust','#9f6798',.13]
+  ];
+  for (const [id,color,opacity] of gradients) {
+    const gradient = svgNode('radialGradient',{id},defs);
+    svgNode('stop',{offset:'0%','stop-color':color,'stop-opacity':opacity},gradient);
+    svgNode('stop',{offset:'100%','stop-color':color,'stop-opacity':0},gradient);
+  }
+
+  const galaxy = svgNode('g',{'aria-hidden':'true',transform:'translate(865 485) rotate(-21) scale(1 .49)'},terrain);
+  svgNode('ellipse',{rx:795,ry:710,fill:'url(#galaxy-disc)'},galaxy);
+  const random = seededRandom(81271);
+  const starColors = ['#b3caff','#f2d0ed','#dfe9ff','#f9d6ad'];
+
+  for (const arm of [0,1,2]) {
+    for (let i=0; i<175; i++) {
+      const progress = i/174;
+      const radius = 45+progress*780+(random()-.5)*100;
+      const angle = arm*2*Math.PI/3+progress*5.4+(random()-.5)*.28;
+      const x = Math.cos(angle)*radius;
+      const y = Math.sin(angle)*radius;
+      const cloud = i%4===0 ? 'galaxy-dust' : 'galaxy-arm';
+      svgNode('circle',{cx:x,cy:y,r:35+random()*100,fill:'url(#'+cloud+')',opacity:1-progress*.68},galaxy);
+    }
+  }
+  svgNode('ellipse',{rx:192,ry:156,fill:'url(#galaxy-core)'},galaxy);
+  for (const arm of [0,1,2]) {
+    for (let i=0; i<390; i++) {
+      const progress = Math.pow(random(),1.25);
+      const radius = 22+progress*820+(random()-.5)*80;
+      const angle = arm*2*Math.PI/3+progress*5.4+(random()-.5)*(.65-.34*progress);
+      svgNode('ellipse',{
+        cx:Math.cos(angle)*radius,cy:Math.sin(angle)*radius,
+        rx:.4+random()*1.5,ry:1+random()*2.5,fill:starColors[i%starColors.length],
+        opacity:(.18+random()*.42)*(1-progress*.45)
+      },galaxy);
+    }
+  }
+}
+
 function drawStarChart() {
   const defs = svgNode('defs', {}, terrain);
   const sun = svgNode('radialGradient',{id:'system-star'},defs);
@@ -384,12 +422,12 @@ function drawStarChart() {
   svgNode('stop',{offset:'58%','stop-color':'#0d1932'},space);
   svgNode('stop',{offset:'100%','stop-color':'#060d1b'},space);
   svgNode('rect',{width:chartWidth,height:chartHeight,fill:'url(#space)'},terrain);
-  nebulae.forEach(([x,y,rx,ry,color,angle],index) => {
+  drawGalaxy(defs);
+  systemNebulaColors.forEach((color,index) => {
     const id = 'nebula-' + index;
     const gradient = svgNode('radialGradient',{id},defs);
     svgNode('stop',{offset:'0%','stop-color':color,'stop-opacity':.68},gradient);
     svgNode('stop',{offset:'100%','stop-color':color,'stop-opacity':0},gradient);
-    svgNode('ellipse',{cx:x,cy:y,rx,ry,fill:'url(#'+id+')',transform:'rotate('+angle+' '+x+' '+y+')'},terrain);
   });
   const grid = svgNode('pattern',{id:'chart-grid',width:100,height:100,patternUnits:'userSpaceOnUse'},defs);
   svgNode('path',{d:'M100 0H0V100',fill:'none',stroke:'#98bfdc','stroke-opacity':.13},grid);
@@ -409,7 +447,8 @@ function drawStarChart() {
     svgNode('circle',{cx:x,cy:y,r:radius,fill:i%4===0?'#8ac6fd':'#dcefff','fill-opacity':.19+random()*.56},stars);
     if(bright) svgNode('path',{d:'M'+(x-4)+' '+y+'h8 M'+x+' '+(y-4)+'v8',
       stroke:'#bde5ff','stroke-opacity':.45,'stroke-width':.65},stars);
-  }  const roadLayer = svgNode('g', {'aria-label':'항성계 연결 항로와 회랑'}, terrain);
+  }
+  const roadLayer = svgNode('g', {'aria-label':'항성계 연결 항로와 회랑'}, terrain);
   for (const road of roads) {
     const points = road.map(point => {
       return routePoint(point);
