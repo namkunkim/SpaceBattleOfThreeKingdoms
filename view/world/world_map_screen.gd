@@ -297,10 +297,7 @@ func _build_card() -> void:
 	_card.add_child(v)
 	v.add_child(UiTheme.label("시나리오 · 건안 13년 겨울", "Eyebrow", 13))
 	v.add_child(UiTheme.label("적벽", "Display", 52))
-	if development:
-		v.add_child(_restore_actions())
-	elif OperationHost.product_save_supported():
-		v.add_child(_product_resume_action())
+	_add_restore_actions(v)
 	var go := _btn("출  격", true)
 	go.custom_minimum_size.y = 66
 	go.pressed.connect(func(): sortie())
@@ -414,10 +411,7 @@ func _build_result() -> void:
 	v.add_child(_res_labels.eyebrow)
 	_res_labels.title = UiTheme.label("", "Display", 46)
 	v.add_child(_res_labels.title)
-	if OS.get_cmdline_user_args().has(BattleBrief.FIRST_OPERATION_DEV_ARG):
-		v.add_child(_restore_actions())
-	elif OperationHost.product_save_supported():
-		v.add_child(_product_resume_action())
+	_add_restore_actions(v)
 	_res_labels.ending = _wrap(UiTheme.label("", "Serif", 19))
 	v.add_child(_res_labels.ending)
 	var grid := GridContainer.new()
@@ -718,38 +712,34 @@ func make_brief(seed := -1) -> BattleBrief:
 	return b
 
 # 출격: 연출(건너뛰기 가능) 뒤 전장 또는 자동 해결
-func _product_resume_action() -> Button:
-	var resume := _btn("첫 작전 이어하기")
-	resume.name = "ResumeProductBattle"
-	resume.pressed.connect(_resume_saved_battle.bind(true))
-	return resume
-
-
-func _restore_actions() -> HBoxContainer:
+func _add_restore_actions(container: Container) -> void:
+	var development := OS.get_cmdline_user_args().has(BattleBrief.FIRST_OPERATION_DEV_ARG)
+	if not development and not OS.has_feature("windows"):
+		return
 	var row := HBoxContainer.new()
-	var resume := _btn("Resume saved battle")
-	resume.name = "ResumeSavedBattle"
-	resume.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	resume.pressed.connect(_resume_saved_battle)
-	row.add_child(resume)
-	var imported := _btn("Import battle\u2026")
-	imported.name = "ImportBattle"
-	imported.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	imported.pressed.connect(_select_import_file)
-	row.add_child(imported)
-	var watch := _btn("Watch replay…")
+	container.add_child(row)
+	if development or OperationHost.product_save_supported():
+		var resume := _btn("Resume saved battle" if development else "첫 작전 이어하기")
+		resume.name = "ResumeSavedBattle" if development else "ResumeProductBattle"
+		resume.pressed.connect(_resume_saved_battle.bind(not development))
+		row.add_child(resume)
+	if development:
+		var imported := _btn("Import battle\u2026")
+		imported.name = "ImportBattle"
+		imported.pressed.connect(_select_import_file)
+		row.add_child(imported)
+	var watch := _btn("Watch replay…" if development else "리플레이 보기…")
 	watch.name = "WatchReplay"
-	watch.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	watch.pressed.connect(_select_replay_file)
-	row.add_child(watch)
 	watch.focus_mode = Control.FOCUS_ALL
-	for button: Button in [resume, imported, watch]:
-		button.add_theme_font_size_override("font_size", 14)
-	return row
+	row.add_child(watch)
+	for button: Button in row.get_children():
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		if development:
+			button.add_theme_font_size_override("font_size", 14)
 
 func _select_replay_file() -> void:
-	if (not OS.get_cmdline_user_args().has(BattleBrief.FIRST_OPERATION_DEV_ARG)
-			or _replay_dialog != null or _replay_overlay != null or _restore_job != null
+	if (_replay_dialog != null or _replay_overlay != null or _restore_job != null
 			or _import_dialog != null or state not in ["browse", "result"]):
 		return
 	_replay_focus = get_viewport().gui_get_focus_owner()
@@ -795,7 +785,8 @@ func _replay_file_selected(path: String) -> void:
 	_replay_overlay.add_child(viewer)
 	_replay_overlay.grab_focus()
 	viewer.exit_requested.connect(_close_replay_overlay)
-	var opened: Dictionary = viewer.open_file(path)
+	var product_only := not OS.get_cmdline_user_args().has(BattleBrief.FIRST_OPERATION_DEV_ARG)
+	var opened: Dictionary = viewer.open_file(path, product_only)
 	if not opened.ok:
 		_close_replay_overlay()
 		_show_chip(OperationHost.error_text(opened))

@@ -3,6 +3,7 @@ extends Control
 signal exit_requested
 
 const Codec := preload("res://scripts/first_operation_replay_codec.gd")
+const Product := preload("res://scripts/first_operation_source_reference.gd")
 const ADAPTER_PATH := "res://scripts/first_operation_adapter.gd"
 const FLAG := "--pc-first-operation-dev"
 const EVENTS_LIMIT := 60
@@ -52,14 +53,16 @@ func _ready() -> void:
 	set_process(false)
 
 
-func open_file(path: String) -> Dictionary:
-	if not OS.get_cmdline_user_args().has(FLAG):
+func open_file(path: String, product_only := false) -> Dictionary:
+	if not product_only and not OS.get_cmdline_user_args().has(FLAG):
 		return _fail("replay_development_only")
 	if not is_node_ready() or _replay != null or _verification != null:
 		return _fail("replay_viewer_busy")
 	var loaded := Codec.read(path)
 	if not loaded.ok:
 		return loaded
+	if product_only and loaded.bundle.request.capability != Product.CAPABILITY:
+		return _fail("replay_unsupported_capability")
 	if not ResourceLoader.exists(ADAPTER_PATH):
 		return _fail("replay_adapter_unavailable")
 	_adapter = load(ADAPTER_PATH) as Script
