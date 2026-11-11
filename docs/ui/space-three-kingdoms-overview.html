@@ -88,6 +88,8 @@ li button:hover,li button[aria-pressed=true]{background:#233956;color:#bef2ff}
   width:max-content;max-width:172px;transform:translate(-50%,-50%);padding:5px 8px;
   color:#eafaff;background:#0c1c32f5;border:1px solid #75bfd6;border-radius:5px;font-size:.8rem}
 .approach-button:hover+.approach-tip,.approach-button:focus-visible+.approach-tip{visibility:visible}
+.chart-object.external-region span{color:#ffe1ad;border-color:#a78151}
+.external-key{color:#e8bf82}
 .chart-object.relay-station{width:20px;height:20px;z-index:3}
 .chart-object.relay-station span{color:#c4f1ff;border-color:#46708d}
 #system-legend[data-relay=true] .system-body-key{display:none}
@@ -122,7 +124,7 @@ main:not(.detail-open) .layout{grid-template-columns:minmax(0,1fr)}
 </div>
 </div>
 <div class="map-viewport" id="viewport" tabindex="0" aria-label="지도. 확대 후 방향키로 이동할 수 있습니다."><div class="map" id="map"><svg id="terrain" xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="none"></svg><div class="labels" id="labels"></div></div></div>
-<div class="legend" id="chart-legend" aria-label="항로도 범례"><span><b class="route-key">━</b>항로</span><span><b class="junction-key">▣</b>중계 정거장</span><span><b class="gate-key">⬡</b>요새 위성</span><span><b>✦</b>항성계</span></div>
+<div class="legend" id="chart-legend" aria-label="항로도 범례"><span><b class="route-key">━</b>항로</span><span><b class="junction-key">▣</b>중계 정거장</span><span><b class="gate-key">⬡</b>요새 위성</span><span><b>✦</b>항성계</span><span><b class="external-key">┄</b>외부 세력 항로</span></div>
 <div class="legend" id="system-legend" aria-label="상세 지도 범례" hidden><span class="system-body-key"><b>●</b>행성</span><span class="system-body-key"><b style="color:#c7b49d">⋯</b>소행성대</span><span class="system-body-key"><b style="color:#9ef6b9">◉</b>거주 가능 행성</span><span><b class="junction-key">▣</b>정거장</span>
 <span><b class="terrain-gas">◉</b>가스 구역</span>
 <span><b class="terrain-rock">◆</b>소행성</span><span><b class="terrain-dust">⋯</b>우주 먼지</span></div>
@@ -241,6 +243,42 @@ const cityPoints = [
   [[957,391],[778,475],[917,519],[942,454],[1052,540],[903,597],[873,672],[1041,700],[1028,814],[855,796]],
   [[1236,456],[1411,443],[1236,545],[1348,503],[1490,520],[1458,592],[1249,677],[1142,628],[772,932]]
 ].map(points => points.map(([x,y]) => [x*sourceScale,y*sourceScale]));
+// Seonghanji: EXT:서역 and RTE-001 (COR-14), from data/maps/galaxy-map.json.
+const westernRegions = {
+  id:'EXT:서역', name:'서역', faction:'서융 권역', grade:'변경', kind:'외부 세력',
+  route:{id:'RTE-001',name:'하서회랑',kind:'회랑',multiplier:3,destination:'무위'},
+  position:[84.0, 74.36].map(value => value*sourceScale)
+};
+// Reproject the source curve onto the existing Muwei marker (SYS-10's inhabited world).
+const externalRoad = [
+  westernRegions.id,
+  [101.7,71.46],[122.33,69.08],[140.02,67.88],[160.64,67.48],[178.32,67.98],
+  [198.93,69.57],[219.53,72.22],[237.19,75.35],[261.58,81.86],[289.93,90.62],
+  [317.88,100.34],[345.42,111.04],[369.87,121.49],[396.65,134.02],[423.02,147.53],
+  westernRegions.route.destination
+];
+const easternSolarSystem = {
+  id:'구자',name:'구자',kind:'동이권 태양계',position:[1385,104],region:3,
+  solar:true,caption:'구자 · 태양계'
+};
+const frontierFactions = [
+  {name:'선비',hanja:'鮮卑',position:[947,38],destination:'계',front:'위 방면',
+    description:'가비능이 여러 부를 규합한 북방 초원 세력. 유주 방면의 항로는 계에서 이어집니다.'},
+  {name:'남흉노',hanja:'南匈奴',position:[770,61],destination:'진양',front:'위 방면',
+    description:'병주 진양과 분수 일대에서 활동한 흉노 세력입니다.'},
+  {name:'남중 세력',position:[400,793],destination:'건녕',front:'촉 방면',
+    description:'건녕·월수·장가·영창 일대의 여러 집단입니다. 225년 제갈량이 남중을 원정했습니다.'},
+  {name:'산월',hanja:'山越',position:[1300,387],destination:'말릉',front:'오 방면',
+    description:'단양 등 강남 산지의 여러 집단입니다. 손권은 단양에서 산월을 규합한 비잔을 토벌하도록 육손을 보냈습니다.'},
+  {name:'강족',hanja:'羌族',position:[309,285],destination:'천수',front:'서북 변경',
+    description:'양주와 농우 일대에서 활동한 여러 집단입니다. 마초가 이 지역에서 강족의 지지를 받았습니다.'},
+  {name:'저족',hanja:'氐族',position:[342,407],destination:'무도',front:'무도 변경',
+    description:'무도 일대에 살았으며, 조조가 한중에서 철수할 때 일부가 천수와 부풍 방면으로 이주했습니다.'}
+].map(point => ({...point,id:point.name,kind:'외부 세력'}));
+const frontierRoads = frontierFactions.map(point => [point.destination,point.id]);
+const externalPoints = [westernRegions,easternSolarSystem,...frontierFactions];
+const externalPointById = new Map(externalPoints.map(point => [point.id,point]));
+const easternRoad = ['양평',easternSolarSystem.id];
 const sectorColors = ['','#f5c77a','#92e9b3','#a5b7ff','#f5a3b7','#d6acff','#73e4f4'];
 const nebulae = [
   [380,194,360,158,'#804a4f',-18],
@@ -313,6 +351,7 @@ const roads = [
   ['@7','여남','수춘','광릉'], ['@8','여남'],
   ['수춘',[1257,483],'@12']
 ];const svgNamespace = 'http://www.w3.org/2000/svg';
+const chartRoads = [...roads,externalRoad,easternRoad,...frontierRoads];
 const chartWidth = 1600;
 const chartHeight = 900;
 const cityLocations = new Map();
@@ -329,6 +368,8 @@ function svgNode(tag, attributes, parent) {
 }
 
 function routePoint(point) {
+  const externalPoint = externalPointById.get(point);
+  if (externalPoint) return externalPoint.position;
   const source = Array.isArray(point) ? point : roadJunctions[point] || gates[point];
   return source ? source.map(value => value*sourceScale) : cityLocations.get(point);
 }
@@ -376,6 +417,31 @@ function drawStarChart() {
     const style = {points,fill:'none','stroke-linecap':'round','stroke-linejoin':'round'};
     svgNode('polyline',{...style,stroke:'#163f60','stroke-width':6},roadLayer);
     svgNode('polyline',{...style,stroke:'#82dcf1','stroke-width':2},roadLayer);
+  }
+  const externalLayer = svgNode('g', {'aria-label':'외부 세력과 동이권 항로'},terrain);
+  const externalPath = svgNode('polyline',{
+    points:externalRoad.map(point => routePoint(point).join(',')).join(' '),
+    fill:'none',stroke:'#e8bf82','stroke-width':2,'stroke-dasharray':'6 4'
+  },externalLayer);
+  svgNode('title',{},externalPath).textContent = westernRegions.route.name;
+  const routeLabel = svgNode('text',{x:172,y:46,fill:'#ffe1ad','font-size':14},externalLayer);
+  routeLabel.textContent = westernRegions.route.name;
+  svgNode('polyline',{
+    points:easternRoad.map(point => routePoint(point).join(',')).join(' '),
+    fill:'none',stroke:'#81dae8','stroke-width':2
+  },externalLayer);
+  for (const road of frontierRoads) {
+    svgNode('polyline',{
+      points:road.map(point => routePoint(point).join(',')).join(' '),
+      fill:'none',stroke:'#e8bf82','stroke-width':2,'stroke-dasharray':'6 4'
+    },externalLayer);
+  }
+  for (const point of externalPoints) {
+    const [cx,cy] = point.position;
+    const radius = point === westernRegions ? 9 : 6;
+    const color = point.solar ? '#b2e9f1' : '#ffe1ad';
+    svgNode('circle',{cx,cy,r:radius,fill:'#152239',stroke:color},externalLayer);
+    svgNode('circle',{cx,cy,r:radius/3,fill:color},externalLayer);
   }
   const featuresLayer = svgNode('g', {'aria-label':'중계 정거장과 요새 위성'}, terrain);
   Object.entries(roadJunctions).forEach(([id,[x,y]]) => {
@@ -498,9 +564,13 @@ function orbitPosition(radius, angle) {
   };
 }
 
+const solarPlanetNames = ['수성','금성','지구','화성','목성','토성','천왕성','해왕성'];
+
 function buildSystem(city) {
   const sequence = cities.indexOf(city);
-  const {starCount,planetCount,extraNameStart} = systemLayouts[sequence];
+  const {starCount,planetCount,extraNameStart} = city.solar
+    ? {starCount:1,planetCount:solarPlanetNames.length}
+    : systemLayouts[sequence];
   const random = seededRandom(8827+sequence*2039);
   const orientation = random()*360;
   const orbitGap = (outerOrbitRadius-innerOrbitRadius)/(planetCount-1);
@@ -521,7 +591,7 @@ function buildSystem(city) {
     const typeIndex = index < planetTypes.length ? index : 4+Math.floor(random()*4);
     const [classification,color,size] = planetTypes[typeIndex];
     const habitable = index === 2;
-    const identity = habitable ? {name:city.name}
+    const identity = city.solar ? {name:solarPlanetNames[index]} : habitable ? {name:city.name}
       : index < 8 ? planetNames[nameIndex++] : extraPlanetNames[extraNameIndex++];
     const angle = orientation+index*137.508+(random()-.5)*22;
     return {
@@ -532,9 +602,9 @@ function buildSystem(city) {
   });
 
   const beltSlots = Array.from({length:planetCount-1},(_,index) => index+1);
-  const beltCount = planetCount <= 4 ? 1 : 1+Math.floor(random()*3);
+  const beltCount = city.solar || planetCount <= 4 ? 1 : 1+Math.floor(random()*3);
   const belts = Array.from({length:beltCount},() => {
-    const after = planetCount <= 4 ? planetCount
+    const after = city.solar ? 4 : planetCount <= 4 ? planetCount
       : beltSlots.splice(Math.floor(random()*beltSlots.length),1)[0];
     const radius = planets[after-1].orbit+(planetCount <= 4 ? 48 : orbitGap/2);
     const width = planetCount <= 4 ? 18 : Math.min(20,orbitGap*.6);
@@ -561,8 +631,15 @@ const fullTurn = 2*Math.PI;
 const systemScale = 2/3;
 const clearSpace = {x:680,y:370};
 
+function systemIndexSeed(city) {
+  if (externalPointById.has(city.id)) {
+    return cities.length+Object.keys(relayNames).length+externalPoints.indexOf(city)+1;
+  }
+  return city.id ? cities.length+Number(city.id.slice(1)) : cities.indexOf(city)+1;
+}
+
 function systemDisplayCenter(city) {
-  const indexSeed = city.id ? cities.length+Number(city.id.slice(1)) : cities.indexOf(city)+1;
+  const indexSeed = systemIndexSeed(city);
   const random = seededRandom(17381+indexSeed*37273);
   const angle = random()*fullTurn;
   // Limit the offset so even the widest displayed belt fits inside the terrain boundary.
@@ -574,7 +651,7 @@ function systemDisplayCenter(city) {
 }
 
 const routeConnections = new Map();
-for (const road of roads) {
+for (const road of chartRoads) {
   const stops = road.filter(point => typeof point === 'string');
   for (let index = 1; index < stops.length; index++) {
     const from = stops[index-1], to = stops[index];
@@ -602,7 +679,7 @@ function approachDestinations(origin,firstStop) {
 function systemApproaches(origin) {
   const [x,y] = routePoint(origin);
   const openings = [];
-  for (const road of roads) {
+  for (const road of chartRoads) {
     road.forEach((point,index) => {
       if (point !== origin) return;
       for (const step of [-1,1]) {
@@ -640,7 +717,7 @@ function centralClearance(angle) {
 }
 
 function drawSystemTerrain(layer,city) {
-  const indexSeed = city.id ? cities.length+Number(city.id.slice(1)) : cities.indexOf(city)+1;
+  const indexSeed = systemIndexSeed(city);
   const random = seededRandom(7309+indexSeed*19277);
   const openings = systemApproaches(city.id || city.name);
   const landscape = svgNode('g',{'aria-label':'연결 항로 사이의 장애 지형'},layer);
@@ -726,7 +803,10 @@ function drawSystem(system) {
   }
   for (const star of system.stars) {
     svgNode('circle',{cx:star.x,cy:star.y,r:star.radius*3.1,fill:'url(#system-star)'},bodies);
-    svgNode('circle',{cx:star.x,cy:star.y,r:star.radius,fill:star.color,stroke:'#ffd188','stroke-width':2},bodies);
+    const starDisc = svgNode('circle',{
+      cx:star.x,cy:star.y,r:star.radius,fill:star.color,stroke:'#ffd188','stroke-width':2
+    },bodies);
+    if (system.city.solar) svgNode('title',{},starDisc).textContent = '태양';
   }
   for (const object of [...system.planets,system.station]) {
     const node = svgNode('g',{transform:'translate('+object.x+' '+object.y+')'},bodies);
@@ -763,11 +843,15 @@ function chartMarker(object, x, y, activate, current = false) {
 }
 
 function destinationName(id) {
+  if (externalPointById.has(id)) return externalPointById.get(id).name;
   return relayNames[id]?.[0] || satelliteNames[id]?.[0] || id;
 }
 
 function visitDestination(id) {
-  if (Object.hasOwn(relayNames,id)) openRelay(id);
+  const point = externalPointById.get(id);
+  if (point?.solar) openSystem(point);
+  else if (point) openExternalPoint(point);
+  else if (Object.hasOwn(relayNames,id)) openRelay(id);
   else if (Object.hasOwn(satelliteNames,id)) openFortress(id);
   else enterSystem(id);
 }
@@ -820,8 +904,17 @@ function approachControls(origin) {
 }
 
 function renderSystem() {
+  if (activeSystem.external) {
+    const {city} = activeSystem;
+    title.textContent = city.name;
+    terrain.setAttribute('aria-label',city.name+' 세부 지도');
+    mapHint.textContent = '진입로에 마우스를 올리면 목적지가 표시됩니다. 진입로를 누르면 연결된 곳으로 이동합니다.';
+    labels.replaceChildren(...approachControls(city.id));
+    return;
+  }
   terrain.setAttribute('viewBox','0 0 1600 900');
-  title.textContent = activeSystem.city.name+(activeSystem.relay ? ' 중계 정거장' : ' 항성계');
+  const {city} = activeSystem;
+  title.textContent = city.caption || city.name+(activeSystem.relay ? ' 중계 정거장' : ' 항성계');
   terrain.setAttribute('aria-label',title.textContent+' 내부 지도');
   mapHint.textContent = '진입로 위에 마우스를 올리면 목적지가 표시됩니다. 진입로를 누르면 연결된 곳으로 이동할 수 있습니다.';
   const objects = [...activeSystem.planets,activeSystem.station];
@@ -890,6 +983,51 @@ function openRelay(id) {
   animateMapTransition();
 }
 
+function openExternalPoint(region) {
+  rememberChartPosition();
+  activeFortress = null;
+  selectedObject = null;
+  activeSystem = {city:region,external:true};
+  showDetailPanels(null);
+  detailTitle.textContent = region.name+' 상세';
+  systemSummary.textContent = region.front
+    ? region.front+' · '+region.kind
+    : region.faction+' · '+region.grade;
+  objectInfo.replaceChildren();
+  if (region.description) {
+    const description = document.createElement('p');
+    description.textContent = region.description;
+    objectInfo.append(description);
+  }
+  objectInfo.hidden = !region.description;
+  detailListTitle.textContent = '연결 항로';
+  const routes = [...routeConnections.get(region.id)].map(destination => {
+    const row = document.createElement('li');
+    const route = region.route;
+    const label = route?.destination === destination
+      ? route.name+' → '+destination+' (이동 소요 ×'+route.multiplier+')'
+      : destinationName(destination);
+    row.append(button(label,() => visitDestination(destination)));
+    return row;
+  });
+  localObjects.replaceChildren(...routes);
+  detailLayer?.remove();
+  detailLayer = svgNode('g',{'aria-label':region.name+' 상세 지도'},terrain);
+  terrain.setAttribute('viewBox','0 0 1600 900');
+  svgNode('rect',{width:chartWidth,height:chartHeight,fill:'#0b1428'},detailLayer);
+  svgNode('rect',{width:chartWidth,height:chartHeight,fill:'url(#chart-grid)'},detailLayer);
+  drawSystemTerrain(detailLayer,region);
+  const {x,y} = systemDisplayCenter(region);
+  svgNode('circle',{cx:x,cy:y,r:62,fill:'#2d2430',stroke:'#e8bf82','stroke-width':2,
+    'stroke-dasharray':'5 8'},detailLayer);
+  const label = svgNode('text',{x,y:y+8,fill:'#ffe1ad','font-size':24,'text-anchor':'middle'},detailLayer);
+  label.textContent = region.name;
+  setZoom(1);
+  renderMap();
+  backChart.focus({preventScroll:true});
+  animateMapTransition();
+}
+
 function openSystem(city) {
   rememberChartPosition();
   activeFortress = null;
@@ -898,11 +1036,12 @@ function openSystem(city) {
   showDetailPanels(systemLegend);
   systemLegend.dataset.relay = 'false';
   detailListTitle.textContent = '행성과 정거장';
-  detailTitle.textContent = city.name+' 항성계 상세';
+  detailTitle.textContent = (city.caption || city.name+' 항성계')+' 상세';
   const {stars,planets,belts} = activeSystem;
   const beltLocations = belts.map(({after}) => after === planets.length ? '최외곽 궤도 바깥'
     : planets[after-1].name+'–'+planets[after].name+' 사이');
-  systemSummary.textContent = '중심별 '+stars.length+'개 · 행성 '+planets.length+'개 · 소행성대 '+belts.length+'곳 ('+beltLocations.join(', ')+')';
+  const starLabel = city.solar ? '중심별 태양' : '중심별 '+stars.length+'개';
+  systemSummary.textContent = starLabel+' · 행성 '+planets.length+'개 · 소행성대 '+belts.length+'곳 ('+beltLocations.join(', ')+')';
   drawSystem(activeSystem);
   const rows = objects => objects.map(object => {
     const row = document.createElement('li');
@@ -928,6 +1067,7 @@ function rememberChartPosition() {
 }
 
 function showDetailPanels(legend) {
+  objectInfo.hidden = false;
   routeChoice.hidden = true;
   page.classList.add('detail-open');
   chartLegend.hidden = true;
@@ -1093,6 +1233,7 @@ function button(text, action) {
 }
 
 const overviewPoints = [
+  ...externalPoints.map(point => ({...point,style:'external-region'})),
   ...cities.map(({name}) => ({id:name,name,kind:'항성계',position:cityLocations.get(name)})),
   ...Object.entries(relayNames).map(([id,[name,hanja]]) =>
     ({id,name,hanja,kind:'중계 정거장',position:routePoint(id),style:'relay-station'})),
@@ -1170,7 +1311,7 @@ function renderMap() {
   }
   terrain.setAttribute('viewBox','0 0 1600 900');
   title.textContent = '전체 항로도';
-  terrain.setAttribute('aria-label','항성계, 중계 정거장, 요새 위성 및 항로');
+  terrain.setAttribute('aria-label','항성계, 중계 정거장, 요새 위성, 외부 세력, 동이권 태양계 및 항로');
   mapHint.textContent = '지점 위에서 휠로 300%까지 확대하면 세부 지도가 열립니다. 지점을 클릭하면 메뉴가 열립니다.';
   const markers = overviewPoints.map(point => {
     const [x,y] = point.position;
@@ -1180,7 +1321,8 @@ function renderMap() {
     if (['#4','#7','#8'].includes(point.id)) marker.classList.add('below');
     marker.setAttribute('aria-haspopup','dialog');
     marker.setAttribute('aria-label',point.name+' '+point.kind+' 메뉴');
-    const minimum = point.style ? relayLabelScale : 1.25;
+    if (point.caption) marker.lastElementChild.textContent = point.caption;
+    const minimum = point.style === 'external-region' ? 1 : point.style ? relayLabelScale : 1.25;
     marker.lastElementChild.hidden = !showLabels || zoomScale < minimum;
     return marker;
   });
