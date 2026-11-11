@@ -80,6 +80,8 @@ E 소스 반영 완료: 독립 R3 통과한 revision-02 제품 5파일을 단일
 - [x] **원장 기록 직후 단일 시험 프로세스 종료·복구.** 계측 환경에서 실제 원장 기록과 잠금 해제 뒤 지도 게시 전 시험 자식 PID만 종료했다. 새 프로세스 두 번에서 같은 ID·사유·294.9초를 표시했고 완료 슬롯을 거부했다. 같은 프로세스의 지도 왕복에서 중복 표시 0건, 원장 1건과 진행 슬롯·백업 SHA 보존을 독립 확인했다. 합성 완료 DTO를 사용한 단일 프로세스 경계이며 자연 전투 중 강제 종료와 전원 상실은 미검증이다. 실행 `01a1c93a…`와 독립 검토 `01a1c915…`는 (DONE)이다. [독립 강제 종료 검토](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/r5-settlement-independent-01a1c915/KILL-REVIEW.md)
 - [x] **복구 EXE `67f9cb20…` Windows 전경 인수.** 15:13:51–15:27:15 KST, 기본 타이틀에서 정면 출격해 113틱 저장과 동일·새 프로세스 113틱 재개를 확인했다. C 점령으로 5,603틱(560.3초)에 자연 종료하고 지도에 목표 달성 결과를 표시했다. 정상 종료 뒤 새 프로세스에서 같은 결산을 복원했고, 완료 슬롯은 `checkpoint_already_settled`로 거부됐다. 같은 실행의 지도 왕복에서 중복 표시 0건, 원장 1건, 주 슬롯·진행 백업 SHA 보존을 확인했다. UI 담당 `01a1c838…`는 (DONE)이다. [실제 입력·화면·원장](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/r5-dimensions-canonical-windows-ui-prep-01a1c838/run-67f9cb20-20261111-01/RESULTS.md)
 
+- [x] **P02·P03 승인 적벽 v1 F 격리 회귀.** Windows 배포본 `67f9cb20…`의 제품 요청 `pc/first-operation/1`을 사용했다. 명시 시작 전 8프레임 동안 0틱·0ms, 첫 이동 명령은 0틱 대기 후 1틱에 한 번 적용됐다. 5틱 주 슬롯과 4틱 백업을 저장했고 새 프로세스에서 동일 작전 ID·상태 다이제스트로 5틱을 복원했다. 6틱 진행 후에도 첫 명령 이력은 1건이었다. `facility_never_secured` 결산이 지도와 원장에 1건 기록됐고, 새 프로세스에서 완료 슬롯은 `checkpoint_already_settled`로 거부됐다. 원장·주 슬롯·백업 SHA를 보존했다. 헤드리스 계측 3개 순차 프로세스 모두 exit 0. [F 검증 보고서](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/rc-v1-entry-baseline-01a1c907-run04/RESULTS.md)
+
 **P09 외에 현재 승인 범위에서 독립 착수할 필수 작업은 확인되지 않았다.** 승인 적벽 v1의 정면 플레이·동일 버전 저장/재개·결산 복구와 구버전 실행본 보존은 인수했다. 일반 I01b 인수는 아래 입력·승인 조건이 남았다.
 
 | 남은 요구 | 실행 조건과 담당 |
