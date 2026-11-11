@@ -32,6 +32,9 @@ var brief: BattleBrief
 var resolver: AutoResolver
 var outcome: BattleOutcome
 
+var _atlas: Control
+var _atlas_backdrop: ColorRect
+var _header: Control
 var _title: Label
 var _sub: Label
 var _crumbs := {}
@@ -87,6 +90,19 @@ func _ready() -> void:
 	sound = UiSound.new()
 	sound.name = "UiSound"
 	add_child(sound)
+	_atlas_backdrop = ColorRect.new()
+	_atlas_backdrop.color = Color("090f18")
+	_atlas_backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hud.add_child(_atlas_backdrop)
+	_atlas_backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_atlas_backdrop.hide()
+	_atlas = preload("res://view/world/navigation_atlas.gd").new()
+	_atlas.name = "WorldAtlas"
+	_atlas.configure(world)
+	hud.add_child(_atlas)
+	_atlas.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_atlas.offset_bottom = -M - 108
+	_atlas.hide()
 	_build_header()
 	_build_legend()
 	_build_card()
@@ -171,6 +187,7 @@ func _build_header() -> void:
 	col.position = Vector2(M, 22)
 	col.add_theme_constant_override("separation", 2)
 	hud.add_child(col)
+	_header = col
 	col.add_child(UiTheme.label(str(world.get("era", "")), "Eyebrow", 13))
 	_title = UiTheme.label("천하", "Title", 34)
 	col.add_child(_title)
@@ -671,6 +688,15 @@ func _result_to_world() -> void:
 # ------------------------------------------------------------ 진행
 func _process(delta: float) -> void:
 	var fl := canvas.flying()
+	var show_atlas := state == "browse" and canvas.level() == "z0" and not fl and not _card.visible
+	if _atlas.visible != show_atlas:
+		_atlas.visible = show_atlas
+		_atlas_backdrop.visible = show_atlas
+		_header.visible = not show_atlas
+		canvas.visible = not show_atlas
+		_legend.visible = not show_atlas and state != "sortie"
+		if show_atlas:
+			_atlas.show_overview()
 	if _was_flying and not fl and state == "browse":
 		_update_card()
 	_was_flying = fl
@@ -702,6 +728,8 @@ func back() -> void:
 		"result":
 			_result_to_world()
 		"browse":
+			if _atlas.visible and _atlas.back_to_overview():
+				return
 			var l := canvas.level()
 			if l == "z3":
 				_go_level("z2")
