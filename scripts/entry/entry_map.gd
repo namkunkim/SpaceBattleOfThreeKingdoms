@@ -2,6 +2,8 @@ extends Control
 # Read-only presentation of existing navigation and approved operation data.
 # Never creates a battle host, writes coordinates, or advances simulation.
 @export var detailed := false
+var local_context := false
+const Sites := preload("res://view/world/red_cliffs_sites.gd")
 const ATLAS := "res://data/galaxy_navigation.json"
 const OPERATION := "res://data/scenarios/p05_p07_first_operation_dev_v1.json"
 const SKY := "res://assets/world_atlas/red-cliffs-reference-sky.jpg"
@@ -75,15 +77,16 @@ func _draw() -> void:
 		_text(Vector2(20, 40), failure, GOLD, 20)
 		return
 	if size.x <= 48.0 or size.y <= 44.0: return
-	var extent := _point(data.space.size) if detailed else Vector2(float(data.width), float(data.height))
-	var field := Rect2(Vector2(24, 22), size - Vector2(48, 44))
-	var scale_factor := minf(field.size.x / extent.x, field.size.y / extent.y)
-	field = Rect2((size - extent * scale_factor) / 2.0, extent * scale_factor)
+	var bounds := _map_bounds()
+	var field := _map_field(bounds.size)
+	var scale_factor := field.size.x / bounds.size.x
 	draw_texture_rect(sky, Rect2(Vector2.ZERO, size), false, Color(0.65, 0.72, 0.85))
 	draw_rect(Rect2(Vector2.ZERO, size), Color(0.02, 0.04, 0.08, 0.15))
 	if detailed:
 		draw_texture_rect(terrain, field, false, Color(0.8, 0.9, 1, 0.9))
 		_detail(field, scale_factor)
+	elif local_context:
+		_local_detail(field, scale_factor)
 	else:
 		_strategy(field, scale_factor)
 	# Sensor-frame corner marks; purely visual.
@@ -91,6 +94,54 @@ func _draw() -> void:
 		var at := Vector2(12 if corner.x > 0 else size.x - 12, 12 if corner.y > 0 else size.y - 12)
 		draw_line(at, at + Vector2(corner.x * 22, 0), MUTED, 1)
 		draw_line(at, at + Vector2(0, corner.y * 22), MUTED, 1)
+
+func _map_bounds() -> Rect2:
+	if local_context:
+		return Sites.DETAIL_BOUNDS
+	var extent := _point(data.space.size) if detailed else Vector2(float(data.width), float(data.height))
+	return Rect2(Vector2.ZERO, extent)
+
+func _map_field(extent: Vector2) -> Rect2:
+	var available := size - Vector2(48, 44)
+	var factor := maxf(0.0, minf(available.x / extent.x, available.y / extent.y))
+	return Rect2((size - extent * factor) / 2.0, extent * factor)
+
+func red_cliffs_position() -> Vector2:
+	var bounds := _map_bounds()
+	var field := _map_field(bounds.size)
+	return field.position + _point(Sites.POINTS[0].position) * (field.size.x / bounds.size.x)
+
+func _local_detail(field: Rect2, factor: float) -> void:
+	var origin := field.position - Sites.DETAIL_BOUNDS.position * factor
+	draw_texture_rect_region(sky, field, Sites.DETAIL_BOUNDS)
+	var battle := origin + _point(Sites.POINTS[0].position) * factor
+	var wulin := origin + _point(Sites.POINTS[1].position) * factor
+	for route: Dictionary in data.routes:
+		for index in range(1, route.points.size()):
+			var from := _point(route.points[index - 1])
+			var to := _point(route.points[index])
+			if not Sites.DETAIL_BOUNDS.has_point(from):
+				if not Sites.DETAIL_BOUNDS.has_point(to):
+					continue
+				from = _local_route_end(to, from)
+			else:
+				to = _local_route_end(from, to)
+			draw_line(origin + from * factor, origin + to * factor, CYAN, 1.5, true)
+	draw_dashed_line(wulin, battle, Color("#dc9c85"), 2.0, 6.0, true, true)
+	draw_circle(wulin, 5.0, Color("#dc9c85"))
+	draw_circle(battle, 6.0, GOLD)
+	_text(wulin + Vector2(-34, -14), "오림 집결지", Color("#dc9c85"), 15)
+	_text(battle + Vector2(-24, 27), "적벽 전장", GOLD, 15)
+
+func _local_route_end(inside: Vector2, outside: Vector2) -> Vector2:
+	var bounds: Rect2 = Sites.DETAIL_BOUNDS
+	var direction := outside - inside
+	var limit := 1.0
+	for axis in range(2):
+		if not is_zero_approx(direction[axis]):
+			var edge := bounds.end[axis] if direction[axis] > 0.0 else bounds.position[axis]
+			limit = minf(limit, (edge - inside[axis]) / direction[axis])
+	return inside + direction * limit
 
 func _strategy(field: Rect2, factor: float) -> void:
 	for route: Dictionary in data.routes:
@@ -102,23 +153,21 @@ func _strategy(field: Rect2, factor: float) -> void:
 		draw_circle(at, 2.0 if str(point.kind) == "항성계" else 1.1, Color("#93a6b280"))
 	for region: Dictionary in data.regions:
 		var at := field.position + _point(region.position) * factor
-		var active: bool = region.name == "형초"
+		if region.name == "형초":
+			continue
 		if compact_scale < 1.0:
-			if active:
-				draw_circle(at, 32, Color("#e6c18c40"))
-				draw_arc(at, 22, 0, TAU, 48, GOLD, 4, true)
-				_compact_label(at + Vector2(34, -28), "적벽 작전", GOLD)
-			else:
-				draw_circle(at, 7, MUTED)
-		elif active:
-			draw_circle(at, 33, Color("#e6c18c20"))
-			draw_arc(at, 24, 0, TAU, 48, GOLD, 1.5, true)
-			draw_polyline(PackedVector2Array([at + Vector2(18,-18), at + Vector2(55,-48), at + Vector2(80,-48)]), GOLD, 1, true)
-			_text(at + Vector2(85, -43), "적벽 작전", GOLD, 20)
-			_text(at + Vector2(85, -22), "형초 권역", MUTED, 14)
+			draw_circle(at, 7, MUTED)
 		else:
 			_text(at, str(region.name) + " · 잠금", Color("#92a1b0"), 14)
-	if compact_scale >= 1.0:
+	var wulin := field.position + _point(Sites.POINTS[1].position) * factor
+	var battle := red_cliffs_position()
+	var tint := Color("#dc9c85")
+	draw_circle(battle, 8.0, GOLD, false, 1.5, true)
+	draw_circle(wulin, 4.0, tint)
+	if compact_scale < 1.0:
+		_compact_label(wulin + Vector2(-24, -14), "오림", tint)
+	else:
+		_text(wulin + Vector2(-18, -12), "오림", tint, 15)
 		_text(Vector2(26, size.y - 22), "천하 항로도     /     작전 가능 지역: 적벽", MUTED, 14)
 
 func _detail(field: Rect2, factor: float) -> void:

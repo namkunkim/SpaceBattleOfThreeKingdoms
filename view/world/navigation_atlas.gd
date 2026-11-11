@@ -1,5 +1,8 @@
 extends Control
 
+signal red_cliffs_requested
+
+const Sites := preload("res://view/world/red_cliffs_sites.gd")
 const PLANET := preload("res://view/world/navigation_planet.gd")
 const DATA_PATH := "res://data/galaxy_navigation.json"
 const IMAGE_PATH := "res://assets/world_atlas/galaxy_navigation_terrain.png"
@@ -70,6 +73,9 @@ func configure(_world: Dictionary) -> void:
 		push_error("Navigation atlas data could not be loaded: " + DATA_PATH)
 		return
 	_data = parsed
+	for site: Dictionary in Sites.POINTS:
+		_data.points.push_front(site)
+	_points.clear()
 	_map_size = Vector2(float(_data.width), float(_data.height))
 	for point: Dictionary in _data.points:
 		_points[point.id] = point
@@ -269,7 +275,7 @@ func _zoom_at(position: Vector2, factor: float) -> void:
 		return
 	if _detail.is_empty() and factor > 1.0 and _zoom * factor >= DETAIL_THRESHOLD:
 		var point := _nearest_point(position, 23.0, false)
-		if not point.is_empty():
+		if point.has("detail"):
 			_open_detail(point)
 			return
 	var pinned := _screen_to_map(position)
@@ -454,9 +460,13 @@ func _tap(position: Vector2) -> void:
 			return
 	if _detail.is_empty():
 		var point := _nearest_point(position, 23.0)
+		if point.get("id") == Sites.RED_CLIFFS:
+			red_cliffs_requested.emit()
+			return
 		if not point.is_empty():
 			_open_popup(position, "%s · %s" % [point.name, point.kind])
-			_add_button(_popup_items, "상세 지도 열기", func(): _open_detail(point))
+			if point.has("detail"):
+				_add_button(_popup_items, "상세 지도 열기", func(): _open_detail(point))
 			_add_button(_popup_items, "이 지점 확대", func(): _focus_point(point))
 			_finish_popup(position)
 		return
@@ -660,6 +670,11 @@ func _draw_overview(canvas: Control) -> void:
 	for point: Dictionary in _data.points:
 		var center := _vector(point.position)
 		match str(point.kind):
+			"전장":
+				canvas.draw_circle(center, 8.0, GOLD, false, 1.6, true)
+				canvas.draw_circle(center, 4.0, GOLD, true, -1.0, true)
+			"집결지":
+				canvas.draw_circle(center, 4.0, Color.from_string(point.color, GOLD), true, -1.0, true)
 			"중계 정거장":
 				_draw_station(canvas, center, 5.5, CYAN)
 			"요새 위성":
@@ -901,14 +916,20 @@ func _draw_overview_labels(canvas: Control) -> void:
 			_draw_label(canvas, str(region.name), _map_to_screen(_vector(region.position)), 18, CYAN)
 	for point: Dictionary in _data.points:
 		var external: bool = point.kind == "외부 세력" or point.kind == "동이권 태양계"
-		if not external and _zoom < LABEL_THRESHOLD:
+		var operation_site: bool = point.id in [Sites.RED_CLIFFS, Sites.WULIN]
+		if not (external or operation_site) and _zoom < LABEL_THRESHOLD:
 			continue
 		var position := _map_to_screen(_vector(point.position))
 		if not Rect2(Vector2.ZERO, canvas.size).grow(12.0).has_point(position):
 			continue
 		var color := GOLD if external or point.kind == "요새 위성" else INK
+		if operation_site:
+			color = Color.from_string(point.color, GOLD)
 		var caption := str(point.caption)
-		for offset in [Vector2(0, -17), Vector2(0, 17), Vector2(26, -13), Vector2(-26, -13)]:
+		var offsets := [Vector2(0, -17), Vector2(0, 17), Vector2(26, -13), Vector2(-26, -13)]
+		if point.id == Sites.RED_CLIFFS:
+			offsets.push_front(Vector2(0, 17))
+		for offset in offsets:
 			var box := _label_rect(caption, position + offset, 14)
 			if taken.any(func(other: Rect2): return other.grow(2.0).intersects(box)):
 				continue

@@ -38,9 +38,14 @@ func act(action: String, token: int, region := REGION) -> bool:
 				if page >= 3: state = State.MAP
 			else: return false
 		State.MAP:
-			if action != "enter" or region != REGION or notified: return false
-			notified = true
-			state = State.CONFIRM
+			if region != REGION: return false
+			if action == "inspect":
+				state = State.LOADING
+			elif action == "enter" and not notified:
+				notified = true
+				state = State.CONFIRM
+			else:
+				return false
 		State.CONFIRM:
 			if region != REGION: return false
 			if action == "yes": state = State.LOADING
@@ -50,7 +55,14 @@ func act(action: String, token: int, region := REGION) -> bool:
 			if action == "retry": state = retry_state
 			elif action == "exit": state = State.EXIT
 			else: return false
-		State.READY, State.BYPASS:
+		State.READY:
+			if action == "map":
+				state = State.MAP
+			elif action == "exit":
+				state = State.EXIT
+			else:
+				return false
+		State.BYPASS:
 			if action != "exit": return false
 			state = State.EXIT
 		_: return false

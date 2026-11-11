@@ -127,7 +127,7 @@ func _label(value: String, font_size := 22, hide_in_compact := false) -> void:
 	_apply_layout(label)
 	body.add_child(label)
 
-func _button(value: String, action: String) -> void:
+func _button(value: String, action: String, parent: Control = null) -> Button:
 	var button := Button.new()
 	button.text = value
 	_apply_layout(button)
@@ -145,8 +145,9 @@ func _button(value: String, action: String) -> void:
 			if Rect2(Vector2.ZERO, button.size).has_point(event.position):
 				request(action, token)
 				button.accept_event())
-	body.add_child(button)
+	(parent if parent != null else body).add_child(button)
 	buttons.append(button)
+	return button
 
 func request(action: String, token: int, region := Flow.REGION) -> bool:
 	if gate_remaining > 0.0 or campaign_busy: return false
@@ -207,7 +208,15 @@ func _render() -> void:
 				flow.revision += 1
 				_render.call_deferred()
 				return
-			if flow.state == Flow.State.MAP:
+			if flow.state == Flow.State.MAP and campaign_enabled:
+				var marker := _button("적벽", "inspect", map)
+				marker.name = "RedCliffsMarker"
+				var place_marker := func():
+					marker.size = Vector2(78, 54)
+					marker.position = map.red_cliffs_position() + Vector2(-9, -13)
+				map.resized.connect(place_marker)
+				place_marker.call()
+			elif flow.state == Flow.State.MAP:
 				_button("◎ 적벽 · 교전 신호 확인", "enter")
 				var token := flow.revision
 				get_tree().create_timer(maxf(auto_prompt_seconds, 0.3)).timeout.connect(func():
@@ -259,11 +268,19 @@ func _load_detail(token: int) -> void:
 	_label("적벽  /  전술 준비", 28)
 	_label("작전 대기     •     전투는 시작되지 않았습니다", 18)
 	_apply_layout(detail)
+	if campaign_enabled:
+		var local_map := MapView.new()
+		local_map.name = "RedCliffsLocalMap"
+		local_map.local_context = true
+		local_map.custom_minimum_size = Vector2(280, 190)
+		_apply_layout(local_map)
+		body.add_child(local_map)
 	body.add_child(detail)
 	_label("임무: 연합 집결 위치와 적 접근 방향을 확인하고 적벽 항로 방어를 준비하십시오.", 20)
 	_label("연합 집결지에서 정면 항로를 따라 작전 목표를 확인하십시오.", 18, true)
 	if campaign_enabled:
 		_button("출격 · 실제 전장 준비", "sortie")
+		_button("항로도로 돌아가기", "map")
 		_button("기존 진행 · 이어하기 / 결산", "continue")
 		campaign_notice = Label.new()
 		campaign_notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

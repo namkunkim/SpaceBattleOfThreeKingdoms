@@ -127,6 +127,7 @@ func _ready() -> void:
 	_atlas = preload("res://view/world/navigation_atlas.gd").new()
 	_atlas.name = "WorldAtlas"
 	_atlas.configure(world)
+	_atlas.red_cliffs_requested.connect(_open_atlas_red_cliffs)
 	hud.add_child(_atlas)
 	_atlas.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_atlas.offset_bottom = -M - 108
@@ -479,9 +480,17 @@ func _build_cta() -> void:
 	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	h.add_child(l)
 	var b := _btn("적벽으로", true, 168)
-	b.pressed.connect(func(): open_card())
+	b.pressed.connect(_open_atlas_red_cliffs)
 	h.add_child(b)
 	_cta.visible = false
+
+func _open_atlas_red_cliffs() -> void:
+	if state != "browse" or not _sortie_available():
+		return
+	var link := _link()
+	if link == null or link.open_entry_detail() != OK:
+		_show_chip("적벽 상세를 열지 못했습니다. 다시 눌러 주세요.")
+
 
 func _return_to_title() -> void:
 	if not _title_button.visible or not _sortie_available():

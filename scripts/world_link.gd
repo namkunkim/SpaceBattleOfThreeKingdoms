@@ -23,6 +23,13 @@ var _prepared_restore: RefCounted
 var _settlement_boot_checked := false
 var _entry_restore := false
 
+func open_entry_detail() -> Error:
+	var error := _request_scene("res://scenes/entry/EntryBoot.tscn")
+	if error == OK:
+		_entry_restore = true
+	return error
+
+
 func take_entry_restore() -> bool:
 	var pending := _entry_restore
 	_entry_restore = false
