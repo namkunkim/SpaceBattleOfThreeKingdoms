@@ -290,12 +290,12 @@ func _draw_legend(c: Control) -> void:
 func _build_card() -> void:
 	_card = _panel()
 	_anchor_right(_card)
+	var development := OS.get_cmdline_user_args().has(BattleBrief.FIRST_OPERATION_DEV_ARG)
 	var v := VBoxContainer.new()
-	v.add_theme_constant_override("separation", 10)
+	v.add_theme_constant_override("separation", 10 if development else 8)
 	_card.add_child(v)
 	v.add_child(UiTheme.label("시나리오 · 건안 13년 겨울", "Eyebrow", 13))
 	v.add_child(UiTheme.label("적벽", "Display", 52))
-	var development := OS.get_cmdline_user_args().has(BattleBrief.FIRST_OPERATION_DEV_ARG)
 	if development:
 		v.add_child(_restore_actions())
 	elif OperationHost.product_save_supported():
@@ -1201,7 +1201,7 @@ func _process(delta: float) -> void:
 		_atlas_backdrop.visible = show_atlas
 		_header.visible = not show_atlas
 		canvas.visible = not show_atlas
-		_legend.visible = not show_atlas
+		_legend.visible = not show_atlas and state != "sortie"
 		if show_atlas:
 			_atlas.show_overview()
 	if _was_flying and not fl and state == "browse":

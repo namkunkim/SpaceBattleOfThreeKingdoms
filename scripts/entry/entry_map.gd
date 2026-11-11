@@ -12,6 +12,10 @@ var sky: Texture2D
 var terrain: Texture2D
 var failure := ""
 var prepared := false
+var compact_scale := 1.0:
+	set(value):
+		compact_scale = value
+		queue_redraw()
 const GOLD := Color("#e6c18c")
 const CYAN := Color("#8cddd9")
 const MUTED := Color("#8a9cab")
@@ -92,14 +96,21 @@ func _strategy(field: Rect2, factor: float) -> void:
 	for route: Dictionary in data.routes:
 		var points := PackedVector2Array()
 		for p: Array in route.points: points.append(field.position + _point(p) * factor)
-		if points.size() > 1: draw_polyline(points, Color("#55778965"), 1, true)
+		if points.size() > 1: draw_polyline(points, Color("#8ba9c58c") if compact_scale < 1.0 else Color("#55778965"), 3 if compact_scale < 1.0 else 1, true)
 	for point: Dictionary in data.points:
 		var at := field.position + _point(point.position) * factor
 		draw_circle(at, 2.0 if str(point.kind) == "항성계" else 1.1, Color("#93a6b280"))
 	for region: Dictionary in data.regions:
 		var at := field.position + _point(region.position) * factor
 		var active: bool = region.name == "형초"
-		if active:
+		if compact_scale < 1.0:
+			if active:
+				draw_circle(at, 32, Color("#e6c18c40"))
+				draw_arc(at, 22, 0, TAU, 48, GOLD, 4, true)
+				_compact_label(at + Vector2(34, -28), "적벽 작전", GOLD)
+			else:
+				draw_circle(at, 7, MUTED)
+		elif active:
 			draw_circle(at, 33, Color("#e6c18c20"))
 			draw_arc(at, 24, 0, TAU, 48, GOLD, 1.5, true)
 			draw_polyline(PackedVector2Array([at + Vector2(18,-18), at + Vector2(55,-48), at + Vector2(80,-48)]), GOLD, 1, true)
@@ -107,7 +118,8 @@ func _strategy(field: Rect2, factor: float) -> void:
 			_text(at + Vector2(85, -22), "형초 권역", MUTED, 14)
 		else:
 			_text(at, str(region.name) + " · 잠금", Color("#92a1b0"), 14)
-	_text(Vector2(26, size.y - 22), "천하 항로도     /     작전 가능 지역: 적벽", MUTED, 14)
+	if compact_scale >= 1.0:
+		_text(Vector2(26, size.y - 22), "천하 항로도     /     작전 가능 지역: 적벽", MUTED, 14)
 
 func _detail(field: Rect2, factor: float) -> void:
 	var nodes: Dictionary = data.space.nodes
@@ -115,14 +127,20 @@ func _detail(field: Rect2, factor: float) -> void:
 	for id: String in data.space.routes.front.nodes:
 		line.append(field.position + _point(nodes[id]) * factor)
 	draw_polyline(line, Color("#8cddd938"), 8, true)
-	draw_polyline(line, CYAN, 1.5, true)
+	draw_polyline(line, CYAN, 4 if compact_scale < 1.0 else 1.5, true)
 	var labels := {"E": "연합 집결", "J": "진입 항로", "A": "전방 경유지", "C": "작전 목표"}
 	for id: String in labels:
 		var at := field.position + _point(nodes[id]) * factor
 		var tint := GOLD if id == "C" else CYAN
 		draw_circle(at, 5, tint)
 		draw_arc(at, 10, 0, TAU, 32, tint, 1, true)
-		_text(at + Vector2(15, 5), labels[id], tint, 15)
+		if compact_scale < 1.0:
+			if id == "E":
+				_compact_label(at + Vector2(-124, 30), labels[id], tint)
+			elif id == "C":
+				_compact_label(at + Vector2(20, 24), labels[id], tint)
+		else:
+			_text(at + Vector2(15, 5), labels[id], tint, 15)
 	var e := field.position + _point(nodes.E) * factor
 	for i in range(3):
 		var at := e + Vector2(-25 - i * 11, 22 + i * 3)
@@ -130,8 +148,21 @@ func _detail(field: Rect2, factor: float) -> void:
 	var r := field.position + _point(nodes.R) * factor
 	var c := field.position + _point(nodes.C) * factor
 	draw_dashed_line(r, c, Color("#dc9c85"), 1.5, 7)
-	_text(r + Vector2(-85, -18), "적 접근 방향", Color("#dc9c85"), 15)
-	_text(Vector2(26, size.y - 22), "적벽  /  전술 준비     •     정면 항로", MUTED, 14)
+	if compact_scale < 1.0:
+		_compact_label(r + Vector2(20, -34), "적 접근", Color("#ffc4ae"))
+	else:
+		_text(r + Vector2(-85, -18), "적 접근 방향", Color("#dc9c85"), 15)
+		_text(Vector2(26, size.y - 22), "적벽  /  전술 준비     •     정면 항로", MUTED, 14)
+
+func _compact_label(position: Vector2, value: String, tint: Color) -> void:
+	var font := get_theme_default_font()
+	var font_size := ceili(12.0 / compact_scale)
+	var padding := Vector2(10, 5)
+	var bounds := font.get_string_size(value, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size) + padding * 2.0
+	var origin := position.clamp(Vector2.ZERO, (size - bounds).max(Vector2.ZERO))
+	draw_rect(Rect2(origin, bounds), Color("#080e18f5"))
+	var baseline := origin + padding + Vector2(0, font.get_ascent(font_size))
+	draw_string(font, baseline, value, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, tint)
 
 func _text(at: Vector2, value: String, tint: Color, font_size: int) -> void:
 	var font := get_theme_default_font()

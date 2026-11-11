@@ -17,6 +17,7 @@ const STORY := [
 @export var auto_prompt_seconds := 2.0
 var flow := Flow.new()
 var body: VBoxContainer
+var _layout_scale := 1.0
 var gate_remaining := 0.0
 var buttons: Array[Button] = []
 var prepared_count := 0
@@ -24,7 +25,9 @@ var prepared_count := 0
 func _ready() -> void:
 	flow.begin(entry_origin)
 	_build()
+	_update_layout_scale()
 	_render()
+	get_window().size_changed.connect(_update_layout_scale)
 	if flow.state == Flow.State.BYPASS:
 		continuation_requested.emit(entry_origin)
 
@@ -62,6 +65,31 @@ func _build() -> void:
 	body.add_theme_constant_override("separation", 12)
 	scroll.add_child(body)
 
+
+func _update_layout_scale() -> void:
+	var logical_size := get_viewport_rect().size
+	var physical_size := Vector2(get_window().size)
+	var scale := minf(physical_size.x / maxf(logical_size.x, 1.0),
+		physical_size.y / maxf(logical_size.y, 1.0))
+	_layout_scale = maxf(scale, 0.25) if scale < 0.6 else 1.0
+	for child in body.get_children():
+		_apply_layout(child)
+
+func _apply_layout(control: Control) -> void:
+	var compact := _layout_scale < 1.0
+	if control.has_meta("hide_in_compact"):
+		control.visible = not compact
+	if control is Label:
+		var normal_size: int = control.get_meta("normal_font_size", 18)
+		var compact_size := 20.0 if normal_size >= 50 else (14.0 if normal_size >= 26 else 12.0)
+		control.add_theme_font_size_override("font_size",
+			maxi(normal_size, ceili(compact_size / _layout_scale)) if compact else normal_size)
+	elif control is Button:
+		control.add_theme_font_size_override("font_size", ceili(13.0 / _layout_scale) if compact else 18)
+		control.custom_minimum_size.y = ceilf(30.0 / _layout_scale) if compact else 54.0
+	elif control is MapView:
+		control.compact_scale = _layout_scale
+
 func _style(fill: Color, border: Color) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
 	style.bg_color = fill
@@ -83,23 +111,26 @@ func _hero(title: String) -> void:
 	label.text = title
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	label.add_theme_font_override("font", load("res://assets/fonts/NotoSerifKR-SemiBold.otf"))
-	label.add_theme_font_size_override("font_size", 64)
+	label.set_meta("normal_font_size", 64)
 	label.add_theme_color_override("font_color", Color("#eedbc0"))
+	_apply_layout(label)
 	body.add_child(label)
 
-func _label(value: String, font_size := 22) -> void:
+func _label(value: String, font_size := 22, hide_in_compact := false) -> void:
 	var label := Label.new()
 	label.text = value
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	label.add_theme_font_size_override("font_size", font_size)
-	label.add_theme_color_override("font_color", Color("#d4dee4") if font_size >= 20 else Color("#98aebc"))
+	label.set_meta("normal_font_size", font_size)
+	if hide_in_compact:
+		label.set_meta("hide_in_compact", true)
+	label.add_theme_color_override("font_color", Color("#d4dee4") if font_size >= 20 else Color("#adc1ce"))
+	_apply_layout(label)
 	body.add_child(label)
 
 func _button(value: String, action: String) -> void:
 	var button := Button.new()
 	button.text = value
-	button.custom_minimum_size = Vector2(0, 54)
-	button.add_theme_font_size_override("font_size", 18)
+	_apply_layout(button)
 	button.add_theme_color_override("font_color", Color("#ecd4ae"))
 	button.add_theme_stylebox_override("normal", _style(Color("#10212de8"), Color("#7a705b")))
 	button.add_theme_stylebox_override("hover", _style(Color("#203845"), Color("#e6c18c")))
@@ -142,7 +173,7 @@ func _render() -> void:
 		body.remove_child(child)
 		child.queue_free()
 	buttons.clear()
-	_label("SPACE BATTLE OF THREE KINGDOMS     /     RED CLIFFS", 16)
+	_label("SPACE BATTLE OF THREE KINGDOMS     /     RED CLIFFS", 16, true)
 	match flow.state:
 		Flow.State.SELECT:
 			_space()
@@ -167,6 +198,7 @@ func _render() -> void:
 			var map := MapView.new()
 			map.custom_minimum_size = Vector2(280, 260)
 			map.size_flags_vertical = Control.SIZE_EXPAND_FILL
+			_apply_layout(map)
 			body.add_child(map)
 			if not map.prepared:
 				flow.error = map.failure
@@ -203,7 +235,7 @@ func _render() -> void:
 	if not buttons.is_empty():
 		buttons[0].grab_focus()
 	if flow.state != Flow.State.READY:
-		_label("방향키 · Tab  이동     Enter · A  선택     마우스 · 터치 지원", 14)
+		_label("방향키 · Tab  이동     Enter · A  선택     마우스 · 터치 지원", 14, true)
 
 func _load_detail(token: int) -> void:
 	if flow.state != Flow.State.LOADING or token != flow.revision: return
@@ -226,15 +258,17 @@ func _load_detail(token: int) -> void:
 	_render()
 	_label("적벽  /  전술 준비", 28)
 	_label("작전 대기     •     전투는 시작되지 않았습니다", 18)
+	_apply_layout(detail)
 	body.add_child(detail)
 	_label("임무: 연합 집결 위치와 적 접근 방향을 확인하고 적벽 항로 방어를 준비하십시오.", 20)
-	_label("연합 집결지에서 정면 항로를 따라 작전 목표를 확인하십시오.", 18)
+	_label("연합 집결지에서 정면 항로를 따라 작전 목표를 확인하십시오.", 18, true)
 	if campaign_enabled:
 		_button("출격 · 실제 전장 준비", "sortie")
 		_button("기존 진행 · 이어하기 / 결산", "continue")
 		campaign_notice = Label.new()
 		campaign_notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		campaign_notice.text = "출격 후 실제 전장에서 시작을 눌러 전투를 진행합니다."
+		_apply_layout(campaign_notice)
 		body.add_child(campaign_notice)
 	_button("게임 종료", "exit")
 	buttons[0].grab_focus()

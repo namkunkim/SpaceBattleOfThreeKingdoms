@@ -43,7 +43,7 @@ class TitleScreen extends Control:
 		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		mouse_filter = Control.MOUSE_FILTER_STOP
 		var col := VBoxContainer.new()
-		col.position = Vector2(118, 400)
+		col.position = Vector2(118, 452)
 		col.add_theme_constant_override("separation", 4)
 		add_child(col)
 		var go := ScreenKit.menu_button("출격 준비", true)
@@ -51,21 +51,23 @@ class TitleScreen extends Control:
 		go.pressed.connect(func(): deck.open_prologue_or_brief())
 		col.add_child(go)
 		var campaign := ScreenKit.menu_button("천하 지도")
-		campaign.custom_minimum_size = Vector2(280, 44)
+		campaign.custom_minimum_size = Vector2(280, 52)
 		col.add_child(campaign)
 		var spacer := Control.new()
 		spacer.custom_minimum_size = Vector2(0, 10)
 		col.add_child(spacer)
 		for spec in [["서막", func(): deck.open_prologue()], ["진형 배치도", func(): deck.screens["formation_guide"].open_guide()], ["함대 도감", func(): deck.screens["fleet_catalog"].open_catalog()], ["설정", func(): deck.show_screen("settings")], ["종료", func(): deck.get_tree().quit()]]:
 			var b := ScreenKit.menu_button(spec[0])
-			b.custom_minimum_size = Vector2(280, 44)
+			b.custom_minimum_size = Vector2(280, 52)
 			b.pressed.connect(spec[1])
 			col.add_child(b)
 		var notice := UiTheme.label("천하 지도를 열지 못했습니다. 다시 눌러 주세요.", "Body", 16, UiTheme.WARN)
 		notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		notice.custom_minimum_size.x = 280
+		notice.position = col.position + Vector2(296, 58)
+		notice.size = Vector2(344, 40)
+		notice.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		notice.hide()
-		col.add_child(notice)
+		add_child(notice)
 		campaign.pressed.connect(func():
 			notice.visible = get_tree().change_scene_to_file(WorldLink.WORLD_SCENE) != OK)
 		var card := W.DrawPanel.new(_draw_card, UiTheme.ornate())
@@ -331,15 +333,15 @@ class PauseScreen extends Control:
 		deck = d
 		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		mouse_filter = Control.MOUSE_FILTER_STOP
-		var p := ScreenKit.centered(self, Vector2(860, 580), UiTheme.ornate())
+		var p := ScreenKit.centered(self, Vector2(860, 560), UiTheme.ornate())
 		p.painter = _draw_panel
 		var col := VBoxContainer.new()
 		col.position = Vector2(36, 150)
 		col.add_theme_constant_override("separation", 2)
 		p.add_child(col)
 		return_notice = notice
-		return_notice.position = Vector2(36, 490)
-		return_notice.size = Vector2(344, 44)
+		return_notice.position = Vector2(36, 500)
+		return_notice.size = Vector2(344, 32)
 		p.add_child(return_notice)
 		var specs := [["계속", func(): deck.resume()], ["함대 도감", func(): deck.screens["fleet_catalog"].open_catalog()], ["설정", func(): deck.show_screen("settings_pause")], ["처음부터", func(): deck.restart()], ["타이틀로", func(): deck.to_title(return_notice)], ["종료", func(): deck.get_tree().quit()]]
 		for i in specs.size():
