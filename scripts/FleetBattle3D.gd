@@ -373,6 +373,8 @@ func _prepare_game(candidate_org: Dictionary) -> Dictionary:
 		"errors": errors, "message": message, "fallback": fallback, "scenario": scen}
 
 func _publish_game(candidate: Dictionary, candidate_org: Dictionary) -> void:
+	_stop_heard_fire()
+	_seen_fire_count = 0
 	for f in fleets:
 		view3d.free_fleet(f)
 	vm.reset()
@@ -629,6 +631,10 @@ func _pump() -> void:
 	for e in sim.drain_events_for(0):
 		trace.event(self, e)
 		_on_event(e)
+	if sim.chain != null:
+		_seen_fire_count = sim.chain.fires.size()
+	if _fire_audio_playing and not _fire_audio_unbound and _heard_fires.all(func(fire: Dictionary) -> bool: return int(fire.next) < 0):
+		_stop_heard_fire()
 
 # 이동 명령 완료 알림(M10, 표시 전용): 이동 명령이 사라졌을 때 목적지 근처면 "○○ 함대 이동 완료"를 교신 기록에 남긴다.
 var _had_move := {}
@@ -725,6 +731,52 @@ const SFX_OF_CAT := {"artillery": "missile_launch", "line_fire": "laser_light", 
 const FX_CATS := ["artillery", "fighter"]
 var salvo_fx: Array = []
 
+var _heard_fires: Array[Dictionary] = []
+var _fire_audio_playing := false
+var _fire_audio_unbound := false
+var _seen_fire_count := 0
+
+func _find_heard_fire(target: int, tick: int) -> Dictionary:
+	if sim.chain == null:
+		return {}
+	var interval := BattleRules.ticks(float(sim.chain.O.spread.interval_s), sim.st.hz)
+	var active: Dictionary = {}
+	var retired: Dictionary = {}
+	var retired_matches := 0
+	for index in sim.chain.fires.size():
+		var fire: Dictionary = sim.chain.fires[index]
+		var origin: Array = fire.burned.keys()
+		if origin.is_empty() or int(origin[0]) != target:
+			continue
+		if int(fire.next) < 0:
+			# A short-lived fire may already have ended before this event batch is delivered.
+			if index >= _seen_fire_count:
+				retired = fire
+				retired_matches += 1
+		elif int(fire.next) - interval * (int(fire.n) + 1) == tick:
+			if not active.is_empty():
+				return {}
+			active = fire
+	if not active.is_empty():
+		return active if retired_matches == 0 else {}
+	return retired if retired_matches == 1 else {}
+
+func _remember_heard_fire(target: int, tick: int) -> void:
+	var fire := _find_heard_fire(target, tick)
+	if fire.is_empty():
+		# Preserve visible audio when a record cannot be bound; the normal off still applies.
+		_fire_audio_unbound = true
+	elif not _heard_fires.any(func(heard: Dictionary) -> bool: return is_same(heard, fire)):
+		_heard_fires.append(fire)
+
+func _stop_heard_fire() -> void:
+	if not _fire_audio_playing:
+		return
+	_fire_audio_playing = false
+	_fire_audio_unbound = false
+	_heard_fires.clear()
+	sfx_loop.emit("fire_loop", 0.0)
+
 func _on_event(e: Dictionary) -> void:
 	var f = vm.fleet(e.sq) if e.sq >= 0 else null
 	if SFX_OF.has(e.kind):
@@ -733,8 +785,15 @@ func _on_event(e: Dictionary) -> void:
 		sfx_event.emit(SFX_OF_CAT[e.value.cat])
 	if e.kind == "salvo" and e.value.cat in FX_CATS:
 		salvo_fx.append({"cat": e.value.cat, "from": e.sq, "to": e.other, "n": int(e.value.n)})
+	elif e.kind == "chain_explosion" and _fire_audio_playing:
+		_remember_heard_fire(int(e.sq), int(e.tick))
 	elif e.kind == "fire_loop":
-		sfx_loop.emit("fire_loop", 1.0 if e.value.on else 0.0)   # 불이 타는 동안(발동 ~ 번짐 끝)
+		if e.value.on:
+			_remember_heard_fire(int(e.sq), int(e.tick))
+			_fire_audio_playing = true
+			sfx_loop.emit("fire_loop", 1.0)
+		else:
+			_stop_heard_fire()
 	match e.kind:
 		"say":
 			if f:
