@@ -68,7 +68,7 @@ func _write_json(path: String, value: Dictionary) -> bool:
 
 
 func _exercise(c0_only: bool) -> void:
-	for label in ["적벽대전 선택 · 시작", "서사 건너뛰기", "적벽", "출격 · 실제 전장 준비"]:
+	for label in ["적벽대전 시작", "서사 건너뛰기", "적벽", "출격 · 실제 전장 준비"]:
 		if not await _entry_action(label):
 			return
 	if not _expect(await _wait_until(func(): return is_instance_valid(_host()) \
