@@ -145,6 +145,8 @@ E 소스 반영 완료: 독립 R3 통과한 revision-02 제품 5파일을 단일
 
 **P04 외부 저장 실패 원자성 — `b2ba73ff`.** 헤드리스 개발 호스트에서 기존 외부 저장 회귀 36/36, 새 프로세스 재열기 3/3, 활성 호스트 실패 경계 30/30을 통과했다. 체크섬 오류는 복원 시작 전에, 상태 지문 불일치는 비동기 재생 뒤에 거부됐다. 두 경우 기존 작전·대기 명령·커서·조작 상태와 저장·결산 파일을 보존했고 기존 작전은 다음 틱으로 진행했다. 별도 모델이 합성 파일 선택과 증거를 검토했다. [활성 호스트 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P04-external-atomicity-b2ba73ff-04/focused/result.json)
 
+**P04 외부 저장의 적용 데이터 지문 거부 — `b2ba73ff`.** 유효한 체크섬을 유지하면서 `effective_digest`만 원래 `source_digest`로 바꿨다. 활성 개발 호스트는 비동기 복원을 시작하기 전에 거부했고, 기존 상태·조작·저장 파일을 보존한 채 계속 진행했다. 같은 호스트에서 원본으로 재시도해 복원하고 대기 명령을 적용했다. 25/25와 상위 모델 독립 검토를 통과했다. 공개 제품 가져오기와 실제 파일 선택기 입력은 별도다. [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P04-external-effective-authority-b2ba73ff-01/REVIEW-HANDOFF.json)
+
 **P07 승인 적벽 v1 보급·증원·철수 — `b2ba73ff`.** 정책 37/37, 개발 시험 77/77, 공개 진입부터 지도 결산까지 승인 호스트 26/26을 통과했다. A 거점 가동 뒤 60초에 보급으로 탄약이 124→138로 늘었고, 증원은 예정 시각 다음 틱에 한 번 진입했다. 명시 철수에서 두 함대가 생환했고 1,854틱의 결산 ID·사유·시각이 호스트와 지도에서 일치했다. 별도 모델이 헤드리스 결과를 검토했다. [보급·증원·철수 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P07-main-b2ba73ff-20261112/RESULTS.md)
 
 **P09 월드맵 테스트 종료 정리 — `b2ba73ff` 런타임.** 결정성 검사에서 소유한 세 `AutoResolver`를 마지막 사용 뒤 닫도록 테스트 한 파일을 수정했다. 초기·복귀 프로필 모두 기존 순서와 값 그대로 149/149를 통과했고, 의도된 거부 진단 4건은 유지했다. 종료 잔류는 기준선의 ObjectDB 117개·리소스 18개에서 두 실행 모두 0/0이 됐다. 별도 모델 검토 후 `27ee7e8b` 위의 수정 커밋을 작업 브랜치에 푸시했다. 제품과 오디오 전체 종료 인수는 별도다. [수정 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/3d5d41cdb5aca023b719e1f2f9c862bb076adb7c) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-current-world-link-lifetime-candidate-20261112-01/REVIEW-HANDOFF.json)
@@ -182,6 +184,8 @@ P06 실제 제품 결산 재열기 — `b2ba73ff`. 격리된 Windows 헤드리�
 **P08 외부 Android 디버그 서명 진단.** 앞서 확인한 ARM64 APK를 일회용 키로 서명했다. Android SDK에서 v2·v3 서명과 ZIP 정렬을 확인했고, 원본 ZIP 항목 1,818개의 내용·길이·압축 방식이 일치했다. 첫 실행의 검증 출력 파싱 실패를 보존하고 같은 APK를 다시 검사해 통과했다. 일회용 키를 제거했고 상위 모델이 독립 검토했다. Godot 서명 프리셋·출시 서명·실기기 인수는 남았다. [디버그 서명 결과](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-android-b2ba73ff-debug-sign-01/RESULTS.md)
 
 **P08 Godot 서명 디버그 프리셋 — `b2ba73ff`.** 커밋된 Android 프리셋으로 내보내기를 완료했다. 400,040,307바이트 ARM64 APK의 ZIP 정렬과 v2·v3 서명을 SDK에서 확인했다. 서명자는 격리된 일회용 인증서와 일치했고 키 파일을 제거했다. 프리셋 바이트를 보존했고 상위 모델이 독립 검토했다. 이전 무서명 산출물과 생성 데이터가 달라 동일 페이로드 판정은 없으며 출시 서명·설치·실기기 검증은 남았다. [프리셋 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-android-b2ba73ff-godot-sign-01/RESULTS.md)
+
+**P08 서명 ARM64 APK의 ELF 정렬.** 포함된 AArch64 라이브러리 두 개의 `PT_LOAD` 여섯 개가 16KiB 정렬과 주소·오프셋 합동 조건을 충족했다. 잘못된 세그먼트 대조 2건을 거부했고 상위 모델이 원본 APK를 독립 검토했다. 두 파일은 ZIP에서 압축되어 매니페스트가 추출을 요청한다. APK 직접 매핑이나 실기기 실행은 검증하지 않았다. [정적 검사](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-android-b2ba73ff-elf-align-01/REVIEW-HANDOFF.json)
 
 ## 현재 상태 요약 — 2026-11-11 KST
 
