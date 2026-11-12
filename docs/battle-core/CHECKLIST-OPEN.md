@@ -50,6 +50,8 @@ K6 15~18행 실행 전 점검과 17·18행 오프라인 비교 초안을 상위 
 
 **K6·P02/P03 새 EntryBoot 기준.** `e3d76788`에서 적벽 선택 문구와 프롤로그 화면이 바뀌어 옛 선택자를 쓰던 테스트 네 개를 수정했다. 1600×900 헤드리스 진입 34/34와 공개 체크포인트 19/19를 독립 검토했고 PR #5로 병합했다. 원격 `main` `78638587`을 확인했다. 이전 실제 입력 좌표는 현행 화면의 증거로 사용하지 않는다. K6 실제 Windows 입력과 정식 실행은 남았다. [선택자 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/5) · [재결속 근거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-e3d76788-entry-rebind-01/HOTFIX-REVIEW-HANDOFF.json)
 
+**K6 15·16행 새 화면 헤드리스 재결속 — `78638587`.** 새 시작 문구와 8장 프롤로그의 첫 삽화·Atlas 준비·Next 포커스를 확인했다. 기존 관찰기와 판정기로 합성 헤드리스 두 행을 통과했고, 출력 결속기의 최초 자료형·종료 횟수 판정 실패는 보존한 뒤 원본으로 재검사했다. 상위 모델 독립 검토를 통과했다. 1600×900 실제 Windows 입력과 정식 계약·실행은 남았다. [헤드리스 재결속](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-78638587-row15-16-headless-rebind-01/REVIEW-HANDOFF.json)
+
 **`b2ba73ff` 15·16행 공개 타이틀 경로 합성 검증.** 실제 승인 호스트에서 만든 113틱 저장 사본으로 시작해 40개 단언을 기존 순서대로 통과했다. 0틱 배치 명령 1회, Space 일시정지 두 번, 새 시뮬레이션의 0틱 재시작, 타이틀을 거친 지도 복귀와 저장 보존을 별도 모델이 확인했다. 이전 원본과 달라진 생성 경로·시드 등 13개 관측도 보존했다. 정식 15·16행에는 이 비라우팅 경로의 판정 기준과 새 실제 Windows 입력이 남았다. [타이틀 경로 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-title-route-focused-01/RESULTS.json)
 
 **264f47b9 호환성 사전검증 — 2026-11-12.** 구형 공개 브리핑을 여는 마지막 main 커밋에 기존 21행·58작업·27비교를 결속했다. 14~18행 사전 시험 11/11 및 비교 3건이 통과했다. GUI 15·16행은 합성 viewport 입력을 사용했다. 별도 현행 Godot 창은 시작됐으나 Computer Use 앱 접근 승인이 시간 초과돼 실제 캡처와 입력은 0건이었다. 이 사전 시험에서는 실제 입력 증거를 요구하는 정식 실행기를 시작하지 않았다. [역사 사전검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-review-01/HISTORICAL-FOCUSED-RESULTS-R02.json) · [Windows 입력 사전확인](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-5ef3537b-successor-01/windows-entry-smoke-01/INPUT-PREFLIGHT-RESULT.json)
@@ -105,6 +107,8 @@ REVIEW-15 후속 무입력 준비: 작성자 모의 Sky 양성 4건 통과, 음�
 **P02·P03 이어하기와 리플레이 연결.** 승인 적벽 작전에서 1틱에 적용된 철수와 대기 중인 종결 명령을 저장했다. 새 프로세스에서 공개 이어하기로 재개해 중단 없는 실행과 바이트가 동일한 2틱 리플레이를 내보냈다. 세 번째 프로세스의 공개 Atlas 재생도 전체 종결 프레임·사건 순서·결산이 일치했다. 세 프로세스에서 47/47을 통과했다. 최초 비교기의 결산 필드 범위 오류를 보존했고 상위 모델 독립 검토 후 테스트 브랜치에 푸시했다. 동일 작전의 헤드리스 검증 범위다. [테스트 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/02ffda964c35ebc3404ad4d3880425741da0829a) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P02-P03-resumed-replay-1ad51fb4-01/REVIEW-HANDOFF.json)
 
 **P02·P03 재현 안내.** 47개 검사의 러너는 세 격리 프로세스에서 입력 파일을 직접 만든다. 새 Windows x64 작업 트리의 DLL 빌드·임포트·CLI 실행 순서를 문서화했고, CLI 옵션과 PowerShell 구문 및 기존 증거를 대조했다. Godot는 재실행하지 않았다. 상위 모델 독립 리뷰 후 PR #2 브랜치를 `a102f412`로 갱신했다. [초안 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/2)
+
+**P02·P03 현행 main 재개·리플레이 회귀 — `78638587`.** 동일 러너·시험 소스와 이전 19/19 체크포인트 원본을 대조해 재사용했다. 현행 main에서는 별도 헤드리스 프로세스로 공개 재개 14/14와 공개 리플레이 14/14만 새로 실행했다. 내보낸 리플레이 바이트, 종결 상태와 사건 순서가 일치했다. 상위 모델 독립 검토를 통과했다. 현행 전체 47개를 재실행하지 않았고 실제 입력·작전 간 커서는 별도다. [현행 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P02-P03-current-main-78638587-01/REVIEW-HANDOFF.json)
 
 **P02·P03 검토 완료 테스트의 main 반영.** PR #1을 먼저 병합했고, 같은 파일 트리를 기준으로 PR #2를 `main`에 다시 지정했다. 변경 파일 14개의 이름·Git 지문·상태가 동일함을 대조한 후 병합했다. 원격 `main` `680c1b2c`에서 두 검토 이력을 확인했다. [PR #1](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/1) · [PR #2](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/2)
 
