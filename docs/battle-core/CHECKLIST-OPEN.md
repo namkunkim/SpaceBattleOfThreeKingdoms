@@ -6,11 +6,13 @@
 
 **5ef3537b 집중 검증 — 2026-11-12.** 격리 입력 3종의 임포트가 통과했고, 별도 모델이 실행 5건의 증거·로그 해시와 경로 코드를 독립 검토했다. 공개 적벽 버튼은 EntryBoot와 승인 첫 작전으로 연결됐다(10/10). 구형 카드 준비를 합성한 격리 실행은 17행 완료 전후 각각 16/16, 18행 취소 전후 각각 24/24였다. 17행은 양쪽 11,350틱·1,134,950ms·연합군 승리이며 같은 오답을 양쪽에 넣은 반례를 거부했다. 공개 경로 변경으로 현재 main의 기존 정식 15~18행을 같은 조건에서 실행할 수 없다. 정식 실행기와 실제 Windows 입력은 이 검증에 포함되지 않았다. [집중 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-5ef3537b-successor-01/FOCUSED-MAIN-RESULTS.json)
 
-**현행 main K6 경로 검토 — 2026-11-12.** `5ef3537b`의 공개 항로도에서 타이틀로 돌아간 뒤 구형 출격 준비로 진입하면 직접 배치·Space 일시정지·재시작을 확인할 수 있다. 이 경로는 재시작 시 시드를 다시 뽑고 타이틀을 거쳐 지도로 복귀하므로, 기존 16행의 고정 시드와 직접 지도 복귀 조건은 남았다. 승인 첫 작전은 EntryBoot를 통해 별도 호스트에서 시작한다. 구형 자동해결 완료·취소(17·18행)의 공개 진입이 막혀 있어 현행 집중 검증은 격리 시험 결과로 유지한다. 공개 경로의 실제 입력을 추가 검증하고, 현행 제품 경로에 맞춘 정식 판정 기준은 독립 검토를 거쳐 동결해야 한다. [현행 검증 계획](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-5ef3537b-successor-01/PLAN.md)
+**현행 main K6 경로 검토 — 2026-11-12.** `5ef3537b`의 공개 항로도에서 타이틀로 돌아간 뒤 구형 출격 준비로 진입하면 직접 배치·Space 일시정지·재시작을 확인할 수 있다. 이 경로는 재시작 시 시드를 다시 뽑고 타이틀을 거쳐 지도로 복귀하므로, 기존 16행의 고정 시드와 직접 지도 복귀 조건은 남았다. 승인 첫 작전은 EntryBoot를 통해 별도 호스트에서 시작한다. 구형 자동해결 완료·취소(17·18행)의 공개 진입이 막혀 있어 현행 집중 검증은 격리 시험 결과로 유지한다. 공개 경로의 실제 입력 결과는 아래에 기록했다. 현행 제품 경로에 맞춘 정식 판정 기준은 독립 검토를 거쳐 동결해야 한다. [현행 검증 계획](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-5ef3537b-successor-01/PLAN.md)
 
 **현행 main 타이틀 경로 집중 검증.** `5ef3537b`의 기존 저장 사본을 사용하는 새 헤드리스 프로세스에서 EntryBoot → 항로도 → 타이틀 → 구형 브리핑에 진입했다. 합성 viewport 입력으로 0틱 배치 명령 1회, Space 일시정지 두 번, 재시작의 새 시뮬레이션·다른 시드, 타이틀 경유 지도 복귀를 검증했다. 40/40 통과, 종료 코드 0, 저장 SHA 유지다. 정식 K6의 실제 Windows 입력 및 공개 AutoResolver 증거는 남았다. [집중 검증 결과](F:/WorkSpace/campaign-p03-20261111/tmp/k6-title-route-5ef3537b/RESULT.json)
 
 **현행 main 타이틀 경로 Windows 검증 — 1600×900.** 정확한 `5ef3537b`의 Godot DEBUG 실행에서 공개 항로도와 타이틀을 거쳐 브리핑에 진입했다. 실제 우클릭으로 0틱 배치 명령 1회를 기록했고, 실제 Space 일시정지 두 번, 새 시드의 재시작, 타이틀 경유 지도 복귀를 확인했다. 별도 모델이 전체 캡처 17건, 입력·엔진 기록, 저장 SHA 유지와 종료 코드 0을 대조했다. 기존 고정 시드·직접 지도 복귀 조건 및 공개 AutoResolver 경로는 남았다. [Windows 증거](F:/WorkSpace/campaign-p03-20261111/tmp/k6-title-route-5ef3537b/windows1600/RESULT.json)
+
+**현행 main 승인 첫 작전 Windows 검증 — 1600×900.** 정확한 `5ef3537b`의 새 격리 프로필에서 공개 EntryBoot로 적벽을 준비했다. 시작 전 0틱 유지와 명령 버튼 비활성, 명시 시작과 실제 이동 반응을 확인했다. 결산 전에 항로도로 돌아와 공개 버튼으로 재진입하자 다시 0틱에서 시작했고, 두 차례 복귀에 결산 화면·슬롯·원장은 없었다. 별도 모델이 전체 캡처 14건, 실제 입력, 중간·최종 프로필과 종료 코드 0을 대조했다. 내부 명령 수와 구형 AutoResolver는 별도 검증 범위다. [Windows 증거](F:/WorkSpace/campaign-p03-20261111/tmp/k6-approved-product-5ef3537b/windows1600/RESULT.json)
 
 **264f47b9 호환성 사전검증 — 2026-11-12.** 구형 공개 브리핑을 여는 마지막 main 커밋에 기존 21행·58작업·27비교를 결속했다. 14~18행 사전 시험 11/11 및 비교 3건이 통과했다. GUI 15·16행은 합성 viewport 입력을 사용했다. 별도 현행 Godot 창은 시작됐으나 Computer Use 앱 접근 승인이 시간 초과돼 실제 캡처와 입력은 0건이었다. 이 사전 시험에서는 실제 입력 증거를 요구하는 정식 실행기를 시작하지 않았다. [역사 사전검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-review-01/HISTORICAL-FOCUSED-RESULTS-R02.json) · [Windows 입력 사전확인](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-5ef3537b-successor-01/windows-entry-smoke-01/INPUT-PREFLIGHT-RESULT.json)
 
@@ -89,7 +91,7 @@ E 소스 반영 완료: 독립 R3 통과한 revision-02 제품 5파일을 단일
 
 - [x] 승인 적벽 v1: 첫 PC 플레이·같은 규칙 버전 저장/재개·결산 복구 검증 완료. 현행 전경 인수는 EXE `67f9cb20…` 한정이다.
 - [x] P09 재생 객체 정리: `tests/battle_flow.gd` 한 파일 E 반영, 독립 검토 및 최소 flow 회귀 통과. SHA `afa999ba1e3d6bde19293999aab2f79034a30312b19ce11ea6fa604cda468826`. [반영 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-rp-apply-01a1c966-20261111/RESULTS.md)
-- [ ] P09 오디오 종료: Godot 4.7.2 Dummy 스트림의 `battle_flow`·`group_formation` 테스트 종료 경로를 보강했다. 기존 TRACE 순서와 틱을 유지했고 두 테스트는 정상 종료했다. 참조를 의도적으로 유지한 대조군은 2,033ms에 종료 코드 1을 반환했다. 이번 기준선에서 간헐적 잔류가 재현되지 않아 제품 오디오 전반의 종료 인수는 남았다. [독립 검토 범위의 GitHub 변경](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/bada6d92c091156fa2dce2c243c26b0716d706cb) · [검증 매니페스트](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-audio-fence-ab-20261112-01/REVIEW-MANIFEST.json)
+- [ ] P09 오디오 종료 보강. Godot 4.7.2 Dummy 스트림의 `battle_flow`·`group_formation` 테스트 종료 경로를 보강했다. 기존 TRACE 순서와 틱을 유지했고 두 테스트는 정상 종료했다. 참조를 의도적으로 유지한 대조군은 2,033ms에 종료 코드 1을 반환했다. 이번 기준선에서 간헐적 잔류가 재현되지 않아 제품 오디오 전반의 종료 인수는 남았다. [독립 검토 범위의 GitHub 변경](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/bada6d92c091156fa2dce2c243c26b0716d706cb) · [검증 매니페스트](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-audio-fence-ab-20261112-01/REVIEW-MANIFEST.json)
 - [ ] O07 운영 전환·외부 지급·전원 상실: 대상/슬롯 지문·전환 승인, 수신자/계약 및 시험 환경 조건이 남았다.
 - [ ] 일반 I01/P03~P08: 공통 입력·운영 상태/커밋·공간/작전 정책·출시 대상 인수 조건이 남았다. 승인된 적벽 한 건의 완료를 전체 인수로 확대하지 않는다.
 - [ ] **K6 정식 검증 진행 중.** 구형 공개 경로가 남은 `264f47b9`의 4차 정식 실행에서 Windows GUI 4/4와 독립 입력 증거 검토를 통과했다. 헤드리스와 전체 판정은 진행 중이며 최신 main의 EntryBoot 경로는 별도 검증이 남았다.
