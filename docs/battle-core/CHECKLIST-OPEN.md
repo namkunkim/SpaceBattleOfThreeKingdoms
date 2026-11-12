@@ -26,6 +26,8 @@
 
 **19행 시간 초과 보강 진단.** `i01b_active_replace` 변경 전 조건을 별도 프로세스에서 단독으로 실행했다. 기존 400초 제한 안에서 252.465초에 종료 코드 0으로 끝났고, 단언 20,099개가 고정 순서와 모두 일치했다. 이전 시간 초과의 단일 원인은 확인되지 않았다. 변경 후 조건과 정식 판정은 남았다. [단독 진단](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/row19-historical-264f47b9-timing-01/result.json)
 
+**264f47b9 5차 정식 실행 — 진행 중.** 21행에 독립 기준선의 정확한 141개 순서 기록과 절대 지문을 적용했다. 나머지 54개 작업의 검증 조건과 전체 21행·58작업·27비교, 시간 제한을 유지했다. 별도 모델이 승인한 매니페스트 SHA는 `34ec8a6eaa54f8930457caa9c1c8a6e11f0b73bec735c559ab702bc749286832`다. 실제 Windows GUI 4작업이 통과했고, 별도 모델이 26개 조작과 MAIN 도구 호출 52개, Windows·Godot 이벤트 각 52개를 대조했다. 정식 GUI 최종 승인과 전체 판정은 실행기에서 진행 중이다. [5차 실행 로그](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-row21-05/HISTORICAL-FORMAL-LAUNCH.log) · [독립 GUI 검토](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-row21-05/operator-tools/independent-gui-evidence-four-jobs.json)
+
 **별도 헤드리스 보강 시험.** 12작업 중 8개, 비교 6개 중 4개가 통과했다. 19행 i01b_active_replace 양쪽은 400초 제한에 도달했고, 21행 양쪽은 exit 0이었지만 141개 관측 단언과 기존 127개 기대 단언 및 지문이 달라 실패했다. 정식 집계에는 포함되지 않는다. [보강 시험 결과](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-review-01/headless-supplement-01/RESULTS.json)
 
 당시 무입력 후속 상태: K6 무입력 revision 02 독립 PASS. 양성4·음성15·경계9 및 예제16 바이트 대조. 30초 경과 캡처에서 클릭/Space 각각 0건, 캡처25초와 사용자 만료 중 이른 경계부터 입력0건. 무입력 준비 범위 마감. 실제 MAIN 도구 원문, Win32/Godot 및 16-after 제목 증거는 당시 정식 실행에서 확인할 조건이었다. [독립 재심](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/review15-main-input-dry-check-02/P02-INDEPENDENT-REVIEW.md), SHA `3111cf2ea9eba1b150ec03456c2f294d3280c9d4080285133ffc96cbc8733d17`.
@@ -98,7 +100,7 @@ E 소스 반영 완료: 독립 R3 통과한 revision-02 제품 5파일을 단일
 - [ ] P09 오디오 종료 보강. Godot 4.7.2 Dummy 스트림의 `battle_flow`·`group_formation` 테스트 종료 경로를 보강했다. 기존 TRACE 순서와 틱을 유지했고 두 테스트는 정상 종료했다. 참조를 의도적으로 유지한 대조군은 2,033ms에 종료 코드 1을 반환했다. 이번 기준선에서 간헐적 잔류가 재현되지 않아 제품 오디오 전반의 종료 인수는 남았다. [독립 검토 범위의 GitHub 변경](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/bada6d92c091156fa2dce2c243c26b0716d706cb) · [검증 매니페스트](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-audio-fence-ab-20261112-01/REVIEW-MANIFEST.json)
 - [ ] O07 운영 전환·외부 지급·전원 상실: 대상/슬롯 지문·전환 승인, 수신자/계약 및 시험 환경 조건이 남았다.
 - [ ] 일반 I01/P03~P08: 공통 입력·운영 상태/커밋·공간/작전 정책·출시 대상 인수 조건이 남았다. 승인된 적벽 한 건의 완료를 전체 인수로 확대하지 않는다.
-- [ ] **K6 정식 검증 미통과.** 구형 공개 경로가 있는 `264f47b9`의 4차 실행은 실제 Windows GUI 4/4를 포함해 34작업을 통과한 뒤 21행의 동결 단언 불일치로 종료했다. 21행의 독립 기준선 검증과 현행 main 경로의 정식 판정 기준이 남았다.
+- [ ] **K6 정식 검증 진행 중.** 4차 FAIL은 보존했다. 독립 검토한 21행 기준으로 `264f47b9` 5차를 시작해 실제 Windows GUI 4/4가 통과했다. 나머지 자동 검증과 전체 판정이 남았다.
 - [x] **신규 진입 Windows 후보 전경 시험.** EXE 2f353f27…에서 네 창 크기, 키보드·마우스, 전장 준비 0틱과 아니오 정상 종료를 확인했다. [전경 검증 기록](../entry/windows-foreground-verification-20261111-ko.md)
 - [ ] **신규 진입 작은 창 가독성.** 480×270은 글자와 지도 라벨이 지나치게 작아 미수용. 800폭에서도 가독성이 저하된다. 최소 지원 크기 또는 화면 개선 결정이 남았다.
 
