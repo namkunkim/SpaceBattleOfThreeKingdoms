@@ -46,6 +46,8 @@ K6 15~18행 실행 전 점검과 17·18행 오프라인 비교 초안을 상위 
 
 **K6 차기 정식 실행 준비 묶음.** 역사 정식 실행의 21행·58작업·27비교와 현행 15~18행, 동일 채팅 리뷰·일회 승인 원형의 근거 17개를 결속했다. 잘못된 SHA·경로 이탈·정식 자격 위조 등 4개 대조를 거부했고 상위 모델이 독립 검토했다. 현행 실행 가능 작업은 0개다. 행 계약 선택, 새 실행 입력 동결, 1600×900 Windows 실제 입력, 독립 리뷰·일회 승인 결속이 남았다. [준비 묶음](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-formal-readiness-bundle-01/README.md)
 
+**K6 15·16행 보존 원본 관계 대조.** 행별 실행 영수증과 출력 SHA를 결속한 뒤 기존 판정기에 입력 순서·시각, 같은 실행의 작전 관계, 소유자 종료와 Atlas 요약 대조를 추가했다. 보존 헤드리스 원본 2/2를 통과하고 다른 행 혼합·Start 누락 등 10건을 거부했다. 상위 모델 독립 검토를 통과했다. 실제 Windows 입력과 정식 실행은 남았다. [관계 대조](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-row15-16-archive-relations-01/REVIEW-HANDOFF.json)
+
 **`b2ba73ff` 15·16행 공개 타이틀 경로 합성 검증.** 실제 승인 호스트에서 만든 113틱 저장 사본으로 시작해 40개 단언을 기존 순서대로 통과했다. 0틱 배치 명령 1회, Space 일시정지 두 번, 새 시뮬레이션의 0틱 재시작, 타이틀을 거친 지도 복귀와 저장 보존을 별도 모델이 확인했다. 이전 원본과 달라진 생성 경로·시드 등 13개 관측도 보존했다. 정식 15·16행에는 이 비라우팅 경로의 판정 기준과 새 실제 Windows 입력이 남았다. [타이틀 경로 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-title-route-focused-01/RESULTS.json)
 
 **264f47b9 호환성 사전검증 — 2026-11-12.** 구형 공개 브리핑을 여는 마지막 main 커밋에 기존 21행·58작업·27비교를 결속했다. 14~18행 사전 시험 11/11 및 비교 3건이 통과했다. GUI 15·16행은 합성 viewport 입력을 사용했다. 별도 현행 Godot 창은 시작됐으나 Computer Use 앱 접근 승인이 시간 초과돼 실제 캡처와 입력은 0건이었다. 이 사전 시험에서는 실제 입력 증거를 요구하는 정식 실행기를 시작하지 않았다. [역사 사전검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-review-01/HISTORICAL-FOCUSED-RESULTS-R02.json) · [Windows 입력 사전확인](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-5ef3537b-successor-01/windows-entry-smoke-01/INPUT-PREFLIGHT-RESULT.json)
@@ -132,6 +134,8 @@ E 소스 반영 완료: 독립 R3 통과한 revision-02 제품 5파일을 단일
 
 **P02·P03 이어하기와 리플레이 연결.** 승인 적벽 작전에서 1틱에 적용된 철수와 대기 중인 종결 명령을 저장했다. 새 프로세스에서 공개 이어하기로 재개해 중단 없는 실행과 바이트가 동일한 2틱 리플레이를 내보냈다. 세 번째 프로세스의 공개 Atlas 재생도 전체 종결 프레임·사건 순서·결산이 일치했다. 세 프로세스에서 47/47을 통과했다. 최초 비교기의 결산 필드 범위 오류를 보존했고 상위 모델 독립 검토 후 테스트 브랜치에 푸시했다. 동일 작전의 헤드리스 검증 범위다. [테스트 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/02ffda964c35ebc3404ad4d3880425741da0829a) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P02-P03-resumed-replay-1ad51fb4-01/REVIEW-HANDOFF.json)
 
+**P02·P03 테스트 PR 인계.** 원격 `02ffda96`을 PR #1 브랜치 위에 초안 PR #2로 연결했다. 독립 검토한 8개 커밋과 테스트 13개 파일만 차이에 포함된다. PR #1이 병합되면 `main` 재대상 지정 전 차이를 다시 대조한다. [초안 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/2)
+
 **2026-11-12 P03 제한 회귀 재확인.** GitHub main `5ef3537b`에서 제한 체크포인트 38/38, 비공개 상태 70건, 활성 교체 20건, 개발 호스트의 새 프로세스 4틱 재개 및 동일 슬롯 SHA를 별도 모델이 독립 확인했다. 개발 플래그 없는 제품 WorldLink 직접 경로는 첫 명령 1회, 2틱 저장·복원과 다음 프레임 일치까지 11/11을 통과했다. 이 제품 시험의 범위는 동일 호스트 내부 복원이다. 이후 공개 항로도 새 프로세스 복원은 아래 결과에 기록했다. [제한 회귀](F:/WorkSpace/campaign-p03-20261111/tmp/p03-main-5ef3537/summary.json) · [제품 경로](F:/WorkSpace/campaign-p03-20261111/tmp/p03-main-5ef3537/product.receipt.json)
 
 **2026-11-12 P03 공개 항로도 이어하기.** 저장이 있는 새 프로세스의 기본 Windows 항로도에 첫 작전 이어하기를 노출했다. 독립 코드·증거 검토에서 정상 31/31, 백업만 있는 저장 17/17, 손상 슬롯 오류 후 재시도 18/18, 빈 프로필 6/6을 확인했다. 공개 EntryBoot에서 만든 2틱 저장을 새 프로세스가 복원했고, 저장 바이트와 대기 명령을 보존해 다음 프레임에서 명령을 한 번 적용했다. 이 시험의 범위는 헤드리스였다. 전체 운영 Cn 및 전역 명령 커서 인수는 남았다. [GitHub 변경](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/b2ba73ff5b3c18a7ab0885d00cebf0c25be7fed1)
@@ -175,6 +179,8 @@ P03 공개 이어하기의 같은 작전 내 여러 세대 저장·재개를 Win
 **P06 논리 시계·결산 연속성 부분 검증 — `b2ba73ff`.** 논리 시계 60/60, 원장 저장·재열기 22/22, 개발 Atlas 결산 표시·재시도 8/8을 통과했다. 개발 플래그가 빠진 첫 실행의 실패 기록을 보존했고, 새 프로필에서 플래그를 적용한 결과를 별도 모델이 확인했다. 현재 제품 소스는 결산 뒤 지도로 돌아가 같은 첫 작전을 새로 시작한다. 이전 결산에 연결되는 후속 작전과 전체 A05·A06 인수는 남았다. [부분 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P06-main-b2ba73ff-20261112/RESULTS.md)
 
 P06 실제 제품 결산 재열기 — `b2ba73ff`. 격리된 Windows 헤드리스 프로세스에서 과거 결산 원장을 재열고 같은 적벽 첫 작전을 0틱에서 새 작전 ID로 시작했다. 빈 프로필 대조군과 요청·규칙 지문·초기 상태가 일치했고 원본과 복사한 원장 바이트를 보존했다. 상위 모델이 검토했다. 이전 결산과 후속 작전을 연결하는 규칙과 A05·A06 종합 인수는 남았다. [재열기 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P06-main-b2ba73ff-product-reopen-01/RESULTS.md)
+
+**P06 후속 작전·P03 작전 간 커서 미서명 제안.** 기존 제품 결산 재열기와 같은 작전 커서 근거를 결속했다. 후속 진입 자격·정의 버전·승계 상태·커서 소유권·게시와 재시도 규칙을 결정할 선택지와 판별 사례 5개를 정리했다. 제품 정책 승인과 A05·A06 종합 인수는 남았다. [결정안](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P06-successor-contract-b2ba73ff-01/README.md)
 
 **P08 Android 패키징 부분 검증 — `b2ba73ff`.** 격리 F 환경에서 Godot 4.7.2 임포트와 ARM64 내보내기가 각각 exit 0이었다. 399,854,099바이트 APK의 ZIP 정렬과 구조를 확인했고 서명은 없었다. Godot가 임포트 중 격리 프로필에 디버그 키를 자동 생성해 전체 진단은 exit 1을 반환했다. 원래 프리셋은 복원했고 상위 모델이 패키징 범위를 검토했다. 출시 서명, 실기기와 성능 인수는 남았다. [진단 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-android-b2ba73ff-01/RESULTS.md)
 
