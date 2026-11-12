@@ -48,6 +48,8 @@ K6 15~18행 실행 전 점검과 17·18행 오프라인 비교 초안을 상위 
 
 **K6 15·16행 보존 원본 관계 대조.** 행별 실행 영수증과 출력 SHA를 결속한 뒤 기존 판정기에 입력 순서·시각, 같은 실행의 작전 관계, 소유자 종료와 Atlas 요약 대조를 추가했다. 보존 헤드리스 원본 2/2를 통과하고 다른 행 혼합·Start 누락 등 10건을 거부했다. 상위 모델 독립 검토를 통과했다. 실제 Windows 입력과 정식 실행은 남았다. [관계 대조](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-row15-16-archive-relations-01/REVIEW-HANDOFF.json)
 
+**K6·P02/P03 새 EntryBoot 기준.** `e3d76788`에서 적벽 선택 문구와 프롤로그 화면이 바뀌어 옛 선택자를 쓰던 테스트 네 개를 수정했다. 1600×900 헤드리스 진입 34/34와 공개 체크포인트 19/19를 독립 검토했고 PR #5로 병합했다. 원격 `main` `78638587`을 확인했다. 이전 실제 입력 좌표는 현행 화면의 증거로 사용하지 않는다. K6 실제 Windows 입력과 정식 실행은 남았다. [선택자 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/5) · [재결속 근거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-e3d76788-entry-rebind-01/HOTFIX-REVIEW-HANDOFF.json)
+
 **`b2ba73ff` 15·16행 공개 타이틀 경로 합성 검증.** 실제 승인 호스트에서 만든 113틱 저장 사본으로 시작해 40개 단언을 기존 순서대로 통과했다. 0틱 배치 명령 1회, Space 일시정지 두 번, 새 시뮬레이션의 0틱 재시작, 타이틀을 거친 지도 복귀와 저장 보존을 별도 모델이 확인했다. 이전 원본과 달라진 생성 경로·시드 등 13개 관측도 보존했다. 정식 15·16행에는 이 비라우팅 경로의 판정 기준과 새 실제 Windows 입력이 남았다. [타이틀 경로 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-title-route-focused-01/RESULTS.json)
 
 **264f47b9 호환성 사전검증 — 2026-11-12.** 구형 공개 브리핑을 여는 마지막 main 커밋에 기존 21행·58작업·27비교를 결속했다. 14~18행 사전 시험 11/11 및 비교 3건이 통과했다. GUI 15·16행은 합성 viewport 입력을 사용했다. 별도 현행 Godot 창은 시작됐으나 Computer Use 앱 접근 승인이 시간 초과돼 실제 캡처와 입력은 0건이었다. 이 사전 시험에서는 실제 입력 증거를 요구하는 정식 실행기를 시작하지 않았다. [역사 사전검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-review-01/HISTORICAL-FOCUSED-RESULTS-R02.json) · [Windows 입력 사전확인](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-5ef3537b-successor-01/windows-entry-smoke-01/INPUT-PREFLIGHT-RESULT.json)
@@ -170,6 +172,8 @@ E 소스 반영 완료: 독립 R3 통과한 revision-02 제품 5파일을 단일
 **P09 이미 들린 화공 루프 종료 수정.** 첫 수정 후보는 공개 화재가 겹치면 너무 일찍 멈추는 문제가 있어 푸시하지 않았다. 수정한 후보는 공개 화재 중첩·배치된 이벤트·전투 재시작과 숨은 화재 대조를 포함한 헤드리스 59/59를 통과했다. 불확실한 시작은 기존 전역 종료 동작을 유지한다. 상위 모델 독립 재리뷰 후 작업 브랜치에 푸시했고 `main` 병합은 남았다. [수정 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/6b12798cc6e9f4bb5cfa66d22f863a312d6ce93a) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-visible-fire-overlap-779d5679-01/REVIEW-HANDOFF.json)
 
 **P09 main 통합 추가 검증.** 정확한 수정 커밋으로 PR #4를 열었다. 병합 직전에 별도 적벽 프롤로그·시작 설정 변경 `e3d76788`이 main에 들어갔다. 제품 오디오 변경의 여섯 파일은 충돌하지 않으나 CommandDeck의 UI 초기화 의존성이 달라져, 새 main과 결합한 집중 검증 뒤 병합한다. [PR #4](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/4)
+
+**P09 main 통합 완료.** `e3d76788`과 수정본을 결합한 작업 트리에서 EntryBoot 초기화와 화공 회귀 29/29가 통과했다. 상위 모델 독립 리뷰 뒤 PR #4를 병합하고 원격 병합 트리가 검증 트리와 동일함을 확인했다. [통합 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-main-e3d76788-pr4-merge-smoke-01/REVIEW-HANDOFF.json)
 
 **P05 승인 적벽 공간 회귀 — `b2ba73ff`.** E/R 팽창 원과 A/B/C/E 중심 검사는 61/61, 정면 이동 자세는 17/17을 통과했다. 네이티브 자세 CSV 20,698행이 이전 승인 기록과 바이트 단위로 일치했고, 이동 오류와 경로 위반은 없었다. 별도 모델이 원본과 입력 해시를 확인했다. 개별 선체 다각형, 진형 전환 중 점유 영역과 Atlas→전장 좌표의 인수 기준은 남았다. [공간 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P05-main-b2ba73ff-20261112/RESULTS.md)
 
