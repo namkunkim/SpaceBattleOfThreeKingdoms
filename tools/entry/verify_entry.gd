@@ -15,8 +15,10 @@ func run() -> void:
 	check(f.act("start", f.revision), "start story")
 	var old: int = f.revision
 	check(f.act("next", old) and not f.act("next", old), "stale double next")
-	f.act("next", f.revision)
-	f.act("next", f.revision)
+	check(Flow.Prologue.PAGES.size() == 8, "eight story chapters")
+	for chapter in range(1, Flow.Prologue.PAGES.size()):
+		check(f.state == Flow.State.STORY and f.page == chapter, "story chapter %d" % (chapter + 1))
+		f.act("next", f.revision)
 	check(f.state == Flow.State.MAP, "full story to map")
 	check(not f.act("enter", f.revision, "locked"), "region request lock")
 	f.act("enter", f.revision)
@@ -38,7 +40,19 @@ func run() -> void:
 	root.add_child(screen)
 	await process_frame
 	check(screen.flow.state == Flow.State.SELECT, "scene boots select")
+	var home_token: int = screen.flow.revision
+	var home_focus: Control = root.gui_get_focus_owner()
+	check(screen.buttons.size() == 2 and screen.buttons[0].text == "적벽대전 시작"
+		and screen.buttons[1].text == "설정", "fresh home shows start and settings")
+	check(screen.request("settings", home_token) and not screen.body.visible, "settings overlays home")
+	check(not screen.request("start", home_token), "settings blocks launcher actions")
+	screen._settings_overlay.closed.emit()
+	check(screen.body.visible and screen.flow.revision == home_token
+		and root.gui_get_focus_owner() == home_focus, "settings restores home and focus")
 	screen.request("start", screen.flow.revision)
+	var story_map: Control = screen.find_child("PrologueAtlas", true, false)
+	check(story_map != null and story_map.prepared and story_map.story_focus == Flow.Prologue.PAGES[0][2],
+		"first story chapter mounts and highlights strategy atlas")
 	await create_timer(0.3).timeout
 	screen.request("skip", screen.flow.revision)
 	await create_timer(0.4).timeout

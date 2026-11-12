@@ -12,21 +12,45 @@ const CARD_H := 54.0
 
 var deck: Control
 var panel: Control
+var _list_scroll: ScrollContainer
+var _lists: Control
 var data := {}
 var reveal := false
 var difficulty := "표준"
 var back_to := "brief"
 var _diff_btns: Array = []
+var _portrait_provider: Callable
 
-func _init(d: Control) -> void:
+func _init(d: Control, portrait_provider := Callable()) -> void:
 	deck = d
+	_portrait_provider = portrait_provider
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	panel = ScreenKit.centered(self, Vector2(1180, 730), UiTheme.ornate())
 	panel.painter = _draw_panel
+	if _portrait_provider.is_valid():
+		panel.set_anchor_and_offset(SIDE_TOP, 0.0, 24.0)
+		panel.set_anchor_and_offset(SIDE_BOTTOM, 1.0, -24.0)
+	_list_scroll = ScrollContainer.new()
+	_list_scroll.name = "RosterScroll"
+	_list_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	panel.add_child(_list_scroll)
+	_list_scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_list_scroll.offset_left = 36
+	_list_scroll.offset_right = -28
+	_list_scroll.offset_top = 146
+	_list_scroll.offset_bottom = -24
+	_lists = DeckWidgets.DrawPanel.new(_draw_lists)
+	_lists.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_lists.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_list_scroll.add_child(_lists)
+	if _portrait_provider.is_valid():
+		_list_scroll.get_v_scroll_bar().focus_mode = Control.FOCUS_ALL
 	var back := Button.new()
+	back.name = "CloseRoster"
 	back.text = "돌아가기"
-	back.focus_mode = Control.FOCUS_NONE
+	if not _portrait_provider.is_valid():
+		back.focus_mode = Control.FOCUS_NONE
 	back.custom_minimum_size = Vector2(150, 52)
 	back.position = Vector2(1180 - 36 - 150, 32)
 	back.pressed.connect(func(): deck.show_screen(back_to))
@@ -40,7 +64,8 @@ func _init(d: Control) -> void:
 		var b := Button.new()
 		b.text = n
 		b.toggle_mode = true
-		b.focus_mode = Control.FOCUS_NONE
+		if not _portrait_provider.is_valid():
+			b.focus_mode = Control.FOCUS_NONE
 		b.custom_minimum_size = Vector2(88, 52)
 		b.pressed.connect(func():
 			difficulty = n
@@ -63,6 +88,13 @@ func _sync() -> void:
 	for b in _diff_btns:
 		b.visible = reveal
 		b.button_pressed = b.text == difficulty
+	var row_count := 0
+	for faction: Dictionary in data.get("factions", []):
+		if faction.id != "cao_cao" or reveal:
+			row_count = maxi(row_count, ScenarioRoster.deployed(data, faction.id, difficulty).size())
+	_lists.custom_minimum_size.y = maxf(510.0, 84.0 + row_count * (CARD_H + 4.0))
+	_list_scroll.set_deferred("scroll_vertical", 0)
+	_lists.queue_redraw()
 	panel.queue_redraw()
 
 func _draw() -> void:
@@ -79,12 +111,14 @@ func _draw_panel(c: Control) -> void:
 		note = "전부 공개 · %s 난이도의 배치입니다(조조군 규모 배율과 투입 난이도 적용)." % difficulty
 	UiDraw.text(c, Vector2(36, 118), note, "regular", 12, UiTheme.INK_3)
 	c.draw_line(Vector2(36, 132), Vector2(c.size.x - 36, 132), Color(UiTheme.GOLD, 0.22))
-	var x := 36.0
+
+func _draw_lists(c: Control) -> void:
+	var x := 0.0
 	for fac in data.get("factions", []):
 		if fac.id == "cao_cao" and not reveal:
-			_hidden_enemy(c, Vector2(x, 152), fac)
+			_hidden_enemy(c, Vector2(x, 6), fac)
 		else:
-			_faction(c, Vector2(x, 152), fac)
+			_faction(c, Vector2(x, 6), fac)
 		x += COL_W + 18.0
 
 func _head(c: Control, o: Vector2, fac: Dictionary, sub: String) -> void:
@@ -156,8 +190,11 @@ func _card(c: Control, r: Rect2, s: Dictionary, key: String, flag: bool) -> void
 	var cmd: Dictionary = s.get("commander", {})
 	var portrait: int = Commanders.PORTRAIT.get(str(cmd.get("id", "")), -1)
 	var pr := Rect2(r.position + Vector2(8, 6), Vector2(44, 44))
+	var texture: Texture2D
 	if portrait >= 0:
-		c.draw_texture_rect(deck.battle._portrait_tex(portrait), pr, false)
+		texture = _portrait_provider.call(portrait) if _portrait_provider.is_valid() else deck.battle._portrait_tex(portrait)
+	if texture:
+		c.draw_texture_rect(texture, pr, false)
 	else:
 		UiDraw.faction_seal(c, pr, key, str(cmd.get("name", "?")).left(1))
 	UiDraw.text(c, r.position + Vector2(60, 20), str(s.name), "serif_bold", 14, UiTheme.INK)

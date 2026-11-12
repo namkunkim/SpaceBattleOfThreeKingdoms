@@ -8,6 +8,7 @@ var notified := false
 var error := ""
 var retry_state := State.SELECT
 var origin := "new"
+const Prologue := preload("res://hud/ui_kit/prologue_text.gd")
 const REGION := "red_cliffs"
 const SCENARIO := "RED-CLIFFS-208-RT"
 
@@ -35,7 +36,7 @@ func act(action: String, token: int, region := REGION) -> bool:
 			if action == "skip": state = State.MAP
 			elif action == "next":
 				page += 1
-				if page >= 3: state = State.MAP
+				if page >= Prologue.PAGES.size(): state = State.MAP
 			else: return false
 		State.MAP:
 			if region != REGION: return false

@@ -3,6 +3,7 @@ extends Control
 # Never creates a battle host, writes coordinates, or advances simulation.
 @export var detailed := false
 var local_context := false
+var story_focus: Array = []
 const Sites := preload("res://view/world/red_cliffs_sites.gd")
 const ATLAS := "res://data/galaxy_navigation.json"
 const OPERATION := "res://data/scenarios/p05_p07_first_operation_dev_v1.json"
@@ -80,7 +81,8 @@ func _draw() -> void:
 	var bounds := _map_bounds()
 	var field := _map_field(bounds.size)
 	var scale_factor := field.size.x / bounds.size.x
-	draw_texture_rect(sky, Rect2(Vector2.ZERO, size), false, Color(0.65, 0.72, 0.85))
+	var backdrop := Rect2(Vector2.ZERO, size) if detailed or local_context else field
+	draw_texture_rect(sky, backdrop, false, Color(0.65, 0.72, 0.85))
 	draw_rect(Rect2(Vector2.ZERO, size), Color(0.02, 0.04, 0.08, 0.15))
 	if detailed:
 		draw_texture_rect(terrain, field, false, Color(0.8, 0.9, 1, 0.9))
@@ -144,13 +146,27 @@ func _local_route_end(inside: Vector2, outside: Vector2) -> Vector2:
 	return inside + direction * limit
 
 func _strategy(field: Rect2, factor: float) -> void:
+	var story := not story_focus.is_empty()
+	var focused_positions := {}
+	if story:
+		for point: Dictionary in data.points:
+			if str(point.get("id", "")) in story_focus:
+				focused_positions[_point(point.position)] = true
 	for route: Dictionary in data.routes:
 		var points := PackedVector2Array()
-		for p: Array in route.points: points.append(field.position + _point(p) * factor)
-		if points.size() > 1: draw_polyline(points, Color("#8ba9c58c") if compact_scale < 1.0 else Color("#55778965"), 3 if compact_scale < 1.0 else 1, true)
+		for p: Array in route.points:
+			points.append(field.position + _point(p) * factor)
+		if points.size() > 1:
+			var tint := Color("#8ba9c58c") if compact_scale < 1.0 or story else Color("#55778965")
+			draw_polyline(points, tint, 3 if compact_scale < 1.0 else 1, true)
+		if story:
+			_story_route(route.points, points, focused_positions)
 	for point: Dictionary in data.points:
 		var at := field.position + _point(point.position) * factor
 		draw_circle(at, 2.0 if str(point.kind) == "항성계" else 1.1, Color("#93a6b280"))
+	if story:
+		_story_sites(field, factor)
+		return
 	for region: Dictionary in data.regions:
 		var at := field.position + _point(region.position) * factor
 		if region.name == "형초":
@@ -169,6 +185,55 @@ func _strategy(field: Rect2, factor: float) -> void:
 	else:
 		_text(wulin + Vector2(-18, -12), "오림", tint, 15)
 		_text(Vector2(26, size.y - 22), "천하 항로도     /     작전 가능 지역: 적벽", MUTED, 14)
+
+func _story_route(raw_points: Array, points: PackedVector2Array, focused_positions: Dictionary) -> void:
+	var start := -1
+	for index in range(raw_points.size()):
+		var position := _point(raw_points[index])
+		if not focused_positions.has(position):
+			continue
+		if start >= 0:
+			draw_polyline(points.slice(start, index + 1), Color(GOLD, 0.72), 2.0, true)
+		start = index
+
+func _story_sites(field: Rect2, factor: float) -> void:
+	var targets: Array[Dictionary] = []
+	var occupied: Array[Rect2] = []
+	for point: Dictionary in data.points + Sites.POINTS:
+		if str(point.get("id", "")) not in story_focus:
+			continue
+		var at := field.position + _point(point.position) * factor
+		if point.id == Sites.RED_CLIFFS:
+			at = red_cliffs_position()
+		targets.append({"position": at, "name": str(point.get("name", ""))})
+		occupied.append(Rect2(at - Vector2.ONE * 8.0, Vector2.ONE * 16.0))
+	if Sites.RED_CLIFFS in story_focus and Sites.WULIN in story_focus:
+		var wulin := field.position + _point(Sites.POINTS[1].position) * factor
+		draw_dashed_line(wulin, red_cliffs_position(), Color(GOLD, 0.72), 2.0, 6.0, true, true)
+	for target: Dictionary in targets:
+		var at: Vector2 = target.position
+		draw_circle(at, 10.0, Color(GOLD, 0.17), true, -1.0, true)
+		draw_circle(at, 7.0, GOLD, false, 1.5, true)
+		draw_circle(at, 2.5, GOLD, true, -1.0, true)
+		_story_label(at, str(target.name), occupied)
+
+func _story_label(at: Vector2, value: String, occupied: Array[Rect2]) -> void:
+	const FONT_SIZE := 16
+	var font := get_theme_default_font()
+	var extent := font.get_string_size(value, HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_SIZE) + Vector2(12, 6)
+	for offset in [Vector2(12, -extent.y - 2), Vector2(12, 5),
+			Vector2(-extent.x - 12, -extent.y - 2), Vector2(-extent.x - 12, 5)]:
+		var label := Rect2(at + offset, extent)
+		if not Rect2(Vector2.ZERO, size).grow(-8.0).encloses(label):
+			continue
+		if occupied.any(func(area: Rect2) -> bool: return area.grow(2.0).intersects(label)):
+			continue
+		occupied.append(label)
+		draw_rect(label, Color("#101d2df5"))
+		draw_rect(label, Color(GOLD, 0.64), false, 1.0)
+		var baseline := label.position + Vector2(6.0, 3.0 + font.get_ascent(FONT_SIZE))
+		draw_string(font, baseline, value, HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_SIZE, GOLD)
+		return
 
 func _detail(field: Rect2, factor: float) -> void:
 	var nodes: Dictionary = data.space.nodes

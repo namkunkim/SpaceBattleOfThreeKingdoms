@@ -394,6 +394,7 @@ class SettingsScreen extends Control:
 	const PAGES := ["화면", "진행", "소리"]
 	var deck: Control
 	var back_to := "title"
+	var _standalone := false
 	var scale_btns: Array = []
 	var full_chk: CheckButton
 	var glow_chk: CheckButton
@@ -409,9 +410,11 @@ class SettingsScreen extends Control:
 	var language_picker: OptionButton
 	var tabs: Array = []
 	var pages: Array = []
-	func _init(d: Control, back: String) -> void:
+	func _init(d: Control, back: String, standalone := false) -> void:
 		deck = d
 		back_to = back
+		_standalone = standalone
+		name = "GamePreferences"
 		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		mouse_filter = Control.MOUSE_FILTER_STOP
 		var p := ScreenKit.centered(self, Vector2(600, 580), UiTheme.ornate())
@@ -428,6 +431,7 @@ class SettingsScreen extends Control:
 			t.custom_minimum_size = Vector2(0, 52)
 			t.pressed.connect(_show_page.bind(i))
 			tb.add_child(t)
+			_enable_standalone_focus(t)
 			tabs.append(t)
 		for i in PAGES.size():
 			var vb := VBoxContainer.new()
@@ -445,6 +449,7 @@ class SettingsScreen extends Control:
 		for language_name in GameLocale.NAMES:
 			language_picker.add_item(language_name)
 		language_row.add_child(language_picker)
+		_enable_standalone_focus(language_picker)
 		var row := _row(pages[0], "UI 크기")
 		for sc in GameSettings.UI_SCALES:
 			var b := _choice("%d%%" % roundi(sc * 100.0), row)
@@ -487,6 +492,7 @@ class SettingsScreen extends Control:
 			sl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 			sl.value_changed.connect(func(v: float): _preview_volume(it[0], v))
 			r.add_child(sl)
+			_enable_standalone_focus(sl)
 			vol_sliders[it[0]] = sl
 		_hint(pages[2], "지금은 임시 합성음입니다. 경보·결정·아군 손실은 화면 표시와 진동을 함께 냅니다.")
 		var hint := UiTheme.label("설정은 이 기기에 저장됩니다.", "Muted")
@@ -504,11 +510,16 @@ class SettingsScreen extends Control:
 		cancel.focus_mode = Control.FOCUS_NONE
 		cancel.pressed.connect(_cancel)
 		hb.add_child(cancel)
+		_enable_standalone_focus(cancel)
 		var ok := ScreenKit.menu_button("저장", true)
 		ok.custom_minimum_size = Vector2(170, 52)
 		ok.pressed.connect(_save)
 		hb.add_child(ok)
+		_enable_standalone_focus(ok)
 		_show_page(0)
+	func _enable_standalone_focus(control: Control) -> void:
+		if _standalone:
+			control.focus_mode = Control.FOCUS_ALL
 	func _row(parent: Control, title: String) -> HBoxContainer:
 		var row := HBoxContainer.new()
 		var lbl := UiTheme.label(title, "Strong")
@@ -527,6 +538,7 @@ class SettingsScreen extends Control:
 		b.focus_mode = Control.FOCUS_NONE
 		b.custom_minimum_size = Vector2(80, 52)
 		row.add_child(b)
+		_enable_standalone_focus(b)
 		return b
 	func _check(parent: Control, text: String) -> CheckButton:
 		var c := CheckButton.new()
@@ -534,6 +546,7 @@ class SettingsScreen extends Control:
 		c.focus_mode = Control.FOCUS_NONE
 		c.custom_minimum_size = Vector2(0, 52)
 		parent.add_child(c)
+		_enable_standalone_focus(c)
 		return c
 	func _show_page(i: int) -> void:
 		for k in pages.size():
@@ -584,6 +597,8 @@ class SettingsScreen extends Control:
 			vol_sliders[k].set_value_no_signal(_orig_vol[k])
 		_show_page(0)
 		_sync()
+		if _standalone:
+			tabs[0].grab_focus()
 	func _cancel() -> void:
 		for k in _orig_vol:
 			_set_vol(k, _orig_vol[k])
@@ -602,11 +617,13 @@ class SettingsScreen extends Control:
 			_set_vol(k, vol_sliders[k].value)
 		if GameSettings.ship_density != pending_density:
 			GameSettings.ship_density = pending_density
-			deck.renderer.reset()
+			if not _standalone:
+				deck.renderer.reset()
 		GameSettings.save_cfg()
 		GameSettings.apply(get_window())
 		UiSound.apply_volume()
-		deck.apply_glow()
+		if not _standalone:
+			deck.apply_glow()
 		deck.show_screen(back_to)
 
 # ------------------------------------------------------------ 결과

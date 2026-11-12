@@ -24,9 +24,14 @@ var back_screen := "title"
 var back_state := "brief"
 var body: BoxContainer
 var key_grid: GridContainer
+var _reference_mode := false
+var _reference_squadrons: Array = []
 
-func _init(d: Control) -> void:
+func _init(d: Control, shu_squadrons: Variant = null) -> void:
 	deck = d
+	_reference_mode = shu_squadrons is Array
+	if _reference_mode:
+		_reference_squadrons = shu_squadrons
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	var margin := MarginContainer.new()
@@ -39,7 +44,7 @@ func _init(d: Control) -> void:
 	margin.add_child(column)
 	var header := HBoxContainer.new()
 	column.add_child(header)
-	var title := UiTheme.label("함종별 진형 배치도", "", 24)
+	var title := UiTheme.label("촉 함선으로 보는 진형" if _reference_mode else "함종별 진형 배치도", "", 24)
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header.add_child(title)
 	clear_button = Button.new()
@@ -94,8 +99,12 @@ func _init(d: Control) -> void:
 	key_grid.add_theme_constant_override("v_separation", 10)
 	body.add_child(key_grid)
 	for i in 8:
-		var model: int = deck.renderer._model_class("SHP-%02d" % (i + 1))
-		var texture: Texture2D = load("res://assets/ships/silhouette/%d.png" % model)
+		var ship_type := "SHP-%02d" % (i + 1)
+		var model: int = deck.renderer._model_class(ship_type)
+		var path := "res://assets/ships/silhouette/%d.png" % model
+		if _reference_mode:
+			path = ScenarioRoster.report_hull_path("shu", ship_type)
+		var texture: Texture2D = load(path)
 		textures.append(texture)
 		var button := Button.new()
 		button.name = "ShipType%02d" % (i + 1)
@@ -129,7 +138,10 @@ func _init(d: Control) -> void:
 		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		legends.append(label)
 		row.add_child(label)
-	var note := UiTheme.label("함종을 클릭하면 위치 강조 · 다시 클릭하거나 전체 표시로 해제 · 위쪽이 전방 ↑ · 열람 중 전투 정지 · 고속정은 요격함 이미지 사용", "Muted", 12)
+	var help := "함종을 클릭하면 위치 강조 · 다시 클릭하거나 전체 표시로 해제 · 위쪽이 전방 ↑"
+	if not _reference_mode:
+		help += " · 열람 중 전투 정지 · 고속정은 요격함 이미지 사용"
+	var note := UiTheme.label(help, "Muted", 12)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	column.add_child(note)
 	resized.connect(_layout)
@@ -141,6 +153,9 @@ func open_guide() -> void:
 	deck.show_screen("formation_guide")
 
 func close_guide() -> void:
+	if _reference_mode:
+		deck.show_screen("menu")
+		return
 	deck.battle.G.state = back_state
 	deck.show_screen(back_screen)
 
@@ -149,6 +164,15 @@ func on_show() -> void:
 	fleet_picker.clear()
 	fleet_picker.add_item("예시 편성 · 56척")
 	fleet_picker.set_item_metadata(0, -1)
+	if _reference_mode:
+		for index in _reference_squadrons.size():
+			var squadron: Dictionary = _reference_squadrons[index]
+			fleet_picker.add_item("%s · %d척" % [squadron.name, ScenarioRoster.ship_count(squadron)])
+			fleet_picker.set_item_metadata(index + 1, index)
+		fleet_picker.select(0)
+		_layout()
+		_sync()
+		return
 	var chosen := 0
 	for sq in deck.src.squadrons():
 		if sq.side != 0 or sq.dead or sq.counts.is_empty():
@@ -175,6 +199,12 @@ func _sync() -> void:
 	if id < 0:
 		for i in 8:
 			counts["SHP-%02d" % (i + 1)] = [EXAMPLE[i], 0, 0, 0]
+	elif _reference_mode:
+		for entry: Dictionary in _reference_squadrons[id].get("composition", []):
+			var ship_type: String = entry.ship_type_id
+			if not counts.has(ship_type):
+				counts[ship_type] = [0, 0, 0, 0]
+			counts[ship_type][0] += int(entry.count)
 	else:
 		counts = deck.src.squadron(id).get("counts", {})
 	chart_ids = deck.renderer._real_ship_ids(counts)
@@ -203,7 +233,7 @@ func ship_alpha(index: int) -> float:
 	return 1.0 if selected_type < 0 or selected_type == index else 0.18
 
 func _input(event: InputEvent) -> void:
-	if visible and event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
+	if not _reference_mode and is_visible_in_tree() and event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
 		get_viewport().set_input_as_handled()
 		close_guide()
 
@@ -236,6 +266,11 @@ class Diagram extends Control:
 			if guide.selected_type == type:
 				draw_rect(Rect2(pos - Vector2(len_ * 0.125 + 5, len_ * 0.5 + 5), Vector2(len_ * 0.25 + 10, len_ + 10)), COLORS[type], false, 2.0)
 			draw_set_transform(pos, PI * 0.5)
-			draw_texture_rect(guide.textures[type], Rect2(-len_ * 0.5, -len_ * 0.125, len_, len_ * 0.25), false, Color(1, 1, 1, alpha))
+			var texture: Texture2D = guide.textures[type]
+			if texture:
+				var half_width := len_ * 0.125
+				if guide._reference_mode:
+					half_width = len_ * 0.5 * float(texture.get_height()) / float(texture.get_width())
+				draw_texture_rect(texture, Rect2(-len_ * 0.5, -half_width, len_, half_width * 2), false, Color(1, 1, 1, alpha))
 			draw_set_transform(Vector2.ZERO)
 			draw_circle(pos + Vector2(0, len_ * 0.5 + 4), 2.5, Color(COLORS[type], alpha))

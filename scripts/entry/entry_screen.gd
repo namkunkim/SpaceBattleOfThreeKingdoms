@@ -7,10 +7,17 @@ var campaign_busy := false
 var campaign_notice: Label
 const Flow := preload("res://scripts/entry/entry_flow.gd")
 const MapView := preload("res://scripts/entry/entry_map.gd")
-const STORY := [
-	"북부 성역을 통합한 조조의 함대가 장강 대항로를 따라 남하한다. 항로 끝에는 남부 성역으로 향하는 관문, 적벽이 있다.",
-	"손권과 유비는 연합 함대를 결성했다. 적벽의 좁은 항로와 성운 경계에서 적의 진격을 저지해야 한다.",
-	"적벽 전초 구역에서 교전 신호가 도착했다. 연합 전술 지휘관인 당신은 정지된 전술 상황을 인계받아 방어 준비를 확인한다."
+const Prologue := preload("res://hud/ui_kit/prologue_text.gd")
+const EntrySettings := preload("res://scripts/entry/entry_settings.gd")
+const PROLOGUE_ILLUSTRATIONS := [
+	"res://assets/prologue/01-empire.png",
+	"res://assets/prologue/02-fracture.png",
+	"res://assets/prologue/03-advance.png",
+	"res://assets/prologue/04-surrender.png",
+	"res://assets/prologue/05-alliance-request.png",
+	"res://assets/prologue/06-allied-rendezvous.png",
+	"res://assets/prologue/07-linked-fleet.png",
+	"res://assets/prologue/08-huang-gai-letter.png",
 ]
 @export_enum("new", "resume", "settlement") var entry_origin := "new"
 @export var detail_scene := "res://scenes/entry/PreparedMap.tscn"
@@ -21,6 +28,8 @@ var _layout_scale := 1.0
 var gate_remaining := 0.0
 var buttons: Array[Button] = []
 var prepared_count := 0
+var _settings_overlay: EntrySettings
+var _settings_focus: Control
 
 func _ready() -> void:
 	flow.begin(entry_origin)
@@ -106,7 +115,7 @@ func _space() -> void:
 	space.custom_minimum_size.y = 16
 	body.add_child(space)
 
-func _hero(title: String) -> void:
+func _hero(title: String, parent: Control = null) -> void:
 	var label := Label.new()
 	label.text = title
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -114,9 +123,9 @@ func _hero(title: String) -> void:
 	label.set_meta("normal_font_size", 64)
 	label.add_theme_color_override("font_color", Color("#eedbc0"))
 	_apply_layout(label)
-	body.add_child(label)
+	(parent if parent != null else body).add_child(label)
 
-func _label(value: String, font_size := 22, hide_in_compact := false) -> void:
+func _label(value: String, font_size := 22, hide_in_compact := false, parent: Control = null) -> Label:
 	var label := Label.new()
 	label.text = value
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -125,7 +134,8 @@ func _label(value: String, font_size := 22, hide_in_compact := false) -> void:
 		label.set_meta("hide_in_compact", true)
 	label.add_theme_color_override("font_color", Color("#d4dee4") if font_size >= 20 else Color("#adc1ce"))
 	_apply_layout(label)
-	body.add_child(label)
+	(parent if parent != null else body).add_child(label)
+	return label
 
 func _button(value: String, action: String, parent: Control = null) -> Button:
 	var button := Button.new()
@@ -150,7 +160,10 @@ func _button(value: String, action: String, parent: Control = null) -> Button:
 	return button
 
 func request(action: String, token: int, region := Flow.REGION) -> bool:
-	if gate_remaining > 0.0 or campaign_busy: return false
+	if gate_remaining > 0.0 or campaign_busy or is_instance_valid(_settings_overlay): return false
+	if action == "settings" and token == flow.revision and flow.state == Flow.State.SELECT:
+		_open_settings()
+		return true
 	if campaign_enabled and token == flow.revision:
 		if action == "sortie" and flow.state == Flow.State.READY:
 			campaign_busy = true
@@ -178,22 +191,13 @@ func _render() -> void:
 	match flow.state:
 		Flow.State.SELECT:
 			_space()
-			_label("시나리오  01     /     건안 13년", 18)
 			_hero("적벽대전")
-			_label("하나의 항로. 두 세력의 운명.", 28)
-			_label("남하하는 조조의 함대에 맞서, 손권과 유비의 연합을 이끄십시오.\n형초의 항로에서 시작되는 첫 방어 작전.", 20)
+			_label("조조가 남진하고, 손권과 유비는 형초에서 함대를 모은다.", 22)
 			_space()
-			_button("적벽대전 선택 · 시작", "start")
-			if campaign_enabled: _button("기존 진행 · 이어하기 / 결산", "continue")
-			_label("다른 시나리오 · 준비 중", 18)
+			_button("적벽대전 시작", "start")
+			_button("설정", "settings")
 		Flow.State.STORY:
-			_space()
-			_label("작전 서문   /   %02d · 03" % (flow.page + 1), 18)
-			_hero(["남하", "연합", "적벽"][flow.page])
-			_label(STORY[flow.page], 24)
-			_space()
-			_button("전략 맵으로" if flow.page == 2 else "다음", "next")
-			_button("서사 건너뛰기", "skip")
+			_render_story()
 		Flow.State.MAP, Flow.State.CONFIRM:
 			_label("천하 항로도  /  적벽 작전", 26)
 			var map := MapView.new()
@@ -242,9 +246,80 @@ func _render() -> void:
 			_label("게임을 종료합니다…")
 			get_tree().quit(0)
 	if not buttons.is_empty():
-		buttons[0].grab_focus()
+		(buttons.back() if flow.state == Flow.State.STORY else buttons[0]).grab_focus()
 	if flow.state != Flow.State.READY:
 		_label("방향키 · Tab  이동     Enter · A  선택     마우스 · 터치 지원", 14, true)
+
+func _render_story() -> void:
+	var chapter: Array = Prologue.PAGES[flow.page]
+	var columns := HBoxContainer.new()
+	columns.name = "PrologueChapter"
+	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	columns.add_theme_constant_override("separation", 26)
+	body.add_child(columns)
+
+	var art_frame := PanelContainer.new()
+	art_frame.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var art_style := _style(Color("#080e18"), Color("#52677a"))
+	art_style.content_margin_left = 1
+	art_style.content_margin_right = 1
+	art_style.content_margin_top = 1
+	art_style.content_margin_bottom = 1
+	art_frame.add_theme_stylebox_override("panel", art_style)
+	columns.add_child(art_frame)
+	var illustration := TextureRect.new()
+	illustration.name = "PrologueIllustration"
+	illustration.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	illustration.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	illustration.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var art_path: String = PROLOGUE_ILLUSTRATIONS[flow.page]
+	if ResourceLoader.exists(art_path, "Texture2D"):
+		illustration.texture = load(art_path) as Texture2D
+	art_frame.add_child(illustration)
+
+	var sidebar := VBoxContainer.new()
+	sidebar.custom_minimum_size.x = 568
+	sidebar.add_theme_constant_override("separation", 12)
+	columns.add_child(sidebar)
+	_label("서막   /   %02d · %02d" % [flow.page + 1, Prologue.PAGES.size()], 18, false, sidebar)
+	_hero(chapter[0], sidebar)
+	var prose := _label(chapter[1], 25, false, sidebar)
+	prose.add_theme_constant_override("line_spacing", 8)
+	var map := MapView.new()
+	map.name = "PrologueAtlas"
+	map.story_focus = chapter[2]
+	map.custom_minimum_size.y = 248
+	map.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	sidebar.add_child(map)
+
+	var actions := HBoxContainer.new()
+	actions.alignment = BoxContainer.ALIGNMENT_END
+	actions.add_theme_constant_override("separation", 12)
+	body.add_child(actions)
+	_button("서사 건너뛰기", "skip", actions)
+	_button("전략 맵으로" if flow.page == Prologue.PAGES.size() - 1 else "다음", "next", actions)
+
+func _open_settings() -> void:
+	_settings_focus = get_viewport().gui_get_focus_owner()
+	touch_button = null
+	touch_index = -1
+	_settings_overlay = EntrySettings.new()
+	_settings_overlay.closed.connect(_close_settings)
+	body.hide()
+	add_child(_settings_overlay)
+	_settings_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+func _close_settings() -> void:
+	_settings_overlay.hide()
+	_settings_overlay.queue_free()
+	_settings_overlay = null
+	body.show()
+	if is_instance_valid(_settings_focus):
+		_settings_focus.grab_focus()
+	else:
+		buttons[0].grab_focus()
+	_settings_focus = null
+
 
 func _load_detail(token: int) -> void:
 	if flow.state != Flow.State.LOADING or token != flow.revision: return
@@ -293,6 +368,8 @@ func _load_detail(token: int) -> void:
 	detail_prepared.emit({"origin": flow.origin, "region_id": Flow.REGION, "scenario_id": Flow.SCENARIO, "battle_started": false})
 
 func _unhandled_key_input(event: InputEvent) -> void:
+	if is_instance_valid(_settings_overlay):
+		return
 	if event is InputEventKey and event.echo:
 		get_viewport().set_input_as_handled()
 
@@ -302,6 +379,8 @@ func _process(delta: float) -> void:
 var touch_button: Button
 var touch_index := -1
 func _input(event: InputEvent) -> void:
+	if is_instance_valid(_settings_overlay):
+		return
 	if event is InputEventJoypadButton and event.pressed and not buttons.is_empty():
 		var focused := get_viewport().gui_get_focus_owner()
 		var index := buttons.find(focused)

@@ -18,6 +18,14 @@ const SHIP_TYPES := {
 	"SHP-08": {"name": "고속정", "short": "고속", "model": ""},
 }
 
+const REPORT_HULLS := {
+	"SHP-01": "carrier", "SHP-02": "siege", "SHP-03": "artillery", "SHP-04": "line",
+	"SHP-05": "supply", "SHP-06": "electronic-warfare", "SHP-07": "interceptor", "SHP-08": "fast-craft",
+}
+
+static func report_hull_path(faction: String, ship_type: String) -> String:
+	return "res://assets/ships/fleet-report-v25/%s/%s.png" % [faction, REPORT_HULLS[ship_type]]
+
 # 시나리오 세력 ID → 표시 세력 키(Factions)
 const FACTION_KEY := {"liu_bei": "shu", "sun_quan": "wu", "cao_cao": "wei"}
 const CONTROL_LABEL := {"player": "직접 지휘", "ai_delegate": "동맹 · 위임", "ai": "적"}
