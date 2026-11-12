@@ -129,7 +129,7 @@ func _seed() -> void:
 	if not _expect(not FileAccess.file_exists(PRIMARY) and not FileAccess.file_exists(PREVIOUS) \
 		and not FileAccess.file_exists(ORACLE_A) and not FileAccess.file_exists(ORACLE_B), "start with an empty isolated profile"):
 		return
-	for label in ["적벽대전 선택 · 시작", "서사 건너뛰기", "적벽", "출격 · 실제 전장 준비"]:
+	for label in ["적벽대전 시작", "서사 건너뛰기", "적벽", "출격 · 실제 전장 준비"]:
 		if not await _entry_action(label):
 			return
 	if not _expect(await _wait_host(), "public EntryBoot sortie publishes product host"):
