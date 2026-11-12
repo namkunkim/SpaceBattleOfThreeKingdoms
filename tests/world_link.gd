@@ -121,16 +121,20 @@ func _determinism() -> void:
 	while not r1.poll():
 		await process_frame
 	var t1 := Time.get_ticks_msec()
-	var o2 := AutoResolver.new(BattleBrief.from_dict(b.to_dict())).run_blocking()
+	var r2 := AutoResolver.new(BattleBrief.from_dict(b.to_dict()))
+	var o2 := r2.run_blocking()
 	print("자동 해결 1판 %.1fs (스레드), 결과 %s %s %s" % [(t1 - t0) / 1000.0, r1.outcome.kind, r1.outcome.reason, r1.outcome.grade])
 	_check(o2 != null and r1.outcome.to_dict() == o2.to_dict(), "같은 Brief → 같은 결과(지문 %s / %s)" % [r1.outcome.fingerprint, o2.fingerprint if o2 else "-"])
 	_check(r1.outcome.cao_status != "", "적벽 결산(st.result)을 읽음")
+	r1.close()
+	r2.close()
 	# 중단은 즉시 돌아온다
 	var r3 := AutoResolver.new(b)
 	r3.start()
 	await process_frame
 	r3.cancel()
 	_check(not r3.poll(), "중단")
+	r3.close()
 
 # ------------------------------------------------------------ 5 화면
 func _screen_new() -> WorldMapScreen:
