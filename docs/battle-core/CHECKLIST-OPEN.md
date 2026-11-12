@@ -22,6 +22,10 @@
 
 **264f47b9 4차 정식 실행 — FAIL.** 58작업 중 35개를 관측해 34개 통과·1개 실패·23개 미실행이었다. 15·16행 변경 전후의 실제 Windows GUI 4작업이 모두 통과했다. 별도 모델은 실제 조작 26건, MAIN 도구 호출 52건, Windows 이벤트 52건, Godot 이벤트 52건과 증거 해시를 확인했다. 첫 실패는 21행 새 프로필의 변경 전 작업이다. 엔진은 종료 코드 0과 `WORLD_LINK_PASS`를 기록했지만, 단언 141개가 동결된 127개와 순서·지문에서 달랐다. 전체 27비교와 정식 GUI 증거 승인 단계는 실행되지 않았고, 런처는 종료 코드 1로 끝났다. 이전 판정은 보존하고 별도 기준선에서 21행의 차이를 검증한다. [4차 집계](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-operator-04/run-once/aggregate.json) · [독립 GUI 검토](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-operator-04/operator-tools/independent-gui-evidence-four-jobs.json)
 
+**21행 독립 기준선 — `264f47b9`.** 후보 네이티브 변경을 넣지 않은 별도 기준선에서 새 프로필·복귀 프로필을 각각 실행했다. 기존 127개 단언의 대응을 사전 정의했고, 두 모드에서 실제 141개가 모두 참이며 순서가 일치했다. 직접 시뮬레이션과 동기 AutoResolver는 공유 코어를 사용하며 전체 결과 값과 타입이 같았다. 종료 11,470틱과 절대 지문 `ac12b629…c8e8`을 별도 모델이 확인했다. 두 지도 시험의 ObjectDB·리소스 종료 진단과 이전 127개 기준의 정식 FAIL은 보존한다. [독립 기준선](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-row21-independent-01/INDEPENDENT-REFERENCE-EVIDENCE.json)
+
+**19행 시간 초과 보강 진단.** `i01b_active_replace` 변경 전 조건을 별도 프로세스에서 단독으로 실행했다. 기존 400초 제한 안에서 252.465초에 종료 코드 0으로 끝났고, 단언 20,099개가 고정 순서와 모두 일치했다. 이전 시간 초과의 단일 원인은 확인되지 않았다. 변경 후 조건과 정식 판정은 남았다. [단독 진단](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/row19-historical-264f47b9-timing-01/result.json)
+
 **별도 헤드리스 보강 시험.** 12작업 중 8개, 비교 6개 중 4개가 통과했다. 19행 i01b_active_replace 양쪽은 400초 제한에 도달했고, 21행 양쪽은 exit 0이었지만 141개 관측 단언과 기존 127개 기대 단언 및 지문이 달라 실패했다. 정식 집계에는 포함되지 않는다. [보강 시험 결과](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-review-01/headless-supplement-01/RESULTS.json)
 
 당시 무입력 후속 상태: K6 무입력 revision 02 독립 PASS. 양성4·음성15·경계9 및 예제16 바이트 대조. 30초 경과 캡처에서 클릭/Space 각각 0건, 캡처25초와 사용자 만료 중 이른 경계부터 입력0건. 무입력 준비 범위 마감. 실제 MAIN 도구 원문, Win32/Godot 및 16-after 제목 증거는 당시 정식 실행에서 확인할 조건이었다. [독립 재심](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/review15-main-input-dry-check-02/P02-INDEPENDENT-REVIEW.md), SHA `3111cf2ea9eba1b150ec03456c2f294d3280c9d4080285133ffc96cbc8733d17`.
