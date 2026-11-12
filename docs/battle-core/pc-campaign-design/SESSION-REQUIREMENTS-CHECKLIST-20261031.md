@@ -10,9 +10,13 @@
 
 **264f47b9 정식 실행 2회 — 2026-11-12.** 두 실행 모두 15-before 작업에서 중단됐다. 각 실행은 계획 58작업 중 1작업 관측·0통과·57미실행, 21행 완료 0, 27비교 실행 0이다. 첫 실행은 캡처 유효시간을 넘겨 등록한 클릭이 호출되기 전에 차단됐고, 출처를 특정할 수 없는 별도 입력이 관측됐다. 재시도는 실제 입력 6건과 함대 배치 명령·확정을 확인했지만, Windows에서 관측한 5번째 동작의 우클릭 해제에 대응하는 Godot 관찰 기록이 없어 실패했다. 두 런처 exit 1, 첫 작업 exit 125 및 잔류 Job 0을 확인했다. [첫 집계](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-review-01/run-once/aggregate.json) · [재시도 집계](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-retry-02/run-once/aggregate.json)
 
+**264f47b9 3차 정식 실행 — 2026-11-12.** 시험 관찰기의 입력 처리 순서를 조정해 15-before의 실제 조작 6건과 Windows·Godot 이벤트 각 12건을 확인했다. 16-before에서 Space 입력은 게임에 도달했으나, 조작 기록에 키 입력 스키마가 허용하지 않는 화면 캡처 ID가 포함돼 중단됐다. 58작업 중 2작업 관측·1통과·56미실행, 런처 exit 1이다. 4차 실행 전 실제 Space 입력으로 수정한 기록 형식을 검증했다. [3차 집계](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-repair-03/run-once/aggregate.json)
+
+**264f47b9 4차 정식 실행 — GUI 검증 완료, 헤드리스 진행 중.** 15·16행 변경 전후 4작업 모두 exit 0이다. 함대 배치·확정, Space 일시정지·같은 시드로 재시작·결산 없는 지도 복귀를 실제 Windows 입력으로 확인했다. 별도 모델이 실제 조작 26건, MAIN 도구 호출 52건, Windows 이벤트 52건, Godot 이벤트 52건과 증거 해시를 검토했다. 전체 21행·58작업·27비교와 실행기 최종 판정은 진행 중이다. 최신 main의 EntryBoot 경로는 새 정식 검증이 필요하다. [4차 실행 로그](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-operator-04/HISTORICAL-FORMAL-LAUNCH.log) · [독립 GUI 검토](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-operator-04/operator-tools/independent-gui-evidence-four-jobs.json)
+
 **별도 헤드리스 보강 시험.** 12작업 중 8개, 비교 6개 중 4개가 통과했다. 19행 i01b_active_replace 양쪽은 400초 제한에 도달했고, 21행 양쪽은 exit 0이었지만 141개 관측 단언과 기존 127개 기대 단언 및 지문이 달라 실패했다. 정식 집계에는 포함되지 않는다. [보강 시험 결과](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-review-01/headless-supplement-01/RESULTS.json)
 
-최신 후속 상태: K6 무입력 revision 02 독립 PASS. 양성4·음성15·경계9 및 예제16 바이트 대조. 30초 경과 캡처에서 클릭/Space 각각 0건, 캡처25초와 사용자 만료 중 이른 경계부터 입력0건. 무입력 준비 범위 마감. 실제 MAIN 도구 원문, Win32/Godot 및 16-after 제목 증거는 차후 승인된 정식 실행에 남는다. [독립 재심](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/review15-main-input-dry-check-02/P02-INDEPENDENT-REVIEW.md), SHA `3111cf2ea9eba1b150ec03456c2f294d3280c9d4080285133ffc96cbc8733d17`.
+당시 무입력 후속 상태: K6 무입력 revision 02 독립 PASS. 양성4·음성15·경계9 및 예제16 바이트 대조. 30초 경과 캡처에서 클릭/Space 각각 0건, 캡처25초와 사용자 만료 중 이른 경계부터 입력0건. 무입력 준비 범위 마감. 실제 MAIN 도구 원문, Win32/Godot 및 16-after 제목 증거는 당시 정식 실행에서 확인할 조건이었다. [독립 재심](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/review15-main-input-dry-check-02/P02-INDEPENDENT-REVIEW.md), SHA `3111cf2ea9eba1b150ec03456c2f294d3280c9d4080285133ffc96cbc8733d17`.
 
 무입력 독립 검토: 모의 양성 4·음성 15 재현. 30초 지난 사전 캡처가 사용자 입력 시간 안이면 모의 클릭을 호출하는 추가 반례를 확인했다. 클릭 직전 사전 캡처 25초 제한과 사용자 입력 만료를 함께 확인하고 오래된 캡처의 입력 호출 0건을 재검증하도록 기존 담당에 배정했다. 실제 MAIN 도구 원문 검증은 별도 조건이다. [독립 기록](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/review15-main-input-dry-check-01/P02-INDEPENDENT-REVIEW.md), SHA `71ef8c5ff7a425cb986cf4dec746da6a634d01dddf39748cac1ce76e1b5daece`.
 
@@ -79,7 +83,7 @@ E 소스 반영 완료: 독립 R3 통과한 revision-02 제품 5파일을 단일
 - [ ] P09 오디오 종료: 이전 playback 전체 추적을 보장하지 못해 종료 장벽 후보 인수 차단. 임의 시간 대기를 해결책으로 반영하지 않았다. [차단 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-barrier-scope-01a1c98b-20261111/RESULTS.md)
 - [ ] O07 운영 전환·외부 지급·전원 상실: 대상/슬롯 지문·전환 승인, 수신자/계약 및 시험 환경 조건이 남았다.
 - [ ] 일반 I01/P03~P08: 공통 입력·운영 상태/커밋·공간/작전 정책·출시 대상 인수 조건이 남았다. 승인된 적벽 한 건의 완료를 전체 인수로 확대하지 않는다.
-- [ ] **K6 정식 검증 미완료.** REVIEW-15는 15행 첫 조작 후 입력 기록 형식 불일치로 공식 FAIL. 1/58 실행, 0/58 통과, 16행과 후속 작업 미실행. 입력 기록·만료 처리 revision 02는 모의 독립 검증 완료. 2026-11-12 사용자 승인에 따라 새 기준 동결·독립 리뷰 후 정식 검증을 진행한다.
+- [ ] **K6 정식 검증 진행 중.** 구형 공개 경로가 남은 `264f47b9`의 4차 정식 실행에서 Windows GUI 4/4와 독립 입력 증거 검토를 통과했다. 헤드리스와 전체 판정은 진행 중이며 최신 main의 EntryBoot 경로는 별도 검증이 남았다.
 - [x] **신규 진입 Windows 후보 전경 시험.** EXE 2f353f27…에서 네 창 크기, 키보드·마우스, 전장 준비 0틱과 아니오 정상 종료를 확인했다. [전경 검증 기록](../../entry/windows-foreground-verification-20261111-ko.md)
 - [ ] **신규 진입 작은 창 가독성.** 480×270은 글자와 지도 라벨이 지나치게 작아 미수용. 800폭에서도 가독성이 저하된다. 최소 지원 크기 또는 화면 개선 결정이 남았다.
 
