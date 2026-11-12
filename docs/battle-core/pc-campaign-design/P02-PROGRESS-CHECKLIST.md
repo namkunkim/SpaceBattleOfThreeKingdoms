@@ -26,6 +26,8 @@
 
 **`b2ba73ff` 17·18행 격리 AutoResolver 확인.** 사설 헤드리스 프로필에서 구형 자동해결 완료 16/16과 두 차례 취소 24/24를 통과했다. 완료 결과는 11,350틱·1,134,950ms·연합군 승리와 절대 지문 `c0e18c8c…80acb`에 일치했다. 실행 뒤 이전 원본과 비교한 결과, 자동 생성된 컨트롤 경로 번호만 달랐고, 명시된 이름·정확한 좌표와 결과·취소·정리 단언은 일치했다. 원본 불일치를 보존했다. 공개 적벽 버튼은 EntryBoot로 연결되므로 공개 AutoResolver 진입과 정식 K6 판정은 남았다. [격리 실행과 원본 비교](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-legacy-world-focused-01/FOCUSED-REFERENCE-HANDOFF.json)
 
+**K6 17·18행 `baaba60b` 해석기 의존성 대조.** 보존된 격리 완료 16개·취소 24개와 검사 대상 런타임 지문 13개를 대조했다. 최근 두 변경은 Atlas 요새 이미지뿐이어서 같은 엔진 검증은 반복하지 않았다. 상위 모델 독립 검토를 통과했다. 기존 격리 의미 관찰의 근거로 사용하며 현행 공개 진입·실제 Windows 입력·정식 실행 근거는 남았다. [의존성 대조](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-36030a28-row17-18-closure-audit-01/RESULT.json) · [최신 이미지 변경](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-baaba60b-row17-18-closure-delta-01/RESULT.json)
+
 K6 15~18행 실행 전 점검과 17·18행 오프라인 비교 초안을 상위 모델이 독립 검토했다. 기존 현행 격리 표본의 16개·24개 단언을 과거 양쪽 실행 근거와 대조했고 실패 대조군 38건을 거부했다. 15·16행의 기존 경로와 동일 시드 및 1600×900 실제 입력 증거, 17·18행의 공개 진입 요건과 양쪽 현행 실행은 남았다. 계약 개정과 정식 실행은 미승인이다. [사전 점검](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-row15-18-launch-preflight-01/PREFLIGHT.md) · [오프라인 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-row17-18-offline-draft-01/OFFLINE-RESULTS.json)
 
 **K6 17·18행 실행 기록 교환 대조.** 과거 실행 패키지 4개가 각자의 실행 구분에서 통과했고, 반대쪽 관찰·실행·결과·로그 묶음으로 바꾼 4건은 모두 거부했다. 관찰 바이트가 같아도 실행 기록에 묶인 경로로 교환을 검출했다. 상위 모델 독립 검토를 통과했다. 정식 실행과 공개 진입 인수는 남았다. [대조 결과](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-row17-18-offline-draft-02/OPPOSITE-LANE-CONTROLS.json)
