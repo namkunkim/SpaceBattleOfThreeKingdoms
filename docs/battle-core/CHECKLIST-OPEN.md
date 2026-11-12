@@ -286,11 +286,11 @@ P06 실제 제품 결산 재열기 — `b2ba73ff`. 격리된 Windows 헤드리�
 - **구현:** M1 이후 구현 세션의 결과를 기다린다.
 - **본편:** 본편(Seonghanji) 쪽의 답을 기다린다.
 
-세션 요구사항 통합 추적: [완료·미완료·상시준수 체크리스트](pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.md).
+캠페인 실행·인수 기준은 [간소화 체크리스트](pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.md)다.
 
 ## PC 캠페인 후속 인수 현황 (2026-11-11)
 
-**사용자 우선순위 변경 (2026-11-11):** 최우선 실행·인수 기준은 [P02 필수 작업](pc-campaign-design/P02-PROGRESS-CHECKLIST.md)과 [사용자 요구사항 통합](pc-campaign-design/SESSION-REQUIREMENTS-CHECKLIST-20261031.md)이다. 이 문서는 종합 증거 이력으로 유지한다. 2분 조율 자동화도 두 문서 우선으로 갱신했다.
+이 문서와 [P02 진행 이력](pc-campaign-design/P02-PROGRESS-CHECKLIST.md)은 상세 검증 근거를 기록한다.
 - (DONE) 01a1c907-1cf5-7680-8dbc-4eb530ab3f99: 두 우선 문서의 11/11 증거 대조·갱신 완료. 다음 필수 작업은 진행 중인 결산 복구와 새 EXE 전경 인수 준비로 확정했다.
 - (ING) 01a1c908-13c7-72a1-9123-acc63d325f5c: 결산 기록 직후 종료 시 다음 지도 결과 복구 후보 구현·검증. F 격리 작업, 독립 검토 전 E 미반영.
 - 검사기 r2 6fd27664…는 독립 재심에서 무효 비교 분기·세미콜론 뒤 조기 반환의 두 새 반례로 미통과. E 미적용이며 추가 수정은 우선 두 문서의 필수 의존성 확인 전 보류한다. [재심 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/i01-data-rules-r5-hash-format-r2-review-01a1c841/RESULTS.md)
