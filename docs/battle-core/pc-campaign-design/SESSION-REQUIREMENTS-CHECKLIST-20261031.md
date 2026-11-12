@@ -20,7 +20,7 @@
 
 **264f47b9 3차 정식 실행 — 2026-11-12.** 시험 관찰기의 입력 처리 순서를 조정해 15-before의 실제 조작 6건과 Windows·Godot 이벤트 각 12건을 확인했다. 16-before에서 Space 입력은 게임에 도달했으나, 조작 기록에 키 입력 스키마가 허용하지 않는 화면 캡처 ID가 포함돼 중단됐다. 58작업 중 2작업 관측·1통과·56미실행, 런처 exit 1이다. 4차 실행 전 실제 Space 입력으로 수정한 기록 형식을 검증했다. [3차 집계](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-repair-03/run-once/aggregate.json)
 
-**264f47b9 4차 정식 실행 — GUI 검증 완료, 헤드리스 진행 중.** 15·16행 변경 전후 4작업 모두 exit 0이다. 함대 배치·확정, Space 일시정지·같은 시드로 재시작·결산 없는 지도 복귀를 실제 Windows 입력으로 확인했다. 별도 모델이 실제 조작 26건, MAIN 도구 호출 52건, Windows 이벤트 52건, Godot 이벤트 52건과 증거 해시를 검토했다. 전체 21행·58작업·27비교와 실행기 최종 판정은 진행 중이다. 최신 main의 EntryBoot 경로는 새 정식 검증이 필요하다. [4차 실행 로그](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-operator-04/HISTORICAL-FORMAL-LAUNCH.log) · [독립 GUI 검토](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-operator-04/operator-tools/independent-gui-evidence-four-jobs.json)
+**264f47b9 4차 정식 실행 — FAIL.** 58작업 중 35개를 관측해 34개 통과·1개 실패·23개 미실행이었다. 15·16행 변경 전후의 실제 Windows GUI 4작업이 모두 통과했다. 별도 모델은 실제 조작 26건, MAIN 도구 호출 52건, Windows 이벤트 52건, Godot 이벤트 52건과 증거 해시를 확인했다. 첫 실패는 21행 새 프로필의 변경 전 작업이다. 엔진은 종료 코드 0과 `WORLD_LINK_PASS`를 기록했지만, 단언 141개가 동결된 127개와 순서·지문에서 달랐다. 전체 27비교와 정식 GUI 증거 승인 단계는 실행되지 않았고, 런처는 종료 코드 1로 끝났다. 이전 판정은 보존하고 별도 기준선에서 21행의 차이를 검증한다. [4차 집계](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-operator-04/run-once/aggregate.json) · [독립 GUI 검토](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-operator-04/operator-tools/independent-gui-evidence-four-jobs.json)
 
 **별도 헤드리스 보강 시험.** 12작업 중 8개, 비교 6개 중 4개가 통과했다. 19행 i01b_active_replace 양쪽은 400초 제한에 도달했고, 21행 양쪽은 exit 0이었지만 141개 관측 단언과 기존 127개 기대 단언 및 지문이 달라 실패했다. 정식 집계에는 포함되지 않는다. [보강 시험 결과](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-review-01/headless-supplement-01/RESULTS.json)
 
@@ -99,7 +99,7 @@ E 소스 반영 완료: 독립 R3 통과한 revision-02 제품 5파일을 단일
 - [ ] P09 오디오 종료 보강. Godot 4.7.2 Dummy 스트림의 `battle_flow`·`group_formation` 테스트 종료 경로를 보강했다. 기존 TRACE 순서와 틱을 유지했고 두 테스트는 정상 종료했다. 참조를 의도적으로 유지한 대조군은 2,033ms에 종료 코드 1을 반환했다. 이번 기준선에서 간헐적 잔류가 재현되지 않아 제품 오디오 전반의 종료 인수는 남았다. [독립 검토 범위의 GitHub 변경](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/bada6d92c091156fa2dce2c243c26b0716d706cb) · [검증 매니페스트](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-audio-fence-ab-20261112-01/REVIEW-MANIFEST.json)
 - [ ] O07 운영 전환·외부 지급·전원 상실: 대상/슬롯 지문·전환 승인, 수신자/계약 및 시험 환경 조건이 남았다.
 - [ ] 일반 I01/P03~P08: 공통 입력·운영 상태/커밋·공간/작전 정책·출시 대상 인수 조건이 남았다. 승인된 적벽 한 건의 완료를 전체 인수로 확대하지 않는다.
-- [ ] **K6 정식 검증 진행 중.** 구형 공개 경로가 남은 `264f47b9`의 4차 정식 실행에서 Windows GUI 4/4와 독립 입력 증거 검토를 통과했다. 헤드리스와 전체 판정은 진행 중이며 최신 main의 EntryBoot 경로는 별도 검증이 남았다.
+- [ ] **K6 정식 검증 미통과.** 구형 공개 경로가 있는 `264f47b9`의 4차 실행은 실제 Windows GUI 4/4를 포함해 34작업을 통과한 뒤 21행의 동결 단언 불일치로 종료했다. 21행의 독립 기준선 검증과 현행 main 경로의 정식 판정 기준이 남았다.
 - [x] **신규 진입 Windows 후보 전경 시험.** EXE 2f353f27…에서 네 창 크기, 키보드·마우스, 전장 준비 0틱과 아니오 정상 종료를 확인했다. [전경 검증 기록](../../entry/windows-foreground-verification-20261111-ko.md)
 - [ ] **신규 진입 작은 창 가독성.** 480×270은 글자와 지도 라벨이 지나치게 작아 미수용. 800폭에서도 가독성이 저하된다. 최소 지원 크기 또는 화면 개선 결정이 남았다.
 
