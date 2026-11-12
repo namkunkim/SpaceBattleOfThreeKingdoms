@@ -8,6 +8,8 @@
 
 **현행 main K6 경로 검토 — 2026-11-12.** `5ef3537b`의 공개 항로도에서 타이틀로 돌아간 뒤 구형 출격 준비로 진입하면 직접 배치·Space 일시정지·재시작을 확인할 수 있다. 이 경로는 재시작 시 시드를 다시 뽑고 타이틀을 거쳐 지도로 복귀하므로, 기존 16행의 고정 시드와 직접 지도 복귀 조건은 남았다. 승인 첫 작전은 EntryBoot를 통해 별도 호스트에서 시작한다. 구형 자동해결 완료·취소(17·18행)의 공개 진입이 막혀 있어 현행 집중 검증은 격리 시험 결과로 유지한다. 공개 경로의 실제 입력을 추가 검증하고, 현행 제품 경로에 맞춘 정식 판정 기준은 독립 검토를 거쳐 동결해야 한다. [현행 검증 계획](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-5ef3537b-successor-01/PLAN.md)
 
+**현행 main 타이틀 경로 집중 검증.** `5ef3537b`의 기존 저장 사본을 사용하는 새 헤드리스 프로세스에서 EntryBoot → 항로도 → 타이틀 → 구형 브리핑에 진입했다. 합성 viewport 입력으로 0틱 배치 명령 1회, Space 일시정지 두 번, 재시작의 새 시뮬레이션·다른 시드, 타이틀 경유 지도 복귀를 검증했다. 40/40 통과, 종료 코드 0, 저장 SHA 유지다. 정식 K6의 실제 Windows 입력 및 공개 AutoResolver 증거는 남았다. [집중 검증 결과](F:/WorkSpace/campaign-p03-20261111/tmp/k6-title-route-5ef3537b/RESULT.json)
+
 **264f47b9 호환성 사전검증 — 2026-11-12.** 구형 공개 브리핑을 여는 마지막 main 커밋에 기존 21행·58작업·27비교를 결속했다. 14~18행 사전 시험 11/11 및 비교 3건이 통과했다. GUI 15·16행은 합성 viewport 입력을 사용했다. 별도 현행 Godot 창은 시작됐으나 Computer Use 앱 접근 승인이 시간 초과돼 실제 캡처와 입력은 0건이었다. 이 사전 시험에서는 실제 입력 증거를 요구하는 정식 실행기를 시작하지 않았다. [역사 사전검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-review-01/HISTORICAL-FOCUSED-RESULTS-R02.json) · [Windows 입력 사전확인](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-5ef3537b-successor-01/windows-entry-smoke-01/INPUT-PREFLIGHT-RESULT.json)
 
 **264f47b9 정식 실행 2회 — 2026-11-12.** 두 실행 모두 15-before 작업에서 중단됐다. 각 실행은 계획 58작업 중 1작업 관측·0통과·57미실행, 21행 완료 0, 27비교 실행 0이다. 첫 실행은 캡처 유효시간을 넘겨 등록한 클릭이 호출되기 전에 차단됐고, 출처를 특정할 수 없는 별도 입력이 관측됐다. 재시도는 실제 입력 6건과 함대 배치 명령·확정을 확인했지만, Windows에서 관측한 5번째 동작의 우클릭 해제에 대응하는 Godot 관찰 기록이 없어 실패했다. 두 런처 exit 1, 첫 작업 exit 125 및 잔류 Job 0을 확인했다. [첫 집계](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-review-01/run-once/aggregate.json) · [재시도 집계](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-retry-02/run-once/aggregate.json)
@@ -43,6 +45,10 @@ REVIEW-15 후속 무입력 준비: 작성자 모의 Sky 양성 4건 통과, 음�
 **P02 공개 항로도 리플레이 Windows 릴리스 — 2026-11-12.** `60b51f2e` 패키지의 1280×720 창에서 실제 마우스·키보드로 파일 선택기, 취소·재진입, 손상 JSON 오류와 지도 복귀를 확인했다. 승인된 2틱 기록은 종결까지 재생했고, 실제 호스트의 5,107틱 기록은 검증을 마쳐 재생 가능한 0틱 화면에 도달했다. 긴 기록의 종결은 별도 내장 PCK 탐침에서 확인했다. 보존된 캡처 20건 중 14건은 이미지 기록이 잘려 전체 화면 배치 인증은 남았다. 시험 파일 7/7 SHA 일치, 종료 코드 0, 엔진 오류·경고 0이다. [전경 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P02-windows-product-replay-20261112-60b51f2e/foreground-20261112-095153/FOREGROUND-RESULT.md)
 
 **P03 공개 항로도 재개 Windows 릴리스 — 2026-11-12.** `b2ba73ff` 패키지의 실제 입력으로 저장한 103틱·10.3초를 새 프로세스가 일시정지 상태로 복원했고, 계속 진행한 뒤 117틱을 관측했다. 800×450에서 백업 전용 복원과 기본 슬롯 미생성을 확인했다. 손상 기본 슬롯은 오류를 표시하고 파일을 보존했으며, 격리 시험의 기본 슬롯을 복구한 뒤 같은 창에서 Enter로 재개했다. 네 프로세스 모두 종료 코드 0, 엔진 오류·경고 0이다. 대기 명령 적용은 이전 헤드리스 검증 범위다. [전경 증거](F:/WorkSpace/campaign-p03-atlas-resume-20261112/tmp/p03-windows-b2ba73ff/RESULTS.md)
+
+**P02·P03 통합 Windows 릴리스 — 1600×900.** 사용자 지정 해상도에서 `b2ba73ff` 패키지의 공개 항로도에 리플레이·이어하기·적벽 진입 버튼이 모두 보였고, 전체 파일 선택기 화면을 확인했다. 처음 Escape가 선택기를 닫지 않아 창에 다시 포커스를 준 뒤 Escape로 취소했고 Enter로 다시 열었다. 손상 파일 오류와 지도 복귀, 승인 2틱 리플레이 종결, 저장 103틱 재개와 지도 복귀를 실제 입력으로 확인했다. 독립 검토에서 전체 창 캡처 14건과 조작 기록, 저장·시험 파일의 SHA, 프로세스 정상 종료를 확인했다. [통합 전경 결과](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P02-P03-layout-b2ba73ff-20261112/RESULTS.md)
+
+**P03 백업 전용 Windows 릴리스 — 1600×900.** 같은 패키지의 새 프로세스에서 실제 클릭 한 번으로 `.previous`만 있는 저장을 103틱·10.3초에 일시정지된 상태로 복원했다. 백업 SHA가 유지됐고 기본 슬롯은 생성되지 않았다. [백업 전용 결과](F:/WorkSpace/campaign-p03-atlas-resume-20261112/tmp/p03-windows-b2ba73ff/foreground-previous-1600/RESULT.json)
 
 ## 신규 진입 화면 병행 조율 — 2026-11-11
 
