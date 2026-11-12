@@ -6,13 +6,14 @@ const Sites := preload("res://view/world/red_cliffs_sites.gd")
 const PLANET := preload("res://view/world/navigation_planet.gd")
 const DATA_PATH := "res://data/galaxy_navigation.json"
 const IMAGE_PATH := "res://assets/world_atlas/galaxy_navigation_terrain.png"
+const RELAY_IMAGE := "res://assets/world_atlas/relay_station_default_v2.png"
 const FACILITY_PATHS := {
-	"orbital": "res://assets/world_atlas/navigation_orbital_station.png",
-	"relay": "res://assets/world_atlas/navigation_relay_station.png",
+	"orbital": RELAY_IMAGE,
+	"relay": RELAY_IMAGE,
 	"fortress": "res://assets/world_atlas/navigation_fortress_satellite_oblique.png",
 	"defense": "res://assets/world_atlas/navigation_defense_platform.png",
 }
-const FACILITY_WIDTHS := {"orbital": 35.0, "relay": 224.0, "fortress": 61.5, "defense": 22.0}
+const FACILITY_WIDTHS := {"orbital": 18.0, "relay": 24.0, "fortress": 61.5, "defense": 22.0}
 const FORTRESS_HEIGHT := 36.25
 const FORTRESS_SPAN_KM := 120
 const FORTRESS_EDGE_PADDING := 6.0
@@ -215,7 +216,7 @@ func _refresh_header() -> void:
 	_back.visible = not overview
 	if overview:
 		_status.text = "항성계 51곳 · 요새 위성 10곳 · %d%%" % roundi(_zoom * 100)
-		_legend.text = "항로  ━    외부 세력 항로  ┄    중계 정거장  ▣    요새 위성  ⬡    가스 성운  ●    먼지대  ●    |    선택하여 상세 보기 · 끌어서 이동"
+		_legend.text = "항로  ━    외부 세력 항로  ┄    중계 정거장  ▣    요새 위성  ⬡    가스 성운  ●    먼지대  ●    |    휠 확대 → 항성계 상세 · 선택하여 상세 보기 · 끌어서 이동"
 		return
 	var detail: Dictionary = _detail.detail
 	var kind := str(_detail.kind)
@@ -226,7 +227,7 @@ func _refresh_header() -> void:
 		_legend.text = "요새를 선택하여 시설과 무장 확인 · 외곽 방어 포대 · 검은 공간은 통행 가능"
 	else:
 		_status.text = "%s · 연결 진입로 %d곳 · %d%%" % [kind, detail.approaches.size(), roundi(_zoom * 100)]
-		_legend.text = "검은 공간은 통행 가능 · 진입로를 선택하여 이동 · 행성을 선택하여 정보 보기"
+		_legend.text = "휠·+/− 확대/축소 · 끌어서 이동 · 진입로 선택하여 이동 · 행성 선택하여 정보 보기"
 
 
 func _on_visibility_changed() -> void:
@@ -514,7 +515,9 @@ func _show_fortress_information(position: Vector2) -> void:
 func _nearest_detail_object(position: Vector2, detail: Dictionary) -> Dictionary:
 	var objects: Array = detail.get("planets", []).duplicate()
 	if detail.has("station"):
-		objects.append(detail.station)
+		for station_position in _relay_positions(_vector(detail.station.position), "orbital"):
+			if position.distance_to(station_position) <= maxf(_facility_rect(station_position, "orbital").size.length() * 0.5, 18.0 / _map_scale()):
+				return detail.station
 	var chosen: Dictionary = {}
 	var nearest := INF
 	for body: Dictionary in objects:
@@ -728,7 +731,10 @@ func _draw_detail(canvas: Control) -> void:
 		if kind == "fortress":
 			for platform in _defense_positions(center, detail.contours):
 				_draw_facility(canvas, platform, "defense")
-		_draw_facility(canvas, center, kind)
+		if kind == "relay":
+			_draw_relay_group(canvas, center, kind)
+		else:
+			_draw_facility(canvas, center, kind)
 		return
 
 	var station := _vector(detail.station.position)
@@ -747,7 +753,76 @@ func _draw_detail(canvas: Control) -> void:
 	for body: Dictionary in detail.planets:
 		var position := _vector(body.position)
 		_draw_planet(canvas, body, _planet_radii[position])
-	_draw_facility(canvas, station, "orbital")
+	_draw_relay_group(canvas, station, "orbital")
+
+
+# Every relay location contains exactly one station.
+func _relay_count(_kind: String) -> int:
+	return 1
+
+
+func _relay_positions(center: Vector2, kind: String) -> Array[Vector2]:
+	if kind == "orbital":
+		return _habitable_relay_cluster(center, 1, _facility_rect(center, kind).size)
+	return [center]
+
+
+func _relay_host(center: Vector2) -> Dictionary:
+	var planets: Array = _detail.detail.get("planets", [])
+	var hosts: Array = planets.filter(func(body: Dictionary): return body.get("habitable", false))
+	if hosts.is_empty():
+		hosts = planets
+	var host: Dictionary = {}
+	var nearest := INF
+	for body: Dictionary in hosts:
+		var distance := center.distance_squared_to(_vector(body.position))
+		if distance < nearest:
+			nearest = distance
+			host = body
+	return host
+
+
+# Place the station beside a habitable planet without covering its silhouette.
+func _habitable_relay_cluster(center: Vector2, count: int, extent: Vector2) -> Array[Vector2]:
+	var planets: Array = _detail.detail.get("planets", [])
+	var host := _relay_host(center)
+	var origin := center if host.is_empty() else _vector(host.position)
+	var host_radius := 0.0 if host.is_empty() else float(host.radius) * _planet_art_scale(host)
+	var step := Vector2(extent.x * 0.40, extent.y * 0.13)
+	var cluster_radius := extent.length() * 0.5 + step.length() * float(count - 1) * 0.5
+	var preferred := (center - origin).angle()
+	var best: Array[Vector2] = []
+	var best_clearance := -INF
+	for bearing in range(16):
+		var direction := Vector2.from_angle(preferred + TAU * bearing / 16.0)
+		var anchor := origin + direction * (host_radius + cluster_radius + 10.0)
+		var positions: Array[Vector2] = []
+		var clearance := INF
+		for index in range(count):
+			var position := anchor + step * (float(index) - float(count - 1) * 0.5)
+			positions.append(position)
+			for body: Dictionary in planets + _detail.detail.get("stars", []):
+				var radius := float(body.radius) * (1.88 if body.get("ringed", false) else 1.0)
+				clearance = minf(clearance, position.distance_to(_vector(body.position)) - radius - extent.length() * 0.5)
+		if best.is_empty() or clearance > best_clearance:
+			best = positions
+			best_clearance = clearance
+		if clearance >= 8.0:
+			break
+	return best
+
+
+func _relay_group_rect(center: Vector2, kind: String) -> Rect2:
+	var positions := _relay_positions(center, kind)
+	var bounds := _facility_rect(positions[0], kind)
+	for position in positions:
+		bounds = bounds.merge(_facility_rect(position, kind))
+	return bounds
+
+
+func _draw_relay_group(canvas: Control, center: Vector2, kind: String) -> void:
+	for position in _relay_positions(center, kind):
+		_draw_facility(canvas, position, kind)
 
 
 func _facility_rect(center: Vector2, kind: String) -> Rect2:
@@ -755,8 +830,16 @@ func _facility_rect(center: Vector2, kind: String) -> Rect2:
 	var dimensions := Vector2.ONE
 	if texture:
 		dimensions = texture.get_size()
+	if not texture and kind in ["orbital", "relay"]:
+		dimensions = Vector2(2.0, 3.0)
 	var longest := maxf(dimensions.x, dimensions.y)
-	var scale := float(FACILITY_WIDTHS[kind]) / longest
+	var symbol_size := float(FACILITY_WIDTHS[kind])
+	if kind == "orbital" and not _detail.is_empty():
+		var host := _relay_host(_vector(_detail.detail.station.position))
+		if not host.is_empty():
+			# Longest symbol dimension stays below the host planet's visible diameter.
+			symbol_size = minf(symbol_size, float(host.radius) * 2.0 * 0.65)
+	var scale := symbol_size / longest
 	if kind == "fortress":
 		scale = minf(scale, FORTRESS_HEIGHT / dimensions.y)
 		scale = _fit_fortress_scale(center, dimensions, scale)
@@ -828,12 +911,35 @@ func _draw_facility(canvas: Control, center: Vector2, kind: String) -> void:
 	var texture: Texture2D = _facility_textures.get(kind)
 	if texture:
 		canvas.draw_texture_rect(texture, _facility_rect(center, kind), false)
+	elif kind in ["orbital", "relay"]:
+		_draw_relay_symbol(canvas, _facility_rect(center, kind))
 	elif kind == "fortress":
 		_draw_fortress(canvas, center, _facility_rect(center, kind).size.y * 0.5)
 	elif kind == "defense":
 		_draw_fortress(canvas, center, 11.0)
 	else:
 		_draw_station(canvas, center, 10.0 if kind == "orbital" else 24.0, CYAN)
+
+
+# Map-native silhouette of the approved three-deck station; readable at small sizes.
+func _draw_relay_symbol(canvas: Control, bounds: Rect2) -> void:
+	var center := bounds.get_center()
+	var height := bounds.size.y
+	var width := bounds.size.x
+	var stroke := maxf(0.8, 1.15 / _map_scale())
+	var tilt := deg_to_rad(15.0)
+	var top := center + Vector2(0, -height * 0.5).rotated(tilt)
+	var bottom := center + Vector2(0, height * 0.5).rotated(tilt)
+	canvas.draw_line(top, bottom, Color("07121d"), stroke * 3.0, true)
+	canvas.draw_line(top, bottom, CYAN, stroke, true)
+	for level in [-0.28, 0.0, 0.28]:
+		var ring := PackedVector2Array()
+		for index in range(25):
+			var angle := TAU * index / 24.0
+			ring.append(center + Vector2(cos(angle) * width * 0.5, float(level) * height + sin(angle) * height * 0.085).rotated(tilt))
+		canvas.draw_colored_polygon(ring, Color("102c40"))
+		canvas.draw_polyline(ring, Color("07121d"), stroke * 3.0, true)
+		canvas.draw_polyline(ring, CYAN, stroke, true)
 
 
 func _planet_art_scale(body: Dictionary) -> float:
@@ -843,13 +949,16 @@ func _planet_art_scale(body: Dictionary) -> float:
 func _update_planet_radii(detail: Dictionary, station: Vector2) -> void:
 	_planet_radii.clear()
 	var minimum := MIN_PLANET_DIAMETER * 0.5 / _map_scale()
+	var station_positions := _relay_positions(station, "orbital")
 	var station_radius := _facility_rect(station, "orbital").size.length() * 0.5
 	for body: Dictionary in detail.planets:
 		var position := _vector(body.position)
 		var radius := float(body.radius)
 		var art_scale := _planet_art_scale(body)
 		var extent := radius * art_scale
-		var room := position.distance_to(station) - station_radius - extent
+		var room := INF
+		for station_position in station_positions:
+			room = minf(room, position.distance_to(station_position) - station_radius - extent)
 		for star: Dictionary in detail.stars:
 			room = minf(room, position.distance_to(_vector(star.position)) - float(star.radius) - extent)
 		for other: Dictionary in detail.planets:
@@ -944,10 +1053,11 @@ func _draw_detail_labels(canvas: Control) -> void:
 	var taken: Array[Rect2] = []
 	if not detail.has("planets"):
 		var kind := "fortress" if _detail.kind == "요새 위성" else "relay"
-		var art := _screen_rect(_facility_rect(_vector(detail.center), kind))
+		var bounds := _relay_group_rect(_vector(detail.center), kind) if kind == "relay" else _facility_rect(_vector(detail.center), kind)
+		var art := _screen_rect(bounds)
 		_draw_object_label(canvas, str(_detail.name), art, 17, INK, taken, [art])
 	else:
-		var station_art := _screen_rect(_facility_rect(_vector(detail.station.position), "orbital"))
+		var station_art := _screen_rect(_relay_group_rect(_vector(detail.station.position), "orbital"))
 		var obstacles: Array[Rect2] = [station_art]
 		var planet_art: Array[Rect2] = []
 		for body: Dictionary in detail.planets:
