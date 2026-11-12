@@ -1,6 +1,7 @@
 extends SceneTree
 ## Windows headless driver for approved Red Cliffs product host / CLI parity.
 ## Launch with a new isolated APPDATA and SBTK_P02_PARITY_PROFILE set to that path.
+## Pass -- c0 to compare only the initial state through the shared CLI bootstrap.
 
 const Adapter := preload("res://scripts/first_operation_adapter.gd")
 const Codec := preload("res://scripts/first_operation_replay_codec.gd")
@@ -66,7 +67,7 @@ func _write_json(path: String, value: Dictionary) -> bool:
 	return written
 
 
-func _exercise() -> void:
+func _exercise(c0_only: bool) -> void:
 	for label in ["적벽대전 선택 · 시작", "서사 건너뛰기", "적벽", "출격 · 실제 전장 준비"]:
 		if not await _entry_action(label):
 			return
@@ -76,6 +77,9 @@ func _exercise() -> void:
 	var host := _host()
 	var initial: Dictionary = host.frame.duplicate(true)
 	if not _expect(initial.tick == 0 and initial.clock_ms == 0 and not host.started, "public host publishes paused C0"):
+		return
+	if c0_only:
+		_compare_initial(host, initial)
 		return
 	var events: Array = initial.events.duplicate(true)
 	host._start.pressed.emit()
@@ -120,7 +124,53 @@ func _exercise() -> void:
 	}), "write public host initial and terminal state plus complete ordered events")
 
 
+func _compare_initial(host: Node, initial: Dictionary) -> void:
+	var captured: Dictionary = host.operation_owner.capture_checkpoint()
+	if not _expect(captured.ok and captured.packet.tick == 0 and captured.packet.commands.is_empty() \
+			and captured.packet.pending.is_empty(), "public host publishes a clean C0 checkpoint"):
+		return
+	var packet: Dictionary = captured.packet
+	var operation_id: String = packet.operation_id
+	var expected := {"operation_id": operation_id, "id": operation_id + "/settlement",
+		"kind": "objective_success", "reason": "objective_conditions_met", "tick": FINAL_TICK, "clock_ms": FINAL_TICK * 100}
+	var bundle := {"format": Adapter.FORMAT, "request": host.brief.operation_request(),
+		"operation_id": operation_id, "max_ticks": FINAL_TICK,
+		"commands": [{"tick": 0, "kind": "move", "waypoint": ROUTE[0]}, {"tick": 900, "kind": "move", "waypoint": ROUTE[900]}],
+		"expected_settlement": expected}
+	# The headless CLI calls this bootstrap via run(); replay exposes the same
+	# bootstrap with its required-settlement policy through open_replay().
+	var headless := Adapter._open(bundle, false)
+	var replay := Adapter.open_replay(bundle)
+	var headless_c0 := _capture_bootstrap(headless, "headless")
+	var replay_c0 := _capture_bootstrap(replay, "replay")
+	if headless_c0.is_empty() or replay_c0.is_empty():
+		return
+	var host_c0 := {"frame": initial, "checkpoint": packet}
+	_expect(headless_c0.frame == initial, "headless bootstrap matches the complete public C0 frame")
+	_expect(replay_c0.frame == initial, "replay bootstrap matches the complete public C0 frame")
+	_expect(headless_c0.checkpoint == packet, "headless bootstrap matches the full C0 checkpoint and operation identity")
+	_expect(replay_c0.checkpoint == packet, "replay bootstrap matches the full C0 checkpoint and operation identity")
+	_expect(host.operation_owner.capture_checkpoint() == captured and host.frame == initial,
+		"comparison leaves the live public host at the same C0")
+	_expect(_write_json("user://c0-result.json", {"host": host_c0, "headless": headless_c0, "replay": replay_c0,
+		"bundle": bundle}), "write complete C0 frames and checkpoints for review")
+
+
+func _capture_bootstrap(opened: Dictionary, label: String) -> Dictionary:
+	if not _expect(opened.ok, label + " bootstrap publishes a fresh owner"):
+		return {}
+	var session: RefCounted = opened.replay
+	var captured: Dictionary = session._owner.capture_checkpoint()
+	session.close()
+	if not _expect(captured.ok and captured.packet.tick == 0 and session._owner == null,
+			label + " checkpoint captured at tick zero and owner closed"):
+		return {}
+	return {"frame": opened.frame, "checkpoint": captured.packet}
+
+
 func _run() -> void:
+	var args := OS.get_cmdline_user_args()
+	var c0_only := args == PackedStringArray(["c0"])
 	var profile := OS.get_environment("SBTK_P02_PARITY_PROFILE")
 	var actual := OS.get_user_data_dir().replace("\\", "/").simplify_path().to_lower()
 	var expected := profile.path_join("Godot/app_userdata/SpaceBattleOfThreeKingdoms").replace("\\", "/").simplify_path().to_lower()
@@ -129,9 +179,9 @@ func _run() -> void:
 		and not FileAccess.file_exists(Settlements.PRODUCT_SLOT_PATH) \
 		and not FileAccess.file_exists(Settlements.PRODUCT_SLOT_PATH + ".previous") \
 		and not FileAccess.file_exists("user://approved-host.pcopreplay")
-	if _expect(not profile.is_empty() and actual == expected and empty \
+	if _expect((args.is_empty() or c0_only) and not profile.is_empty() and actual == expected and empty \
 			and ProjectSettings.get_setting("application/run/main_scene") == ENTRY, "fresh isolated profile and product default scene"):
 		if _expect(change_scene_to_file(ENTRY) == OK, "load product default scene"):
-			await _exercise()
+			await _exercise(c0_only)
 	print("P02_PARITY_RESULT checks=%d failures=%d pid=%d" % [_checks, _failures, OS.get_process_id()])
 	quit(0 if _failures == 0 else 1)
