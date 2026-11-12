@@ -44,6 +44,8 @@ K6 15~18행 실행 전 점검과 17·18행 오프라인 비교 초안을 상위 
 
 **K6 과거 정식 실행의 중복 대조.** 21행 58개 실행과 27개 비교를 보존 원본으로 확인했다. 작업별 경로를 정규화한 뒤에도 58개 입력 지문이 달랐다. 출력이 동일한 전후 14쌍은 별도의 고정 입력·관찰 조건을 사용했고 7·8행은 이미 실행을 공유했다. 안전한 삭제를 입증한 사례는 0개였다. 상위 모델이 독립 검토했으며 현재 미서명 15~18행 초안의 실행 가능 작업은 0개다. [중복 대조](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-job-identity-audit-01/REVIEW-HANDOFF.json)
 
+**K6 차기 정식 실행 준비 묶음.** 역사 정식 실행의 21행·58작업·27비교와 현행 15~18행, 동일 채팅 리뷰·일회 승인 원형의 근거 17개를 결속했다. 잘못된 SHA·경로 이탈·정식 자격 위조 등 4개 대조를 거부했고 상위 모델이 독립 검토했다. 현행 실행 가능 작업은 0개다. 행 계약 선택, 새 실행 입력 동결, 1600×900 Windows 실제 입력, 독립 리뷰·일회 승인 결속이 남았다. [준비 묶음](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-formal-readiness-bundle-01/README.md)
+
 **`b2ba73ff` 15·16행 공개 타이틀 경로 합성 검증.** 실제 승인 호스트에서 만든 113틱 저장 사본으로 시작해 40개 단언을 기존 순서대로 통과했다. 0틱 배치 명령 1회, Space 일시정지 두 번, 새 시뮬레이션의 0틱 재시작, 타이틀을 거친 지도 복귀와 저장 보존을 별도 모델이 확인했다. 이전 원본과 달라진 생성 경로·시드 등 13개 관측도 보존했다. 정식 15·16행에는 이 비라우팅 경로의 판정 기준과 새 실제 Windows 입력이 남았다. [타이틀 경로 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-title-route-focused-01/RESULTS.json)
 
 **264f47b9 호환성 사전검증 — 2026-11-12.** 구형 공개 브리핑을 여는 마지막 main 커밋에 기존 21행·58작업·27비교를 결속했다. 14~18행 사전 시험 11/11 및 비교 3건이 통과했다. GUI 15·16행은 합성 viewport 입력을 사용했다. 별도 현행 Godot 창은 시작됐으나 Computer Use 앱 접근 승인이 시간 초과돼 실제 캡처와 입력은 0건이었다. 이 사전 시험에서는 실제 입력 증거를 요구하는 정식 실행기를 시작하지 않았다. [역사 사전검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-review-01/HISTORICAL-FOCUSED-RESULTS-R02.json) · [Windows 입력 사전확인](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-5ef3537b-successor-01/windows-entry-smoke-01/INPUT-PREFLIGHT-RESULT.json)
@@ -95,6 +97,8 @@ REVIEW-15 후속 무입력 준비: 작성자 모의 Sky 양성 4건 통과, 음�
 **P02 공개 리플레이 규칙 지문 거부.** 승인 호스트 내보내기의 `rules_digest` 한 바이트만 바꾸고 본문과 유효 체크섬을 유지했다. 헤드리스 공개 Atlas에서 17/17을 통과했다. 변형은 어댑터·재생·프레임 생성 전에 거부됐고, 같은 버튼으로 원본을 선택하면 비공개 0틱 검증을 열 수 있었다. 진행 전에 닫은 뒤 지도·포커스와 파일 바이트를 보존했다. 상위 모델 독립 검토 후 테스트 브랜치에 푸시했다. 전체 재생·실제 입력 인수와는 별도다. [테스트 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/e0ee30dc3e1dba83a2aee788aa7efeb465300aa4) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P02-public-replay-guard-b08ed389-01/REVIEW-HANDOFF.json)
 
 **P02 공개 리플레이 종결 검증.** 승인된 2틱 원본에서 예상 종결 사유만 바꾸고 본문 체크섬을 다시 계산했다. 헤드리스 공개 Atlas에서 24/24를 통과했다. 변형은 검증기가 2틱 진행한 뒤 재생 게시 없이 거부됐고, 같은 Atlas 버튼으로 원본을 다시 열어 2틱·200ms의 종결 ID와 사유를 확인했다. 원본과 저장 바이트를 보존했고 상위 모델 독립 검토 후 테스트 브랜치에 푸시했다. [테스트 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/1ad51fb456cd1bc3bebb2bdc573aa9ba275c4521) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P02-public-replay-terminal-e0ee30dc-01/REVIEW-HANDOFF.json)
+
+**P02·P03 이어하기와 리플레이 연결.** 승인 적벽 작전에서 1틱에 적용된 철수와 대기 중인 종결 명령을 저장했다. 새 프로세스에서 공개 이어하기로 재개해 중단 없는 실행과 바이트가 동일한 2틱 리플레이를 내보냈다. 세 번째 프로세스의 공개 Atlas 재생도 전체 종결 프레임·사건 순서·결산이 일치했다. 세 프로세스에서 47/47을 통과했다. 최초 비교기의 결산 필드 범위 오류를 보존했고 상위 모델 독립 검토 후 테스트 브랜치에 푸시했다. 동일 작전의 헤드리스 검증 범위다. [테스트 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/02ffda964c35ebc3404ad4d3880425741da0829a) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P02-P03-resumed-replay-1ad51fb4-01/REVIEW-HANDOFF.json)
 
 **P03 공개 항로도 재개 Windows 릴리스 — 2026-11-12.** `b2ba73ff` 패키지의 실제 입력으로 저장한 103틱·10.3초를 새 프로세스가 일시정지 상태로 복원했고, 계속 진행한 뒤 117틱을 관측했다. 800×450에서 백업 전용 복원과 기본 슬롯 미생성을 확인했다. 손상 기본 슬롯은 오류를 표시하고 파일을 보존했으며, 격리 시험의 기본 슬롯을 복구한 뒤 같은 창에서 Enter로 재개했다. 네 프로세스 모두 종료 코드 0, 엔진 오류·경고 0이다. 대기 명령 적용은 이전 헤드리스 검증 범위다. [전경 증거](F:/WorkSpace/campaign-p03-atlas-resume-20261112/tmp/p03-windows-b2ba73ff/RESULTS.md)
 
