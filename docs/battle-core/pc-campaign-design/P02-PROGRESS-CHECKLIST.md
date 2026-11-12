@@ -24,6 +24,8 @@
 
 **`b2ba73ff` 21행 절대 결과 참조.** 별도 초기 프로필의 직접 스텝과 동기 AutoResolver가 공유 코어에서 모든 종결 값과 재귀적 Godot 자료형에 일치했다. 320초 제한 안에 종료 코드 0이며, 11,470틱과 지문 `ac12b629…c8e8`을 확인했다. 현행 정식 매니페스트는 별도로 동결해야 한다. [절대 결과 참조](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-row21-typed-01/run-once/RESULT.json)
 
+**`b2ba73ff` 17·18행 격리 AutoResolver 확인.** 사설 헤드리스 프로필에서 구형 자동해결 완료 16/16과 두 차례 취소 24/24를 통과했다. 완료 결과는 11,350틱·1,134,950ms·연합군 승리와 절대 지문 `c0e18c8c…80acb`에 일치했다. 실행 뒤 이전 원본과 비교한 결과, 자동 생성된 컨트롤 경로 번호만 달랐고, 명시된 이름·정확한 좌표와 결과·취소·정리 단언은 일치했다. 원본 불일치를 보존했다. 공개 적벽 버튼은 EntryBoot로 연결되므로 공개 AutoResolver 진입과 정식 K6 판정은 남았다. [격리 실행과 원본 비교](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-legacy-world-focused-01/FOCUSED-REFERENCE-HANDOFF.json)
+
 **264f47b9 호환성 사전검증 — 2026-11-12.** 구형 공개 브리핑을 여는 마지막 main 커밋에 기존 21행·58작업·27비교를 결속했다. 14~18행 사전 시험 11/11 및 비교 3건이 통과했다. GUI 15·16행은 합성 viewport 입력을 사용했다. 별도 현행 Godot 창은 시작됐으나 Computer Use 앱 접근 승인이 시간 초과돼 실제 캡처와 입력은 0건이었다. 이 사전 시험에서는 실제 입력 증거를 요구하는 정식 실행기를 시작하지 않았다. [역사 사전검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-review-01/HISTORICAL-FOCUSED-RESULTS-R02.json) · [Windows 입력 사전확인](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-5ef3537b-successor-01/windows-entry-smoke-01/INPUT-PREFLIGHT-RESULT.json)
 
 **264f47b9 정식 실행 2회 — 2026-11-12.** 두 실행 모두 15-before 작업에서 중단됐다. 각 실행은 계획 58작업 중 1작업 관측·0통과·57미실행, 21행 완료 0, 27비교 실행 0이다. 첫 실행은 캡처 유효시간을 넘겨 등록한 클릭이 호출되기 전에 차단됐고, 출처를 특정할 수 없는 별도 입력이 관측됐다. 재시도는 실제 입력 6건과 함대 배치 명령·확정을 확인했지만, Windows에서 관측한 5번째 동작의 우클릭 해제에 대응하는 Godot 관찰 기록이 없어 실패했다. 두 런처 exit 1, 첫 작업 exit 125 및 잔류 Job 0을 확인했다. [첫 집계](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-review-01/run-once/aggregate.json) · [재시도 집계](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-retry-02/run-once/aggregate.json)
@@ -113,6 +115,10 @@ E 소스 반영 완료: 독립 R3 통과한 revision-02 제품 5파일을 단일
 **P07 승인 적벽 v1 보급·증원·철수 — `b2ba73ff`.** 정책 37/37, 개발 시험 77/77, 공개 진입부터 지도 결산까지 승인 호스트 26/26을 통과했다. A 거점 가동 뒤 60초에 보급으로 탄약이 124→138로 늘었고, 증원은 예정 시각 다음 틱에 한 번 진입했다. 명시 철수에서 두 함대가 생환했고 1,854틱의 결산 ID·사유·시각이 호스트와 지도에서 일치했다. 별도 모델이 헤드리스 결과를 검토했다. [보급·증원·철수 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P07-main-b2ba73ff-20261112/RESULTS.md)
 
 **P09 월드맵 테스트 종료 정리 — `b2ba73ff` 런타임.** 결정성 검사에서 소유한 세 `AutoResolver`를 마지막 사용 뒤 닫도록 테스트 한 파일을 수정했다. 초기·복귀 프로필 모두 기존 순서와 값 그대로 149/149를 통과했고, 의도된 거부 진단 4건은 유지했다. 종료 잔류는 기준선의 ObjectDB 117개·리소스 18개에서 두 실행 모두 0/0이 됐다. 별도 모델 검토 후 `27ee7e8b` 위의 수정 커밋을 작업 브랜치에 푸시했다. 제품과 오디오 전체 종료 인수는 별도다. [수정 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/3d5d41cdb5aca023b719e1f2f9c862bb076adb7c) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-current-world-link-lifetime-candidate-20261112-01/REVIEW-HANDOFF.json)
+
+**P05 승인 적벽 공간 회귀 — `b2ba73ff`.** E/R 팽창 원과 A/B/C/E 중심 검사는 61/61, 정면 이동 자세는 17/17을 통과했다. 네이티브 자세 CSV 20,698행이 이전 승인 기록과 바이트 단위로 일치했고, 이동 오류와 경로 위반은 없었다. 별도 모델이 원본과 입력 해시를 확인했다. 개별 선체 다각형, 진형 전환 중 점유 영역과 Atlas→전장 좌표의 인수 기준은 남았다. [공간 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P05-main-b2ba73ff-20261112/RESULTS.md)
+
+**O07 로컬 Win32 교체 거절·복구 — `b2ba73ff`.** 격리 F 슬롯과 릴리스 DLL에서 14개 프로세스가 통과했다. 실제 공유 제한으로 결산·보급 저장의 교체가 거절됐을 때 기존 상태와 저장 파일이 보존됐다. 잠금 해제 뒤 새 프로세스의 재시도·재열기 결과는 기준 바이트와 일치했다. 기본 슬롯 부재 시 이전 세대를 읽기 전용으로 열었고, 소유한 시험 잠금 프로세스가 종료된 뒤에는 잠금 파일이 남아 있어도 슬롯을 열었다. 별도 모델이 검토했다. 전원 상실·운영 전환·외부 지급은 남았다. [로컬 복구 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/O07/main-b2ba73ff-release-recovery-01/RESULT.json)
 
 ## 현재 상태 요약 — 2026-11-11 KST
 
