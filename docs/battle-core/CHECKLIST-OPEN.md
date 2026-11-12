@@ -38,6 +38,8 @@ K6 15~18행 실행 전 점검과 17·18행 오프라인 비교 초안을 상위 
 
 **K6 15·16행 실제 제품 헤드리스 전이 — `b2ba73ff`.** 외부 합성 버튼 신호로 명시 시작 전 C0 대기, 같은 승인 요청·시드의 두 작전과 동일 C0, 두 소유자 종료 및 결산 없는 Atlas 직행 복귀를 관찰했다. 양수 프레임의 hz 위치와 보조 StringName 키 처리 문제를 고친 뒤 원본을 재판정해 2/2를 통과했다. 초기 실패를 보존했고 상위 모델이 독립 검토했다. 계약은 미서명이며 1600×900 실제 Windows 입력과 정식 실행은 남았다. [제품 전이 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-row15-16-passive-observer-product-01/REVIEW-HANDOFF.json)
 
+**K6 같은 채팅의 독립 리뷰 증명 초안.** 과거 정식 실행기는 서로 다른 리뷰·실행 채팅 ID를 요구한다. 같은 채팅에서 별도 상위 모델을 쓰는 제안의 오프라인 판정은 합성 양성 1건과 음성 21건을 통과했고 상위 모델이 독립 검토했다. 현행 도구 응답으로는 독립 실행기가 검증할 플랫폼 신원 증명을 확보하지 못했다. 신뢰할 수 있는 플랫폼 증명과 원자적 일회 승인 소비가 남아 있으며 정식 실행 자격은 보류다. [증명 초안](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-same-chat-proof-01/REVIEW-HANDOFF.json)
+
 **`b2ba73ff` 15·16행 공개 타이틀 경로 합성 검증.** 실제 승인 호스트에서 만든 113틱 저장 사본으로 시작해 40개 단언을 기존 순서대로 통과했다. 0틱 배치 명령 1회, Space 일시정지 두 번, 새 시뮬레이션의 0틱 재시작, 타이틀을 거친 지도 복귀와 저장 보존을 별도 모델이 확인했다. 이전 원본과 달라진 생성 경로·시드 등 13개 관측도 보존했다. 정식 15·16행에는 이 비라우팅 경로의 판정 기준과 새 실제 Windows 입력이 남았다. [타이틀 경로 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-title-route-focused-01/RESULTS.json)
 
 **264f47b9 호환성 사전검증 — 2026-11-12.** 구형 공개 브리핑을 여는 마지막 main 커밋에 기존 21행·58작업·27비교를 결속했다. 14~18행 사전 시험 11/11 및 비교 3건이 통과했다. GUI 15·16행은 합성 viewport 입력을 사용했다. 별도 현행 Godot 창은 시작됐으나 Computer Use 앱 접근 승인이 시간 초과돼 실제 캡처와 입력은 0건이었다. 이 사전 시험에서는 실제 입력 증거를 요구하는 정식 실행기를 시작하지 않았다. [역사 사전검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-review-01/HISTORICAL-FOCUSED-RESULTS-R02.json) · [Windows 입력 사전확인](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-5ef3537b-successor-01/windows-entry-smoke-01/INPUT-PREFLIGHT-RESULT.json)
@@ -135,6 +137,8 @@ E 소스 반영 완료: 독립 R3 통과한 revision-02 제품 5파일을 단일
 
 **P05 승인 적벽 공간 회귀 — `b2ba73ff`.** E/R 팽창 원과 A/B/C/E 중심 검사는 61/61, 정면 이동 자세는 17/17을 통과했다. 네이티브 자세 CSV 20,698행이 이전 승인 기록과 바이트 단위로 일치했고, 이동 오류와 경로 위반은 없었다. 별도 모델이 원본과 입력 해시를 확인했다. 개별 선체 다각형, 진형 전환 중 점유 영역과 Atlas→전장 좌표의 인수 기준은 남았다. [공간 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P05-main-b2ba73ff-20261112/RESULTS.md)
 
+**P05 승인 적벽 좌표 근거 — `b2ba73ff`.** Atlas와 진입 지도는 항로도 마커를 공유하며 Atlas 선택은 전장 좌표를 넘기지 않는다. 전술 미리보기는 E–J–A–C를 목표 중심까지 그린다. 실제 C0의 최종 경유지는 접근 거리 245와 교전 보정 `(56,18)`을 적용한 `(1197.59094,490.08563)`으로, 보존 원본과 0.001 단위 이내에 일치했다. 잘못된 좌표·원본 변조 등 5개 대조군이 거부됐고 상위 모델이 독립 검토했다. 일반 지도→전장 변환·선체 기하 인수는 남았다. [좌표 대조](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P05-atlas-anchor-b2ba73ff-01/RESULTS.md)
+
 **O07 로컬 Win32 교체 거절·복구 — `b2ba73ff`.** 격리 F 슬롯과 릴리스 DLL에서 14개 프로세스가 통과했다. 실제 공유 제한으로 결산·보급 저장의 교체가 거절됐을 때 기존 상태와 저장 파일이 보존됐다. 잠금 해제 뒤 새 프로세스의 재시도·재열기 결과는 기준 바이트와 일치했다. 기본 슬롯 부재 시 이전 세대를 읽기 전용으로 열었고, 소유한 시험 잠금 프로세스가 종료된 뒤에는 잠금 파일이 남아 있어도 슬롯을 열었다. 별도 모델이 검토했다. 전원 상실·운영 전환·외부 지급은 남았다. [로컬 복구 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/O07/main-b2ba73ff-release-recovery-01/RESULT.json)
 
 **P03 제한 호스트 C0·Cn 명령 커서 — `b2ba73ff`.** 같은 규칙과 입력의 다섯 격리 프로세스에서 74/74를 통과했다. 첫 재개가 대기 중인 명령 3번을 한 번 적용했고, 두 번째 저장은 적용 3번·수락 4번을 기록했다. 새 프로세스에서 C0와 저장 Cn을 대조했고 명령 4번만 한 번 적용됐다. 다음 빈 틱에서 반복 적용이 없었으며 기본 슬롯과 이전 세대 해시를 보존했다. 별도 모델이 검토한 범위는 제한 호스트의 로컬 커서다. [커서 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P03-command-cursor-b2ba73ff-01/RESULT.json)
@@ -142,6 +146,8 @@ E 소스 반영 완료: 독립 R3 통과한 revision-02 제품 5파일을 단일
 P03 공개 이어하기의 같은 작전 내 여러 세대 저장·재개를 Windows 헤드리스 3개 프로세스에서 60/60 검증했다. 두 번째 재개에서 대기 명령이 순서대로 한 번씩 적용됐고 다음 빈 틱에서 반복이 없었다. 기본·이전 슬롯 해시를 보존했다. 상위 모델 독립 검토 후 테스트 전용 브랜치에 푸시했다. 작전 간 전역 커서 인수는 남았다. [테스트 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/15441ea296054cb91f24b867b718e00847a8f18b) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P03-public-cursor-b2ba73ff-01/REVIEW-HANDOFF.json)
 
 **P03 보존 슬롯으로 공개 이어하기 — `b2ba73ff`.** 실제 저장 회전 후 기본 슬롯이 없는 조건을 격리 프로필에서 구성했다. Windows 헤드리스 프로세스 3개에서 55/55를 통과했다. 보존 슬롯의 대기 명령 두 건이 순서대로 한 번씩 적용됐고 명시적으로 저장했을 때만 기본 슬롯을 복구했다. 다음 프로세스는 복구 슬롯을 우선했고 보존·미게시 파일 바이트를 유지했다. 실제 전원 차단과 작전 간 전역 커서는 별도다. 상위 모델 독립 검토 후 테스트 브랜치로 푸시했다. [테스트 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/08dca4b3e24c50ec7b5e7f68854d799e33bfe5d2) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P03-public-fallback-15441ea2-01/REVIEW-HANDOFF.json)
+
+**P03 공개 이어하기 호환성 거부.** 체크섬이 유효한 저장의 봉투 버전, 내부 체크포인트 형식, 규칙 지문을 각각 한 필드만 바꿔 33/33을 검증했다. 세 변형은 각각 오류를 표시하고 자동 백업 사용·슬롯 게시 없이 기존 파일을 보존했다. 정상 슬롯을 복원해 같은 Atlas 버튼으로 재시도하자 대기 명령이 순서대로 한 번 적용됐다. 최초 러너의 검사 수 설정 오류를 보존했고 상위 모델 독립 리뷰 후 테스트 브랜치에 푸시했다. 패키지 마이그레이션·실제 입력·전역 커서는 별도다. [테스트 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/b08ed3898507993c7597d212648a92c457faa850) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P03-public-version-b18ac5fa-01/REVIEW-HANDOFF.json)
 
 **P03·O07 저장 중단 진단 — `b2ba73ff`.** 검증된 임시 저장 직후와 테스트 콜백으로 기본 슬롯을 이전 슬롯으로 옮긴 직후에 격리된 Godot 자식 프로세스를 각각 종료했다. 두 경우 새 프로세스는 마지막 확정 저장을 읽었고, 명시적으로 다시 저장한 뒤 새 세대를 열었다. 상위 모델 독립 검토를 통과했다. 두 번째 지점은 기본 경로의 이동을 재현한 것으로, 비계측 기본 경로·네이티브 DLL·전원 차단 인수는 남았다. [저장 중단 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/O07/p03-store-child-cutpoint-b2ba73ff-02/RESULTS.md)
 
