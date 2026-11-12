@@ -14,6 +14,16 @@
 
 **현행 main 승인 첫 작전 Windows 검증 — 1600×900.** 정확한 `5ef3537b`의 새 격리 프로필에서 공개 EntryBoot로 적벽을 준비했다. 시작 전 0틱 유지와 명령 버튼 비활성, 명시 시작과 실제 이동 반응을 확인했다. 결산 전에 항로도로 돌아와 공개 버튼으로 재진입하자 다시 0틱에서 시작했고, 두 차례 복귀에 결산 화면·슬롯·원장은 없었다. 별도 모델이 전체 캡처 14건, 실제 입력, 중간·최종 프로필과 종료 코드 0을 대조했다. 내부 명령 수와 구형 AutoResolver는 별도 검증 범위다. [Windows 증거](F:/WorkSpace/campaign-p03-20261111/tmp/k6-approved-product-5ef3537b/windows1600/RESULT.json)
 
+**`b2ba73ff` main EntryBoot 검증 준비 — 2026-11-12.** 설정된 EntryBoot 씬을 열어 보이는 컨트롤에 합성 입력을 보내는 헤드리스 시험에서 30/30을 통과했다. 명시 시작 전 0틱 대기, 공개 항로도의 `적벽으로` 재진입, 두 차례 조기 복귀 뒤 슬롯·결산 파일 부재를 확인했다. 첫 탐침은 중간 확인 화면을 잘못 가정해 실패했으며 원본을 보존했다. 독립 검토한 준비 계약에 15~18행의 현행 공개 경로와 역사 판정 기준을 기록했다. [집중 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-entry-contract-01/focused-run-143221/RESULT.json) · [K6 준비 계약](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-entry-contract-01/ACCEPTANCE-CONTRACT-02.md)
+
+**`b2ba73ff` 승인 첫 작전 결산·리플레이 보강 검증.** 월드맵에서 승인된 적벽 정면 작전을 시작한 헤드리스 호스트 시험이 26/26을 통과했다. 시드 208에서 0틱·751틱에 경유점을 지정해 5,107틱·510,700ms에 목표를 달성했다. 별도 재생과 독립 검토에서 순서가 보존된 이벤트 74개, 정산 1건과 저장·원장·리플레이의 동일 작전 ID, 내보낸 정산 필드 6개의 값과 자료형을 확인했다. 공개 EntryBoot 전체 실기와 정식 K6 판정은 남았다. [호스트·리플레이 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-first-operation-reference-01/PRODUCT-REFERENCE-EVIDENCE.json)
+
+**`b2ba73ff` 21행 대응 시험 — 기존 지도 검사 FAIL.** 제품 소스를 그대로 사용한 초기·복귀 프로필 두 실행에서 129개 단언 중 125개가 참이고 4개가 거짓이었다. 기존 검사는 단일 CTA와 구형 Z2 카드 진입을 가정한다. 실제 첫 버튼은 `WatchReplay`이며 이름으로 찾은 `OpenRedCliffs`는 EntryBoot를 연다. 시뮬레이션 결정성 지문은 일치했다. 기존 기록을 보존하고 공개 EntryBoot 검증과 구형 지도 조작 검증을 각각 명시한다. [실패 원문과 독립 검토 근거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-row21-analogue-01/FINDINGS.md)
+
+**현행 21행 지도 테스트 수정 후보.** 공개 시험은 이름이 고정된 `OpenRedCliffs`를 선택해 EntryBoot 준비까지 확인했다. 구형 지도 시험은 카드 진입을 명시적으로 준비해 기존 터치 크기 36건, 핀치·권역·뒤로 가기와 전투 왕복 검사를 유지했다. Windows 리플레이 버튼의 터치 크기 3건도 검증했다. 초기·복귀 프로필은 각각 같은 순서의 149/149, 공개 시험은 27/27을 통과했다. 제품 변경 없이 테스트 두 파일만 독립 검토 후 작업 브랜치에 푸시했다. [테스트 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/27ee7e8ba4e7f523eedb9a112fbb1b4bc55d346f) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-row21-tests-candidate-02/REVIEW-HANDOFF.json)
+
+**`b2ba73ff` 21행 절대 결과 참조.** 별도 초기 프로필의 직접 스텝과 동기 AutoResolver가 공유 코어에서 모든 종결 값과 재귀적 Godot 자료형에 일치했다. 320초 제한 안에 종료 코드 0이며, 11,470틱과 지문 `ac12b629…c8e8`을 확인했다. 현행 정식 매니페스트는 별도로 동결해야 한다. [절대 결과 참조](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-row21-typed-01/run-once/RESULT.json)
+
 **264f47b9 호환성 사전검증 — 2026-11-12.** 구형 공개 브리핑을 여는 마지막 main 커밋에 기존 21행·58작업·27비교를 결속했다. 14~18행 사전 시험 11/11 및 비교 3건이 통과했다. GUI 15·16행은 합성 viewport 입력을 사용했다. 별도 현행 Godot 창은 시작됐으나 Computer Use 앱 접근 승인이 시간 초과돼 실제 캡처와 입력은 0건이었다. 이 사전 시험에서는 실제 입력 증거를 요구하는 정식 실행기를 시작하지 않았다. [역사 사전검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-review-01/HISTORICAL-FOCUSED-RESULTS-R02.json) · [Windows 입력 사전확인](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-5ef3537b-successor-01/windows-entry-smoke-01/INPUT-PREFLIGHT-RESULT.json)
 
 **264f47b9 정식 실행 2회 — 2026-11-12.** 두 실행 모두 15-before 작업에서 중단됐다. 각 실행은 계획 58작업 중 1작업 관측·0통과·57미실행, 21행 완료 0, 27비교 실행 0이다. 첫 실행은 캡처 유효시간을 넘겨 등록한 클릭이 호출되기 전에 차단됐고, 출처를 특정할 수 없는 별도 입력이 관측됐다. 재시도는 실제 입력 6건과 함대 배치 명령·확정을 확인했지만, Windows에서 관측한 5번째 동작의 우클릭 해제에 대응하는 Godot 관찰 기록이 없어 실패했다. 두 런처 exit 1, 첫 작업 exit 125 및 잔류 Job 0을 확인했다. [첫 집계](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-review-01/run-once/aggregate.json) · [재시도 집계](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-retry-02/run-once/aggregate.json)
@@ -103,7 +113,7 @@ E 소스 반영 완료: 독립 R3 통과한 revision-02 제품 5파일을 단일
 - [ ] O07 운영 전환·외부 지급·전원 상실: 대상/슬롯 지문·전환 승인, 수신자/계약 및 시험 환경 조건이 남았다.
 - [ ] 일반 I01/P03~P08: 공통 입력·운영 상태/커밋·공간/작전 정책·출시 대상 인수 조건이 남았다. 승인된 적벽 한 건의 완료를 전체 인수로 확대하지 않는다.
 - [x] **`264f47b9` K6 정식 검증 통과.** 5차에서 21행·58작업·27비교와 최종 GUI 증거 승인을 완료했다.
-- [ ] **`b2ba73ff` main 제품 경로 K6 정식 검증.** EntryBoot와 구형 공개 경로가 달라 현행 제품 경로의 판정 기준 동결이 남았다.
+- [ ] **`b2ba73ff` main 제품 경로 K6 정식 검증.** 21행 검증 후보와 절대 참조를 마련했다. 15~18행의 현행 공개 경로 판정, 매니페스트 동결, 새 실제 Windows 입력 검증이 남았다.
 - [x] **신규 진입 Windows 후보 전경 시험.** EXE 2f353f27…에서 네 창 크기, 키보드·마우스, 전장 준비 0틱과 아니오 정상 종료를 확인했다. [전경 검증 기록](../entry/windows-foreground-verification-20261111-ko.md)
 - [ ] **신규 진입 작은 창 가독성.** 480×270은 글자와 지도 라벨이 지나치게 작아 미수용. 800폭에서도 가독성이 저하된다. 최소 지원 크기 또는 화면 개선 결정이 남았다.
 
