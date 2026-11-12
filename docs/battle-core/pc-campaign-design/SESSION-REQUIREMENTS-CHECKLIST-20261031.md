@@ -249,8 +249,8 @@ P06 실제 제품 결산 재열기 — `b2ba73ff`. 격리된 Windows 헤드리�
 - [ ] **P05·P07 일반 공간·작전.** 선체 외곽·진형 전환과 호송·통신소·재점령·정비의 승인 입력·규칙 및 검증이 남았다.
 - [x] **P06 같은 작전 재열기·시계.** 결산 재열기와 같은 첫 작전의 새 시작, 이어하기·리플레이의 시계 경계 36/36을 확인했다.
 - [ ] **P06 연속 작전·A05/A06.** 후속 작전 승계와 커서 소유권 결정, 승인된 종합 시계·운영 커밋 검증이 남았다.
-- [x] **P08 Android 서명 디버그 패키징.** `baaba60b`에서 ARM64 APK와 v2·v3 서명을 검증했다.
-- [ ] **P08 출시 인수.** 이후 지도 변경이 포함된 대상 빌드, 출시 서명, 실기기·대표 플레이와 성능 검증이 남았다.
+- [x] **이전 P08 Android 디버그 패키징 기록.** `baaba60b`에서 ARM64 APK와 v2·v3 서명을 검증했다.
+- [ ] **P08 Windows 제품 인수.** 1600×900 대상 Windows 빌드에서 실제 입력, 대표 플레이와 성능 검증이 남았다. Android 빌드·설치·실기기 검증은 이 세션 범위에서 제외한다.
 - [x] **`264f47b9` K6 정식 검증 통과.** 5차에서 21행·58작업·27비교와 최종 GUI 증거 승인을 완료했다.
 - [ ] **K6 이후 main 변경분 재검증.** 15~18행의 현행 경로 판정, 매니페스트 동결 및 1600×900 실제 Windows 입력과 독립 리뷰가 남았다.
 - [x] **신규 진입 Windows 후보 전경 시험.** EXE 2f353f27…에서 네 창 크기, 키보드·마우스, 전장 준비 0틱과 아니오 정상 종료를 확인했다. [전경 검증 기록](../../entry/windows-foreground-verification-20261111-ko.md)
@@ -303,12 +303,12 @@ P06 실제 제품 결산 재열기 — `b2ba73ff`. 격리된 Windows 헤드리�
 
 **P09 `battle_flow` 종료 수정.** 테스트에 믹서 정리 확인을 추가했다. 격리 실행 한 번에서 기능, 믹서 확인, TRACE 구조, 종료 진단 0건의 네 검사를 통과했다. 상위 모델 독립 검토 뒤 PR #7로 병합했고 원격 `main` `7f138c2d`를 확인했다. 제품 전체 오디오 종료 인수는 남았다. [병합 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/7) · [수정 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-flow-fence-a2733c8b-01/REVIEW-HANDOFF.json)
 
-- [x] **P08 Android 서명 디버그 패키징.** `baaba60b` ARM64 APK의 v2·v3 서명을 확인했다. [패키징 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-android-main-baaba60b-02/REVIEW-HANDOFF.json)
+- [x] **이전 P08 Android 디버그 패키징 기록.** `baaba60b` ARM64 APK의 v2·v3 서명을 확인했다. [패키징 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-android-main-baaba60b-02/REVIEW-HANDOFF.json)
 
 **P08 실기기 환경 확인 — `a2733c8b`.** 설치된 SDK를 확인했다. 점검한 범위에서 명시적으로 식별되는 Android·ADB 장치, 실행 중인 에뮬레이터와 ADB 서버, 기본 AVD 설정은 확인되지 않았다. 일반 휴대 장치의 기종은 확정하지 않았다. `baaba60b` APK 이후 Atlas 표시 변경까지 검증하려면 대상 빌드와 승인된 ARM64 시험 장치가 필요하다. 상위 모델이 읽기 전용 근거를 검토했다. [환경 확인](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-device-readiness-a2733c8b-01/README.md)
 - [ ] **P02·P03·P04 일반 운영.** 승인 공통 입력·상태 사전, 운영 Cn·작전 간 명령 커서, 공개 외부 저장과 독립 두 번째 호스트의 원장·슬롯 보존 검증이 남았다.
 - [ ] **P05·P06·P07 확장.** 선체 외곽·진형 전환, 호송·통신소·재점령·정비, 후속 작전 승계와 A05/A06 종합 인수가 남았다.
-- [ ] **P08·P09·O07 제품 인수.** 출시 서명·실기기·대표 플레이·성능, 제품 전체 오디오 종료와 TRACE, 운영 전환·외부 지급·실제 전원 차단 검증이 남았다. 구버전 실행본과 데이터는 승인 당시 상태로 보존한다.
+- [ ] **P08·P09·O07 제품 인수.** Windows 1600×900 실제 입력·대표 플레이·성능, 제품 전체 오디오 종료와 TRACE, 운영 전환·외부 지급·실제 전원 차단 검증이 남았다. Android 작업은 이 세션 범위에서 제외한다. 구버전 실행본과 데이터는 승인 당시 상태로 보존한다.
 
 ## 2026-11-11 P09 진행 이력
 
