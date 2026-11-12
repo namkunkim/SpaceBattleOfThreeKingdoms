@@ -267,55 +267,23 @@ P06 실제 제품 결산 재열기 — `b2ba73ff`. 격리된 Windows 헤드리�
 
 ## 0. 캠페인 적용 전체 체크리스트 — 2026-11-12
 
-**첫 PC 플레이 → 같은 규칙 버전 저장·재개 → 제품 인수와 확장 검증** 순으로 진행한다. 원격 `main` 확인 기준은 `7f138c2d`다. 승인 적벽 v1의 단계별 검증과 확장 인수 조건을 아래에 기록한다.
+이번 세션 범위는 Windows 1600×900이다. 원격 `main` 확인 기준은 `7f138c2d`다.
 
-### 1단계 · 첫 PC 캠페인 플레이 — Windows 개발 후보 v1 확인
+### 완료
 
-- [x] **P02/P03 최소 연결 — 개발 후보 v1.** 실제 PC 진입점 한 곳에서 같은 작전을 시작·진행·종료한다. 해당 경로의 초기 배치·명령·논리시계·표시·결과 반영과 준비 실패 시 기존 상태 보존을 확인한다. 상태 범위는 이 작전에 필요한 함대·손실·자원·목표·시간 정보로 좁힌다.
-- [x] **P05/P07 작전 흐름 — 개발 후보 v1.** 실제 맵에서 정면과 우회가 각각 통행 가능하고 보급거점 및 시간 증원이 플레이어의 판단에 영향을 준다. 목표 달성과 명시 철수의 결과를 각각 확인한다. 좌표·진형 외곽·접근은 첫 작전에 쓰이는 범위로 검증한다.
-- [x] **P08 최소 PC 확인 — 개발 후보 v1.** Windows 실제 입력으로 정면 목표 달성과 우회 철수를 각각 플레이하고 게임시간·결산을 기록했다. 검증 배속 결과이므로 실제 경과와 약 20분 페이싱 가설은 현행 제품에서 별도로 확인한다. [정면·우회 로그](P02-PROGRESS-CHECKLIST.md#첫-pc-캠페인-플레이--1109-개발-후보-v1-이력)
+- [x] **K6 정식 실행** — `264f47b9`에서 21행·58작업·27비교 통과. [정식 집계](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-row21-05/run-once/aggregate.json)
+- [x] **P02·P03 승인 적벽 v1** — 공개 시작·리플레이와 Windows 실제 입력으로 같은 작전 저장·새 프로세스 이어하기·결산 복구 검증. 설정과 작전 슬롯 분리 25/25. [Windows 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/r5-dimensions-canonical-windows-ui-prep-01a1c838/run-67f9cb20-20261111-01/RESULTS.md) · [저장·리플레이 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/2) · [설정 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/6)
+- [x] **P04·O07 격리 저장 복구** — 개발 호스트의 오류 거부·정상 재시도와 시험 프로세스 중단 뒤 확정 저장 복구. [P04 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P04-external-effective-authority-b2ba73ff-01/REVIEW-HANDOFF.json) · [O07 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/O07/p03-store-child-cutpoint-b2ba73ff-02/RESULTS.md)
+- [x] **P05·P06·P07 승인 적벽 검증** — Atlas 선택 15/15, 같은 작전의 시계·재개 36/36, 결산 잠금 재시도 22/22. 정면·우회와 보급·증원·철수도 개발 후보 v1에서 확인했다. [상세 검증](P02-PROGRESS-CHECKLIST.md) · [결산 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/3)
+- [x] **P08 Windows 후보 플레이** — 실제 입력으로 정면 목표 달성과 우회 철수 확인. [정면·우회 로그](P02-PROGRESS-CHECKLIST.md#첫-pc-캠페인-플레이--1109-개발-후보-v1-이력)
+- [x] **P09 한정 수정** — 화공 오디오와 `battle_flow` 종료 수정 병합. 수정 후보의 종료 잔류 진단 0건 확인. [화공 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/4) · [종료 수정 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/7)
 
-자동 조율의 첫 지시는 현재 작업의 종료·소유 경로를 확인하고 위 플레이를 막는 가장 작은 실제 PC 연결·공간·작전 동작을 고르는 것이다. 기존 P02/P03 결과는 재사용하며 신규 검증은 선택한 조각의 반례와 관련 회귀에 집중한다.
+### 남은 작업
 
-### 2단계 · 같은 규칙 버전 저장·재개 — 개발 후보 v1
-
-- [x] **P04와 필요한 P03 후속 — 개발 후보 v1.** 같은 규칙 버전에서 현재 작전 상태와 후속 명령을 보존하고 재개한다. 운영 체크포인트 Cn과 명령 커서는 이 범위에 필요한 적용·대기 경계를 확정한다. 같은 후속 입력이 동일하게 적용되고 잘못된 입력은 활성 상태를 보존하며 거부되는지 확인한다. Windows 개발 작전의 외부 파일은 [v1 규격](FIRST-OPERATION-EXTERNAL-SAVE-V1.md)으로 확정했다. 전체 O07 저장 범위는 별도다. [실제 입력과 독립 검증](P02-PROGRESS-CHECKLIST.md)
-
-### 3단계 · 승인 적벽 v1 제품 반영 및 Windows 복구 배포
-
-- [x] **승인 정면 A04 및 직전 통합 배포.** A04 61/61, 지도 결산 표시 9/9, r5·승인 치수 E 설치 8/8, `d267012a…` 제품 8/8·O07 10/10의 제한 범위를 인수했다. [직전 배포 독립 검토](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/r5-dimensions-canonical-windows-review-01a1c8e0/RESULTS.md)
-- [x] **P02/P04 결산 복구.** E WorldLink `7e3b1d42…` 설치, 제한판 `67f9cb20…` 결산 7/7·O07 최소 5/5 및 단일 시험 자식 프로세스 종료 뒤 순차 복구 2회 독립 인수. 같은 결산을 복원했고 원장 1건과 슬롯·진행 백업을 보존했다. 항로도 포함 E 전체 출력 `5a849441…`은 별도다. [설치](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/r5-settlement-e-applied-01a1c908/RESULTS.md) · [배포 독립 검토](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/r5-settlement-independent-01a1c915/DEPLOYMENT-REVIEW.md) · [단일 프로세스 종료 독립 검토](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/r5-settlement-independent-01a1c915/KILL-REVIEW.md)
-- [x] **P02/P04/P08 복구 EXE 전경 확인.** `67f9cb20…`에서 15:13:51–15:27:15 KST 실제 정면 출격·113틱 저장/동일 및 새 프로세스 재개·5,603틱 C 점령 자연 종료·지도 결산을 확인했다. 정상 종료 뒤 같은 결산을 복원했다. 중복 표시 0건, 완료 슬롯 거부, 원장 1건, 슬롯·진행 백업 SHA 보존을 확인했다. UI 담당 `01a1c838…`는 (DONE)이다. [전경 결과](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/r5-dimensions-canonical-windows-ui-prep-01a1c838/run-67f9cb20-20261111-01/RESULTS.md)
-
-**2026-11-11 Windows 종료·TRACE 기록.** `tests/battle_flow.gd`의 테스트 소유 replay 정리를 E에 반영했다(`afa999ba…468826`). 설치 담당 `01a1c966…`과 독립 검토 `01a1c971…`는 (DONE)이다. F 고정 기준선의 적용 파일 회귀에서 flow PASS, 실제 엔진 exit 0, TRACE 2/26/20행, 잔류 0/0을 확인했다. 오디오 조사 `01a1c981…`는 엔진 종료 경계의 잔류를, 장벽 검토 `01a1c98b…`는 stop·교체된 이전 playback을 프레임 표본이 놓치는 반례를 확인하고 (DONE)으로 마감했다. 깨끗한 종료 인수에는 전체 테스트 소유 playback의 관찰 계약이 필요하다. 제품·엔진 수정은 별도 범위 결정이 필요하다. [E 반영·회귀](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-rp-apply-01a1c966-20261111/RESULTS.md) · [독립 검토](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-rp-review-01a1c971-20261111/RESULTS.md) · [엔진 경계](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-audio-boundary-01a1c981-20261111/RESULTS.md) · [수집 반례](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-barrier-scope-01a1c98b-20261111/RESULTS.md)
-
-**2026-11-11 당시 인수 검토.** 승인 적벽 v1의 정면 플레이·동일 버전 저장/재개·결산 복구와 구버전 실행본 보존은 인수했다. 일반 I01b 인수는 아래 입력·승인 조건이 남았다. [항목별 부족 조건과 담당](P02-PROGRESS-CHECKLIST.md#2026-11-11-현재-인수-범위와-남은-필수-작업)
-
-**남은 차단.** 다중호스트 두 번째 게시의 독립 확인은 미완료이며 차단된 시험은 재실행 금지다. K6 `264f47b9` 정식 실행은 21행·58작업·27비교 통과로 완료했다. 이후 `main`의 15~18행은 현행 판정 기준, 입력 동결, 1600×900 Windows 실제 입력과 독립 리뷰·일회 승인 결속이 남았다. 검사기 r2는 독립 미통과·E 미적용으로 추가 수정을 보류한다. O07은 기존 담당 범위이며 운영 권위 인계 승인과 외부 지급 수신자·계약·시험 환경, 실기기 전원 상실 조건이 남았다. [후속 마감 보고서](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p02-checklists-closeout-01a1c907-20261111.md)
-
-
-### 별도 후속 · 확장과 검증
-
-- [x] **K6 정식 실행 — `264f47b9`.** 21행·58작업·27비교를 통과했다. [정식 집계](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-row21-05/run-once/aggregate.json)
-- [x] **P02 승인 적벽 v1 공개 시작·리플레이.** Windows 전경의 공개 진입과 리플레이를 검증했다. 공개 리플레이의 오류 거부·정상 재시도 테스트를 main에 병합했다. [공개 리플레이 전경 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P02-windows-product-replay-20261112-60b51f2e/foreground-20261112-095153/FOREGROUND-RESULT.md) · [저장·리플레이 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/2)
-- [x] **P03 승인 적벽 v1 같은 작전 저장·이어하기.** Windows 실제 입력으로 저장하고 새 프로세스에서 재개와 결산 복구를 검증했다. 시작 음량 설정과 작전 슬롯 분리 25/25도 main에 병합했다. [설정 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/6)
-- [x] **P04 개발 호스트 외부 저장 복구.** 체크섬이 유효해도 적용 데이터 지문이 다르면 복원 전에 거부했고, 정상 원본 재시도와 기존 파일 보존을 확인했다. [외부 저장 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P04-external-effective-authority-b2ba73ff-01/REVIEW-HANDOFF.json)
-- [x] **P05 승인 적벽 Atlas 선택.** 1600×900 헤드리스 합성 입력에서 15/15를 통과했다. [Atlas 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P05-atlas-facility-hit-a2733c8b-01/REVIEW-HANDOFF.json)
-- [x] **P06 같은 작전 시계·재개.** 시작 전 대기와 리플레이 일시정지·재개를 검증해 36/36을 통과했다. [시계 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P06-clock-boundary-02ffda96-01/REVIEW-HANDOFF.json)
-- [x] **O07 로컬 저장 복구.** 격리된 저장 프로세스 중단 후 마지막 확정 저장을 복구했다. [저장 중단 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/O07/p03-store-child-cutpoint-b2ba73ff-02/RESULTS.md)
-- [x] **P07 결산 재시도와 P09 화공 오디오 수정.** 원장 잠금 재시도 22/22와 화공 수정 통합 29/29를 검토해 병합했다. 별도 집중 TRACE 대조 7/7을 통과했다. [결산 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/3) · [오디오 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/4)
-
-**P09 현행 종료 회귀 — `a2733c8b`.** `battle_flow`와 `group_formation`은 각각 기능 통과·종료 코드 0이었다. TRACE 네 파일은 보존 기준과 행 수·이벤트 순서·필드 구성이 일치했다. `battle_flow` 종료에 오디오 객체 5개와 리소스 2개가 남아 종료 인수는 미완료다. `group_formation`에는 종료 진단이 없었다. 상위 모델이 독립 검토했다. [종료 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-full-main-a2733c8b-01/REVIEW-HANDOFF.json)
-
-- [x] **P09 `battle_flow` 종료 수정.** 테스트에 믹서 정리 확인을 추가했다. 격리 실행 한 번에서 기능, 믹서 확인, TRACE 구조, 종료 진단 0건의 네 검사를 통과했다. 상위 모델 독립 검토 뒤 PR #7로 병합했고 원격 `main` `7f138c2d`를 확인했다. 제품 전체 오디오 종료 인수는 남았다. [병합 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/7) · [수정 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-flow-fence-a2733c8b-01/REVIEW-HANDOFF.json)
-
-- [x] **이전 P08 Android 디버그 패키징 기록.** `baaba60b` ARM64 APK의 v2·v3 서명을 확인했다. [패키징 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-android-main-baaba60b-02/REVIEW-HANDOFF.json)
-
-**P08 실기기 환경 확인 — `a2733c8b`.** 설치된 SDK를 확인했다. 점검한 범위에서 명시적으로 식별되는 Android·ADB 장치, 실행 중인 에뮬레이터와 ADB 서버, 기본 AVD 설정은 확인되지 않았다. 일반 휴대 장치의 기종은 확정하지 않았다. `baaba60b` APK 이후 Atlas 표시 변경까지 검증하려면 대상 빌드와 승인된 ARM64 시험 장치가 필요하다. 상위 모델이 읽기 전용 근거를 검토했다. [환경 확인](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-device-readiness-a2733c8b-01/README.md)
-- [ ] **K6 이후 main 변경분 15~18행.** 현행 판정 기준과 1600×900 Windows 실제 입력을 결속해 재검증한다.
-- [ ] **P02·P03·P04 일반 운영.** 승인 공통 입력·상태 사전, 운영 Cn·작전 간 명령 커서, 공개 외부 저장과 독립 두 번째 호스트의 원장·슬롯 보존 검증이 남았다.
-- [ ] **P05·P06·P07 확장.** 선체 외곽·진형 전환, 호송·통신소·재점령·정비, 후속 작전 승계와 A05/A06 종합 인수가 남았다.
-- [ ] **P08·P09·O07 제품 인수.** Windows 1600×900 실제 입력·대표 플레이·성능, 제품 전체 오디오 종료와 TRACE, 운영 전환·외부 지급·실제 전원 차단 검증이 남았다. Android 작업은 이 세션 범위에서 제외한다. 구버전 실행본과 데이터는 승인 당시 상태로 보존한다.
+- [ ] **K6 이후 main 변경분 15~18행** — 판정 기준·입력 동결, 1600×900 Windows 실제 입력과 독립 리뷰·일회 승인 결속.
+- [ ] **P02·P03·P04 일반 운영** — 공통 입력·상태, 운영 Cn과 작전 간 명령 커서, 공개 외부 저장과 독립 다중 호스트 검증. 차단된 기존 다중 호스트 시험은 재실행하지 않는다.
+- [ ] **P05·P06·P07 확장** — 일반 선체·진형, 추가 작전 규칙, 후속 작전 승계와 A05/A06 종합 검증.
+- [ ] **P08·P09·O07 인수** — Windows 1600×900 대표 플레이·성능, 제품 전체 오디오 종료·TRACE, 운영 전환·외부 지급·실제 전원 차단 복구.
 
 ## 2026-11-11 P09 진행 이력
 
