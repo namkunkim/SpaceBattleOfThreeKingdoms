@@ -40,7 +40,9 @@ func _atlas_browse(map: WorldMapScreen) -> bool:
 	var watch := map._cta.find_child("WatchReplay", true, false) as Button
 	var primary := map._cta.find_child("OpenRedCliffs", true, false) as Button
 	if not _check(map._atlas.is_visible_in_tree() and not map._card.visible and watch != null
-		and watch.is_visible_in_tree() and primary != null, "default atlas shows Windows replay and Red Cliffs actions"):
+		and watch.is_visible_in_tree() and primary != null and primary.is_visible_in_tree() and not primary.disabled
+		and map._cta.find_children("OpenRedCliffs", "Button", true, false).size() == 1,
+		"default atlas shows Windows replay and one enabled Red Cliffs action"):
 		return false
 	var original_size := root.size
 	for size: Vector2i in [Vector2i(1600, 900), Vector2i(800, 450)]:
@@ -86,8 +88,21 @@ func _atlas_browse(map: WorldMapScreen) -> bool:
 	accept.pressed = false
 	root.push_input(accept, true)
 	await _frames()
-	return _check(current_scene != null and current_scene.scene_file_path == "res://scenes/entry/EntryBoot.tscn",
-		"focused Red Cliffs action still opens entry detail with Enter")
+	if not _check(current_scene != null and current_scene.scene_file_path == "res://scenes/entry/EntryBoot.tscn",
+		"focused Red Cliffs action still opens entry detail with Enter"):
+		return false
+	var boot := current_scene
+	var link := root.get_node("WorldLink")
+	var deadline := Time.get_ticks_msec() + 5000
+	while current_scene == boot and Time.get_ticks_msec() < deadline:
+		var entry = boot.get("screen")
+		if entry != null and entry.flow.state == entry.Flow.State.READY:
+			return _check(entry.campaign_enabled and entry.find_child("PreparedMap", true, false) != null
+				and entry.find_child("RedCliffsLocalMap", true, false) != null and not link.routed()
+				and link.outcome == null,
+				"EntryBoot prepares the Red Cliffs map without launching a battle")
+		await process_frame
+	return _check(false, "EntryBoot prepares the Red Cliffs map without launching a battle")
 
 
 func _product(map: WorldMapScreen) -> void:

@@ -28,7 +28,7 @@ func _run() -> void:
 	_rules()
 	if not OS.get_cmdline_user_args().has("--quick"):
 		await _determinism()
-	await _screen()
+	await _legacy_screen()
 	await _development_sortie()
 	await _round_trip()
 	await _prepare_failure_return()
@@ -121,16 +121,20 @@ func _determinism() -> void:
 	while not r1.poll():
 		await process_frame
 	var t1 := Time.get_ticks_msec()
-	var o2 := AutoResolver.new(BattleBrief.from_dict(b.to_dict())).run_blocking()
+	var r2 := AutoResolver.new(BattleBrief.from_dict(b.to_dict()))
+	var o2 := r2.run_blocking()
 	print("자동 해결 1판 %.1fs (스레드), 결과 %s %s %s" % [(t1 - t0) / 1000.0, r1.outcome.kind, r1.outcome.reason, r1.outcome.grade])
 	_check(o2 != null and r1.outcome.to_dict() == o2.to_dict(), "같은 Brief → 같은 결과(지문 %s / %s)" % [r1.outcome.fingerprint, o2.fingerprint if o2 else "-"])
 	_check(r1.outcome.cao_status != "", "적벽 결산(st.result)을 읽음")
+	r1.close()
+	r2.close()
 	# 중단은 즉시 돌아온다
 	var r3 := AutoResolver.new(b)
 	r3.start()
 	await process_frame
 	r3.cancel()
 	_check(not r3.poll(), "중단")
+	r3.close()
 
 # ------------------------------------------------------------ 5 화면
 func _screen_new() -> WorldMapScreen:
@@ -186,7 +190,7 @@ func _touch_sizes(s: Node, where: String) -> void:
 			var short := minf((b as Control).size.x, (b as Control).size.y)
 			_check(short * dpu >= TouchMetrics.MIN_DP - 0.01, "%s 터치 크기 %s: %.0f단위 = %.1fdp (%s)" % [where, (b as Button).text, short, short * dpu, dev[0]])
 
-func _screen() -> void:
+func _legacy_screen() -> void:
 	var s := _screen_new()
 	await _frames(6)
 	_check(s.state == "browse" and s.canvas.level() == "z0", "시작은 천하 Z0")
@@ -194,13 +198,12 @@ func _screen() -> void:
 	_touch_sizes(s, "Z0")
 	var atlas := s.find_child("WorldAtlas", true, false) as Control
 	_check(atlas != null and atlas.visible, "홈에서 전체 항로도 표시")
-	var actions: Array = []
-	_buttons(s._cta, actions)
-	_check(actions.size() == 1, "홈의 적벽 시나리오 진입 버튼")
-	if not actions.is_empty():
-		(actions[0] as Button).pressed.emit()
+	# The public Red Cliffs action is covered by the separate EntryBoot route test.
+	# Open the legacy card explicitly to exercise the legacy canvas and gestures.
+	s.open_card()
 	await _seconds(1.6)
-	_check(s._card.visible and s.canvas.level() == "z2", "적벽 버튼 → 형주 Z2·시나리오 카드 (%s)" % s.canvas.level())
+	_check(s._card.visible and s.canvas.visible and atlas != null and not atlas.visible and s.canvas.level() == "z2",
+		"레거시 카드 → 형주 Z2·시나리오 카드 (%s)" % s.canvas.level())
 	_touch_sizes(s, "카드")
 	# 두 손가락 벌리기 → 확대
 	var z0 := s.canvas.zoom
@@ -216,7 +219,8 @@ func _screen() -> void:
 	# 뒤로 가기 → 한 단계 축소
 	s.back()
 	await _seconds(1.4)
-	_check(s.canvas.level() == "z0" and s._cta.visible and not s._card.visible, "뒤로 가기 → Z0")
+	_check(s.canvas.level() == "z0" and s._cta.visible and not s._card.visible and atlas != null and atlas.visible,
+		"뒤로 가기 → Z0")
 	s.queue_free()
 	await _frames(2)
 
