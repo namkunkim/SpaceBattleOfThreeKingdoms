@@ -108,6 +108,12 @@ E 소스 반영 완료: 독립 R3 통과한 revision-02 제품 5파일을 단일
 
 **P02·P03 GitHub main 반영 — 2026-11-12.** 독립 검토 후 `5ef3537b`에서 `b2ba73ff`로 fast-forward했다. 공개 항로도 리플레이와 이어하기가 들어간 커밋이며, 1600×900 통합 Windows 릴리스와 백업 전용 실기 검증에 사용한 정확한 소스다. GitHub main을 다시 읽어 커밋을 확인했다. [통합 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/b2ba73ff5b3c18a7ab0885d00cebf0c25be7fed1)
 
+**P04 외부 저장 실패 원자성 — `b2ba73ff`.** 헤드리스 개발 호스트에서 기존 외부 저장 회귀 36/36, 새 프로세스 재열기 3/3, 활성 호스트 실패 경계 30/30을 통과했다. 체크섬 오류는 복원 시작 전에, 상태 지문 불일치는 비동기 재생 뒤에 거부됐다. 두 경우 기존 작전·대기 명령·커서·조작 상태와 저장·결산 파일을 보존했고 기존 작전은 다음 틱으로 진행했다. 별도 모델이 합성 파일 선택과 증거를 검토했다. [활성 호스트 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P04-external-atomicity-b2ba73ff-04/focused/result.json)
+
+**P07 승인 적벽 v1 보급·증원·철수 — `b2ba73ff`.** 정책 37/37, 개발 시험 77/77, 공개 진입부터 지도 결산까지 승인 호스트 26/26을 통과했다. A 거점 가동 뒤 60초에 보급으로 탄약이 124→138로 늘었고, 증원은 예정 시각 다음 틱에 한 번 진입했다. 명시 철수에서 두 함대가 생환했고 1,854틱의 결산 ID·사유·시각이 호스트와 지도에서 일치했다. 별도 모델이 헤드리스 결과를 검토했다. [보급·증원·철수 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P07-main-b2ba73ff-20261112/RESULTS.md)
+
+**P09 월드맵 테스트 종료 정리 — `b2ba73ff` 런타임.** 결정성 검사에서 소유한 세 `AutoResolver`를 마지막 사용 뒤 닫도록 테스트 한 파일을 수정했다. 초기·복귀 프로필 모두 기존 순서와 값 그대로 149/149를 통과했고, 의도된 거부 진단 4건은 유지했다. 종료 잔류는 기준선의 ObjectDB 117개·리소스 18개에서 두 실행 모두 0/0이 됐다. 별도 모델 검토 후 `27ee7e8b` 위의 수정 커밋을 작업 브랜치에 푸시했다. 제품과 오디오 전체 종료 인수는 별도다. [수정 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/3d5d41cdb5aca023b719e1f2f9c862bb076adb7c) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-current-world-link-lifetime-candidate-20261112-01/REVIEW-HANDOFF.json)
+
 ## 현재 상태 요약 — 2026-11-11 KST
 
 **사용자 우선순위: P02·P03 최우선.** 관련 채팅을 5분마다 점검하며 직접 필요한 승인 작업부터 조율한다. 사용자가 K6 정식 검증 재개를 승인했다. 현행 공개 적벽 진입에서 기존 정식 경로를 사용할 수 없어 재검증 기준을 점검 중이다.
