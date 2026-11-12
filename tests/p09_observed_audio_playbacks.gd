@@ -22,9 +22,30 @@ func _run() -> void:
 		quit(1)
 		return
 
-	var owner: Node = UiSoundScript.new()
-	root.add_child(owner)
-	var player: AudioStreamPlayer = owner.get("_loops").get("engine_loop")
+	var use_battle := "--battle" in OS.get_cmdline_user_args()
+	var scope: Node
+	if use_battle:
+		scope = (load("res://scenes/FleetBattle3D.tscn") as PackedScene).instantiate()
+	else:
+		scope = UiSoundScript.new()
+	root.add_child(scope)
+	var owner: Node = scope
+	if use_battle:
+		var presentation: Node = scope.get("presentation")
+		var deck: Node = presentation.get("hud") if presentation != null else null
+		owner = deck.get("sound") if deck != null else null
+	var player: AudioStreamPlayer = owner.get("_loops").get("engine_loop") if owner != null else null
+	if player == null:
+		push_error("The focused playback owner did not expose engine_loop.")
+		scope.free()
+		quit(1)
+		return
+	var set_level := func(level: float) -> void:
+		if use_battle:
+			scope.emit_signal("sfx_loop", "engine_loop", level)
+		else:
+			owner.call("set_loop", "engine_loop", level)
+	var scope_ref: WeakRef = weakref(scope)
 	var owner_ref: WeakRef = weakref(owner)
 	var player_ref: WeakRef = weakref(player)
 	var wav: AudioStreamWAV = UiSoundScript._synth(["tone", 180.0, 180.0, 0.25, 0.3])
@@ -38,25 +59,25 @@ func _run() -> void:
 	_check("inactive-player-is-not-observed", retirement.observe(player) == 0)
 
 	AudioServer.lock()
-	owner.call("set_loop", "engine_loop", 0.65)
+	set_level.call(0.65)
 	var first_id := retirement.observe(player)
 	_check("first-playback-is-registered-once", first_id != 0 and retirement.observe(player) == first_id
 		and retirement.pending_ids() == [first_id])
 	var first_ref: WeakRef = weakref(player.get_stream_playback()) if first_id != 0 else null
-	owner.call("set_loop", "engine_loop", 0.0)
+	set_level.call(0.0)
 	_check("stopped-player-still-has-observed-pending-id", retirement.observe(player) == 0
 		and retirement.pending_ids() == [first_id])
-	owner.call("set_loop", "engine_loop", 0.65)
+	set_level.call(0.65)
 	var replacement_id := retirement.observe(player)
 	_check("replacement-and-retired-playback-remain-distinct", replacement_id != 0 and replacement_id != first_id
 		and retirement.pending_ids() == [first_id, replacement_id])
 
 	var held: AudioStreamPlayback = first_ref.get_ref() if first_ref != null else null
-	owner.call("set_loop", "engine_loop", 0.0)
-	owner.free()
+	set_level.call(0.0)
+	scope.free()
 	AudioServer.unlock()
 
-	_check("owner-and-player-freed", owner_ref.get_ref() == null and player_ref.get_ref() == null)
+	_check("owner-and-player-freed", scope_ref.get_ref() == null and owner_ref.get_ref() == null and player_ref.get_ref() == null)
 	var started := Time.get_ticks_msec()
 	var pending := await retirement.wait_for_release(self, RELEASE_TIMEOUT_MS)
 	var negative_wait_ms := Time.get_ticks_msec() - started
@@ -70,6 +91,7 @@ func _run() -> void:
 	print("P09_OBSERVED_RESULT ", JSON.stringify({
 		"pid": OS.get_process_id(),
 		"driver": AudioServer.get_driver_name(),
+		"scope": "battle_sfx_loop" if use_battle else "standalone_ui_sound",
 		"godot": Engine.get_version_info(),
 		"first_id": str(first_id),
 		"replacement_id": str(replacement_id),
