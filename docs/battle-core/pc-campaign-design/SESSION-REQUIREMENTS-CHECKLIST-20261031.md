@@ -188,9 +188,13 @@ E 소스 반영 완료: 독립 R3 통과한 revision-02 제품 5파일을 단일
 
 **P09 main 통합 완료.** `e3d76788`과 수정본을 결합한 작업 트리에서 EntryBoot 초기화와 화공 회귀 29/29가 통과했다. 상위 모델 독립 리뷰 뒤 PR #4를 병합하고 원격 병합 트리가 검증 트리와 동일함을 확인했다. [통합 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-main-e3d76788-pr4-merge-smoke-01/REVIEW-HANDOFF.json)
 
+**P09 화공 수정 전후 TRACE 대조.** 정확한 `e3d76788`과 `a2733c8b`의 격리 헤드리스 실행에서 7/7을 통과했다. 실제 TRACE 11행은 벽시계·단조 시간 필드만 제외하면 같았고, 별도 관찰한 가시성 통과 사건 20건의 값과 순서도 일치했다. 숨은 종료 신호는 양쪽 모두 화면으로 전달되지 않았으며 수정본에서만 201틱에 오디오가 멈췄다. 최초 파서 실패를 보존했고 상위 모델 독립 검토를 통과했다. [TRACE 대조](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-trace-parity-e3d-a273-01/REVIEW-HANDOFF.json)
+
 **P05 승인 적벽 공간 회귀 — `b2ba73ff`.** E/R 팽창 원과 A/B/C/E 중심 검사는 61/61, 정면 이동 자세는 17/17을 통과했다. 네이티브 자세 CSV 20,698행이 이전 승인 기록과 바이트 단위로 일치했고, 이동 오류와 경로 위반은 없었다. 별도 모델이 원본과 입력 해시를 확인했다. 개별 선체 다각형, 진형 전환 중 점유 영역과 Atlas→전장 좌표의 인수 기준은 남았다. [공간 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P05-main-b2ba73ff-20261112/RESULTS.md)
 
 **P05 승인 적벽 좌표 근거 — `b2ba73ff`.** Atlas와 진입 지도는 항로도 마커를 공유하며 Atlas 선택은 전장 좌표를 넘기지 않는다. 전술 미리보기는 E–J–A–C를 목표 중심까지 그린다. 실제 C0의 최종 경유지는 접근 거리 245와 교전 보정 `(56,18)`을 적용한 `(1197.59094,490.08563)`으로, 보존 원본과 0.001 단위 이내에 일치했다. 잘못된 좌표·원본 변조 등 5개 대조군이 거부됐고 상위 모델이 독립 검토했다. 일반 지도→전장 변환·선체 기하 인수는 남았다. [좌표 대조](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P05-atlas-anchor-b2ba73ff-01/RESULTS.md)
+
+**P05 현재 Atlas 시설 선택 — `a2733c8b`.** 1600×900 합성 뷰포트에서 15/15를 통과했다. 요새·방어 시설 중심을 유지했고, 새 요새 영역의 중심 클릭으로 정보가 열렸다. 예전 영역에만 속하던 좌표는 시설을 선택하지 않았고, 접근로와 적벽은 기존 대상으로 전달됐다. 최초 파서 오류를 보존했고 상위 모델 독립 검토를 통과했다. 실제 입력·시각 품질·WorldMap 전체 통합은 남았다. [선택 영역 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P05-atlas-facility-hit-a2733c8b-01/REVIEW-HANDOFF.json)
 
 **O07 로컬 Win32 교체 거절·복구 — `b2ba73ff`.** 격리 F 슬롯과 릴리스 DLL에서 14개 프로세스가 통과했다. 실제 공유 제한으로 결산·보급 저장의 교체가 거절됐을 때 기존 상태와 저장 파일이 보존됐다. 잠금 해제 뒤 새 프로세스의 재시도·재열기 결과는 기준 바이트와 일치했다. 기본 슬롯 부재 시 이전 세대를 읽기 전용으로 열었고, 소유한 시험 잠금 프로세스가 종료된 뒤에는 잠금 파일이 남아 있어도 슬롯을 열었다. 별도 모델이 검토했다. 전원 상실·운영 전환·외부 지급은 남았다. [로컬 복구 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/O07/main-b2ba73ff-release-recovery-01/RESULT.json)
 
