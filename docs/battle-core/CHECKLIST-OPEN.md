@@ -30,6 +30,8 @@ K6 15~18행 실행 전 점검과 17·18행 오프라인 비교 초안을 상위 
 
 **K6 17·18행 실행 기록 교환 대조.** 과거 실행 패키지 4개가 각자의 실행 구분에서 통과했고, 반대쪽 관찰·실행·결과·로그 묶음으로 바꾼 4건은 모두 거부했다. 관찰 바이트가 같아도 실행 기록에 묶인 경로로 교환을 검출했다. 상위 모델 독립 검토를 통과했다. 정식 실행과 공개 진입 인수는 남았다. [대조 결과](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-row17-18-offline-draft-02/OPPOSITE-LANE-CONTROLS.json)
 
+**K6 15·16행 경로 대조.** 과거 실제 입력 실행 4건을 대조했고, 15행의 기존 실행 원문에는 배치 명령 tick 값이 없음을 확인했다. 16행 과거 원문은 같은 시드의 sim 교체와 지도 직행 복귀를 뒷받침한다. 현재 공개 적벽은 승인된 첫 작전 호스트로 연결되고 구형 타이틀 경로는 시드 및 복귀 조건을 충족하지 않아 오프라인 점검에서 거부됐다. 상위 모델 독립 검토를 통과했다. 승인된 현행 경로 또는 명시적 계약 개정과 1600×900 실제 Windows 입력을 동결 매니페스트에 묶는 작업이 남았다. [경로 점검](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-row15-16-offline-route-gate-01/README.md)
+
 **`b2ba73ff` 15·16행 공개 타이틀 경로 합성 검증.** 실제 승인 호스트에서 만든 113틱 저장 사본으로 시작해 40개 단언을 기존 순서대로 통과했다. 0틱 배치 명령 1회, Space 일시정지 두 번, 새 시뮬레이션의 0틱 재시작, 타이틀을 거친 지도 복귀와 저장 보존을 별도 모델이 확인했다. 이전 원본과 달라진 생성 경로·시드 등 13개 관측도 보존했다. 정식 15·16행에는 이 비라우팅 경로의 판정 기준과 새 실제 Windows 입력이 남았다. [타이틀 경로 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-title-route-focused-01/RESULTS.json)
 
 **264f47b9 호환성 사전검증 — 2026-11-12.** 구형 공개 브리핑을 여는 마지막 main 커밋에 기존 21행·58작업·27비교를 결속했다. 14~18행 사전 시험 11/11 및 비교 3건이 통과했다. GUI 15·16행은 합성 viewport 입력을 사용했다. 별도 현행 Godot 창은 시작됐으나 Computer Use 앱 접근 승인이 시간 초과돼 실제 캡처와 입력은 0건이었다. 이 사전 시험에서는 실제 입력 증거를 요구하는 정식 실행기를 시작하지 않았다. [역사 사전검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-review-01/HISTORICAL-FOCUSED-RESULTS-R02.json) · [Windows 입력 사전확인](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-5ef3537b-successor-01/windows-entry-smoke-01/INPUT-PREFLIGHT-RESULT.json)
@@ -73,6 +75,8 @@ REVIEW-15 후속 무입력 준비: 작성자 모의 Sky 양성 4건 통과, 음�
 **P02 공개 항로도 리플레이 Windows 릴리스 — 2026-11-12.** `60b51f2e` 패키지의 1280×720 창에서 실제 마우스·키보드로 파일 선택기, 취소·재진입, 손상 JSON 오류와 지도 복귀를 확인했다. 승인된 2틱 기록은 종결까지 재생했고, 실제 호스트의 5,107틱 기록은 검증을 마쳐 재생 가능한 0틱 화면에 도달했다. 긴 기록의 종결은 별도 내장 PCK 탐침에서 확인했다. 보존된 캡처 20건 중 14건은 이미지 기록이 잘려 전체 화면 배치 인증은 남았다. 시험 파일 7/7 SHA 일치, 종료 코드 0, 엔진 오류·경고 0이다. [전경 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P02-windows-product-replay-20261112-60b51f2e/foreground-20261112-095153/FOREGROUND-RESULT.md)
 
 **P02 승인 적벽 v1 종결 대조 — `b2ba73ff`.** 공개 호스트 18/18, 두 CLI 진입 각각 8/8을 통과했다. 같은 승인 정면 작전에서 5,487틱·548,700ms에 목표 성공으로 종결했고, 결산·최종 전장 상태·사건 78건의 순서와 내용·초기 입력 메타데이터가 일치했다. 두 CLI는 공통 제품 어댑터를 사용하며 전체 C0 상태와 일반 입력 인수는 남았다. 상위 모델 독립 검토 후 테스트 전용 브랜치에 푸시했다. [테스트 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/6ab92333bd1c74b5c5beec1524c3ad4f0d0fc236) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P02-consumer-parity-b2ba73ff-01/REVIEW-HANDOFF.json)
+
+**P02 승인 적벽 v1 C0 대조.** 공개 호스트와 두 CLI 경로의 공통 초기화에서 전체 0틱 전장 프레임, 초기 사건 2건과 지원 범위의 체크포인트가 일치했다. 엔진 검사 19건과 저장 결과 비교 4건을 통과했다. 전체 C0 검증은 공통 초기화 경계에서 했고 CLI 자체 출력은 초기 메타데이터를 제공한다. 상위 모델 독립 검토 후 테스트 전용 브랜치에 푸시했다. [테스트 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/50d3cff4ded90101034d355eaa80d367b0843fc5) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P02-c0-parity-6ab92333-01/REVIEW-HANDOFF.json)
 
 **P03 공개 항로도 재개 Windows 릴리스 — 2026-11-12.** `b2ba73ff` 패키지의 실제 입력으로 저장한 103틱·10.3초를 새 프로세스가 일시정지 상태로 복원했고, 계속 진행한 뒤 117틱을 관측했다. 800×450에서 백업 전용 복원과 기본 슬롯 미생성을 확인했다. 손상 기본 슬롯은 오류를 표시하고 파일을 보존했으며, 격리 시험의 기본 슬롯을 복구한 뒤 같은 창에서 Enter로 재개했다. 네 프로세스 모두 종료 코드 0, 엔진 오류·경고 0이다. 대기 명령 적용은 이전 헤드리스 검증 범위다. [전경 증거](F:/WorkSpace/campaign-p03-atlas-resume-20261112/tmp/p03-windows-b2ba73ff/RESULTS.md)
 
@@ -130,6 +134,8 @@ P03 공개 이어하기의 같은 작전 내 여러 세대 저장·재개를 Win
 **P06 논리 시계·결산 연속성 부분 검증 — `b2ba73ff`.** 논리 시계 60/60, 원장 저장·재열기 22/22, 개발 Atlas 결산 표시·재시도 8/8을 통과했다. 개발 플래그가 빠진 첫 실행의 실패 기록을 보존했고, 새 프로필에서 플래그를 적용한 결과를 별도 모델이 확인했다. 현재 제품 소스는 결산 뒤 지도로 돌아가 같은 첫 작전을 새로 시작한다. 이전 결산에 연결되는 후속 작전과 전체 A05·A06 인수는 남았다. [부분 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P06-main-b2ba73ff-20261112/RESULTS.md)
 
 P06 실제 제품 결산 재열기 — `b2ba73ff`. 격리된 Windows 헤드리스 프로세스에서 과거 결산 원장을 재열고 같은 적벽 첫 작전을 0틱에서 새 작전 ID로 시작했다. 빈 프로필 대조군과 요청·규칙 지문·초기 상태가 일치했고 원본과 복사한 원장 바이트를 보존했다. 상위 모델이 검토했다. 이전 결산과 후속 작전을 연결하는 규칙과 A05·A06 종합 인수는 남았다. [재열기 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P06-main-b2ba73ff-product-reopen-01/RESULTS.md)
+
+**P08 Android 패키징 부분 검증 — `b2ba73ff`.** 격리 F 환경에서 Godot 4.7.2 임포트와 ARM64 내보내기가 각각 exit 0이었다. 399,854,099바이트 APK의 ZIP 정렬과 구조를 확인했고 서명은 없었다. Godot가 임포트 중 격리 프로필에 디버그 키를 자동 생성해 전체 진단은 exit 1을 반환했다. 원래 프리셋은 복원했고 상위 모델이 패키징 범위를 검토했다. 출시 서명, 실기기와 성능 인수는 남았다. [진단 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-android-b2ba73ff-01/RESULTS.md)
 
 ## 현재 상태 요약 — 2026-11-11 KST
 
