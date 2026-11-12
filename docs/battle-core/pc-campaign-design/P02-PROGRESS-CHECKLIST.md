@@ -32,6 +32,8 @@ K6 15~18행 실행 전 점검과 17·18행 오프라인 비교 초안을 상위 
 
 **K6 15·16행 경로 대조.** 과거 실제 입력 실행 4건을 대조했고, 15행의 기존 실행 원문에는 배치 명령 tick 값이 없음을 확인했다. 16행 과거 원문은 같은 시드의 sim 교체와 지도 직행 복귀를 뒷받침한다. 현재 공개 적벽은 승인된 첫 작전 호스트로 연결되고 구형 타이틀 경로는 시드 및 복귀 조건을 충족하지 않아 오프라인 점검에서 거부됐다. 상위 모델 독립 검토를 통과했다. 승인된 현행 경로 또는 명시적 계약 개정과 1600×900 실제 Windows 입력을 동결 매니페스트에 묶는 작업이 남았다. [경로 점검](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-row15-16-offline-route-gate-01/README.md)
 
+**K6 15·16행 현행 경로 계약 변경안.** 승인 적벽 EntryBoot의 0틱 대기·명시 시작과 동일 요청·시드의 새 작전 진입·무결산 지도 직행을 제안했다. 기존 직접 배치, Space 일시정지와 구형 재시작은 별도 범위로 기록했다. 과거 실제 입력 5건은 원본 창 이미지에 결속했으며 신규 1600×900 입력 좌표는 미결속이다. 상위 모델은 미서명 제안 범위만 검토했다. 관찰기, 실행 매니페스트 동결, 계약 승인과 정식 실행은 남았다. [미서명 제안](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-row15-16-entryboot-amendment-01/README.md)
+
 **`b2ba73ff` 15·16행 공개 타이틀 경로 합성 검증.** 실제 승인 호스트에서 만든 113틱 저장 사본으로 시작해 40개 단언을 기존 순서대로 통과했다. 0틱 배치 명령 1회, Space 일시정지 두 번, 새 시뮬레이션의 0틱 재시작, 타이틀을 거친 지도 복귀와 저장 보존을 별도 모델이 확인했다. 이전 원본과 달라진 생성 경로·시드 등 13개 관측도 보존했다. 정식 15·16행에는 이 비라우팅 경로의 판정 기준과 새 실제 Windows 입력이 남았다. [타이틀 경로 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-title-route-focused-01/RESULTS.json)
 
 **264f47b9 호환성 사전검증 — 2026-11-12.** 구형 공개 브리핑을 여는 마지막 main 커밋에 기존 21행·58작업·27비교를 결속했다. 14~18행 사전 시험 11/11 및 비교 3건이 통과했다. GUI 15·16행은 합성 viewport 입력을 사용했다. 별도 현행 Godot 창은 시작됐으나 Computer Use 앱 접근 승인이 시간 초과돼 실제 캡처와 입력은 0건이었다. 이 사전 시험에서는 실제 입력 증거를 요구하는 정식 실행기를 시작하지 않았다. [역사 사전검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-review-01/HISTORICAL-FOCUSED-RESULTS-R02.json) · [Windows 입력 사전확인](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-5ef3537b-successor-01/windows-entry-smoke-01/INPUT-PREFLIGHT-RESULT.json)
@@ -136,11 +138,15 @@ E 소스 반영 완료: 독립 R3 통과한 revision-02 제품 5파일을 단일
 
 P03 공개 이어하기의 같은 작전 내 여러 세대 저장·재개를 Windows 헤드리스 3개 프로세스에서 60/60 검증했다. 두 번째 재개에서 대기 명령이 순서대로 한 번씩 적용됐고 다음 빈 틱에서 반복이 없었다. 기본·이전 슬롯 해시를 보존했다. 상위 모델 독립 검토 후 테스트 전용 브랜치에 푸시했다. 작전 간 전역 커서 인수는 남았다. [테스트 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/15441ea296054cb91f24b867b718e00847a8f18b) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P03-public-cursor-b2ba73ff-01/REVIEW-HANDOFF.json)
 
+**P03 보존 슬롯으로 공개 이어하기 — `b2ba73ff`.** 실제 저장 회전 후 기본 슬롯이 없는 조건을 격리 프로필에서 구성했다. Windows 헤드리스 프로세스 3개에서 55/55를 통과했다. 보존 슬롯의 대기 명령 두 건이 순서대로 한 번씩 적용됐고 명시적으로 저장했을 때만 기본 슬롯을 복구했다. 다음 프로세스는 복구 슬롯을 우선했고 보존·미게시 파일 바이트를 유지했다. 실제 전원 차단과 작전 간 전역 커서는 별도다. 상위 모델 독립 검토 후 테스트 브랜치로 푸시했다. [테스트 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/08dca4b3e24c50ec7b5e7f68854d799e33bfe5d2) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P03-public-fallback-15441ea2-01/REVIEW-HANDOFF.json)
+
 **P06 논리 시계·결산 연속성 부분 검증 — `b2ba73ff`.** 논리 시계 60/60, 원장 저장·재열기 22/22, 개발 Atlas 결산 표시·재시도 8/8을 통과했다. 개발 플래그가 빠진 첫 실행의 실패 기록을 보존했고, 새 프로필에서 플래그를 적용한 결과를 별도 모델이 확인했다. 현재 제품 소스는 결산 뒤 지도로 돌아가 같은 첫 작전을 새로 시작한다. 이전 결산에 연결되는 후속 작전과 전체 A05·A06 인수는 남았다. [부분 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P06-main-b2ba73ff-20261112/RESULTS.md)
 
 P06 실제 제품 결산 재열기 — `b2ba73ff`. 격리된 Windows 헤드리스 프로세스에서 과거 결산 원장을 재열고 같은 적벽 첫 작전을 0틱에서 새 작전 ID로 시작했다. 빈 프로필 대조군과 요청·규칙 지문·초기 상태가 일치했고 원본과 복사한 원장 바이트를 보존했다. 상위 모델이 검토했다. 이전 결산과 후속 작전을 연결하는 규칙과 A05·A06 종합 인수는 남았다. [재열기 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P06-main-b2ba73ff-product-reopen-01/RESULTS.md)
 
 **P08 Android 패키징 부분 검증 — `b2ba73ff`.** 격리 F 환경에서 Godot 4.7.2 임포트와 ARM64 내보내기가 각각 exit 0이었다. 399,854,099바이트 APK의 ZIP 정렬과 구조를 확인했고 서명은 없었다. Godot가 임포트 중 격리 프로필에 디버그 키를 자동 생성해 전체 진단은 exit 1을 반환했다. 원래 프리셋은 복원했고 상위 모델이 패키징 범위를 검토했다. 출시 서명, 실기기와 성능 인수는 남았다. [진단 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-android-b2ba73ff-01/RESULTS.md)
+
+**P08 외부 Android 디버그 서명 진단.** 앞서 확인한 ARM64 APK를 일회용 키로 서명했다. Android SDK에서 v2·v3 서명과 ZIP 정렬을 확인했고, 원본 ZIP 항목 1,818개의 내용·길이·압축 방식이 일치했다. 첫 실행의 검증 출력 파싱 실패를 보존하고 같은 APK를 다시 검사해 통과했다. 일회용 키를 제거했고 상위 모델이 독립 검토했다. Godot 서명 프리셋·출시 서명·실기기 인수는 남았다. [디버그 서명 결과](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-android-b2ba73ff-debug-sign-01/RESULTS.md)
 
 ## 현재 상태 요약 — 2026-11-11 KST
 
