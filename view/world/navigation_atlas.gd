@@ -9,7 +9,7 @@ const IMAGE_PATH := "res://assets/world_atlas/galaxy_navigation_terrain.png"
 const FACILITY_PATHS := {
 	"orbital": "res://assets/world_atlas/navigation_orbital_station.png",
 	"relay": "res://assets/world_atlas/navigation_relay_station.png",
-	"fortress": "res://assets/world_atlas/navigation_fortress_satellite.png",
+	"fortress": "res://assets/world_atlas/navigation_fortress_satellite_symbol.png",
 	"defense": "res://assets/world_atlas/navigation_defense_platform.png",
 }
 const FACILITY_WIDTHS := {"orbital": 35.0, "relay": 224.0, "fortress": 246.0, "defense": 44.0}
