@@ -106,7 +106,7 @@ func _run() -> void:
 	preload("res://scripts/legacy_battle_lifetime.gd").release(rp)
 	rp = null
 	if not TestCheck.ok(self, replay_matches, "live game replays to the same fingerprint"): return
-	battle.queue_free()
-	await process_frame
+	var audio_released: bool = await preload("res://tests/lib/headless_audio_shutdown.gd").release(self, battle)
+	if not TestCheck.ok(self, audio_released, "headless battle audio cleanup"): return
 	print("BATTLE_FLOW_PASS")
 	quit(0)
