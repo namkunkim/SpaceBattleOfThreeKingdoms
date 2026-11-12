@@ -8,6 +8,7 @@ const Adapter := preload("res://scripts/first_operation_adapter.gd")
 const SaveStore := preload("res://scripts/first_operation_save_store.gd")
 const Settlements := preload("res://scripts/first_operation_settlement_store.gd")
 const ReplayCodec := preload("res://scripts/first_operation_replay_codec.gd")
+const OperationTrace := preload("res://scripts/first_operation_trace.gd")
 
 var operation_owner: RefCounted
 var frame := {}
@@ -44,6 +45,7 @@ var _replay_commands: Array = []
 var _replay_recording := {}
 var _can_record_replay := true
 var _export_replay: Button
+var _trace: OperationTrace
 
 func _ready() -> void:
 	set_process(false)
@@ -152,6 +154,9 @@ func _publish_candidate(candidate: RefCounted, target: BattleBrief, restored: bo
 		return published if not published.ok else {"ok": false, "error": "initial_frame_changed", "path": "frame"}
 
 	var previous := operation_owner
+	if _trace != null:
+		_trace.close(frame, "replaced")
+		_trace = null
 	_stop()
 	operation_owner = candidate
 	brief = target
@@ -166,6 +171,9 @@ func _publish_candidate(candidate: RefCounted, target: BattleBrief, restored: bo
 	_clock.hz = preview.frame.hz
 	_reset_field(preview.frame.projection.operation.route_points)
 	_install_frame(published.frame)
+	if _is_product() and OS.get_cmdline_user_args().has(OperationTrace.ARG):
+		_trace = OperationTrace.new()
+		_trace.start(brief.operation_request(), frame, restored)
 	_start.text = "Resume operation" if restored else "Start operation"
 	_start.show()
 	var product := _is_product()
@@ -220,6 +228,8 @@ func _begin() -> void:
 	if operation_owner == null or started or not failure.is_empty():
 		return
 	started = true
+	if _trace != null:
+		_trace.write(frame, "operation_started")
 	_start.hide()
 	var product := _is_product()
 	_save.disabled = product and not product_save_supported()
@@ -256,6 +266,13 @@ func step_operation() -> bool:
 			_fail({"error": "invalid_operation_settlement", "path": "runtime.summary.settlement"})
 			return false
 	_install_frame(advanced.frame)
+	if _trace != null:
+		_trace.record_frame(frame)
+		if advanced.has("movement_error"):
+			_trace.write(frame, "movement_error", {"error": advanced.movement_error})
+		if settlement != null:
+			_trace.write(frame, "operation_end", {"settlement": current.settlement})
+			_trace.close(frame, "settled")
 	if advanced.has("movement_error"):
 		_status.text = str(advanced.movement_error)
 	if settlement != null:
@@ -279,7 +296,15 @@ func _issue(kind: String, point := Vector2.ZERO) -> void:
 	for row in frame.projection.squadrons:
 		if row.side == 0 and not row.get("dead", false) and not row.get("out", ""):
 			ids.append(row.id)
-	var result: Dictionary = Adapter.queue(operation_owner, {"side": 0, "kind": kind, "ids": ids, "point": point})
+	var command := {"side": 0, "kind": kind, "ids": ids, "point": point}
+	if _trace != null:
+		_trace.write(frame, "command_request", {"command": command})
+	var result: Dictionary = Adapter.queue(operation_owner, command)
+	if _trace != null:
+		if result.ok:
+			_trace.write(frame, "command_queued", {"record": result.record})
+		else:
+			_trace.write(frame, "command_rejected", {"error": result.error, "path": result.path})
 	_status.text = kind if result.ok else "%s / %s" % [result.error, result.path]
 	if result.ok and _can_record_replay:
 		_replay_commands.append(result.record)
@@ -554,6 +579,9 @@ func _cancel_battle_restore() -> void:
 func _fail(problem: Dictionary) -> void:
 	failure = {"error": problem.get("error", "operation_failed"), "path": problem.get("path", "runtime")}
 	_status.text = error_text(failure)
+	if _trace != null:
+		_trace.write(frame, "operation_failed", failure)
+		_trace.close(frame, "failed")
 	_stop()
 
 func _stop() -> void:
@@ -589,6 +617,8 @@ func return_to_map() -> void:
 		_return.text = "Retry map return (%d)" % error
 
 func _exit_tree() -> void:
+	if _trace != null:
+		_trace.close(frame, "host_exit")
 	if _restore_job != null:
 		_restore_job.cancel()
 		_restore_job = null
