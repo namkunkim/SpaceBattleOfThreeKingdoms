@@ -134,6 +134,8 @@ E 소스 반영 완료: 독립 R3 통과한 revision-02 제품 5파일을 단일
 
 **P02·P03 이어하기와 리플레이 연결.** 승인 적벽 작전에서 1틱에 적용된 철수와 대기 중인 종결 명령을 저장했다. 새 프로세스에서 공개 이어하기로 재개해 중단 없는 실행과 바이트가 동일한 2틱 리플레이를 내보냈다. 세 번째 프로세스의 공개 Atlas 재생도 전체 종결 프레임·사건 순서·결산이 일치했다. 세 프로세스에서 47/47을 통과했다. 최초 비교기의 결산 필드 범위 오류를 보존했고 상위 모델 독립 검토 후 테스트 브랜치에 푸시했다. 동일 작전의 헤드리스 검증 범위다. [테스트 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/02ffda964c35ebc3404ad4d3880425741da0829a) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P02-P03-resumed-replay-1ad51fb4-01/REVIEW-HANDOFF.json)
 
+**P02·P03 재현 안내.** 47개 검사의 러너는 세 격리 프로세스에서 입력 파일을 직접 만든다. 새 Windows x64 작업 트리의 DLL 빌드·임포트·CLI 실행 순서를 문서화했고, CLI 옵션과 PowerShell 구문 및 기존 증거를 대조했다. Godot는 재실행하지 않았다. 상위 모델 독립 리뷰 후 PR #2 브랜치를 `a102f412`로 갱신했다. [초안 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/2)
+
 **P02·P03 테스트 PR 인계.** 원격 `02ffda96`을 PR #1 브랜치 위에 초안 PR #2로 연결했다. 독립 검토한 8개 커밋과 테스트 13개 파일만 차이에 포함된다. PR #1이 병합되면 `main` 재대상 지정 전 차이를 다시 대조한다. [초안 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/2)
 
 **2026-11-12 P03 제한 회귀 재확인.** GitHub main `5ef3537b`에서 제한 체크포인트 38/38, 비공개 상태 70건, 활성 교체 20건, 개발 호스트의 새 프로세스 4틱 재개 및 동일 슬롯 SHA를 별도 모델이 독립 확인했다. 개발 플래그 없는 제품 WorldLink 직접 경로는 첫 명령 1회, 2틱 저장·복원과 다음 프레임 일치까지 11/11을 통과했다. 이 제품 시험의 범위는 동일 호스트 내부 복원이다. 이후 공개 항로도 새 프로세스 복원은 아래 결과에 기록했다. [제한 회귀](F:/WorkSpace/campaign-p03-20261111/tmp/p03-main-5ef3537/summary.json) · [제품 경로](F:/WorkSpace/campaign-p03-20261111/tmp/p03-main-5ef3537/product.receipt.json)
@@ -154,6 +156,8 @@ E 소스 반영 완료: 독립 R3 통과한 revision-02 제품 5파일을 단일
 
 **P07 승인 적벽 v1 보급·증원·철수 — `b2ba73ff`.** 정책 37/37, 개발 시험 77/77, 공개 진입부터 지도 결산까지 승인 호스트 26/26을 통과했다. A 거점 가동 뒤 60초에 보급으로 탄약이 124→138로 늘었고, 증원은 예정 시각 다음 틱에 한 번 진입했다. 명시 철수에서 두 함대가 생환했고 1,854틱의 결산 ID·사유·시각이 호스트와 지도에서 일치했다. 별도 모델이 헤드리스 결과를 검토했다. [보급·증원·철수 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P07-main-b2ba73ff-20261112/RESULTS.md)
 
+**P07 공개 결산의 원장 잠금 재시도.** 직접 지휘의 조기 철수 결산에서 원장을 잠그고 반환을 두 번 시도했다. 같은 결산·호스트 상태가 유지됐고, 잠금을 해제한 뒤 연속 반환 입력에도 원장은 한 번만 게시됐다. 지도에 같은 결산이 표시됐다. 헤드리스 22/22와 상위 모델 독립 검토를 통과해 테스트 브랜치에 푸시했다. 실제 동시 작성·성공 철수·전원 상실은 별도다. [테스트 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/5a7afb1d7cdaa145ea1e90f799e7db3d1be9ff5b) · [검토 근거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P07-product-settlement-retry-02ffda96-01/REVIEW-HANDOFF.json)
+
 **P09 월드맵 테스트 종료 정리 — `b2ba73ff` 런타임.** 결정성 검사에서 소유한 세 `AutoResolver`를 마지막 사용 뒤 닫도록 테스트 한 파일을 수정했다. 초기·복귀 프로필 모두 기존 순서와 값 그대로 149/149를 통과했고, 의도된 거부 진단 4건은 유지했다. 종료 잔류는 기준선의 ObjectDB 117개·리소스 18개에서 두 실행 모두 0/0이 됐다. 별도 모델 검토 후 `27ee7e8b` 위의 수정 커밋을 작업 브랜치에 푸시했다. 제품과 오디오 전체 종료 인수는 별도다. [수정 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/3d5d41cdb5aca023b719e1f2f9c862bb076adb7c) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-current-world-link-lifetime-candidate-20261112-01/REVIEW-HANDOFF.json)
 
 **P09 교체된 루프 재생의 수명 진단 — `b2ba73ff`.** 격리된 Godot Dummy 드라이버에서 11/11을 통과했다. 루프 교체 뒤 현재 플레이어에는 새 재생만 보였고 이전 재생의 약한 참조는 살아 있었다. 유지 대조와 두 재생 및 오디오 리소스 해제를 확인했고 콘솔 종료 잔류 진단은 없었다. 상위 모델이 독립 검토했다. 실제 오디오 장치, 전체 종료와 TRACE 인수는 남았다. [재생 수명 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-ui-loop-retirement-b2ba73ff-02/REVIEW-HANDOFF.json)
@@ -161,6 +165,8 @@ E 소스 반영 완료: 독립 R3 통과한 revision-02 제품 5파일을 단일
 **P09 등록된 재생의 종료 추적.** 테스트가 시작 시 등록한 재생은 교체 후에도 계속 추적했다. 격리 Dummy 시험에서 8/8을 통과했다. 이전 재생 참조를 의도적으로 유지하면 해당 ID만 제한 시간까지 남았고, 참조 해제 뒤 목록이 비었다. 첫 파서 실패를 보존했고 상위 모델 독립 검토 후 테스트 브랜치에 푸시했다. 제품의 모든 재생·실장치·TRACE 인수는 남았다. [테스트 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/050a1df0097333ceebf9652be3fc8b5ad5f7295e) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-observed-retirement-b2ba73ff-01/REVIEW-HANDOFF.json)
 
 **P09 실제 전투 신호의 재생 추적.** `FleetBattle3D`에서 CommandDeck·UiSound까지 연결된 테스트 소유 루프 두 개를 등록했다. Dummy 헤드리스 8/8을 통과했고, 이전 재생을 의도적으로 유지하면 해당 ID만 1,501ms 제한 시점까지 남았다. 참조를 해제한 뒤 두 재생과 소유 객체가 정리됐다. 상위 모델 독립 검토 후 테스트 브랜치에 푸시했다. 자동 재생 전체, 실제 오디오 장치와 TRACE 인수는 남았다. [테스트 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/1ef0fc0ef172ce7972e9a9ce71400adf9582dabe) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-battle-signal-retirement-050a1df0-01/REVIEW-HANDOFF.json)
+
+**P09 제품 자동 화공의 종료 신호 누락.** 실제 전투 AI가 1틱에 시작한 화공 루프를 수동 관찰했다. 201틱에 코어가 낸 종료 신호는 대상이 아군 접촉 목록에 없어 화면 전달에서 제외됐고, 루프는 씬 정리까지 재생됐다. 정리 뒤 같은 ID의 해제까지 7/7을 검증했다. 초기 실패 원본을 보존했고 상위 모델 독립 검토 후 정확한 테스트 커밋만 푸시했다. 복제 임포트 파일은 격리 F 작업본에 보존했다. [테스트 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/fc0d3d9c9bb062494563b52c3da38d175767e6bd) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-autonomous-fire-1ef0fc0e-01/REVIEW-HANDOFF.json)
 
 **P05 승인 적벽 공간 회귀 — `b2ba73ff`.** E/R 팽창 원과 A/B/C/E 중심 검사는 61/61, 정면 이동 자세는 17/17을 통과했다. 네이티브 자세 CSV 20,698행이 이전 승인 기록과 바이트 단위로 일치했고, 이동 오류와 경로 위반은 없었다. 별도 모델이 원본과 입력 해시를 확인했다. 개별 선체 다각형, 진형 전환 중 점유 영역과 Atlas→전장 좌표의 인수 기준은 남았다. [공간 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P05-main-b2ba73ff-20261112/RESULTS.md)
 
@@ -183,6 +189,8 @@ P03 공개 이어하기의 같은 작전 내 여러 세대 저장·재개를 Win
 P06 실제 제품 결산 재열기 — `b2ba73ff`. 격리된 Windows 헤드리스 프로세스에서 과거 결산 원장을 재열고 같은 적벽 첫 작전을 0틱에서 새 작전 ID로 시작했다. 빈 프로필 대조군과 요청·규칙 지문·초기 상태가 일치했고 원본과 복사한 원장 바이트를 보존했다. 상위 모델이 검토했다. 이전 결산과 후속 작전을 연결하는 규칙과 A05·A06 종합 인수는 남았다. [재열기 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P06-main-b2ba73ff-product-reopen-01/RESULTS.md)
 
 **P06 후속 작전·P03 작전 간 커서 미서명 제안.** 기존 제품 결산 재열기와 같은 작전 커서 근거를 결속했다. 후속 진입 자격·정의 버전·승계 상태·커서 소유권·게시와 재시도 규칙을 결정할 선택지와 판별 사례 5개를 정리했다. 제품 정책 승인과 A05·A06 종합 인수는 남았다. [결정안](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P06-successor-contract-b2ba73ff-01/README.md)
+
+**P06 이어하기와 리플레이의 논리 시계 경계.** 이어하기는 Start 전 18프레임 동안 1틱과 대기 종결 명령을 보존했고, 공개 리플레이의 Play/Pause도 18프레임 동안 1틱을 유지했다. 재개하면 두 경로 모두 2틱·200ms의 전체 종결 프레임과 사건 순서가 중단 없는 원본과 일치했다. 헤드리스 36/36과 상위 모델 독립 검토를 통과했다. 별도 CLI·FX-G 전체·실제 입력은 남았다. [시계 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P06-clock-boundary-02ffda96-01/REVIEW-HANDOFF.json)
 
 **P08 Android 패키징 부분 검증 — `b2ba73ff`.** 격리 F 환경에서 Godot 4.7.2 임포트와 ARM64 내보내기가 각각 exit 0이었다. 399,854,099바이트 APK의 ZIP 정렬과 구조를 확인했고 서명은 없었다. Godot가 임포트 중 격리 프로필에 디버그 키를 자동 생성해 전체 진단은 exit 1을 반환했다. 원래 프리셋은 복원했고 상위 모델이 패키징 범위를 검토했다. 출시 서명, 실기기와 성능 인수는 남았다. [진단 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-android-b2ba73ff-01/RESULTS.md)
 
