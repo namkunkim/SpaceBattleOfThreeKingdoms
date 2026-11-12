@@ -296,16 +296,23 @@ P06 실제 제품 결산 재열기 — `b2ba73ff`. 격리된 Windows 헤드리�
 
 ### 별도 후속 · 확장과 검증
 
-- [x] **P02·P03 승인 적벽 v1 공개 경로.** 시작, 저장·복구·이어하기, 공개 리플레이와 재생 거부 후 정상 재시도를 검증해 main에 반영했다. 시작 음량 설정과 작전 슬롯 분리 25/25도 병합했다. [저장·리플레이 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/2) · [설정 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/6)
+- [x] **K6 정식 실행 — `264f47b9`.** 21행·58작업·27비교를 통과했다. [정식 집계](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-row21-05/run-once/aggregate.json)
+- [x] **P02 승인 적벽 v1 공개 시작·리플레이.** Windows 전경의 공개 진입과 리플레이를 검증했다. 공개 리플레이의 오류 거부·정상 재시도 테스트를 main에 병합했다. [공개 리플레이 전경 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P02-windows-product-replay-20261112-60b51f2e/foreground-20261112-095153/FOREGROUND-RESULT.md) · [저장·리플레이 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/2)
+- [x] **P03 승인 적벽 v1 같은 작전 저장·이어하기.** Windows 실제 입력으로 저장하고 새 프로세스에서 재개와 결산 복구를 검증했다. 시작 음량 설정과 작전 슬롯 분리 25/25도 main에 병합했다. [설정 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/6)
+- [x] **P04 개발 호스트 외부 저장 복구.** 체크섬이 유효해도 적용 데이터 지문이 다르면 복원 전에 거부했고, 정상 원본 재시도와 기존 파일 보존을 확인했다. [외부 저장 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P04-external-effective-authority-b2ba73ff-01/REVIEW-HANDOFF.json)
+- [x] **P05 승인 적벽 Atlas 선택.** 1600×900 헤드리스 합성 입력에서 15/15를 통과했다. [Atlas 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P05-atlas-facility-hit-a2733c8b-01/REVIEW-HANDOFF.json)
+- [x] **P06 같은 작전 시계·재개.** 시작 전 대기와 리플레이 일시정지·재개를 검증해 36/36을 통과했다. [시계 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P06-clock-boundary-02ffda96-01/REVIEW-HANDOFF.json)
+- [x] **O07 로컬 저장 복구.** 격리된 저장 프로세스 중단 후 마지막 확정 저장을 복구했다. [저장 중단 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/O07/p03-store-child-cutpoint-b2ba73ff-02/RESULTS.md)
 - [x] **P07 결산 재시도와 P09 화공 오디오 수정.** 원장 잠금 재시도 22/22와 화공 수정 통합 29/29를 검토해 병합했다. 별도 집중 TRACE 대조 7/7을 통과했다. [결산 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/3) · [오디오 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/4)
 
 **P09 현행 종료 회귀 — `a2733c8b`.** `battle_flow`와 `group_formation`은 각각 기능 통과·종료 코드 0이었다. TRACE 네 파일은 보존 기준과 행 수·이벤트 순서·필드 구성이 일치했다. `battle_flow` 종료에 오디오 객체 5개와 리소스 2개가 남아 종료 인수는 미완료다. `group_formation`에는 종료 진단이 없었다. 상위 모델이 독립 검토했다. [종료 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-full-main-a2733c8b-01/REVIEW-HANDOFF.json)
 
-**P09 `battle_flow` 종료 수정.** 테스트에 믹서 정리 확인을 추가했다. 격리 실행 한 번에서 기능, 믹서 확인, TRACE 구조, 종료 진단 0건의 네 검사를 통과했다. 상위 모델 독립 검토 뒤 PR #7로 병합했고 원격 `main` `7f138c2d`를 확인했다. 제품 전체 오디오 종료 인수는 남았다. [병합 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/7) · [수정 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-flow-fence-a2733c8b-01/REVIEW-HANDOFF.json)
+- [x] **P09 `battle_flow` 종료 수정.** 테스트에 믹서 정리 확인을 추가했다. 격리 실행 한 번에서 기능, 믹서 확인, TRACE 구조, 종료 진단 0건의 네 검사를 통과했다. 상위 모델 독립 검토 뒤 PR #7로 병합했고 원격 `main` `7f138c2d`를 확인했다. 제품 전체 오디오 종료 인수는 남았다. [병합 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/7) · [수정 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-flow-fence-a2733c8b-01/REVIEW-HANDOFF.json)
 
 - [x] **이전 P08 Android 디버그 패키징 기록.** `baaba60b` ARM64 APK의 v2·v3 서명을 확인했다. [패키징 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-android-main-baaba60b-02/REVIEW-HANDOFF.json)
 
 **P08 실기기 환경 확인 — `a2733c8b`.** 설치된 SDK를 확인했다. 점검한 범위에서 명시적으로 식별되는 Android·ADB 장치, 실행 중인 에뮬레이터와 ADB 서버, 기본 AVD 설정은 확인되지 않았다. 일반 휴대 장치의 기종은 확정하지 않았다. `baaba60b` APK 이후 Atlas 표시 변경까지 검증하려면 대상 빌드와 승인된 ARM64 시험 장치가 필요하다. 상위 모델이 읽기 전용 근거를 검토했다. [환경 확인](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-device-readiness-a2733c8b-01/README.md)
+- [ ] **K6 이후 main 변경분 15~18행.** 현행 판정 기준과 1600×900 Windows 실제 입력을 결속해 재검증한다.
 - [ ] **P02·P03·P04 일반 운영.** 승인 공통 입력·상태 사전, 운영 Cn·작전 간 명령 커서, 공개 외부 저장과 독립 두 번째 호스트의 원장·슬롯 보존 검증이 남았다.
 - [ ] **P05·P06·P07 확장.** 선체 외곽·진형 전환, 호송·통신소·재점령·정비, 후속 작전 승계와 A05/A06 종합 인수가 남았다.
 - [ ] **P08·P09·O07 제품 인수.** Windows 1600×900 실제 입력·대표 플레이·성능, 제품 전체 오디오 종료와 TRACE, 운영 전환·외부 지급·실제 전원 차단 검증이 남았다. Android 작업은 이 세션 범위에서 제외한다. 구버전 실행본과 데이터는 승인 당시 상태로 보존한다.
