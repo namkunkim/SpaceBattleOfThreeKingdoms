@@ -3,7 +3,7 @@
 ## K6 완료 및 재검증 현황 — 2026-11-12
 
 - [x] **K6 정식 실행 완료 — `264f47b9`.** 2026-11-12 14:21 KST, 5차 실행에서 21행·58작업·27비교와 실제 Windows GUI 4작업의 독립 증거 검증을 통과했다. [정식 집계](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-row21-05/run-once/aggregate.json)
-- [ ] **이후 `main` 변경분 재검증 — 15~18행.** 확인 기준은 `a2733c8b`다. 15·16행 헤드리스 2/2는 `78638587`, 17·18행 격리 완료 16/16·취소 24/24 및 의존성 대조는 `baaba60b`까지 증거가 있다. 현행 경로의 판정 기준 확정, 1600×900 Windows 실제 입력, 입력 동결과 독립 리뷰·일회 승인 결속이 남았다.
+- [ ] **이후 `main` 변경분 재검증 — 15~18행.** 확인 기준은 `7f138c2d`다. 15·16행 헤드리스 2/2는 `78638587`, 17·18행 격리 완료 16/16·취소 24/24 및 의존성 대조는 `baaba60b`까지 증거가 있다. 현행 경로의 판정 기준 확정, 1600×900 Windows 실제 입력, 입력 동결과 독립 리뷰·일회 승인 결속이 남았다.
 
 ### 이전 실행·집중 검증 기록
 
@@ -231,7 +231,7 @@ P06 실제 제품 결산 재열기 — `b2ba73ff`. 격리된 Windows 헤드리�
 
 ## 현재 상태 요약 — 2026-11-12 KST
 
-**사용자 우선순위: P02·P03 최우선.** 같은 채팅에서 10분마다 점검한다. 이 요약의 원격 확인 기준은 `main` `a2733c8b`다. 각 검증은 아래에 기록한 범위로 인수한다.
+**사용자 우선순위: P02·P03 최우선.** 같은 채팅에서 10분마다 점검한다. 이 요약의 원격 확인 기준은 `main` `7f138c2d`다. 각 검증은 아래에 기록한 범위로 인수한다.
 
 - [x] 승인 적벽 v1: 첫 PC 플레이·같은 규칙 버전 저장/재개·결산 복구 검증 완료. 현행 전경 인수는 EXE `67f9cb20…` 한정이다.
 - [x] P09 재생 객체 정리: `tests/battle_flow.gd` 한 파일 E 반영, 독립 검토 및 최소 flow 회귀 통과. SHA `afa999ba1e3d6bde19293999aab2f79034a30312b19ce11ea6fa604cda468826`. [반영 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-rp-apply-01a1c966-20261111/RESULTS.md)
@@ -267,7 +267,7 @@ P06 실제 제품 결산 재열기 — `b2ba73ff`. 격리된 Windows 헤드리�
 
 ## 0. 캠페인 적용 전체 체크리스트 — 2026-11-12
 
-**첫 PC 플레이 → 같은 규칙 버전 저장·재개 → 제품 인수와 확장 검증** 순으로 진행한다. 원격 `main` 확인 기준은 `a2733c8b`다. 승인 적벽 v1의 단계별 검증과 확장 인수 조건을 아래에 기록한다.
+**첫 PC 플레이 → 같은 규칙 버전 저장·재개 → 제품 인수와 확장 검증** 순으로 진행한다. 원격 `main` 확인 기준은 `7f138c2d`다. 승인 적벽 v1의 단계별 검증과 확장 인수 조건을 아래에 기록한다.
 
 ### 1단계 · 첫 PC 캠페인 플레이 — Windows 개발 후보 v1 확인
 
@@ -301,7 +301,11 @@ P06 실제 제품 결산 재열기 — `b2ba73ff`. 격리된 Windows 헤드리�
 
 **P09 현행 종료 회귀 — `a2733c8b`.** `battle_flow`와 `group_formation`은 각각 기능 통과·종료 코드 0이었다. TRACE 네 파일은 보존 기준과 행 수·이벤트 순서·필드 구성이 일치했다. `battle_flow` 종료에 오디오 객체 5개와 리소스 2개가 남아 종료 인수는 미완료다. `group_formation`에는 종료 진단이 없었다. 상위 모델이 독립 검토했다. [종료 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-full-main-a2733c8b-01/REVIEW-HANDOFF.json)
 
+**P09 `battle_flow` 종료 수정.** 테스트에 믹서 정리 확인을 추가했다. 격리 실행 한 번에서 기능, 믹서 확인, TRACE 구조, 종료 진단 0건의 네 검사를 통과했다. 상위 모델 독립 검토 뒤 PR #7로 병합했고 원격 `main` `7f138c2d`를 확인했다. 제품 전체 오디오 종료 인수는 남았다. [병합 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/7) · [수정 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-flow-fence-a2733c8b-01/REVIEW-HANDOFF.json)
+
 - [x] **P08 Android 서명 디버그 패키징.** `baaba60b` ARM64 APK의 v2·v3 서명을 확인했다. [패키징 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-android-main-baaba60b-02/REVIEW-HANDOFF.json)
+
+**P08 실기기 환경 확인 — `a2733c8b`.** 설치된 SDK를 확인했다. 점검한 범위에서 명시적으로 식별되는 Android·ADB 장치, 실행 중인 에뮬레이터와 ADB 서버, 기본 AVD 설정은 확인되지 않았다. 일반 휴대 장치의 기종은 확정하지 않았다. `baaba60b` APK 이후 Atlas 표시 변경까지 검증하려면 대상 빌드와 승인된 ARM64 시험 장치가 필요하다. 상위 모델이 읽기 전용 근거를 검토했다. [환경 확인](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-device-readiness-a2733c8b-01/README.md)
 - [ ] **P02·P03·P04 일반 운영.** 승인 공통 입력·상태 사전, 운영 Cn·작전 간 명령 커서, 공개 외부 저장과 독립 두 번째 호스트의 원장·슬롯 보존 검증이 남았다.
 - [ ] **P05·P06·P07 확장.** 선체 외곽·진형 전환, 호송·통신소·재점령·정비, 후속 작전 승계와 A05/A06 종합 인수가 남았다.
 - [ ] **P08·P09·O07 제품 인수.** 출시 서명·실기기·대표 플레이·성능, 제품 전체 오디오 종료와 TRACE, 운영 전환·외부 지급·실제 전원 차단 검증이 남았다. 구버전 실행본과 데이터는 승인 당시 상태로 보존한다.
