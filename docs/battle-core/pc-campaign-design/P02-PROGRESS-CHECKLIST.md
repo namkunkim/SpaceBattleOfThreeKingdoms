@@ -136,6 +136,8 @@ E 소스 반영 완료: 독립 R3 통과한 revision-02 제품 5파일을 단일
 
 **P02·P03 재현 안내.** 47개 검사의 러너는 세 격리 프로세스에서 입력 파일을 직접 만든다. 새 Windows x64 작업 트리의 DLL 빌드·임포트·CLI 실행 순서를 문서화했고, CLI 옵션과 PowerShell 구문 및 기존 증거를 대조했다. Godot는 재실행하지 않았다. 상위 모델 독립 리뷰 후 PR #2 브랜치를 `a102f412`로 갱신했다. [초안 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/2)
 
+**P02·P03 검토 완료 테스트의 main 반영.** PR #1을 먼저 병합했고, 같은 파일 트리를 기준으로 PR #2를 `main`에 다시 지정했다. 변경 파일 14개의 이름·Git 지문·상태가 동일함을 대조한 후 병합했다. 원격 `main` `680c1b2c`에서 두 검토 이력을 확인했다. [PR #1](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/1) · [PR #2](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/2)
+
 **P02·P03 테스트 PR 인계.** 원격 `02ffda96`을 PR #1 브랜치 위에 초안 PR #2로 연결했다. 독립 검토한 8개 커밋과 테스트 13개 파일만 차이에 포함된다. PR #1이 병합되면 `main` 재대상 지정 전 차이를 다시 대조한다. [초안 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/2)
 
 **2026-11-12 P03 제한 회귀 재확인.** GitHub main `5ef3537b`에서 제한 체크포인트 38/38, 비공개 상태 70건, 활성 교체 20건, 개발 호스트의 새 프로세스 4틱 재개 및 동일 슬롯 SHA를 별도 모델이 독립 확인했다. 개발 플래그 없는 제품 WorldLink 직접 경로는 첫 명령 1회, 2틱 저장·복원과 다음 프레임 일치까지 11/11을 통과했다. 이 제품 시험의 범위는 동일 호스트 내부 복원이다. 이후 공개 항로도 새 프로세스 복원은 아래 결과에 기록했다. [제한 회귀](F:/WorkSpace/campaign-p03-20261111/tmp/p03-main-5ef3537/summary.json) · [제품 경로](F:/WorkSpace/campaign-p03-20261111/tmp/p03-main-5ef3537/product.receipt.json)
@@ -167,6 +169,8 @@ E 소스 반영 완료: 독립 R3 통과한 revision-02 제품 5파일을 단일
 **P09 실제 전투 신호의 재생 추적.** `FleetBattle3D`에서 CommandDeck·UiSound까지 연결된 테스트 소유 루프 두 개를 등록했다. Dummy 헤드리스 8/8을 통과했고, 이전 재생을 의도적으로 유지하면 해당 ID만 1,501ms 제한 시점까지 남았다. 참조를 해제한 뒤 두 재생과 소유 객체가 정리됐다. 상위 모델 독립 검토 후 테스트 브랜치에 푸시했다. 자동 재생 전체, 실제 오디오 장치와 TRACE 인수는 남았다. [테스트 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/1ef0fc0ef172ce7972e9a9ce71400adf9582dabe) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-battle-signal-retirement-050a1df0-01/REVIEW-HANDOFF.json)
 
 **P09 제품 자동 화공의 종료 신호 누락.** 실제 전투 AI가 1틱에 시작한 화공 루프를 수동 관찰했다. 201틱에 코어가 낸 종료 신호는 대상이 아군 접촉 목록에 없어 화면 전달에서 제외됐고, 루프는 씬 정리까지 재생됐다. 정리 뒤 같은 ID의 해제까지 7/7을 검증했다. 초기 실패 원본을 보존했고 상위 모델 독립 검토 후 정확한 테스트 커밋만 푸시했다. 복제 임포트 파일은 격리 F 작업본에 보존했다. [테스트 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/fc0d3d9c9bb062494563b52c3da38d175767e6bd) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-autonomous-fire-1ef0fc0e-01/REVIEW-HANDOFF.json)
+
+**P09 이미 들린 화공 루프 종료 수정.** 첫 수정 후보는 공개 화재가 겹치면 너무 일찍 멈추는 문제가 있어 푸시하지 않았다. 수정한 후보는 공개 화재 중첩·배치된 이벤트·전투 재시작과 숨은 화재 대조를 포함한 헤드리스 59/59를 통과했다. 불확실한 시작은 기존 전역 종료 동작을 유지한다. 상위 모델 독립 재리뷰 후 작업 브랜치에 푸시했고 `main` 병합은 남았다. [수정 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/6b12798cc6e9f4bb5cfa66d22f863a312d6ce93a) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-visible-fire-overlap-779d5679-01/REVIEW-HANDOFF.json)
 
 **P05 승인 적벽 공간 회귀 — `b2ba73ff`.** E/R 팽창 원과 A/B/C/E 중심 검사는 61/61, 정면 이동 자세는 17/17을 통과했다. 네이티브 자세 CSV 20,698행이 이전 승인 기록과 바이트 단위로 일치했고, 이동 오류와 경로 위반은 없었다. 별도 모델이 원본과 입력 해시를 확인했다. 개별 선체 다각형, 진형 전환 중 점유 영역과 Atlas→전장 좌표의 인수 기준은 남았다. [공간 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P05-main-b2ba73ff-20261112/RESULTS.md)
 
