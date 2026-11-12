@@ -28,7 +28,7 @@ func _run() -> void:
 	_rules()
 	if not OS.get_cmdline_user_args().has("--quick"):
 		await _determinism()
-	await _screen()
+	await _legacy_screen()
 	await _development_sortie()
 	await _round_trip()
 	await _prepare_failure_return()
@@ -186,7 +186,7 @@ func _touch_sizes(s: Node, where: String) -> void:
 			var short := minf((b as Control).size.x, (b as Control).size.y)
 			_check(short * dpu >= TouchMetrics.MIN_DP - 0.01, "%s 터치 크기 %s: %.0f단위 = %.1fdp (%s)" % [where, (b as Button).text, short, short * dpu, dev[0]])
 
-func _screen() -> void:
+func _legacy_screen() -> void:
 	var s := _screen_new()
 	await _frames(6)
 	_check(s.state == "browse" and s.canvas.level() == "z0", "시작은 천하 Z0")
@@ -194,13 +194,12 @@ func _screen() -> void:
 	_touch_sizes(s, "Z0")
 	var atlas := s.find_child("WorldAtlas", true, false) as Control
 	_check(atlas != null and atlas.visible, "홈에서 전체 항로도 표시")
-	var actions: Array = []
-	_buttons(s._cta, actions)
-	_check(actions.size() == 1, "홈의 적벽 시나리오 진입 버튼")
-	if not actions.is_empty():
-		(actions[0] as Button).pressed.emit()
+	# The public Red Cliffs action is covered by the separate EntryBoot route test.
+	# Open the legacy card explicitly to exercise the legacy canvas and gestures.
+	s.open_card()
 	await _seconds(1.6)
-	_check(s._card.visible and s.canvas.level() == "z2", "적벽 버튼 → 형주 Z2·시나리오 카드 (%s)" % s.canvas.level())
+	_check(s._card.visible and s.canvas.visible and atlas != null and not atlas.visible and s.canvas.level() == "z2",
+		"레거시 카드 → 형주 Z2·시나리오 카드 (%s)" % s.canvas.level())
 	_touch_sizes(s, "카드")
 	# 두 손가락 벌리기 → 확대
 	var z0 := s.canvas.zoom
@@ -216,7 +215,8 @@ func _screen() -> void:
 	# 뒤로 가기 → 한 단계 축소
 	s.back()
 	await _seconds(1.4)
-	_check(s.canvas.level() == "z0" and s._cta.visible and not s._card.visible, "뒤로 가기 → Z0")
+	_check(s.canvas.level() == "z0" and s._cta.visible and not s._card.visible and atlas != null and atlas.visible,
+		"뒤로 가기 → Z0")
 	s.queue_free()
 	await _frames(2)
 
