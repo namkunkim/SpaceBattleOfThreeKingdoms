@@ -144,6 +144,8 @@ E 소스 반영 완료: 독립 R3 통과한 revision-02 제품 5파일을 단일
 
 **P02·P03 현행 main 재개·리플레이 회귀 — `78638587`.** 동일 러너·시험 소스와 이전 19/19 체크포인트 원본을 대조해 재사용했다. 현행 main에서는 별도 헤드리스 프로세스로 공개 재개 14/14와 공개 리플레이 14/14만 새로 실행했다. 내보낸 리플레이 바이트, 종결 상태와 사건 순서가 일치했다. 상위 모델 독립 검토를 통과했다. 현행 전체 47개를 재실행하지 않았고 실제 입력·작전 간 커서는 별도다. [현행 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P02-P03-current-main-78638587-01/REVIEW-HANDOFF.json)
 
+**P02 시작 음량 설정과 작전 슬롯 분리.** `e1bfc274`의 새 프로필에서 실제 설정 저장·취소를 조작했고, 두 번째 헤드리스 프로세스에서 저장한 음량 설정이 로드됨을 확인했다. 격리 사본의 기존 작전 슬롯 바이트를 보존했고 공개 이어하기에서 1틱의 대기 명령과 명시 Start를 확인했다. 25/25와 상위 모델 독립 리뷰 후 테스트 한 파일을 PR #6으로 병합했다. 새 `main`은 `a2733c8b`다. 첫 파싱 실패를 보존했다. [PR #6](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/6) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P02-entry-settings-e1bfc274-01/REVIEW-HANDOFF.json)
+
 **P02·P03 검토 완료 테스트의 main 반영.** PR #1을 먼저 병합했고, 같은 파일 트리를 기준으로 PR #2를 `main`에 다시 지정했다. 변경 파일 14개의 이름·Git 지문·상태가 동일함을 대조한 후 병합했다. 원격 `main` `680c1b2c`에서 두 검토 이력을 확인했다. [PR #1](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/1) · [PR #2](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/2)
 
 **P02·P03 테스트 PR 인계.** 원격 `02ffda96`을 PR #1 브랜치 위에 초안 PR #2로 연결했다. 독립 검토한 8개 커밋과 테스트 13개 파일만 차이에 포함된다. PR #1이 병합되면 `main` 재대상 지정 전 차이를 다시 대조한다. [초안 PR](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/pull/2)
@@ -217,6 +219,8 @@ P06 실제 제품 결산 재열기 — `b2ba73ff`. 격리된 Windows 헤드리�
 **P08 Godot 서명 디버그 프리셋 — `b2ba73ff`.** 커밋된 Android 프리셋으로 내보내기를 완료했다. 400,040,307바이트 ARM64 APK의 ZIP 정렬과 v2·v3 서명을 SDK에서 확인했다. 서명자는 격리된 일회용 인증서와 일치했고 키 파일을 제거했다. 프리셋 바이트를 보존했고 상위 모델이 독립 검토했다. 이전 무서명 산출물과 생성 데이터가 달라 동일 페이로드 판정은 없으며 출시 서명·설치·실기기 검증은 남았다. [프리셋 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-android-b2ba73ff-godot-sign-01/RESULTS.md)
 
 **P08 서명 ARM64 APK의 ELF 정렬.** 포함된 AArch64 라이브러리 두 개의 `PT_LOAD` 여섯 개가 16KiB 정렬과 주소·오프셋 합동 조건을 충족했다. 잘못된 세그먼트 대조 2건을 거부했고 상위 모델이 원본 APK를 독립 검토했다. 두 파일은 ZIP에서 압축되어 매니페스트가 추출을 요청한다. APK 직접 매핑이나 실기기 실행은 검증하지 않았다. [정적 검사](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-android-b2ba73ff-elf-align-01/REVIEW-HANDOFF.json)
+
+**P08 `baaba60b` Android 서명 디버그 패키징.** 첫 시도는 SDK 정렬에서 240초 제한에 걸려 불완전한 APK를 남겼다. 실패 원본을 보존하고 같은 임포트 작업본에서 내보내기만 재시도했다. 414,563,009바이트 ARM64 APK의 v2·v3 서명과 정렬, 프롤로그 8장·시작 설정·요새 텍스처를 확인했다. 두 네이티브 라이브러리는 이전 검토본과 동일했고 상위 모델이 독립 검토했다. 이후 요새 심볼 변경과 출시 서명·실기기는 검증 범위 밖이다. [패키징 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-android-main-baaba60b-02/REVIEW-HANDOFF.json)
 
 ## 현재 상태 요약 — 2026-11-11 KST
 
