@@ -34,6 +34,8 @@ K6 15~18행 실행 전 점검과 17·18행 오프라인 비교 초안을 상위 
 
 **K6 15·16행 현행 경로 계약 변경안.** 승인 적벽 EntryBoot의 0틱 대기·명시 시작과 동일 요청·시드의 새 작전 진입·무결산 지도 직행을 제안했다. 기존 직접 배치, Space 일시정지와 구형 재시작은 별도 범위로 기록했다. 과거 실제 입력 5건은 원본 창 이미지에 결속했으며 신규 1600×900 입력 좌표는 미결속이다. 상위 모델은 미서명 제안 범위만 검토했다. 관찰기, 실행 매니페스트 동결, 계약 승인과 정식 실행은 남았다. [미서명 제안](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-row15-16-entryboot-amendment-01/README.md)
 
+**K6 15·16행 수동 관찰 프로토타입.** 정확한 `b2ba73ff` EntryBoot SELECT를 입력 없이 관찰했다. 첫 스모크의 임포트 오류를 보존했고, 두 번째는 종료 코드 0·진단 0이었다. 독립 리뷰에서 빈 요청·C0 및 잘못된 float 인코딩을 허용하는 판정 오류를 찾아 v2에서 보강했다. 실제 C0·지도 복귀·소유자 종료와 Windows 네이티브 입력은 남았다. 정식 검증은 실행하지 않았다. [관찰기 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-row15-16-passive-observer-01/REVIEW-HANDOFF.json) · [판정기 보강](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-row15-16-passive-observer-02/REVIEW-HANDOFF.json)
+
 **`b2ba73ff` 15·16행 공개 타이틀 경로 합성 검증.** 실제 승인 호스트에서 만든 113틱 저장 사본으로 시작해 40개 단언을 기존 순서대로 통과했다. 0틱 배치 명령 1회, Space 일시정지 두 번, 새 시뮬레이션의 0틱 재시작, 타이틀을 거친 지도 복귀와 저장 보존을 별도 모델이 확인했다. 이전 원본과 달라진 생성 경로·시드 등 13개 관측도 보존했다. 정식 15·16행에는 이 비라우팅 경로의 판정 기준과 새 실제 Windows 입력이 남았다. [타이틀 경로 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-b2ba73ff-title-route-focused-01/RESULTS.json)
 
 **264f47b9 호환성 사전검증 — 2026-11-12.** 구형 공개 브리핑을 여는 마지막 main 커밋에 기존 21행·58작업·27비교를 결속했다. 14~18행 사전 시험 11/11 및 비교 3건이 통과했다. GUI 15·16행은 합성 viewport 입력을 사용했다. 별도 현행 Godot 창은 시작됐으나 Computer Use 앱 접근 승인이 시간 초과돼 실제 캡처와 입력은 0건이었다. 이 사전 시험에서는 실제 입력 증거를 요구하는 정식 실행기를 시작하지 않았다. [역사 사전검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-review-01/HISTORICAL-FOCUSED-RESULTS-R02.json) · [Windows 입력 사전확인](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/main-5ef3537b-successor-01/windows-entry-smoke-01/INPUT-PREFLIGHT-RESULT.json)
@@ -135,6 +137,8 @@ P03 공개 이어하기의 같은 작전 내 여러 세대 저장·재개를 Win
 
 **P03 보존 슬롯으로 공개 이어하기 — `b2ba73ff`.** 실제 저장 회전 후 기본 슬롯이 없는 조건을 격리 프로필에서 구성했다. Windows 헤드리스 프로세스 3개에서 55/55를 통과했다. 보존 슬롯의 대기 명령 두 건이 순서대로 한 번씩 적용됐고 명시적으로 저장했을 때만 기본 슬롯을 복구했다. 다음 프로세스는 복구 슬롯을 우선했고 보존·미게시 파일 바이트를 유지했다. 실제 전원 차단과 작전 간 전역 커서는 별도다. 상위 모델 독립 검토 후 테스트 브랜치로 푸시했다. [테스트 커밋](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/commit/08dca4b3e24c50ec7b5e7f68854d799e33bfe5d2) · [검토 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P03-public-fallback-15441ea2-01/REVIEW-HANDOFF.json)
 
+**P03·O07 저장 중단 진단 — `b2ba73ff`.** 검증된 임시 저장 직후와 테스트 콜백으로 기본 슬롯을 이전 슬롯으로 옮긴 직후에 격리된 Godot 자식 프로세스를 각각 종료했다. 두 경우 새 프로세스는 마지막 확정 저장을 읽었고, 명시적으로 다시 저장한 뒤 새 세대를 열었다. 상위 모델 독립 검토를 통과했다. 두 번째 지점은 기본 경로의 이동을 재현한 것으로, 비계측 기본 경로·네이티브 DLL·전원 차단 인수는 남았다. [저장 중단 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/O07/p03-store-child-cutpoint-b2ba73ff-02/RESULTS.md)
+
 **P06 논리 시계·결산 연속성 부분 검증 — `b2ba73ff`.** 논리 시계 60/60, 원장 저장·재열기 22/22, 개발 Atlas 결산 표시·재시도 8/8을 통과했다. 개발 플래그가 빠진 첫 실행의 실패 기록을 보존했고, 새 프로필에서 플래그를 적용한 결과를 별도 모델이 확인했다. 현재 제품 소스는 결산 뒤 지도로 돌아가 같은 첫 작전을 새로 시작한다. 이전 결산에 연결되는 후속 작전과 전체 A05·A06 인수는 남았다. [부분 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P06-main-b2ba73ff-20261112/RESULTS.md)
 
 P06 실제 제품 결산 재열기 — `b2ba73ff`. 격리된 Windows 헤드리스 프로세스에서 과거 결산 원장을 재열고 같은 적벽 첫 작전을 0틱에서 새 작전 ID로 시작했다. 빈 프로필 대조군과 요청·규칙 지문·초기 상태가 일치했고 원본과 복사한 원장 바이트를 보존했다. 상위 모델이 검토했다. 이전 결산과 후속 작전을 연결하는 규칙과 A05·A06 종합 인수는 남았다. [재열기 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P06-main-b2ba73ff-product-reopen-01/RESULTS.md)
@@ -142,6 +146,8 @@ P06 실제 제품 결산 재열기 — `b2ba73ff`. 격리된 Windows 헤드리�
 **P08 Android 패키징 부분 검증 — `b2ba73ff`.** 격리 F 환경에서 Godot 4.7.2 임포트와 ARM64 내보내기가 각각 exit 0이었다. 399,854,099바이트 APK의 ZIP 정렬과 구조를 확인했고 서명은 없었다. Godot가 임포트 중 격리 프로필에 디버그 키를 자동 생성해 전체 진단은 exit 1을 반환했다. 원래 프리셋은 복원했고 상위 모델이 패키징 범위를 검토했다. 출시 서명, 실기기와 성능 인수는 남았다. [진단 증거](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-android-b2ba73ff-01/RESULTS.md)
 
 **P08 외부 Android 디버그 서명 진단.** 앞서 확인한 ARM64 APK를 일회용 키로 서명했다. Android SDK에서 v2·v3 서명과 ZIP 정렬을 확인했고, 원본 ZIP 항목 1,818개의 내용·길이·압축 방식이 일치했다. 첫 실행의 검증 출력 파싱 실패를 보존하고 같은 APK를 다시 검사해 통과했다. 일회용 키를 제거했고 상위 모델이 독립 검토했다. Godot 서명 프리셋·출시 서명·실기기 인수는 남았다. [디버그 서명 결과](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-android-b2ba73ff-debug-sign-01/RESULTS.md)
+
+**P08 Godot 서명 디버그 프리셋 — `b2ba73ff`.** 커밋된 Android 프리셋으로 내보내기를 완료했다. 400,040,307바이트 ARM64 APK의 ZIP 정렬과 v2·v3 서명을 SDK에서 확인했다. 서명자는 격리된 일회용 인증서와 일치했고 키 파일을 제거했다. 프리셋 바이트를 보존했고 상위 모델이 독립 검토했다. 이전 무서명 산출물과 생성 데이터가 달라 동일 페이로드 판정은 없으며 출시 서명·설치·실기기 검증은 남았다. [프리셋 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-android-b2ba73ff-godot-sign-01/RESULTS.md)
 
 ## 현재 상태 요약 — 2026-11-11 KST
 
