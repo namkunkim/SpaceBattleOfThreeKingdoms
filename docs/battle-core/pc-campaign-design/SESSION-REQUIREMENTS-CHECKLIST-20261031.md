@@ -18,4 +18,4 @@
 - [ ] **K6 이후 main 변경분 15~18행** — 판정 기준·입력 동결, 1600×900 Windows 실제 입력과 독립 리뷰·일회 승인 결속.
 - [ ] **P02·P03·P04 일반 운영** — 공통 입력·상태, 운영 Cn과 작전 간 명령 커서, 공개 외부 저장과 독립 다중 호스트 검증. 차단된 기존 다중 호스트 시험은 재실행하지 않는다.
 - [ ] **P05·P06·P07 확장** — 일반 선체·진형, 추가 작전 규칙, 후속 작전 승계와 A05/A06 종합 검증.
-- [ ] **P08·P09·O07 인수** — Windows 1600×900 대표 플레이·성능, 제품 전체 오디오 종료·TRACE, 운영 전환·외부 지급·실제 전원 차단 복구. [P09 단발 효과 참조 해제 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-product-oneshot-drain-7f138c2d-01/REVIEW-HANDOFF.json)
+- [ ] **P08·P09·O07 인수** — Windows 1600×900 대표 플레이·성능, 설정·지도 효과음과 배경음악의 전경 종료 및 전체 TRACE, 운영 전환·외부 지급·실제 전원 차단 복구. [Windows 후보 빌드](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/P08-windows-release-7f138c2d-01/REVIEW-HANDOFF.json) · [전경 오디오 범위](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-nonbattle-audio-scope-7f138c2d-01/REVIEW-HANDOFF.json) [P09 단발 효과 참조 해제 검증](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/I01/p09-product-oneshot-drain-7f138c2d-01/REVIEW-HANDOFF.json)
