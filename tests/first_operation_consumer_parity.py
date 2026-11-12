@@ -2,6 +2,7 @@
 
 Run on Windows from an imported worktree with the native dependency prepared:
     python tests/first_operation_consumer_parity.py --engine GODOT_EXE --evidence NEW_DIRECTORY
+    Add --c0-only to compare the complete C0 state through the shared CLI bootstrap.
 """
 
 from __future__ import annotations
@@ -96,10 +97,27 @@ def compare(host: dict, result: dict, executor: str, bundle_sha: str) -> dict[st
     return checks
 
 
+def compare_initial(c0_path: Path) -> dict:
+    frames = load_object(c0_path)
+    host = frames["host"]
+    checks = {phase: {part: frames[phase][part] == host[part] for part in ("frame", "checkpoint")}
+              for phase in ("headless", "replay")}
+    return {
+        "checks": checks,
+        "initial_output_sha256": file_sha(c0_path),
+        "initial_frame_sha256": result_sha(host["frame"]),
+        "initial_checkpoint_sha256": result_sha(host["checkpoint"]),
+        "operation_id": host["checkpoint"]["operation_id"],
+        "state_digest": host["checkpoint"]["state_digest"],
+        "pass": all(check for phase_checks in checks.values() for check in phase_checks.values()),
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--engine", required=True, type=Path)
     parser.add_argument("--evidence", required=True, type=Path)
+    parser.add_argument("--c0-only", action="store_true")
     args = parser.parse_args()
     if os.name != "nt":
         parser.error("requires the Windows product host")
@@ -107,6 +125,7 @@ def main() -> int:
     evidence = args.evidence.resolve()
     evidence.mkdir()
     proof = {
+        "mode": "c0-bootstrap" if args.c0_only else "terminal-cli",
         "head": subprocess.check_output(
             ["git", "-c", f"safe.directory={PROJECT.as_posix()}", "-C", PROJECT, "rev-parse", "HEAD"],
             text=True,
@@ -118,43 +137,47 @@ def main() -> int:
         "phases": [],
     }
     try:
-        host_phase = run_phase(engine, evidence, "host", f"res://{HOST_SCRIPT.relative_to(PROJECT).as_posix()}", [])
+        host_args = ["c0"] if args.c0_only else []
+        host_phase = run_phase(engine, evidence, "host", f"res://{HOST_SCRIPT.relative_to(PROJECT).as_posix()}", host_args)
         proof["phases"].append(host_phase)
         if not host_phase["pass"]:
             raise RuntimeError("public host phase failed")
         host_directory = evidence / "host" / USER_DIRECTORY
-        host_file = host_directory / "host-result.json"
-        replay_file = host_directory / "approved-host.pcopreplay"
-        bundle = host_directory / "approved-bundle.json"
-        bundle_sha = file_sha(bundle)
-        proof.update({"host_output_sha256": file_sha(host_file), "host_export_sha256": file_sha(replay_file),
-                      "input_bundle_sha256": bundle_sha})
-        outputs = {phase: evidence / f"{phase}-result.json" for phase in ("headless", "replay")}
-        options = {"headless": "--first-operation-input", "replay": "--first-operation-replay"}
-        with ThreadPoolExecutor(max_workers=2) as pool:
-            futures = [pool.submit(run_phase, engine, evidence, phase, CLI_SCRIPT,
-                                   [option, str(bundle), "--out", str(outputs[phase])])
-                       for phase, option in options.items()]
-            proof["phases"].extend(future.result() for future in futures)
-        if not all(phase["pass"] for phase in proof["phases"]):
-            raise RuntimeError("one or more CLI phases failed")
-        host = load_object(host_file)
-        checks = {phase: compare(host, load_object(path), f"first_operation_{phase}", bundle_sha)
-                  for phase, path in outputs.items()}
-        proof.update({
-            "checks": checks,
-            "bundle_unchanged": file_sha(bundle) == bundle_sha,
-            "terminal": host["summary"],
-            "events": host["event_count"],
-            "source_digest": host["meta"]["source_digest"],
-            "effective_digest": host["meta"]["effective_digest"],
-            "terminal_projection_sha256": result_sha(host["projection"]),
-            "ordered_event_sha256": result_sha(host["events"]),
-            "cli_output_sha256": {phase: file_sha(path) for phase, path in outputs.items()},
-        })
-        proof["pass"] = proof["bundle_unchanged"] and all(
-            check for phase_checks in checks.values() for check in phase_checks.values()
-        )
+        if args.c0_only:
+            proof.update(compare_initial(host_directory / "c0-result.json"))
+        else:
+            host_file = host_directory / "host-result.json"
+            replay_file = host_directory / "approved-host.pcopreplay"
+            bundle = host_directory / "approved-bundle.json"
+            bundle_sha = file_sha(bundle)
+            proof.update({"host_output_sha256": file_sha(host_file), "host_export_sha256": file_sha(replay_file),
+                          "input_bundle_sha256": bundle_sha})
+            outputs = {phase: evidence / f"{phase}-result.json" for phase in ("headless", "replay")}
+            options = {"headless": "--first-operation-input", "replay": "--first-operation-replay"}
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                futures = [pool.submit(run_phase, engine, evidence, phase, CLI_SCRIPT,
+                                       [option, str(bundle), "--out", str(outputs[phase])])
+                           for phase, option in options.items()]
+                proof["phases"].extend(future.result() for future in futures)
+            if not all(phase["pass"] for phase in proof["phases"]):
+                raise RuntimeError("one or more CLI phases failed")
+            host = load_object(host_file)
+            checks = {phase: compare(host, load_object(path), f"first_operation_{phase}", bundle_sha)
+                      for phase, path in outputs.items()}
+            proof.update({
+                "checks": checks,
+                "bundle_unchanged": file_sha(bundle) == bundle_sha,
+                "terminal": host["summary"],
+                "events": host["event_count"],
+                "source_digest": host["meta"]["source_digest"],
+                "effective_digest": host["meta"]["effective_digest"],
+                "terminal_projection_sha256": result_sha(host["projection"]),
+                "ordered_event_sha256": result_sha(host["events"]),
+                "cli_output_sha256": {phase: file_sha(path) for phase, path in outputs.items()},
+            })
+            proof["pass"] = proof["bundle_unchanged"] and all(
+                check for phase_checks in checks.values() for check in phase_checks.values()
+            )
     except (OSError, ValueError, RuntimeError, KeyError) as exc:
         proof["error"] = str(exc)
         proof["pass"] = False
