@@ -104,3 +104,23 @@ r=0.05에서 두 편성 모두 60·120Hz에서 5초 이내였다. 39척·30Hz는
 | [프레임 계산](F:/WorkSpace/Campaign-Orchestration/P05-reordered-moves-20261113/analyze-wide.py) | `7f425155f3399eaa6d6a3931d04ae2c8808c6ae038d66070868f8eab8c6bcc5d` |
 | [램프 탐색](F:/WorkSpace/Campaign-Orchestration/P05-reordered-moves-20261113/ramp-search.py) | `da1314b10068c6b98f9bc1125c6cdf10b0ce4c4e2e5128a56c6e29cbc65eb524` |
 | [147프레임 경로](F:/WorkSpace/Campaign-Orchestration/P05-reordered-moves-20261113/RESULT-RAMP-SEARCH.json) | `0687c9d4ce28e03bc6e7017db0218e45ff1f602e1b35f68e5549054ca4b39773` |
+
+## 39척 경로의 헤드리스 렌더러 검증
+
+기존 FleetRenderer의 선택 적용 경로에 시험 스크립트로 재구성한 68개 위상 시간표를 주입했다. 39척의 전환 구간을 여유 0.001로 양방향 재검증했고, 렌더러 슬롯 좌표가 그리는 구간도 양방향에서 안전했다. 같은 편성이라도 바인딩하지 않은 함대는 기존 표시 경로를 사용했다. 독립 검토는 이 시험 범위의 결과를 확인했다.
+
+| 시계 조건 | 정방향 도착 | 역방향 도착 | 양방향 최대 차분 가속도 |
+| --- | ---: | ---: | ---: |
+| 30Hz 표시 시계 | 147프레임·4.900초 | 150프레임·5.000초 | 23,786.523056 |
+| 10Hz 권위 스냅샷, 30Hz 표시 갱신 | 204프레임·6.800초 | 207프레임·6.900초 | 89,868.699646 |
+
+역방향 시간표는 3프레임 정지 구간에서 시작한다. 표의 가속도는 실제 제출된 슬롯 좌표의 프레임 차분 값이며 단위는 전술 단위/s²다. 앞 절의 연속 가속도 분석값과 측정 방식이 다르다. 10Hz 시험에서는 안전 구간을 유지했지만 표시 시계가 요청 시점보다 뒤처졌고, 차분 가속도는 잠정 연속 기준 25,883.497247을 넘었다.
+
+다음 검증 후보는 확인된 스냅샷 사이를 지연 보간하는 표시 시계다. 이상적 30Hz에서 10Hz 스냅샷 한 틱을 완충하면 정방향 5.000초·역방향 5.100초가 된다. 다른 후보는 최신 확인 시점까지만 표시를 진행하고, 정지점까지 필요한 구간이 확인된 뒤 위상을 시작하는 방식이다. 종료가 확정되면 동일한 종료 스냅샷을 고정한 채 안전 구간으로 표시를 마무리한다. 60·120Hz, 불규칙 갱신·공백, 전환 취소·재명령과 허용 지연·가속도 기준은 남아 있다. 공개 제품 명령이나 기본 렌더러에 연결한 변경은 없다.
+
+| 격리 산출물 | SHA-256 |
+| --- | --- |
+| [표시 시계 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-native-reordered-renderer-20261113/native_probe.gd) | `dc28fe14d80f4bff2487e6a0fb602dd644fe9c948052c1908942ed4f37dfd7ce` |
+| [표시 시계 결과](F:/WorkSpace/Campaign-Orchestration/P05-native-reordered-renderer-20261113/native.out) | `7b34ae242dd90a89e74d33bfa0bdb9acadc677cf17808f2ddf78de2fc1f6cd7c` |
+| [권위 스냅샷 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-native-reordered-renderer-20261113/native_authority_probe.gd) | `ce2af903e42e49015b733f36f05a19fa81327f6983f826934d4c95f079b70d1e` |
+| [권위 스냅샷 결과](F:/WorkSpace/Campaign-Orchestration/P05-native-reordered-renderer-20261113/authority-checked.out) | `969723372d3807d3a19194314bee42cc84492afcf49bc15786aa225c6d9238ce` |
