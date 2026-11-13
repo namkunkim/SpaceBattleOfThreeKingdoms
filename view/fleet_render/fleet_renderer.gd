@@ -124,6 +124,7 @@ class FleetVis:
 	var p05_start := 0.0
 	var p05_elapsed := 0.0
 	var p05_tick := -1
+	var p05_terminal := {}
 
 var src: BattleSource
 var meshes := [[], []]
@@ -161,7 +162,8 @@ func setup(source: BattleSource) -> void:
 # An optional operation identity selects the authority-clock prototype. Its
 # source rows must include operation_id and tick from the same live projection.
 # A fresh renderer is needed for another operation or a rewound timeline.
-# A committed snapshot is immutable within its tick.
+# A committed snapshot is immutable within its tick. A terminal row may carry
+# terminal_tick from the operation outcome once its formation is committed.
 func enable_p05_formation_routes(fleet_ids: Dictionary, operation_id := "") -> bool:
 	if not _p05_operation_id.is_empty() or not vis.is_empty() or fleet_ids.is_empty() or FileAccess.get_sha256(P05Dev.INPUT_PATHS.roster) != P05Product.INPUT_SHA256.roster:
 		return false
@@ -261,6 +263,9 @@ func _p05_update(v: FleetVis, sq: Dictionary, dt: float) -> bool:
 				or (sq.form_to == "" and remaining != 0.0):
 			return true
 		v.p05_tick = _p05_authority_tick(sq)
+		var terminal_tick: Variant = sq.get("terminal_tick")
+		if typeof(terminal_tick) == TYPE_INT and terminal_tick == v.p05_tick and sq.form_to == "":
+			v.p05_terminal = sq.duplicate(true)
 		if sq.form_to != "":
 			requested = P05Schedule.DURATION - remaining if goal > 0.0 else float(remaining)
 	v.p05_time = v.p05.advance(v.p05_time, requested, v.p05_position)
@@ -853,11 +858,16 @@ func update(dt: float) -> void:
 					m.set_shader_parameter("detail", detail)
 	for sq in sqs:
 		var v: FleetVis = vis[sq.id]
-		if v.p05 != null and not _p05_operation_id.is_empty() \
-				and (_p05_authority_tick(sq) <= v.p05_tick or not is_finite(dt) or dt <= 0.0):
-			continue
+		if v.p05 != null and not _p05_operation_id.is_empty():
+			if not is_finite(dt) or dt <= 0.0:
+				continue
+			if not v.p05_terminal.is_empty():
+				if sq != v.p05_terminal or v.p05_time == (P05Schedule.DURATION if sq.formation_id == v.p05_to else 0.0):
+					continue
+			elif _p05_authority_tick(sq) <= v.p05_tick:
+				continue
 		var aim_id: int = sq.firing_at if sq.firing_at >= 0 else sq.target_id
-		var foe: Dictionary = by_id.get(aim_id, {})
+		var foe: Dictionary = by_id.get(aim_id, {}) if v.p05_terminal.is_empty() else {}
 		var was_aim := v.aim
 		v.aim = not sq.dead and not foe.is_empty() and not foe.dead
 		if was_aim != v.aim:
