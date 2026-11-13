@@ -297,7 +297,7 @@ func _render_story() -> void:
 	actions.add_theme_constant_override("separation", 12)
 	body.add_child(actions)
 	_button("서사 건너뛰기", "skip", actions)
-	_button("전략 맵으로" if flow.page == Prologue.PAGES.size() - 1 else "다음", "next", actions)
+	_button("전술 준비로" if flow.page == Prologue.PAGES.size() - 1 else "다음", "next", actions)
 
 func _open_settings() -> void:
 	_settings_focus = get_viewport().gui_get_focus_owner()
@@ -341,28 +341,48 @@ func _load_detail(token: int) -> void:
 	flow.loaded(token, true)
 	_render()
 	_label("적벽  /  전술 준비", 28)
-	_label("작전 대기     •     전투는 시작되지 않았습니다", 18)
-	_apply_layout(detail)
+	_label("작전 대기  •  전투는 시작되지 않았습니다", 18)
+	_label("임무: 적벽 항로 방어", 22)
+	_label("연합 집결지와 적 접근 방향을 확인한 후 전장으로 이동하세요.", 18)
+	var maps := HBoxContainer.new()
+	maps.add_theme_constant_override("separation", 12)
+	body.add_child(maps)
 	if campaign_enabled:
+		var local_column := VBoxContainer.new()
+		local_column.custom_minimum_size.x = 240
+		maps.add_child(local_column)
+		_label("작전 위치", 18, false, local_column)
 		var local_map := MapView.new()
 		local_map.name = "RedCliffsLocalMap"
 		local_map.local_context = true
-		local_map.custom_minimum_size = Vector2(280, 190)
+		local_map.custom_minimum_size = Vector2(240, 300)
 		_apply_layout(local_map)
-		body.add_child(local_map)
-	body.add_child(detail)
-	_label("임무: 연합 집결 위치와 적 접근 방향을 확인하고 적벽 항로 방어를 준비하십시오.", 20)
-	_label("연합 집결지에서 정면 항로를 따라 작전 목표를 확인하십시오.", 18, true)
+		local_column.add_child(local_map)
+	var tactical_column := VBoxContainer.new()
+	tactical_column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	maps.add_child(tactical_column)
+	_label("작전 항로", 18, false, tactical_column)
+	detail.custom_minimum_size = Vector2(280, 360)
+	detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_apply_layout(detail)
+	tactical_column.add_child(detail)
 	if campaign_enabled:
-		_button("출격 · 실제 전장 준비", "sortie")
-		_button("항로도로 돌아가기", "map")
-		_button("기존 진행 · 이어하기 / 결산", "continue")
+		var primary := _button("함대 편성으로 이동", "sortie")
+		primary.add_theme_stylebox_override("normal", _style(Color("#285c62"), Color("#b2eeeb")))
+		_label("작전 브리핑에서 함대를 편성하고 전투를 시작할 수 있습니다.", 16, true)
+		var actions := HBoxContainer.new()
+		actions.add_theme_constant_override("separation", 12)
+		body.add_child(actions)
+		var resume := _button("기존 진행 이어하기 / 결산", "continue", actions)
+		resume.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var quit_button := _button("게임 종료", "exit", actions)
+		quit_button.custom_minimum_size.x = 150
 		campaign_notice = Label.new()
 		campaign_notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		campaign_notice.text = "출격 후 실제 전장에서 시작을 눌러 전투를 진행합니다."
 		_apply_layout(campaign_notice)
 		body.add_child(campaign_notice)
-	_button("게임 종료", "exit")
+	else:
+		_button("게임 종료", "exit")
 	buttons[0].grab_focus()
 	prepared_count += 1
 	detail_prepared.emit({"origin": flow.origin, "region_id": Flow.REGION, "scenario_id": Flow.SCENARIO, "battle_started": false})

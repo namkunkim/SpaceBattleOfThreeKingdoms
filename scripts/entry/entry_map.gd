@@ -83,7 +83,7 @@ func _draw() -> void:
 	var scale_factor := field.size.x / bounds.size.x
 	var backdrop := Rect2(Vector2.ZERO, size) if detailed or local_context else field
 	draw_texture_rect(sky, backdrop, false, Color(0.65, 0.72, 0.85))
-	draw_rect(Rect2(Vector2.ZERO, size), Color(0.02, 0.04, 0.08, 0.15))
+	draw_rect(Rect2(Vector2.ZERO, size), Color(0.02, 0.04, 0.08, 0.35) if detailed else Color(0.02, 0.04, 0.08, 0.15))
 	if detailed:
 		draw_texture_rect(terrain, field, false, Color(0.8, 0.9, 1, 0.9))
 		_detail(field, scale_factor)
@@ -254,18 +254,22 @@ func _detail(field: Rect2, factor: float) -> void:
 			elif id == "C":
 				_compact_label(at + Vector2(20, 24), labels[id], tint)
 		else:
-			_text(at + Vector2(15, 5), labels[id], tint, 15)
+			_text(at + Vector2(15, 5), labels[id], tint, 18)
 	var e := field.position + _point(nodes.E) * factor
 	for i in range(3):
 		var at := e + Vector2(-25 - i * 11, 22 + i * 3)
 		draw_colored_polygon(PackedVector2Array([at+Vector2(5,-6), at+Vector2(-4,5), at+Vector2(4,3)]), CYAN)
 	var r := field.position + _point(nodes.R) * factor
 	var c := field.position + _point(nodes.C) * factor
-	draw_dashed_line(r, c, Color("#dc9c85"), 1.5, 7)
+	draw_dashed_line(r, c, Color("#ffc0a6"), 2.5, 9)
+	var direction := (c - r).normalized()
+	var tip := c - direction * 20.0
+	var side := Vector2(-direction.y, direction.x)
+	draw_colored_polygon(PackedVector2Array([tip, tip - direction * 16.0 + side * 7.0, tip - direction * 16.0 - side * 7.0]), Color("#ffc0a6"))
 	if compact_scale < 1.0:
 		_compact_label(r + Vector2(20, -34), "적 접근", Color("#ffc4ae"))
 	else:
-		_text(r + Vector2(-85, -18), "적 접근 방향", Color("#dc9c85"), 15)
+		_text(r + Vector2(12, -18), "적 접근 방향", Color("#ffc0a6"), 18)
 		_text(Vector2(26, size.y - 22), "적벽  /  전술 준비     •     정면 항로", MUTED, 14)
 
 func _compact_label(position: Vector2, value: String, tint: Color) -> void:

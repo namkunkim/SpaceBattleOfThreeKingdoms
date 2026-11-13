@@ -174,7 +174,10 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 	GameSettings.apply(get_window())
 	get_window().title = GameLocale.text("성한지 — 적벽")
 	# 천하 지도에서 출격했으면 타이틀을 건너뛴다(WORLD-MAP-LINK §2). 서막(첫 진입 한 번, 브리핑 전)이 있으면 그것부터
-	if battle.has_method("routed") and battle.routed():
+	var world_link := get_node_or_null("/root/WorldLink")
+	if battle.has_method("routed") and battle.routed() and world_link != null and bool(world_link._sortie_origin.get("entry", false)):
+		show_screen("brief")
+	elif battle.has_method("routed") and battle.routed():
 		if has_method("open_prologue_or_brief"):
 			call("open_prologue_or_brief")
 		else:

@@ -33,10 +33,10 @@ func act(action: String, token: int, region := REGION) -> bool:
 			if action != "start" or region != REGION: return false
 			state = State.STORY
 		State.STORY:
-			if action == "skip": state = State.MAP
+			if action == "skip": state = State.LOADING
 			elif action == "next":
 				page += 1
-				if page >= Prologue.PAGES.size(): state = State.MAP
+				if page >= Prologue.PAGES.size(): state = State.LOADING
 			else: return false
 		State.MAP:
 			if region != REGION: return false

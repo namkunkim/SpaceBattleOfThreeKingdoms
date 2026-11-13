@@ -19,13 +19,7 @@ func run() -> void:
 	for chapter in range(1, Flow.Prologue.PAGES.size()):
 		check(f.state == Flow.State.STORY and f.page == chapter, "story chapter %d" % (chapter + 1))
 		f.act("next", f.revision)
-	check(f.state == Flow.State.MAP, "full story to map")
-	check(not f.act("enter", f.revision, "locked"), "region request lock")
-	f.act("enter", f.revision)
-	check(not f.act("enter", f.revision), "modal background blocked")
-	check(not f.act("escape", f.revision), "escape does not quit")
-	old = f.revision
-	check(f.act("yes", old) and not f.act("no", old), "yes/no first wins")
+	check(f.state == Flow.State.LOADING, "full story directly loads tactical preparation")
 	check(not f.act("yes", f.revision), "loading duplicate blocked")
 	check(f.loaded(f.revision, false, "fixture"), "load failure")
 	f.act("retry", f.revision)
@@ -54,12 +48,8 @@ func run() -> void:
 	check(story_map != null and story_map.prepared and story_map.story_focus == Flow.Prologue.PAGES[0][2],
 		"first story chapter mounts and highlights strategy atlas")
 	await create_timer(0.3).timeout
-	screen.request("skip", screen.flow.revision)
-	await create_timer(0.4).timeout
-	check(screen.flow.state == Flow.State.CONFIRM, "auto prompt after map")
-	await create_timer(0.3).timeout
 	screen.detail_scene = "res://missing.tscn"
-	screen.request("yes", screen.flow.revision)
+	screen.request("skip", screen.flow.revision)
 	await process_frame
 	await process_frame
 	check(screen.flow.state == Flow.State.ERROR, "real loader failure UI")
@@ -72,18 +62,14 @@ func run() -> void:
 	check(screen.find_child("PreparedMap", true, false) != null, "detail map mounted")
 	screen.queue_free()
 	await process_frame
-	var n = Flow.new()
-	n.begin("new")
-	n.act("start", n.revision)
-	n.act("skip", n.revision)
-	n.act("enter", n.revision)
-	check(n.act("no", n.revision) and n.state == Flow.State.EXIT, "no exit")
+	var skipped = Flow.new()
+	skipped.begin("new")
+	skipped.act("start", skipped.revision)
+	check(skipped.act("skip", skipped.revision) and skipped.state == Flow.State.LOADING, "skip directly loads tactical preparation")
 	var err = Flow.new()
 	err.begin("new")
 	err.act("start", err.revision)
 	err.act("skip", err.revision)
-	err.act("enter", err.revision)
-	err.act("yes", err.revision)
 	err.loaded(err.revision, false)
 	check(err.act("exit", err.revision), "error exit")
 	print("ENTRY_RESULT checks=%d failures=%d" % [checks, failures])

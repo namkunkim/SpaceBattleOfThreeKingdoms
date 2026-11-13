@@ -61,9 +61,7 @@ func _continue(_origin: String) -> void:
 
 func _sortie() -> void:
 	if screen == null or screen.flow.state != screen.Flow.State.READY: return
-	# Only this explicit action selects the approved product. detail_prepared is informational.
 	var candidate := BattleBrief.new()
-	candidate.select_first_operation_product()
 	var link := get_node("/root/WorldLink")
 	var error: Error = link.go_battle(candidate, {"entry": true, "difficulty": "표준", "mode": "direct"})
 	if error != OK: screen.campaign_rejected("전장에 들어갈 수 없습니다. 준비 상태에서 다시 출격해 주세요.")
