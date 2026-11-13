@@ -17,13 +17,13 @@ func _run() -> void:
 	var args := OS.get_cmdline_user_args()
 	var profile := OS.get_environment("SBTK_FXG_CHECKPOINT_PROFILE").replace("\\", "/")
 	var user_path := ProjectSettings.globalize_path("user://").replace("\\", "/")
-	if _check(args.size() == 1 or (args.size() == 2 and args[1] in ["seed", "reopen"]),
-			"pass the byte-preserved FX-G fixture path and optional seed/reopen mode") \
+	if _check(args.size() == 1 or (args.size() == 2 and args[1] in ["seed", "seed-hold", "reopen"]),
+			"pass the byte-preserved FX-G fixture path and optional seed, seed-hold or reopen mode") \
 			and _check(not profile.is_empty() and user_path.begins_with(profile + "/"),
 				"Godot uses the explicitly isolated profile") \
 			and _check(FileAccess.get_sha256(args[0]) == INPUT_SHA, "frozen FX-G host input hash"):
 		var mode := args[1] if args.size() == 2 else "round-trip"
-		_run_mode(args[0], mode)
+		await _run_mode(args[0], mode)
 		_check(FileAccess.get_sha256(args[0]) == INPUT_SHA, "frozen input bytes unchanged")
 	print("FXG_CHECKPOINT %d/%d" % [checks - failures, checks])
 	quit(0 if failures == 0 else 1)
@@ -48,10 +48,14 @@ func _run_mode(input: String, mode: String) -> void:
 	else:
 		var expected := _seed(host, input)
 		if not expected.is_empty():
-			if mode == "seed":
+			if mode in ["seed", "seed-hold"]:
 				var file := FileAccess.open(ORACLE, FileAccess.WRITE)
 				if _check(file != null and file.store_var(expected), "write oracle for pid=%d" % expected.pid):
 					file.close()
+					if mode == "seed-hold":
+						print("FXG_CHECKPOINT_READY_FOR_TERMINATION pid=%d" % expected.pid)
+						await create_timer(30.0).timeout
+						_check(false, "writer was not terminated after the ready marker")
 			else:
 				var resumed := Host.instantiate()
 				root.add_child(resumed)
