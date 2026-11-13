@@ -90,3 +90,19 @@ Windows 1600×900, 후보 `4dac0b8d`에서 17-before와 17-after는 각 재시�
 | [지도 닫기](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-audio-4dac0b8d-map-close-01/audio-map-close-01.wav) | `7c08fee3f4ac4eb1fc91c3d4cc895e2368382d873cbac546d52c0d54298952d4` |
 
 [설정 종료 기록](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-audio-4dac0b8d-settings-close-01/game-exit.json) · [지도 종료 기록](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-audio-4dac0b8d-map-close-01/game-exit.json)
+
+#### 활성 신호가 있는 설정 닫기 재시험
+
+`4dac0b8d`의 별도 프로필에서 PID 28736, HWND 7471250의 클라이언트를 1600×900, DPI 96으로 확인했다. 설정 오버레이에서 마스터·UI·음악을 0.8, SFX를 0으로 저장한 뒤 다시 열었다. 같은 오버레이에서 기준 파형을 확보한 후 창의 X로 닫았다. 프로세스 종료 코드 0을 확인했다. [클라이언트 실측](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-audio-4dac0b8d-settings-close-02/client-rect.json) · [종료 기록](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-audio-4dac0b8d-settings-close-02/game-exit.json)
+
+| 캡처 | 길이 | 최대 절대 PCM | 관측 |
+| --- | ---: | ---: | --- |
+| 설정 활성 기준 | 9.92초 | 5015 | 1–7초 RMS 635 |
+| 설정 활성 상태에서 닫기 | 9.81초 | 5567 | 마지막 절대 PCM ≥20은 4.072857초, 이후 꼬리 최대 18, 뒤 구간 RMS 0.479·최대 1 |
+
+시간 원점은 WAV 표본 시작이다. 캡처 준비에서 프로세스 종료까지의 QPC 간격은 4.81899초였다. 두 시계의 표본 정렬이 없어 닫기 입력부터 무음까지의 지연은 미산정이다. 독립 검토는 설정 닫기의 활성 기준 신호, 닫기 구간의 낮은 꼬리 및 정상 종료를 확인했다. 물리 출력 장치 청취, 트랙과 UI 효과별 식별, 전체 TRACE 및 P09 전체 인수는 남아 있다.
+
+| 루프백 파일 | SHA-256 |
+| --- | --- |
+| [활성 기준](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-audio-4dac0b8d-settings-close-02/audio-settings-active-baseline-01.wav) | `13deb8e1bc0be2ff0670bf547fc0fb9353c90a5c39e1ca156da5c001eb07c4cc` |
+| [활성 상태에서 닫기](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-audio-4dac0b8d-settings-close-02/audio-settings-active-close-01.wav) | `47d5dbae3204cf06c632e51799de9c188e7da6eca95dc04b9bd93c69746a49da` |
