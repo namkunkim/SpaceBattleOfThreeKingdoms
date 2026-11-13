@@ -121,3 +121,16 @@ Windows 1600×900, 후보 `4dac0b8d`에서 17-before와 17-after는 각 재시�
 | [재현 설명](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-4dac0b8d-foreground-trace-replay-03/RESULTS.md) | `752359effe006cb87a67a066fa3da4c803886811c649ff944f59a2dc7f4b615d` |
 | [재실행 스크립트](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-4dac0b8d-foreground-trace-replay-03/replay.gd) | `71bbf024ef7db48e037e4ccaf625f0e98626d2e5cc95a7e11d30a402e6910366` |
 | [정규화 스크립트](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-4dac0b8d-foreground-trace-replay-03/compare-normalized.py) | `cb708fc0be442924058ba9b45d6ba44c40acdd7c006375992c0ec7189ef4107c` |
+
+### 공개 파일 선택기에서 리플레이 재생
+
+Windows 후보 `4dac0b8d`에서 공개 리플레이 선택기로 고정 파일을 열었다. 시험 파일은 제한 호스트 기록을 바탕으로 같은 소스의 도구가 공개 capability 형식과 제품 코덱으로 생성했다. 전경에서 검증한 경로는 파일 선택과 재생이었다. [시험 파일 근거](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-4dac0b8d-foreground-trace-replay-fixture-01/RESULTS.md)
+
+격리 프로필에서 실행 중 읽기 전용 측정으로 1600×900, DPI 96, PID 16556, HWND 9962202를 확인했다. 0틱 준비 화면에서 Play를 눌렀고 중간 1037·1778·2878·3578·4467틱을 관찰했다. 끝까지 재생해 5541틱·554.1초에 `site_captured`와 `operation_settled`, `objective_success`·`objective_conditions_met`을 확인했다. 결산 ID는 `red-cliffs-first-operation-dev-v1/0a34ee3ab95f69b13f7df455a69da57c/settlement`였다. 리플레이 닫기 후 WorldMap이 복원됐고 창의 X로 정상 종료했다. 종료 코드는 0이었다. 독립 확인에서 재생 중간과 종료 후 격리 프로필의 셰이더 캐시 경로 5개가 같았고, 보호 대상 저장·결산·보조 파일은 없었다. 시험 파일 해시도 동일했다. 물리 오디오, 트랙·UI 효과 식별과 전체 P09 인수는 남아 있다.
+
+| 재생 근거 | SHA-256 |
+| --- | --- |
+| [고정 리플레이](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-4dac0b8d-foreground-trace-replay-fixture-01/red-cliffs-front-5541.pcopreplay) | `035dc2400bd0da3d9348254cf64e7aa5bfd7a9a2223f1b45b18e3e109fc447a5` |
+| [실행 기록](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-audio-4dac0b8d-replay-playback-01/game-start.json) | `3435c10b2e4d179a5ac87fe21b762c11321903a85c8e040fa9b186bef8dd4cf3` |
+| [종료 기록](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-audio-4dac0b8d-replay-playback-01/game-exit.json) | `c396954e9d9375828c2396e25eb3f9e301e0a0abe14ec0c9ef0b65921eb620af` |
+| [엔진 로그](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-audio-4dac0b8d-replay-playback-01/engine.log) | `3ed90fd67a8b29656f4cc9903140aeae10ec6cfacf5b7e8ecf3afa3d21b4aeaf` |
