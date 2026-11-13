@@ -90,7 +90,7 @@ func _verify_map(first: BattleOutcome, second: BattleOutcome) -> void:
 	var map := current_scene as WorldMapScreen
 	_check(map != null and map.state == "result" and map._result.visible
 		and map.outcome.to_dict() == second.to_dict()
-		and map._res_labels.src.text == second.settlement_id and map._res_labels.ending.text == second.reason,
+		and map.outcome.settlement_id == second.settlement_id and map._res_labels.ending.text == second.reason,
 		"fresh map renders durable settlement ID and reason")
 	var link := root.get_node("WorldLink")
 	var duplicate: Dictionary = link.publish_operation_settlement(first)

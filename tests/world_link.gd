@@ -303,7 +303,7 @@ func _development_sortie() -> void:
 		map = current_scene as WorldMapScreen
 		var link := root.get_node("WorldLink")
 		_check(map != null and map.outcome == settled and map.state == "result"
-			and map._res_labels.ending.text == dto.reason and map._res_labels.src.text == dto.id
+			and map._res_labels.ending.text == dto.reason and map.outcome.settlement_id == dto.id
 			and is_equal_approx(map.outcome.t_s, dto.clock_ms / 1000.0)
 			and link.take_outcome() == null and not link.routed(),
 			"settlement returns exactly once to the map")

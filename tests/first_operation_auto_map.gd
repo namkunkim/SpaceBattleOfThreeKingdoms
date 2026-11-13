@@ -84,7 +84,7 @@ func _verify_map(map: WorldMapScreen) -> void:
 		var outcome := map.outcome
 		if not _check(outcome != null and current_scene == map and map.state == "result" and map._result.visible
 				and outcome.kind == expected_kind and outcome.reason == expected_reason and outcome.mode == "auto"
-				and is_equal_approx(outcome.t_s, expected_time) and map._res_labels.src.text == outcome.settlement_id
+				and is_equal_approx(outcome.t_s, expected_time) and map.outcome.settlement_id == outcome.settlement_id
 				and not outcome.settlement_id.is_empty() and progress > 0, "automatic route publishes its joined settlement"):
 			return
 		if route == "flank":

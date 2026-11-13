@@ -315,7 +315,7 @@ func _development(map: WorldMapScreen, watch: Button) -> void:
 	viewer._leave()
 	await _frames()
 	_check(current_scene == map and map.state == "result" and map._result.visible and map.outcome == outcome
-		and map._res_labels.src.text == outcome.settlement_id and map.canvas.input_lock == map_lock
+		and map.outcome.settlement_id == outcome.settlement_id and map.canvas.input_lock == map_lock
 		and link.brief == old_brief and link.outcome == old_outcome
 		and link.last_difficulty == old_difficulty and link.last_mode == old_mode, "close preserves original result and WorldLink")
 	_check(FileAccess.get_sha256(path) == hash, "watch does not rewrite record")

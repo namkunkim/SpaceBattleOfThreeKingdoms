@@ -37,7 +37,6 @@ var _atlas_backdrop: ColorRect
 var _header: Control
 var _title: Label
 var _sub: Label
-var _crumbs := {}
 var _card: PanelContainer
 var _result: PanelContainer
 var _cta: PanelContainer
@@ -258,17 +257,6 @@ func _build_header() -> void:
 	col.add_child(_title)
 	_sub = UiTheme.label("", "Muted", 15)
 	col.add_child(_sub)
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 8)
-	col.add_child(row)
-	var g := ButtonGroup.new()
-	for l in ["z0", "z2", "z3"]:
-		var b := _toggle(["천하", "형주", "구지"][["z0", "z2", "z3"].find(l)], g)
-		b.custom_minimum_size = Vector2(104, BTN_H)
-		b.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-		b.pressed.connect(func(): _go_level(l))
-		row.add_child(b)
-		_crumbs[l] = b
 
 func _build_legend() -> void:
 	_legend = W.DrawPanel.new(_draw_legend, UiTheme.ornate(false))
@@ -406,61 +394,55 @@ func _anchor_right(p: Control) -> void:
 	p.offset_bottom = -M
 
 func _build_result() -> void:
-	_result = _panel()
-	_anchor_right(_result)
-	var v := VBoxContainer.new()
-	v.add_theme_constant_override("separation", 10)
-	_result.add_child(v)
-	_res_labels.eyebrow = UiTheme.label("", "Eyebrow", 13)
-	v.add_child(_res_labels.eyebrow)
+	_result = _panel(UiTheme.ornate(false))
+	_result.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var layout := HBoxContainer.new()
+	layout.add_theme_constant_override("separation", 24)
+	_result.add_child(layout)
+	var art := TextureRect.new()
+	art.name = "ResultArtwork"
+	art.texture = load("res://assets/backgrounds/allied-fleet-review-final-4k.png")
+	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	art.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	art.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	layout.add_child(art)
+	_res_labels.art = art
+	var column := VBoxContainer.new()
+	column.custom_minimum_size.x = 500
+	column.add_theme_constant_override("separation", 12)
+	layout.add_child(column)
+	_res_labels.eyebrow = UiTheme.label("전투 결과", "Eyebrow", 15)
+	column.add_child(_res_labels.eyebrow)
 	_res_labels.title = UiTheme.label("", "Display", 46)
-	v.add_child(_res_labels.title)
-	_add_restore_actions(v)
-	_res_labels.ending = _wrap(UiTheme.label("", "Serif", 19))
-	v.add_child(_res_labels.ending)
-	var grid := GridContainer.new()
-	grid.columns = 2
-	grid.add_theme_constant_override("h_separation", 18)
-	grid.add_theme_constant_override("v_separation", 4)
-	v.add_child(grid)
-	_res_labels.legacy_grid = grid
-	for k in [["time", "교전 시간"], ["loss_a", "연합 손실"], ["loss_f", "조조군 손실"], ["cao", "조조"]]:
-		grid.add_child(UiTheme.label(k[1], "Muted", 15))
-		var l := UiTheme.label("", "Strong", 16)
-		grid.add_child(l)
-		_res_labels[k[0]] = l
-	v.add_child(HSeparator.new())
-	v.add_child(UiTheme.label("형주의 변화", "Eyebrow", 13))
-	_res_labels.regions = _wrap(UiTheme.label("", "Body", 15))
-	v.add_child(_res_labels.regions)
-	v.add_child(HSeparator.new())
-	v.add_child(UiTheme.label("후일담", "Eyebrow", 13))
-	_res_labels.line = _wrap(UiTheme.label("", "Serif", 17, UiTheme.INK_2))
-	v.add_child(_res_labels.line)
-	_res_labels.src = _wrap(UiTheme.label("", "Muted", 13))
-	v.add_child(_res_labels.src)
-	var sp := Control.new()
-	sp.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	v.add_child(sp)
-	_res_labels.seed = UiTheme.label("", "Muted", 13)
-	v.add_child(_res_labels.seed)
+	column.add_child(_res_labels.title)
+	_res_labels.ending = _wrap(UiTheme.label("", "Body", 18))
+	column.add_child(_res_labels.ending)
+	column.add_child(UiTheme.label("전투 이후", "Eyebrow", 15))
+	_res_labels.epilogue = _wrap(UiTheme.label("", "Serif", 20, UiTheme.INK_2))
+	_res_labels.epilogue.name = "ResultEpilogue"
+	_res_labels.epilogue.add_theme_constant_override("line_spacing", 8)
+	column.add_child(_res_labels.epilogue)
+	var spacer := Control.new()
+	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	column.add_child(spacer)
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 8)
-	v.add_child(row)
-	var world_b := _btn("천하 보기")
-	world_b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	world_b.pressed.connect(_result_to_world)
-	row.add_child(world_b)
-	var same := _btn("같은 판 다시")
-	same.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	same.pressed.connect(func(): sortie(outcome.seed if outcome else -1))
-	row.add_child(same)
-	_res_labels.same = same
-	var again := _btn("새 판", true)
+	column.add_child(row)
+	var again := _btn("다시 하기", true)
+	again.name = "ResultRetry"
 	again.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	again.pressed.connect(func(): sortie())
 	row.add_child(again)
-	_res_labels.again = again
+	var replay := _watch_replay_action(false)
+	replay.text = "리플레이 보기"
+	replay.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(replay)
+	var quit_button := _btn("종료")
+	quit_button.name = "ResultQuit"
+	quit_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	quit_button.pressed.connect(func(): get_tree().quit())
+	row.add_child(quit_button)
 	_result.visible = false
 
 func _build_cta() -> void:
@@ -686,8 +668,6 @@ func open_card() -> void:
 func _on_level(l: String) -> void:
 	_title.text = LEVEL_TITLE.get(l, "")
 	_sub.text = LEVEL_SUB.get(l, "")
-	for k in _crumbs:
-		(_crumbs[k] as Button).set_pressed_no_signal(k == l)
 	if state == "browse":
 		_update_card()
 
@@ -1180,68 +1160,30 @@ func _show_result(o: BattleOutcome, animate := true) -> void:
 	outcome = o
 	_close_legacy_resolver()
 	state = "result"
-	canvas.input_lock = false
+	canvas.input_lock = true
 	canvas.battle_live = false
 	canvas.arrows = ""
+	canvas.visible = false
+	_header.visible = false
+	_legend.visible = false
 	_resolve.visible = false
 	_card.visible = false
 	_cta.visible = false
-	_legend.visible = true
-	_update_inset()
-	var operation := not o.settlement_id.is_empty()
-	_res_labels.same.visible = not operation
-	_res_labels.again.visible = not operation
-	_res_labels.legacy_grid.visible = not operation
-	if operation:
-		var native := o.mode == "o07_native"
-		if native:
-			_res_labels.eyebrow.text = "O07 operation settlement"
-		elif o.is_product_operation:
-			_res_labels.eyebrow.text = "PC operation settlement"
-		else:
-			_res_labels.eyebrow.text = "PC development operation"
-		_res_labels.title.text = KIND_TITLE.get(o.kind, "") if native else {"objective_success": "\ubaa9\ud45c \ub2ec\uc131", "withdrawal_success": "\ucca0\uc218 \uc131\uacf5", "failure": "\uc791\uc804 \uc2e4\ud328"}[o.kind]
-		_res_labels.title.add_theme_color_override("font_color", Factions.of("wu").rim if o.win else Factions.of("wei").rim)
-		_res_labels.ending.text = o.reason
-		_res_labels.regions.text = ""
-		_res_labels.line.text = ""
-		_res_labels.src.text = o.settlement_id
-		_res_labels.seed.text = "%d ms / seed %d" % [roundi(o.t_s * 1000), o.seed] if native else "%.1f s / seed %d" % [o.t_s, o.seed]
-		_result.visible = true
-		_update_inset()
-		if animate:
-			canvas.jump_to("z2")
-		return
-	_res_labels.eyebrow.text = "%s · %s · %s" % [o.grade, "직접 지휘" if o.mode == "direct" else "자동 해결", o.difficulty]
-	_res_labels.title.text = KIND_TITLE.get(o.kind, "")
+	_res_labels.title.text = KIND_TITLE.get(o.kind, "연합 승리" if o.win else "전투 패배")
 	_res_labels.title.add_theme_color_override("font_color", Factions.of("wu").rim if o.win else Factions.of("wei").rim)
-	_res_labels.ending.text = o.ending_text()
-	_res_labels.time.text = "%d분 %02d초" % [int(o.t_s) / 60, int(o.t_s) % 60]
-	var has := o.cao_status != ""
-	_res_labels.loss_a.text = "%d%%" % o.loss_pct.alliance if has else "—"
-	_res_labels.loss_f.text = "%d%%" % o.loss_pct.foe if has else "—"
-	_res_labels.cao.text = EpilogueText.CAO_STATUS.get(o.cao_status, "—") if has else "—"
-	var ln := o.line_text()
-	_res_labels.line.text = ln[0]
-	_res_labels.src.text = ln[1]
-	_res_labels.seed.text = "시드 %d" % o.seed
-	var after: Dictionary = world.outcome_owners.get(o.kind, {})
-	var lines := PackedStringArray()
-	for r in world.regions:
-		var to: String = after.get(r.id, r.owner)
-		if to != r.owner:
-			lines.append("%s (%s)  %s → %s" % [r.name, r.label, OWNER_NAME.get(r.owner, ""), OWNER_NAME.get(to, "")])
-	_res_labels.regions.text = "\n".join(lines) if not lines.is_empty() else "형주의 주인은 바뀌지 않았다."
+	_res_labels.ending.text = o.ending_text() if o.settlement_id.is_empty() else o.reason
+	_res_labels.art.visible = true
+	_res_labels.art.texture = load("res://assets/backgrounds/allied-fleet-review-final-4k.png")
+	if o.kind == "withdrawal_success":
+		_res_labels.epilogue.text = "함대는 전열을 수습하며 적벽을 벗어났다. 살아남은 이들은 다음 싸움을 준비한다."
+	elif o.win:
+		_res_labels.epilogue.text = "손권과 유비의 연합함대가 적벽을 지켜 냈다. 전투가 끝난 우주에서 장수들은 돌아온 함대를 맞으며, 함께 이룬 승리를 기린다."
+	else:
+		_res_labels.epilogue.text = "연합함대는 흩어진 전열을 수습해 물러났다. 적벽의 패배를 뒤로하고 살아남은 이들은 다시 맞설 날을 준비한다."
 	_result.visible = true
 	_update_inset()
-	if not animate:
-		return
-	canvas.set_region_owners(_initial_owners(), false)
-	canvas.jump_to("z2")
-	sound.play("decision")
-	get_tree().create_timer(0.6).timeout.connect(func():
-		if state == "result":
-			canvas.set_region_owners(world.outcome_owners.get(o.kind, _initial_owners()), true))
+	if animate:
+		sound.play("decision")
 
 func _result_to_world() -> void:
 	_result.visible = false
@@ -1255,6 +1197,9 @@ func _result_to_world() -> void:
 func _process(delta: float) -> void:
 	var fl := canvas.flying()
 	var show_atlas := state == "browse" and canvas.level() == "z0" and not fl and not _card.visible
+	if state != "result" and not show_atlas:
+		canvas.visible = true
+		_header.visible = true
 	_title_button.visible = show_atlas and _sortie_available()
 	_atlas_skirmish_button.visible = show_atlas and _cta.visible
 	_atlas_skirmish_button.disabled = not _sortie_available() or _replay_dialog != null or _replay_overlay != null
@@ -1264,9 +1209,9 @@ func _process(delta: float) -> void:
 	if _atlas.visible != show_atlas:
 		_atlas.visible = show_atlas
 		_atlas_backdrop.visible = show_atlas
-		_header.visible = not show_atlas
-		canvas.visible = not show_atlas
-		_legend.visible = not show_atlas and state != "sortie"
+		_header.visible = not show_atlas and state != "result"
+		canvas.visible = not show_atlas and state != "result"
+		_legend.visible = not show_atlas and state not in ["sortie", "result"]
 		if show_atlas:
 			_atlas.show_overview()
 	if _was_flying and not fl and state == "browse":
