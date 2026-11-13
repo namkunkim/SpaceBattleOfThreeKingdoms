@@ -89,3 +89,18 @@ r=0.05에서 두 편성 모두 60·120Hz에서 5초 이내였다. 39척·30Hz는
 | [12개 시간표](F:/WorkSpace/Campaign-Orchestration/P05-ramped-acceleration-20261113/RESULT.json) | `6b6eeb45f69c4139c3073209e496a8ff7577694bf5ab067e56b38d95a6149550` |
 | [시간표 계산](F:/WorkSpace/Campaign-Orchestration/P05-ramped-acceleration-20261113/analyze.py) | `cd640c87a68cf8d8dc311ac94e60dbdff549947d11fc63cc4c00cb309c9cb912` |
 | [39척·30Hz 하한](F:/WorkSpace/Campaign-Orchestration/P05-ramped-acceleration-20261113/LIMIT-30HZ.json) | `e259ec2938c9d3c96d4cef6324be69362c259fc59b3b3d964cb56a99aa963985` |
+
+## 39척·30Hz 이동 순서 탐색
+
+기존 258개 이동의 순서에서 서로 다른 함선의 인접 이동을 바꾼 중간 자세를 후보에 추가했다. 최대 24개 원래 이동 간격에서 후보 구간 13,720개를 기존 Sweep 검증기와 여유 0.001로 검사했다. 7,040개 구간이 정방향과 역방향 모두를 통과했다.
+
+독립 검토에서 고정 방향·중심, 공백 없는 30Hz, 램프 비율 0.03인 시간표를 확인했다. **68개 위상·147프레임·4.900초**이며 최대 연속 가속도는 잠정 상한의 **0.971448배**였다. 같은 그래프에서 램프 비율 0.05는 153프레임·5.100초였다. 이 결과는 인증된 후보 자세와 프레임별 위상 경계 표시에 한정된다. 임의 갱신·공백, 제품 저크 기준, 전환 중 명령, 실제 표시와 권위 시계 연결은 추가 검증 범위다.
+
+| 격리 산출물 | SHA-256 |
+| --- | --- |
+| [실험 기록](F:/WorkSpace/Campaign-Orchestration/P05-reordered-moves-20261113/RESULTS.md) | `765dc8f74e09104ffff29244c194594170e6d9511c3655e85b7b1aa473275814` |
+| [Godot 양방향 검사](F:/WorkSpace/Campaign-Orchestration/P05-reordered-moves-20261113/graph-wide.out) | `223762259f7f01d3be073e7a34bf0259ac517b1a2914c07500f0d4e30a338785` |
+| [Godot 추출 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-reordered-moves-20261113/export-wide.gd) | `cc4696794ae2753eb12224990068ade4611a777b98f099e029d00e71a899f712` |
+| [프레임 계산](F:/WorkSpace/Campaign-Orchestration/P05-reordered-moves-20261113/analyze-wide.py) | `7f425155f3399eaa6d6a3931d04ae2c8808c6ae038d66070868f8eab8c6bcc5d` |
+| [램프 탐색](F:/WorkSpace/Campaign-Orchestration/P05-reordered-moves-20261113/ramp-search.py) | `da1314b10068c6b98f9bc1125c6cdf10b0ce4c4e2e5128a56c6e29cbc65eb524` |
+| [147프레임 경로](F:/WorkSpace/Campaign-Orchestration/P05-reordered-moves-20261113/RESULT-RAMP-SEARCH.json) | `0687c9d4ce28e03bc6e7017db0218e45ff1f602e1b35f68e5549054ca4b39773` |
