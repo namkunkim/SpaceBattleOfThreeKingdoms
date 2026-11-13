@@ -16,3 +16,24 @@
 | [Godot 경로 추출](F:/WorkSpace/Campaign-Orchestration/P05-display-governor-20261113/schedule.out) | `953de0780c73b24e09581dfb8628afd3f0797074936d66fc866c2405b2c75c06` |
 | [분석 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-display-governor-20261113/analyze.py) | `0d41722a6b28e4d95a58a4485cc6dd59b1c277e3be622006c15308399d07c3f0` |
 | [원본 분석 기록](F:/WorkSpace/Campaign-Orchestration/P05-display-governor-20261113/RESULTS.md) | `46adeae5793aa2cf2d3db30e2e1af26691e39b9fdecbfe93a44233e95e6842ca` |
+
+## 고정 주사율에서 위상별 최소 시간
+
+기존 인증 순서(39척 78개 위상, 21척 41개 위상)와 5차 보간을 유지했다. 갱신 공백 없이 30·60·120Hz로 고정했고 모든 위상 경계를 프레임에 표시했다. 이 조건에서 잠정 연속 가속도 기준을 지키는 최소 프레임 수와, 표시 좌표의 차분만 제한했을 때의 최소 프레임 수를 각각 계산했다.
+
+| 편성 | 갱신 빈도 | 연속 기준 최소 프레임 / 초 | 차분 기준 최소 프레임 / 초 |
+| --- | ---: | ---: | ---: |
+| 39척 | 30Hz | 192 / 6.400 | 97 / 3.233 |
+| 39척 | 60Hz | 339 / 5.650 | 270 / 4.500 |
+| 39척 | 120Hz | 645 / 5.375 | 609 / 5.075 |
+| 21척 | 30Hz | 173 / 5.767 | 120 / 4.000 |
+| 21척 | 60Hz | 320 / 5.333 | 305 / 5.083 |
+| 21척 | 120Hz | 621 / 5.175 | 613 / 5.108 |
+
+연속 기준의 최소 시간은 여섯 조건 모두 5초를 초과했다. 차분 기준에서 5초 이내인 세 조건의 프레임 사이 연속 가속도는 잠정 기준의 5.57–7.40배였다. 이 최소값은 위의 경로·보간·경계 표시 제약에 한정된다. 다른 경로나 갱신 방식은 별도 검증 범위다. 제품 기준과 동작은 변경하지 않았다.
+
+| 격리 산출물 | SHA-256 |
+| --- | --- |
+| [분석 기록](F:/WorkSpace/Campaign-Orchestration/P05-display-frame-optimum-20261113/RESULTS.md) | `4fc9b26890a45b365554f0bc7590e3a540e8cf22ff2f4ebad91929a45e03717f` |
+| [상세 결과](F:/WorkSpace/Campaign-Orchestration/P05-display-frame-optimum-20261113/RESULT.json) | `05aaa0220d0364e3855020706b42eebea886d2142b5e0369488e6e7bd726bad9` |
+| [재현 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-display-frame-optimum-20261113/optimize.py) | `acf18018800ed42c7c01c7dcb4a961f1a75d5dbe71f5ff61a7f208263ddd1c10` |
