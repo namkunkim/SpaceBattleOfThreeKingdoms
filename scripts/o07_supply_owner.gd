@@ -2,6 +2,7 @@ extends RefCounted
 # Isolated opt-in operation owner. Only a native Supply completion can
 # create a receipt. Consumers can acknowledge a committed receipt by key.
 const Private := preload("res://core/battle/operation_private_state.gd")
+const EventReferences := preload("res://scripts/operation_event_references.gd")
 const Runtime := preload("res://core/battle/operation_runtime_adapter.gd")
 const Store := preload("res://scripts/first_operation_save_store.gd")
 const WindowsSlot := preload("res://scripts/o07_windows_slot.gd")
@@ -80,6 +81,9 @@ static func _open(path: String, previous: bool) -> Dictionary:
 	var prepared := Private.prepare(packet)
 	if not prepared.ok:
 		return prepared
+	if not EventReferences.valid(packet.view, EventReferences.Scope.O07):
+		prepared.owner.close()
+		return _fail("event_reference")
 	var end: Dictionary = packet.view.state
 	if end.over:
 		var expected := _settlement_key(state)
