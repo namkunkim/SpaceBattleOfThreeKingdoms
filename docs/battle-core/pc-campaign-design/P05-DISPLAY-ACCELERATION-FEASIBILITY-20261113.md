@@ -142,3 +142,25 @@ r=0.05에서 두 편성 모두 60·120Hz에서 5초 이내였다. 39척·30Hz는
 | [정상 갱신 로그](F:/WorkSpace/Campaign-Orchestration/P05-confirmed-frontier-renderer-20261113/frontier-0.out) | `7621ea239e098348c48c10cb0d8179b64e60626b12230cea06506aafee495410` |
 | [권위 갱신 억제 로그](F:/WorkSpace/Campaign-Orchestration/P05-confirmed-frontier-renderer-20261113/frontier-1.out) | `29b5f78788fad19ab756b87a8a60fcc1568a50a0c6a805e21d3dff309d5d69b9` |
 | [147프레임 입력 경로](F:/WorkSpace/Campaign-Orchestration/P05-reordered-moves-20261113/RESULT-RAMP-SEARCH.json) | `0687c9d4ce28e03bc6e7017db0218e45ff1f602e1b35f68e5549054ca4b39773` |
+
+## 39척 확인 범위 정렬 표시
+
+독립 검토에서 격리 Godot 헤드리스 시험 네 건을 확인했다. 기존 양방향 인증 그래프와 잠정 연속 가속도 상한을 유지했다. 램프 비율 0.01에서 양방향의 위상 길이를 각각 선택했다. 30Hz 표시 갱신마다 한 표본씩 진행했고, 합성 10Hz 권위 스냅샷으로 위상 끝이 확인되기 전에는 정지점에서 기다렸다. 표시 슬롯은 확인 범위를 넘지 않았으며 이동 구간은 양방향 모두 안전했다.
+
+| 합성 권위 조건 | 정방향 표시 도착 | 역방향 표시 도착 | 시험용 표시 확정 |
+| --- | ---: | ---: | ---: |
+| 정상 | 149프레임·4.967초 | 149프레임·4.967초 | 양방향 150프레임·5.000초 |
+| 표시 프레임 51–61의 권위 갱신만 억제 | 158프레임·5.267초 | 159프레임·5.300초 | 각각 158·159프레임 |
+
+공백 조건에서도 표시 주사율은 30Hz였다. 권위 갱신만 11표시 프레임·366.7ms 동안 억제했다. 공백은 종료 이전에 해소되었고, 합성 권위 종료 기준은 150프레임이었다. 공백 시험의 표시 확정은 그 기준과 표시 도착을 모두 기다렸다. 이는 시험 어댑터의 확정 동작이며 제품 권위 결산 지연을 의미하지 않는다. 네 조건의 표시 좌표 최대 차분 가속도는 모두 22,913.480758667 전술 단위/s²였다. 실제 권위 연결, 불규칙 표시 갱신과 제품 저크 상한은 검증 범위 밖이다.
+
+| 파일 | SHA-256 |
+| --- | --- |
+| [solve.py](F:/WorkSpace/Campaign-Orchestration/P05-frontier-aligned-20261113/solve.py) | `0439841822fe24521e4e4cdb074a6462f975b1dc40375e31a615095e5f05e6e3` |
+| [RESULT.json](F:/WorkSpace/Campaign-Orchestration/P05-frontier-aligned-20261113/RESULT.json) | `2ffa837f94d19967e3405e8b2cc9d380f060b510adc36aeffd14cddf94f4db85` |
+| [probe.gd](F:/WorkSpace/Campaign-Orchestration/P05-frontier-aligned-20261113/probe.gd) | `db0188faff33082d8c2f3025df3e8c92bd48eabe858908d8e0e89298c326c689` |
+| [final-0.out](F:/WorkSpace/Campaign-Orchestration/P05-frontier-aligned-20261113/final-0.out) | `c700f8060837962e834f3328f4ba5e30e0f05de4e040f66a00a0c99f2e186d0e` |
+| [final-1.out](F:/WorkSpace/Campaign-Orchestration/P05-frontier-aligned-20261113/final-1.out) | `a65af7cda40721c69465204534f79b572aee0fe3adaaa4f6e9704f6c7e02f69a` |
+| [gap_probe.gd](F:/WorkSpace/Campaign-Orchestration/P05-frontier-aligned-20261113/gap_probe.gd) | `e21a5035ac980097ba2a8c2c801695ebfd23a50473ae0d4589ea00183fbc16bd` |
+| [gap-0.out](F:/WorkSpace/Campaign-Orchestration/P05-frontier-aligned-20261113/gap-0.out) | `b95c00b8f537e030f706621f8c2f8e0e83a53580bab996ddcdb58ad5a293c8c3` |
+| [gap-1.out](F:/WorkSpace/Campaign-Orchestration/P05-frontier-aligned-20261113/gap-1.out) | `1fdf50f35ad9f16aa05f52b248abcc3ac7bf49fcac7a002c306ab65f1ef0c873` |
