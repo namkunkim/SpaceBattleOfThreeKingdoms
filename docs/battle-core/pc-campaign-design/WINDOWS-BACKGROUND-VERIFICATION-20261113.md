@@ -107,6 +107,13 @@ Windows 1600×900, 후보 `4dac0b8d`에서 17-before와 17-after는 각 재시�
 | [활성 기준](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-audio-4dac0b8d-settings-close-02/audio-settings-active-baseline-01.wav) | `13deb8e1bc0be2ff0670bf547fc0fb9353c90a5c39e1ca156da5c001eb07c4cc` |
 | [활성 상태에서 닫기](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-audio-4dac0b8d-settings-close-02/audio-settings-active-close-01.wav) | `47d5dbae3204cf06c632e51799de9c188e7da6eca95dc04b9bd93c69746a49da` |
 
+#### P09 루프백 배경음악 음원 대조
+
+`4dac0b8d`의 설정 활성 기준·설정 닫기·월드맵 닫기 루프백 WAV에서 각각 `stars_stripes.ogg`와 일치하는 신호를 확인했다. FFmpeg로 1kHz 모노 PCM으로 변환한 뒤 1.5초 구간 7개를 대조했다. 파형 상관계수는 0.83035–0.96280이었고, 같은 캡처 안의 트랙 오프셋은 1ms 해상도에서 일관됐다. 후보 구간을 선별한 같은 검색에서 `mountain_king.ogg`는 최대 0.08984, 순서를 섞은 구간은 최대 0.31952였다. 이전의 조용한 설정 닫기 WAV는 변환 후 RMS 0이었다. 물리 장치 청취, UI 효과음 식별과 종료 인수는 남아 있다.
+
+- [대조 스크립트](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-4dac0b8d-offline-source-fingerprint-01/match.py) SHA-256 `14dab5b3a02cddd4f067474740bd087358b6d5113fa7b3fa0df6af14697db891`
+- [대조 결과와 입력 해시](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-4dac0b8d-offline-source-fingerprint-01/RESULT.json) SHA-256 `19ea22c9674284f1f52b6599e8a30efeefe396ba72f3078e8ed93d394b41d6a4`
+
 ### P09 제한 검증 호스트 TRACE 재실행
 
 격리 작업본 `4dac0b8d`에서 Godot 4.7.2와 같은 작전 어댑터·TRACE 기록기를 사용했다. 앞서 Windows 전경에서 실행한 제한 검증 호스트의 정면 경로에 기록된 명령 세 건을 틱 44·400·954에 재실행했다. 원본과 재실행에서 기록된 644행 전체를 비교했다. 시각 필드 `wall_time`, `mono_ms`와 실행별 `id`·`operation_id`의 작전 식별자 부분을 정규화한 뒤 644/644가 일치했다. 시각 필드만 제외하면 작전 식별자를 포함한 여섯 행의 차이가 남았다.
