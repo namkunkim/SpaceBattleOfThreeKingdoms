@@ -82,6 +82,7 @@ var _operation_auto_pending: BattleOutcome
 var _operation_auto_save_error := ""
 var _title_button: Button
 var _atlas_resume_button: Button
+var _atlas_skirmish_button: Button
 var _difficulty := "표준"
 var _mode := "direct"
 var _res_labels := {}
@@ -148,6 +149,7 @@ func _ready() -> void:
 	_title_button.hide()
 	_title_button.pressed.connect(_return_to_title)
 	_build_atlas_resume()
+	_build_atlas_skirmish()
 	_build_chip()
 	_build_caption()
 	_build_resolve()
@@ -487,6 +489,27 @@ func _build_cta() -> void:
 	b.pressed.connect(_open_atlas_red_cliffs)
 	h.add_child(b)
 	_cta.visible = false
+
+func _build_atlas_skirmish() -> void:
+	_atlas_skirmish_button = _btn("적벽 모의전", false, 180)
+	_atlas_skirmish_button.name = "OpenRedCliffsSkirmish"
+	_atlas_skirmish_button.focus_mode = Control.FOCUS_ALL
+	hud.add_child(_atlas_skirmish_button)
+	_atlas_skirmish_button.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	_atlas_skirmish_button.offset_left = M
+	_atlas_skirmish_button.offset_right = M + _atlas_skirmish_button.custom_minimum_size.x
+	_atlas_skirmish_button.offset_top = -M - BTN_H
+	_atlas_skirmish_button.offset_bottom = -M
+	_atlas_skirmish_button.hide()
+	_atlas_skirmish_button.pressed.connect(_open_atlas_skirmish)
+
+
+func _open_atlas_skirmish() -> void:
+	if (not _atlas_skirmish_button.is_visible_in_tree() or not _cta.visible
+			or not _sortie_available() or _replay_dialog != null or _replay_overlay != null):
+		return
+	open_card()
+
 
 func _build_atlas_resume() -> void:
 	if not OperationHost.product_save_supported() \
@@ -1233,6 +1256,8 @@ func _process(delta: float) -> void:
 	var fl := canvas.flying()
 	var show_atlas := state == "browse" and canvas.level() == "z0" and not fl and not _card.visible
 	_title_button.visible = show_atlas and _sortie_available()
+	_atlas_skirmish_button.visible = show_atlas and _cta.visible
+	_atlas_skirmish_button.disabled = not _sortie_available() or _replay_dialog != null or _replay_overlay != null
 	if _atlas_resume_button != null:
 		_atlas_resume_button.visible = show_atlas
 		_atlas_resume_button.disabled = not _sortie_available() or _replay_dialog != null or _replay_overlay != null
