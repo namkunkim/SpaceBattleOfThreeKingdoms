@@ -37,3 +37,22 @@
 | [분석 기록](F:/WorkSpace/Campaign-Orchestration/P05-display-frame-optimum-20261113/RESULTS.md) | `4fc9b26890a45b365554f0bc7590e3a540e8cf22ff2f4ebad91929a45e03717f` |
 | [상세 결과](F:/WorkSpace/Campaign-Orchestration/P05-display-frame-optimum-20261113/RESULT.json) | `05aaa0220d0364e3855020706b42eebea886d2142b5e0369488e6e7bd726bad9` |
 | [재현 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-display-frame-optimum-20261113/optimize.py) | `acf18018800ed42c7c01c7dcb4a961f1a75d5dbe71f5ff61a7f208263ddd1c10` |
+
+## 기존 위상 경계 병합
+
+39척 경로의 경계 쌍 3,081개와 21척 경로의 861개를 기존 Sweep 검증기의 여유 0.001로 검사했다. 통과 구간은 역방향에서도 확인했다. 39척은 인접 구간 외 두 구간을 추가로 통과해 78개 위상을 76개로 줄였다. 21척은 인접 구간 41개를 유지했다.
+
+| 편성 | 30Hz 최소 프레임 / 초 | 60Hz 최소 프레임 / 초 | 120Hz 최소 프레임 / 초 |
+| --- | ---: | ---: | ---: |
+| 39척 | 188 / 6.267 | 331 / 5.517 | 629 / 5.242 |
+| 21척 | 173 / 5.767 | 320 / 5.333 | 621 / 5.175 |
+
+기존 경계 순서, 5차 보간, 공백 없는 고정 갱신 및 잠정 연속 가속도 기준을 적용한 최소값이다. 기존 경계 병합만으로는 여섯 조건 모두 5초를 초과했다. 새 경유 자세와 제품 기준은 별도 검증 범위다. 런타임 변경은 없다.
+
+| 격리 산출물 | SHA-256 |
+| --- | --- |
+| [분석 기록](F:/WorkSpace/Campaign-Orchestration/P05-phase-merge-20261113/RESULTS.md) | `70ff01512e899ec81e378cb42425f2c45e3240ebdb31bdb0420730e2a7c3f28f` |
+| [상세 결과](F:/WorkSpace/Campaign-Orchestration/P05-phase-merge-20261113/RESULT.json) | `61b6381700154d78d328717cc6cec9bcb6dd3c3da236078169d5c05b20f6705c` |
+| [Godot 검증 출력](F:/WorkSpace/Campaign-Orchestration/P05-phase-merge-20261113/merges.out) | `1901506b448be8120c7ed3a73982997a18f524d8e427b060d71e9b51c6a3182d` |
+| [Godot 추출 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-phase-merge-20261113/export_merges.gd) | `8227337a1314dea47c1102687c8f84dc4c328dca449e8c67158e319d067d1640` |
+| [최소 프레임 계산](F:/WorkSpace/Campaign-Orchestration/P05-phase-merge-20261113/optimize_merges.py) | `0d90e0baf31a4b24eafa5c51cdf1d76ca10d67e476e16b2100cfb97979435d47` |
