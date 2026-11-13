@@ -106,3 +106,18 @@ Windows 1600×900, 후보 `4dac0b8d`에서 17-before와 17-after는 각 재시�
 | --- | --- |
 | [활성 기준](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-audio-4dac0b8d-settings-close-02/audio-settings-active-baseline-01.wav) | `13deb8e1bc0be2ff0670bf547fc0fb9353c90a5c39e1ca156da5c001eb07c4cc` |
 | [활성 상태에서 닫기](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-audio-4dac0b8d-settings-close-02/audio-settings-active-close-01.wav) | `47d5dbae3204cf06c632e51799de9c188e7da6eca95dc04b9bd93c69746a49da` |
+
+### P09 제한 검증 호스트 TRACE 재실행
+
+격리 작업본 `4dac0b8d`에서 Godot 4.7.2와 같은 작전 어댑터·TRACE 기록기를 사용했다. 앞서 Windows 전경에서 실행한 제한 검증 호스트의 정면 경로에 기록된 명령 세 건을 틱 44·400·954에 재실행했다. 원본과 재실행에서 기록된 644행 전체를 비교했다. 시각 필드 `wall_time`, `mono_ms`와 실행별 `id`·`operation_id`의 작전 식별자 부분을 정규화한 뒤 644/644가 일치했다. 시각 필드만 제외하면 작전 식별자를 포함한 여섯 행의 차이가 남았다.
+
+스냅샷 555개, 사건 79개, 명령 요청·처리 세 쌍이 일치했다. 틱 5541·554100ms의 `objective_success`와 결산 뒤 세션 닫기도 일치했다. 검증 범위는 기존 Windows 전경 제한 호스트 TRACE와 같은 소스의 헤드리스 재실행이다. 독립 검토는 이 기록 행 비교를 통과로 판정했다. 실시간 시계와 미기록 틱은 비교 범위 밖이다. 공개 리플레이 선택기를 통한 재생, 일반 전투, 실제 출력 장치와 트랙별 오디오 및 P09 전체 인수는 남아 있다.
+
+| TRACE 근거 | SHA-256 |
+| --- | --- |
+| Windows 전경 원본(위 전경 TRACE 링크) | `b73d3bb853992d0b06270e59aa776b244612c545ccd25dbaa183acdeb0d31d46` |
+| [헤드리스 재실행](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-4dac0b8d-foreground-trace-replay-03/profile/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/first_operation_traces/operation-2026-11-13T21-32-59-3372-1030530.jsonl) | `9ea076774f58b3ddc08b9557a84b2d853b7c3fd71eb28f49a7555b58f27d5af1` |
+| [정규화 비교 결과](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-4dac0b8d-foreground-trace-replay-03/RESULT-NORMALIZED.json) | `6d956b2274f1764d39af5b32988aa50e5b72fd1e074487c74e697cfcef1e3225` |
+| [재현 설명](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-4dac0b8d-foreground-trace-replay-03/RESULTS.md) | `752359effe006cb87a67a066fa3da4c803886811c649ff944f59a2dc7f4b615d` |
+| [재실행 스크립트](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-4dac0b8d-foreground-trace-replay-03/replay.gd) | `71bbf024ef7db48e037e4ccaf625f0e98626d2e5cc95a7e11d30a402e6910366` |
+| [정규화 스크립트](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-4dac0b8d-foreground-trace-replay-03/compare-normalized.py) | `cb708fc0be442924058ba9b45d6ba44c40acdd7c006375992c0ec7189ef4107c` |
