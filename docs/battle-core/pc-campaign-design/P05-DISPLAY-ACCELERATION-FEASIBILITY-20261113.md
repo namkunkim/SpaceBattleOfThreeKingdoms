@@ -254,3 +254,20 @@ C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe --headless --path . --scrip
 | [후보 결과](F:/WorkSpace/Campaign-Orchestration/P05-native-rollback-candidate-20261113/candidate-final.out) | `12c6f0386f897eb2586fcaab613ce54f04976a54ec503cea3b66e3d556bfc874` |
 | [격리 v1 체크포인트](F:/WorkSpace/Campaign-Orchestration/P05-native-rollback-candidate-20261113/old-checkpoint.json) | `8b59cc59145389b3865b0fff4e80780878d9f8c1ac9193899bf6db3d9c88f148` |
 | [격리 v1 리플레이](F:/WorkSpace/Campaign-Orchestration/P05-native-rollback-candidate-20261113/old-recording.pcopreplay) | `548b02a87811ea2e7255936104ceae217a9ac35ab2994de31ad9fe85f5236269` |
+
+## 코어 밖 로그 복원과 정책 제안 거부
+
+원본 `e52f64668d043ab99ee13588cb6bb8f73e78be2a`에서 전투 코어와 작전 어댑터·코덱을 변경하지 않고 시험했다. 격리 코드가 실제 정책의 제안 경계에서 임시 진형 명령을 발행한 뒤 비어 있는 프레임을 원래 정책에 전달했다. `owner.advance()`는 `runtime.policy.propose_tick`에서 `invalid_tick_frame`을 반환했다. 실제 롤백 뒤에도 임시 로그 한 건이 남고 체크포인트 상태 다이제스트가 달라졌다. 시험 코드가 코어 바깥에서 로그를 직전 길이로 되돌리자 체크포인트와 투영이 실패 전과 일치했다. 대기 중이던 정상 정지 명령의 재시도도 실패 없는 새 소유자의 체크포인트와 일치했다. 최종 종료 코드는 0이었다.
+
+규칙 지문은 `b7189ae8f3408fd4e053a792491ac5f6457a520218df2b709c4a8e3986863658`을 유지했다. 이전 격리 v1 체크포인트는 `begin_restore` 접수 후 취소했고, 같은 격리 v1 리플레이를 제품 코덱으로 읽었다. 공개 v1은 진형 명령을 계속 거부했다. 이 결과는 임시 발행을 주입한 정책 제안 거부와 추가형 로그 복원에 한정된다. 정책 효과·확정 실패, 공개 v2 연결과 실제 제품 코드 변경은 이 시험 범위 밖이다.
+
+프로젝트는 `F:/WorkSpace/.codex/worktree/p05-formation-20261113`이다. `APPDATA`와 `LOCALAPPDATA`는 `F:/WorkSpace/Campaign-Orchestration/P05-outer-rollback-20261113/profile`, `P05_COMPAT_ROOT`는 `F:/WorkSpace/Campaign-Orchestration/P05-native-rollback-candidate-20261113`으로 지정했다. 콘솔 실행기 SHA-256은 `c8f0a6bc45a19b33541501e57f6f7cd972ab18453743266339d495cbbe846643`이다.
+
+```text
+C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe --headless --path . --script F:/WorkSpace/Campaign-Orchestration/P05-outer-rollback-20261113/probe.gd
+```
+
+| 격리 근거 | SHA-256 |
+| --- | --- |
+| [시험 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-outer-rollback-20261113/probe.gd) | `d50ae1c813e56aa90795df177d874d539d965eebd6892c6fa76bc5a32d974c59` |
+| [최종 로그](F:/WorkSpace/Campaign-Orchestration/P05-outer-rollback-20261113/probe-final.out) | `b9fd67531cc842c926a064d43224ed72362e8ca6e86fd66ee2e39d4681b7f054` |

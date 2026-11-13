@@ -64,3 +64,16 @@ Windows Godot 4.7.2 헤드리스에서 J210 주 슬롯 상태에 따른 제한 �
 | 체크섬 불일치 로그 | `d0685b538e236aa3b8ce4940452233e3b2185ff58989222719baebbf860f0943` |
 
 [격리 프로필·시험 스크립트·로그](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/A05-A06-FXG-J210-previous-69099a33-01)
+
+### 제한 FX-G J210 종결 후 저장 거부
+
+`bf4c134df03bdf7e4313bca13d024648c0cbc3d8` 작업본의 Windows Godot 4.7.2 헤드리스 시험에서, 주 슬롯이 없는 격리 프로필에 동결 J210 이전 슬롯을 두었다. 100ms 상태로 복원하고 150ms 섬멸 종결까지 진행했다. 종결 후 제한 호스트는 `host_not_running`, 체크포인트 계층은 `unsupported_terminal_settlement`를 반환했다. 활성 소유자와 요약·투영·표시를 보존했고 종료 이벤트는 한 건이었다. 주 슬롯은 생성되지 않았으며 이전 슬롯 바이트도 유지됐다. 10/10, 종료 코드 0이었다. 시험 범위는 이전 슬롯 복원 뒤의 종결 저장 거부와 해당 격리 슬롯 보존이다.
+
+| 근거 | SHA-256 |
+| --- | --- |
+| 동결 J210 입력 | `da996e2de32de23e13e142e49d73b38b78784b1cdcbbf424ef780c9b87c5725a` |
+| 이전 슬롯 | `12df7a29bf6676dc6a7a9eaf60ab0b03e1a6ee25538e05b31c2fd8220ae43188` |
+| 시험 스크립트 | `a41d6fc7490ff62507584184c8cf73c13cc7f1b5629d167f3f2413b4c5adff1f` |
+| 실행 로그 | `fbda14839c857711157bb4271a77c4eacfaf3d87d783e43bcfd6e859b50889a9` |
+
+[시험 스크립트·로그·격리 프로필](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/A05-A06-FXG-J210-terminal-save-01)
