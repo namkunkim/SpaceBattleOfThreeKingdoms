@@ -1,0 +1,1305 @@
+{
+  "before": {
+    "head": "e3d7678810e857a52354ca79c2498fc5c7389292",
+    "engine_sha256": "c8f0a6bc45a19b33541501e57f6f7cd972ab18453743266339d495cbbe846643",
+    "exit": 0,
+    "diagnostics": [],
+    "stdout_sha256": "bd28f030e3f661cf881971f0116d2fca41e085b4b6c5ba5e3c680c80e1ea51de",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine_log_sha256": "6ebf9dc7364016768f64ee6f8a065daadfa548c8df9312b591b765c4300abf77",
+    "marker": {
+      "audio": [
+        {
+          "level": 1.0,
+          "playing": true,
+          "tick": 1
+        }
+      ],
+      "autonomous": true,
+      "final_core": [
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            892.638977050781,
+            451.559997558594
+          ],
+          "sq": 10,
+          "tick": 11,
+          "value": {
+            "state": "none",
+            "was": "confirmed"
+          }
+        },
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            1229.18420410156,
+            628.298400878906
+          ],
+          "sq": 8,
+          "tick": 31,
+          "value": {
+            "state": "confirmed",
+            "was": "estimated"
+          }
+        },
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            1500.0,
+            535.0
+          ],
+          "sq": 13,
+          "tick": 31,
+          "value": {
+            "state": "estimated",
+            "was": "none"
+          }
+        },
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            1500.0,
+            570.0
+          ],
+          "sq": 14,
+          "tick": 31,
+          "value": {
+            "state": "estimated",
+            "was": "none"
+          }
+        },
+        {
+          "kind": "salvo",
+          "other": 8,
+          "pos": [
+            459.5400390625,
+            958.388427734375
+          ],
+          "sq": 3,
+          "tick": 121,
+          "value": {
+            "acc": 5515,
+            "band": "barrage",
+            "cat": "artillery",
+            "dmg": 722,
+            "hit": true,
+            "n": 12.0,
+            "sector": "flank"
+          }
+        },
+        {
+          "kind": "ship_lost",
+          "other": 3,
+          "pos": [
+            459.5400390625,
+            958.388427734375
+          ],
+          "sq": 8,
+          "tick": 121,
+          "value": 6
+        },
+        {
+          "kind": "salvo",
+          "other": 8,
+          "pos": [
+            352.105499267578,
+            1003.18310546875
+          ],
+          "sq": 2,
+          "tick": 132,
+          "value": {
+            "acc": 9341,
+            "band": "barrage",
+            "cat": "intercept",
+            "dmg": 200,
+            "hit": true,
+            "n": 12.0,
+            "sector": "flank"
+          }
+        },
+        {
+          "kind": "ship_lost",
+          "other": 2,
+          "pos": [
+            352.105499267578,
+            1003.18310546875
+          ],
+          "sq": 8,
+          "tick": 132,
+          "value": 2
+        },
+        {
+          "kind": "morale_state",
+          "other": -1,
+          "pos": [
+            352.105499267578,
+            1003.18310546875
+          ],
+          "sq": 8,
+          "tick": 132,
+          "value": {
+            "from": "stable",
+            "to": "shaken"
+          }
+        },
+        {
+          "kind": "chain_result",
+          "other": -1,
+          "pos": [
+            892.638977050781,
+            451.559997558594
+          ],
+          "sq": 10,
+          "tick": 201,
+          "value": {
+            "counter": "",
+            "grade": "흔들림",
+            "n": 0
+          }
+        },
+        {
+          "kind": "fire_loop",
+          "other": -1,
+          "pos": [
+            892.638977050781,
+            451.559997558594
+          ],
+          "sq": 10,
+          "tick": 201,
+          "value": {
+            "on": false
+          }
+        }
+      ],
+      "final_tick": 201,
+      "hidden_stop_count": 1,
+      "initial_core": [
+        {
+          "kind": "skill",
+          "other": -1,
+          "pos": [
+            320.0,
+            850.0
+          ],
+          "sq": 4,
+          "tick": 1,
+          "value": {
+            "id": "SK-U-ZHOUYU",
+            "targets": [
+              4
+            ]
+          }
+        },
+        {
+          "kind": "skill",
+          "other": -1,
+          "pos": [
+            780.0,
+            450.0
+          ],
+          "sq": 6,
+          "tick": 1,
+          "value": {
+            "id": "SK-T-FIRE",
+            "targets": [
+              6
+            ]
+          }
+        },
+        {
+          "kind": "chain_explosion",
+          "other": 6,
+          "pos": [
+            900.0,
+            450.0
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": {
+            "feigned": false,
+            "power": 0.52,
+            "suspicion": 0.0
+          }
+        },
+        {
+          "kind": "fire_loop",
+          "other": -1,
+          "pos": [
+            900.0,
+            450.0
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": {
+            "on": true
+          }
+        },
+        {
+          "kind": "ship_lost",
+          "other": 6,
+          "pos": [
+            900.0,
+            450.0
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": 33
+        },
+        {
+          "kind": "fire_ignite",
+          "other": 6,
+          "pos": [
+            900.0,
+            450.0
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": {
+            "power": 0.52
+          }
+        },
+        {
+          "kind": "skill",
+          "other": -1,
+          "pos": [
+            900.0,
+            450.0
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": {
+            "id": "SK-T-MOVE",
+            "targets": [
+              10
+            ]
+          }
+        },
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            1500.0,
+            325.0
+          ],
+          "sq": 7,
+          "tick": 1,
+          "value": {
+            "state": "estimated",
+            "was": "none"
+          }
+        },
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            1494.87561035156,
+            360.247283935547
+          ],
+          "sq": 8,
+          "tick": 1,
+          "value": {
+            "state": "estimated",
+            "was": "none"
+          }
+        },
+        {
+          "kind": "surrender",
+          "other": -1,
+          "pos": [
+            892.638610839844,
+            451.559661865234
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": null
+        },
+        {
+          "kind": "chain_window",
+          "other": -1,
+          "pos": [
+            0.0,
+            0.0
+          ],
+          "sq": -1,
+          "tick": 1,
+          "value": {
+            "state": "open"
+          }
+        },
+        {
+          "kind": "commander_status",
+          "other": -1,
+          "pos": [
+            892.638610839844,
+            451.559661865234
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": {
+            "person": "CHR-0017",
+            "state": "captured"
+          }
+        }
+      ],
+      "initial_visible_count": 11,
+      "naturally_ended": true,
+      "pid": 30508,
+      "playing_before_teardown": true,
+      "released_after_teardown": true,
+      "started": true,
+      "trace": "before-trace.normalized.json",
+      "visible": [
+        {
+          "kind": "skill",
+          "other": -1,
+          "pos": [
+            320.0,
+            850.0
+          ],
+          "sq": 4,
+          "tick": 1,
+          "value": {
+            "id": "SK-U-ZHOUYU",
+            "targets": [
+              4
+            ]
+          }
+        },
+        {
+          "kind": "skill",
+          "other": -1,
+          "pos": [
+            780.0,
+            450.0
+          ],
+          "sq": 6,
+          "tick": 1,
+          "value": {
+            "id": "SK-T-FIRE",
+            "targets": [
+              6
+            ]
+          }
+        },
+        {
+          "kind": "chain_explosion",
+          "other": 6,
+          "pos": [
+            900.0,
+            450.0
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": {
+            "feigned": false,
+            "power": 0.52,
+            "suspicion": 0.0
+          }
+        },
+        {
+          "kind": "fire_loop",
+          "other": -1,
+          "pos": [
+            900.0,
+            450.0
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": {
+            "on": true
+          }
+        },
+        {
+          "kind": "ship_lost",
+          "other": 6,
+          "pos": [
+            900.0,
+            450.0
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": 33
+        },
+        {
+          "kind": "fire_ignite",
+          "other": 6,
+          "pos": [
+            900.0,
+            450.0
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": {
+            "power": 0.52
+          }
+        },
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            1500.0,
+            325.0
+          ],
+          "sq": 7,
+          "tick": 1,
+          "value": {
+            "state": "estimated",
+            "was": "none"
+          }
+        },
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            1494.87561035156,
+            360.247283935547
+          ],
+          "sq": 8,
+          "tick": 1,
+          "value": {
+            "state": "estimated",
+            "was": "none"
+          }
+        },
+        {
+          "kind": "surrender",
+          "other": -1,
+          "pos": [
+            892.638610839844,
+            451.559661865234
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": null
+        },
+        {
+          "kind": "chain_window",
+          "other": -1,
+          "pos": [
+            0.0,
+            0.0
+          ],
+          "sq": -1,
+          "tick": 1,
+          "value": {
+            "state": "open"
+          }
+        },
+        {
+          "kind": "commander_status",
+          "other": -1,
+          "pos": [
+            892.638610839844,
+            451.559661865234
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": {
+            "person": "CHR-0017",
+            "state": "captured"
+          }
+        },
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            892.638977050781,
+            451.559997558594
+          ],
+          "sq": 10,
+          "tick": 11,
+          "value": {
+            "state": "none",
+            "was": "confirmed"
+          }
+        },
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            1229.18420410156,
+            628.298400878906
+          ],
+          "sq": 8,
+          "tick": 31,
+          "value": {
+            "state": "confirmed",
+            "was": "estimated"
+          }
+        },
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            1500.0,
+            535.0
+          ],
+          "sq": 13,
+          "tick": 31,
+          "value": {
+            "state": "estimated",
+            "was": "none"
+          }
+        },
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            1500.0,
+            570.0
+          ],
+          "sq": 14,
+          "tick": 31,
+          "value": {
+            "state": "estimated",
+            "was": "none"
+          }
+        },
+        {
+          "kind": "salvo",
+          "other": 8,
+          "pos": [
+            459.5400390625,
+            958.388427734375
+          ],
+          "sq": 3,
+          "tick": 121,
+          "value": {
+            "acc": 5515,
+            "band": "barrage",
+            "cat": "artillery",
+            "dmg": 722,
+            "hit": true,
+            "n": 12.0,
+            "sector": "flank"
+          }
+        },
+        {
+          "kind": "ship_lost",
+          "other": 3,
+          "pos": [
+            459.5400390625,
+            958.388427734375
+          ],
+          "sq": 8,
+          "tick": 121,
+          "value": 6
+        },
+        {
+          "kind": "salvo",
+          "other": 8,
+          "pos": [
+            352.105499267578,
+            1003.18310546875
+          ],
+          "sq": 2,
+          "tick": 132,
+          "value": {
+            "acc": 9341,
+            "band": "barrage",
+            "cat": "intercept",
+            "dmg": 200,
+            "hit": true,
+            "n": 12.0,
+            "sector": "flank"
+          }
+        },
+        {
+          "kind": "ship_lost",
+          "other": 2,
+          "pos": [
+            352.105499267578,
+            1003.18310546875
+          ],
+          "sq": 8,
+          "tick": 132,
+          "value": 2
+        },
+        {
+          "kind": "morale_state",
+          "other": -1,
+          "pos": [
+            352.105499267578,
+            1003.18310546875
+          ],
+          "sq": 8,
+          "tick": 132,
+          "value": {
+            "from": "stable",
+            "to": "shaken"
+          }
+        }
+      ]
+    },
+    "trace_sha256": "b7783c980437d5b82903e5d6395ded54fdc7b69824fa31e45b554c8792f0a6f6",
+    "trace_rows": 11,
+    "normalized_sha256": "b91a86fddf08ac71b89f7853e5c1cd008a172b7c6c31232fab8d4c97c0c38b06"
+  },
+  "after": {
+    "head": "a2733c8b29d9666dd426907a24991a5ddf61c2b7",
+    "engine_sha256": "c8f0a6bc45a19b33541501e57f6f7cd972ab18453743266339d495cbbe846643",
+    "exit": 0,
+    "diagnostics": [],
+    "stdout_sha256": "87c242c574f27a925e52b276e75c11a971480f11563875475cc844055672d97c",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine_log_sha256": "0cbd64f453f17072e5f0e94c58bf977a1652c4fc7eb0dfb2f2811e0eb9d6bb17",
+    "marker": {
+      "audio": [
+        {
+          "level": 1.0,
+          "playing": true,
+          "tick": 1
+        },
+        {
+          "level": 0.0,
+          "playing": false,
+          "tick": 201
+        }
+      ],
+      "autonomous": true,
+      "final_core": [
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            892.638977050781,
+            451.559997558594
+          ],
+          "sq": 10,
+          "tick": 11,
+          "value": {
+            "state": "none",
+            "was": "confirmed"
+          }
+        },
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            1229.18420410156,
+            628.298400878906
+          ],
+          "sq": 8,
+          "tick": 31,
+          "value": {
+            "state": "confirmed",
+            "was": "estimated"
+          }
+        },
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            1500.0,
+            535.0
+          ],
+          "sq": 13,
+          "tick": 31,
+          "value": {
+            "state": "estimated",
+            "was": "none"
+          }
+        },
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            1500.0,
+            570.0
+          ],
+          "sq": 14,
+          "tick": 31,
+          "value": {
+            "state": "estimated",
+            "was": "none"
+          }
+        },
+        {
+          "kind": "salvo",
+          "other": 8,
+          "pos": [
+            459.5400390625,
+            958.388427734375
+          ],
+          "sq": 3,
+          "tick": 121,
+          "value": {
+            "acc": 5515,
+            "band": "barrage",
+            "cat": "artillery",
+            "dmg": 722,
+            "hit": true,
+            "n": 12.0,
+            "sector": "flank"
+          }
+        },
+        {
+          "kind": "ship_lost",
+          "other": 3,
+          "pos": [
+            459.5400390625,
+            958.388427734375
+          ],
+          "sq": 8,
+          "tick": 121,
+          "value": 6
+        },
+        {
+          "kind": "salvo",
+          "other": 8,
+          "pos": [
+            352.105499267578,
+            1003.18310546875
+          ],
+          "sq": 2,
+          "tick": 132,
+          "value": {
+            "acc": 9341,
+            "band": "barrage",
+            "cat": "intercept",
+            "dmg": 200,
+            "hit": true,
+            "n": 12.0,
+            "sector": "flank"
+          }
+        },
+        {
+          "kind": "ship_lost",
+          "other": 2,
+          "pos": [
+            352.105499267578,
+            1003.18310546875
+          ],
+          "sq": 8,
+          "tick": 132,
+          "value": 2
+        },
+        {
+          "kind": "morale_state",
+          "other": -1,
+          "pos": [
+            352.105499267578,
+            1003.18310546875
+          ],
+          "sq": 8,
+          "tick": 132,
+          "value": {
+            "from": "stable",
+            "to": "shaken"
+          }
+        },
+        {
+          "kind": "chain_result",
+          "other": -1,
+          "pos": [
+            892.638977050781,
+            451.559997558594
+          ],
+          "sq": 10,
+          "tick": 201,
+          "value": {
+            "counter": "",
+            "grade": "흔들림",
+            "n": 0
+          }
+        },
+        {
+          "kind": "fire_loop",
+          "other": -1,
+          "pos": [
+            892.638977050781,
+            451.559997558594
+          ],
+          "sq": 10,
+          "tick": 201,
+          "value": {
+            "on": false
+          }
+        }
+      ],
+      "final_tick": 201,
+      "hidden_stop_count": 1,
+      "initial_core": [
+        {
+          "kind": "skill",
+          "other": -1,
+          "pos": [
+            320.0,
+            850.0
+          ],
+          "sq": 4,
+          "tick": 1,
+          "value": {
+            "id": "SK-U-ZHOUYU",
+            "targets": [
+              4
+            ]
+          }
+        },
+        {
+          "kind": "skill",
+          "other": -1,
+          "pos": [
+            780.0,
+            450.0
+          ],
+          "sq": 6,
+          "tick": 1,
+          "value": {
+            "id": "SK-T-FIRE",
+            "targets": [
+              6
+            ]
+          }
+        },
+        {
+          "kind": "chain_explosion",
+          "other": 6,
+          "pos": [
+            900.0,
+            450.0
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": {
+            "feigned": false,
+            "power": 0.52,
+            "suspicion": 0.0
+          }
+        },
+        {
+          "kind": "fire_loop",
+          "other": -1,
+          "pos": [
+            900.0,
+            450.0
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": {
+            "on": true
+          }
+        },
+        {
+          "kind": "ship_lost",
+          "other": 6,
+          "pos": [
+            900.0,
+            450.0
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": 33
+        },
+        {
+          "kind": "fire_ignite",
+          "other": 6,
+          "pos": [
+            900.0,
+            450.0
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": {
+            "power": 0.52
+          }
+        },
+        {
+          "kind": "skill",
+          "other": -1,
+          "pos": [
+            900.0,
+            450.0
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": {
+            "id": "SK-T-MOVE",
+            "targets": [
+              10
+            ]
+          }
+        },
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            1500.0,
+            325.0
+          ],
+          "sq": 7,
+          "tick": 1,
+          "value": {
+            "state": "estimated",
+            "was": "none"
+          }
+        },
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            1494.87561035156,
+            360.247283935547
+          ],
+          "sq": 8,
+          "tick": 1,
+          "value": {
+            "state": "estimated",
+            "was": "none"
+          }
+        },
+        {
+          "kind": "surrender",
+          "other": -1,
+          "pos": [
+            892.638610839844,
+            451.559661865234
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": null
+        },
+        {
+          "kind": "chain_window",
+          "other": -1,
+          "pos": [
+            0.0,
+            0.0
+          ],
+          "sq": -1,
+          "tick": 1,
+          "value": {
+            "state": "open"
+          }
+        },
+        {
+          "kind": "commander_status",
+          "other": -1,
+          "pos": [
+            892.638610839844,
+            451.559661865234
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": {
+            "person": "CHR-0017",
+            "state": "captured"
+          }
+        }
+      ],
+      "initial_visible_count": 11,
+      "naturally_ended": true,
+      "pid": 31464,
+      "playing_before_teardown": false,
+      "released_after_teardown": true,
+      "started": true,
+      "trace": "after-trace.normalized.json",
+      "visible": [
+        {
+          "kind": "skill",
+          "other": -1,
+          "pos": [
+            320.0,
+            850.0
+          ],
+          "sq": 4,
+          "tick": 1,
+          "value": {
+            "id": "SK-U-ZHOUYU",
+            "targets": [
+              4
+            ]
+          }
+        },
+        {
+          "kind": "skill",
+          "other": -1,
+          "pos": [
+            780.0,
+            450.0
+          ],
+          "sq": 6,
+          "tick": 1,
+          "value": {
+            "id": "SK-T-FIRE",
+            "targets": [
+              6
+            ]
+          }
+        },
+        {
+          "kind": "chain_explosion",
+          "other": 6,
+          "pos": [
+            900.0,
+            450.0
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": {
+            "feigned": false,
+            "power": 0.52,
+            "suspicion": 0.0
+          }
+        },
+        {
+          "kind": "fire_loop",
+          "other": -1,
+          "pos": [
+            900.0,
+            450.0
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": {
+            "on": true
+          }
+        },
+        {
+          "kind": "ship_lost",
+          "other": 6,
+          "pos": [
+            900.0,
+            450.0
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": 33
+        },
+        {
+          "kind": "fire_ignite",
+          "other": 6,
+          "pos": [
+            900.0,
+            450.0
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": {
+            "power": 0.52
+          }
+        },
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            1500.0,
+            325.0
+          ],
+          "sq": 7,
+          "tick": 1,
+          "value": {
+            "state": "estimated",
+            "was": "none"
+          }
+        },
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            1494.87561035156,
+            360.247283935547
+          ],
+          "sq": 8,
+          "tick": 1,
+          "value": {
+            "state": "estimated",
+            "was": "none"
+          }
+        },
+        {
+          "kind": "surrender",
+          "other": -1,
+          "pos": [
+            892.638610839844,
+            451.559661865234
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": null
+        },
+        {
+          "kind": "chain_window",
+          "other": -1,
+          "pos": [
+            0.0,
+            0.0
+          ],
+          "sq": -1,
+          "tick": 1,
+          "value": {
+            "state": "open"
+          }
+        },
+        {
+          "kind": "commander_status",
+          "other": -1,
+          "pos": [
+            892.638610839844,
+            451.559661865234
+          ],
+          "sq": 10,
+          "tick": 1,
+          "value": {
+            "person": "CHR-0017",
+            "state": "captured"
+          }
+        },
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            892.638977050781,
+            451.559997558594
+          ],
+          "sq": 10,
+          "tick": 11,
+          "value": {
+            "state": "none",
+            "was": "confirmed"
+          }
+        },
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            1229.18420410156,
+            628.298400878906
+          ],
+          "sq": 8,
+          "tick": 31,
+          "value": {
+            "state": "confirmed",
+            "was": "estimated"
+          }
+        },
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            1500.0,
+            535.0
+          ],
+          "sq": 13,
+          "tick": 31,
+          "value": {
+            "state": "estimated",
+            "was": "none"
+          }
+        },
+        {
+          "kind": "contact",
+          "other": -1,
+          "pos": [
+            1500.0,
+            570.0
+          ],
+          "sq": 14,
+          "tick": 31,
+          "value": {
+            "state": "estimated",
+            "was": "none"
+          }
+        },
+        {
+          "kind": "salvo",
+          "other": 8,
+          "pos": [
+            459.5400390625,
+            958.388427734375
+          ],
+          "sq": 3,
+          "tick": 121,
+          "value": {
+            "acc": 5515,
+            "band": "barrage",
+            "cat": "artillery",
+            "dmg": 722,
+            "hit": true,
+            "n": 12.0,
+            "sector": "flank"
+          }
+        },
+        {
+          "kind": "ship_lost",
+          "other": 3,
+          "pos": [
+            459.5400390625,
+            958.388427734375
+          ],
+          "sq": 8,
+          "tick": 121,
+          "value": 6
+        },
+        {
+          "kind": "salvo",
+          "other": 8,
+          "pos": [
+            352.105499267578,
+            1003.18310546875
+          ],
+          "sq": 2,
+          "tick": 132,
+          "value": {
+            "acc": 9341,
+            "band": "barrage",
+            "cat": "intercept",
+            "dmg": 200,
+            "hit": true,
+            "n": 12.0,
+            "sector": "flank"
+          }
+        },
+        {
+          "kind": "ship_lost",
+          "other": 2,
+          "pos": [
+            352.105499267578,
+            1003.18310546875
+          ],
+          "sq": 8,
+          "tick": 132,
+          "value": 2
+        },
+        {
+          "kind": "morale_state",
+          "other": -1,
+          "pos": [
+            352.105499267578,
+            1003.18310546875
+          ],
+          "sq": 8,
+          "tick": 132,
+          "value": {
+            "from": "stable",
+            "to": "shaken"
+          }
+        }
+      ]
+    },
+    "trace_sha256": "9a80f0d005b5852acd0393db4cf56a56243d959056207879b14466e9fe61ba00",
+    "trace_rows": 11,
+    "normalized_sha256": "b91a86fddf08ac71b89f7853e5c1cd008a172b7c6c31232fab8d4c97c0c38b06"
+  },
+  "checks": {
+    "separate-processes": true,
+    "clean-exits": true,
+    "ordered-typed-core-and-admitted-events-identical": true,
+    "natural-stop-filtered-in-both": true,
+    "before-audible-after-natural-retirement": true,
+    "both-release-on-teardown": true,
+    "actual-normalized-trace-identical": true
+  },
+  "pass": true,
+  "normalized_fields_excluded": [
+    "mono_ms",
+    "wall_time"
+  ],
+  "probe_sha256": "e6179acea9ff8174d26aefe564802b6e2dabd93d049b2b727b8e3a75956991de",
+  "cache_sha256": "6a04eda88ca7e4e108087ddf77eeb9bed708d8a0cb2f786ac6a445dfa51d3ac8"
+}

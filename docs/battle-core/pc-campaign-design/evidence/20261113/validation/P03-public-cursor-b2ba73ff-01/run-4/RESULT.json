@@ -1,0 +1,42 @@
+{
+  "head": "b2ba73ff5b3c18a7ab0885d00cebf0c25be7fed1",
+  "engine": "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64.exe",
+  "engine_sha256": "ab1824f85bfd8e0e4128182c000c4003a3e042245b2967848d089b2a04b22424",
+  "test": "tests/first_operation_public_cursor.gd",
+  "test_sha256": "5e2b59163105f40024a270ea3c113bb0b06202614fd6703c9f133d605eaac101",
+  "native_sha256": "a9e45eed91cbe8721469359160bbcb3716675a575537acf716a2da782a75b6e8",
+  "profile": "<workspace>\\SpaceBattleOfThreeKingdoms-validation\\P03-public-cursor-b2ba73ff-01\\run-4\\profile",
+  "phases": [
+    {
+      "phase": "seed",
+      "pid": 6060,
+      "exit": 0,
+      "timed_out": false,
+      "checks": 21,
+      "pass": true,
+      "diagnostics": [],
+      "log_sha256": "bd792c37258819525be7c41f87e47cb830b22a5d7c6d9b923624b513fbe0ed3c"
+    },
+    {
+      "phase": "rotate",
+      "pid": 30084,
+      "exit": 0,
+      "timed_out": false,
+      "checks": 25,
+      "pass": true,
+      "diagnostics": [],
+      "log_sha256": "0cdd43360cf19337ef6b009eba55fa227cd84d8a75a560d0ef3936bac4a4bfd6"
+    },
+    {
+      "phase": "reopen",
+      "pid": 9324,
+      "exit": 0,
+      "timed_out": false,
+      "checks": 14,
+      "pass": true,
+      "diagnostics": [],
+      "log_sha256": "322da11f7645a1643d765ee5fa6d077fcb857f60275f934c2eecbe833b77c335"
+    }
+  ],
+  "pass": true
+}

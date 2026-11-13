@@ -1,0 +1,36 @@
+{
+  "mode": "c0-bootstrap",
+  "head": "6ab92333bd1c74b5c5beec1524c3ad4f0d0fc236",
+  "engine": "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64.exe",
+  "engine_sha256": "ab1824f85bfd8e0e4128182c000c4003a3e042245b2967848d089b2a04b22424",
+  "test_sha256": "ad8219fb665f91307e5ffe2017c86b60eb57e0c17f16323dd32021b0536a9d4f",
+  "runner_sha256": "aba59bbc33b50c4dafefc3f2f61ea415e749b5af0c516e2b9c0971a07a9561c8",
+  "phases": [
+    {
+      "phase": "host",
+      "pid": 13356,
+      "exit": 0,
+      "diagnostics": [],
+      "host_checks": 19,
+      "engine_log_sha256": "9dca680fd22ace41fcc7d24d2b28070dc5304eb7ed85c612021b890fd343fc58",
+      "stdout_sha256": "06c8d81a7fc1e32686ce5cbdd1e9a99ee763888e7d6b02aa2e966f486d738c6e",
+      "pass": true
+    }
+  ],
+  "checks": {
+    "headless": {
+      "frame": true,
+      "checkpoint": true
+    },
+    "replay": {
+      "frame": true,
+      "checkpoint": true
+    }
+  },
+  "initial_output_sha256": "881945410ed684a86f872e0978c2835e975136ad1d31c1b24b8cd3315d4f2bf2",
+  "initial_frame_sha256": "42698f4f4de39c380f149727593b26134bb7a0ce247e890a1711386ac551e257",
+  "initial_checkpoint_sha256": "650536570f7f4b38110ebdcf8cb751d4be5dab5ff65380e99c2288c72cc4cbad",
+  "operation_id": "red-cliffs-first-operation-dev-v1/1962ffb6e1d6fe535790964a8135118e",
+  "state_digest": "fa2304d466a1d39ecc81a90a7bb350d025db3fb83b16eea813e6ad54b482dd35",
+  "pass": true
+}

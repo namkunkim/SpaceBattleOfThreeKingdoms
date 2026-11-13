@@ -1,0 +1,61 @@
+{
+	"event_count": 4,
+	"events": [
+		{
+			"kind": "spawn",
+			"other": -1,
+			"pos": "(0.0, 0.0)",
+			"sq": 1,
+			"tick": 0,
+			"value": null
+		},
+		{
+			"kind": "spawn",
+			"other": -1,
+			"pos": "(0.0, 0.0)",
+			"sq": 2,
+			"tick": 0,
+			"value": null
+		},
+		{
+			"kind": "destroyed",
+			"other": 1,
+			"pos": "(470.0, 600.0)",
+			"sq": 2,
+			"tick": 2,
+			"value": null
+		},
+		{
+			"kind": "battle_end",
+			"other": -1,
+			"pos": "(0.0, 0.0)",
+			"sq": -1,
+			"tick": 2,
+			"value": "annihilation"
+		}
+	],
+	"meta": {
+		"format": "p02/restricted-headless/1",
+		"input_file_sha256": "da996e2de32de23e13e142e49d73b38b78784b1cdcbbf424ef780c9b87c5725a",
+		"input_sha256": "eb1d1f76479a2f37a95330cf671bd2ebd9c32e182051db47f4c879a17f0a9509",
+		"transform": "identity/no-transform"
+	},
+	"ok": true,
+	"summary": {
+		"ally_alive": 1,
+		"clock_ms": 150,
+		"commands": 0,
+		"end_ms": 150,
+		"end_tick": 2,
+		"foe_alive": 0,
+		"fp": "77887d991024d9b50bf6bc5d361c027bc7011fc5b5b98978f4d06867d9d38186",
+		"killed": 0.528,
+		"lost": 0.0,
+		"over": true,
+		"reason": "annihilation",
+		"reinf_t": -1.0,
+		"t": 0.15,
+		"tick": 2,
+		"win": true
+	}
+}

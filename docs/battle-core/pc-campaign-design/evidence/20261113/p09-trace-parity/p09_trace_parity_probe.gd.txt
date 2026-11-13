@@ -1,0 +1,115 @@
+extends SceneTree
+
+const BattleTrace = preload("res://scripts/battle_trace.gd")
+
+# Observe the events already admitted to the product recorder, then use its real writer.
+class CapturingTrace extends BattleTrace:
+	var observed: Array = []
+
+	func event(host: Node, payload: Dictionary) -> void:
+		observed.append(_json(payload))
+		super.event(host, payload)
+
+
+func _initialize() -> void:
+	call_deferred("_run")
+
+
+func _run() -> void:
+	if DisplayServer.get_name() != "headless" or AudioServer.get_driver_name() != "Dummy":
+		push_error("Headless Dummy audio required.")
+		quit(1)
+		return
+	var link := root.get_node("WorldLink")
+	var brief := BattleBrief.new()
+	brief.seed = 208
+	brief.difficulty = "입문"
+	link.brief = brief
+	var battle := (load("res://scenes/FleetBattle3D.tscn") as PackedScene).instantiate()
+	var recorder := CapturingTrace.new()
+	battle.set("trace", recorder)
+	root.add_child(battle)
+	battle.set_process(false)
+	var sim: BattleSim = battle.get("sim")
+	var player: AudioStreamPlayer = battle.get("presentation").get("hud").get("sound").get("_loops").get("fire_loop")
+	var host: FleetState = sim.chain.host()
+	var target: FleetState
+	for fleet in sim.st.fleets:
+		if fleet.sq_id == "RC-CAO-SQ-04":
+			target = fleet
+		else:
+			fleet.pos = Vector2(100 + fleet.id * 55, 850) if fleet.side == 0 else Vector2(1500, 80 + fleet.id * 35)
+	if target == null or host == null or player.stream == null or player.playing or battle.get("battle_seed") != 208:
+		push_error("Deterministic legacy fixture did not initialize.")
+		battle.free()
+		quit(1)
+		return
+	host.pos = Vector2(780, 450)
+	host.control = "delegate"
+	target.pos = Vector2(900, 450)
+	sim.first_hit_tick = 0
+	sim.chain.win_start = 0
+	sim.chain.win_end = 1000
+	sim.chain.mode = "open"
+	sim.detect.contacts[0][target.id] = {
+		"seen": sim.st.tick, "pos": target.pos, "state": "confirmed",
+		"conf_bp": BattleRules.BP, "err_r": 0.0,
+	}
+
+	var audio: Array = []
+	battle.connect("sfx_loop", func(key: String, level: float) -> void:
+		if key == "fire_loop":
+			audio.append({"tick": sim.st.tick, "level": level, "playing": player.playing})
+	)
+
+	recorder.sample(battle)
+	AudioServer.lock()
+	sim.st.ai_timer = 0
+	sim.step()
+	var initial_core: Array = recorder._json(sim.get("_events"))
+	battle.call("_pump")
+	recorder.sample(battle)
+	var initial_visible_count := recorder.observed.size()
+	var started: bool = player.playing and audio.size() == 1 and audio[0].level == 1.0
+	var playback: WeakRef
+	if started and player.has_stream_playback():
+		playback = weakref(player.get_stream_playback())
+	sim.st.ai_timer = 1 << 40
+	var interval := BattleRules.ticks(float(sim.chain.O.spread.interval_s), sim.st.hz)
+	var fire: Dictionary = sim.chain.fires[0] if not sim.chain.fires.is_empty() else {}
+	for step in interval * (int(sim.chain.O.spread.max) + 1):
+		if fire.is_empty() or int(fire.next) < 0 or sim.st.over:
+			break
+		sim.step()
+	var final_core: Array = recorder._json(sim.get("_events"))
+	var hidden_stop_count := 0
+	for event in final_core:
+		if event.kind == "fire_loop" and not event.value.on and not sim.detect.contacts[0].has(event.sq):
+			hidden_stop_count += 1
+	battle.call("_pump")
+	recorder.sample(battle)
+	var final_tick := sim.st.tick
+	var final_playing := player.playing
+	var autonomous: bool = sim.command_log.is_empty() and sim.chain.stats.fires == 1
+	var naturally_ended := not fire.is_empty() and int(fire.next) < 0 and not sim.st.over
+	var trace_path := ProjectSettings.globalize_path(recorder.path)
+	recorder.file.close()
+	recorder.file = null
+	battle.free()
+	link.brief = null
+	AudioServer.unlock()
+	var until := Time.get_ticks_msec() + 1500
+	while playback != null and playback.get_ref() != null and Time.get_ticks_msec() < until:
+		await process_frame
+	var released := playback != null and playback.get_ref() == null
+	var passed: bool = started and autonomous and naturally_ended and hidden_stop_count == 1 and released
+	print("P09_TRACE_PARITY ", JSON.stringify({
+		"pid": OS.get_process_id(), "trace": trace_path, "audio": audio,
+		"initial_core": initial_core, "final_core": final_core,
+		"initial_visible_count": initial_visible_count, "visible": recorder.observed,
+		"final_tick": final_tick, "playing_before_teardown": final_playing,
+		"started": started, "autonomous": autonomous, "naturally_ended": naturally_ended,
+		"hidden_stop_count": hidden_stop_count, "released_after_teardown": released,
+	}))
+	quit(0 if passed else 1)
+

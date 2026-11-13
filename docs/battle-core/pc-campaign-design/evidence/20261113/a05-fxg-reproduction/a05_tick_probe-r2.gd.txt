@@ -1,0 +1,56 @@
+extends RefCounted
+
+var clock := TickClock.new()
+var speed: float
+var pause: bool
+var path: String
+var rows: Array = []
+var advances := 0
+
+static func start(summary: Dictionary):
+	var output := OS.get_environment("A05_PROBE_PATH")
+	if output.is_empty():
+		return null
+	var probe = load("res://tests/a05_tick_probe.gd").new()
+	probe.path = output
+	probe.speed = OS.get_environment("A05_PROBE_SPEED").to_float()
+	probe.pause = OS.get_environment("A05_PROBE_PAUSE") == "1"
+	probe.clock.set_speed(probe.speed)
+	probe.record("initial", summary)
+	return probe
+
+func record(stage: String, summary: Dictionary, wall_ms := 0.0, permits := 0) -> void:
+	rows.append({"stage": stage, "summary": summary.duplicate(true), "wall_ms": wall_ms,
+		"speed": clock.speed, "permits": permits, "advance_calls": advances})
+
+func permit(summary: Dictionary, observe: Callable) -> bool:
+	if pause and advances == 1:
+		_hold("mid_pause", observe)
+	var wall_ms := 100.0 / speed
+	var permits := clock.advance(wall_ms / 1000.0)
+	record("permit", summary, wall_ms, permits)
+	if permits != 1:
+		return false
+	advances += 1
+	return true
+
+func _hold(stage: String, observe: Callable) -> void:
+	clock.set_speed(0)
+	for i in 2:
+		record(stage, observe.call(), 250.0, clock.advance(0.250))
+	clock.set_speed(speed)
+
+func finish(observe: Callable) -> void:
+	if pause:
+		_hold("terminal_pause", observe)
+		var wall_ms := 100.0 / speed
+		record("terminal_resume", observe.call(), wall_ms, clock.advance(wall_ms / 1000.0))
+	if FileAccess.file_exists(path):
+		push_error("A05 probe refuses to overwrite " + path)
+		return
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	if file == null:
+		push_error("A05 probe cannot write " + path)
+		return
+	file.store_string(JSON.stringify({"rows": rows, "advance_calls": advances}, "  ", true, true) + "\n")
+

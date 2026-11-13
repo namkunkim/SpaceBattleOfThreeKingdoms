@@ -1,0 +1,101 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Accessibility: AccessKit driver loaded.
+Native OpenGL API detected: 3.3: Intel - Intel(R) Arc(TM) 130V GPU (8GB)
+Accessibility: window 0 adapter created.
+SDL: Init OK!
+Accessibility: window 0 adapter activated.
+Using "winink" pen tablet driver...
+Shader 'CanvasSdfShaderGLES3' SHA256: d9691479fdcd9e00540c9402d6ef51f647aee0ee9767934116bcefeb48c92ccb
+Shader 'SkeletonShaderGLES3' SHA256: d213e299324bd1cb83ae66142a30869c2eb73648decf7847e0690377b404b50e
+Shader 'ParticlesShaderGLES3' SHA256: 3b024ec143d458e9bc6b87cc09342d0f47c7d2a7fb6ded9ebd246e882ee190d5
+Shader 'ParticlesCopyShaderGLES3' SHA256: 15ad70e596fc3862cd44de1ed89544a7f5fc291bfcbe1bf3bed51601c6767620
+Shader 'CopyShaderGLES3' SHA256: 934eb9f3361b92b9bda091856bd099b1abc1e3db75bffc7a4989777585ab6738
+Shader 'CubemapFilterShaderGLES3' SHA256: d6907ec78a34b18172d09634747788b699c20a17589e6019439b028b1a502e06
+Shader 'GlowShaderGLES3' SHA256: 5be19515aecf42885971176690f939d47c438cabe17d03b9116591a1044b45fe
+Shader 'PostShaderGLES3' SHA256: 4801458f3d22ac5e1c150f0f564c235ba48f2c838010d93fbdaa3a096d9c793b
+Shader 'FeedShaderGLES3' SHA256: eb61147a5a336fe5b4b7d7e8d9ad977415ea0dd44645158a8da74c1910ccc551
+Shader 'CanvasShaderGLES3' SHA256: 013367668b282197674e1b455f39c8bac1ddd59944ea6ea70fff2729fb8c2f21
+Shader 'CanvasOcclusionShaderGLES3' SHA256: aa65c733200e4ff1e8c4134367fedc19d3d0b14e3658c2864a433f2d820bf6bd
+Shader 'SceneShaderGLES3' SHA256: 48b16992edc8d5d73a4b7f45561460b8ace674d003859023e0e3a6464bfe27fc
+Shader 'SkyShaderGLES3' SHA256: 9603a1bd506c394fd750cf35619f7a6655c394e2542025841459ddadc1ce0e8c
+Shader 'TexBlitShaderGLES3' SHA256: 386f162501c853a42fbad1be6d3710df174e96e742b6e870efa466a6ea5e8e2a
+OpenGL API 3.3.0 - Build 32.0.101.8626 - Compatibility - Using Device: Intel - Intel(R) Arc(TM) 130V GPU (8GB)
+WASAPI: Activated output_device using IAudioClient3 interface
+WASAPI: wFormatTag = 65534
+WASAPI: nChannels = 2
+WASAPI: nSamplesPerSec = 48000
+WASAPI: nAvgBytesPerSec = 384000
+WASAPI: nBlockAlign = 8
+WASAPI: wBitsPerSample = 32
+WASAPI: cbSize = 22
+WASAPI: mix_rate = 48000
+WASAPI: fundamental_period_frames = 480
+WASAPI: min_period_frames = 480
+WASAPI: max_period_frames = 480
+WASAPI: selected a period frame size of 480
+WASAPI: detected 2 channels
+WASAPI: audio buffer frames: 480 calculated latency: 10ms
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+CORE API HASH: 0
+EDITOR API HASH: 0
+SceneTreeFTI: traversal method DEFAULT
+Loading resource: res://scripts/world_link.gdc remapped: res://scripts/world_link.gdc
+Completed load for: 'res://scripts/world_link.gd' remapped 'res://scripts/world_link.gdc' at thread -1
+Loaded system CA certificates
+Loading resource: res://.godot/exported/133200997/export-c13ef97394bb53c55763d8a685f7fbfa-EntryBoot.scn remapped: res://.godot/exported/133200997/export-c13ef97394bb53c55763d8a685f7fbfa-EntryBoot.scn
+Loading resource: res://scripts/entry/entry_boot.gdc remapped: res://scripts/entry/entry_boot.gdc
+Loading resource: res://.godot/exported/133200997/export-e4b17fa4b6b847aedbc608dd7e01894e-NewEntry.scn remapped: res://.godot/exported/133200997/export-e4b17fa4b6b847aedbc608dd7e01894e-NewEntry.scn
+Loading resource: res://scripts/entry/entry_screen.gdc remapped: res://scripts/entry/entry_screen.gdc
+Loading resource: res://assets/world_atlas/red-cliffs-reference-sky.jpg remapped: res://assets/world_atlas/red-cliffs-reference-sky.jpg
+Loading resource: res://.godot/imported/red-cliffs-reference-sky.jpg-aab6d53bec17ae86d42d2d600f88b338.ctex remapped: res://.godot/imported/red-cliffs-reference-sky.jpg-aab6d53bec17ae86d42d2d600f88b338.ctex
+Completed load for: 'res://assets/world_atlas/red-cliffs-reference-sky.jpg' remapped 'res://assets/world_atlas/red-cliffs-reference-sky.jpg' at thread -1
+Loading resource: res://data/i18n/messages.json remapped: res://data/i18n/messages.json
+Completed load for: 'res://data/i18n/messages.json' remapped 'res://data/i18n/messages.json' at thread -1
+Completed load for: 'res://scripts/entry/entry_screen.gd' remapped 'res://scripts/entry/entry_screen.gdc' at thread -1
+Completed load for: 'res://scenes/entry/NewEntry.tscn' remapped 'res://.godot/exported/133200997/export-e4b17fa4b6b847aedbc608dd7e01894e-NewEntry.scn' at thread -1
+Completed load for: 'res://scripts/entry/entry_boot.gd' remapped 'res://scripts/entry/entry_boot.gdc' at thread -1
+Completed load for: 'res://scenes/entry/EntryBoot.tscn' remapped 'res://.godot/exported/133200997/export-c13ef97394bb53c55763d8a685f7fbfa-EntryBoot.scn' at thread -1
+Loading resource: res://assets/fonts/Pretendard-Regular.otf remapped: res://assets/fonts/Pretendard-Regular.otf
+Loading resource: res://.godot/imported/Pretendard-Regular.otf-375f78108183715aa325a9c9dc71177f.fontdata remapped: res://.godot/imported/Pretendard-Regular.otf-375f78108183715aa325a9c9dc71177f.fontdata
+Completed load for: 'res://assets/fonts/Pretendard-Regular.otf' remapped 'res://assets/fonts/Pretendard-Regular.otf' at thread -1
+Loading resource: res://assets/fonts/NotoSerifKR-SemiBold.otf remapped: res://assets/fonts/NotoSerifKR-SemiBold.otf
+Loading resource: res://.godot/imported/NotoSerifKR-SemiBold.otf-2190be0e138fd50bde38a01a0579cf40.fontdata remapped: res://.godot/imported/NotoSerifKR-SemiBold.otf-2190be0e138fd50bde38a01a0579cf40.fontdata
+Completed load for: 'res://assets/fonts/NotoSerifKR-SemiBold.otf' remapped 'res://assets/fonts/NotoSerifKR-SemiBold.otf' at thread -1
+Loading resource: res://assets/prologue/01-empire.png remapped: res://assets/prologue/01-empire.png
+Loading resource: res://.godot/imported/01-empire.png-a00b8ec64379f0faf3501d4d6f419cca.ctex remapped: res://.godot/imported/01-empire.png-a00b8ec64379f0faf3501d4d6f419cca.ctex
+Completed load for: 'res://assets/prologue/01-empire.png' remapped 'res://assets/prologue/01-empire.png' at thread -1
+Loading resource: res://assets/world_atlas/galaxy_navigation_terrain.png remapped: res://assets/world_atlas/galaxy_navigation_terrain.png
+Loading resource: res://.godot/imported/galaxy_navigation_terrain.png-10deb9baad2454df48e0f46f9d82eade.ctex remapped: res://.godot/imported/galaxy_navigation_terrain.png-10deb9baad2454df48e0f46f9d82eade.ctex
+Completed load for: 'res://assets/world_atlas/galaxy_navigation_terrain.png' remapped 'res://assets/world_atlas/galaxy_navigation_terrain.png' at thread -1
+Loading resource: res://.godot/exported/133200997/export-41c8dc4460d763b1e7c7f4965bfd927b-PreparedMap.scn remapped: res://.godot/exported/133200997/export-41c8dc4460d763b1e7c7f4965bfd927b-PreparedMap.scn
+Completed load for: 'res://scenes/entry/PreparedMap.tscn' remapped 'res://.godot/exported/133200997/export-41c8dc4460d763b1e7c7f4965bfd927b-PreparedMap.scn' at thread -1
+Loading resource: res://assets/world_atlas/red-cliffs-terrain.png remapped: res://assets/world_atlas/red-cliffs-terrain.png
+Loading resource: res://.godot/imported/red-cliffs-terrain.png-d91f2b61ced7f06189e2ce30d7896d6f.ctex remapped: res://.godot/imported/red-cliffs-terrain.png-d91f2b61ced7f06189e2ce30d7896d6f.ctex
+Completed load for: 'res://assets/world_atlas/red-cliffs-terrain.png' remapped 'res://assets/world_atlas/red-cliffs-terrain.png' at thread -1
+Loading resource: res://.godot/exported/133200997/export-6fc9f3aa03723dcea84c2d7516fcefec-FleetBattle3D.scn remapped: res://.godot/exported/133200997/export-6fc9f3aa03723dcea84c2d7516fcefec-FleetBattle3D.scn
+Loading resource: res://scripts/FleetBattle3D.gdc remapped: res://scripts/FleetBattle3D.gdc
+Completed load for: 'res://scripts/FleetBattle3D.gd' remapped 'res://scripts/FleetBattle3D.gdc' at thread -1
+Completed load for: 'res://scenes/FleetBattle3D.tscn' remapped 'res://.godot/exported/133200997/export-6fc9f3aa03723dcea84c2d7516fcefec-FleetBattle3D.scn' at thread -1
+Loading resource: res://assets/fonts/Pretendard-Regular.otf remapped: res://assets/fonts/Pretendard-Regular.otf
+Loading resource: res://.godot/imported/Pretendard-Regular.otf-375f78108183715aa325a9c9dc71177f.fontdata remapped: res://.godot/imported/Pretendard-Regular.otf-375f78108183715aa325a9c9dc71177f.fontdata
+Completed load for: 'res://assets/fonts/Pretendard-Regular.otf' remapped 'res://assets/fonts/Pretendard-Regular.otf' at thread -1
+Loading resource: res://assets/fonts/NotoSansCJKsc-Regular.otf remapped: res://assets/fonts/NotoSansCJKsc-Regular.otf
+Loading resource: res://.godot/imported/NotoSansCJKsc-Regular.otf-234b66ec4f6090cf3cb4fe9bcf1a8765.fontdata remapped: res://.godot/imported/NotoSansCJKsc-Regular.otf-234b66ec4f6090cf3cb4fe9bcf1a8765.fontdata
+Completed load for: 'res://assets/fonts/NotoSansCJKsc-Regular.otf' remapped 'res://assets/fonts/NotoSansCJKsc-Regular.otf' at thread -1
+Loading resource: res://assets/fonts/Pretendard-Medium.otf remapped: res://assets/fonts/Pretendard-Medium.otf
+Loading resource: res://.godot/imported/Pretendard-Medium.otf-38b7e8428b68ea05158620404bacd677.fontdata remapped: res://.godot/imported/Pretendard-Medium.otf-38b7e8428b68ea05158620404bacd677.fontdata
+Completed load for: 'res://assets/fonts/Pretendard-Medium.otf' remapped 'res://assets/fonts/Pretendard-Medium.otf' at thread -1
+Loading resource: res://assets/fonts/NotoSerifKR-Bold.otf remapped: res://assets/fonts/NotoSerifKR-Bold.otf
+Loading resource: res://.godot/imported/NotoSerifKR-Bold.otf-21990f8736afce1e7d7697ba8dc3852f.fontdata remapped: res://.godot/imported/NotoSerifKR-Bold.otf-21990f8736afce1e7d7697ba8dc3852f.fontdata
+Completed load for: 'res://assets/fonts/NotoSerifKR-Bold.otf' remapped 'res://assets/fonts/NotoSerifKR-Bold.otf' at thread -1
+Loading resource: res://assets/fonts/NotoSerifKR-SemiBold.otf remapped: res://assets/fonts/NotoSerifKR-SemiBold.otf
+Loading resource: res://.godot/imported/NotoSerifKR-SemiBold.otf-2190be0e138fd50bde38a01a0579cf40.fontdata remapped: res://.godot/imported/NotoSerifKR-SemiBold.otf-2190be0e138fd50bde38a01a0579cf40.fontdata
+Completed load for: 'res://assets/fonts/NotoSerifKR-SemiBold.otf' remapped 'res://assets/fonts/NotoSerifKR-SemiBold.otf' at thread -1
+Loading resource: res://assets/fonts/Pretendard-SemiBold.otf remapped: res://assets/fonts/Pretendard-SemiBold.otf
+Loading resource: res://.godot/imported/Pretendard-SemiBold.otf-b18e006bb23af1cf92c966e372cc15da.fontdata remapped: res://.godot/imported/Pretendard-SemiBold.otf-b18e006bb23af1cf92c966e372cc15da.fontdata
+Completed load for: 'res://assets/fonts/Pretendard-SemiBold.otf' remapped 'res://assets/fonts/Pretendard-SemiBold.otf' at thread -1
+Loading resource: res://data/operation_checkpoint_anchor.gdc remapped: res://data/operation_checkpoint_anchor.gdc
+Completed load for: 'res://data/operation_checkpoint_anchor.gd' remapped 'res://data/operation_checkpoint_anchor.gdc' at thread -1

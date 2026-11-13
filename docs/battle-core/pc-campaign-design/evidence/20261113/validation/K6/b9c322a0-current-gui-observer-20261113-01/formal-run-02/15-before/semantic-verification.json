@@ -1,0 +1,82 @@
+{
+  "row": 15,
+  "semantic_pass": true,
+  "comparison_core": {
+    "typed_request": [
+      "Dictionary",
+      [
+        [
+          [
+            "String",
+            "capability"
+          ],
+          [
+            "String",
+            "pc/first-operation/1"
+          ]
+        ],
+        [
+          [
+            "String",
+            "definition_id"
+          ],
+          [
+            "String",
+            "red-cliffs-first-operation-dev-v1"
+          ]
+        ],
+        [
+          [
+            "String",
+            "definition_version"
+          ],
+          [
+            "int",
+            "1"
+          ]
+        ],
+        [
+          [
+            "String",
+            "difficulty"
+          ],
+          [
+            "String",
+            "standard"
+          ]
+        ],
+        [
+          [
+            "String",
+            "mode"
+          ],
+          [
+            "String",
+            "direct"
+          ]
+        ],
+        [
+          [
+            "String",
+            "roster_id"
+          ],
+          [
+            "String",
+            "red-cliffs-dev-roster-v1"
+          ]
+        ],
+        [
+          [
+            "String",
+            "seed"
+          ],
+          [
+            "int",
+            "208"
+          ]
+        ]
+      ]
+    ],
+    "c0_sha256": "c26ee8257a1b0b5d7ddf30a25977e0698487316fdcbb0cf0ffaa52598be35620"
+  }
+}

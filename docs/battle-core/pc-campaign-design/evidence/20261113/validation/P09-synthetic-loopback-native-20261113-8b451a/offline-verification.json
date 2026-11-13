@@ -1,0 +1,23 @@
+{
+  "status": "pass",
+  "method": "Offline least squares of sin and cos on center 2.3\u20133.6 s",
+  "wave_sha256": "3a7e9e1181c8bc5e6f43f4ec3d77b4f1429907605fe44b6c5931e6e85cb25aa5",
+  "channel_metrics": [
+    {
+      "channel": 1,
+      "fit_energy_fraction_997hz": 0.999996295741899,
+      "fitted_peak_pcm": 638.6697754575154,
+      "first_abs_pcm_ge_20_seconds": 2.161451247165533,
+      "last_abs_pcm_ge_20_seconds": 3.750612244897959,
+      "threshold_span_seconds": 1.5891836734693878
+    },
+    {
+      "channel": 2,
+      "fit_energy_fraction_997hz": 0.9999963204161905,
+      "fitted_peak_pcm": 638.6719319639332,
+      "first_abs_pcm_ge_20_seconds": 2.161451247165533,
+      "last_abs_pcm_ge_20_seconds": 3.750612244897959,
+      "threshold_span_seconds": 1.5891836734693878
+    }
+  ]
+}

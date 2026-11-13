@@ -1,0 +1,23 @@
+{"label":"천하 지도","at":"2026-11-11T06:14:12.477Z","completedAt":"2026-11-11T06:14:12.651Z","windowId":7474128,"x":177,"y":568}
+{"label":"적벽으로","at":"2026-11-11T06:14:18.550Z","completedAt":"2026-11-11T06:14:18.684Z","windowId":7474128,"x":1024,"y":849}
+{"label":"첫 작전 · 정면","at":"2026-11-11T06:14:24.740Z","completedAt":"2026-11-11T06:14:24.866Z","windowId":7474128,"x":1446,"y":907}
+{"label":"Start operation","at":"2026-11-11T06:14:41.959Z","completedAt":"2026-11-11T06:14:42.083Z","windowId":7474128,"x":125,"y":154}
+{"label":"Save battle 1","at":"2026-11-11T06:14:48.435Z","completedAt":"2026-11-11T06:14:48.551Z","windowId":7474128,"x":121,"y":200}
+{"label":"Save battle 2","at":"2026-11-11T06:14:53.322Z","completedAt":"2026-11-11T06:14:53.450Z","windowId":7474128,"x":121,"y":200}
+{"label":"Load battle","at":"2026-11-11T06:14:59.666Z","completedAt":"2026-11-11T06:14:59.784Z","windowId":7474128,"x":121,"y":245}
+{"label":"Close first process","at":"2026-11-11T06:15:06.272Z","completedAt":"2026-11-11T06:15:06.418Z","windowId":7474128,"x":1578,"y":15}
+{"label":"천하 지도 (PID 2)","at":"2026-11-11T06:15:39.814Z","completedAt":"2026-11-11T06:15:39.952Z","windowId":7670736,"x":175,"y":568}
+{"label":"적벽으로 (PID 2)","at":"2026-11-11T06:15:45.529Z","completedAt":"2026-11-11T06:15:45.667Z","windowId":7670736,"x":1023,"y":849}
+{"label":"첫 작전 이어하기 (active)","at":"2026-11-11T06:15:52.286Z","completedAt":"2026-11-11T06:15:52.433Z","windowId":7670736,"x":1340,"y":226}
+{"label":"Resume operation","at":"2026-11-11T06:15:59.596Z","completedAt":"2026-11-11T06:15:59.734Z","windowId":7670736,"x":122,"y":154}
+{"label":"Move to waypoint 2","at":"2026-11-11T06:16:05.278Z","completedAt":"2026-11-11T06:16:05.434Z","windowId":7670736,"x":124,"y":454}
+{"label":"Move to waypoint 3","at":"2026-11-11T06:17:29.975Z","completedAt":"2026-11-11T06:17:30.084Z","windowId":7670736,"x":124,"y":501}
+{"label":"Return to map","at":"2026-11-11T06:25:48.612Z","completedAt":"2026-11-11T06:25:48.733Z","windowId":7670736,"x":165,"y":154}
+{"label":"천하 보기 (first settlement)","at":"2026-11-11T06:26:05.064Z","completedAt":"2026-11-11T06:26:05.216Z","windowId":7670736,"x":1340,"y":853}
+{"label":"Close second process","at":"2026-11-11T06:26:12.057Z","completedAt":"2026-11-11T06:26:12.217Z","windowId":7670736,"x":1578,"y":15}
+{"label":"천하 지도 (settlement reopen)","at":"2026-11-11T06:26:39.576Z","completedAt":"2026-11-11T06:26:39.752Z","windowId":1643008,"x":175,"y":568}
+{"label":"첫 작전 이어하기 (settled)","at":"2026-11-11T06:26:45.689Z","completedAt":"2026-11-11T06:26:45.816Z","windowId":1643008,"x":1335,"y":216}
+{"label":"천하 보기 (restored settlement)","at":"2026-11-11T06:26:50.191Z","completedAt":"2026-11-11T06:26:50.334Z","windowId":1643008,"x":1337,"y":852}
+{"label":"타이틀로 (PID 3)","at":"2026-11-11T06:26:59.493Z","completedAt":"2026-11-11T06:26:59.617Z","windowId":1643008,"x":1500,"y":873}
+{"label":"천하 지도 (same PID round trip)","at":"2026-11-11T06:27:08.168Z","completedAt":"2026-11-11T06:27:08.300Z","windowId":1643008,"x":177,"y":567}
+{"label":"Close third process","at":"2026-11-11T06:27:15.140Z","completedAt":"2026-11-11T06:27:15.267Z","windowId":1643008,"x":1578,"y":15}

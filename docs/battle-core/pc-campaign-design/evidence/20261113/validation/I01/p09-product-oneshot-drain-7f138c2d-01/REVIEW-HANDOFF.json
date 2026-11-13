@@ -1,0 +1,41 @@
+{
+  "main": "7f138c2df7f1a55118bf9a5b7e251703049d5bb6",
+  "worktree": "<workspace>/campaign-p09-product-oneshot-drain-7f138c2d-20261112",
+  "prior_pins": {
+    "REVIEW-HANDOFF.json": "6d6f88137581a38ea51fd7ce7000ebe79862c01eab7ff2ff027d43b84d35a91c",
+    "CACHE-PROOF.json": "292f107d740c403de0bcdc6ff2b3415d53a3ef857fdff975c31ed07c91d320b0",
+    "probe-v3.gd": "747a532a0680476e8dadacd737c76458b2ad7494f52873c96cf8a484cb8cd006",
+    "run-3/RESULT.json": "89b2aeb637088ca8e22c7b5c7b3ea68f4544beab552efbc217a5cbbaca1b7088"
+  },
+  "files": {
+    "RESULTS.md": {
+      "bytes": 1257,
+      "sha256": "842cf399de0c4fba885fdc3197d32fec3a34a3732702c9ddce4ae78b6eae2807"
+    },
+    "CACHE-PROOF.json": {
+      "bytes": 326034,
+      "sha256": "aef4a3ccc84a3f7faceede28748869f1b182995b2382100eb8917abe5a95fae5"
+    },
+    "probe.gd": {
+      "bytes": 4283,
+      "sha256": "fec6664f463311f85ebafee3163bb6471a804d64f5fbf555ff51330eb158863e"
+    },
+    "run.py": {
+      "bytes": 6990,
+      "sha256": "d14ff908aedd8a8856c17b77f29cadd9e6515ad2afdf9f41d2e378a3b12ce52a"
+    },
+    "run-1/RESULT.json": {
+      "bytes": 5622,
+      "sha256": "360961d8cb2da4187d99ef6972527394b1c547b5310dd0906c2ad8a534d18e18"
+    },
+    "run-1/stdout.log": {
+      "bytes": 39159,
+      "sha256": "1d6b4be668ef877a758a46d4b118abd0f4e8672e93e5ef714b00cf8216f73a6e"
+    },
+    "run-1/stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "scope": "One passive headless product presentation teardown; no whole-product, physical, TRACE or formal credit."
+}

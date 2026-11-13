@@ -1,0 +1,30 @@
+{
+  "head": "7f138c2df7f1a55118bf9a5b7e251703049d5bb6",
+  "worktree": "<workspace>/campaign-p04-export-failure-7f138c2d-20261112",
+  "checks": 23,
+  "protected_sha256": {
+    "pc-first-operation-dev.save": "cb561095f66d9129cb290baab774b12795ea084f32e0c164b9431879d5d76b0c",
+    "pc-first-operation-dev.save.previous": "850b5cbdf8cb65145686aa74112fc0c7b1b2e9c56e89142f30d7f69b58c30f90",
+    "pc-first-operation-settlements.save": "0723942829d5f2a77c3cf6595d3acade8287e44823e1bf951cba5e685d6246b2",
+    "pc-first-operation-settlements.save.previous": "cc26f2775c965146f3458819dc1dd7db8e51c243288daa9f1683372d69d16cfd"
+  },
+  "pins": {
+    "probe.gd": "a36253dd9b80bf66b4dac0945f2739236e40483edb5afb208120c76197ad2b01",
+    "probe-ui-frame.gd": "b831a1dec4140598ca04753703d645c326b1b6809db087faed66409b7d9f5126",
+    "run.py": "58db5f3c58db6f3947841a1fdd932cbdd65d285b1611baeacbd9d43b56c540e9",
+    "run-retry.py": "d260395129e3fb92977eec837f1578239b6fbcd1ae100cdb73834bdf1a2f34a2",
+    "run-preflight-1.py": "66ee15f12b603de3d3d4b66858bcd934126f6ee8d5712774f2470307e318c771",
+    "PREFLIGHT-FAILURE-1.txt": "de4ee0bd1fd6c8018ac86be8724f6709e28f1a5fa68343f187e39bf275178c9c",
+    "IMPORT.json": "62a962dc43d383b28946c4850bf519281734c89d57094a4d65cb1441f5c2856a",
+    "RESULT.json": "8ee2088785bbdb9464d9a0d7f347e223482781377b2e9b853332cbf32ea8fc8b",
+    "RETRY-RESULT.json": "65e9d87b667d45a1c7179bd04be8a69a8cf8044e6b1d60c2757a415acfee02d0",
+    "import.stdout.log": "489d1d31d7cd322d2ffd76fe2973480a2add89bb36eff5f3ea79b69fd28d1a16",
+    "import.stderr.log": "94244bb31e67a570f35f9f7a7cfe69b6922d8cd4d638772e2599448658d69d8a",
+    "probe.stdout.log": "83fbc766686df80d3e0284e053a9ac921ff5656630ea16f91de4fbb6c8be2c31",
+    "probe.stderr.log": "98493bd8aa853b76b156464aeb04d41147b663cac7dffa1b0c539b9521eb9934",
+    "probe-retry.stdout.log": "7b2ddf32b45b3e0880a0db4b1a19680d963da518bb72e4dd2cdd35914a05d895",
+    "probe-retry.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "RESULTS.md": "57fa3a7d0d3f99d6a4beb6c7926e18cf75dba44fd5472a4528f92111a90f22fc",
+    "retry-profile\\fixtures\\uncreated\\checkpoint.pcopsave": "5ee77ed196cbdf609c70645c1dfd0335b4b615d56259c52306e70b2a39abf2e5"
+  }
+}

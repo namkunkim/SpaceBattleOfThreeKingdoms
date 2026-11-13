@@ -1,0 +1,16 @@
+{
+  "atKst": "2026-11-11T15:26:29.1269676+09:00",
+  "fileSha256": "85b29c24b5f7f5ef79564e2a019fa87fd105f8fdbc2a7456de60d1531ef45ba3",
+  "bodySha256": "e61449557fa4a2b56e903d0de12a108b56e647ca44cfb2ad3a83df5bc2bda2f4",
+  "count": 1,
+  "latest": "red-cliffs-first-operation-dev-v1/d27b6189bcb2e62d02d8d947bd7ed987/settlement",
+  "record": {
+    "clock_ms": 560300,
+    "difficulty": "standard",
+    "id": "red-cliffs-first-operation-dev-v1/d27b6189bcb2e62d02d8d947bd7ed987/settlement",
+    "kind": "objective_success",
+    "mode": "direct",
+    "reason": "objective_conditions_met",
+    "seed": 208
+  }
+}

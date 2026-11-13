@@ -1,0 +1,148 @@
+extends SceneTree
+
+const Builder := preload("res://core/battle/operation_profile.gd")
+const Host := preload("res://scenes/RestrictedOperationHost.tscn")
+const Source := "res://tests/fixtures/i01/valid_definition.json"
+const Poc := "res://tests/fixtures/p02/poc.json"
+const Version := "a05-fxg-projection/1"
+const Envelopes := {"host": "host_input", "headless": "headless_input", "replay": "replay_input"}
+
+func _initialize() -> void:
+	_run.call_deferred()
+
+func _run() -> void:
+	var args := OS.get_cmdline_user_args()
+	var out := args[1]
+	if args[0] == "freeze":
+		quit(_freeze(out))
+	elif args[0] == "host":
+		quit(_host(out))
+
+func _save(path: String, data: Variant) -> bool:
+	if FileAccess.file_exists(path):
+		printerr("Refusing to overwrite ", path)
+		return false
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	if file == null:
+		printerr("Cannot write ", path)
+		return false
+	file.store_string(JSON.stringify(data, "  ", true, true) + "\n")
+	return true
+
+func _project(result: Dictionary) -> Dictionary:
+	var effective: Dictionary = result.effective
+	var anchor: Array = effective.nodes.filter(func(node): return node.id == "J")[0].position
+	var input: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(Poc))
+	input.seed = effective.seed
+	input.hz = effective.hz
+	input.profile.profile_id = effective.profile_id
+	input.profile.rules.world_w = effective.bounds[2]
+	input.profile.rules.world_h = effective.bounds[3]
+	input.profile.ally[0].ships = 320
+	input.profile.ally[0].x = anchor[0]
+	input.profile.ally[0].y = anchor[1]
+	input.profile.foe[0].x = float(anchor[0]) + 50.0
+	input.profile.foe[0].y = anchor[1]
+	input.initial_controls = ["direct", "direct"]
+	input.policy = "none"
+	input.max_ticks = 2
+	return input
+
+func _freeze(out: String) -> int:
+	var metadata := {
+		"projector_version": Version,
+		"projector_sha256": FileAccess.get_sha256("res://tests/a05_projection_experiment.gd"),
+		"definition_file_sha256": FileAccess.get_sha256(Source),
+		"poc_file_sha256": FileAccess.get_sha256(Poc),
+		"projection_fields": {
+			"seed": "seed", "hz": "hz", "profile_id": "profile.profile_id",
+			"bounds[2:4]": "profile.rules.world_w/world_h",
+			"nodes.J.position": "ally + [0,0]; foe + [50,0]",
+			"clock_metadata": "initial owner comparison",
+		},
+		"cases": {},
+	}
+	for variant in ["base", "j210"]:
+		var definition: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(Source))
+		if variant == "j210":
+			for node in definition.nodes:
+				if node.id == "J":
+					node.position[0] = 210
+		if not _save(out.path_join(variant + "-definition.json"), definition):
+			return 2
+		var lanes := {}
+		for lane in Envelopes:
+			var payload := {"mode": "operation", "seed": 20824, "hz": 10, "definition": definition}
+			var adapter: String = Envelopes[lane]
+			var envelope := {"adapter": adapter, "selection": payload} if lane == "host" else payload
+			if lane == "replay":
+				envelope = {"adapter": adapter, "header": payload}
+			if lane == "headless":
+				envelope.adapter = adapter
+			var result := Builder.from_envelope(envelope)
+			if not result.ok:
+				printerr("Builder rejected ", variant, "/", lane, " ", result)
+				return 3
+			var input := _project(result)
+			var data := {"format": "p02/restricted-fresh-replay/1", "input": input, "commands": []} if lane == "replay" else input
+			var file_name: String = "%s-%s.json" % [variant, lane]
+			var path := out.path_join(file_name)
+			if not _save(path, data):
+				return 4
+			var parsed: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+			var parsed_input: Dictionary = parsed.input if lane == "replay" else parsed
+			lanes[lane] = {
+				"envelope": envelope, "manifest": result.manifest, "effective": result.effective,
+				"file": file_name, "file_sha256": FileAccess.get_sha256(path),
+				"canonical_input_sha256": Builder.canonical(parsed_input).sha256_text(),
+				"adapter_hash_of_reparsed_input": var_to_bytes(parsed_input).hex_encode().sha256_text(),
+				"ally": [input.profile.ally[0].x, input.profile.ally[0].y],
+				"foe": [input.profile.foe[0].x, input.profile.foe[0].y],
+			}
+		for lane in ["headless", "replay"]:
+			for key in ["source_hash", "effective_hash"]:
+				if lanes[lane].manifest[key] != lanes.host.manifest[key]:
+					return 5
+			if Builder.canonical(lanes[lane].effective) != Builder.canonical(lanes.host.effective):
+				return 6
+			if lanes[lane].canonical_input_sha256 != lanes.host.canonical_input_sha256:
+				return 7
+		metadata.cases[variant] = lanes
+	var base: Dictionary = metadata.cases.base.host
+	var moved: Dictionary = metadata.cases.j210.host
+	if Builder.canonical([base.ally, base.foe, moved.ally, moved.foe]) != Builder.canonical([[400.0, 600.0], [450.0, 600.0], [420.0, 600.0], [470.0, 600.0]]) or base.canonical_input_sha256 == moved.canonical_input_sha256:
+		return 8
+	return 0 if _save(out.path_join("fixture-freeze.json"), metadata) else 9
+
+func _host(out: String) -> int:
+	var host := Host.instantiate()
+	root.add_child(host)
+	var path := out.path_join("base-host.json")
+	var raw := {"file": path, "file_sha256": FileAccess.get_sha256(path), "frames": [], "events": []}
+	raw.prepare = host.load_runtime_file(path)
+	if raw.prepare.ok:
+		raw.frames.append(_host_frame(host))
+		for i in 2:
+			if host._summary.over:
+				break
+			var frame := {"advance": host.advance()}
+			frame.merge(_host_frame(host))
+			var drained: Dictionary = host._operation.drain_events()
+			frame.drain_ok = drained.ok
+			if drained.ok:
+				raw.events.append_array(drained.events)
+			raw.frames.append(frame)
+	root.remove_child(host)
+	host.free()
+	return 0 if _save(out.path_join("base-host-first-natural.json"), raw) and raw.prepare.ok else 10
+
+func _host_frame(host: Node) -> Dictionary:
+	var observed: Dictionary = host._operation.observe()
+	return {
+		"owner_summary": host._operation.summary(),
+		"host_summary": host._summary.duplicate(true),
+		"display": host._view.text,
+		"command_log": observed.sim.command_log,
+		"queue": observed.sim._queue,
+	}
+

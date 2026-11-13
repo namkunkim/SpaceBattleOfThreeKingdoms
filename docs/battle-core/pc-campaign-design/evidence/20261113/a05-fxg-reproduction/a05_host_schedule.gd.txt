@@ -1,0 +1,55 @@
+extends SceneTree
+
+const Host := preload("res://scenes/RestrictedOperationHost.tscn")
+const Probe := preload("res://tests/a05_tick_probe.gd")
+
+func _initialize() -> void:
+	_run.call_deferred()
+
+func _run() -> void:
+	var args := OS.get_cmdline_user_args()
+	var host := Host.instantiate()
+	root.add_child(host)
+	var prepared: Dictionary = host.load_runtime_file(args[0])
+	if not prepared.ok:
+		printerr(prepared)
+		quit(3)
+		return
+	var observations: Array = []
+	var events: Array = []
+	var observe := func() -> Dictionary:
+		var current: Dictionary = host._operation.summary().summary
+		observations.append({"owner": current.duplicate(true),
+			"host": host._summary.duplicate(true), "display": host._view.text})
+		return current
+	var probe = Probe.start(observe.call())
+	while not host._summary.over and host._summary.tick < 2:
+		if probe != null and not probe.permit(host._summary, observe):
+			quit(4)
+			return
+		if not host.advance().ok:
+			quit(5)
+			return
+		events.append_array(host._operation.drain_events().events)
+		var summary: Dictionary = observe.call()
+		if probe != null:
+			probe.record("after", summary)
+	if probe != null:
+		probe.finish(observe)
+	var input: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(args[0]))
+	var result := {"prepare": prepared, "file_sha256": FileAccess.get_sha256(args[0]),
+		"input_sha256": var_to_bytes(input).hex_encode().sha256_text(),
+		"summary": host._summary, "events": events, "observations": observations}
+	if FileAccess.file_exists(args[1]):
+		quit(6)
+		return
+	var file := FileAccess.open(args[1], FileAccess.WRITE)
+	if file == null:
+		quit(7)
+		return
+	file.store_string(JSON.stringify(result, "  ", true, true) + "\n")
+	file.close()
+	root.remove_child(host)
+	host.free()
+	quit()
+

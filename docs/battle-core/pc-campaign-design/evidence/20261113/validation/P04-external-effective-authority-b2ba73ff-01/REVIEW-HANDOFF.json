@@ -1,0 +1,59 @@
+{
+  "scope": "exact b2ba Windows development host effective-authority mismatch and same-host retry, isolated headless",
+  "formal_credit": false,
+  "public_credit": false,
+  "source_change": false,
+  "semantic_change": "effective_digest only; substitute original source_digest",
+  "source_digest": "c425c68d5914ce921d1e610e41cd7993a06e97ccea2c2fdff8c7abfe61d17794",
+  "effective_digest": "3807520f7c33dc306c93223acaae80ba9f53d652e4ee65f6b69d406d62984c7e",
+  "files": {
+    "probe.gd": {
+      "sha256": "10ddb6275c411bfa3e3097fb683004d55ede99d56aff9ee1984e750fb30106fd",
+      "bytes": 9176
+    },
+    "run.py": {
+      "sha256": "888be0f21463503141aab9b3946f98663eca2bac7b8eab785f69e770a2141426",
+      "bytes": 3815
+    },
+    "runner-preflight-typo.py": {
+      "sha256": "26b04e29cb377bc59124040e030560741a0203d91660b2f276555a395bf2c505",
+      "bytes": 3814
+    },
+    "runner-preflight-typo.txt": {
+      "sha256": "e10ee36f95e978cb24104b80a3eebc7eb21b922ecbffe5ed42e3032b611f3478",
+      "bytes": 97
+    },
+    "RESULTS.md": {
+      "sha256": "f6207aae28b6a244ed907d36dfc83327eaee1414fab91a0ad274cb6764a1baf7",
+      "bytes": 1660
+    },
+    "run-1/RESULT.json": {
+      "sha256": "a2827f5554de992df49cec7a3efd21dd3c74f5c80e2854f93bd245083402cca4",
+      "bytes": 5357
+    },
+    "run-1/preflight.json": {
+      "sha256": "0de77a0b662a465df78722ef90c954d8ee7c2b54a374fe913eb8d2c83535a338",
+      "bytes": 886
+    },
+    "run-1/launch.json": {
+      "sha256": "e370599a55166484ae657499a677e0dd20e492cbe0ccaccbbd66f4ab8ac3d636",
+      "bytes": 615
+    },
+    "run-1/stdout.raw": {
+      "sha256": "113c0731bc879ef5516bbe281cb221bac84d714cdf2e49da54dd0dd6f67ca8e4",
+      "bytes": 3894
+    },
+    "run-1/stderr.raw": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "run-1/fixtures/valid.pcopsave": {
+      "sha256": "c6b670a0c90a18d3e8b3bad0d7874e81fa83b45fa398d101b86a97ae86e8ec9f",
+      "bytes": 1016
+    },
+    "run-1/fixtures/wrong-effective.pcopsave": {
+      "sha256": "ea68c037dfb642a743362bc4431f5a12d597d6fa4235e81d65a24a3ea069f46f",
+      "bytes": 1016
+    }
+  }
+}

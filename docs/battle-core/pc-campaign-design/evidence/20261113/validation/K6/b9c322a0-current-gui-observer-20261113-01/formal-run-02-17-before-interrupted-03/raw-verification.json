@@ -1,0 +1,30 @@
+{
+  "raw_correlation": "PASS",
+  "actions": 11,
+  "operator_source": "authorized-windows-automation",
+  "native_hook_flags": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+  ],
+  "formal_credit": false
+}

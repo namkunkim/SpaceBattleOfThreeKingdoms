@@ -1,0 +1,125 @@
+{
+  "advance_calls": 2,
+  "rows": [
+    {
+      "advance_calls": 0,
+      "permits": 0,
+      "speed": 1.0,
+      "stage": "initial",
+      "summary": {
+        "ally_alive": 1,
+        "clock_ms": 0,
+        "commands": 0,
+        "end_ms": -1,
+        "end_tick": -1,
+        "foe_alive": 1,
+        "fp": "421c9a8ada224c95964e7f5fa0e8cc303648afed41b7b20e3e75d26dae7a7d26",
+        "killed": 0.0,
+        "lost": 0.0,
+        "over": false,
+        "reason": "timeout",
+        "reinf_t": -1.0,
+        "t": 0.0,
+        "tick": 0,
+        "win": false
+      },
+      "wall_ms": 0.0
+    },
+    {
+      "advance_calls": 0,
+      "permits": 1,
+      "speed": 1.0,
+      "stage": "permit",
+      "summary": {
+        "ally_alive": 1,
+        "clock_ms": 0,
+        "commands": 0,
+        "end_ms": -1,
+        "end_tick": -1,
+        "foe_alive": 1,
+        "fp": "421c9a8ada224c95964e7f5fa0e8cc303648afed41b7b20e3e75d26dae7a7d26",
+        "killed": 0.0,
+        "lost": 0.0,
+        "over": false,
+        "reason": "timeout",
+        "reinf_t": -1.0,
+        "t": 0.0,
+        "tick": 0,
+        "win": false
+      },
+      "wall_ms": 100.0
+    },
+    {
+      "advance_calls": 1,
+      "permits": 0,
+      "speed": 1.0,
+      "stage": "after",
+      "summary": {
+        "ally_alive": 1,
+        "clock_ms": 100,
+        "commands": 0,
+        "end_ms": -1,
+        "end_tick": -1,
+        "foe_alive": 1,
+        "fp": "06da8a7676e184abb620a13d8ce50aa7ad17cc2f182acda060446ba18930f184",
+        "killed": 0.352,
+        "lost": 0.0,
+        "over": false,
+        "reason": "timeout",
+        "reinf_t": -1.0,
+        "t": 0.1,
+        "tick": 1,
+        "win": false
+      },
+      "wall_ms": 0.0
+    },
+    {
+      "advance_calls": 1,
+      "permits": 1,
+      "speed": 1.0,
+      "stage": "permit",
+      "summary": {
+        "ally_alive": 1,
+        "clock_ms": 100,
+        "commands": 0,
+        "end_ms": -1,
+        "end_tick": -1,
+        "foe_alive": 1,
+        "fp": "06da8a7676e184abb620a13d8ce50aa7ad17cc2f182acda060446ba18930f184",
+        "killed": 0.352,
+        "lost": 0.0,
+        "over": false,
+        "reason": "timeout",
+        "reinf_t": -1.0,
+        "t": 0.1,
+        "tick": 1,
+        "win": false
+      },
+      "wall_ms": 100.0
+    },
+    {
+      "advance_calls": 2,
+      "permits": 0,
+      "speed": 1.0,
+      "stage": "after",
+      "summary": {
+        "ally_alive": 1,
+        "clock_ms": 150,
+        "commands": 0,
+        "end_ms": 150,
+        "end_tick": 2,
+        "foe_alive": 0,
+        "fp": "77887d991024d9b50bf6bc5d361c027bc7011fc5b5b98978f4d06867d9d38186",
+        "killed": 0.528,
+        "lost": 0.0,
+        "over": true,
+        "reason": "annihilation",
+        "reinf_t": -1.0,
+        "t": 0.15,
+        "tick": 2,
+        "win": true
+      },
+      "wall_ms": 0.0
+    }
+  ]
+}

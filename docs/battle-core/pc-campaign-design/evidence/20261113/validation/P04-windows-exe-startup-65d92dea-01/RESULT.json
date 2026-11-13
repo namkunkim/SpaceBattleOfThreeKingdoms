@@ -1,0 +1,69 @@
+{
+  "candidate": "65d92deaa783795d156b5c3f0763d9490d18e978",
+  "remote_candidate_at_finish": "65d92deaa783795d156b5c3f0763d9490d18e978",
+  "owned_job": {
+    "exit": 0,
+    "interruption": null,
+    "active_at_join": 0,
+    "broker_pid": 14188,
+    "descendants_outlived_broker": false,
+    "active_at_broker_exit": 0,
+    "natural_exit_grace_ms": 0.05
+  },
+  "logs": {
+    "stdout.log": {
+      "bytes": 3521,
+      "sha256": "c829300a07902f364086ed0e12109613f2f47070ad46357ba2d77f40bd9da4ff"
+    },
+    "stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "engine.log": {
+      "bytes": 3337,
+      "sha256": "daa1cf4675de2e3a514207a98407a710eee3b8474f2703b15971db5939645d0c"
+    }
+  },
+  "after_original": {
+    "SpaceBattleOfThreeKingdoms.exe": {
+      "bytes": 497295216,
+      "sha256": "20f98cc1096eef278479e343e6d2ab6a3749f5982bc22e224f4aa32bf1ca5016"
+    },
+    "o07_win32.dll": {
+      "bytes": 108032,
+      "sha256": "a9e45eed91cbe8721469359160bbcb3716675a575537acf716a2da782a75b6e8"
+    }
+  },
+  "after_runtime": {
+    "SpaceBattleOfThreeKingdoms.exe": {
+      "bytes": 497295216,
+      "sha256": "20f98cc1096eef278479e343e6d2ab6a3749f5982bc22e224f4aa32bf1ca5016"
+    },
+    "o07_win32.dll": {
+      "bytes": 108032,
+      "sha256": "a9e45eed91cbe8721469359160bbcb3716675a575537acf716a2da782a75b6e8"
+    }
+  },
+  "packaged_entry_markers": [
+    "Loading resource: res://.godot/exported/133200997/export-c13ef97394bb53c55763d8a685f7fbfa-EntryBoot.scn remapped: res://.godot/exported/133200997/export-c13ef97394bb53c55763d8a685f7fbfa-EntryBoot.scn"
+  ],
+  "packaged_newentry_markers": [
+    "Loading resource: res://.godot/exported/133200997/export-e4b17fa4b6b847aedbc608dd7e01894e-NewEntry.scn remapped: res://.godot/exported/133200997/export-e4b17fa4b6b847aedbc608dd7e01894e-NewEntry.scn"
+  ],
+  "diagnostics": [],
+  "profile_files": {},
+  "profile_app_userdata": "<validation-root>/P04-windows-exe-startup-65d92dea-01/profile/APPDATA/Godot/app_userdata/SpaceBattleOfThreeKingdoms",
+  "slot_files": [],
+  "checks": {
+    "actual_packaged_exe_exit_zero_no_residue": true,
+    "engine_log_recorded": true,
+    "entryboot_resource_loaded": true,
+    "newentry_resource_loaded": true,
+    "no_startup_or_shutdown_diagnostics": true,
+    "both_package_files_unchanged": true,
+    "isolated_godot_app_userdata_directory": true,
+    "no_slot_writes_in_profile": true
+  },
+  "pass": true,
+  "scope": "actual packaged EXE headless startup and bounded exit only; no desktop, input, play or release acceptance"
+}

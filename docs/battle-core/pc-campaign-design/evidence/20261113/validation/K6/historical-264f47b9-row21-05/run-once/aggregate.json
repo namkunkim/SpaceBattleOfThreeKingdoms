@@ -1,0 +1,38 @@
+{
+  "status": "PASS",
+  "processes_observed": 58,
+  "rows": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ],
+  "missing_or_failed": [],
+  "comparison_failures": {},
+  "interruption": null,
+  "independent_gui_review": {
+    "pass": true,
+    "reviewer_thread_id": "/root/review",
+    "main_thread_id": "01a1cb10-9ce9-77a3-a728-0808939a5f79",
+    "gui_jobs": 4,
+    "tool_calls": 52,
+    "evidence_sha256": "eb87dab588425d7fee750d40ab65eae977872e54039ff621af6504d996d5f7fc"
+  }
+}
