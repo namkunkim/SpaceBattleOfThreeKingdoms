@@ -233,3 +233,24 @@ C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe --headless --path . --scrip
 | --- | --- |
 | [시험 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-native-command-rollback-20261113/rollback.gd) | `8787a37677ef9662efcd50dba68021edda4ecd1b425140a1efc56c5f19a94c67` |
 | [시험 로그](F:/WorkSpace/Campaign-Orchestration/P05-native-command-rollback-20261113/rollback.out) | `7d2f36b9d266ec31cf9cddcd9946e46d329ec4e2896c9e6af9a5b1dbfe7b7ba4` |
+
+## 네이티브 로그 롤백 후보와 v1 호환성
+
+`63281a72058fe19a66fc4dc18f6a5e9ff9fabfcc` 기준의 격리 작업본에서 `NativeTick` 체크포인트에 명령 로그 길이를 기록하고, 롤백에서 그 길이로 되돌리는 두 줄을 시험했다. 중단 전에 있던 로그를 보존하고 임시 추가 기록만 제거했다. 네이티브 상태 다이제스트를 완전히 복원했으며, 재시도 후 50틱은 중단 없는 대조군과 일치하고 틱 51에서 완료가 한 번 발생했다. 9/9, 종료 코드 0이었으며 독립 검토에서 확인했다.
+
+기준 소스로 격리 v1 체크포인트와 리플레이를 새로 생성했다. 기준 실행은 체크포인트 `begin_restore` 접수에 성공한 뒤 복원 작업을 취소했다. 리플레이 파일 읽기도 성공했다. 두 줄 후보는 같은 파일을 각각 `checkpoint_rules_mismatch`와 `replay_rules_mismatch`로 거부했다. 기준 규칙 지문 `b7189ae8f3408fd4e053a792491ac5f6457a520218df2b709c4a8e3986863658`이 후보에서 `2f7bd9e26aaceef67b2f6bb736bd93cf7668ce906f973fecd0e747c05e7d5566`으로 바뀌었다. 제품 슬롯과 기존 사용자 파일은 사용하지 않았다. 이 후보는 병합 제안에서 제외한다. v2 구현 시 기존 지문을 보존하는 트랜잭션 경계를 먼저 검토하고, 코어 변경이 필요하면 체크포인트와 공개 리플레이 각각에 검증된 호환 규칙을 마련해야 한다.
+
+### 실행 기준과 근거
+
+프로젝트는 `F:/WorkSpace/.codex/worktree/p05-formation-20261113`이다. `core/battle/first_operation_native_tick.gd` 원본 Git 바이트 SHA-256은 `25e493adf77f70fc305c0206d40857dfd5cea8a30016550f9f9a557aae66e87f`, 시험 후보 바이트는 `457edf90956e9f76f46d103ecc7d93bf7d4c43dbe53c1dc329f5b05031b8e0cc`이다. 실행기는 `C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe`(SHA-256 `c8f0a6bc45a19b33541501e57f6f7cd972ab18453743266339d495cbbe846643`)이며 엔진 EXE는 같은 폴더의 `Godot_v4.7.2-stable_win64.exe`(SHA-256 `ab1824f85bfd8e0e4128182c000c4003a3e042245b2967848d089b2a04b22424`)다. 프로젝트에서 `--headless --path . --script <근거 폴더>/probe.gd` 또는 `compat.gd`를 실행했다. 격리 프로필은 `<근거 폴더>/profile`이다. 회귀 실행에는 `APPDATA`·`LOCALAPPDATA`·`SBTK_P05_TRANSITION_PROFILE`을 해당 프로필로 설정했다. 호환성 실행에는 앞 두 프로필 변수와 `P05_COMPAT_ROOT`를 설정했다. 원본에서 `P05_COMPAT_WRITE=1`로 파일을 만들고 검사한 뒤 후보에서 0으로 같은 파일을 읽었다.
+
+| 격리 근거 | SHA-256 |
+| --- | --- |
+| [두 줄 diff](F:/WorkSpace/Campaign-Orchestration/P05-native-rollback-candidate-20261113/candidate.diff) | `9f93b9589362cda750aeec094ad5092a69c328fcd605b9ac37c3ffc77534babf` |
+| [회귀 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-native-rollback-candidate-20261113/probe.gd) | `02befe73d4ea6d002a6bcd46dd72b1c8034951e65ca2c52e68f255ccf0e49e76` |
+| [회귀 로그](F:/WorkSpace/Campaign-Orchestration/P05-native-rollback-candidate-20261113/probe.out) | `479a740c8b950432e6655c90e51de71e9c6f5400c9eb911fb2d7cdb14e5c7a4c` |
+| [호환성 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-native-rollback-candidate-20261113/compat.gd) | `4169412aa5958c85d97f7bf441025ad9dea8c8146391a0cb4ffb0695f76a6541` |
+| [원본 결과](F:/WorkSpace/Campaign-Orchestration/P05-native-rollback-candidate-20261113/baseline-final.out) | `65347ec904a589fc6dbd4b341dc4d9a9984bae0495d190616584395397e78c4b` |
+| [후보 결과](F:/WorkSpace/Campaign-Orchestration/P05-native-rollback-candidate-20261113/candidate-final.out) | `12c6f0386f897eb2586fcaab613ce54f04976a54ec503cea3b66e3d556bfc874` |
+| [격리 v1 체크포인트](F:/WorkSpace/Campaign-Orchestration/P05-native-rollback-candidate-20261113/old-checkpoint.json) | `8b59cc59145389b3865b0fff4e80780878d9f8c1ac9193899bf6db3d9c88f148` |
+| [격리 v1 리플레이](F:/WorkSpace/Campaign-Orchestration/P05-native-rollback-candidate-20261113/old-recording.pcopreplay) | `548b02a87811ea2e7255936104ceae217a9ac35ab2994de31ad9fe85f5236269` |
