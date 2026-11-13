@@ -69,3 +69,23 @@
 | [Godot 검사 출력](F:/WorkSpace/Campaign-Orchestration/P05-midpoint-shortcuts-20261113/midpoints.out) | `38e89a115e6a7a29fec939ecdd9880087532be854597856857227eea752b59ba` |
 | [Godot 추출 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-midpoint-shortcuts-20261113/export_midpoints.gd) | `f857659cd660e9f2e3bd69b2c4dea10d9450fcc3bdab7d5e855dbbc06fbba431` |
 | [최소 프레임 계산](F:/WorkSpace/Campaign-Orchestration/P05-midpoint-shortcuts-20261113/optimize_midpoints.py) | `6c0006591c1c1dfcffa3eac026859b4915502eea82d11d430d965df650276597` |
+
+## 연속 가속도 램프 시간표
+
+기존·중간 자세의 양방향 인증 구간과 여유 0.001을 재사용했다. 5차 보간 대신 각 위상의 시작과 끝에서 속도·가속도가 0인 대칭 가속도 램프를 적용했다. 끝 램프가 위상 시간에서 차지하는 비율을 r로 두면 최대 가속도 계수는 4/(1−2r)이다. 함대별 기존 5차 경로의 분석 최대값을 잠정 연속 가속도 기준으로 유지하고, 각 위상의 최소 시간을 정수 프레임으로 올렸다. 독립 검토에서 이 조건의 시간표를 확인했다.
+
+| 편성 | r | 30Hz | 60Hz | 120Hz |
+| --- | ---: | ---: | ---: | ---: |
+| 39척 | 0.05 | 5.567초 | 4.850초 | 4.600초 |
+| 21척 | 0.05 | 4.933초 | 4.667초 | 4.542초 |
+| 39척 | 0.10 | 5.967초 | 5.200초 | 4.808초 |
+| 21척 | 0.10 | 5.433초 | 5.017초 | 4.833초 |
+
+r=0.05에서 두 편성 모두 60·120Hz에서 5초 이내였다. 39척·30Hz는 r이 0에 접근하는 경우에도 **157프레임·5.233초**가 하한이다. 이 하한은 현재 인증 그래프, 위상별 정지 및 프레임 경계 표시, 잠정 연속 가속도 기준에 한정된다. 고정 중심·방향, 공백 없는 고정 주사율의 오프라인 실험이다. 가변 갱신, 공백, 제품 저크·완료 기준은 별도 검증 범위다.
+
+| 격리 산출물 | SHA-256 |
+| --- | --- |
+| [실험 기록](F:/WorkSpace/Campaign-Orchestration/P05-ramped-acceleration-20261113/RESULTS.md) | `307d0b89c10bf263c557620f4ae1cd5f9b326b392123c3851ae57e30e3d9aff4` |
+| [12개 시간표](F:/WorkSpace/Campaign-Orchestration/P05-ramped-acceleration-20261113/RESULT.json) | `6b6eeb45f69c4139c3073209e496a8ff7577694bf5ab067e56b38d95a6149550` |
+| [시간표 계산](F:/WorkSpace/Campaign-Orchestration/P05-ramped-acceleration-20261113/analyze.py) | `cd640c87a68cf8d8dc311ac94e60dbdff549947d11fc63cc4c00cb309c9cb912` |
+| [39척·30Hz 하한](F:/WorkSpace/Campaign-Orchestration/P05-ramped-acceleration-20261113/LIMIT-30HZ.json) | `e259ec2938c9d3c96d4cef6324be69362c259fc59b3b3d964cb56a99aa963985` |
