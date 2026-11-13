@@ -180,3 +180,18 @@ Windows에서 1600×900을 요청한 `4dac0b8d` 월드맵의 타이틀 복귀 �
 
 - [효과음 대조 스크립트](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-4dac0b8d-offline-ui-oneshot-01/scan.py) SHA-256 `8f548d378de1602e29019407d07914b954238bc5607699f9eb0066be4f6f1716`
 - [입력 해시·대조 결과](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-4dac0b8d-offline-ui-oneshot-01/RESULT.json) SHA-256 `c3b31d1d533d8c797bee4a133c646b52ce9b5c34fc565c3dc7dad546fc0b6180`
+
+### Windows 릴리스 65c5588c 패키지 검증
+
+`65c5588caea6036b317a4636ca9f39d6e152f126`의 로컬에서 사용할 서명 없는 Windows 릴리스 후보를 격리 F 작업본에서 Godot 4.7.2 공식 지문 빌더로 생성했다. Win32 DLL 빌드·임포트·내보내기는 종료 코드 0이었다. 내장 패키지 1,665개 항목의 지문 검증을 통과했고 Wei 함대 결산 이미지의 임포트 텍스처가 작업본과 바이트 단위로 일치했다. 격리 프로필의 헤드리스 타이틀 기동은 종료 코드 0이었고 진단 로그에 오류와 경고가 없었다. `git diff --name-only 65c5588c a602a06d`에는 P05 타당성 문서와 체크리스트만 포함됐다. 두 커밋의 런타임 소스 변경은 없었다. 텍스트 입력 대조는 줄바꿈을 정규화했으며, Wei 임포트 텍스처의 바이트 일치는 작업본과 패키지 사이에서 확인했다. 전경 1600×900 플레이와 릴리스 성능 계측은 남아 있다.
+
+| 근거 | SHA-256 |
+| --- | --- |
+| Windows EXE | `18990d88a46245d878d4f1dc650e6a9ab9d5439fb7d7f9c41e75faabfa25be66` |
+| Win32 DLL | `038c3f97fb6ac2af8c7c12c2ef94d1ef07e17a92e115b9297a87b729976ef0bd` |
+| 저장 지문 매니페스트 | `517027d6ceeaebba808bcddc38965f7ef411b9e94888e9192c1e16f6b76dcc62` |
+| 리플레이 지문 매니페스트 | `98e0767ad293b23338285dde9751a53f4db6c254f14b6d07eb6663290186ab54` |
+| Wei 원본 PNG | `39dd2082efd8ab2ef3519833132f079adf23f320d8f448bd6d06819b329b5199` |
+| 내장 Wei 임포트 텍스처 | `6bb51b4b74295d48591ec7b63547d2fa0bd3d6bc6aac2940d9e78f387a831a12` |
+
+[빌드·패키지 대조·헤드리스 기동 결과](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/Windows-release-65c5588c-01/RESULT.json)
