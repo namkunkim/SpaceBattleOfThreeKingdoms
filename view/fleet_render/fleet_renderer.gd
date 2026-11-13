@@ -1,5 +1,9 @@
 class_name FleetRenderer
 extends Node3D
+const P05Schedule := preload("res://view/fleet_render/p05_formation_schedule.gd")
+const P05Policy := preload("res://core/battle/p05_p07_first_operation.gd")
+const P05Dev := preload("res://core/battle/first_operation_dev.gd")
+const P05Product := preload("res://scripts/first_operation_source_reference.gd")
 
 # 함대 대량 표시와 전투 연출.
 # - 함대 하나 = 함종별 MultiMesh(저폴리 LOD) + 엔진광 MultiMesh. 함선 수는 남은 전력에 비례한다.
@@ -109,6 +113,16 @@ class FleetVis:
 	var last_pos := Vector3(1e9, 0, 0)
 	var last_rot := 1e9
 	var acc := 0.0
+	var p05: P05Schedule
+	var p05_from := ""
+	var p05_to := ""
+	var p05_time := 0.0
+	var p05_position := {}
+	var p05_origin := Vector2.ZERO
+	var p05_heading := 0.0
+	var p05_goal := 0.0
+	var p05_start := 0.0
+	var p05_elapsed := 0.0
 
 var src: BattleSource
 var meshes := [[], []]
@@ -125,6 +139,7 @@ var rng := RandomNumberGenerator.new()
 var clock := 0.0
 var _detail := -1.0   # 확대 정도에 따른 함선 세부 표현(0~1)
 var _missile_last := {}
+var _p05_fleet_ids := {}
 
 func setup(source: BattleSource) -> void:
 	src = source
@@ -138,6 +153,93 @@ func setup(source: BattleSource) -> void:
 	add_child(fx_add)
 	_build_dust()
 	_build_far_backdrop()
+
+# An operation adapter must explicitly bind its verified operation roster IDs before first update.
+# Legacy squadron IDs alone carry no operation identity.
+func enable_p05_formation_routes(fleet_ids: Dictionary) -> bool:
+	if not vis.is_empty() or fleet_ids.is_empty() or FileAccess.get_sha256(P05Dev.INPUT_PATHS.roster) != P05Product.INPUT_SHA256.roster:
+		return false
+	var loaded := P05Policy.load_source()
+	if not loaded.ok:
+		return false
+	var roster: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(P05Dev.INPUT_PATHS.roster))
+	var enabled := {}
+	for id in fleet_ids:
+		var roster_id: String = fleet_ids[id]
+		if not id is int or roster_id not in ["RC-LIU-SQ-01", "RC-LIU-SQ-02"]:
+			return false
+		var fleet: Dictionary = loaded.definition.fleets.filter(func(row): return row.id == roster_id)[0]
+		var squad: Dictionary = roster.squadrons.filter(func(row): return row.id == roster_id)[0]
+		enabled[id] = {"fleet": fleet, "squad": squad}
+	_p05_fleet_ids = enabled
+	return true
+
+
+func _p05_build(v: FleetVis, sq: Dictionary) -> void:
+	if not _p05_fleet_ids.has(v.id) or sq.side != 0 or sq.get("flip", false) or not is_equal_approx(src.unit_scale(), CameraRig.S):
+		return
+	var approved: Dictionary = _p05_fleet_ids[v.id]
+	var fleet: Dictionary = approved.fleet
+	var squad: Dictionary = approved.squad
+	if sq.get("formation_id", "") != fleet.formation_id or sq.form_to != "" or sq.flagship != squad.flagship 			or sq.ships != fleet.ship_count or v.slots.size() != int(fleet.ship_count):
+		return
+	var expected := {}
+	for entry: Dictionary in squad.composition:
+		expected[entry.ship_type_id] = int(entry.count)
+	var counts := {}
+	var rows: Array = []
+	var scale := src.unit_scale()
+	for slot: Slot in v.slots:
+		counts[slot.ship_type] = counts.get(slot.ship_type, 0) + 1
+		var half := Vector2(slot.half_len, SHIP_WIDTH * slot.scl.z * 0.5) / scale
+		rows.append({"id": "%s/%d" % [slot.ship_type, counts[slot.ship_type]], "half": half})
+	if counts != expected:
+		return
+	var schedule := P05Schedule.new()
+	if not schedule.prepare(fleet.id, rows, fleet.outer_radius):
+		return
+	v.p05 = schedule
+	v.p05_from = fleet.formation_id
+	v.p05_to = fleet.allowed_formations[1]
+	v.p05_origin = sq.pos
+	v.p05_heading = sq.heading
+	v.p05_position = schedule.sample(0.0)
+	_p05_homes(v)
+
+
+func _p05_homes(v: FleetVis) -> void:
+	var scale := src.unit_scale()
+	for i in v.slots.size():
+		var slot: Slot = v.slots[i]
+		var point: Vector2 = v.p05_position[v.p05.rows[i].id]
+		slot.home = Vector3(point.y * scale, slot.home.y, -point.x * scale)
+
+
+func _p05_update(v: FleetVis, sq: Dictionary, dt: float) -> bool:
+	if v.p05 == null:
+		return false
+	var current: String = sq.get("formation_id", "")
+	var target: String = sq.form_to if sq.form_to != "" else current
+	if target not in [v.p05_from, v.p05_to] or sq.get("flip", false) or v.aim or sq.dead 			or sq.ships != sq.max_ships or sq.pos != v.p05_origin or sq.heading != v.p05_heading:
+		# The certificate covers stationary, fixed-heading, no-loss formations.
+		v.p05 = null
+		_reform(v, sq)
+		return false
+	var goal := P05Schedule.DURATION if target == v.p05_to else 0.0
+	if goal != v.p05_goal:
+		v.p05_start = v.p05_time
+		v.p05_elapsed = 0.0
+		v.p05_goal = goal
+	v.p05_elapsed += maxf(0.0, dt)
+	var requested := move_toward(v.p05_start, goal, v.p05_elapsed)
+	v.p05_time = v.p05.advance(v.p05_time, requested, v.p05_position)
+	v.p05_position = v.p05.sample(v.p05_time)
+	_p05_homes(v)
+	v.formation = sq.formation
+	v.rest = 0
+	return true
+
+
 
 func _load_assets() -> void:
 	var plane := PlaneMesh.new()
@@ -452,7 +554,8 @@ func _follow(v: FleetVis, sq: Dictionary, dt: float) -> void:
 		if not s.alive:
 			continue
 		var t := fpos + fb * Vector3(s.home.x * fs, s.home.y, s.home.z * fs) + fvel * s.tau
-		var d := (t - s.pos) * (step / (s.tau + step))   # 지수 추종의 유리 근사(안정, 오버슈트 없음)
+		var follow_weight := 1.0 if v.p05 != null else step / (s.tau + step)
+		var d := (t - s.pos) * follow_weight   # 지수 추종의 유리 근사(안정, 오버슈트 없음)
 		s.pos += d
 		s.vel = d * inv
 		maxerr = maxf(maxerr, (t - s.pos).length_squared())
@@ -570,6 +673,7 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 		s.idx = per_class[s.hull].size()
 		per_class[s.hull].append(s)
 		v.slots.append(s)
+	_p05_build(v, sq)
 	var fpos := src.to3(sq.pos)
 	var frot := -float(sq.heading) - PI * 0.5
 	for s in v.slots:
@@ -727,9 +831,10 @@ func update(dt: float) -> void:
 		if v.aim:
 			v.aim_pos = src.to3(foe.pos)
 		v.node.visible = sq.contact != "lost"   # 상실 접촉은 마지막 위치에 모델 없이 표식만 남는다
-		if sq.formation != v.formation:
-			_reform(v, sq)
-		_form_progress(v, sq)
+		if not _p05_update(v, sq, dt):
+			if sq.formation != v.formation:
+				_reform(v, sq)
+			_form_progress(v, sq)
 		if not sq.dead:
 			_follow(v, sq, dt)
 		var want := 0 if near else 1

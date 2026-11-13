@@ -2,6 +2,7 @@ extends RefCounted
 
 const Runtime := preload("res://core/battle/operation_runtime_adapter.gd")
 const Private := preload("res://core/battle/operation_private_state.gd")
+const EventReferences := preload("res://scripts/operation_event_references.gd")
 const Service := preload("res://core/battle/operation_service_state.gd")
 const Store := preload("res://scripts/first_operation_save_store.gd")
 const FORMAT := "pc-restricted-operation-checkpoint/1"
@@ -108,7 +109,7 @@ func restore_checkpoint(path: String, suffix: Array = []) -> Dictionary:
 	if not prepared.ok:
 		return prepared
 	var candidate: OperationPrivateState = prepared.owner
-	if not _valid_event_references(snapshot.view):
+	if not EventReferences.valid(snapshot.view):
 		candidate.close()
 		return _fail("event_reference", "snapshot.sim._events")
 	if snapshot.view.state.over:
@@ -128,23 +129,6 @@ func restore_checkpoint(path: String, suffix: Array = []) -> Dictionary:
 	# The restricted owner compares context and replaces its live sim only
 	# after fully validating the staged state.
 	return _owner.restore_completed(staged.packet)
-
-
-static func _valid_event_references(view: Dictionary) -> bool:
-	var fleet_ids := {}
-	for fleet: Dictionary in view.fleets:
-		fleet_ids[fleet.id] = true
-	for event: Dictionary in view.sim._events:
-		if event.sq != -1 and not fleet_ids.has(event.sq):
-			return false
-		# Command rejection stores the issuing side in other.
-		if event.kind == "rejected":
-			if event.other not in [0, 1]:
-				return false
-		elif event.other != -1 and not fleet_ids.has(event.other):
-			return false
-	return true
-
 
 
 static func _queue_suffix(candidate: OperationPrivateState, snapshot: Dictionary, payload: Dictionary, suffix: Array) -> Dictionary:

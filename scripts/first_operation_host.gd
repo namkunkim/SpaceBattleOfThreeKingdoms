@@ -8,6 +8,7 @@ const Adapter := preload("res://scripts/first_operation_adapter.gd")
 const SaveStore := preload("res://scripts/first_operation_save_store.gd")
 const Settlements := preload("res://scripts/first_operation_settlement_store.gd")
 const ReplayCodec := preload("res://scripts/first_operation_replay_codec.gd")
+const OperationTrace := preload("res://scripts/first_operation_trace.gd")
 
 var operation_owner: RefCounted
 var frame := {}
@@ -44,6 +45,7 @@ var _replay_commands: Array = []
 var _replay_recording := {}
 var _can_record_replay := true
 var _export_replay: Button
+var _trace: OperationTrace
 
 func _ready() -> void:
 	set_process(false)
@@ -102,11 +104,11 @@ static func external_save_dialog(exporting: bool) -> FileDialog:
 		dialog.current_file = "battle.pcopsave"
 	return dialog
 
-static func read_external_battle(path: String) -> Dictionary:
+static func read_external_battle(path: String, product := false) -> Dictionary:
 	var codec := _external_save_codec()
 	if codec == null:
 		return {"ok": false, "error": "external_save_unavailable", "path": "codec"}
-	return codec.read(path)
+	return codec.read(path, product)
 
 static func _external_save_codec() -> Script:
 	if not ResourceLoader.exists(EXTERNAL_SAVE):
@@ -152,6 +154,9 @@ func _publish_candidate(candidate: RefCounted, target: BattleBrief, restored: bo
 		return published if not published.ok else {"ok": false, "error": "initial_frame_changed", "path": "frame"}
 
 	var previous := operation_owner
+	if _trace != null:
+		_trace.close(frame, "replaced")
+		_trace = null
 	_stop()
 	operation_owner = candidate
 	brief = target
@@ -166,11 +171,14 @@ func _publish_candidate(candidate: RefCounted, target: BattleBrief, restored: bo
 	_clock.hz = preview.frame.hz
 	_reset_field(preview.frame.projection.operation.route_points)
 	_install_frame(published.frame)
+	if _is_product() and OS.get_cmdline_user_args().has(OperationTrace.ARG):
+		_trace = OperationTrace.new()
+		_trace.start(brief.operation_request(), frame, restored)
 	_start.text = "Resume operation" if restored else "Start operation"
 	_start.show()
 	var product := _is_product()
 	_load.disabled = not restored or (product and not product_save_supported())
-	_import.disabled = not restored or product
+	_import.disabled = not restored or (product and not product_save_supported())
 	_save_status.text = "Restored at tick %d" % frame.tick if restored else ""
 	if previous != null:
 		previous.close()
@@ -220,12 +228,14 @@ func _begin() -> void:
 	if operation_owner == null or started or not failure.is_empty():
 		return
 	started = true
+	if _trace != null:
+		_trace.write(frame, "operation_started")
 	_start.hide()
 	var product := _is_product()
 	_save.disabled = product and not product_save_supported()
 	_load.disabled = _save.disabled
-	_export.disabled = product
-	_import.disabled = product
+	_export.disabled = _save.disabled
+	_import.disabled = _save.disabled
 	for button in _commands:
 		button.disabled = false
 	set_process(true)
@@ -256,6 +266,13 @@ func step_operation() -> bool:
 			_fail({"error": "invalid_operation_settlement", "path": "runtime.summary.settlement"})
 			return false
 	_install_frame(advanced.frame)
+	if _trace != null:
+		_trace.record_frame(frame)
+		if advanced.has("movement_error"):
+			_trace.write(frame, "movement_error", {"error": advanced.movement_error})
+		if settlement != null:
+			_trace.write(frame, "operation_end", {"settlement": current.settlement})
+			_trace.close(frame, "settled")
 	if advanced.has("movement_error"):
 		_status.text = str(advanced.movement_error)
 	if settlement != null:
@@ -279,7 +296,15 @@ func _issue(kind: String, point := Vector2.ZERO) -> void:
 	for row in frame.projection.squadrons:
 		if row.side == 0 and not row.get("dead", false) and not row.get("out", ""):
 			ids.append(row.id)
-	var result: Dictionary = Adapter.queue(operation_owner, {"side": 0, "kind": kind, "ids": ids, "point": point})
+	var command := {"side": 0, "kind": kind, "ids": ids, "point": point}
+	if _trace != null:
+		_trace.write(frame, "command_request", {"command": command})
+	var result: Dictionary = Adapter.queue(operation_owner, command)
+	if _trace != null:
+		if result.ok:
+			_trace.write(frame, "command_queued", {"record": result.record})
+		else:
+			_trace.write(frame, "command_rejected", {"error": result.error, "path": result.path})
 	_status.text = kind if result.ok else "%s / %s" % [result.error, result.path]
 	if result.ok and _can_record_replay:
 		_replay_commands.append(result.record)
@@ -477,6 +502,7 @@ func _select_external_file(exporting: bool) -> void:
 func _close_external_dialog() -> void:
 	if _file_dialog == null:
 		return
+	_file_dialog.hide()
 	_file_dialog.queue_free()
 	_file_dialog = null
 	set_process(_file_processing)
@@ -486,9 +512,14 @@ func _external_file_selected(path: String, exporting: bool) -> void:
 		return
 	_close_external_dialog()
 	if not exporting:
-		var imported := read_external_battle(path)
+		var product := _is_product()
+		var imported := read_external_battle(path, product)
+		if imported.ok and product:
+			var status := Settlements.check_product_unsettled(imported.payload.operation_id)
+			if not status.ok:
+				imported = status
 		if imported.ok:
-			_restore_battle(imported.payload)
+			_restore_battle(imported.payload, product)
 		else:
 			_save_status.text = error_text(imported)
 		return
@@ -500,10 +531,10 @@ func _external_file_selected(path: String, exporting: bool) -> void:
 	if not captured.ok:
 		_save_status.text = error_text(captured)
 		return
-	var saved: Dictionary = codec.write(captured.packet, path)
+	var saved: Dictionary = codec.write(captured.packet, path, _is_product())
 	_save_status.text = "Exported at tick %d" % frame.tick if saved.ok else error_text(saved)
 
-func _restore_battle(packet: Dictionary) -> void:
+func _restore_battle(packet: Dictionary, external_product := false) -> void:
 	var pending := begin_restore(packet, brief)
 	if not pending.ok:
 		_save_status.text = error_text(pending)
@@ -530,7 +561,14 @@ func _restore_battle(packet: Dictionary) -> void:
 			return
 		if next.done:
 			_finish_battle_restore()
-			var result := _publish_candidate(next.owner, pending.brief, true)
+			var result: Dictionary
+			if external_product:
+				result = Settlements.publish_unsettled_product(packet.operation_id,
+					_publish_candidate.bind(next.owner, pending.brief, true))
+				if not result.ok:
+					next.owner.close()
+			else:
+				result = _publish_candidate(next.owner, pending.brief, true)
 			if not result.ok:
 				_save_status.text = error_text(result)
 			return
@@ -554,6 +592,9 @@ func _cancel_battle_restore() -> void:
 func _fail(problem: Dictionary) -> void:
 	failure = {"error": problem.get("error", "operation_failed"), "path": problem.get("path", "runtime")}
 	_status.text = error_text(failure)
+	if _trace != null:
+		_trace.write(frame, "operation_failed", failure)
+		_trace.close(frame, "failed")
 	_stop()
 
 func _stop() -> void:
@@ -589,6 +630,8 @@ func return_to_map() -> void:
 		_return.text = "Retry map return (%d)" % error
 
 func _exit_tree() -> void:
+	if _trace != null:
+		_trace.close(frame, "host_exit")
 	if _restore_job != null:
 		_restore_job.cancel()
 		_restore_job = null

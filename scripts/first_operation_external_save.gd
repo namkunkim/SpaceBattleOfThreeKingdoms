@@ -1,6 +1,8 @@
 extends RefCounted
 
 const Checkpoint := preload("res://core/battle/first_operation_checkpoint.gd")
+const Product := preload("res://scripts/first_operation_source_reference.gd")
+const WindowsSlot := preload("res://scripts/o07_windows_slot.gd")
 
 const EXTENSION := ".pcopsave"
 const FORMAT := "pc-first-operation-external"
@@ -20,13 +22,15 @@ const REQUEST := {
 
 static var _write_lock := Mutex.new()
 
-static func write(packet: Dictionary, path: String) -> Dictionary:
+static func write(packet: Dictionary, path: String, product := false) -> Dictionary:
+	if product and not OS.has_feature("windows"):
+		return _fail("external_save_unavailable", "platform")
 	var target := _windows_path(path)
 	if target.is_empty():
 		return _fail("external_invalid_path", "path")
 	if not _has_fields(packet, PAYLOAD_FIELDS + ["format"]):
 		return _fail("external_invalid_payload", "packet")
-	var normalized := _validate(packet)
+	var normalized := _validate(packet, product)
 	if not normalized.ok:
 		return normalized
 	var body := _body(normalized.payload)
@@ -34,11 +38,13 @@ static func write(packet: Dictionary, path: String) -> Dictionary:
 	if bytes.size() > MAX_BYTES:
 		return _fail("external_file_too_large", "file")
 	_write_lock.lock()
-	var written := _publish_new(target, bytes)
+	var written := _publish_new(target, bytes, product)
 	_write_lock.unlock()
 	return written
 
-static func read(path: String) -> Dictionary:
+static func read(path: String, product := false) -> Dictionary:
+	if product and not OS.has_feature("windows"):
+		return _fail("external_save_unavailable", "platform")
 	var source := _windows_path(path)
 	if source.is_empty():
 		return _fail("external_invalid_path", "path")
@@ -77,14 +83,14 @@ static func read(path: String) -> Dictionary:
 		return _fail("external_invalid_payload", "file.body")
 	var packet: Dictionary = parsed.value
 	packet.format = Checkpoint.FORMAT
-	var validated := _validate(packet)
+	var validated := _validate(packet, product)
 	if not validated.ok:
 		return validated
 	if envelope.body != _body(validated.payload):
 		return _fail("external_noncanonical_json", "file.body")
 	return validated
 
-static func _validate(packet: Dictionary) -> Dictionary:
+static func _validate(packet: Dictionary, product: bool) -> Dictionary:
 	# Bound total work before the internal validator walks every command.
 	if not packet.commands is Array or not packet.pending is Array or packet.commands.size() > Checkpoint.MAX_TICKS:
 		return _fail("external_invalid_commands", "packet.commands")
@@ -99,10 +105,12 @@ static func _validate(packet: Dictionary) -> Dictionary:
 	if not checked.ok:
 		return checked
 	var normalized: Dictionary = checked.packet
-	for key in REQUEST:
-		if normalized.request[key] != REQUEST[key]:
+	var expected := Product.REQUEST if product else REQUEST
+	for key in expected:
+		if normalized.request[key] != expected[key]:
 			return _fail("external_unsupported_request", "packet.request." + key)
-	if normalized.request.route_id not in ["front", "flank"]:
+	var routes := [Product.ROUTE] if product else ["front", "flank"]
+	if normalized.request.route_id not in routes:
 		return _fail("external_unsupported_request", "packet.request.route_id")
 	if normalized.rules_digest != Checkpoint.rules_digest():
 		return _fail("external_rules_mismatch", "packet.rules_digest")
@@ -171,7 +179,9 @@ static func _valid_utf8(bytes: PackedByteArray) -> bool:
 		index += width
 	return true
 
-static func _publish_new(path: String, bytes: PackedByteArray) -> Dictionary:
+static func _publish_new(path: String, bytes: PackedByteArray, product := false) -> Dictionary:
+	if product and not ClassDB.class_exists(WindowsSlot.NATIVE):
+		return _fail("external_save_unavailable", "publisher")
 	if FileAccess.file_exists(path) or DirAccess.dir_exists_absolute(path):
 		return _fail("external_path_exists", "path")
 	var temporary := path + ".pending-" + Crypto.new().generate_random_bytes(16).hex_encode()
@@ -187,6 +197,12 @@ static func _publish_new(path: String, bytes: PackedByteArray) -> Dictionary:
 		result = _fail("external_write_failed", "file")
 	elif FileAccess.file_exists(path) or DirAccess.dir_exists_absolute(path):
 		result = _fail("external_path_exists", "path")
+	elif product:
+		# The Windows publisher with existing=false cannot replace a target
+		# created by a different process after the existence checks.
+		if WindowsSlot.publish(temporary, path, false).ok:
+			return {"ok": true}
+		result = _fail("external_publish_failed", "file")
 	elif DirAccess.rename_absolute(temporary, path) != OK:
 		result = _fail("external_publish_failed", "file")
 	else:

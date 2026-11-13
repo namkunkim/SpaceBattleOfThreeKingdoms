@@ -34,6 +34,24 @@ static func product_settlement_status(operation_id: String) -> Dictionary:
 	return {"ok": true, "settled": restored.payload.consumed.has(operation_id + ID_SUFFIX)}
 
 
+static func check_product_unsettled(operation_id: String) -> Dictionary:
+	var status := product_settlement_status(operation_id)
+	if status.ok and status.settled:
+		return _fail("checkpoint_already_settled", PRODUCT_SLOT_PATH)
+	return status
+
+
+static func publish_unsettled_product(operation_id: String, publish: Callable) -> Dictionary:
+	return _with_slot_lock(PRODUCT_SLOT_PATH, _publish_unsettled_product.bind(operation_id, publish))
+
+
+static func _publish_unsettled_product(operation_id: String, publish: Callable) -> Dictionary:
+	var status := check_product_unsettled(operation_id)
+	if not status.ok:
+		return status
+	return publish.call()
+
+
 static func _with_slot_lock(path: String, operation: Callable) -> Dictionary:
 	var lock_path := ProjectSettings.globalize_path(path).simplify_path() + LOCK_SUFFIX
 	# The filesystem creates the directory exclusively across processes.

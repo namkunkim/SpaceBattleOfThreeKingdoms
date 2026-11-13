@@ -198,12 +198,23 @@ func _legacy_screen() -> void:
 	_touch_sizes(s, "Z0")
 	var atlas := s.find_child("WorldAtlas", true, false) as Control
 	_check(atlas != null and atlas.visible, "홈에서 전체 항로도 표시")
-	# The public Red Cliffs action is covered by the separate EntryBoot route test.
-	# Open the legacy card explicitly to exercise the legacy canvas and gestures.
-	s.open_card()
+	var skirmish := s.find_child("OpenRedCliffsSkirmish", true, false) as Button
+	var primary := s.find_child("OpenRedCliffs", true, false) as Button
+	_check(skirmish != null and skirmish.is_visible_in_tree() and not skirmish.disabled
+		and primary != null and primary.is_visible_in_tree(), "공개 지도에서 모의전·작전 선택")
+	if skirmish == null:
+		return
+	for down in [true, false]:
+		var event := InputEventMouseButton.new()
+		event.button_index = MOUSE_BUTTON_LEFT
+		event.position = skirmish.get_global_rect().get_center()
+		event.pressed = down
+		root.push_input(event, true)
 	await _seconds(1.6)
 	_check(s._card.visible and s.canvas.visible and atlas != null and not atlas.visible and s.canvas.level() == "z2",
 		"레거시 카드 → 형주 Z2·시나리오 카드 (%s)" % s.canvas.level())
+	_check(not skirmish.is_visible_in_tree() and s.brief == null and s.resolver == null,
+		"카드 진입은 출격 및 자동 해결을 시작하지 않음")
 	_touch_sizes(s, "카드")
 	# 두 손가락 벌리기 → 확대
 	var z0 := s.canvas.zoom
