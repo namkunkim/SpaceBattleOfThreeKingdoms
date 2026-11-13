@@ -30,3 +30,17 @@ Windows Godot 4.7.2 헤드리스, 제품 소스 기준 bd5afc4a.
 | 저장 슬롯 | `12df7a29bf6676dc6a7a9eaf60ab0b03e1a6ee25538e05b31c2fd8220ae43188` |
 
 [입력·시험 사본·로그](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/A05-A06-FXG-J210-reopen-cc8394ec-01)
+
+### 제한 FX-G J210 체크섬 거부와 재시도
+
+`9be4eaab`와 런타임 소스가 같은 `bf4c134d`에서 Windows Godot 4.7.2 헤드리스로 제한 호스트를 실행했다. 이전 검증에서 보존한 J210 입력과 정상 슬롯을 사용했다. 격리 슬롯 사본의 저장 봉투에서 체크섬 16진수 한 자리만 바꿨으며 본문은 유지했다. 복원을 시도하자 `checksum_mismatch`를 반환했고, 활성 C0 소유자·상태·표시와 손상 슬롯 바이트를 보존했다. 시험기가 같은 격리 슬롯에 정상 바이트를 명시적으로 복사한 뒤, 같은 호스트가 100ms 상태를 읽고 150ms 섬멸 종결에 도달했다. 종료 이벤트는 한 번 발생했고 정상 슬롯 바이트는 유지됐다. 7/7, 종료 코드 0이었으며 독립 검토에서 확인했다. 시험 범위는 체크섬 불일치 거부와 명시적 재시도다. 매체 고장과 이전 슬롯 자동 복구는 추가 검증 범위다.
+
+| 근거 | SHA-256 |
+| --- | --- |
+| 동결 J210 입력 | `da996e2de32de23e13e142e49d73b38b78784b1cdcbbf424ef780c9b87c5725a` |
+| 원래 정상 슬롯 | `12df7a29bf6676dc6a7a9eaf60ab0b03e1a6ee25538e05b31c2fd8220ae43188` |
+| 체크섬 변조 슬롯 | `b5720457dc18ae52cfceea03bd8fc990bd58e852e44e854cd3247dababcd64a2` |
+| 시험 스크립트 | `496fb472d2ccb17a9719ea375af7f11995c7249994591127bf062c09658659ca` |
+| 실행 로그 | `0f48f508754d52980d5566d4f4532ebee9d772fe79ef9e0dc5f7b1ae8c72a0f9` |
+
+[시험 스크립트·격리 입력·로그](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/A05-A06-FXG-J210-reject-retry-9be4eaab-01)
