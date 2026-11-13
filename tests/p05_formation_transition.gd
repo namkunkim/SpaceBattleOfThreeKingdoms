@@ -117,6 +117,7 @@ func _check_adjusted_route(rows: Array, fleet: String, radius: float, duration_m
 	_check(source_offset <= offset_limit and destination_offset <= offset_limit,
 		"%s proposed endpoint shifts stay within measured limits" % fleet)
 	var segment_start := current.duplicate()
+	var layouts: Array = [segment_start]
 	var distance := 0.0
 	var corner_radius := 0.0
 	for move: Array in route.moves:
@@ -137,11 +138,148 @@ func _check_adjusted_route(rows: Array, fleet: String, radius: float, duration_m
 			return
 		distance += Vector2(current[moving]).distance_to(next)
 		current[moving] = next
+		layouts.append(current.duplicate())
 	_check(current == destination and not route.moves.is_empty() and current != segment_start,
 		"%s candidate reaches adjusted destination through collision-free segments in both directions" % fleet)
 	print("P05_ADJUSTED_ROUTE_OBSERVATION ", JSON.stringify({"fleet": fleet, "segments": route.moves.size(),
 		"max_source_offset": source_offset, "max_destination_offset": destination_offset, "corner_radius": corner_radius, "approved_radius": radius, "sequential_distance": distance,
 		"constant_moving_speed_for_duration": distance / (duration_ms / 1000.0)}))
+	_check_timed_route(rows, fleet, radius, duration_ms, layouts)
+
+
+# A phase moves all participating ships simultaneously, linearly between two known-safe layouts.
+# The base core timer supplies the duration. Renderer Slot.pos also follows Slot.home through a
+# smoothing filter, so this certificate describes the scheduled coordinates themselves.
+# Salvo.transition_ticks defines the deadline, not a slot velocity or acceleration limit.
+# Report the scheduled speed for review; the fleet-center speed does not constrain these slots.
+func _check_timed_route(rows: Array, fleet: String, radius: float, duration_ms: int, layouts: Array) -> void:
+	# Shortest path over the ordered layouts. An edge exists only when its simultaneous sweep
+	# passes, and its cost is the longest ship movement (the minimum time at a common speed).
+	var costs: Array[float] = []
+	costs.resize(layouts.size())
+	costs.fill(INF)
+	costs[0] = 0.0
+	var previous: Array[int] = []
+	previous.resize(layouts.size())
+	previous.fill(-1)
+	for first in layouts.size() - 1:
+		if not is_finite(costs[first]):
+			continue
+		for last in range(first + 1, layouts.size()):
+			var phase := _phase(rows, layouts[first], layouts[last])
+			var cost := costs[first] + _phase_distance(phase)
+			if cost < costs[last] and _phase_clear(phase, radius):
+				costs[last] = cost
+				previous[last] = first
+	var phases: Array = []
+	var last := layouts.size() - 1
+	if not _check(previous[last] >= 0, "%s timed route connects both endpoints" % fleet):
+		return
+	while last > 0:
+		var first := previous[last]
+		phases.append(_phase(rows, layouts[first], layouts[last]))
+		last = first
+	phases.reverse()
+
+	var phase_weights: Array[float] = []
+	var total_weight := 0.0
+	var parallel_phases := 0
+	for phase: Array in phases:
+		var moving := 0
+		for row: Dictionary in phase:
+			if row.from != row.to:
+				moving += 1
+		if moving > 1:
+			parallel_phases += 1
+		var longest := _phase_distance(phase)
+		phase_weights.append(longest)
+		total_weight += longest
+	if not _check(total_weight > 0.0 and parallel_phases > 0, "%s timed route uses simultaneous motion" % fleet):
+		return
+
+	# Integer microseconds give exactly 0 and the pinned duration at the first and last knots.
+	# Allocate time proportionally to the longest movement in each phase, then check all velocities.
+	var duration_us := duration_ms * 1000
+	var knots: Array[int] = [0]
+	var elapsed_weight := 0.0
+	var peak_speed := 0.0
+	for i in phases.size():
+		elapsed_weight += phase_weights[i]
+		var finish := duration_us if i == phases.size() - 1 else roundi(duration_us * elapsed_weight / total_weight)
+		if not _check(finish > knots[-1], "%s phase %d has positive duration" % [fleet, i]):
+			return
+		peak_speed = maxf(peak_speed, phase_weights[i] * 1000000.0 / (finish - knots[-1]))
+		knots.append(finish)
+	var initial := _timed_positions(phases, knots, 0)
+	var final := _timed_positions(phases, knots, duration_us)
+	_check(initial == layouts.front() and final == layouts.back() and knots[-1] == 5000000,
+		"%s adjusted route reaches exact endpoints at 0 and 5 seconds" % fleet)
+	var reversed_phases: Array = []
+	var reversed_knots: Array[int] = [0]
+	for i in range(phases.size() - 1, -1, -1):
+		reversed_phases.append(_reverse_phase(phases[i]))
+		reversed_knots.append(duration_us - knots[i])
+	_check(_timed_positions(reversed_phases, reversed_knots, 0) == layouts.back()
+		and _timed_positions(reversed_phases, reversed_knots, duration_us) == layouts.front(),
+		"%s reverse timed route reaches exact endpoints at 0 and 5 seconds" % fleet)
+	var playback_matches := true
+	for i in phases.size():
+		var sample := roundi((knots[i] + knots[i + 1]) * 0.5)
+		var forward_position := _timed_positions(phases, knots, sample)
+		var reverse_position := _timed_positions(reversed_phases, reversed_knots, duration_us - sample)
+		for id: String in forward_position:
+			playback_matches = playback_matches and Vector2(forward_position[id]).distance_to(reverse_position[id]) < 0.00002
+	_check(playback_matches, "%s forward and reverse agree inside every timed phase" % fleet)
+	print("P05_TIMED_ROUTE_OBSERVATION ", JSON.stringify({"fleet": fleet, "phases": phases.size(),
+		"simultaneous_phases": parallel_phases, "duration_us": knots[-1], "peak_slot_speed": peak_speed,
+		"minimum_phase_us": _minimum_phase_time(knots)}))
+
+
+func _phase(rows: Array, start: Dictionary, finish: Dictionary) -> Array:
+	var phase: Array = []
+	for row: Dictionary in rows:
+		var short_id := _short_id(row.id)
+		phase.append({"id": row.id, "from": start[short_id], "to": finish[short_id], "half": row.half})
+	return phase
+
+
+func _phase_distance(phase: Array) -> float:
+	var longest := 0.0
+	for row: Dictionary in phase:
+		longest = maxf(longest, row.from.distance_to(row.to))
+	return longest
+
+
+func _phase_clear(phase: Array, radius: float) -> bool:
+	if not Sweep.validate(phase, radius).ok:
+		return false
+	return Sweep.validate(_reverse_phase(phase), radius).ok
+
+
+func _reverse_phase(phase: Array) -> Array:
+	return phase.map(func(row):
+		return {"id": row.id, "from": row.to, "to": row.from, "half": row.half})
+
+
+func _timed_positions(phases: Array, knots: Array[int], time_us: int) -> Dictionary:
+	var i := 0
+	while i < phases.size() - 1 and time_us > knots[i + 1]:
+		i += 1
+	var fraction := float(time_us - knots[i]) / (knots[i + 1] - knots[i])
+	var positions := {}
+	for row: Dictionary in phases[i]:
+		# Avoid rounding error at the final knot.
+		var position: Vector2 = row.to if fraction == 1.0 else Vector2(row.from).lerp(row.to, fraction)
+		positions[_short_id(row.id)] = position
+	return positions
+
+
+func _minimum_phase_time(knots: Array[int]) -> int:
+	var shortest := knots[-1]
+	for i in range(1, knots.size()):
+		shortest = mini(shortest, knots[i] - knots[i - 1])
+	return shortest
+
 
 
 func _short_id(id: String) -> String:
