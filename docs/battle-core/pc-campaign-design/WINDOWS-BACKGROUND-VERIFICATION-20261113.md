@@ -152,3 +152,17 @@ Windows 후보 `4dac0b8d`에서 공개 리플레이 선택기로 고정 파일�
 | [전투 TRACE](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P08-windows-debug-bf4c134d-ordinary-fps-01/profile/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-13T21-55-14-18916-60174951.jsonl) | `3f5da6fe40ee9b9ed3775bde2c212916178410994bcc4ed50262a7ea9ee63c14` |
 | [전투 준비 TRACE](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P08-windows-debug-bf4c134d-ordinary-fps-01/profile/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-13T21-54-45-18916-31615512.jsonl) | `a6d7ea7965c0aa98bfe88fae1892fbc7990c60330b960efb29bdc02e478d8a26` |
 | [클라이언트 실측](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P08-windows-debug-bf4c134d-ordinary-fps-01/client-rect.json) | `1bb95df25f01daf4fc9570ed690712669bc40a2e7c75151f357682c7b95508ce` |
+
+### P09 일반 전투 종료 TRACE
+
+별도 격리 프로필의 `bf4c134d` Windows 디버그 EXE에서 일반 전투를 4배속으로 진행했다. PID 28392, HWND 1180336의 실제 클라이언트는 1600×900, DPI 96이었다. TRACE에 전술 명령 기록은 없었다. 앞선 1배속 디버그 FPS 관측과는 별도 실행이다.
+
+종료 TRACE 순번 1–236이 연속이며 스냅샷 203개를 포함한다. 틱 2020·201950ms의 `battle_end`에서 `alliance_morale_collapse`·패배를 기록했고, 마지막 UI 상태는 `end`였다. 독립 검토에서 TRACE와 종료 기록을 확인했다. 전경에서 패배 화면 03:21과 손실 64/116, 생존 전대 4/6을 관찰했다. 이후 창의 X로 닫아 종료 코드 0을 확인했다. 전체 P09 인수, 물리 오디오 및 릴리스 프레임 시간 검증은 남아 있다.
+
+| 근거 | SHA-256 |
+| --- | --- |
+| [종료 TRACE](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P08-windows-debug-bf4c134d-ordinary-terminal-01/profile/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-13T22-03-03-28392-35168162.jsonl) | `d5b653056eeecedcc61362171655e26eb95e0db14a567b757935e71396bdf899` |
+| [준비 TRACE](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P08-windows-debug-bf4c134d-ordinary-terminal-01/profile/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-13T22-02-56-28392-28223433.jsonl) | `82714057df8b869ca84079f4d745954857c80577518b8c685b4ebaf54626bbbd` |
+| [엔진 로그](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P08-windows-debug-bf4c134d-ordinary-terminal-01/engine.log) | `3854d6053abac47a532fee6b7c7e0d6ac3134e8687fb20399e140d3c773869d2` |
+| [클라이언트 실측](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P08-windows-debug-bf4c134d-ordinary-terminal-01/client-rect.json) | `0f9e9c9428fc142b440cd30aa2250e338e6552d4f1a641e46d063fbbd1074fc9` |
+| [종료 기록](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P08-windows-debug-bf4c134d-ordinary-terminal-01/game-exit.json) | `4d4084f6737b8d5bef01e9bb3dc981ad5f57466b1d9ab0587b989e7ea4f473b1` |
