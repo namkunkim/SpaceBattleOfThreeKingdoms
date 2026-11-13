@@ -149,7 +149,54 @@ func _measure_authority(source: RouteSource, bindings: Dictionary) -> void:
 		"skipped completion defers unsafe endpoint chord")
 	_check_authority_holds(renderer, source)
 	_drain_authority(renderer, source, tick + 50, false)
+	_measure_terminal(renderer, source, tick + 150)
 	renderer.free()
+
+
+func _measure_terminal(renderer: FleetRenderer, source: RouteSource, tick: int) -> void:
+	for sq: Dictionary in source.rows:
+		var v: FleetRenderer.FleetVis = renderer.vis[sq.id]
+		sq.formation_id = v.p05_from
+		sq.formation = _shape(v.p05_from)
+		sq.tick = tick
+		sq.terminal_tick = tick
+	renderer.update(1.0 / 60.0)
+	var frozen := source.rows.duplicate(true)
+	var before := {}
+	var deferred := true
+	for sq: Dictionary in source.rows:
+		var v: FleetRenderer.FleetVis = renderer.vis[sq.id]
+		before[sq.id] = _positions(v, sq)
+		deferred = v.p05_time > 0.0 and deferred
+	_check(deferred, "terminal completion first defers the unsafe reverse chord")
+	renderer.update(0.0)
+	for sq: Dictionary in source.rows:
+		sq.tick += 1
+	renderer.update(0.5)
+	source.rows.assign(frozen.duplicate(true))
+	for sq: Dictionary in source.rows:
+		sq.formation_id = renderer.vis[sq.id].p05_to
+	renderer.update(0.5)
+	source.rows.assign(frozen.duplicate(true))
+	var held := true
+	for sq: Dictionary in source.rows:
+		held = _positions(renderer.vis[sq.id], sq) == before[sq.id] and held
+	_check(held, "terminal slots hold during pause and reject newer or changed snapshots")
+	var complete := false
+	var safe := true
+	for frame in 100:
+		renderer.update(1.0 / 60.0)
+		complete = true
+		for sq: Dictionary in source.rows:
+			var v: FleetRenderer.FleetVis = renderer.vis[sq.id]
+			var rendered := _positions(v, sq)
+			safe = v.p05.clear(before[sq.id], rendered, 0.0) and v.p05_tick == tick and safe
+			before[sq.id] = rendered
+			complete = v.p05_time == 0.0 and complete
+		if complete:
+			print("P05_TERMINAL_PRESENTATION updates=", frame + 1, " authority_tick=", tick)
+			break
+	_check(complete and safe and source.rows == frozen, "frozen terminal snapshot finishes safely without new ticks")
 
 
 func _check_authority_holds(renderer: FleetRenderer, source: RouteSource) -> void:
