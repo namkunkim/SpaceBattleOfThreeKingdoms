@@ -89,8 +89,125 @@ func _run() -> void:
 	renderer.update(1.0 / 60.0)
 	_check(renderer.vis[1].p05 == null and renderer.vis[2].p05 != null, "moving fleet alone returns to ordinary rendering")
 	renderer.free()
+	source.rows[0].pos -= Vector2.ONE
+	_measure_authority(source, bindings)
 	print("P05_RENDERER_RESULT failures=", failures)
 	quit(0 if failures == 0 else 1)
+
+
+func _measure_authority(source: RouteSource, bindings: Dictionary) -> void:
+	var renderer := FleetRenderer.new()
+	root.add_child(renderer)
+	renderer.setup(source)
+	var identity := "p05-clock-test"
+	for sq: Dictionary in source.rows:
+		sq.operation_id = identity
+		sq.tick = 0
+	if not _check(renderer.enable_p05_formation_routes(bindings, identity), "bind operation clock"):
+		renderer.free()
+		return
+	renderer.update(0.0)
+	if not _check(renderer.vis[1].p05 != null and renderer.vis[2].p05 != null, "both authority routes build"):
+		renderer.free()
+		return
+	var tick := 0
+	for reverse in [false, true]:
+		var clear_chords := true
+		var respects_clock := true
+		for elapsed in range(1, 51):
+			tick += 1
+			var before := {}
+			for sq: Dictionary in source.rows:
+				var v: FleetRenderer.FleetVis = renderer.vis[sq.id]
+				before[sq.id] = _positions(v, sq)
+				sq.tick = tick
+				sq.form_left_s = float(50 - elapsed) / 10.0
+				var target := v.p05_from if reverse else v.p05_to
+				sq.form_to = target if elapsed < 50 else ""
+				if elapsed == 50:
+					sq.formation_id = target
+					sq.formation = _shape(target)
+			renderer.update(1.0 / 120.0 if elapsed % 2 == 0 else 0.4)
+			for sq: Dictionary in source.rows:
+				var v: FleetRenderer.FleetVis = renderer.vis[sq.id]
+				clear_chords = v.p05.clear(before[sq.id], _positions(v, sq), 0.0) and clear_chords
+				var requested: float = sq.form_left_s if reverse else Schedule.DURATION - sq.form_left_s
+				respects_clock = (v.p05_time >= requested if reverse else v.p05_time <= requested) and respects_clock
+			if elapsed == 15:
+				_check_authority_holds(renderer, source)
+		_check(clear_chords and respects_clock, "authority samples respect clock and certified chords, reverse=%s" % reverse)
+		_drain_authority(renderer, source, tick, reverse)
+		tick = source.rows[0].tick
+	# Jump from the original endpoint to a committed target in one snapshot.
+	for sq: Dictionary in source.rows:
+		var v: FleetRenderer.FleetVis = renderer.vis[sq.id]
+		sq.formation_id = v.p05_to
+		sq.formation = _shape(v.p05_to)
+		sq.tick = tick + 50
+	renderer.update(5.0)
+	_check(renderer.vis[1].p05_time < Schedule.DURATION and renderer.vis[2].p05_time < Schedule.DURATION,
+		"skipped completion defers unsafe endpoint chord")
+	_check_authority_holds(renderer, source)
+	_drain_authority(renderer, source, tick + 50, false)
+	renderer.free()
+
+
+func _check_authority_holds(renderer: FleetRenderer, source: RouteSource) -> void:
+	var before := {}
+	var saved_time := {}
+	for sq: Dictionary in source.rows:
+		before[sq.id] = _positions(renderer.vis[sq.id], sq)
+		saved_time[sq.id] = sq.form_left_s
+	renderer.update(0.5)
+	var held := true
+	for sq: Dictionary in source.rows:
+		held = _positions(renderer.vis[sq.id], sq) == before[sq.id] and held
+		sq.tick -= 1
+	renderer.update(0.5)
+	for sq: Dictionary in source.rows:
+		held = _positions(renderer.vis[sq.id], sq) == before[sq.id] and held
+		sq.tick += 2
+		sq.operation_id = "different-operation"
+	renderer.update(0.5)
+	for sq: Dictionary in source.rows:
+		held = _positions(renderer.vis[sq.id], sq) == before[sq.id] and held
+		sq.tick -= 1
+		sq.operation_id = "p05-clock-test"
+	_check(held, "duplicate, older and foreign-operation snapshots hold rendered slots")
+	for sq: Dictionary in source.rows:
+		sq.tick += 1
+	renderer.update(0.0)
+	held = true
+	for sq: Dictionary in source.rows:
+		held = _positions(renderer.vis[sq.id], sq) == before[sq.id] and held
+		sq.form_left_s = NAN
+	renderer.update(0.5)
+	for sq: Dictionary in source.rows:
+		var v: FleetRenderer.FleetVis = renderer.vis[sq.id]
+		held = _positions(v, sq) == before[sq.id] and v.p05_tick == sq.tick - 1 and held
+		sq.tick -= 1
+		sq.form_left_s = saved_time[sq.id]
+	_check(held, "paused update and malformed remaining time preserve slots and clock")
+
+
+func _drain_authority(renderer: FleetRenderer, source: RouteSource, tick: int, reverse: bool) -> void:
+	var endpoint := 0.0 if reverse else Schedule.DURATION
+	var complete := false
+	var clear_chords := true
+	for offset in range(1, 101):
+		var before := {}
+		for sq: Dictionary in source.rows:
+			before[sq.id] = _positions(renderer.vis[sq.id], sq)
+			sq.tick = tick + offset
+		renderer.update(1.0 / 60.0)
+		complete = true
+		for sq: Dictionary in source.rows:
+			var v: FleetRenderer.FleetVis = renderer.vis[sq.id]
+			clear_chords = v.p05.clear(before[sq.id], _positions(v, sq), 0.0) and clear_chords
+			complete = v.p05_time == endpoint and complete
+		if complete:
+			break
+	_check(complete and clear_chords, "later authority ticks finish on safe chords, reverse=%s" % reverse)
 
 
 # The quintic f(u) = 6u^5 - 15u^4 + 10u^3 has its acceleration extrema

@@ -123,6 +123,7 @@ class FleetVis:
 	var p05_goal := 0.0
 	var p05_start := 0.0
 	var p05_elapsed := 0.0
+	var p05_tick := -1
 
 var src: BattleSource
 var meshes := [[], []]
@@ -140,6 +141,7 @@ var clock := 0.0
 var _detail := -1.0   # 확대 정도에 따른 함선 세부 표현(0~1)
 var _missile_last := {}
 var _p05_fleet_ids := {}
+var _p05_operation_id := ""
 
 func setup(source: BattleSource) -> void:
 	src = source
@@ -156,8 +158,12 @@ func setup(source: BattleSource) -> void:
 
 # An operation adapter must explicitly bind its verified operation roster IDs before first update.
 # Legacy squadron IDs alone carry no operation identity.
-func enable_p05_formation_routes(fleet_ids: Dictionary) -> bool:
-	if not vis.is_empty() or fleet_ids.is_empty() or FileAccess.get_sha256(P05Dev.INPUT_PATHS.roster) != P05Product.INPUT_SHA256.roster:
+# An optional operation identity selects the authority-clock prototype. Its
+# source rows must include operation_id and tick from the same live projection.
+# A fresh renderer is needed for another operation or a rewound timeline.
+# A committed snapshot is immutable within its tick.
+func enable_p05_formation_routes(fleet_ids: Dictionary, operation_id := "") -> bool:
+	if not _p05_operation_id.is_empty() or not vis.is_empty() or fleet_ids.is_empty() or FileAccess.get_sha256(P05Dev.INPUT_PATHS.roster) != P05Product.INPUT_SHA256.roster:
 		return false
 	var loaded := P05Policy.load_source()
 	if not loaded.ok:
@@ -172,11 +178,14 @@ func enable_p05_formation_routes(fleet_ids: Dictionary) -> bool:
 		var squad: Dictionary = roster.squadrons.filter(func(row): return row.id == roster_id)[0]
 		enabled[id] = {"fleet": fleet, "squad": squad}
 	_p05_fleet_ids = enabled
+	_p05_operation_id = operation_id
 	return true
 
 
 func _p05_build(v: FleetVis, sq: Dictionary) -> void:
 	if not _p05_fleet_ids.has(v.id) or sq.side != 0 or sq.get("flip", false) or not is_equal_approx(src.unit_scale(), CameraRig.S):
+		return
+	if not _p05_operation_id.is_empty() and _p05_authority_tick(sq) < 0:
 		return
 	var approved: Dictionary = _p05_fleet_ids[v.id]
 	var fleet: Dictionary = approved.fleet
@@ -203,6 +212,8 @@ func _p05_build(v: FleetVis, sq: Dictionary) -> void:
 	v.p05_to = fleet.allowed_formations[1]
 	v.p05_origin = sq.pos
 	v.p05_heading = sq.heading
+	if not _p05_operation_id.is_empty():
+		v.p05_tick = _p05_authority_tick(sq)
 	v.p05_position = schedule.sample(0.0)
 	_p05_homes(v)
 
@@ -213,6 +224,13 @@ func _p05_homes(v: FleetVis) -> void:
 		var slot: Slot = v.slots[i]
 		var point: Vector2 = v.p05_position[v.p05.rows[i].id]
 		slot.home = Vector3(point.y * scale, slot.home.y, -point.x * scale)
+
+
+func _p05_authority_tick(sq: Dictionary) -> int:
+	var tick: Variant = sq.get("tick")
+	if sq.get("operation_id") != _p05_operation_id or typeof(tick) != TYPE_INT:
+		return -1
+	return tick
 
 
 func _p05_update(v: FleetVis, sq: Dictionary, dt: float) -> bool:
@@ -226,12 +244,25 @@ func _p05_update(v: FleetVis, sq: Dictionary, dt: float) -> bool:
 		_reform(v, sq)
 		return false
 	var goal := P05Schedule.DURATION if target == v.p05_to else 0.0
-	if goal != v.p05_goal:
-		v.p05_start = v.p05_time
-		v.p05_elapsed = 0.0
-		v.p05_goal = goal
-	v.p05_elapsed += maxf(0.0, dt)
-	var requested := move_toward(v.p05_start, goal, v.p05_elapsed)
+	var requested := goal
+	if _p05_operation_id.is_empty():
+		if goal != v.p05_goal:
+			v.p05_start = v.p05_time
+			v.p05_elapsed = 0.0
+			v.p05_goal = goal
+		v.p05_elapsed += maxf(0.0, dt)
+		requested = move_toward(v.p05_start, goal, v.p05_elapsed)
+	else:
+		var remaining: Variant = sq.get("form_left_s")
+		if typeof(remaining) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(remaining) \
+				or remaining < 0.0 or remaining > P05Schedule.DURATION:
+			return true
+		if current not in [v.p05_from, v.p05_to] or (sq.form_to != "" and (current == target or remaining <= 0.0)) \
+				or (sq.form_to == "" and remaining != 0.0):
+			return true
+		v.p05_tick = _p05_authority_tick(sq)
+		if sq.form_to != "":
+			requested = P05Schedule.DURATION - remaining if goal > 0.0 else float(remaining)
 	v.p05_time = v.p05.advance(v.p05_time, requested, v.p05_position)
 	v.p05_position = v.p05.sample(v.p05_time)
 	_p05_homes(v)
@@ -822,6 +853,9 @@ func update(dt: float) -> void:
 					m.set_shader_parameter("detail", detail)
 	for sq in sqs:
 		var v: FleetVis = vis[sq.id]
+		if v.p05 != null and not _p05_operation_id.is_empty() \
+				and (_p05_authority_tick(sq) <= v.p05_tick or not is_finite(dt) or dt <= 0.0):
+			continue
 		var aim_id: int = sq.firing_at if sq.firing_at >= 0 else sq.target_id
 		var foe: Dictionary = by_id.get(aim_id, {})
 		var was_aim := v.aim
