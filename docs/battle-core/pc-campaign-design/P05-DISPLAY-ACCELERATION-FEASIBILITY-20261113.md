@@ -289,3 +289,30 @@ C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe --headless --path . --scrip
 | Godot 콘솔 실행기 | `c8f0a6bc45a19b33541501e57f6f7cd972ab18453743266339d495cbbe846643` |
 | [시험 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-commit-rollback-20261113/probe.gd) | `49495c2471efd5e5c81f518ede4111c13e5056d43ab3d24ad7d9b1c23bb24e86` |
 | [실행 로그](F:/WorkSpace/Campaign-Orchestration/P05-commit-rollback-20261113/probe.out) | `b1fbbd7064f35bb566266fa37ac219b79e7e8d2a3ffbb974a6f19531c47c5183` |
+
+## 안정 ID 진형 명령의 별도 프로세스 저장·재생
+
+격리 개발 로더 `p05-formation-dev-opt-in/2`에서 39척 `RC-LIU-SQ-01`의 `FRM-03→FRM-01` 한 방향을 시험했다. 실제 소유자가 정지 명령을 처리한 뒤 1틱의 대기 체크포인트에 안정 ID 진형 명령을 저장했다. 2틱의 전환 중 체크포인트에서는 기존 진형을 유지했고 새 진형까지 49틱이 남았다. 51틱에 새 진형이 적용됐다.
+
+작성 PID 32640과 별도 읽기 PID 20512가 각각 9/9, 종료 코드 0이었다. 읽기 프로세스는 대기 및 전환 중 상태를 실제 소유자의 틱 실행으로 재구성하고 체크포인트 증거값과 대조했다. 전환 중 복원 후 완료한 상태와 처음부터 재생한 상태가 일치했다. 이전 격리 v1 체크포인트의 복원 접수 후 취소와 v1 리플레이 읽기도 확인했다. 공개 v1은 진형 명령과 개발용 체크포인트를 거부했고, 개발용 `.pcopreplay`도 `file.format`의 `replay_invalid_format`으로 거부했다.
+
+시험은 새 소유자와 시험 전용 파일 형식을 사용했다. 실제 소유자의 체크포인트 캡처와 증거값을 사용했고, 개발용 읽기는 별도 로더에서 수행했다. 공개 v2 제품 연결, 현재 플레이 중인 소유자의 복원 실패 처리, 반대 방향·다른 함대 및 전투 중단 조건은 미검증이다.
+
+`F:/WorkSpace/.codex/worktree/p05-formation-20261113`의 `e52f64668d043ab99ee13588cb6bb8f73e78be2a`에서 실행했다. 시험에 사용한 코어·어댑터·코덱·시나리오·프로젝트 파일은 기준 main `46e7d54c0b707f1a7e721d37fd1515a2a5bfddde`와 같았다. `P05_V2_ROOT`는 아래 근거 폴더이며, `APPDATA`와 `LOCALAPPDATA`는 실행마다 별도 `profile-write` 또는 `profile-read`로 지정했다. `P05_COMPAT_ROOT`는 `F:/WorkSpace/Campaign-Orchestration/P05-native-rollback-candidate-20261113`이었다.
+
+```text
+C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe --headless --path . --script F:/WorkSpace/Campaign-Orchestration/P05-v2-native-loader-20261113/paired-02/probe.gd -- write
+C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe --headless --path . --script F:/WorkSpace/Campaign-Orchestration/P05-v2-native-loader-20261113/paired-02/probe.gd -- read
+```
+
+| 근거 | SHA-256 |
+| --- | --- |
+| Godot 콘솔 실행기 | `c8f0a6bc45a19b33541501e57f6f7cd972ab18453743266339d495cbbe846643` |
+| `probe.gd` | `a9187cd7ab6f90fef618db8e20946b88ef527bc23bc382ef4a323c552ce2e17c` |
+| `write.out` | `163cfe0999bfac82466a61a1f801a0420a4d7f882c6c57fdcfad83ddb04db033` |
+| `read.out` | `c4ac9056243865268ae62e48dfa35b0ffb8967b423565097ac48a51b6925e100` |
+| `pending.json` | `3243af4b1be4283fa4bf2b371b06c88b313cf8da9ccdb2b70c89c29f3f6e2b83` |
+| `inflight.json` | `19af946e60ea836275dc9723fc53c132827a68da231cf5a4240218d78d0f5bbf` |
+| `formation.pcopreplay` | `156e8fdb4c5d33989caf5231bfa54f8b65081a5979e86c831f588d0702751aba` |
+
+[격리 시험 근거](F:/WorkSpace/Campaign-Orchestration/P05-v2-native-loader-20261113/paired-02)
