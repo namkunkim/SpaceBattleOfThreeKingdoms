@@ -184,3 +184,15 @@ C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe --headless --path . --scrip
 | [시험 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-native-authority-aligned-20261113/probe.gd) | `53385cab5247a41a0cd049bae4f80f955647800140e2bf0e00a7ae5c6f729c67` |
 | [정방향 로그](F:/WorkSpace/Campaign-Orchestration/P05-native-authority-aligned-20261113/native-0.out) | `ef7792292abd30e2642d150481e502b148e407669adb81f3ea8d8fe86a9969c3` |
 | [역방향 로그](F:/WorkSpace/Campaign-Orchestration/P05-native-authority-aligned-20261113/native-1.out) | `e96df783b1ca1e06c697f02ce24b46fbe48fe7cf08dc5059b40a7e7af451043f` |
+
+## 39척 진형 전환의 시험용 저널 복원
+
+39척 편성의 `FRM-01` 명령을 틱 0에 적용하고, 역방향 `FRM-03` 명령은 틱 50에 적용할 대기 항목으로 두었다. 전환 중인 틱 26에서 적용·대기 명령과 네이티브 상태 다이제스트를 시험용 JSON 파일에 기록했다. JSON을 다시 읽을 때 명령 틱을 정수로 정규화했다. 같은 Godot 헤드리스 시험 프로세스 안에서 새 적벽 v1 작전 소유자를 준비해 초기 상태부터 틱 26까지 재생했다. 틱 26의 네이티브 다이제스트와 대기 명령이 일치했다. 이후 75틱의 상태 다이제스트도 매 틱 일치했고, 진형 완료 이벤트는 틱 50에 `FRM-01`, 틱 100에 `FRM-03`으로 각각 한 번 발생했다. 최종 실행 종료 코드는 0이었고 독립 검토에서 이 결과를 확인했다.
+
+저널 형식은 `p05-formation-journal-test/1`이며, 격리 시험에서 코어 명령 순서와 복원을 검증하는 데 사용했다. 공개 v1 진형 명령의 허용 범위와 제품 저장·재생 형식은 유지했다. 별도 프로세스 재개, 작전 소유자 전체 상태·원장과 공개 체크포인트·리플레이 연동은 추가 검증 범위다. 제품 연결에는 버전, 명령의 대상 편성·진형 식별자 및 기존 이동·보급·철수와의 순서를 정해야 한다.
+
+| 격리 근거 | SHA-256 |
+| --- | --- |
+| [시험 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-formation-journal-20261113/journal.gd) | `d2b3e42a23e3cd9a8e37dce5e2d80773f91411b21fb458c149d8a8497cb195ea` |
+| [최종 로그](F:/WorkSpace/Campaign-Orchestration/P05-formation-journal-20261113/journal-final.out) | `a60116eb326e43b94bc9133d6a27d60f2320440cddfdbf8427dbe7cb1394e406` |
+| [시험용 저널](F:/WorkSpace/Campaign-Orchestration/P05-formation-journal-20261113/profile/journal-test.json) | `bc8718fd65ae1f5eec259c1685fecc04c5427f3a69b2429311785981f9022ee4` |
