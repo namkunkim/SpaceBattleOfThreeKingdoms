@@ -33,3 +33,13 @@ K6 비교 전후 프로젝트를 격리된 Windows 작업본에 생성했다. �
 `4dac0b8d`에서 17·18행 전후 네 케이스의 고정 매니페스트와 두 QA 레인 파일 6,522개의 해시를 검증했다. 첫 17-before는 실제 클릭 9/10건을 기록했다. 출격 해제 후 6.658초에 자연 진행했고, 필수 건너뛰기 클릭이 누락되어 기록기가 시간 초과했다. 자연 결산은 기대값과 일치했다(틱 11350, 1134950ms, 지문 `c0e18c8c758f6767e67761630cc68cd2a5aeb2e9a5e87d0bf5cd14da5d880acb`). 이 시도의 정식 PASS는 0건이며 17·18행 전후 비교가 남아 있다. [고정 매니페스트](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/K6/main-4dac0b8d-row17-18-runner-20261113/MANIFEST-FROZEN-CANDIDATE.json) SHA-256 `212de24d4ab404e30717945b8c88466a3cf892098a3f60772653590b3ddabc31`. [원시 출력](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/K6/main-4dac0b8d-row17-18-runner-20261113/formal-run-01/17-before/stdout.raw) SHA-256 `61b8da2002404f3782e69d7d1d855fd45cd614adc0555ad613a39152f571ec44`. [재시도 분석](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/K6/main-4dac0b8d-row17-18-retry-analysis-20261113/ROW17-RETRY.md)
 
 - P08 PresentMon 2.6.0 격리 사전 검사에서 라이브 ETW 권한이 거부되어 종료 코드 6을 기록했다. 제품 성능 측정은 남아 있다. [ETW 사전 검사](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/sbtk-p08-etw-82fbc41037ed/RESULT.json)
+
+### K6 17-before 재시도 독립 검토
+
+`4dac0b8d` 17-before 재시도에서 승인된 Windows 자동화 입력 10건을 기록했다. 원시 상관과 의미 판정이 모두 PASS였고, 독립 검토에서 두 판정을 재생성해 보존 결과와 일치함을 확인했다. 레인 파일 지문과 검토·승인·nonce 영수증도 일치했다. 결산은 틱 11350, 1134950ms, 지문 `c0e18c8c758f6767e67761630cc68cd2a5aeb2e9a5e87d0bf5cd14da5d880acb`였다. 이전 실패 시도는 위에 남겼다. 이번 판정은 17-before 한 건이며, 17-after 및 18행 두 케이스의 정식 비교가 남아 있다.
+
+| 재시도 근거 | SHA-256 |
+| --- | --- |
+| [원시 판정](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/K6/main-4dac0b8d-row17-before-retry-draft-20261113/formal-run-17-before-retry/17-before/raw-verification.json) | `d739446b574ad1dbd87940b97a3b392ff1484625cd0cc83a932e250f85774d00` |
+| [의미 판정](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/K6/main-4dac0b8d-row17-before-retry-draft-20261113/formal-run-17-before-retry/17-before/semantic-verification.json) | `d1572487c85c6f4a4fe8bb990ec486cc7627bfd140d114238f17a02a564c47c0` |
+| [원시 출력](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/K6/main-4dac0b8d-row17-before-retry-draft-20261113/formal-run-17-before-retry/17-before/stdout.raw) | `f5129f20e1b7f8a70a80c43b867d37eb7c266d1eceacd416287454b964d6ec5e` |
