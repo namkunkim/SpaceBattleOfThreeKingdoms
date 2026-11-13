@@ -1,0 +1,242 @@
+{
+  "bounds": [
+    0.0,
+    0.0,
+    1000.0,
+    600.0
+  ],
+  "canonical_version": "i01a-canonical-v1",
+  "coordinate_space": "source",
+  "definition_id": "FX-G",
+  "edges": [
+    {
+      "bidirectional": true,
+      "from": "E",
+      "id": "E-J",
+      "to": "J"
+    },
+    {
+      "bidirectional": true,
+      "from": "J",
+      "id": "J-A",
+      "to": "A"
+    },
+    {
+      "bidirectional": true,
+      "from": "A",
+      "id": "A-C",
+      "to": "C"
+    },
+    {
+      "bidirectional": true,
+      "from": "J",
+      "id": "J-B",
+      "to": "B"
+    },
+    {
+      "bidirectional": true,
+      "from": "B",
+      "id": "B-D",
+      "to": "D"
+    },
+    {
+      "bidirectional": true,
+      "from": "D",
+      "id": "D-C",
+      "to": "C"
+    },
+    {
+      "bidirectional": true,
+      "from": "A",
+      "id": "A-B",
+      "to": "B"
+    },
+    {
+      "bidirectional": true,
+      "from": "R",
+      "id": "R-C",
+      "to": "C"
+    },
+    {
+      "bidirectional": true,
+      "from": "R",
+      "id": "R-D",
+      "to": "D"
+    }
+  ],
+  "effect_zones": [
+    {
+      "effects": {
+        "movement_cost_bp": 13333.0
+      },
+      "id": "NEB-1",
+      "rect": [
+        300.0,
+        50.0,
+        100.0,
+        50.0
+      ],
+      "type": "nebula"
+    }
+  ],
+  "envelope": {
+    "kind": "synthetic-circle",
+    "radius": 20.0,
+    "safety": 5.0,
+    "unit": "source-coordinate"
+  },
+  "features": {
+    "physical_obstacles": false,
+    "runtime": "deferred",
+    "save": "deferred"
+  },
+  "kinematics": {
+    "evasion_per_speed": 8.0,
+    "speed": 10.0,
+    "turn_deg_per_s": 9.0
+  },
+  "move_mul": 2.0,
+  "nodes": [
+    {
+      "id": "E",
+      "kind": "entry",
+      "position": [
+        50.0,
+        300.0
+      ]
+    },
+    {
+      "id": "J",
+      "kind": "junction",
+      "position": [
+        210,
+        300.0
+      ]
+    },
+    {
+      "id": "A",
+      "kind": "facility",
+      "position": [
+        400.0,
+        180.0
+      ]
+    },
+    {
+      "id": "B",
+      "kind": "facility",
+      "position": [
+        400.0,
+        420.0
+      ]
+    },
+    {
+      "id": "C",
+      "kind": "facility",
+      "position": [
+        800.0,
+        300.0
+      ]
+    },
+    {
+      "id": "D",
+      "kind": "facility",
+      "position": [
+        650.0,
+        420.0
+      ]
+    },
+    {
+      "id": "R",
+      "kind": "entry",
+      "position": [
+        950.0,
+        300.0
+      ]
+    }
+  ],
+  "profile_id": "i01a-synthetic",
+  "regions": [
+    {
+      "admission": "center-in-world/intersect-free-centers",
+      "id": "supply-A",
+      "node": "A",
+      "radius": 60.0,
+      "shape": "circle",
+      "unit": "source-coordinate"
+    },
+    {
+      "admission": "center-in-world/intersect-free-centers",
+      "id": "supply-B",
+      "node": "B",
+      "radius": 60.0,
+      "shape": "circle",
+      "unit": "source-coordinate"
+    },
+    {
+      "admission": "center-in-world/intersect-free-centers",
+      "id": "exit-E",
+      "node": "E",
+      "radius": 60.0,
+      "shape": "circle",
+      "unit": "source-coordinate"
+    },
+    {
+      "admission": "center-in-world/intersect-free-centers",
+      "id": "entry-R",
+      "node": "R",
+      "radius": 60.0,
+      "shape": "circle",
+      "unit": "source-coordinate"
+    }
+  ],
+  "required_routes": [
+    [
+      "E",
+      "A"
+    ],
+    [
+      "A",
+      "E"
+    ],
+    [
+      "E",
+      "B"
+    ],
+    [
+      "B",
+      "E"
+    ],
+    [
+      "E",
+      "C"
+    ],
+    [
+      "C",
+      "E"
+    ],
+    [
+      "E",
+      "D"
+    ],
+    [
+      "D",
+      "E"
+    ],
+    [
+      "R",
+      "C"
+    ],
+    [
+      "R",
+      "D"
+    ]
+  ],
+  "rules_version": "i01a-fixture-v1",
+  "schema_version": 1.0,
+  "synthetic": true,
+  "target_size": [
+    2000.0,
+    1200.0
+  ],
+  "turn_mul": 3.0
+}

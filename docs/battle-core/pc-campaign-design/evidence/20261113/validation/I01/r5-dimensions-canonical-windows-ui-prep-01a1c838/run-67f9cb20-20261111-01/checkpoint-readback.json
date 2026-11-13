@@ -1,0 +1,18 @@
+[
+  {
+    "name": "pc-first-operation-product-v1.save",
+    "operation_id": "red-cliffs-first-operation-dev-v1/d27b6189bcb2e62d02d8d947bd7ed987",
+    "tick": 113,
+    "clock_ms": 11300,
+    "rules_digest": "b7189ae8f3408fd4e053a792491ac5f6457a520218df2b709c4a8e3986863658",
+    "bodySha": "16472597fc24c15d317e9d56b4be594f5ed3b9fb9af2bc4420e6b0bfcf21339f"
+  },
+  {
+    "name": "pc-first-operation-product-v1.save.previous",
+    "operation_id": "red-cliffs-first-operation-dev-v1/d27b6189bcb2e62d02d8d947bd7ed987",
+    "tick": 64,
+    "clock_ms": 6400,
+    "rules_digest": "b7189ae8f3408fd4e053a792491ac5f6457a520218df2b709c4a8e3986863658",
+    "bodySha": "de7d2221d599598517ac5c11bf0a0f03d2cfcd7813979d012988776293541e1a"
+  }
+]

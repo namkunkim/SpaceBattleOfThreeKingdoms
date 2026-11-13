@@ -1,0 +1,19 @@
+{
+  "pid": 23904,
+  "launched_utc": "2026-11-13T02:32:37.8489885Z",
+  "exe": "<workspace>\\SpaceBattleOfThreeKingdoms-validation\\P04-windows-picker-actual-65d92dea-01\\runtime\\SpaceBattleOfThreeKingdoms.exe",
+  "exe_sha256": "20f98cc1096eef278479e343e6d2ab6a3749f5982bc22e224f4aa32bf1ca5016",
+  "dll_sha256": "a9e45eed91cbe8721469359160bbcb3716675a575537acf716a2da782a75b6e8",
+  "argv": [
+    "--resolution",
+    "1600x900",
+    "--windowed",
+    "--position",
+    "80,70",
+    "--verbose",
+    "--log-file",
+    "\"<workspace>\\SpaceBattleOfThreeKingdoms-validation\\P04-windows-picker-actual-65d92dea-01\\engine.log\""
+  ],
+  "user_data": "<workspace>\\SpaceBattleOfThreeKingdoms-validation\\P04-windows-picker-actual-65d92dea-01\\profile\\APPDATA\\Godot\\app_userdata\\SpaceBattleOfThreeKingdoms",
+  "log": "<workspace>\\SpaceBattleOfThreeKingdoms-validation\\P04-windows-picker-actual-65d92dea-01\\engine.log"
+}

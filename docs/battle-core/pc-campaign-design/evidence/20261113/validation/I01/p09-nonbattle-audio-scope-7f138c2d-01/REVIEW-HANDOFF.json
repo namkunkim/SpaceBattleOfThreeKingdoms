@@ -1,0 +1,18 @@
+{
+  "main": "7f138c2df7f1a55118bf9a5b7e251703049d5bb6",
+  "files": {
+    "README.md": {
+      "bytes": 1288,
+      "sha256": "375d612c7f0150b02541cb45dfbeecd2fff797862d56f23c1c3b62ddf70c331b"
+    },
+    "RESULT.json": {
+      "bytes": 4539,
+      "sha256": "399406ebc455c2098f0b95b93f17932bdba4451f21901f16b8ae40e14b099e0d"
+    },
+    "check_scope.py": {
+      "bytes": 3313,
+      "sha256": "b6e579d2747f3d83b8e08063b75e5721e5e9b781875b1be8d80e233cf569499c"
+    }
+  },
+  "scope": "Read-only exact Git source audit of headless-disabled product audio; no runtime, device or acceptance credit."
+}

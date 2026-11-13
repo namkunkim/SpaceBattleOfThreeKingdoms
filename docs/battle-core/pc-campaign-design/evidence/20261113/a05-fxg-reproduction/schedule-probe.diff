@@ -1,0 +1,59 @@
+diff --git a/core/battle/operation_replay.gd b/core/battle/operation_replay.gd
+index f3b90797..36957507 100644
+--- a/core/battle/operation_replay.gd
++++ b/core/battle/operation_replay.gd
+@@ -118,6 +118,7 @@ static func _play(owner: OperationPrivateState, policy: String, max_ticks: int,
+ 	var read := owner.summary()
+ 	if not read.ok:
+ 		return read
++	var a05_probe = preload("res://tests/a05_tick_probe.gd").start(read.summary)
+ 	while not read.summary.over and read.summary.tick < max_ticks:
+ 		var next := consumed
+ 		while next < commands.size() and commands[next].tick == read.summary.tick:
+@@ -125,6 +126,8 @@ static func _play(owner: OperationPrivateState, policy: String, max_ticks: int,
+ 			if not queued.ok:
+ 				return Adapter.fail(queued.error, "commands[%d]" % next)
+ 			next += 1
++		if a05_probe != null and not a05_probe.permit(read.summary, func(): return owner.summary().summary):
++			return Adapter.fail("a05_probe_permit", "owner")
+ 		var advanced := owner.advance()
+ 		if not advanced.ok:
+ 			return Adapter.fail(advanced.error, "owner")
+@@ -136,6 +139,8 @@ static func _play(owner: OperationPrivateState, policy: String, max_ticks: int,
+ 		read = owner.summary()
+ 		if not read.ok:
+ 			return read
++		if a05_probe != null: a05_probe.record("after", read.summary)
++	if a05_probe != null: a05_probe.finish(func(): return owner.summary().summary)
+ 	if consumed < commands.size():
+ 		return Adapter.fail("replay_unconsumed_command", "commands[%d].tick" % consumed)
+ 	return {"ok": true, "summary": read.summary, "events": events, "event_count": events.size(),
+diff --git a/tests/autoresolve.gd b/tests/autoresolve.gd
+index b0d14ee4..746beb90 100644
+--- a/tests/autoresolve.gd
++++ b/tests/autoresolve.gd
+@@ -128,12 +128,15 @@ static func run_operation(owner: OperationPrivateState, policy: String, max_tick
+ 	var events: Array = []
+ 	var read := owner.summary()
+ 	if not read.ok: return read
++	var a05_probe = preload("res://tests/a05_tick_probe.gd").start(read.summary)
+ 	while not read.summary.over and read.summary.tick < max_ticks:
+ 		var projected := owner.read_projection(0)
+ 		if not projected.ok: return projected
+ 		for command in _operation_policy_commands(policy, projected.projection):
+ 			var queued := owner.queue(command)
+ 			if not queued.ok: return queued
++		if a05_probe != null and not a05_probe.permit(read.summary, func(): return owner.summary().summary):
++			return preload("res://core/battle/operation_runtime_adapter.gd").fail("a05_probe_permit", "owner")
+ 		var advanced := owner.advance()
+ 		if not advanced.ok: return advanced
+ 		var drained := owner.drain_events()
+@@ -141,6 +144,8 @@ static func run_operation(owner: OperationPrivateState, policy: String, max_tick
+ 		events.append_array(drained.events)
+ 		read = owner.summary()
+ 		if not read.ok: return read
++		if a05_probe != null: a05_probe.record("after", read.summary)
++	if a05_probe != null: a05_probe.finish(func(): return owner.summary().summary)
+ 	return {"ok": true, "summary": read.summary, "events": events, "event_count": events.size()}
+ 
+ func _run_first_operation_cli(args: PackedStringArray) -> void:

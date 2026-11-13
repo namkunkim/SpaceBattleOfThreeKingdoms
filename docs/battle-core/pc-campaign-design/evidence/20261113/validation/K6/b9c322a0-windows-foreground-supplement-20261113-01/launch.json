@@ -1,0 +1,19 @@
+{
+  "pid": 27796,
+  "launched_utc": "2026-11-13T02:42:50.1592634Z",
+  "exe": "<workspace>\\SpaceBattleOfThreeKingdoms-validation\\K6\\b9c322a0-windows-foreground-supplement-20261113-01\\runtime\\SpaceBattleOfThreeKingdoms.exe",
+  "exe_sha256": "196ee4a32ad1fb7486da349f649eb9b998515278dd93ec31433dbd04eab52674",
+  "dll_sha256": "a9e45eed91cbe8721469359160bbcb3716675a575537acf716a2da782a75b6e8",
+  "argv": [
+    "--resolution",
+    "1600x900",
+    "--windowed",
+    "--position",
+    "80,70",
+    "--verbose",
+    "--log-file",
+    "\"<workspace>\\SpaceBattleOfThreeKingdoms-validation\\K6\\b9c322a0-windows-foreground-supplement-20261113-01\\engine.log\""
+  ],
+  "user_data": "<workspace>\\SpaceBattleOfThreeKingdoms-validation\\K6\\b9c322a0-windows-foreground-supplement-20261113-01\\profile\\APPDATA\\Godot\\app_userdata\\SpaceBattleOfThreeKingdoms",
+  "log": "<workspace>\\SpaceBattleOfThreeKingdoms-validation\\K6\\b9c322a0-windows-foreground-supplement-20261113-01\\engine.log"
+}

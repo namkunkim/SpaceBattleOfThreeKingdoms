@@ -1,0 +1,13 @@
+{
+  "launchedAtKst": "2026-11-11T15:26:29.1442726+09:00",
+  "exe": "<workspace>\\SpaceBattleOfThreeKingdoms-validation\\I01\\r5-settlement-canonical-windows-01a1c7c7\\worldlink-only\\windows-release\\SpaceBattleOfThreeKingdoms.exe",
+  "workingDirectory": "<validation-root>/I01/r5-settlement-canonical-windows-01a1c7c7/worldlink-only/windows-release",
+  "arguments": [],
+  "sha256": "67f9cb20d10001bd33aa21c5c316bd4bb80aed9df4a2278a29900e2adb9c3924",
+  "dllSha256": "ebd3b5ce05d43bb89dc2d421047a2ca685a246086bd9298af6ad353760fca9d0",
+  "fileVersion": "0.1.0.0",
+  "productVersion": "0.1.0.0",
+  "APPDATA": "<workspace>\\SpaceBattleOfThreeKingdoms-validation\\I01\\r5-dimensions-canonical-windows-ui-prep-01a1c838\\run-67f9cb20-20261111-01\\profile",
+  "LOCALAPPDATA": "<workspace>\\SpaceBattleOfThreeKingdoms-validation\\I01\\r5-dimensions-canonical-windows-ui-prep-01a1c838\\run-67f9cb20-20261111-01\\local",
+  "pid": 8020
+}

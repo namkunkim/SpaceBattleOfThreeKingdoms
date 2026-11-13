@@ -1,0 +1,35 @@
+{
+  "atKst": "2026-11-11T15:26:28.9925550+09:00",
+  "userData": "<workspace>\\SpaceBattleOfThreeKingdoms-validation\\I01\\r5-dimensions-canonical-windows-ui-prep-01a1c838\\run-67f9cb20-20261111-01\\profile\\Godot\\app_userdata\\SpaceBattleOfThreeKingdoms",
+  "entries": [
+    {
+      "name": "pc-first-operation-product-v1.save",
+      "exists": true,
+      "sha256": "6624514f102e3042b194e01e5dafff7c35b4fa980f24c29e901d21d56fbfd0fe",
+      "length": 992
+    },
+    {
+      "name": "pc-first-operation-product-v1.save.previous",
+      "exists": true,
+      "sha256": "a3207876dfedccbbe21fc47e09e927d2491e33213eaeaec8492fe7756678c513",
+      "length": 989
+    },
+    {
+      "name": "pc-first-operation-product-v1-settlements.save",
+      "exists": true,
+      "sha256": "85b29c24b5f7f5ef79564e2a019fa87fd105f8fdbc2a7456de60d1531ef45ba3",
+      "length": 616
+    },
+    {
+      "name": "pc-first-operation-product-v1-settlements.save.previous",
+      "exists": false,
+      "sha256": null,
+      "length": null
+    }
+  ],
+  "names": [
+    "pc-first-operation-product-v1-settlements.save",
+    "pc-first-operation-product-v1.save",
+    "pc-first-operation-product-v1.save.previous"
+  ]
+}
