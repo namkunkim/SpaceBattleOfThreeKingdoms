@@ -69,6 +69,10 @@ func _fleet(renderer: FleetRenderer, squad: Dictionary, fleet: Dictionary, forma
 			FleetRenderer.SHIP_WIDTH * FleetRenderer.HULL_STRETCH.z) * (0.5 * scale / CameraRig.S)
 		rows.append({"id": "%s/%s/%d" % [squad.id, type, ordinals[type]],
 			"from": Vector2(source[i].x, source[i].z), "to": Vector2(destination[i].x, destination[i].z), "half": half})
+	var expected_counts := [13, 7] if squad.id == "RC-LIU-SQ-01" else [2, 10]
+	_report_endpoint(rows, "from", fleet.formation_id, fleet.outer_radius, expected_counts[0])
+	_report_endpoint(rows, "to", "FRM-01" if fleet.formation_id == "FRM-03" else "FRM-03",
+		fleet.outer_radius, expected_counts[1])
 	var frozen := rows.duplicate(true)
 	var forward := Sweep.validate(rows, fleet.outer_radius)
 	var reversed := rows.map(func(row): return {"id": row.id, "from": row.to, "to": row.from, "half": row.half})
@@ -81,6 +85,36 @@ func _fleet(renderer: FleetRenderer, squad: Dictionary, fleet: Dictionary, forma
 		and is_equal_approx(forward.fraction + backward.fraction, 1.0), "%s deterministic overlap in both directions" % squad.id)
 	print("P05_FORMATION_OBSERVATION ", JSON.stringify({"fleet": squad.id, "ships": rows.size(),
 		"from": fleet.formation_id, "duration_ms": duration_ms, "forward": forward, "reverse": backward}))
+
+
+func _report_endpoint(rows: Array, endpoint: String, formation: String, radius: float, expected_count: int) -> void:
+	var overlaps := 0
+	var equal_hull_witness := {}
+	var required_radius := 0.0
+	for i in rows.size():
+		var a: Dictionary = rows[i]
+		var position: Vector2 = a[endpoint]
+		required_radius = maxf(required_radius, (Vector2(absf(position.x), absf(position.y)) + a.half).length())
+		for j in range(i + 1, rows.size()):
+			var b: Dictionary = rows[j]
+			var delta: Vector2 = position - b[endpoint]
+			var penetration: Vector2 = a.half + b.half - Vector2(absf(delta.x), absf(delta.y))
+			if penetration.x <= 0.0 or penetration.y <= 0.0:
+				continue
+			overlaps += 1
+			if equal_hull_witness.is_empty() and a.half == b.half and a.id.get_slice("/", 1) == b.id.get_slice("/", 1):
+				equal_hull_witness = {"ships": [a.id, b.id], "half": [a.half.x, a.half.y],
+					"penetration": [penetration.x, penetration.y]}
+	var stationary := rows.map(func(row):
+		return {"id": row.id, "from": row[endpoint], "to": row[endpoint], "half": row.half})
+	var result := Sweep.validate(stationary, radius)
+	var fleet: String = rows[0].id.get_slice("/", 0)
+	_check(overlaps == expected_count and not equal_hull_witness.is_empty()
+		and result.get("error") == "swept_overlap", "%s %s endpoint overlaps while stationary" % [fleet, formation])
+	print("P05_ENDPOINT_OBSERVATION ", JSON.stringify({"fleet": fleet, "formation": formation,
+		"pairs": overlaps, "equal_hull_witness": equal_hull_witness,
+		"required_radius": required_radius, "approved_radius": radius}))
+
 
 
 func _points(renderer: FleetRenderer, formation_id: String, types: Array, formation_ids: Array) -> Array:
