@@ -339,3 +339,19 @@ C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe --headless --path . --scrip
 | `wrong-witness.json` | `fc048c8b9800e02e694d792b4d990288ea2c3e845450b77fd3442b169e3f9338` |
 
 [격리 시험 근거](F:/WorkSpace/Campaign-Orchestration/P05-v2-staged-loader-20261114)
+
+## 예산 분할 복원과 검증 후 공개
+
+실제 `Checkpoint.RestoreJob`을 사용하는 격리 개발 시험에서 39척 진형 전환의 2틱 체크포인트를 복원했다. 작업은 1µs 예산을 요청한 세 번의 호출로 진행됐다. 첫 호출 후 후보는 준비 상태였고, 중간 취소 및 재구성 증거값 불일치 시 후보를 닫았다. 기존 활성 소유자의 체크포인트는 일치했다. 유효한 후보는 실제 소유자의 복원 완료 검사 뒤 `publish()`를 호출해 2틱 재개 프레임과 원본 네이티브 상태 증거값을 확인했다. PID 20980, 6/6, 종료 코드 0이었다. 시험 코드가 RestoreJob 생성자를 직접 호출해 공개 입력 정규화 경로를 거치지 않았다. 후보 소유자의 공개까지 확인했으며, 호스트의 활성 참조 교체는 시험 범위 밖이다.
+
+실행 프로젝트는 `F:/WorkSpace/.codex/worktree/p05-formation-20261113`의 `e52f64668d043ab99ee13588cb6bb8f73e78be2a`였다. `core/battle`, 작전 어댑터·소스 참조·리플레이 코덱, 동결 시나리오와 `project.godot`은 기준 main `5ecadbd33f55be36a62105b172a5bb664791bbbb`와 일치했다. `APPDATA`와 `LOCALAPPDATA`는 근거 폴더의 `profile`, `P05_V2_PAIRED`는 `F:/WorkSpace/Campaign-Orchestration/P05-v2-native-loader-20261113/paired-02`로 지정했다.
+
+```text
+C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe --headless --path . --script res://tests/p05_development_restore_job_probe.gd
+```
+
+| 근거 | SHA-256 |
+| --- | --- |
+| Godot 콘솔 실행기 | `c8f0a6bc45a19b33541501e57f6f7cd972ab18453743266339d495cbbe846643` |
+| [시험 스크립트](F:/WorkSpace/.codex/worktree/p05-formation-20261113/tests/p05_development_restore_job_probe.gd) | `024e1d5e8e36ca6761d84edc946b93e475679e499d9281bc13a7cedc1d541025` |
+| [실행 로그](F:/WorkSpace/Campaign-Orchestration/P05-v2-restore-job-20261114/probe-final.out) | `29c3a269f12a2546f65606321fe651429b263bcc0cbddd6ee6e93cc492d0af32` |
