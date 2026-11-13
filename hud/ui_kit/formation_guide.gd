@@ -20,6 +20,7 @@ var clear_button: Button
 var chart_ids: Array = []
 var chart_points: Array = []
 var textures: Array[Texture2D] = []
+var ship_icons: Array[TextureRect] = []
 var back_screen := "title"
 var back_state := "brief"
 var body: BoxContainer
@@ -100,10 +101,7 @@ func _init(d: Control, shu_squadrons: Variant = null) -> void:
 	body.add_child(key_grid)
 	for i in 8:
 		var ship_type := "SHP-%02d" % (i + 1)
-		var model: int = deck.renderer._model_class(ship_type)
-		var path := "res://assets/ships/silhouette/%d.png" % model
-		if _reference_mode:
-			path = ScenarioRoster.report_hull_path("shu", ship_type)
+		var path := ScenarioRoster.report_hull_path("shu", ship_type)
 		var texture: Texture2D = load(path)
 		textures.append(texture)
 		var button := Button.new()
@@ -129,6 +127,7 @@ func _init(d: Control, shu_squadrons: Variant = null) -> void:
 		row.add_child(chip)
 		var icon := TextureRect.new()
 		icon.texture = texture
+		ship_icons.append(icon)
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.custom_minimum_size = Vector2(64, 32)
@@ -140,7 +139,7 @@ func _init(d: Control, shu_squadrons: Variant = null) -> void:
 		row.add_child(label)
 	var help := "함종을 클릭하면 위치 강조 · 다시 클릭하거나 전체 표시로 해제 · 위쪽이 전방 ↑"
 	if not _reference_mode:
-		help += " · 열람 중 전투 정지 · 고속정은 요격함 이미지 사용"
+		help += " · 열람 중 전투 정지"
 	var note := UiTheme.label(help, "Muted", 12)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	column.add_child(note)
@@ -207,6 +206,15 @@ func _sync() -> void:
 			counts[ship_type][0] += int(entry.count)
 	else:
 		counts = deck.src.squadron(id).get("counts", {})
+	var faction: String = "shu" if _reference_mode else ("han" if id < 0 else deck.src.squadron(id).get("faction", "han"))
+	faction = ScenarioRoster.FACTION_KEY.get(faction, faction)
+	if faction not in ["wei", "shu", "wu"]:
+		faction = "han"
+	for i in 8:
+		var ship_type := "SHP-%02d" % (i + 1)
+		var path := "res://assets/ships/fleet-report-v25/han/imperial-falcon.png" if faction == "han" else ScenarioRoster.report_hull_path(faction, ship_type)
+		textures[i] = load(path)
+		ship_icons[i].texture = textures[i]
 	chart_ids = deck.renderer._real_ship_ids(counts)
 	var shape: int = BattleRules.FORM_SHAPE[formation_picker.selected]
 	chart_points = deck.renderer._role_points(deck.renderer.formation_points(shape, chart_ids.size()), chart_ids)

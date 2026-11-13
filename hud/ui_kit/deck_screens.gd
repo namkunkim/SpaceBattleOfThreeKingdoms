@@ -17,7 +17,6 @@ static func world_return_notice() -> Label:
 
 static func build_all(deck: Control) -> Dictionary:
 	var out := {
-		"title": TitleScreen.new(deck),
 		"prologue": PrologueScreen.new(deck),
 		"brief": BriefScreen.new(deck),
 		"pause": PauseScreen.new(deck, world_return_notice()),
@@ -34,87 +33,6 @@ static func build_all(deck: Control) -> Dictionary:
 		out[k].visible = false
 	return out
 
-# ------------------------------------------------------------ 타이틀
-class TitleScreen extends Control:
-	var deck: Control
-	var t := 0.0
-	func _init(d: Control) -> void:
-		deck = d
-		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		mouse_filter = Control.MOUSE_FILTER_STOP
-		var col := VBoxContainer.new()
-		col.position = Vector2(118, 452)
-		col.add_theme_constant_override("separation", 4)
-		add_child(col)
-		var go := ScreenKit.menu_button("출격 준비", true)
-		go.custom_minimum_size = Vector2(280, 54)
-		go.pressed.connect(func(): deck.open_prologue_or_brief())
-		col.add_child(go)
-		var campaign := ScreenKit.menu_button("천하 지도")
-		campaign.custom_minimum_size = Vector2(280, 52)
-		col.add_child(campaign)
-		var spacer := Control.new()
-		spacer.custom_minimum_size = Vector2(0, 10)
-		col.add_child(spacer)
-		for spec in [["서막", func(): deck.open_prologue()], ["진형 배치도", func(): deck.screens["formation_guide"].open_guide()], ["함대 도감", func(): deck.screens["fleet_catalog"].open_catalog()], ["설정", func(): deck.show_screen("settings")], ["종료", func(): deck.get_tree().quit()]]:
-			var b := ScreenKit.menu_button(spec[0])
-			b.custom_minimum_size = Vector2(280, 52)
-			b.pressed.connect(spec[1])
-			col.add_child(b)
-		var notice := UiTheme.label("천하 지도를 열지 못했습니다. 다시 눌러 주세요.", "Body", 16, UiTheme.WARN)
-		notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		notice.position = col.position + Vector2(296, 58)
-		notice.size = Vector2(344, 40)
-		notice.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		notice.hide()
-		add_child(notice)
-		campaign.pressed.connect(func():
-			notice.visible = get_tree().change_scene_to_file(WorldLink.WORLD_SCENE) != OK)
-		var card := W.DrawPanel.new(_draw_card, UiTheme.ornate())
-		add_child(card)
-		card.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-		card.offset_left = -500
-		card.offset_top = -268
-		card.offset_right = -56
-		card.offset_bottom = -56
-	func _process(delta: float) -> void:
-		delta = UiDraw.real_dt(delta)
-		t += delta
-		queue_redraw()
-	func _draw() -> void:
-		var vs := size
-		# 왼쪽을 어둡게 눌러 글자를 읽히게 하고 오른쪽 전장은 살린다
-		draw_polygon(PackedVector2Array([Vector2(0, 0), Vector2(vs.x * 0.62, 0), Vector2(vs.x * 0.62, vs.y), Vector2(0, vs.y)]), PackedColorArray([Color(0.01, 0.015, 0.03, 0.92), Color(0.01, 0.015, 0.03, 0.0), Color(0.01, 0.015, 0.03, 0.0), Color(0.01, 0.015, 0.03, 0.92)]))
-		draw_rect(Rect2(0, vs.y - 120, vs.x, 120), Color(0.0, 0.0, 0.0, 0.35))
-		var x := 118.0
-		UiDraw.text(self, Vector2(x, 196), "星 漢 志", "serif_wide", 18, UiTheme.GOLD)
-		UiDraw.text(self, Vector2(x - 4, 300), "성한지", "serif_bold", 96, UiTheme.INK, HORIZONTAL_ALIGNMENT_LEFT, -1, 0)
-		UiDraw.text(self, Vector2(x, 348), "적벽 전투", "serif", 26, UiTheme.GOLD_HI)
-		ScreenKit.rule(self, Vector2(x, 374), Vector2(x + 380, 374))
-		UiDraw.text(self, Vector2(x, 404), "건안 13년 겨울, 구지의 궤도에서 손권과 유비가 조조를 맞는다.", "regular", 15, UiTheme.INK_2, HORIZONTAL_ALIGNMENT_LEFT, -1, 3)
-		UiDraw.text(self, Vector2(x, 428), "기함을 지키며 조조군을 적벽에서 몰아내라.", "regular", 15, UiTheme.INK_2, HORIZONTAL_ALIGNMENT_LEFT, -1, 3)
-		UiDraw.text(self, Vector2(x, vs.y - 30), "개발 빌드 · 전투 규칙 POC · 표현 계층 ui-fleet-visuals", "regular", 11, UiTheme.INK_4)
-		var a := 0.5 + 0.5 * sin(t * 1.4)
-		UiDraw.text(self, Vector2(vs.x - 56, vs.y - 290), "적 함대 접근 중", "medium", 12, Color(UiTheme.FOE_HI, 0.5 + a * 0.5), HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
-	func _draw_card(c: Control) -> void:
-		UiDraw.text(c, Vector2(24, 34), "시 나 리 오", "eyebrow", 11, UiTheme.GOLD)
-		UiDraw.text(c, Vector2(24, 70), "적벽 전투", "serif_bold", 24, UiTheme.INK)
-		UiDraw.seal(c, Rect2(c.size.x - 108, 24, 38, 38), 0)
-		UiDraw.text(c, Vector2(c.size.x - 61, 49), "對", "serif", 13, UiTheme.INK_3, HORIZONTAL_ALIGNMENT_CENTER, 0.0)
-		UiDraw.seal(c, Rect2(c.size.x - 52, 24, 38, 38), 1)
-		var rows := [["편성", "손유 연합  대  조조군 (난이도별 함대 수)"], ["승리", "조조군 전멸 (증원 포함)"], ["패배", "기함 유비 격침"], ["지휘", "직접 지휘 · 실시간 · 일시정지 가능"]]
-		var y := 108.0
-		for r in rows:
-			UiDraw.text(c, Vector2(24, y), r[0], "semibold", 12, UiTheme.GOLD)
-			UiDraw.text(c, Vector2(70, y), r[1], "regular", 13, UiTheme.INK_2)
-			y += 26.0
-	func on_show() -> void:
-		pass
-
-# ------------------------------------------------------------ 서막
-# NARRATIVE-RED-CLIFFS §11: 실제 전장 위 어두운 막 + 가운데 명조 문장, 8장(PrologueText.PAGES).
-# 탭·클릭·Space = 다음 장, 건너뛰기(Esc) = 브리핑. 자동 넘김 없음. 마지막 장 다음은 브리핑.
-# 글자는 UI 크기 설정(content_scale_factor)을 따르고, 카메라 흐름은 동작 줄이기면 멈춘다(FleetBattle3D brief 상태).
 class PrologueScreen extends Control:
 	const TEXT_W := 960.0
 	var deck: Control

@@ -29,13 +29,8 @@ func _run() -> void:
 			await process_frame
 	var deck: Control = battle.presentation.hud
 	var guide: Control = deck.screens.formation_guide
-	var entry: Button = null
-	for b in deck.screens.title.find_children("*", "Button", true, false):
-		if b.text == "진형 배치도":
-			entry = b
-	if not TestCheck.ok(self, entry != null, "타이틀에 진형 배치도 버튼"): return
 	var state: String = battle.G.state
-	entry.pressed.emit()
+	guide.open_guide()
 	for i in 3:
 		await process_frame
 	if not TestCheck.ok(self, guide.visible and deck.screen == "formation_guide" and battle.G.state == "formation_guide", "배치도 열기"): return
@@ -64,7 +59,7 @@ func _run() -> void:
 	await process_frame
 	if not TestCheck.ok(self, guide.selected_type == -1, "전체 표시로 강조 해제"): return
 	guide.close_guide()
-	if not TestCheck.ok(self, deck.screen == "title" and battle.G.state == state, "타이틀 상태 복원"): return
+	if not TestCheck.ok(self, deck.screen == "brief" and battle.G.state == state, "브리핑 상태 복원"): return
 	var ally = battle.vm.alive(0)[0]
 	battle.selected.assign([ally])
 	battle.G.state = "play"

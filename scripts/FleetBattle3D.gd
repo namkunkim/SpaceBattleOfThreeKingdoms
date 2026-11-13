@@ -146,6 +146,9 @@ func _exit_tree() -> void:
 
 func _ready() -> void:
 	var link := get_node_or_null("/root/WorldLink")
+	if get_tree().current_scene == self and (link == null or not link.routed()) and not _o07_product_requested() and not OS.get_cmdline_user_args().has(BattleBrief.FIRST_OPERATION_DEV_ARG):
+		get_tree().call_deferred("change_scene_to_file", "res://scenes/entry/EntryBoot.tscn")
+		return
 	if link != null and link.routed() and not link.brief.operation_request().is_empty():
 		set_process(false)
 		var host := preload("res://scripts/first_operation_host.gd").new()

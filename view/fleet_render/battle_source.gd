@@ -245,8 +245,8 @@ func faction(id: int) -> String:
 		return faction_override[id]
 	var f = battle.by_id(id)
 	if f == null:
-		return "shu"
-	return f.faction if f.faction != "" else ("wei" if f.side == 1 else "shu")
+		return "han"
+	return f.faction if f.faction != "" else "han"
 
 # 지휘 상태(Q20, 리뷰 V-1): "direct"(직접 지휘 ●) | "delegated"(위임 ○) | ""(모름).
 # 세력과 무관하다(유비 전대도 위임할 수 있고 손권 전대에도 직접 명령할 수 있다). 세력은 글리프가 맡는다.

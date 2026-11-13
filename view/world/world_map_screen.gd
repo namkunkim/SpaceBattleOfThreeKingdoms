@@ -517,7 +517,7 @@ func _open_atlas_red_cliffs() -> void:
 func _return_to_title() -> void:
 	if not _title_button.visible or not _sortie_available():
 		return
-	if get_tree().change_scene_to_file(WorldLink.BATTLE_SCENE) != OK:
+	if get_tree().change_scene_to_file("res://scenes/entry/EntryBoot.tscn") != OK:
 		_show_chip("타이틀로 돌아가지 못했습니다. 다시 눌러 주세요.")
 
 func _build_chip() -> void:

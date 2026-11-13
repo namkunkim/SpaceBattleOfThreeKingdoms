@@ -8,7 +8,7 @@ uniform vec3 hull_color : source_color = vec3(0.09, 0.12, 0.17);
 uniform vec3 rim_color : source_color = vec3(0.62, 0.9, 1.0);
 uniform float fat = 1.0;   // 폭 배율 미세 조정(0.5~1.0)
 uniform int kind = 0;
-uniform sampler2D ship_tex : source_color, filter_linear;   // 컨셉 PNG에서 구운 실루엣(RGBA, 알파 = 모양). tools/ships/bake_silhouettes.gd
+uniform sampler2D ship_tex : source_color, filter_linear;   // 보고서 v2.5 함선 이미지 (RGBA, 알파 = 선체)
 uniform bool use_tex = false;                                 // false면 아래 kind별 수식 실루엣(대체)
 uniform float detail : hint_range(0.0, 1.0) = 0.0;   // 확대할수록 1: 판 이음선, 안쪽 윤곽, 함교 창, 엔진 노즐, 포탑 고리가 나타난다
 

@@ -317,7 +317,8 @@ func _run() -> void:
 	var bad_org: Dictionary = chosen.duplicate(true)
 	bad_org.fleets[other].admiral = ""
 	bad_org.fleets[other].composition = []
-	deck.to_title()
+	battle.init_game()
+	deck.show_screen("brief")
 	battle.difficulty = "극한"
 	battle.org = bad_org.duplicate(true)
 	battle.init_game()
@@ -342,7 +343,8 @@ func _run() -> void:
 	await _frames()
 	if not TestCheck.ok(self, deck.screen == "" and battle.G.state == "play" and battle.load_error == "", "back -> start uses repaired org"): return
 	# deck 시작 경로도 막는다(다시 거부 상태로)
-	deck.to_title()
+	battle.init_game()
+	deck.show_screen("brief")
 	battle.org = bad_org.duplicate(true)
 	battle.init_game()
 	deck.begin_battle()
@@ -353,7 +355,8 @@ func _run() -> void:
 	if not TestCheck.ok(self, deck.screen == "" and battle.G.state == "play" and battle.org_errors.is_empty(), "re-confirmed org -> battle"): return
 	battle.difficulty = "표준"
 	# 건너뛰기 경로 = 세 세력 자동 편성 = 화면 첫 상태(같은 시드로 지문 비교)
-	deck.to_title()
+	battle.init_game()
+	deck.show_screen("brief")
 	deck.show_screen("brief")
 	await _frames()
 	seed(7)

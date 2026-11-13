@@ -180,7 +180,7 @@ func setup(b: Node, s: BattleSource, r: FleetRenderer) -> void:
 		else:
 			show_screen("brief")
 	else:
-		show_screen("title")
+		show_screen("brief")
 
 func _build_place_bar() -> void:
 	place_bar = PanelContainer.new()
@@ -230,6 +230,9 @@ func _layout_floaters() -> void:
 
 # ------------------------------------------------------------ 화면 흐름
 func show_screen(name: String) -> void:
+	if name == "title":
+		get_tree().call_deferred("change_scene_to_file", "res://scenes/entry/EntryBoot.tscn")
+		return
 	screen = name
 	for k in screens:
 		var sc: Control = screens[k]

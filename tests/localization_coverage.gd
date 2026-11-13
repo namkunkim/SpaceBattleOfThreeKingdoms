@@ -88,8 +88,6 @@ func _run() -> void:
 			"연합 · 강하에서", "조조군 · 장강 대항로 · 규모 추정",
 		]:
 			verify(composed, "composed caption")
-		deck.show_screen("title")
-		await frame(deck, "title", true)
 		deck.open_prologue()
 		for page in PrologueText.PAGES.size():
 			deck.screens.prologue.open_at(page)

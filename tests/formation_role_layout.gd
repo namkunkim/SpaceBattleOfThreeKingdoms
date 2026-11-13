@@ -62,7 +62,8 @@ func _initialize() -> void:
 	if not args.is_empty():
 		var textures := []
 		for k in 7:
-			var img := Image.load_from_file("res://assets/ships/silhouette/%d.png" % k)
+			var roles := ["line", "artillery", "siege", "supply", "electronic-warfare", "interceptor", "carrier"]
+			var img := Image.load_from_file("res://assets/ships/fleet-report-v25/shu/%s.png" % roles[k])
 			img.resize(256, 64, Image.INTERPOLATE_LANCZOS)
 			textures.append("data:image/png;base64," + Marshalls.raw_to_base64(img.save_png_to_buffer()))
 		var out := FileAccess.open(args[0], FileAccess.WRITE)

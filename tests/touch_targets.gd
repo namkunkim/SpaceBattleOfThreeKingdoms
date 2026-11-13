@@ -44,7 +44,6 @@ func _run() -> void:
 	root.add_child(battle)
 	await _frames()
 	var deck = battle.presentation.hud
-	_collect(deck.screens["title"], "타이틀")
 	deck.show_screen("brief")
 	await _frames()
 	_collect(deck.screens["brief"], "브리핑")

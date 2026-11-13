@@ -5,8 +5,8 @@ extends RefCounted
 # 노드는 host(전투 노드)의 자식으로 붙인다(상품화 표현 계층이 host의 WorldEnvironment를 찾아 쓴다).
 # 상품화 표현 계층(view/fleet_render)이 있으면 이 함대 노드는 숨겨지고 렌더러가 대신 그린다.
 
-const MODEL_ROOT := "res://assets/models/user_ver3_runtime/"
-const MODEL_NAMES := ["전열함", "화력함", "공성함", "보급_수리함", "전자전함", "호위함", "항모"]
+const SHIP_ROOT := "res://assets/ships/fleet-report-v25/"
+const SHIP_ROLES := ["line", "artillery", "siege", "supply", "electronic-warfare", "interceptor", "carrier"]
 const MODEL_SCALES := [1.10, 1.60, 1.55, 1.45, 1.50, 0.90, 1.55]
 const SHIP_VISUAL_SCALE := 0.55
 # 28척 편제: 전열함 11 · 화력함 6 · 강습항모 4 · 전자전함 3 · 공성함 1 · 보급함 3
@@ -16,21 +16,30 @@ const FORM_VIS := 1.0
 
 var host: Node3D
 var rig: CameraRig
-var model_scenes: Array[PackedScene] = []
+var ship_textures := {}
 var _glow_cache := {}
 
 func setup(h: Node3D, camera_rig: CameraRig) -> void:
 	host = h
 	rig = camera_rig
-	_load_models()
+	_load_ship_textures()
 	_build_environment()
 	build_backdrop()
 
-func _load_models() -> void:
-	for model_name in MODEL_NAMES:
-		var packed := load(MODEL_ROOT + model_name + ".glb") as PackedScene
-		assert(packed != null, "3D 함선 모델 로드 실패: %s" % model_name)
-		model_scenes.append(packed)
+func _load_ship_textures() -> void:
+	for faction in ["shu", "wei", "wu"]:
+		var textures: Array[Texture2D] = []
+		for role in SHIP_ROLES:
+			var texture := load(SHIP_ROOT + faction + "/" + role + ".png") as Texture2D
+			assert(texture != null, "함선 이미지 로드 실패: %s/%s" % [faction, role])
+			textures.append(texture)
+		ship_textures[faction] = textures
+	var imperial := load(SHIP_ROOT + "han/imperial-falcon.png") as Texture2D
+	assert(imperial != null, "후한 황실 함선 이미지 로드 실패")
+	var imperial_textures: Array[Texture2D] = []
+	for role in SHIP_ROLES:
+		imperial_textures.append(imperial)
+	ship_textures["han"] = imperial_textures
 
 func _build_environment() -> void:
 	var world := WorldEnvironment.new()
@@ -143,11 +152,16 @@ func build_fleet(f: BattleViewModel.FleetView) -> void:
 		wrapper.position = Vector3(fp.y, 0.0, -fp.x)
 		wrapper.scale = Vector3.ONE * SHIP_VISUAL_SCALE
 		f.root.add_child(wrapper)
-		var model := model_scenes[model_index].instantiate() as Node3D
+		var faction: String = ScenarioRoster.FACTION_KEY.get(f.faction, f.faction)
+		if not ship_textures.has(faction):
+			faction = "han"
+		var model := Sprite3D.new()
+		model.texture = ship_textures[faction][model_index]
+		model.pixel_size = 2.3 / float(model.texture.get_width())
+		model.shaded = false
+		model.rotation.x = -PI * 0.5
 		var hs := 1.0 if index == 0 else (0.92 if model_index < 5 else 1.0)
-		# 위에서 내려다보는 전술 시점에서도 선체가 읽히도록 폭·높이를 키운다.
-		model.scale = Vector3(1.0, 1.8, 2.4) * MODEL_SCALES[model_index] * hs
-		model.rotation.y = -PI * 0.5
+		model.scale = Vector3.ONE * MODEL_SCALES[model_index] * hs
 		wrapper.add_child(model)
 		_add_engine_glow(wrapper, model_index, f.side, hs)
 		if index == 0 and f.is_flag:

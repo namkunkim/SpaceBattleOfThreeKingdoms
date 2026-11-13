@@ -158,10 +158,10 @@ func _load_assets() -> void:
 			m.set_shader_parameter("rim_color", [C_ALLY_OUTLINE, C_FOE_OUTLINE, C_WU_OUTLINE][side])
 			m.set_shader_parameter("fat", CLASS_FAT[c])
 			m.set_shader_parameter("kind", c)
-			var tex_path := "res://assets/ships/silhouette/%d.png" % c
-			if ResourceLoader.exists(tex_path):
-				m.set_shader_parameter("ship_tex", load(tex_path))
-				m.set_shader_parameter("use_tex", true)
+			# Unknown factions use the Han imperial escort.
+			var texture := load(HULL_ROOT + "han/imperial-falcon.png") as Texture2D
+			m.set_shader_parameter("ship_tex", texture)
+			m.set_shader_parameter("use_tex", true)
 			fallback.append(m)
 		mats[side][""] = fallback
 		for faction in HULL_FACTIONS:

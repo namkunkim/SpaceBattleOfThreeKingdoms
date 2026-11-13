@@ -65,12 +65,12 @@ func _run() -> void:
 	root.add_child(battle)
 	await _frames()
 	var deck = battle.presentation.hud
-	if not TestCheck.ok(self, deck.screen == "title" and battle.G.state == "brief", "starts at title"): return
+	if not TestCheck.ok(self, deck.screen == "brief" and battle.G.state == "brief", "starts at briefing"): return
 	# 서막(NARRATIVE-RED-CLIFFS §11): 첫 회만 출격 준비 → 서막 → 브리핑. 실제 설정 파일은 끝나고 되돌린다.
 	var saved_cfg := FileAccess.get_file_as_bytes(GameSettings.PATH) if FileAccess.file_exists(GameSettings.PATH) else PackedByteArray()
 	GameSettings.load_cfg()
 	GameSettings.prologue_seen = false
-	_click(_find_button(deck, "출격 준비"))
+	deck.open_prologue_or_brief()
 	await _frames()
 	var pro = deck.screens["prologue"]
 	if not TestCheck.ok(self, deck.screen == "prologue" and pro.page == 0, "first run: title -> prologue (%s)" % deck.screen): return
@@ -89,15 +89,11 @@ func _run() -> void:
 	if not TestCheck.ok(self, deck.screen == "brief" and GameSettings.prologue_seen, "last page -> brief, seen saved"): return
 	var cf := ConfigFile.new()
 	if not TestCheck.ok(self, cf.load(GameSettings.PATH) == OK and bool(cf.get_value("progress", "prologue_seen", false)), "prologue_seen in settings.cfg"): return
-	_click(_find_button(deck, "뒤로"))
-	await _frames()
-	_click(_find_button(deck, "출격 준비"))
+	deck.open_prologue_or_brief()
 	await _frames()
 	if not TestCheck.ok(self, deck.screen == "brief", "second run: title -> brief (%s)" % deck.screen): return
 	# 다시 보기 + 건너뛰기(버튼·Esc)
-	_click(_find_button(deck, "뒤로"))
-	await _frames()
-	_click(_find_button(deck, "서막"))
+	deck.open_prologue()
 	await _frames()
 	if not TestCheck.ok(self, deck.screen == "prologue" and pro.page == 0, "title replay button -> prologue"): return
 	_click(_find_button(deck, "건너뛰기  Esc"), true)
@@ -145,6 +141,6 @@ func _run() -> void:
 	if not TestCheck.ok(self, deck.screen == "result" and not deck.overlay.visible, "result screen"): return
 	_click(_find_button(deck, "타이틀로"))
 	await _frames()
-	if not TestCheck.ok(self, deck.screen == "title" and battle.G.state == "brief", "back to title"): return
+	if not TestCheck.ok(self, current_scene != null and current_scene.scene_file_path == "res://scenes/entry/EntryBoot.tscn", "back to EntryBoot"): return
 	print("UI_FLOW_PASS")
 	quit(0)
