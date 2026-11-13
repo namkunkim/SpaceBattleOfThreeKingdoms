@@ -55,3 +55,14 @@ K6 비교 전후 프로젝트를 격리된 Windows 작업본에 생성했다. �
 | [원시 판정](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/K6/main-4dac0b8d-row17-after-retry-20261113/formal-run-17-after-retry/17-after/raw-verification.json) | `d739446b574ad1dbd87940b97a3b392ff1484625cd0cc83a932e250f85774d00` |
 | [의미 판정](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/K6/main-4dac0b8d-row17-after-retry-20261113/formal-run-17-after-retry/17-after/semantic-verification.json) | `d1572487c85c6f4a4fe8bb990ec486cc7627bfd140d114238f17a02a564c47c0` |
 | [원시 출력](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/K6/main-4dac0b8d-row17-after-retry-20261113/formal-run-17-after-retry/17-after/stdout.raw) | `643afbdead099c1520ec978855baa5b7986db8e44b38e77b22ab640686507cdf` |
+
+### K6 17·18행 교차 경로 집계
+
+Windows 1600×900, 후보 `4dac0b8d`에서 17-before와 17-after는 각 재시도 매니페스트, 18-before와 18-after는 원래 매니페스트의 완료 케이스를 사용했다. 두 원래 17행 실패는 근거와 nonce를 보존하고 집계에서 제외했다. 17행은 각 입력 10건과 결산 핵심값, 18행은 각 입력 14건과 중단 두 번·결산 없음의 전후 판정이 일치했다. 앞선 15·16행 전후 네 케이스의 기준은 별도 후보 `b9c322a0`이다.
+
+검토된 세 매니페스트 집계기로 레인·도구 해시, 증거 파일, 승인 및 nonce 원장을 대조하고 네 원시·의미 판정을 재생성했다. 한글 의미 판정을 읽기 위해 `PYTHONUTF8=1`로 실행했다. 결과는 종료 코드 0, `17:true`, `18:true`다. 독립 최종 검토에서 동일 인덱스와 집계 출력 해시, 두 원래 실패의 제외 및 재실행 종료 코드 0을 확인해 이 동결 범위의 17·18행을 PASS로 판정했다. 보존 출력의 머신 필드(aggregate_credit=false, independent_postrun_review=pending)는 생성 시점 그대로 보존했다.
+
+| 집계 근거 | SHA-256 |
+| --- | --- |
+| [고정 인덱스](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/K6/main-4dac0b8d-row17-18-three-root-evidence-20261113/INDEX.json) | `8a0ae23585878f09e95e33b6b832dfd1b24c0b8b9caaa4a6e2ddc69181d775cc` |
+| [UTF-8 집계 출력](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/K6/main-4dac0b8d-row17-18-three-root-evidence-20261113/aggregate-utf8.json) | `f36709cb6f7c25ce0d2f0cf07e2a896f79f74fcac9ae6ca1cfa1e30555dd04b5` |
