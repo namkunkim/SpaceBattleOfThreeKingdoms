@@ -40,7 +40,7 @@ func _run() -> void:
 			if not TestCheck.ok(self, f.move_to == expected[f.id], "진형 카드가 그룹 슬롯 지정"): return
 			if not TestCheck.ok(self, f.form_to == fid or f.formation_id == fid, "선택 함대 진형 전환"): return
 		if not TestCheck.ok(self, outsider.move_to == old_move and outsider.formation_id == old_form, "비선택 함대 유지"): return
+	var audio_released: bool = await preload("res://tests/lib/headless_audio_shutdown.gd").release(self, battle)
+	if not TestCheck.ok(self, audio_released, "headless battle audio cleanup"): return
 	print("GROUP_FORMATION_PASS")
-	battle.queue_free()
-	await process_frame
 	quit(0)
