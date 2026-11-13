@@ -44,3 +44,23 @@ Windows Godot 4.7.2 헤드리스, 제품 소스 기준 bd5afc4a.
 | 실행 로그 | `0f48f508754d52980d5566d4f4532ebee9d772fe79ef9e0dc5f7b1ae8c72a0f9` |
 
 [시험 스크립트·격리 입력·로그](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/A05-A06-FXG-J210-reject-retry-9be4eaab-01)
+
+### 제한 FX-G J210 이전 슬롯 복원
+
+Windows Godot 4.7.2 헤드리스에서 J210 주 슬롯 상태에 따른 제한 호스트 복원을 검증했다. 실행 작업본은 `bf4c134d`이며 `69099a33`까지의 차이는 문서 다섯 개다. 별도 격리 프로필 두 개에 동일한 정상 `.previous`를 복사했다.
+
+- 주 슬롯 부재 7/7. 이전 슬롯으로 100ms 상태를 복원하고 150ms 섬멸 종결 및 종료 이벤트 한 건을 확인했다. 새 주 슬롯은 생성되지 않았고 이전 슬롯 바이트는 유지됐다.
+- 주 슬롯 체크섬 불일치 6/6. 정상 이전 슬롯이 있는 상태에서 `checksum_mismatch`를 반환했다. 활성 소유자 상태와 투영·표시, 두 슬롯 바이트를 보존했다.
+
+두 프로세스 모두 종료 코드 0이었으며 독립 검토에서 확인했다. 검증 범위는 격리 제한 호스트의 슬롯 우선순위다. 운영 전환과 물리 전원 차단 복구는 남아 있다.
+
+| 근거 | SHA-256 |
+| --- | --- |
+| 동결 J210 입력 | `da996e2de32de23e13e142e49d73b38b78784b1cdcbbf424ef780c9b87c5725a` |
+| 정상 이전 슬롯 | `12df7a29bf6676dc6a7a9eaf60ab0b03e1a6ee25538e05b31c2fd8220ae43188` |
+| 체크섬 변조 주 슬롯 | `b5720457dc18ae52cfceea03bd8fc990bd58e852e44e854cd3247dababcd64a2` |
+| 시험 스크립트 | `54bb413efa9e231b71995803da738fb75e13d008ead5a4a2188301661699c895` |
+| 주 슬롯 부재 로그 | `7ad48dd59fe78bbf8ef5918179f328cc5508a10e787f0d15a4a677c8818081af` |
+| 체크섬 불일치 로그 | `d0685b538e236aa3b8ce4940452233e3b2185ff58989222719baebbf860f0943` |
+
+[격리 프로필·시험 스크립트·로그](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/A05-A06-FXG-J210-previous-69099a33-01)

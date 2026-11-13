@@ -220,3 +220,16 @@ C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe --headless --path . --scrip
 | --- | --- |
 | [시험 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-mixed-command-order-20261113/mixed.gd) | `94d1230c8530d71c6f32b7747c503a2f7e2a69539dab80f98b868e616459791f` |
 | [시험 로그](F:/WorkSpace/Campaign-Orchestration/P05-mixed-command-order-20261113/mixed.out) | `d0441c1a994260f5349f5922b5be295ea7991bf99a220c6316c2989caa5488f1` |
+
+## 정책 확정 전 진형 명령의 네이티브 로그 롤백
+
+격리 Godot 헤드리스에서 유효한 정지 명령 한 건이 있는 적벽 v1 코어를 사용했다. 네이티브 체크포인트를 만든 뒤 시험 코드가 39척 진형 명령을 직접 발행하고 한 틱 진행했다. 정책 실패 대신 네이티브 롤백 API를 직접 호출해 중단을 모사했다. 상태를 되돌린 뒤 재생 비교 데이터에서 달라진 필드는 `command_log`뿐이었다. 확정되지 않은 진형 명령 한 건이 남았다.
+
+시험 코드에서 추가 기록만 체크포인트 전 길이로 잘라내자 기존 정지 기록을 보존하면서 전체 네이티브 다이제스트가 복원됐다. 같은 진형 명령을 재시도한 뒤 50틱의 다이제스트가 중단 없는 대조군과 매 틱 일치했고, 틱 51에서 `FRM-01` 완료가 한 번 발생했다. 설정 확인을 포함해 9/9, 종료 코드 0이었으며 독립 검토에서 확인했다.
+
+공개 v1 작전 경로는 진형 명령을 거부한다. 이 결과는 향후 v2에서 확정 전 네이티브 명령을 발행할 경우의 네이티브 로그 경계에 한정된다. 작전 정책·원장·공개 저장을 포함하는 전체 트랜잭션 롤백은 추가 검증 범위다. 제품 코드는 변경하지 않았다.
+
+| 격리 근거 | SHA-256 |
+| --- | --- |
+| [시험 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-native-command-rollback-20261113/rollback.gd) | `8787a37677ef9662efcd50dba68021edda4ecd1b425140a1efc56c5f19a94c67` |
+| [시험 로그](F:/WorkSpace/Campaign-Orchestration/P05-native-command-rollback-20261113/rollback.out) | `7d2f36b9d266ec31cf9cddcd9946e46d329ec4e2896c9e6af9a5b1dbfe7b7ba4` |
