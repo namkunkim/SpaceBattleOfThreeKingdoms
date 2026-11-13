@@ -1,6 +1,7 @@
 extends SceneTree
 
 const Adapter := preload("res://scripts/first_operation_adapter.gd")
+const Codec := preload("res://scripts/first_operation_replay_codec.gd")
 const Product := preload("res://scripts/first_operation_source_reference.gd")
 const NativeTick := preload("res://core/battle/first_operation_native_tick.gd")
 
@@ -18,6 +19,7 @@ func _run() -> void:
 	if _check(not profile.is_empty() and OS.get_user_data_dir().replace("\\", "/").to_lower() == expected,
 			"isolated profile"):
 		_verify()
+		_verify_persistence()
 	print("P05_FORMATION_CLOCK checks=%d failures=%d" % [checks, failures])
 	quit(0 if failures == 0 else 1)
 
@@ -56,6 +58,75 @@ func _verify_owner(owner: RefCounted) -> void:
 		"rejected commands preserve checkpoint and public projection")
 	_verify_round(sim, fleets)
 	_verify_round(sim, fleets)
+
+
+func _verify_persistence() -> void:
+	var prepared := Adapter.prepare_fresh(Product.REQUEST)
+	if not _check(prepared.ok, "prepare persistence control operation"):
+		return
+	var owner: RefCounted = prepared.owner
+	if _check(owner.publish().ok, "publish persistence control operation"):
+		_check_persistence(owner, prepared.operation_id)
+	owner.close()
+
+
+func _check_persistence(owner: RefCounted, operation_id: String) -> void:
+	var withdraw := Adapter.queue(owner, {"kind": "withdraw", "side": 0})
+	if not _check(withdraw.ok and Adapter.advance(owner).ok, "commit supported Withdraw"):
+		return
+	var finalize := Adapter.queue(owner, {"kind": "finalize_withdrawal", "side": 0})
+	var saved: Dictionary = owner.capture_checkpoint()
+	if not _check(finalize.ok and saved.ok, "capture one applied and one pending command"):
+		return
+	var packet: Dictionary = saved.packet
+	var control := Adapter.begin_restore(packet)
+	if not _check(control.ok, "unmodified checkpoint passes restore preflight"):
+		return
+	control.job.cancel()
+	for pending in [true, false]:
+		var changed := packet.duplicate(true)
+		var batch: Array = changed.pending if pending else changed.commands[0].batch
+		batch[0] = {"kind": "formation"}
+		var expected := "packet.pending[0]" if pending else "packet.commands[0].batch[0]"
+		var restore := Adapter.begin_restore(changed)
+		_check(restore == {"ok": false, "error": "invalid_checkpoint_command", "path": expected},
+			"formation is rejected at " + expected)
+		if restore.ok:
+			restore.job.cancel()
+	_check(owner.capture_checkpoint() == saved, "restore rejects preserve the original owner")
+	var terminal := Adapter.advance(owner)
+	if not _check(terminal.ok and terminal.summary.over, "commit supported Finalize withdrawal"):
+		return
+	var record := Adapter.make_recording(Product.REQUEST, operation_id,
+		[withdraw.record, finalize.record], terminal.summary.settlement)
+	if not _check(record.ok and Adapter.run_replay(record.bundle).ok, "unmodified recording replays"):
+		return
+	var changed_record: Dictionary = record.bundle.duplicate(true)
+	changed_record.commands[0].kind = "formation"
+	var result := Adapter.open_replay(changed_record)
+	var reject := {"ok": false, "error": "unsupported_operation_command", "path": "commands[0].kind"}
+	_check(result == reject, "formation is rejected before replay opens")
+	if result.ok:
+		result.replay.close()
+	var directory := ProjectSettings.globalize_path("user://p05-" + operation_id.get_file())
+	if not _check(DirAccess.make_dir_absolute(directory) == OK, "create isolated replay fixture directory"):
+		return
+	var original := directory.path_join("original.pcopreplay")
+	if not _check(Codec.write(record.bundle, original).ok and Codec.read(original).ok,
+			"unmodified replay file writes and reads"):
+		return
+	var digest := FileAccess.get_sha256(original)
+	var changed_path := directory.path_join("formation.pcopreplay")
+	_check(Codec.write(changed_record, changed_path) == reject and not FileAccess.file_exists(changed_path),
+		"formation recording cannot publish a replay file")
+	var body := JSON.stringify(changed_record, "", true, true)
+	var fixture := FileAccess.open(changed_path, FileAccess.WRITE)
+	if not _check(fixture != null, "open separate replay mutation fixture"):
+		return
+	fixture.store_string(Codec._envelope(body, Codec._rules_and_inputs_digest()))
+	fixture.close()
+	_check(Codec.read(changed_path) == reject and FileAccess.get_sha256(original) == digest,
+		"canonical replay with formation is rejected and original bytes remain intact")
 
 
 func _verify_round(sim: NativeTick, fleets: Array) -> void:
