@@ -23,6 +23,16 @@ python -B tests/first_operation_successor_persistence.py <isolated-settlement-le
 
 이 실험은 한 Windows 머신의 F: 고정 exFAT 볼륨, 로컬 SQLite, 독립 프로세스 및 연결을 사용했다. 강제 프로세스 종료를 검증했으며 실제 전원 차단, 서버 중단, 네트워크 연결 단절, 원격 파일 잠금, 운영 인증 및 다중 머신 활성 소유자 검증은 다음 단계에 속한다.
 
+## 활성 소유자 펜싱 준비 검증
+
+[펜싱 검증기](../../../tests/first_operation_successor_fencing.py)는 위와 같은 격리 정산 원장의 SHA-256과 정산 내용을 확인한 뒤 기존 승계 제안으로 시험 작전 ID를 산출한다. 임시 로컬 SQLite에서 별도 프로세스와 새 연결을 사용한다. 소유자 ID와 시간은 검증기가 주입한다. 임대 획득은 작전 ID별 세대를 늘린다. 효과를 기록하는 같은 트랜잭션에서 소유자, 세대, 만료를 확인하며, 기존 효과를 재조회할 때도 동일한 권한을 요구한다. 유효한 후임 소유자는 기존 효과 결과를 재조회할 수 있다.
+
+검증 항목은 동시 임대 요청의 단일 승자와 만료·세대 교체, 소유권 획득의 커밋 전후 종료, 효과 기록의 커밋 전후 종료와 중복·충돌, 미등록 작전 거부다. 효과 기록은 검증용 DB 행이다. 승인된 후속 C0, 운영 서비스 인증·시간·저장소, 실제 네트워크 장애, 독립 Windows 머신 두 대에서의 인수는 아래 선행 조건에 해당한다.
+
+```powershell
+python -B tests/first_operation_successor_fencing.py <isolated-settlement-ledger> <local-temporary-parent>
+```
+
 ## 독립 Windows 머신 인수의 선행 조건
 
 - 서로 다른 두 Windows 머신과 각각 격리된 프로필·고정 빌드·대상 매니페스트가 필요하다. 기존 체크리스트의 두 번째 호스트 무게시 복귀·원장/슬롯 보존 시험은 준비된 독립 호스트가 필요하며 기존 차단 시험을 재실행하지 않았다.
