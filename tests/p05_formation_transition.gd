@@ -90,7 +90,7 @@ func _fleet(renderer: FleetRenderer, squad: Dictionary, fleet: Dictionary, forma
 
 func _check_adjusted_route(rows: Array, fleet: String, radius: float, duration_ms: int) -> void:
 	var fixture: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
-		"res://tests/fixtures/p05/adjusted_formation_route.json"))
+		"res://data/scenarios/p05/adjusted_formation_route.json"))
 	var route: Dictionary = fixture[fleet]
 	var current := {}
 	var destination := {}
