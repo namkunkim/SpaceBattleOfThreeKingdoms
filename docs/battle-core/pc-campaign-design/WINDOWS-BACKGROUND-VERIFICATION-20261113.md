@@ -173,3 +173,10 @@ Windows 후보 `4dac0b8d`에서 공개 리플레이 선택기로 고정 파일�
 | [엔진 로그](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P08-windows-debug-bf4c134d-ordinary-terminal-01/engine.log) | `3854d6053abac47a532fee6b7c7e0d6ac3134e8687fb20399e140d3c773869d2` |
 | [클라이언트 실측](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P08-windows-debug-bf4c134d-ordinary-terminal-01/client-rect.json) | `0f9e9c9428fc142b440cd30aa2250e338e6552d4f1a641e46d063fbbd1074fc9` |
 | [종료 기록](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P08-windows-debug-bf4c134d-ordinary-terminal-01/game-exit.json) | `4d4084f6737b8d5bef01e9bb3dc981ad5f57466b1d9ab0587b989e7ea4f473b1` |
+
+#### P09 월드맵 복귀 효과음 대조
+
+Windows에서 1600×900을 요청한 `4dac0b8d` 월드맵의 타이틀 복귀 루프백에서 `button.wav` 파형을 확인했다. 600Hz 고역 통과 필터와 4kHz 모노 변환을 거친 60ms 원본을 3.1–4.1초 구간에 대조했다. 정규화 상관계수는 WAV 시작 기준 3.809초에서 0.95583이었다. 다른 보존 구간에서 같은 음원의 최고값은 0.21266이었으며, 배경음악 기준 구간은 0.19498, 조용한 설정 탭은 0이었다. 배경음악 기준 구간에 원본을 35% 진폭으로 삽입한 양성 대조군은 알려진 위치에서 0.99000이었다. 소스의 월드맵 `타이틀로` 버튼은 `button` 효과음을 호출한다. WAV 오프셋과 클릭 시각의 정밀 정렬, 물리 장치 청취와 내부 재생 객체의 해제는 미확인이다. 독립 검토에서 이 대조 결과를 확인했다. 설정 복귀·탭 캡처에서는 특정 효과음을 식별하지 못했다.
+
+- [효과음 대조 스크립트](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-4dac0b8d-offline-ui-oneshot-01/scan.py) SHA-256 `8f548d378de1602e29019407d07914b954238bc5607699f9eb0066be4f6f1716`
+- [입력 해시·대조 결과](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-4dac0b8d-offline-ui-oneshot-01/RESULT.json) SHA-256 `c3b31d1d533d8c797bee4a133c646b52ce9b5c34fc565c3dc7dad546fc0b6180`

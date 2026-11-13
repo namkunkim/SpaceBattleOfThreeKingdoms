@@ -164,3 +164,23 @@ r=0.05에서 두 편성 모두 60·120Hz에서 5초 이내였다. 39척·30Hz는
 | [gap_probe.gd](F:/WorkSpace/Campaign-Orchestration/P05-frontier-aligned-20261113/gap_probe.gd) | `e21a5035ac980097ba2a8c2c801695ebfd23a50473ae0d4589ea00183fbc16bd` |
 | [gap-0.out](F:/WorkSpace/Campaign-Orchestration/P05-frontier-aligned-20261113/gap-0.out) | `b95c00b8f537e030f706621f8c2f8e0e83a53580bab996ddcdb58ad5a293c8c3` |
 | [gap-1.out](F:/WorkSpace/Campaign-Orchestration/P05-frontier-aligned-20261113/gap-1.out) | `1fdf50f35ad9f16aa05f52b248abcc3ac7bf49fcac7a002c306ab65f1ef0c873` |
+
+## 실제 전투 코어 확인 범위와 39척 표시
+
+승인된 적벽 v1 작전 소유자를 격리 메모리에서 준비했다. 공개 작전 어댑터는 진형 명령을 `unsupported_dev_command`로 거부했다. 시험에서만 `BattleSim.issue`와 `NativeTick.advance_combat`을 호출했다. 역방향 시작 상태는 실제 코어에서 정방향 명령을 완료해 만들었다. 각 방향에서 공개 코어 투영의 현재·목표 진형과 남은 시간을 읽어 50틱 카운트다운 및 완료를 확인했다.
+
+30Hz 렌더러에는 고정 원점·방향의 시험용 슬롯을 사용했다. 표시 진행의 확인 범위는 실제 10Hz 코어 투영의 틱에서 얻었으며, 렌더러 바인딩에 넣은 합성 `sq.tick`은 표시 표본 순번이다. 정상 전달에서 정·역방향 모두 이동 145프레임과 대기 4프레임을 거쳐 **149프레임·4.967초**에 표시 위치가 도착했다. 코어 진형과 시험 표시 확정은 모두 **150프레임·5.000초**였다. 확인 범위 내 진행과 슬롯 이동 구간의 안전성을 확인했고, 최대 차분 가속도는 양방향 **22,913.480758667 전술 단위/s²**였다. 두 실행 모두 종료 코드 0이었고 독립 검토에서 해당 결과를 확인했다.
+
+시험 작업본은 `c40e83f9`이고, 사용한 렌더러·전투 코어·작전 어댑터 경로는 기준 `c72150fd`와 Git 차이가 없었다. 공개 작전 명령의 허용과 제품 투영·렌더러 연결은 별도 검증 범위다. 이번 시험은 고정 자세와 정상 전달 조건을 사용했다.
+
+재현 시 `F:/WorkSpace/.codex/worktree/p05-formation-20261113`에서 Godot 4.7.2 콘솔로 실행했다. 각 방향에서 `P05_REVERSE`는 각각 0과 1을 사용했고, `APPDATA`·`LOCALAPPDATA`·`SBTK_P05_TRANSITION_PROFILE`은 같은 방향별 격리 프로필로 설정했다.
+
+```text
+C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe --headless --path . --script F:/WorkSpace/Campaign-Orchestration/P05-native-authority-aligned-20261113/probe.gd --log-file F:/WorkSpace/Campaign-Orchestration/P05-native-authority-aligned-20261113/native-{0,1}.log
+```
+
+| 격리 근거 | SHA-256 |
+| --- | --- |
+| [시험 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-native-authority-aligned-20261113/probe.gd) | `53385cab5247a41a0cd049bae4f80f955647800140e2bf0e00a7ae5c6f729c67` |
+| [정방향 로그](F:/WorkSpace/Campaign-Orchestration/P05-native-authority-aligned-20261113/native-0.out) | `ef7792292abd30e2642d150481e502b148e407669adb81f3ea8d8fe86a9969c3` |
+| [역방향 로그](F:/WorkSpace/Campaign-Orchestration/P05-native-authority-aligned-20261113/native-1.out) | `e96df783b1ca1e06c697f02ce24b46fbe48fe7cf08dc5059b40a7e7af451043f` |
