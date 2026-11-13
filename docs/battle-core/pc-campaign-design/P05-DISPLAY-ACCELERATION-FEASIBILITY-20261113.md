@@ -196,3 +196,27 @@ C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe --headless --path . --scrip
 | [시험 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-formation-journal-20261113/journal.gd) | `d2b3e42a23e3cd9a8e37dce5e2d80773f91411b21fb458c149d8a8497cb195ea` |
 | [최종 로그](F:/WorkSpace/Campaign-Orchestration/P05-formation-journal-20261113/journal-final.out) | `a60116eb326e43b94bc9133d6a27d60f2320440cddfdbf8427dbe7cb1394e406` |
 | [시험용 저널](F:/WorkSpace/Campaign-Orchestration/P05-formation-journal-20261113/profile/journal-test.json) | `bc8718fd65ae1f5eec259c1685fecc04c5427f3a69b2429311785981f9022ee4` |
+
+## 39척 진형·이동·정지 명령 순서
+
+같은 Godot 헤드리스 프로세스에서 승인 입력으로 두 적벽 v1 소유자를 준비했다. 시험 코드가 첫 코어에 명령을 발행하고, 생성된 명령 로그 13건을 동일 순서로 두 번째 코어에 전달했다. 두 번째 소유자에서는 편성 식별자 `RC-LIU-SQ-01`을 네이티브 ID로 다시 해석했다. 네이티브 상태 다이제스트는 81틱 모두 일치했다. 21척 동료 편성의 현재·목표 진형 필드는 유지됐다.
+
+| 네이티브 명령 순서 | 관측 결과 |
+| --- | --- |
+| 같은 틱 이동 → 정지 | 이동 플래그 해제, 진형 전환 유지 |
+| 같은 틱 정지 → 이동 및 같은 목표 진형 재지정 | 이동 플래그 유지, 전환 타이머 40틱 유지 |
+| 현재 진형 지정 | 진행 중 전환 취소 |
+| 같은 틱 취소 → 목표 진형 재지정 | 전환 타이머 50틱으로 재시작 |
+
+`FRM-01` 완료 사건은 틱 80에 한 번 발생했다. 설정 확인을 포함한 9개 검사와 종료 코드 0을 독립 검토에서 확인했다. 시험은 `BattleSim.issue`와 `NativeTick.advance_combat`을 사용해 이동 플래그와 진형 상태를 비교했다. 작전 경로가 소유한 실제 위치 이동과 공개 v1 명령·저장·재생은 별도 검증 범위다. 제품 정책 후보는 전환 동안 이동 요청 거부, 안전한 정지점까지 지연, 또는 별도 인증을 받은 이동 중 전환이다. 확정할 정책은 명령 우선순위, 안정 편성 식별자, 재생 순서와 함께 버전 계약에 기록해야 한다.
+
+실행 프로젝트는 `F:/WorkSpace/.codex/worktree/p05-formation-20261113`의 `c40e83f9`다. 관련 전투·렌더러·작전 어댑터 경로는 검증 기준 `cc8394ec`와 Git 차이가 없었다. 이 프로젝트에서 `APPDATA`·`LOCALAPPDATA`·`SBTK_P05_TRANSITION_PROFILE`을 동일한 새 격리 프로필로 지정하고 실행한다.
+
+```text
+C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe --headless --path . --script F:/WorkSpace/Campaign-Orchestration/P05-mixed-command-order-20261113/mixed.gd
+```
+
+| 격리 근거 | SHA-256 |
+| --- | --- |
+| [시험 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-mixed-command-order-20261113/mixed.gd) | `94d1230c8530d71c6f32b7747c503a2f7e2a69539dab80f98b868e616459791f` |
+| [시험 로그](F:/WorkSpace/Campaign-Orchestration/P05-mixed-command-order-20261113/mixed.out) | `d0441c1a994260f5349f5922b5be295ea7991bf99a220c6316c2989caa5488f1` |
