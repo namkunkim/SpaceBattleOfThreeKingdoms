@@ -1173,13 +1173,13 @@ func _show_result(o: BattleOutcome, animate := true) -> void:
 	_res_labels.title.add_theme_color_override("font_color", Factions.of("wu").rim if o.win else Factions.of("wei").rim)
 	_res_labels.ending.text = o.ending_text() if o.settlement_id.is_empty() else o.reason
 	_res_labels.art.visible = true
-	_res_labels.art.texture = load("res://assets/backgrounds/allied-fleet-review-final-4k.png")
+	_res_labels.art.texture = load("res://assets/backgrounds/allied-fleet-review-final-4k.png" if o.win else "res://assets/backgrounds/wei-fleet-review-v4-underway.png")
 	if o.kind == "withdrawal_success":
 		_res_labels.epilogue.text = "함대는 전열을 수습하며 적벽을 벗어났다. 살아남은 이들은 다음 싸움을 준비한다."
 	elif o.win:
 		_res_labels.epilogue.text = "손권과 유비의 연합함대가 적벽을 지켜 냈다. 전투가 끝난 우주에서 장수들은 돌아온 함대를 맞으며, 함께 이룬 승리를 기린다."
 	else:
-		_res_labels.epilogue.text = "연합함대는 흩어진 전열을 수습해 물러났다. 적벽의 패배를 뒤로하고 살아남은 이들은 다시 맞설 날을 준비한다."
+		_res_labels.epilogue.text = "적벽에서 전열이 무너진 연합함대는 살아남은 함선들을 이끌고 물러났다. 조조의 함대가 항로를 장악한 가운데, 손권과 유비는 흩어진 병력을 모아 다시 맞설 날을 준비한다."
 	_result.visible = true
 	_update_inset()
 	if animate:

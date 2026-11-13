@@ -11,7 +11,7 @@ func run():
  result.kind = "alliance_win"
  map._show_result(result, false)
  await process_frame
- if not map._res_labels.epilogue.text.contains("연합함대") or map._result.find_child("ScoresWei", true, false) != null or not map._res_labels.art.visible:
+ if not map._res_labels.epilogue.text.contains("연합함대") or map._result.find_child("ScoresWei", true, false) != null or not map._res_labels.art.visible or map._res_labels.art.texture.resource_path != "res://assets/backgrounds/allied-fleet-review-final-4k.png":
   printerr("FAIL victory screen")
   quit(1)
   return
@@ -23,7 +23,7 @@ func run():
  result.win = false
  result.kind = "cao_win"
  map._show_result(result, false)
- if not map._res_labels.epilogue.text.contains("패배"):
+ if not map._res_labels.epilogue.text.contains("조조의 함대") or map._res_labels.art.texture.resource_path != "res://assets/backgrounds/wei-fleet-review-v4-underway.png":
   printerr("FAIL defeat epilogue")
   quit(1)
   return
