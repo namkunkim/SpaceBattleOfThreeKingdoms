@@ -38,3 +38,18 @@ python -B tests/first_operation_successor_fencing.py <isolated-settlement-ledger
 - 서로 다른 두 Windows 머신과 각각 격리된 프로필·고정 빌드·대상 매니페스트가 필요하다. 기존 체크리스트의 두 번째 호스트 무게시 복귀·원장/슬롯 보존 시험은 준비된 독립 호스트가 필요하며 기존 차단 시험을 재실행하지 않았다.
 - 두 호스트는 승인된 동일 시험 캠페인에 인증된 서비스 API로 연결한다. 제안하는 서비스가 전환 DB와 세대·커밋 권한을 단독 소유하며 DB는 서비스 머신의 지원되는 로컬 볼륨에 둔다. 각 호스트에 파일 저장을 복제하면 동일 권위의 CAS를 검증할 수 없다. 연결 주소와 자격 증명은 제공 주체가 별도로 설정하고 실행 증거는 비밀값을 제외한다.
 - 승인 후 실제 대상 정책·매니페스트와 서비스 트랜잭션, 동일 작전 ID의 활성 소유자 임대 및 펜싱을 고정한다. 동시 동일/상이 요청, 커밋 전 장애, 커밋 뒤 응답 단절, 재접속 후 동일 응답, 오래된 세대·펜싱 거부, 단일 효과와 후속 C0, 보호 원장·슬롯 바이트 및 두 호스트별 증거를 검증한다.
+
+## 두 Windows 호스트의 실행 자료 사전 점검
+
+[실행 자료 점검기](../../../tests/first_operation_successor_preflight.py)는 승인 후 운영 담당자가 준비한 폴더를 읽는다. 원격 서비스에는 연결하지 않는다. 아래 다섯 파일을 고정된 이름으로 준비한다.
+
+- `run.json`은 `schema` 값 `successor-fencing-preflight/1`과 `run_id`, `authority_id`, `build_sha256`, `policy_sha256`, `target_sha256`을 담는다. `authority_id`에는 두 호스트가 사용할 동일 권위의 시험용 별칭을 넣는다. 서비스 주소와 자격 증명은 폴더 밖에서 관리한다.
+- `policy.json`과 `target-manifest.json`은 각각 운영자가 승인본과 대조한 정책과 대상 매니페스트의 원본 바이트다. 점검기는 두 파일의 SHA-256을 실행 계획과 비교한다.
+- 각 Windows 호스트 담당자는 `host-a.json` 또는 `host-b.json`을 독립적으로 준비한다. 실행 계획과 같은 필드를 쓰고 `schema`는 `successor-fencing-host/1`로 바꾼다. `os`에 `Windows`를 넣고 `machine_id_sha256`에는 동일한 방식으로 산출한 기기 식별자 해시를 넣는다. 기기 식별자 원문과 호스트 이름은 제외한다. `build_sha256`에는 해당 호스트에서 직접 측정한 빌드 지문을 넣는다. 모든 필드는 문자열이다. SHA-256 표기는 소문자 16진수 64자다.
+
+```powershell
+python -B tests/first_operation_successor_preflight.py --bundle <operator-prepared-folder>
+python -B tests/first_operation_successor_preflight.py --self-test
+```
+
+`bundle-consistent`는 제출된 실행 계획, 정책·대상 바이트, 호스트 기록이 서로 일치하고 두 기기 지문이 다르다는 뜻이다. 점검기는 승인 여부와 기기 기록의 진위, 물리 호스트 분리, 서비스 연결, 작전 C0 또는 펜싱 실행 결과를 판정하지 않는다. 운영자가 두 호스트의 기기와 측정값을 확인한 뒤 위의 실제 인수 절차를 진행한다. 자기 검증은 합성 자료만 사용한다.
