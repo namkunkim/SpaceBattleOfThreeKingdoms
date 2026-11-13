@@ -16,6 +16,8 @@
 
 구현 전 원자성 경계를 수정해야 한다. `FirstOperationDevRuntime.advance`는 정책 제안·효과·확정 실패 때 `NativeTick.rollback_tick`으로 복구한다. 현재 `NativeTick.checkpoint_tick`은 함대와 사건을 보관하지만 `command_log`는 보관하지 않는다. `BattleSim.issue`가 즉시 로그를 추가하고 `replay_witness`에 그 로그가 포함되므로, 정책 확정 전에 명령을 발행하면 롤백 뒤 로그가 남는다. v2 명령 처리에서 로그 길이를 체크포인트에 함께 담아 실패 시 잘라내거나, 확정 전에는 별도 임시 기록에 보관한다. 최종 명령 이력, 공개 사건, 원장, 대기 배치의 변경은 같은 성공 경계에 둔다. 정상 명령 소비와 재시도는 한 번씩만 일어나도록 한다. 이 누출은 v2에서 확정 전에 네이티브 발행을 추가할 경우의 위험이다. 현행 v1 작전 경로는 진형 명령을 거부하며 이 발행을 하지 않는다. [틱 확정 및 롤백](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/blob/9be4eaab506e433e0fa255c826ed48b6a6d81b80/core/battle/first_operation_dev_runtime.gd#L56) · [네이티브 명령 기록](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/blob/9be4eaab506e433e0fa255c826ed48b6a6d81b80/core/battle/battle_sim.gd#L142) · [체크포인트·재생 증명·롤백](https://github.com/namkunkim/SpaceBattleOfThreeKingdoms/blob/9be4eaab506e433e0fa255c826ed48b6a6d81b80/core/battle/first_operation_native_tick.gd#L39)
 
+격리 시험에서 두 줄 롤백 후보는 명령 로그를 복원했으나 규칙 지문이 달라 기존 v1 체크포인트와 리플레이가 거부됐다. 후보는 병합 대상에서 제외했다. [네이티브 로그 롤백 후보와 v1 호환성](P05-DISPLAY-ACCELERATION-FEASIBILITY-20261113.md#네이티브-로그-롤백-후보와-v1-호환성)
+
 ## 승인 후 첫 인수 시험
 
 - 두 편성의 허용 진형과 안정 ID, 잘못된 상대·숫자 ID·손실·이동·선회 및 같은 틱 충돌 거부를 확인한다.
