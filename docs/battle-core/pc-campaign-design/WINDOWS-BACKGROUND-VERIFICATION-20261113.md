@@ -195,3 +195,20 @@ Windows에서 1600×900을 요청한 `4dac0b8d` 월드맵의 타이틀 복귀 �
 | 내장 Wei 임포트 텍스처 | `6bb51b4b74295d48591ec7b63547d2fa0bd3d6bc6aac2940d9e78f387a831a12` |
 
 [빌드·패키지 대조·헤드리스 기동 결과](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/Windows-release-65c5588c-01/RESULT.json)
+
+### Windows 릴리스 내장 팩 Wei 결산 분기 확인
+
+Windows 릴리스 후보 `65c5588caea6036b317a4636ca9f39d6e152f126`의 EXE 복사본을 Godot 4.7.2 콘솔에서 `--headless --main-pack`으로 열었다. 테스트는 격리 프로필에서 내장 팩의 `WorldMap.tscn`을 인스턴스화하고, 결산 표시 함수에 결과를 주입했다. `ff2c6c06888386cc8cf5f36cd92447a1189fc9af`까지의 소스 차이는 문서 3개다(`git diff --name-only 65c5588c ff2c6c06`).
+
+같은 맵 인스턴스에서 연합 승리 → 조조 승리(Wei) → 연합 승리 순으로 전환했다. 각 결과에서 배경 노드의 표시 상태, 텍스처 경로, 결말 문구 및 재시도·리플레이·나가기 버튼 노드 존재를 확인했다. 텍스처 크기는 순서대로 3840×2160, 1672×941, 3840×2160이었다. 세 건 모두 통과했고 종료 코드는 0, 표준 오류는 0바이트였다. 이번 확인 범위는 내장 팩의 결산 분기와 리소스 로드다. 실제 전투 종료 경로, 화면 표시 및 오디오 인수는 별도 확인이 필요하다.
+
+#### 실행 근거 SHA-256
+
+- 릴리스 EXE `18990d88a46245d878d4f1dc650e6a9ab9d5439fb7d7f9c41e75faabfa25be66`
+- 함께 배치한 `o07_win32.dll` 두 복사본 `038c3f97fb6ac2af8c7c12c2ef94d1ef07e17a92e115b9297a87b729976ef0bd`
+- `probe.gd` `c0257c0f1044b9e3d8138e71d2846868be64b1b0ecd7babeee1b87f0400839f1`
+- `invocation.json` `34426a560d7bbb7726773f3c0900460b282a30f429ea9d0d02e132ee853dd1c6`
+- `stdout.log` `27f8e17a0990b837909673a9cc0a20ebb518283e4ea3b6f3de0fdc0061fcb528`
+- `stderr.log` `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+
+[격리 실행 근거](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-wei-result-release-pack-65c5588c-02)
