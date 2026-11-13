@@ -271,3 +271,21 @@ C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe --headless --path . --scrip
 | --- | --- |
 | [시험 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-outer-rollback-20261113/probe.gd) | `d50ae1c813e56aa90795df177d874d539d965eebd6892c6fa76bc5a32d974c59` |
 | [최종 로그](F:/WorkSpace/Campaign-Orchestration/P05-outer-rollback-20261113/probe-final.out) | `b9fd67531cc842c926a064d43224ed72362e8ca6e86fd66ee2e39d4681b7f054` |
+
+## 증원 효과 적용 후 정책 확정 거부
+
+격리 시험은 정상 정지 명령이 대기 중인 125000ms 상태에서 실제 정책에 제안을 요청하고, 시험용 진형 명령을 네이티브 로그에 추가했다. 실제 증원 효과로 예비 함대가 생긴 뒤 원래 정책의 확정 함수에 잘못된 제안 토큰을 전달했다. 원래 정책이 `runtime.policy.commit_tick`에서 `unknown_revision`으로 거부했고, 원래 제안은 정상 폐기됐다. 네이티브 롤백은 예비 함대가 없는 상태와 적측 투영, 정책 원장을 복원했다. 남은 진형 로그 한 건을 시험 코드가 코어 밖에서 제거하자 체크포인트 증거값도 일치했다.
+
+폐기된 제안 토큰을 재사용하지 않아 일련번호는 1250→1251→1252로 증가했다. 재시도 결과는 실패 없이 진행한 별도 소유자와 일치했다. 체크포인트 비교에는 이 일련번호 차이와 그에 따른 증거값을 반영했다. 125100ms의 증원 이벤트는 양쪽 모두 한 번만 발행됐다. 기존 격리 v1 체크포인트는 복원 접수 후 취소했고, v1 리플레이 읽기와 공개 v1 진형 명령 거부도 확인했다. 13/13, 종료 코드 0이었다. 이 시험의 범위는 실제 증원 효과 뒤 주입된 잘못된 토큰의 확정 거부이며, 제품 코드 변경이나 효과 처리 자체의 실패는 포함하지 않는다.
+
+실행 프로젝트는 `F:/WorkSpace/.codex/worktree/p05-formation-20261113`의 `e52f64668d043ab99ee13588cb6bb8f73e78be2a`였다. 확인 기준인 main `65c5588caea6036b317a4636ca9f39d6e152f126`과의 차이는 문서, 위 함대 이미지, 결과 화면 시험 및 지도 화면이었다. 프로젝트 루트에서 실행했고, `APPDATA`와 `LOCALAPPDATA`는 근거 폴더의 `profile`, `P05_COMPAT_ROOT`는 `F:/WorkSpace/Campaign-Orchestration/P05-native-rollback-candidate-20261113`으로 지정했다.
+
+```text
+C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe --headless --path . --script F:/WorkSpace/Campaign-Orchestration/P05-commit-rollback-20261113/probe.gd
+```
+
+| 근거 | SHA-256 |
+| --- | --- |
+| Godot 콘솔 실행기 | `c8f0a6bc45a19b33541501e57f6f7cd972ab18453743266339d495cbbe846643` |
+| [시험 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-commit-rollback-20261113/probe.gd) | `49495c2471efd5e5c81f518ede4111c13e5056d43ab3d24ad7d9b1c23bb24e86` |
+| [실행 로그](F:/WorkSpace/Campaign-Orchestration/P05-commit-rollback-20261113/probe.out) | `b1fbbd7064f35bb566266fa37ac219b79e7e8d2a3ffbb974a6f19531c47c5183` |
