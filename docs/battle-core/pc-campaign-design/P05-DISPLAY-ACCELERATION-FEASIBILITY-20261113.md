@@ -124,3 +124,21 @@ r=0.05에서 두 편성 모두 60·120Hz에서 5초 이내였다. 39척·30Hz는
 | [표시 시계 결과](F:/WorkSpace/Campaign-Orchestration/P05-native-reordered-renderer-20261113/native.out) | `7b34ae242dd90a89e74d33bfa0bdb9acadc677cf17808f2ddf78de2fc1f6cd7c` |
 | [권위 스냅샷 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-native-reordered-renderer-20261113/native_authority_probe.gd) | `ce2af903e42e49015b733f36f05a19fa81327f6983f826934d4c95f079b70d1e` |
 | [권위 스냅샷 결과](F:/WorkSpace/Campaign-Orchestration/P05-native-reordered-renderer-20261113/authority-checked.out) | `969723372d3807d3a19194314bee42cc84492afcf49bc15786aa225c6d9238ce` |
+
+## 확인된 위상만 표시하는 시계 실험
+
+39척의 같은 68개 위상 램프 시간표를 사용했다. 합성 10Hz 권위 스냅샷에서 위상 끝까지 확인되면 정지점에서 시작해 30Hz 표시 갱신당 한 표본만 진행했다. 기존 렌더러 바인딩에 시험용 `sq.tick`을 전달했다. 이 값은 표시 표본 순번이며 실제 작전 권위 틱과 별개다. 역방향의 시작 정지 구간도 유지했다.
+
+| 권위 스냅샷 조건 | 정방향 도착 | 역방향 도착 |
+| --- | ---: | ---: |
+| 정상 갱신 | 152프레임·5.067초 | 154프레임·5.133초 |
+| 권위 갱신 11표시 프레임·366.7ms 억제 | 160프레임·5.333초 | 163프레임·5.433초 |
+
+두 조건 모두 표시 갱신은 30Hz를 유지했다. 독립 검토에서 네 조건 모두 표시 진행이 확인 범위를 넘지 않았고, 제출 슬롯의 이동 구간이 안전했으며, 최대 차분 가속도는 23,786.523056 전술 단위/s²였다. 모든 도착 시간은 5초를 초과했다. 이 결과는 합성 스냅샷의 헤드리스 시험에 한정된다. 제품 권위 경로와 렌더러는 변경하지 않았다.
+
+| 격리 산출물 | SHA-256 |
+| --- | --- |
+| [시험 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-confirmed-frontier-renderer-20261113/frontier_probe.gd) | `cdedaa8297a0d984044d0f6ebf66dd6edd769b40b2b6babe47906ead9ba6ba3e` |
+| [정상 갱신 로그](F:/WorkSpace/Campaign-Orchestration/P05-confirmed-frontier-renderer-20261113/frontier-0.out) | `7621ea239e098348c48c10cb0d8179b64e60626b12230cea06506aafee495410` |
+| [권위 갱신 억제 로그](F:/WorkSpace/Campaign-Orchestration/P05-confirmed-frontier-renderer-20261113/frontier-1.out) | `29b5f78788fad19ab756b87a8a60fcc1568a50a0c6a805e21d3dff309d5d69b9` |
+| [147프레임 입력 경로](F:/WorkSpace/Campaign-Orchestration/P05-reordered-moves-20261113/RESULT-RAMP-SEARCH.json) | `0687c9d4ce28e03bc6e7017db0218e45ff1f602e1b35f68e5549054ca4b39773` |
