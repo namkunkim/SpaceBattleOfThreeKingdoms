@@ -73,6 +73,7 @@ func _fleet(renderer: FleetRenderer, squad: Dictionary, fleet: Dictionary, forma
 	_report_endpoint(rows, "from", fleet.formation_id, fleet.outer_radius, expected_counts[0])
 	_report_endpoint(rows, "to", "FRM-01" if fleet.formation_id == "FRM-03" else "FRM-03",
 		fleet.outer_radius, expected_counts[1])
+	_check_adjusted_route(rows, squad.id, fleet.outer_radius, duration_ms)
 	var frozen := rows.duplicate(true)
 	var forward := Sweep.validate(rows, fleet.outer_radius)
 	var reversed := rows.map(func(row): return {"id": row.id, "from": row.to, "to": row.from, "half": row.half})
@@ -85,6 +86,73 @@ func _fleet(renderer: FleetRenderer, squad: Dictionary, fleet: Dictionary, forma
 		and is_equal_approx(forward.fraction + backward.fraction, 1.0), "%s deterministic overlap in both directions" % squad.id)
 	print("P05_FORMATION_OBSERVATION ", JSON.stringify({"fleet": squad.id, "ships": rows.size(),
 		"from": fleet.formation_id, "duration_ms": duration_ms, "forward": forward, "reverse": backward}))
+
+
+func _check_adjusted_route(rows: Array, fleet: String, radius: float, duration_ms: int) -> void:
+	var fixture: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+		"res://tests/fixtures/p05/adjusted_formation_route.json"))
+	var route: Dictionary = fixture[fleet]
+	var current := {}
+	var destination := {}
+	var original := {}
+	var used_slots := {}
+	var source_offset := 0.0
+	var destination_offset := 0.0
+	for row: Dictionary in rows:
+		original[_short_id(row.id)] = row
+	for short_id: String in original:
+		var row: Dictionary = original[short_id]
+		var slot_id: String = route.dest[short_id][0]
+		var slot: Dictionary = original[slot_id]
+		if not _check(not used_slots.has(slot_id) and slot.half == row.half
+				and slot_id.get_slice("/", 0) == short_id.get_slice("/", 0), "%s unique same-hull slot for %s" % [fleet, short_id]):
+			return
+		used_slots[slot_id] = true
+		current[short_id] = Vector2(route.source[short_id][0], route.source[short_id][1])
+		var point: Array = route.dest[short_id][1]
+		destination[short_id] = Vector2(point[0], point[1])
+		source_offset = maxf(source_offset, Vector2(current[short_id]).distance_to(row.from))
+		destination_offset = maxf(destination_offset, Vector2(destination[short_id]).distance_to(slot.to))
+	var offset_limit := 5.661 if fleet == "RC-LIU-SQ-01" else 2.475
+	_check(source_offset <= offset_limit and destination_offset <= offset_limit,
+		"%s proposed endpoint shifts stay within measured limits" % fleet)
+	var segment_start := current.duplicate()
+	var distance := 0.0
+	var corner_radius := 0.0
+	for move: Array in route.moves:
+		var moving: String = move[0]
+		var next := Vector2(move[1][0], move[1][1])
+		var segment: Array = []
+		for row: Dictionary in rows:
+			var short_id := _short_id(row.id)
+			var start: Vector2 = current[short_id]
+			var end: Vector2 = next if short_id == moving else start
+			segment.append({"id": row.id, "from": start, "to": end, "half": row.half})
+			corner_radius = maxf(corner_radius, maxf((end.abs() + row.half).length(), (start.abs() + row.half).length()))
+		var reversed := segment.map(func(row):
+			return {"id": row.id, "from": row.to, "to": row.from, "half": row.half})
+		var forward := Sweep.validate(segment, radius)
+		var reverse := Sweep.validate(reversed, radius)
+		if not _check_segment(forward, reverse, fleet, moving):
+			return
+		distance += Vector2(current[moving]).distance_to(next)
+		current[moving] = next
+	_check(current == destination and not route.moves.is_empty() and current != segment_start,
+		"%s candidate reaches adjusted destination through collision-free segments in both directions" % fleet)
+	print("P05_ADJUSTED_ROUTE_OBSERVATION ", JSON.stringify({"fleet": fleet, "segments": route.moves.size(),
+		"max_source_offset": source_offset, "max_destination_offset": destination_offset, "corner_radius": corner_radius, "approved_radius": radius, "sequential_distance": distance,
+		"constant_moving_speed_for_duration": distance / (duration_ms / 1000.0)}))
+
+
+func _short_id(id: String) -> String:
+	return id.get_slice("/", 1) + "/" + id.get_slice("/", 2)
+
+
+func _check_segment(forward: Dictionary, reverse: Dictionary, fleet: String, moving: String) -> bool:
+	if forward.ok and reverse.ok:
+		return true
+	return _check(false, "%s invalid candidate segment for %s: %s / %s" % [fleet, moving, forward, reverse])
+
 
 
 func _report_endpoint(rows: Array, endpoint: String, formation: String, radius: float, expected_count: int) -> void:
