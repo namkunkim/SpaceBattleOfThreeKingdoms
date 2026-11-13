@@ -1,0 +1,63 @@
+{
+  "card_sha256": "44518bca57a92d1394ccb4df646fa28cf40f3cfae620cb165201bbdf290350a7",
+  "gold_filtered_sha256": "810b9920425a4cfa0e8ee9c2684077c7997bc3405173105476f68a4160f5ee74",
+  "card_columns": [
+    "Application",
+    "ProcessID",
+    "SwapChainAddress",
+    "PresentRuntime",
+    "SyncInterval",
+    "PresentFlags",
+    "AllowsTearing",
+    "PresentMode",
+    "CPUStartQPC",
+    "FrameTime",
+    "CPUBusy",
+    "CPUWait",
+    "GPULatency",
+    "GPUTime",
+    "GPUBusy",
+    "GPUWait",
+    "DisplayLatency",
+    "DisplayedTime",
+    "AnimationError",
+    "AnimationTime",
+    "MsFlipDelay"
+  ],
+  "removed_columns": [
+    "AllInputToPhotonLatency",
+    "ClickToPhotonLatency",
+    "FrameType",
+    "InstrumentedLatency",
+    "VideoBusy"
+  ],
+  "replayed_rows": 56,
+  "phase_boundary_qpc": [
+    8086364705,
+    8087378034,
+    8087872762
+  ],
+  "phase_results": [
+    {
+      "count": 4,
+      "frame_time_sample_count": 4,
+      "frame_time_median_ms": 25.618299999999998,
+      "displayed_time_sample_count": 4,
+      "displayed_time_median_ms": 25.18365,
+      "not_displayed_count": 0,
+      "unknown_displayed_time_count": 0
+    },
+    {
+      "count": 3,
+      "frame_time_sample_count": 3,
+      "frame_time_median_ms": 16.9079,
+      "displayed_time_sample_count": 3,
+      "displayed_time_median_ms": 16.6609,
+      "not_displayed_count": 0,
+      "unknown_displayed_time_count": 0
+    }
+  ],
+  "mixed_pid_swapchain_control": "pass",
+  "na_blank_numeric_control": "pass",
+  "empty_window_control": "pass"
+}

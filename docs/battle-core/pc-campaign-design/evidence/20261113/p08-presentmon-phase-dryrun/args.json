@@ -1,0 +1,12 @@
+[
+  "--etl_file",
+  "test_case_2.etl",
+  "--process_id",
+  "1300",
+  "--no_console_stats",
+  "--v2_metrics",
+  "--qpc_time",
+  "--no_track_input",
+  "--output_file",
+  "card.csv"
+]

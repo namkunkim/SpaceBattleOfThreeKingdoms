@@ -1,0 +1,21 @@
+{
+  "status": "REVIEW_ONLY",
+  "formal_eligible": false,
+  "source_commit": "cabc4de30fadc347a84a628ad24a590c8763a6aa",
+  "runtime_equivalent_main": "1367aebc0e93899be31af31da10078b60eb3fe05",
+  "project_index_sha256": "0d6475fda96d87329d747cae610f3562210ce0a70e37b0571e092e4dbdf182e1",
+  "source_inventory_sha256": "0086f21a1a126af47fd425655013c221bf08662bd63a71aca4a7641cca56b45b",
+  "headless_smoke_sha256": "9cdd5a052d2ca84bfb992188b480bf7514606fc7fef8291dedb2df6f6d76ea00",
+  "lanes": {
+    "before": {
+      "files": 3257,
+      "parse_sha256": "83cf0b082206af2aa236c83064fbcfa76be1e00a4aa3558574b2f65965d9481c",
+      "boot_sha256": "ee530fd539e596b3e1725140330ad37c5fafe0d84e442ed7d17c8bbed1eb7228"
+    },
+    "after": {
+      "files": 3259,
+      "parse_sha256": "83cf0b082206af2aa236c83064fbcfa76be1e00a4aa3558574b2f65965d9481c",
+      "boot_sha256": "ee530fd539e596b3e1725140330ad37c5fafe0d84e442ed7d17c8bbed1eb7228"
+    }
+  }
+}
