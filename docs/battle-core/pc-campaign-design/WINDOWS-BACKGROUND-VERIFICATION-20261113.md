@@ -66,3 +66,27 @@ Windows 1600×900, 후보 `4dac0b8d`에서 17-before와 17-after는 각 재시�
 | --- | --- |
 | [고정 인덱스](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/K6/main-4dac0b8d-row17-18-three-root-evidence-20261113/INDEX.json) | `8a0ae23585878f09e95e33b6b832dfd1b24c0b8b9caaa4a6e2ddc69181d775cc` |
 | [UTF-8 집계 출력](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/K6/main-4dac0b8d-row17-18-three-root-evidence-20261113/aggregate-utf8.json) | `f36709cb6f7c25ce0d2f0cf07e2a896f79f74fcac9ae6ca1cfa1e30555dd04b5` |
+
+### P09 설정·지도 전경 루프백
+
+동일한 `4dac0b8d` Windows EXE를 별도의 새 설정·지도 프로필에서 실행했다. CLI로 1600×900을 요청했다. 기존 마스터 음량은 약 78%였고, 시험 프로필에서 UI·음악을 약 78%로 조정했다. 설정에서 복귀 후 닫았고, 지도에서 복귀·재진입 후 닫았다. 두 프로세스 모두 종료 코드 0이며 캡처 도구의 표준 오류는 비어 있었다. 독립 클라이언트 크기 실측과 물리 청취는 남아 있다.
+
+| 프로세스 루프백 구간 | 캡처 길이 | 최대 절대 PCM | 마지막 절대 PCM ≥ 20 | 꼬리 최대 절대 PCM |
+| --- | ---: | ---: | ---: | ---: |
+| 설정 탭 | 9.97초 | 1 | — | 1 이하 |
+| 설정 복귀 | 9.98초 | 12380 | 3.404014초 | 16(3.5초 이후 1 이하) |
+| 설정 닫기 | 9.83초 | 1 | — | 1 이하 |
+| 지도 복귀 | 9.90초 | 14579 | 3.860612초 | 13 |
+| 지도 닫기 | 9.87초 | 14223 | 3.758050초 | 17 |
+
+표의 시간 원점은 각 캡처 시작이다. 설정 닫기 구간에서는 활성 신호가 관측되지 않았다. 지도 복귀·닫기 구간에서는 활성 신호와 이후 낮은 꼬리를 관측했다. 구간별 파형은 트랙을 구분하지 않으며, 동작 기준의 종료 지연과 P09 전체 인수는 남아 있다.
+
+| 루프백 파일 | SHA-256 |
+| --- | --- |
+| [설정 탭](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-audio-4dac0b8d-settings-close-01/audio-settings-tab-01.wav) | `2e1b7e01b97454350850fb503e160e8484f7d07ea6dd6e7dbdce0b9acc9c3537` |
+| [설정 복귀](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-audio-4dac0b8d-settings-close-01/audio-settings-return-01.wav) | `5305cfa5d086d49d6f78aa90720ee7dc2a6325b3e5f72faebb7bb9c404e4a221` |
+| [설정 닫기](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-audio-4dac0b8d-settings-close-01/audio-settings-close-01.wav) | `52eba4bbcfb05e2ec4f19eef9257394ea168711d855ab7d8f98a6c7656274ab8` |
+| [지도 복귀](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-audio-4dac0b8d-map-close-01/audio-map-return-01.wav) | `b44d5e1bea7654fef0855273f8de85125b300af26b0bfdda9857094d8fa79401` |
+| [지도 닫기](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-audio-4dac0b8d-map-close-01/audio-map-close-01.wav) | `7c08fee3f4ac4eb1fc91c3d4cc895e2368382d873cbac546d52c0d54298952d4` |
+
+[설정 종료 기록](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-audio-4dac0b8d-settings-close-01/game-exit.json) · [지도 종료 기록](F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/P09-audio-4dac0b8d-map-close-01/game-exit.json)
