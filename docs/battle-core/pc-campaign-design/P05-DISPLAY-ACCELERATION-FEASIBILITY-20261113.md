@@ -56,3 +56,16 @@
 | [Godot 검증 출력](F:/WorkSpace/Campaign-Orchestration/P05-phase-merge-20261113/merges.out) | `1901506b448be8120c7ed3a73982997a18f524d8e427b060d71e9b51c6a3182d` |
 | [Godot 추출 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-phase-merge-20261113/export_merges.gd) | `8227337a1314dea47c1102687c8f84dc4c328dca449e8c67158e319d067d1640` |
 | [최소 프레임 계산](F:/WorkSpace/Campaign-Orchestration/P05-phase-merge-20261113/optimize_merges.py) | `0d90e0baf31a4b24eafa5c51cdf1d76ca10d67e476e16b2100cfb97979435d47` |
+
+## 위상 중간 자세를 경유하는 지름길
+
+각 인증 위상의 중간 자세를 후보로 추가했다. 최대 여덟 반위상 간격에서 중간 자세가 포함된 구간 1,384개를 기존 Sweep 검증기와 여유 0.001로 검사했다. 39척은 914개 중 166개, 21척은 470개 중 82개를 양방향으로 통과했다. 기존 경계만 사용한 최단 경로를 대조군으로 유지했다.
+
+39척은 30·60·120Hz에서 한 프레임씩 줄어 **187 / 330 / 628프레임(6.233 / 5.500 / 5.233초)**이었다. 21척은 **173 / 320 / 621프레임(5.767 / 5.333 / 5.175초)**을 유지했다. 고정 방향·공백 없는 갱신·잠정 연속 가속도 기준에서 여섯 조건 모두 5초를 초과했다. 독립 검토는 이 제한된 탐색과 결과를 확인했다. 제품 동작과 완료 조건은 기존 상태를 유지한다.
+
+| 격리 산출물 | SHA-256 |
+| --- | --- |
+| [상세 결과](F:/WorkSpace/Campaign-Orchestration/P05-midpoint-shortcuts-20261113/RESULT.json) | `8dd762c5616364b552aff0b9a46ea7206614da1502455bdaf13027b696376400` |
+| [Godot 검사 출력](F:/WorkSpace/Campaign-Orchestration/P05-midpoint-shortcuts-20261113/midpoints.out) | `38e89a115e6a7a29fec939ecdd9880087532be854597856857227eea752b59ba` |
+| [Godot 추출 스크립트](F:/WorkSpace/Campaign-Orchestration/P05-midpoint-shortcuts-20261113/export_midpoints.gd) | `f857659cd660e9f2e3bd69b2c4dea10d9450fcc3bdab7d5e855dbbc06fbba431` |
+| [최소 프레임 계산](F:/WorkSpace/Campaign-Orchestration/P05-midpoint-shortcuts-20261113/optimize_midpoints.py) | `6c0006591c1c1dfcffa3eac026859b4915502eea82d11d430d965df650276597` |
