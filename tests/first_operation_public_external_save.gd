@@ -9,12 +9,12 @@ func _run() -> void:
 	var actual := OS.get_user_data_dir().replace("\\", "/").simplify_path().to_lower()
 	var expected := profile.path_join("Godot/app_userdata/SpaceBattleOfThreeKingdoms").replace("\\", "/").simplify_path().to_lower()
 	if _expect(OS.has_feature("windows") and not profile.is_empty() and actual == expected, "isolated Windows profile"):
-		await _exercise(profile)
+		await _exercise(profile, OS.get_cmdline_user_args().has("state-digest"))
 	print("P04_PUBLIC_EXTERNAL_SAVE checks=%d failures=%d" % [_checks, _failures])
 	quit(0 if _failures == 0 else 1)
 
 
-func _exercise(profile: String) -> void:
+func _exercise(profile: String, focused: bool) -> void:
 	if not _expect(_protected_files() == ["", "", "", ""], "fresh isolated slots"):
 		return
 	change_scene_to_file(ENTRY)
@@ -45,6 +45,9 @@ func _exercise(profile: String) -> void:
 		return
 	var protected := _protected_files()
 	_expect(protected.all(func(hash): return not hash.is_empty()), "all four protected files exist")
+	if focused:
+		await _state_digest_rejection(host, profile, saved, protected)
+		return
 	var external := profile.path_join("valid.pcopsave")
 	var blocked_directory := profile.path_join("missing")
 	var retry := blocked_directory.path_join("retry.pcopsave")
@@ -109,6 +112,9 @@ func _exercise(profile: String) -> void:
 	_expect(host._save_status.text.begins_with("settlement_slot_busy / ") and _stable(host, original, frame, continued)
 		and _protected_files() == protected, "busy publication keeps old owner and all four files")
 	_expect(DirAccess.remove_absolute(lock) == OK, "release isolated ledger lock")
+
+	if not await _reject_state_digest(host, profile, saved, continued, protected):
+		return
 	if not _select(host, false, external):
 		return
 	if not _expect(await _wait_restore(host), "retry finishes"):
@@ -119,6 +125,65 @@ func _exercise(profile: String) -> void:
 	_expect(host.step_operation() and _capture(host) == continued
 		and JSON.stringify(host.frame) == JSON.stringify(continued_frame), "one pending Stop reproduces uninterrupted state")
 	_expect(_protected_files() == protected, "both operations preserve the two slot and two ledger files")
+
+
+func _state_digest_rejection(host: Node, profile: String, saved: Dictionary, protected: Array) -> void:
+	var valid := profile.path_join("valid.pcopsave")
+	if not _select(host, true, valid):
+		return
+	if not _expect(host.step_operation(), "uninterrupted tick consumes pending Stop"):
+		return
+	var continued := _capture(host)
+	var frame: Dictionary = host.frame.duplicate(true)
+	var owner: RefCounted = host.operation_owner
+	if not _expect(Codec.read(valid, true).get("payload") == saved, "valid public export matches checkpoint"):
+		return
+	if not await _reject_state_digest(host, profile, saved, continued, protected):
+		return
+	if not _select(host, false, valid) or not _expect(await _wait_restore(host), "same-host retry finishes"):
+		return
+	_expect(host.operation_owner != owner and not host.started and _capture(host) == saved and host.frame.events.is_empty(),
+		"retry publishes exact checkpoint without republishing consumed events")
+	_start(host)
+	_expect(host.step_operation() and _capture(host) == continued and JSON.stringify(host.frame) == JSON.stringify(frame),
+		"pending Stop applies once and reproduces uninterrupted state")
+	_expect(_protected_files() == protected and _no_pending_files(profile), "retry preserves all four files without staging")
+
+
+func _reject_state_digest(host: Node, profile: String, saved: Dictionary, continued: Dictionary, protected: Array) -> bool:
+	var invalid := profile.path_join("bad-state.pcopsave")
+	_write_wire(invalid, saved, "state_digest", "0".repeat(64))
+	var expected := saved.duplicate(true)
+	expected.state_digest = "0".repeat(64)
+	var decoded := Codec.read(invalid, true)
+	if not _expect(decoded.get("payload") == expected
+			and expected.state_digest != saved.state_digest, "canonical packet differs only in state digest"):
+		return false
+	var frame: Dictionary = host.frame.duplicate(true)
+	var owner: RefCounted = host.operation_owner
+	var brief: BattleBrief = host.brief
+	var brief_data := brief.to_dict().duplicate(true)
+	if not _select(host, false, invalid):
+		return false
+	if not _expect(host._restore_job != null and host.operation_owner == owner
+			and host._import.disabled and host._export.disabled, "tampered candidate enters private replay"):
+		return false
+	if not _expect(await _wait_restore(host), "tampered replay finishes"):
+		return false
+	_expect(host._save_status.text == "checkpoint_state_mismatch / packet.state_digest"
+		and _stable(host, owner, frame, continued) and host.brief == brief
+		and host.link.brief == brief and host.brief.to_dict() == brief_data,
+		"late failure preserves live owner, brief, checkpoint and controls")
+	_expect(_protected_files() == protected and _no_pending_files(profile), "late failure preserves all four files without staging")
+	return true
+
+
+func _no_pending_files(profile: String) -> bool:
+	for directory in [profile, "user://"]:
+		for name in DirAccess.get_files_at(directory):
+			if ".pending-" in name:
+				return false
+	return true
 
 
 func _wait_restore(host: Node) -> bool:
