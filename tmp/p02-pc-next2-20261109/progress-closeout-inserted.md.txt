@@ -1,2 +1,0 @@
-- [x] **전달 독립 마감 후속.** ZIP 외부의 독립 심사에서 기존 즉시 복귀 거절 조각을 한정 수용했다. 닫힌 격리 실행의 Godot 캐시 세 곳을 정리해 C: 여유가 약 1.01 GB 늘었다. 검증 로그·입력 매니페스트·ZIP은 보존했으며 캐시 재현에는 재임포트가 필요하다. [독립 마감](../../../tmp/p02-pc-next2-20261109/REVIEW-CLOSEOUT-INDEPENDENT.md) · [공간 정리](../../../tmp/p02-pc-next2-20261109/cache-cleanup-result.json).
-

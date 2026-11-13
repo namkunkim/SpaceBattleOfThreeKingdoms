@@ -1,2 +1,0 @@
-[인계](pc-campaign-design/SESSION-HANDOFF-P02-LEGACY-OUTCOME-20261108.md).
-  - [ ] **P02 legacy FleetBattle3D 후보 준비(2026-11-08)**. 지정 bench patch 두 오류와 제품 동기 호출 경계는 독립 5-b 한정 수용됐다. 제품 operation host와 전체 P02 인수는 남는다. [결과](pc-campaign-design/P02-HOST-PREP-RESULT-20261108.md) · [진행표](pc-campaign-design/P02-PROGRESS-CHECKLIST.md) · [인계](pc-campaign-design/SESSION-HANDOFF-P02-HOST-PREP-20261108.md).

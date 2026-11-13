@@ -1,4 +1,0 @@
-SCRIPT ERROR: Parse Error: Cannot find member "resource_path" in base "res://core/battle/operation_runtime_adapter.gd".
-   at: GDScript::reload (res://tmp/p02-sixth-20261108/product-host-common.gd:76)
-ERROR: Failed to load script "res://tmp/p02-sixth-20261108/product-host-common.gd" with error "Parse error".
-   at: load (modules/gdscript/gdscript_resource_format.cpp:46)

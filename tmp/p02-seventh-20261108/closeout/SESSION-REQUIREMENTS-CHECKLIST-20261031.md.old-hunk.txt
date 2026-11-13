@@ -1,1 +1,0 @@
-[legacy FleetBattle3D 후보 준비](P02-HOST-PREP-RESULT-20261108.md)는 지정 오류와 동기 호출만 한정 수용. [진행표]

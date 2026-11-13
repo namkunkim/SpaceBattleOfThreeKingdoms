@@ -1,2 +1,0 @@
-compared=1657
-DIFF scripts\FleetBattle3D.gd

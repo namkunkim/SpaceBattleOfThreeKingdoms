@@ -6,8 +6,6 @@
 
 Godot 화면: 타이틀 **진형 배치도** 또는 전투 중 **진형 → 배치도 보기**. 7종 진형과 예시 편성·실제 아군 편성을 선택할 수 있다. 실제 렌더러와 같은 배치 함수를 사용하고 열람 중에는 전투가 멈춘다. 돌아가기·Esc로 기존 화면에 복귀한다. 구현은 `hud/ui_kit/formation_guide.gd`, 연결은 `deck_screens.gd`와 `command_deck.gd`, 검증은 `tests/formation_guide_ui.gd`다.
 
-함종 범례를 클릭하면 해당 함선에 테두리를 표시하고 나머지는 흐리게 표시한다. 같은 함종을 다시 누르거나 **전체 표시**를 누르면 해제한다. 진형·함대를 변경해도 강조할 함종은 유지하고, 편성에 없으면 0척으로 안내한다. HTML도 같은 선택 기능을 제공한다. [Godot 함종 선택 화면](evidence/fleet-role-layout/formation-guide-highlight.png)을 참고한다.
-
 실행 시 읽는 문서 정본은 [data/fleet-role-layout.md](../../data/fleet-role-layout.md)다. `FleetRenderer` 생성 시 해당 문서의 `fleet-role-layout` 설정 블록을 읽어 자리 우선순위와 선호 좌표에 적용한다. 문서 수정은 게임 재실행부터 반영된다. Android 내보내기에도 문서를 포함하며, 누락·오류 시 경고 후 내장 기본값을 사용한다.
 
 `FleetRenderer._role_points`는 기존 진형의 모든 좌표를 유지하면서 함종별 위치를 배정한다. 편성의 실제 척 수와 함종 ID를 유지한다.

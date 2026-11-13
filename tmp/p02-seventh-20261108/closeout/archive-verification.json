@@ -1,9 +1,0 @@
-{
-  "archive": "tmp/p02-seventh-20261108/closeout/P02-PREP-ERROR-DELIVERY-20261108.zip",
-  "bytes": 10159325,
-  "sha256": "df72060b8db835b40e3f1e52124bd49f3807af37b0283558a2c21a47a26d35a7",
-  "entries": 631,
-  "crc": "pass",
-  "entry_sha256_and_live_bytes": "pass",
-  "manifest_sha256": "818d0d06b7190c4e5c0e6cc50e77cdd0fd7b1c91a985e24f9e3c63196ad336b4"
-}

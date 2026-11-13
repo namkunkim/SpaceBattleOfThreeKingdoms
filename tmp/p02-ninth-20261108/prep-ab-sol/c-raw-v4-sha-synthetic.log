@@ -1,6 +1,0 @@
-accepted independent SHA over actual byte sequence
-rejected hex text hash packet raw byte SHA mismatch
-rejected same claimed SHA over modified bytes packet raw byte SHA mismatch
-rejected noncanonical upper-case hex packet raw hex
-rejected odd hex packet raw hex
-synthetic only

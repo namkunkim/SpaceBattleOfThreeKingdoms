@@ -1,3 +1,0 @@
-Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
-
-P02_HIDDEN_ORACLE {"commands_consumed":1,"controls":["direct","delegate"],"event_count":3,"events":[{"kind":"spawn","other":-1,"pos":"(0.0, 0.0)","sq":1,"tick":0,"value":null},{"kind":"spawn","other":-1,"pos":"(0.0, 0.0)","sq":2,"tick":0,"value":null},{"kind":"rejected","other":0,"pos":"(0.0, 0.0)","sq":1,"tick":0,"value":"no_contact"}],"summary":{"ally_alive":1,"clock_ms":100,"commands":1,"end_ms":-1,"end_tick":-1,"foe_alive":1,"fp":"4c029378fd07b2ad0b4f932ac1a8a24edfe31aefcb8ccdd62bfcd35af867869b","killed":0.0,"lost":0.0,"over":false,"reason":"timeout","reinf_t":-1.0,"t":0.1,"tick":1,"win":false}}

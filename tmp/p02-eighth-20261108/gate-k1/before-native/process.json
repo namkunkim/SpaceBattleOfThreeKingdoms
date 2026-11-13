@@ -1,7 +1,0 @@
-{
-  "exit": 1,
-  "timeout": false,
-  "user_after": {
-    "logs\\godot.log": "f2eb8972a61d7fc27f00793dec5ad3b3fe8c280845612acfd364252d6af6c971"
-  }
-}

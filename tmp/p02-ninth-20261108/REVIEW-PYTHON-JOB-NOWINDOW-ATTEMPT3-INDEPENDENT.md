@@ -1,9 +1,0 @@
-# Python no-window 3회차 독립 결과 심사
-
-판정: **실패 1회, normal 0/1. 비제품 Python 진단 K=3 소진; 재시도 금지.** `PYTHON-JOB-NOWINDOW-ATTEMPT3-RESULT.md` SHA `e38f7b1505efb4a2a16c34245722443b0ab4341cd7ad9e24963284e5becb0a04`, evidence JSON `f05884e39b7b45e76aa1940cf4e1c685a5aa50b5f081fea7fb39e07e847a8464` 확인. 심사 모델 gpt-6.1-terra. 이 심사에서는 어떤 child·Job·Godot·제품도 실행하지 않았다.
-
-raw 외부 stderr SHA `eb91bb86d45f548fbe314c065c04bdf1a8b187ff94c6869753b3eac6c071f2af`의 첫 진단은 normal/outer의 PID 35984 및 Windows console host 경로, 조회 전후 Job membership true, Python-only allowlist 불일치다. 새 broker의 CREATE_NO_WINDOW가 적용된 시험에서 해당 Job에 console-host 경로가 관측된 것은 사실이다. 어느 spawn edge에서 왔는지, 실 image bytes/서명·부모 및 과거 #1의 이미지가 무엇인지, timeout 또는 OS/Job race가 원인인지 이 자료로 확정할 수 없다. #2와 같은 경로 문자열이라는 관측은 동일한 원인이나 같은 프로세스를 증명하지 않는다. 원시 경로는 기존 로컬 증거에 보관한다.
-
-case outer journal SHA `0b5bd4f5fc903f16844b8e84f1a0750a2db6750263ddf4ef319aeeda8444a538`은 case-running, `drained=false`, broker exit 125만 기록한다. 첫 mismatch와 별도 cleanup ValueError가 있었지만 그 cleanup 오류의 정확한 실패 조건은 원문만으로 특정하지 못한다. mismatch retained HANDLE의 signalled 여부와 payload spawn/종료는 증명되지 않았다. 별도 global journal SHA `d352a7cb1e62b3abaa47b1258160cad44ad4652867932b6ff516af27b36c1dff`은 global owned_drained=true, output_complete=true, supervisor exit1을 기록한다. 이것은 case Job과 그 retained HANDLE 개별 종료의 대체 증거가 아니다. Sentinel journal은 해당 소유 sentinel exit 0을 기록한다. 보호 29/6 SHA 및 HEAD/ref 전후 일치는 전달 결과의 시점별 관측이며 중간 불변이나 모든 파일 보호를 보증하지 않는다.
-
-#1 및 #2 실패와 #3 실패를 모두 보존하고 동일 시험을 추가 반복하거나 K를 리셋하지 않는다. 새 allowance, 허용 목록 자동 확대나 재실행을 승인하지 않는다. 남은 안전한 비실행 작업은 보존된 source/공식 API 계약과 raw 기록을 비교하여 console-helper 소유·정리/retained HANDLE 관측 경계의 원인 가설과 증거 공백을 기술하고, 독립적인 P02 정적 작업을 계속하는 것이다. 실제 OS 동작·Godot ABI 또는 21행 성공이라고 확대하지 않는다. 기존 K6은 최초 제품 import/검증 spawn 전이라 한 회 남아 있으며 GUI provenance·제품 Job 적합성은 미해결이다. P03 작업과 모든 기존 증거는 보존한다.

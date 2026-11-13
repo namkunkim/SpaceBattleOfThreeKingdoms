@@ -1,4 +1,0 @@
-SCRIPT ERROR: Cannot call method 'get_var' on a null value.
-   at: _run (res://tests/p02_replay_adapter.gd:41)
-   GDScript backtrace (most recent call first):
-       [0] _run (res://tests/p02_replay_adapter.gd:41)

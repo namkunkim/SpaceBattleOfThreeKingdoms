@@ -1,6 +1,0 @@
-accepted five original pairs and equal true timestamps
-rejected missing repeat restore five restore calls and four raw boundaries per call
-rejected source state mutated restore mutated source _all
-rejected repeat changed selected state repeat restore not a no-op
-rejected producer ordinal forged single writer ordinal: unexpected value
-synthetic only

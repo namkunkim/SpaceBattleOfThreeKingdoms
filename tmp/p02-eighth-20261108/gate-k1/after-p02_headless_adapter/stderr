@@ -1,4 +1,0 @@
-SCRIPT ERROR: Cannot call method 'store_string' on a null value.
-   at: _run (res://tests/p02_headless_adapter.gd:368)
-   GDScript backtrace (most recent call first):
-       [0] _run (res://tests/p02_headless_adapter.gd:368)

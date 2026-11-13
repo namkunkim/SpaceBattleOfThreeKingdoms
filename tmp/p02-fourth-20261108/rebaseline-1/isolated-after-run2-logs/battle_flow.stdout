@@ -1,8 +1,0 @@
-Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
-
-[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fourth-20261108/rebaseline-1/isolated-after-run2-logs/user/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T14-29-57-27068-1125576.jsonl
-[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fourth-20261108/rebaseline-1/isolated-after-run2-logs/user/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T14-29-58-27068-2447017.jsonl
-[ORDER] move w=(846.0, 601.0) field=(1700.0, 1150.0) args={  } ["f4 pos=(446.0, 601.0) to=(846.0, 601.0)"]
-[TRACE] C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fourth-20261108/rebaseline-1/isolated-after-run2-logs/user/roaming/Godot/app_userdata/SpaceBattleOfThreeKingdoms/battle_traces/battle-2026-11-08T14-29-59-27068-2733541.jsonl
-[ORDER] move w=(1557.0, 792.0) field=(1700.0, 1150.0) args={  } ["f1 pos=(329.0, 792.0) to=(1490.0, 926.0)", "f2 pos=(457.0, 767.0) to=(1618.0, 901.0)", "f3 pos=(244.0, 894.0) to=(1405.0, 1029.0)", "f4 pos=(446.0, 601.0) to=(1607.0, 735.0)", "f5 pos=(499.0, 473.0) to=(1660.0, 607.0)", "f6 pos=(404.0, 422.0) to=(1564.0, 556.0)"]
-BATTLE_FLOW_PASS

@@ -1,9 +1,0 @@
-{
-  "archive": "tmp/p02-sixth-20261108/closeout-v2/P02-HOST-PREP-DELIVERY-20261108.zip",
-  "bytes": 3441998,
-  "sha256": "81648e3bdc13aae7a588f03fecedc3e09384832db8194f542ab22a0f4061a877",
-  "entries": 209,
-  "crc": "pass",
-  "entry_sha256_and_live_bytes": "pass",
-  "manifest_sha256": "8ec983ea8e7304981a33496d8e2eac7e84bf0f275e55eaa1a37c00b0a8fac13a"
-}

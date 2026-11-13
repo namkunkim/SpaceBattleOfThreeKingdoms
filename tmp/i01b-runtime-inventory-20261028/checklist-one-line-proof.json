@@ -1,8 +1,0 @@
-{
-  "inserted_line": "  - [x] **I01b-P2a B0 부분 runtime 관측(2026-10-28):** POC/적벽 표준×10seed×fresh2 역순 40관측·신규2352체크와 core/data/config/clock/detection/supply 6종 실제 exit0, 독립5-b 수용. B0≠C0·선택필드 관측이며 save_policy=UNCLASSIFIED, 운영 저장/복원·실제 어댑터·제품 공간은 미완료다. [결과·검토·압축 인계](pc-campaign-design/I01B-P2A-RESULT-20261028.md).",
-  "previous_text_identical_when_added_line_removed": true,
-  "before_sha256": "a2c38e1d267aa5349f07291343c9896294c4d895b5b7632fe5c0c0f85d77ac9a",
-  "after_sha256": "9554a7eaa884769e35782ed1ea69a3775c0a03f33522312e7eb0f9f5a0621765",
-  "bom_preserved": false,
-  "newline": "CRLF"
-}

@@ -1,5 +1,0 @@
-{
-  "name": "i01b_logical_clock",
-  "actual_exit": 0,
-  "script": "tests/i01b_logical_clock.gd"
-}

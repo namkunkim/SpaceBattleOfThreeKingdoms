@@ -1,9 +1,0 @@
-{
-  "command.json": "fc74627d27f89f606b9039c18b20482030855e5ad2927e8cd575ea6526359f53",
-  "engine.log": "f325cbb06292aae921a9e89c50ad7ac58c8aa6b87966d34606a0ff0a9021ed7a",
-  "engine.os.tsv": "5f35e727335f66ea84ad4ffce529d4b66f16b1e34109c9ab993f01c8e42b6b77",
-  "supervisor-argv.json": "fb849cd6ba8f0ba8821a906defd9ccc9ff1c66098958762ce40d3d012f33c845",
-  "supervisor-exit.json": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
-  "supervisor.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-  "supervisor.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-}

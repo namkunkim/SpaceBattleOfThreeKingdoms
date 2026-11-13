@@ -1,6 +1,0 @@
-Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
-OpenGL API 3.3.0 - Build 32.0.101.8626 - Compatibility - Using Device: Intel - Intel(R) Arc(TM) 130V GPU (8GB)
-
-P02_7 {"focus":"/root/FleetBattle3D/BattlePrepareError/SafeContent/PrepareErrorCard/@VBoxContainer@85/ExitBattlePrepareError","host_process":false,"layer":true,"legacy_visible":false,"phase":"initial","presentation":false,"sim":false}
-P02_7 {"code":1,"phase":"os-input","type":"mouse","x":838.749938964844,"y":518.749938964844}
-P02_7 {"brief_null":true,"last_difficulty":"표준","last_mode":"auto","outcome_null":true,"phase":"return","scene":"res://scenes/WorldMap.tscn"}

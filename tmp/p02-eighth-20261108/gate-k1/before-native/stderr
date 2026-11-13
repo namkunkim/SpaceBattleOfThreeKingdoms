@@ -1,6 +1,0 @@
-SCRIPT ERROR: Parse Error: Cannot call non-static function "call()" on the class "res://core/battle/operation_runtime_adapter.gd" directly. Make an instance instead.
-   at: GDScript::reload (res://_p02_native.gd:117)
-SCRIPT ERROR: Parse Error: Cannot call non-static function "call()" on the class "res://core/battle/operation_runtime_adapter.gd" directly. Make an instance instead.
-   at: GDScript::reload (res://_p02_native.gd:121)
-ERROR: Failed to load script "res://_p02_native.gd" with error "Parse error".
-   at: load (modules/gdscript/gdscript_resource_format.cpp:46)

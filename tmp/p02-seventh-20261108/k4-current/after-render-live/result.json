@@ -1,6 +1,0 @@
-{"focus":"","host_process":true,"layer":true,"legacy_visible":false,"phase":"initial","presentation":true,"sim":true}
-{"focus":"","host_process":true,"layer":true,"legacy_visible":false,"phase":"live-warning","presentation":true,"sim":true}
-{"height":720,"label":"live-warning","phase":"capture","save":0,"width":1280}
-{"phase":"recover-result","result":{"ok":true}}
-{"focus":"","host_process":true,"layer":false,"legacy_visible":false,"phase":"recover","presentation":true,"sim":true}
-{"height":720,"label":"recover","phase":"capture","save":0,"width":1280}

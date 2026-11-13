@@ -1,8 +1,0 @@
-{
-  "P02-EXEC-BOUNDARY-AND-C-RAW-V4-REVIEW.md": "e51b732c87583583b685461d9ee2143078ceedfbff5970a8fc023a9759203f50",
-  "build_c_producer_overlay_v4.py": "101421407cb3b5cd8e67d63c13ff65daaf50ac42866d4c97539d8484314e7197",
-  "c-producer-overlay-review-v4/SHA.json": "85cd20d01c2d727c04f9681d0257f0dc93cedeb970fd36020cb6b25fbd415347",
-  "c_raw_v4_semantic_adapter.py": "a0b4e873ef93daad0f8792734c587ec6e016fff8c6f3f454fe626c8a15b98a24",
-  "c-raw-v4-sha-synthetic.py": "094bde9b5ad95e341de5db6030b588862434f0d67e76e909e3dfa9718b3906a8",
-  "c-raw-v4-sha-synthetic.log": "faa7fe053a4b894c753705320576ee439a69e81416e1353dbfcc2a76343647c3"
-}

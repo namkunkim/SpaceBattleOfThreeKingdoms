@@ -1,1 +1,0 @@
- 구현 한정 수용. [legacy WorldMap 결산 경계](P02-LEGACY-OUTCOME-RESULT-20261108.md)도 한정 수용. [진행표](P02-PROGRESS-CHECKLIST.md). I01/K01~08

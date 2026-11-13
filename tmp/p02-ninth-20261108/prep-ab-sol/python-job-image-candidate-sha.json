@@ -1,9 +1,0 @@
-{
-  "PYTHON-JOB-IMAGE-DIAGNOSTIC-CANDIDATE-REVIEW.md": "54d2ecd9e35715725c01740b9415944c1cea7ca77cfb7999a8456b0088c58dac",
-  "variant-abi-review/PYTHON-JOB-IMAGE-DIAGNOSTIC-MANIFEST.json": "35b75ad6c43bf3d8f42a7a11cc2027e11c6641ea2cc15e47ab9f4183edd7e9f6",
-  "variant-abi-review/diagnostic_owner_candidate.py": "bf33c2b7498b75e93864f051fd80f692a9a2c587667a86e5432c1f0391b0adac",
-  "variant-abi-review/python_job_image_diagnostic_candidate.py": "5d02398b108ab9cf8f7252c6a9bbf85d0883b2d796629f70e1b4b5a035e94246",
-  "variant-abi-review/python_job_image_external_candidate.py": "792e0644998edfb24b4e588e054a4b391eb07bcc13d513e663496e252ce29b35",
-  "variant-abi-review/owned-image-candidate-synthetic.py": "b9cb18a187aa33111647ab7ef8cc66ac042722904f361f045200879446d6e505",
-  "variant-abi-review/owned-image-candidate-synthetic.log": "bb12c5bed8bfbce365993b2e26934ab61a4948c29e977e373b19c30a3dd2a282"
-}

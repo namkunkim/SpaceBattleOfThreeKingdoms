@@ -1,7 +1,0 @@
-accepted full synthetic two-lane rehearsal {'lane_rows': 10160, 'evaluation_witnesses': 8960, 'restore_calls': 200}
-rejected wrong external approval SHA external evidence pin SHA
-rejected fixture case pin changed fixture pin not approved
-rejected geometry insufficient source geometry clearance
-rejected request wrong restore receipt request id
-rejected cross-run independent distinct lane runs
-synthetic only

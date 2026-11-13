@@ -1,8 +1,0 @@
-{
-  "nominal": [["A", true, 1], ["A", true, 1], {"complete": true, "operations": ["applied", "skipped"], "notifications": []}],
-  "marker_first_interruption": [["A", true, 0], ["A", true, 0], {"complete": false, "operations": ["interrupted", "skipped"], "notifications": []}],
-  "effect_first_interruption": [["A", false, 1], ["A", true, 2], {"complete": false, "operations": ["interrupted", "applied"], "notifications": []}],
-  "projection_only": [["A", false, 0], ["A", false, 0], {"complete": false, "operations": ["notified", "notified"], "notifications": ["K", "K"]}],
-  "wrong_context": [["A", false, 0], ["A", false, 0], {"complete": false, "operations": ["context_mismatch"], "notifications": []}],
-  "rollback_countermodel": [["A", false, 0], ["A", true, 1], {"complete": true, "operations": ["interrupted", "applied"], "notifications": []}]
-}

@@ -1,1 +1,0 @@
-{"differences": {"missing_effects": [], "added_effects": [], "changed_effects": [], "missing_callers": [["core/battle/detection.gd", 94]], "added_callers": []}, "order_matches": true, "skills": 19, "effects": 33, "unique_effect_keys": 24, "caller_rows": 30}

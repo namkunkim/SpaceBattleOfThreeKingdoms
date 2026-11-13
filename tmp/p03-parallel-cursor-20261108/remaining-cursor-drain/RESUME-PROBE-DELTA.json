@@ -1,7 +1,0 @@
-{
-  "file": "probe.gd",
-  "before_sha": "955BFFF8A8CA35681BA9E7DE9FBD6EECB46D711A15C39819B91FAB03E6DA69A2",
-  "after_sha": "8692892413C05BCB6F170AD0A5AE774551E4FFB52B1355236BE4C3DC1C8B625D",
-  "before_line": "return _exact(owner.summary(), {\"ok\": false, \"error\": \"unprepared_owner\"})",
-  "after_line": "return _exact(owner.summary(), {\"ok\": false, \"error\": \"unprepared_owner\", \"path\": \"owner\"})"
-}

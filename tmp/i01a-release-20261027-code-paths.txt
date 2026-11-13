@@ -1,4 +1,0 @@
-core/battle/operation_profile.gd
-tests/i01_operation_config.gd
-tests/fixtures/i01/valid_definition.json
-tests/fixtures/i01/invalid_definitions.json

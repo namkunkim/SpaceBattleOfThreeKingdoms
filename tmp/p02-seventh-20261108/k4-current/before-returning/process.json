@@ -1,9 +1,0 @@
-{
-  "exit": null,
-  "timeout": true,
-  "inputs_unchanged": true,
-  "user_after": {
-    "settings.cfg": "c8b752aba9f5015889c00c5a45db9fef916af2a1e1be3e68d49b8121b2db721b",
-    "logs/godot.log": "7dc58872ed3cadc8ca2e0ecb6867db3d333aca0451485241b0e960a243dea1e2"
-  }
-}

@@ -1,1 +1,0 @@
-{"event":"external-watchdog","phase":"global-running","error":"ValueError: supervisor exit or descendants remained","owned_drained":true,"output_complete":true,"exit":1,"output_sha256":{"stdout":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855","stderr":"45f6b1cc6a54bea83cd33756ac4dadd1eea8bb177950b775eae084083534fc8c"}}

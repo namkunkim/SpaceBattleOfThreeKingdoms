@@ -1,8 +1,0 @@
-{
-  "status": "INDEPENDENT_ACCEPT_PC0_LEGACY_ONCE",
-  "manifest_path": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-first-pc-20261109/prepared-pc0-terminal/REVIEW-MANIFEST.json",
-  "manifest_sha256": "4783b7dbad772643726a8cf7b253f353aa48f0481b732634afc3bc41436b1cc7",
-  "scope": "PC0 legacy baseline only; no eighth-candidate K6 or product operation acceptance",
-  "attempts": 1,
-  "review": "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-first-pc-20261109/REVIEW-PREPARED-PC0-TERMINAL-INDEPENDENT.md"
-}

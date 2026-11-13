@@ -1,5 +1,0 @@
-## 한정 수용 — legacy FleetBattle3D 후보 준비
-
-- [x] 지정 bench patch 두 오류에서 기존 전투와 deck·편성 화면의 동기 상태를 보존한다. 공통 8행·27단언이 전후 일치했고 사후 10행·546단언과 전체 복구 trace 대조가 통과했다. clean WorldLink 기존 실패, 종료 진단, HUD 오류 표시 미검증을 별도로 기록했다. 제품 operation은 미연결이다. [결과](P02-HOST-PREP-RESULT-20261108.md) · [전용 체크리스트](P02-HOST-PREP-CHECKLIST-20261108.md) · [인계](SESSION-HANDOFF-P02-HOST-PREP-20261108.md) · [전달 ZIP](../../../tmp/p02-sixth-20261108/closeout/P02-HOST-PREP-DELIVERY-20261108.zip)
-
-## 남은 인수

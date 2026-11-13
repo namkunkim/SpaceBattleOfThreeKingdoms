@@ -1,1 +1,0 @@
-{"checks":{"fixture.invalid_auto_contract":true,"invalid.no.sim":false,"invalid.notice":false,"invalid.return.no.result":false},"facts":{},"failed":["invalid.no.sim","invalid.notice","invalid.return.no.result"],"lane":"D13","phase":"before"}

@@ -1,6 +1,0 @@
-FIFTH_FAIL A03 native briefing
-FIFTH_FAIL A06 product profile rejected: { "ok": false, "error": "unsupported_scenario", "path": "profile" }
-WARNING: 182 ObjectDB instances were leaked at exit (run with `--verbose` for details).
-   at: cleanup (core/object/object.cpp:2536)
-ERROR: 18 resources still in use at exit (run with --verbose for details).
-   at: clear (core/io/resource.cpp:822)

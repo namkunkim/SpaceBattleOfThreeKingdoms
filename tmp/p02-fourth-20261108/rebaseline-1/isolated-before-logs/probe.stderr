@@ -1,8 +1,0 @@
-SCRIPT ERROR: Parse Error: Cannot find member "resource_path" in base "OperationPrivateState".
-   at: GDScript::reload (C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fourth-20261108/rebaseline-1/probe.gd:14)
-SCRIPT ERROR: Parse Error: Cannot find member "resource_path" in base "BattleSim".
-   at: GDScript::reload (C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fourth-20261108/rebaseline-1/probe.gd:14)
-SCRIPT ERROR: Parse Error: Cannot find member "resource_path" in base "Detection".
-   at: GDScript::reload (C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fourth-20261108/rebaseline-1/probe.gd:14)
-ERROR: Failed to load script "C:/WorkSpace/SpaceBattleOfThreeKingdoms/tmp/p02-fourth-20261108/rebaseline-1/probe.gd" with error "Parse error".
-   at: load (modules/gdscript/gdscript_resource_format.cpp:46)

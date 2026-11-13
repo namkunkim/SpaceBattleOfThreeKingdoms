@@ -14,9 +14,6 @@ var fleet_picker: OptionButton
 var plot: Control
 var summary: Label
 var legends: Array[Label] = []
-var legend_buttons: Array[Button] = []
-var selected_type := -1
-var clear_button: Button
 var chart_ids: Array = []
 var chart_points: Array = []
 var textures: Array[Texture2D] = []
@@ -42,13 +39,6 @@ func _init(d: Control) -> void:
 	var title := UiTheme.label("함종별 진형 배치도", "", 24)
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header.add_child(title)
-	clear_button = Button.new()
-	clear_button.text = "전체 표시"
-	clear_button.custom_minimum_size = Vector2(112, 48)
-	clear_button.pressed.connect(func():
-		selected_type = -1
-		_refresh_selection())
-	header.add_child(clear_button)
 	var close := Button.new()
 	close.name = "CloseGuide"
 	close.text = "돌아가기 · Esc"
@@ -97,39 +87,23 @@ func _init(d: Control) -> void:
 		var model: int = deck.renderer._model_class("SHP-%02d" % (i + 1))
 		var texture: Texture2D = load("res://assets/ships/silhouette/%d.png" % model)
 		textures.append(texture)
-		var button := Button.new()
-		button.name = "ShipType%02d" % (i + 1)
-		button.toggle_mode = true
-		button.custom_minimum_size = Vector2(312, 56)
-		button.tooltip_text = "클릭하여 해당 함종 위치 강조 · 다시 클릭하면 전체 표시"
-		button.pressed.connect(_select_type.bind(i))
-		legend_buttons.append(button)
-		key_grid.add_child(button)
 		var row := HBoxContainer.new()
-		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		button.add_child(row)
-		row.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		row.offset_left = 6
-		row.offset_right = -6
-		row.offset_top = 4
-		row.offset_bottom = -4
+		row.custom_minimum_size = Vector2(300, 48)
+		key_grid.add_child(row)
 		var chip := ColorRect.new()
 		chip.color = COLORS[i]
 		chip.custom_minimum_size.x = 4
-		chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		row.add_child(chip)
 		var icon := TextureRect.new()
 		icon.texture = texture
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.custom_minimum_size = Vector2(64, 32)
-		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		row.add_child(icon)
 		var label := UiTheme.label("", "", 13)
-		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		legends.append(label)
 		row.add_child(label)
-	var note := UiTheme.label("함종을 클릭하면 위치 강조 · 다시 클릭하거나 전체 표시로 해제 · 위쪽이 전방 ↑ · 열람 중 전투 정지 · 고속정은 요격함 이미지 사용", "Muted", 12)
+	var note := UiTheme.label("이미지 위쪽이 전방 ↑ · 점 색상은 오른쪽 함종 범례와 대응 · 열람 중 전투 정지 · 고속정은 요격함 이미지 사용", "Muted", 12)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	column.add_child(note)
 	resized.connect(_layout)
@@ -145,7 +119,6 @@ func close_guide() -> void:
 	deck.show_screen(back_screen)
 
 func on_show() -> void:
-	selected_type = -1
 	fleet_picker.clear()
 	fleet_picker.add_item("예시 편성 · 56척")
 	fleet_picker.set_item_metadata(0, -1)
@@ -180,27 +153,11 @@ func _sync() -> void:
 	chart_ids = deck.renderer._real_ship_ids(counts)
 	var shape: int = BattleRules.FORM_SHAPE[formation_picker.selected]
 	chart_points = deck.renderer._role_points(deck.renderer.formation_points(shape, chart_ids.size()), chart_ids)
-	_refresh_selection()
-
-func _select_type(index: int) -> void:
-	selected_type = -1 if selected_type == index else index
-	_refresh_selection()
-
-func _refresh_selection() -> void:
 	summary.text = "%s · %s · %d척 · %s" % [FORM_NAMES[formation_picker.selected], PURPOSE[formation_picker.selected], chart_ids.size(), fleet_picker.get_item_text(fleet_picker.selected)]
-	if selected_type >= 0:
-		var selected_id := "SHP-%02d" % (selected_type + 1)
-		var count := chart_ids.count(selected_id)
-		summary.text += " · %s %d척 %s" % [ScenarioRoster.SHIP_TYPES[selected_id].name, count, "강조" if count > 0 else "(편성에 없음)"]
-	clear_button.disabled = selected_type < 0
 	for i in 8:
 		var type_id := "SHP-%02d" % (i + 1)
-		legend_buttons[i].set_pressed_no_signal(selected_type == i)
-		legends[i].text = "%s%s · %d척\n%s" % ["선택 · " if selected_type == i else "", ScenarioRoster.SHIP_TYPES[type_id].name, chart_ids.count(type_id), ROLES[i]]
+		legends[i].text = "%s · %d척\n%s" % [ScenarioRoster.SHIP_TYPES[type_id].name, chart_ids.count(type_id), ROLES[i]]
 	plot.queue_redraw()
-
-func ship_alpha(index: int) -> float:
-	return 1.0 if selected_type < 0 or selected_type == index else 0.18
 
 func _input(event: InputEvent) -> void:
 	if visible and event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
@@ -232,10 +189,7 @@ class Diagram extends Control:
 			var factor: float = [1.12, 1.04, 0.98, 1.0, 0.92, 0.82, 0.72, 0.48][type]
 			var len_ := length * factor
 			var pos := Vector2(size.x * 0.5 + (p.z - center.x) * scale_, (size.y + 24) * 0.5 - (p.x - center.y) * scale_)
-			var alpha: float = guide.ship_alpha(type)
-			if guide.selected_type == type:
-				draw_rect(Rect2(pos - Vector2(len_ * 0.125 + 5, len_ * 0.5 + 5), Vector2(len_ * 0.25 + 10, len_ + 10)), COLORS[type], false, 2.0)
 			draw_set_transform(pos, PI * 0.5)
-			draw_texture_rect(guide.textures[type], Rect2(-len_ * 0.5, -len_ * 0.125, len_, len_ * 0.25), false, Color(1, 1, 1, alpha))
+			draw_texture_rect(guide.textures[type], Rect2(-len_ * 0.5, -len_ * 0.125, len_, len_ * 0.25), false)
 			draw_set_transform(Vector2.ZERO)
-			draw_circle(pos + Vector2(0, len_ * 0.5 + 4), 2.5, Color(COLORS[type], alpha))
+			draw_circle(pos + Vector2(0, len_ * 0.5 + 4), 2.5, COLORS[type])

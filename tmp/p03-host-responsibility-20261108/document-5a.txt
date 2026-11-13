@@ -1,1 +1,0 @@
-PASS inputs=20 groups=8 counterexamples=3 links=28 index=0 Godot_runs=0

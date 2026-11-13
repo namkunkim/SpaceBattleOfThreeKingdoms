@@ -1,7 +1,0 @@
-{
-  "separate_probe_count": 1,
-  "actual_exit": 1,
-  "main_runner_limit": 6,
-  "main_runner_attempts": 4,
-  "purpose": "independent 5b malformed empty formation counterexample"
-}
