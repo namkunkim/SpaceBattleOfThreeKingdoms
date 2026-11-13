@@ -316,3 +316,26 @@ C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe --headless --path . --scrip
 | `formation.pcopreplay` | `156e8fdb4c5d33989caf5231bfa54f8b65081a5979e86c831f588d0702751aba` |
 
 [격리 시험 근거](F:/WorkSpace/Campaign-Orchestration/P05-v2-native-loader-20261113/paired-02)
+
+## 검증 실패 시 활성 소유자 보존과 재시도
+
+별도 개발 로더의 격리 호스트에서 잘못된 JSON, 체크섬 불일치, 유효한 체크섬을 가진 잘못된 상태 증거값을 차례로 거부했다. 세 경우 모두 기존 활성 소유자와 대기 진형 명령을 포함한 체크포인트가 일치했다. 상태 증거값이 다른 후보는 별도 소유자에서 재구성한 뒤 닫았다. 같은 호스트가 유효한 파일로 재시도하자 검증을 마친 후보로 교체하고 기존 소유자를 닫았다. 남은 49틱을 진행한 51틱 상태는 기존 격리 리플레이와 일치했다. PID 31612, 10/10, 종료 코드 0이었다.
+
+후보는 재구성에 앞서 내부 소유자의 publish()를 호출했으며, 호스트의 활성 참조는 검증을 마친 뒤에만 교체했다. 이 범위는 단일 함대·한 방향의 시험용 호스트이며 제품 로더와 UI는 시험 범위 밖이다.
+
+`F:/WorkSpace/.codex/worktree/p05-formation-20261113`의 `e52f64668d043ab99ee13588cb6bb8f73e78be2a`에서 실행했다. 관련 코어·어댑터·코덱·시나리오·프로젝트 파일은 기준 main `ff2c6c06888386cc8cf5f36cd92447a1189fc9af`와 같았다. `APPDATA`와 `LOCALAPPDATA`는 아래 근거 폴더의 `profile`, `P05_V2_ROOT`는 근거 폴더, `P05_V2_PAIRED`는 `F:/WorkSpace/Campaign-Orchestration/P05-v2-native-loader-20261113/paired-02`로 지정했다.
+
+```text
+C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe --headless --path . --script F:/WorkSpace/Campaign-Orchestration/P05-v2-staged-loader-20261114/probe.gd
+```
+
+| 근거 | SHA-256 |
+| --- | --- |
+| Godot 콘솔 실행기 | `c8f0a6bc45a19b33541501e57f6f7cd972ab18453743266339d495cbbe846643` |
+| `probe.gd` | `36a77d27c9ca4950bed3fb285cb7468f87e96acd817bcdf26a3eb9e06e314795` |
+| `probe.out` | `f9d1cf2c1f7528e2cb1d0867ea6552b1bcc2a314047780c588c362eb3ea0cc0a` |
+| `malformed.json` | `021fb596db81e6d02bf3d2586ee3981fe519f275c0ac9ca76bbcf2ebb4097d96` |
+| `bad-checksum.json` | `d259e4b1c7dfdbaeb7b250639a97c6daf89db04c414fc1ce5f9df48357854126` |
+| `wrong-witness.json` | `fc048c8b9800e02e694d792b4d990288ea2c3e845450b77fd3442b169e3f9338` |
+
+[격리 시험 근거](F:/WorkSpace/Campaign-Orchestration/P05-v2-staged-loader-20261114)
