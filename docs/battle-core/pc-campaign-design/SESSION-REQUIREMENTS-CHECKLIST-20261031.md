@@ -6,7 +6,7 @@
 
 | 남은 작업 | 확인된 진척 | 완료 조건 |
 | --- | --- | --- |
-| K6 변경분 | 15·16행 정식 비교 4건 통과, 17·18행 공개 경로 헤드리스 47/47, 4dac0b8d 17-before 필수 Skip 누락으로 정식 PASS 0건, 17·18행 전후 프로젝트 로딩 통과 | 실행 매니페스트 확정과 17·18행 Windows 정식 전후 비교. [재개 절차](K6-ROW17-18-WINDOWS-RETRY.md) |
+| K6 변경분 | 15·16행 정식 비교 4건 통과, 17·18행 공개 경로 헤드리스 47/47, `4dac0b8d` 17-before 첫 시도 Skip 누락, [재시도 10건 원시·의미 독립 PASS](WINDOWS-BACKGROUND-VERIFICATION-20261113.md#k6-17-before-재시도-독립-검토), 17·18행 전후 프로젝트 로딩 통과 | 실행 매니페스트 확정과 17·18행 Windows 정식 전후 비교. [재개 절차](K6-ROW17-18-WINDOWS-RETRY.md) |
 | P02·P03·P04 일반 운영 | 적벽 v1 저장·이어하기·결산 복구, P04 파일 선택기 왕복, 로컬 SQLite 펜싱·복구 4/4 | 승인된 후속 작전의 C0·명령 승계와 두 번째 Windows 호스트에서의 영속 펜싱 검증. [후속 작전 검증](P02-P03-SUCCESSOR-CANDIDATE-INVENTORY.md) |
 | P05·P06·P07 확장 | P05 5초 궤적 214/214, 가속도 포함 렌더러 헤드리스 30/30. 진형 명령의 체크포인트·리플레이 거부를 포함한 회귀 36/36. 선택형 렌더러 종료 표시 포함 47/47. [P05 표시 가속도 오프라인 36건](P05-DISPLAY-ACCELERATION-FEASIBILITY-20261113.md) 및 [고정 주사율 위상별 하한](P05-DISPLAY-ACCELERATION-FEASIBILITY-20261113.md#고정-주사율에서-위상별-최소-시간). 제한 FX-G 체크포인트 100→150ms 복원 16/16, 별도 Windows 프로세스 저장 11/11·재개 13/13, 저장 완료 후 강제 종료·재개 13/13 | 공개 제품 명령과 렌더러 연결, 가속도 상한과 종료 표시의 제품 연결·시간 기준, 추가 작전 규칙과 A05/A06 종합 검증. [가속도 테스트](../../../tests/p05_formation_renderer.gd) · [렌더러 틱과 FX-G 재시작 검증](FORMATION-FXG-HEADLESS-20261113.md) |
 | P08·P09·O07 인수 | `4dac0b8d` 패키지 지문 검증 및 격리 기동 3/3. 제한 검증 호스트 정면 목표 달성과 리플레이 선택기 열기·취소 관찰. [실행 근거](WINDOWS-BACKGROUND-VERIFICATION-20261113.md#windows-후보-4dac0b8d-후속-검증) | 대표 플레이·성능, 실제 오디오 종료·전체 TRACE, 운영 슬롯 전환·외부 지급·물리 전원 차단 복구. [인수 준비](../../entry/windows-acceptance-preparation-20261113-ko.md) |
