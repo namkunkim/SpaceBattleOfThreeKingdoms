@@ -102,11 +102,11 @@ static func external_save_dialog(exporting: bool) -> FileDialog:
 		dialog.current_file = "battle.pcopsave"
 	return dialog
 
-static func read_external_battle(path: String) -> Dictionary:
+static func read_external_battle(path: String, product := false) -> Dictionary:
 	var codec := _external_save_codec()
 	if codec == null:
 		return {"ok": false, "error": "external_save_unavailable", "path": "codec"}
-	return codec.read(path)
+	return codec.read(path, product)
 
 static func _external_save_codec() -> Script:
 	if not ResourceLoader.exists(EXTERNAL_SAVE):
@@ -170,7 +170,7 @@ func _publish_candidate(candidate: RefCounted, target: BattleBrief, restored: bo
 	_start.show()
 	var product := _is_product()
 	_load.disabled = not restored or (product and not product_save_supported())
-	_import.disabled = not restored or product
+	_import.disabled = not restored or (product and not product_save_supported())
 	_save_status.text = "Restored at tick %d" % frame.tick if restored else ""
 	if previous != null:
 		previous.close()
@@ -224,8 +224,8 @@ func _begin() -> void:
 	var product := _is_product()
 	_save.disabled = product and not product_save_supported()
 	_load.disabled = _save.disabled
-	_export.disabled = product
-	_import.disabled = product
+	_export.disabled = _save.disabled
+	_import.disabled = _save.disabled
 	for button in _commands:
 		button.disabled = false
 	set_process(true)
@@ -477,6 +477,7 @@ func _select_external_file(exporting: bool) -> void:
 func _close_external_dialog() -> void:
 	if _file_dialog == null:
 		return
+	_file_dialog.hide()
 	_file_dialog.queue_free()
 	_file_dialog = null
 	set_process(_file_processing)
@@ -486,9 +487,14 @@ func _external_file_selected(path: String, exporting: bool) -> void:
 		return
 	_close_external_dialog()
 	if not exporting:
-		var imported := read_external_battle(path)
+		var product := _is_product()
+		var imported := read_external_battle(path, product)
+		if imported.ok and product:
+			var status := Settlements.check_product_unsettled(imported.payload.operation_id)
+			if not status.ok:
+				imported = status
 		if imported.ok:
-			_restore_battle(imported.payload)
+			_restore_battle(imported.payload, product)
 		else:
 			_save_status.text = error_text(imported)
 		return
@@ -500,10 +506,10 @@ func _external_file_selected(path: String, exporting: bool) -> void:
 	if not captured.ok:
 		_save_status.text = error_text(captured)
 		return
-	var saved: Dictionary = codec.write(captured.packet, path)
+	var saved: Dictionary = codec.write(captured.packet, path, _is_product())
 	_save_status.text = "Exported at tick %d" % frame.tick if saved.ok else error_text(saved)
 
-func _restore_battle(packet: Dictionary) -> void:
+func _restore_battle(packet: Dictionary, external_product := false) -> void:
 	var pending := begin_restore(packet, brief)
 	if not pending.ok:
 		_save_status.text = error_text(pending)
@@ -530,7 +536,14 @@ func _restore_battle(packet: Dictionary) -> void:
 			return
 		if next.done:
 			_finish_battle_restore()
-			var result := _publish_candidate(next.owner, pending.brief, true)
+			var result: Dictionary
+			if external_product:
+				result = Settlements.publish_unsettled_product(packet.operation_id,
+					_publish_candidate.bind(next.owner, pending.brief, true))
+				if not result.ok:
+					next.owner.close()
+			else:
+				result = _publish_candidate(next.owner, pending.brief, true)
 			if not result.ok:
 				_save_status.text = error_text(result)
 			return
