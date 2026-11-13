@@ -78,9 +78,12 @@ func _run() -> void:
 			renderer.free()
 			quit(1)
 			return
+	var schedule_peaks := {}
+	for sq: Dictionary in source.rows:
+		schedule_peaks[sq.id] = _check_schedule_acceleration(renderer.vis[sq.id].p05, bindings[sq.id])
 	for cadence: Array in [[60, 0.0], [30, 0.0], [120, 0.0], [60, 0.35], [60, 5.0]]:
 		for reverse in [false, true]:
-			_measure(renderer, source, bindings, cadence[0], cadence[1], reverse)
+			_measure(renderer, source, bindings, cadence[0], cadence[1], reverse, schedule_peaks)
 	# Motion outside the certified fixed origin is allowed to use the ordinary renderer.
 	source.rows[0].pos += Vector2.ONE
 	renderer.update(1.0 / 60.0)
@@ -90,7 +93,52 @@ func _run() -> void:
 	quit(0 if failures == 0 else 1)
 
 
-func _measure(renderer: FleetRenderer, source: RouteSource, ids: Dictionary, hz: int, skip: float, reverse: bool) -> void:
+# The quintic f(u) = 6u^5 - 15u^4 + 10u^3 has its acceleration extrema
+# at (3 ± sqrt(3))/6. The time-reversed route has the same peak magnitude.
+func _check_schedule_acceleration(schedule: Schedule, fleet: String) -> float:
+	var extremum := (3.0 - sqrt(3.0)) / 6.0
+	var peak_factor := 10.0 * sqrt(3.0) / 3.0
+	var peak := 0.0
+	var peak_ship := ""
+	var peak_phase := -1
+	var derivative_matches := true
+	for phase in range(schedule.knots.size() - 1):
+		var begin := schedule.knots[phase]
+		var duration := schedule.knots[phase + 1] - begin
+		if not _check(duration > 0.0 and is_finite(duration), "%s positive finite phase duration" % fleet, false):
+			return 0.0
+		var step := duration / 64.0
+		for u in [extremum, 1.0 - extremum]:
+			var time: float = begin + duration * u
+			var before := schedule.sample(time - step)
+			var center := schedule.sample(time)
+			var after := schedule.sample(time + step)
+			for row: Dictionary in schedule.rows:
+				var id: String = row.id
+				var start: Vector2 = schedule.layouts[phase][id]
+				var finish: Vector2 = schedule.layouts[phase + 1][id]
+				var acceleration := (finish - start) * (peak_factor / (duration * duration))
+				var position: Vector2 = center[id]
+				var measured := ((Vector2(after[id]) - position) - (position - Vector2(before[id]))) / (step * step)
+				var expected := acceleration if u < 0.5 else -acceleration
+				# Central-difference truncation and single-precision Vector2 rounding.
+				var rounding := 0.000001 * maxf(start.length(), finish.length()) / (step * step)
+				derivative_matches = derivative_matches and measured.distance_to(expected) <= expected.length() * 0.003 + rounding
+				var magnitude := acceleration.length()
+				if magnitude > peak:
+					peak = magnitude
+					peak_ship = id
+					peak_phase = phase
+	_check(derivative_matches, "%s schedule samples match both signed acceleration extrema" % fleet)
+	_check(peak > 0.0 and is_finite(peak), "%s schedule has a finite acceleration peak" % fleet)
+	print("P05_SCHEDULE_ACCELERATION ", JSON.stringify({"fleet": fleet, "duration_s": Schedule.DURATION,
+		"peak_acceleration": peak, "peak_ship": peak_ship, "peak_phase": peak_phase,
+		"units": "tactical_units_per_second_squared"}))
+	return peak
+
+
+func _measure(renderer: FleetRenderer, source: RouteSource, ids: Dictionary, hz: int, skip: float,
+		reverse: bool, schedule_peaks: Dictionary) -> void:
 	var measures := {}
 	for sq: Dictionary in source.rows:
 		var v: FleetRenderer.FleetVis = renderer.vis[sq.id]
@@ -154,7 +202,8 @@ func _measure(renderer: FleetRenderer, source: RouteSource, ids: Dictionary, hz:
 		print("P05_RENDERER_OBSERVATION ", JSON.stringify({"fleet": ids[sq.id], "hz": hz,
 			"skip_s": skip, "reverse": reverse, "completion_s": m.completed,
 			"deferred_frames": m.deferred_frames, "peak_speed": m.peak_speed,
-			"peak_acceleration": m.peak_acceleration}))
+			"peak_acceleration": m.peak_acceleration,
+			"schedule_peak_ratio": m.peak_acceleration / schedule_peaks[sq.id] if schedule_peaks[sq.id] > 0.0 else null}))
 
 
 func _positions(v: FleetRenderer.FleetVis, sq: Dictionary) -> Dictionary:
