@@ -1,0 +1,80 @@
+{
+  "commit": "efc27ff3e4ff7d61f8e27e750334b3adbdd618b7",
+  "engine_sha256": "C8F0A6BC45A19B33541501E57F6F7CD972AB18453743266339D495CBBE846643",
+  "pid": 18784,
+  "diagnostics": 0,
+  "exit": 0,
+  "invocation": {
+    "mode": "headless",
+    "script": "res://tests/first_operation_public_external_save.gd",
+    "user_argument": "state-digest"
+  },
+  "source_sha256": [
+    {
+      "path": "tests/first_operation_public_external_save.gd",
+      "sha256": "428EE497FCC86800D5E2250535CC05BE1A118FE14BD85149327FA250D8B7595E"
+    },
+    {
+      "path": "scripts/first_operation_host.gd",
+      "sha256": "21B0437670855ABEA0646418DB87A6E770C3E324D425816DD25C9C76F3825FE8"
+    },
+    {
+      "path": "scripts/first_operation_external_save.gd",
+      "sha256": "3D67F0AF82B2004C2CFBADF024CB8A3E2A496400DC5D4D2BC517D533851250D7"
+    },
+    {
+      "path": "scripts/first_operation_settlement_store.gd",
+      "sha256": "069BE0B09F451A13B9482966815BA55D2B18ADA05C0FB82B1FB592FB814C3E0A"
+    },
+    {
+      "path": "scripts/entry/entry_boot.gd",
+      "sha256": "23BFD56A8C54B0A46CB0A96AD1E4019992FD6E5FD3CABDBCD5887B8E8B465812"
+    },
+    {
+      "path": "native/o07_win32/o07_win32.dll",
+      "sha256": "EBD3B5CE05D43BB89DC2D421047A2CA685A246086BD9298AF6AD353760FCA9D0"
+    }
+  ],
+  "source_run_sha256": "7b49a37f9b27081c3068878ec215b38f4815cb358988a2fc5e750d16070f415c",
+  "stdout_sha256": "d4a7976610d5e29585f94d4425e7436452786357746c7bfea8c03a953273dea8",
+  "assertions": [
+    "P03_PUBLIC_CURSOR_CHECK true isolated Windows profile",
+    "P03_PUBLIC_CURSOR_CHECK true fresh isolated slots",
+    "P03_PUBLIC_CURSOR_CHECK true EntryBoot offers 적벽대전 시작",
+    "P03_PUBLIC_CURSOR_CHECK true EntryBoot offers 서사 건너뛰기",
+    "P03_PUBLIC_CURSOR_CHECK true EntryBoot offers 기존 진행 이어하기 / 결산",
+    "P03_PUBLIC_CURSOR_CHECK true public first-operation button prepares sortie",
+    "P03_PUBLIC_CURSOR_CHECK true sortie presents the skip control",
+    "P03_PUBLIC_CURSOR_CHECK true public entry publishes product host",
+    "P03_PUBLIC_CURSOR_CHECK true public host offers Move to waypoint 1",
+    "P03_PUBLIC_CURSOR_CHECK true public host offers Stop",
+    "P03_PUBLIC_CURSOR_CHECK true capture product checkpoint",
+    "P03_PUBLIC_CURSOR_CHECK true fixture has a consumed event cursor and applied and pending commands",
+    "P03_PUBLIC_CURSOR_CHECK true button commits exact primary checkpoint",
+    "P03_PUBLIC_CURSOR_CHECK true button commits exact primary checkpoint",
+    "P03_PUBLIC_CURSOR_CHECK true seed both settlement generations",
+    "P03_PUBLIC_CURSOR_CHECK true all four protected files exist",
+    "P03_PUBLIC_CURSOR_CHECK true public external button enabled",
+    "P03_PUBLIC_CURSOR_CHECK true public picker has expected mode and filter",
+    "P03_PUBLIC_CURSOR_CHECK true uninterrupted tick consumes pending Stop",
+    "P03_PUBLIC_CURSOR_CHECK true capture product checkpoint",
+    "P03_PUBLIC_CURSOR_CHECK true valid public export matches checkpoint",
+    "P03_PUBLIC_CURSOR_CHECK true canonical packet differs only in state digest",
+    "P03_PUBLIC_CURSOR_CHECK true public external button enabled",
+    "P03_PUBLIC_CURSOR_CHECK true public picker has expected mode and filter",
+    "P03_PUBLIC_CURSOR_CHECK true tampered candidate enters private replay",
+    "P03_PUBLIC_CURSOR_CHECK true tampered replay finishes",
+    "P03_PUBLIC_CURSOR_CHECK true capture product checkpoint",
+    "P03_PUBLIC_CURSOR_CHECK true late failure preserves live owner, brief, checkpoint and controls",
+    "P03_PUBLIC_CURSOR_CHECK true late failure preserves all four files without staging",
+    "P03_PUBLIC_CURSOR_CHECK true public external button enabled",
+    "P03_PUBLIC_CURSOR_CHECK true public picker has expected mode and filter",
+    "P03_PUBLIC_CURSOR_CHECK true same-host retry finishes",
+    "P03_PUBLIC_CURSOR_CHECK true capture product checkpoint",
+    "P03_PUBLIC_CURSOR_CHECK true retry publishes exact checkpoint without republishing consumed events",
+    "P03_PUBLIC_CURSOR_CHECK true capture product checkpoint",
+    "P03_PUBLIC_CURSOR_CHECK true pending Stop applies once and reproduces uninterrupted state",
+    "P03_PUBLIC_CURSOR_CHECK true retry preserves all four files without staging"
+  ],
+  "result": "P04_PUBLIC_EXTERNAL_SAVE checks=37 failures=0"
+}
