@@ -4,7 +4,6 @@ const Lease := preload("res://scripts/cross_counter/public_lease.gd")
 const Parent := preload("res://scripts/cross_counter/public_parent.gd")
 const Store := preload("res://scripts/first_operation_save_store.gd")
 const Publisher := preload("res://scripts/o07_windows_slot.gd")
-const Checkpoint := preload("res://core/battle/first_operation_checkpoint.gd")
 
 const SLOT_PATH := "user://cross-counter-successor-v1.save"
 const FORMAT := "cross-counter-successor-slot/1"
@@ -101,7 +100,7 @@ func settle(packet: Dictionary, settlement: Dictionary) -> Dictionary:
 			or not packet.bootstrap_done or not _valid_settlement(settlement, operation_id, packet.clock_ms) \
 			or not _valid_settlement(packet.settlement, operation_id, packet.clock_ms) or packet.settlement != settlement:
 		return _fail("cross_counter_invalid_terminal_checkpoint")
-	var digest := Checkpoint.digest_value(packet)
+	var digest := _sha(var_to_bytes(packet))
 	for receipt: Dictionary in _head.completed.values():
 		if receipt.operation_id == operation_id:
 			if receipt.packet_sha256 == digest and receipt.settlement == settlement:
@@ -135,7 +134,7 @@ func _store_active(active: Dictionary, packet: Dictionary) -> Dictionary:
 	var next := _head.duplicate(true)
 	next.active = active.duplicate(true)
 	next.active.packet_bytes = Marshalls.raw_to_base64(bytes)
-	next.active.packet_sha256 = Checkpoint.digest_value(packet)
+	next.active.packet_sha256 = _sha(bytes)
 	return _publish(next)
 
 
@@ -192,7 +191,7 @@ static func _decode_packet(active: Dictionary) -> Dictionary:
 	if bytes.is_empty() or bytes.size() > MAX_PACKET_BYTES or Marshalls.raw_to_base64(bytes) != encoded:
 		return {}
 	var packet: Variant = bytes_to_var(bytes)
-	if not packet is Dictionary or Checkpoint.digest_value(packet) != active.get("packet_sha256"):
+	if not packet is Dictionary or _sha(bytes) != active.get("packet_sha256"):
 		return {}
 	return packet
 
@@ -229,6 +228,13 @@ static func _parent_id(value: Variant) -> bool:
 
 static func _operation_id(value: Variant) -> bool:
 	return value is String and value.begins_with(OPERATION_PREFIX) and _hex(value.trim_prefix(OPERATION_PREFIX), 32)
+
+
+static func _sha(bytes: PackedByteArray) -> String:
+	var hashing := HashingContext.new()
+	hashing.start(HashingContext.HASH_SHA256)
+	hashing.update(bytes)
+	return hashing.finish().hex_encode()
 
 
 static func _digest(value: Variant) -> bool:

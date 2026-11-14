@@ -80,6 +80,11 @@ var _operation_auto_cancelling := false
 var _operation_auto_pending: BattleOutcome
 var _operation_auto_save_error := ""
 var _title_button: Button
+const CrossCounterHost := preload("res://scripts/cross_counter/public_host.gd")
+const CrossCounterSlot := preload("res://scripts/cross_counter/public_slot.gd")
+var _cross_counter_button: Button
+var _cross_counter_parent_id := ""
+var _cross_counter_host: CrossCounterHost
 var _atlas_resume_button: Button
 var _atlas_skirmish_button: Button
 var _difficulty := "표준"
@@ -423,6 +428,11 @@ func _build_result() -> void:
 	_res_labels.epilogue.name = "ResultEpilogue"
 	_res_labels.epilogue.add_theme_constant_override("line_spacing", 8)
 	column.add_child(_res_labels.epilogue)
+	_cross_counter_button = _btn("Cross Counter · 교차 반격")
+	_cross_counter_button.name = "OpenCrossCounter"
+	_cross_counter_button.hide()
+	_cross_counter_button.pressed.connect(_open_cross_counter)
+	column.add_child(_cross_counter_button)
 	var spacer := Control.new()
 	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	column.add_child(spacer)
@@ -1181,9 +1191,65 @@ func _show_result(o: BattleOutcome, animate := true) -> void:
 	else:
 		_res_labels.epilogue.text = "적벽에서 전열이 무너진 연합함대는 살아남은 함선들을 이끌고 물러났다. 조조의 함대가 항로를 장악한 가운데, 손권과 유비는 흩어진 병력을 모아 다시 맞설 날을 준비한다."
 	_result.visible = true
+	_update_cross_counter()
 	_update_inset()
 	if animate:
 		sound.play("decision")
+
+func _update_cross_counter() -> void:
+	_cross_counter_button.hide()
+	_cross_counter_parent_id = ""
+	if not OS.has_feature("windows") or OS.get_cmdline_user_args().has(BattleBrief.FIRST_OPERATION_DEV_ARG):
+		return
+	var displayed_id := outcome.settlement_id if outcome != null else ""
+	var inspected := CrossCounterSlot.inspect()
+	if not inspected.ok:
+		if not displayed_id.is_empty() and CrossCounterSlot.eligible_parent(displayed_id).ok:
+			_cross_counter_button.show()
+			_cross_counter_button.disabled = true
+			_cross_counter_button.text = "Cross Counter · 사용 중"
+		return
+	var head: Dictionary = inspected.head
+	var active: Dictionary = head.active
+	var parent_id: String = active.get("parent_id", displayed_id)
+	if parent_id.is_empty() or not CrossCounterSlot.eligible_parent(parent_id).ok:
+		return
+	_cross_counter_parent_id = parent_id
+	_cross_counter_button.show()
+	_cross_counter_button.disabled = false
+	if not active.is_empty():
+		_cross_counter_button.text = "Cross Counter 재개"
+	elif head.completed.has(parent_id):
+		_cross_counter_button.text = "Cross Counter 결산 보기"
+	else:
+		_cross_counter_button.text = "Cross Counter · 교차 반격 출격"
+
+
+func _open_cross_counter() -> void:
+	if _cross_counter_host != null or _cross_counter_button.disabled or not _cross_counter_button.is_visible_in_tree() \
+			or _replay_dialog != null or _replay_overlay != null:
+		return
+	_cross_counter_host = CrossCounterHost.new()
+	_cross_counter_host.name = "CrossCounterPublicHost"
+	add_child(_cross_counter_host)
+	var opened := _cross_counter_host.open_operation(_cross_counter_parent_id)
+	if not opened.ok:
+		_close_cross_counter()
+		_show_chip(OperationHost.error_text(opened))
+		return
+	hud.hide()
+	_cross_counter_host.returned.connect(_close_cross_counter)
+
+
+func _close_cross_counter() -> void:
+	if _cross_counter_host != null:
+		var host := _cross_counter_host
+		_cross_counter_host = null
+		remove_child(host)
+		host.queue_free()
+	hud.show()
+	_update_cross_counter()
+
 
 func _result_to_world() -> void:
 	_result.visible = false
@@ -1195,6 +1261,8 @@ func _result_to_world() -> void:
 
 # ------------------------------------------------------------ 진행
 func _process(delta: float) -> void:
+	if _cross_counter_host != null:
+		return
 	var fl := canvas.flying()
 	var show_atlas := state == "browse" and canvas.level() == "z0" and not fl and not _card.visible
 	if state != "result" and not show_atlas:
