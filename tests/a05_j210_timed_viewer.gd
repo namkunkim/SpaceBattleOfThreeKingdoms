@@ -42,6 +42,8 @@ func _run() -> void:
 		return
 	var link := root.get_node("WorldLink")
 	var before := [link.brief, link.outcome, link.routed()]
+	_verify_delta(source)
+	_verify_contract()
 	Engine.max_fps = 120
 	for speed in [1.0, 2.0, 4.0]:
 		await _play(source, speed)
@@ -130,3 +132,105 @@ func _check(ok: bool, label: String) -> bool:
 		failures += 1
 	print("A05_J210_TIMED_CHECK ", ok, " ", label)
 	return ok
+
+class StubReplay extends RefCounted:
+	var next: Dictionary
+	var calls := 0
+	var closed := false
+
+	func step() -> Dictionary:
+		calls += 1
+		return {"ok": true, "frame": next}
+
+	func close() -> void:
+		closed = true
+
+
+func _verify_delta(source: String) -> void:
+	var opened := Adapter.open_record(source, PIN)
+	if not _check(opened.ok, "verified fixture for deterministic viewer delta"):
+		return
+	var viewer := Viewer.new()
+	root.add_child(viewer)
+	if not _check(viewer.attach_playback(opened.replay, opened.frame).ok, "attach deterministic viewer"):
+		opened.replay.close()
+		viewer.free()
+		return
+	viewer._play.pressed.emit()
+	viewer._process(0.099)
+	_check(viewer._frame.tick == 0 and viewer._frame.next_clock_ms == 100, "99 ms holds C0")
+	viewer._process(0.001)
+	_check(viewer._frame.tick == 1 and viewer._frame.next_clock_ms == 150, "100 ms presents tick 1")
+	viewer._play.pressed.emit()
+	viewer._play.pressed.emit()
+	viewer._process(0.049)
+	_check(viewer._frame.tick == 1 and viewer._result.text.is_empty(), "49 ms after resume holds tick 1")
+	viewer._process(0.001)
+	_check(viewer._finished and viewer._frame.clock_ms == 150
+		and not viewer._frame.has("next_clock_ms")
+		and viewer._frame.settlement.receipt_digest == DIGEST, "50 ms presents same receipt")
+	viewer.free()
+
+	opened = Adapter.open_record(source, PIN)
+	if not _check(opened.ok, "verified fixture for long delta"):
+		return
+	viewer = Viewer.new()
+	root.add_child(viewer)
+	if _check(viewer.attach_playback(opened.replay, opened.frame).ok, "attach long delta viewer"):
+		viewer._play.pressed.emit()
+		viewer._process(2.0)
+		_check(viewer._frame.tick == 1 and viewer.installed.size() == 2
+			and is_equal_approx(viewer._elapsed, 0.05), "long callback advances once and bounds credit to next interval")
+		viewer._process(0.001)
+		_check(viewer._finished and viewer.installed.size() == 3, "subsequent callback completes bounded replay")
+	else:
+		opened.replay.close()
+	viewer.free()
+
+
+func _verify_contract() -> void:
+	for hinted in ["100", null, 0, -1]:
+		var replay := StubReplay.new()
+		var viewer := Viewer.new()
+		root.add_child(viewer)
+		var invalid := _stub_frame(0, 0)
+		invalid.next_clock_ms = hinted
+		_check(viewer.attach_playback(replay, invalid).get("error") == "replay_invalid_frame"
+			and replay.closed and replay.calls == 0, "reject malformed initial timing hint %s" % str(hinted))
+		viewer.free()
+	for timed in [false, true]:
+		for bad_successor in [false, true]:
+			var replay := StubReplay.new()
+			var viewer := Viewer.new()
+			root.add_child(viewer)
+			var initial := _stub_frame(0, 0)
+			initial.next_clock_ms = 50
+			replay.next = _stub_frame(1, 50 if bad_successor else 51)
+			if bad_successor:
+				replay.next.next_clock_ms = []
+			replay.next.settlement = {"id": RECEIPT}
+			if _check(viewer.attach_playback(replay, initial).ok, "attach guarded successor"):
+				if timed:
+					viewer._play.pressed.emit()
+					viewer._process(0.05)
+				else:
+					viewer.step_replay()
+				_check(replay.closed and replay.calls == 1 and viewer._frame.tick == 0
+					and viewer._result.text == "replay_invalid_frame"
+					and not viewer._finished, "reject invalid successor before displaying settlement")
+			viewer.free()
+	var replay := StubReplay.new()
+	var viewer := Viewer.new()
+	root.add_child(viewer)
+	replay.next = _stub_frame(1, 50)
+	if _check(viewer.attach_playback(replay, _stub_frame(0, 0)).ok, "attach original no-hint frame"):
+		viewer._play.pressed.emit()
+		viewer._process(0.099)
+		_check(replay.calls == 0, "no hint waits for unchanged 10 Hz period")
+		viewer._process(0.001)
+		_check(replay.calls == 1 and viewer._frame.tick == 1, "no hint installs frame at unchanged 100 ms")
+	viewer.free()
+
+
+func _stub_frame(tick: int, clock_ms: int) -> Dictionary:
+	return {"tick": tick, "clock_ms": clock_ms, "events": [], "projection": {"hz": 10}}

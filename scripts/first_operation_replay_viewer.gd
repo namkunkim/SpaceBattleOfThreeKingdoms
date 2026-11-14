@@ -103,7 +103,8 @@ func step_replay() -> void:
 		_show_failure(str(result.get("error", "replay_step_failed")))
 		return
 	var next: Variant = result.get("frame")
-	if not next is Dictionary or not _valid_frame(next) or next.tick != _frame.tick + 1 or next.clock_ms <= _frame.clock_ms:
+	if not next is Dictionary or not _valid_frame(next) or next.tick != _frame.tick + 1 \
+			or next.clock_ms <= _frame.clock_ms or next.clock_ms != _frame.get("next_clock_ms", next.clock_ms):
 		_show_failure("replay_invalid_frame")
 		return
 	_install(next)
@@ -116,11 +117,19 @@ func _process(delta: float) -> void:
 		_verify_slice()
 		return
 	_elapsed += delta
-	var period := 1.0 / maxf(1.0, float(_frame.projection.get("hz", 10)))
+	var period := _playback_period()
 	# A slow render frame never triggers an unbounded catch-up loop.
 	if _elapsed >= period:
-		_elapsed = minf(period, _elapsed - period)
+		var credit := _elapsed - period
+		var variable_interval := _frame.has("next_clock_ms")
 		step_replay()
+		_elapsed = minf(_playback_period() if variable_interval else period, credit)
+
+
+func _playback_period() -> float:
+	if _frame.has("next_clock_ms"):
+		return float(_frame.next_clock_ms - _frame.clock_ms) / 1000.0
+	return 1.0 / maxf(1.0, float(_frame.projection.get("hz", 10)))
 
 
 func _verify_slice() -> void:
@@ -255,7 +264,9 @@ func _exit_tree() -> void:
 static func _valid_frame(frame: Dictionary) -> bool:
 	return (typeof(frame.get("tick")) == TYPE_INT and frame.tick >= 0
 		and typeof(frame.get("clock_ms")) == TYPE_INT and frame.clock_ms >= 0
-		and frame.get("projection") is Dictionary and frame.get("events") is Array)
+		and frame.get("projection") is Dictionary and frame.get("events") is Array
+		and (not frame.has("next_clock_ms") or (typeof(frame.next_clock_ms) == TYPE_INT
+			and frame.next_clock_ms > frame.clock_ms)))
 
 
 static func _fail(error: String) -> Dictionary:

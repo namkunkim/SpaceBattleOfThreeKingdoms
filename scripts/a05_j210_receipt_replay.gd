@@ -185,6 +185,8 @@ func _frame() -> Dictionary:
 	_event_count = events.size()
 	if _index == 2:
 		frame["settlement"] = _settlement.duplicate(true)
+	else:
+		frame["next_clock_ms"] = _frames[_index + 1].summary.clock_ms
 	return {"ok": true, "frame": frame, "done": _index == 2}
 
 func close() -> void:
