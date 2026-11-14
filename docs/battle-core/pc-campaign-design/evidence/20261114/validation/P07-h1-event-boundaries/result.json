@@ -1,0 +1,824 @@
+{
+  "checks": 34,
+  "engine_pid": 15556,
+  "failures": 0,
+  "observations": [
+    {
+      "actual": {
+        "deadline_ms": 12401,
+        "departure_ms": 7701,
+        "effective_delay_ms": 401,
+        "eligible": true,
+        "ok": true
+      },
+      "expected": {
+        "deadline_ms": 12401,
+        "departure_ms": 7701,
+        "effective_delay_ms": 401,
+        "eligible": true,
+        "ok": true
+      },
+      "input": {
+        "activation_complete_ms": 7299,
+        "authorized_delay_ms": 401,
+        "base_deadline_ms": 12000,
+        "departure_ms": 7300
+      },
+      "input_unchanged": true,
+      "name": "before",
+      "pass": true
+    },
+    {
+      "actual": {
+        "deadline_ms": 12401,
+        "departure_ms": 7701,
+        "effective_delay_ms": 401,
+        "eligible": true,
+        "ok": true
+      },
+      "expected": {
+        "deadline_ms": 12401,
+        "departure_ms": 7701,
+        "effective_delay_ms": 401,
+        "eligible": true,
+        "ok": true
+      },
+      "input": {
+        "activation_complete_ms": 7300,
+        "authorized_delay_ms": 401,
+        "base_deadline_ms": 12000,
+        "departure_ms": 7300
+      },
+      "input_unchanged": true,
+      "name": "equal logical time",
+      "pass": true
+    },
+    {
+      "actual": {
+        "deadline_ms": 12000,
+        "departure_ms": 7300,
+        "effective_delay_ms": 0,
+        "eligible": false,
+        "ok": true
+      },
+      "expected": {
+        "deadline_ms": 12000,
+        "departure_ms": 7300,
+        "effective_delay_ms": 0,
+        "eligible": false,
+        "ok": true
+      },
+      "input": {
+        "activation_complete_ms": 7301,
+        "authorized_delay_ms": 401,
+        "base_deadline_ms": 12000,
+        "departure_ms": 7300
+      },
+      "input_unchanged": true,
+      "name": "after no retroactive delay",
+      "pass": true
+    },
+    {
+      "actual": {
+        "deadline_ms": 12000,
+        "departure_ms": 7301,
+        "effective_delay_ms": 0,
+        "eligible": false,
+        "ok": true
+      },
+      "expected": {
+        "deadline_ms": 12000,
+        "departure_ms": 7301,
+        "effective_delay_ms": 0,
+        "eligible": false,
+        "ok": true
+      },
+      "input": {
+        "activation_complete_ms": 7309,
+        "authorized_delay_ms": 401,
+        "base_deadline_ms": 12000,
+        "departure_ms": 7301
+      },
+      "input_unchanged": true,
+      "name": "same outer tick different logical time",
+      "pass": true
+    },
+    {
+      "actual": {
+        "deadline_ms": 12000,
+        "departure_ms": 7300,
+        "effective_delay_ms": 0,
+        "eligible": true,
+        "ok": true
+      },
+      "expected": {
+        "deadline_ms": 12000,
+        "departure_ms": 7300,
+        "effective_delay_ms": 0,
+        "eligible": true,
+        "ok": true
+      },
+      "input": {
+        "activation_complete_ms": 7300,
+        "authorized_delay_ms": 0,
+        "base_deadline_ms": 12000,
+        "departure_ms": 7300
+      },
+      "input_unchanged": true,
+      "name": "zero duration",
+      "pass": true
+    },
+    {
+      "actual": {
+        "deadline_ms": 17,
+        "departure_ms": 17,
+        "effective_delay_ms": 17,
+        "eligible": true,
+        "ok": true
+      },
+      "expected": {
+        "deadline_ms": 17,
+        "departure_ms": 17,
+        "effective_delay_ms": 17,
+        "eligible": true,
+        "ok": true
+      },
+      "input": {
+        "activation_complete_ms": 0,
+        "authorized_delay_ms": 17,
+        "base_deadline_ms": 0,
+        "departure_ms": 0
+      },
+      "input_unchanged": true,
+      "name": "epoch boundary",
+      "pass": true
+    },
+    {
+      "actual": {
+        "deadline_ms": 9223372036854775807,
+        "departure_ms": 9223372036854775807,
+        "effective_delay_ms": 5,
+        "eligible": true,
+        "ok": true
+      },
+      "expected": {
+        "deadline_ms": 9223372036854775807,
+        "departure_ms": 9223372036854775807,
+        "effective_delay_ms": 5,
+        "eligible": true,
+        "ok": true
+      },
+      "input": {
+        "activation_complete_ms": 1,
+        "authorized_delay_ms": 5,
+        "base_deadline_ms": 9223372036854775802,
+        "departure_ms": 9223372036854775802
+      },
+      "input_unchanged": true,
+      "name": "maximum representable extension",
+      "pass": true
+    },
+    {
+      "actual": {
+        "error": "logical_time_overflow",
+        "ok": false
+      },
+      "expected": {
+        "error": "logical_time_overflow",
+        "ok": false
+      },
+      "input": {
+        "activation_complete_ms": 1,
+        "authorized_delay_ms": 5,
+        "base_deadline_ms": 12000,
+        "departure_ms": 9223372036854775803
+      },
+      "input_unchanged": true,
+      "name": "departure overflow",
+      "pass": true
+    },
+    {
+      "actual": {
+        "error": "logical_time_overflow",
+        "ok": false
+      },
+      "expected": {
+        "error": "logical_time_overflow",
+        "ok": false
+      },
+      "input": {
+        "activation_complete_ms": 1,
+        "authorized_delay_ms": 5,
+        "base_deadline_ms": 9223372036854775803,
+        "departure_ms": 7300
+      },
+      "input_unchanged": true,
+      "name": "deadline overflow",
+      "pass": true
+    },
+    {
+      "actual": {
+        "deadline_ms": 9223372036854775807,
+        "departure_ms": 1,
+        "effective_delay_ms": 0,
+        "eligible": false,
+        "ok": true
+      },
+      "expected": {
+        "deadline_ms": 9223372036854775807,
+        "departure_ms": 1,
+        "effective_delay_ms": 0,
+        "eligible": false,
+        "ok": true
+      },
+      "input": {
+        "activation_complete_ms": 2,
+        "authorized_delay_ms": 9223372036854775807,
+        "base_deadline_ms": 9223372036854775807,
+        "departure_ms": 1
+      },
+      "input_unchanged": true,
+      "name": "ineffective delay cannot overflow",
+      "pass": true
+    },
+    {
+      "actual": {
+        "error": "invalid_logical_time",
+        "ok": false
+      },
+      "expected": {
+        "error": "invalid_logical_time",
+        "ok": false
+      },
+      "input": {
+        "activation_complete_ms": 1,
+        "authorized_delay_ms": -1,
+        "base_deadline_ms": 12000,
+        "departure_ms": 7300
+      },
+      "input_unchanged": true,
+      "name": "negative duration",
+      "pass": true
+    },
+    {
+      "actual": {
+        "error": "invalid_logical_time",
+        "ok": false
+      },
+      "expected": {
+        "error": "invalid_logical_time",
+        "ok": false
+      },
+      "input": {
+        "activation_complete_ms": 1,
+        "authorized_delay_ms": 5,
+        "base_deadline_ms": 12000,
+        "departure_ms": 7300.0
+      },
+      "input_unchanged": true,
+      "name": "float is not internal integer time",
+      "pass": true
+    },
+    {
+      "actual": {
+        "error": "invalid_logical_time",
+        "ok": false
+      },
+      "expected": {
+        "error": "invalid_logical_time",
+        "ok": false
+      },
+      "input": {
+        "activation_complete_ms": 1,
+        "authorized_delay_ms": 5,
+        "base_deadline_ms": 12000,
+        "departure_ms": true
+      },
+      "input_unchanged": true,
+      "name": "boolean is not time",
+      "pass": true
+    },
+    {
+      "actual": {
+        "error": "invalid_fields",
+        "ok": false
+      },
+      "expected": {
+        "error": "invalid_fields",
+        "ok": false
+      },
+      "input": {
+        "activation_complete_ms": 1,
+        "base_deadline_ms": 12000,
+        "departure_ms": 7300
+      },
+      "input_unchanged": true,
+      "name": "missing authorization amount",
+      "pass": true
+    },
+    {
+      "actual": {
+        "error": "invalid_fields",
+        "ok": false
+      },
+      "expected": {
+        "error": "invalid_fields",
+        "ok": false
+      },
+      "input": {
+        "activation_complete_ms": 1,
+        "authorized_delay_ms": 5,
+        "base_deadline_ms": 12000,
+        "departure_ms": 7300,
+        "repeat_count": 2
+      },
+      "input_unchanged": true,
+      "name": "unsigned repeat policy not accepted",
+      "pass": true
+    },
+    {
+      "actual": {
+        "at_deadline": false,
+        "command_loss_requires_other_policy": false,
+        "objective_success_disallowed": false,
+        "ok": true,
+        "simultaneous_failure_priority": false,
+        "withdrawal_only": false,
+        "within_deadline": true
+      },
+      "expected": {
+        "at_deadline": false,
+        "command_loss_requires_other_policy": false,
+        "objective_success_disallowed": false,
+        "ok": true,
+        "simultaneous_failure_priority": false,
+        "withdrawal_only": false,
+        "within_deadline": true
+      },
+      "input": {
+        "achievement_ms": 11999,
+        "command_loss_ms": null,
+        "deadline_ms": 12000,
+        "explicit_withdrawal": false,
+        "kind": "objective"
+      },
+      "input_unchanged": true,
+      "name": "objective before deadline",
+      "pass": true
+    },
+    {
+      "actual": {
+        "at_deadline": true,
+        "command_loss_requires_other_policy": false,
+        "objective_success_disallowed": false,
+        "ok": true,
+        "simultaneous_failure_priority": false,
+        "withdrawal_only": false,
+        "within_deadline": true
+      },
+      "expected": {
+        "at_deadline": true,
+        "command_loss_requires_other_policy": false,
+        "objective_success_disallowed": false,
+        "ok": true,
+        "simultaneous_failure_priority": false,
+        "withdrawal_only": false,
+        "within_deadline": true
+      },
+      "input": {
+        "achievement_ms": 12000,
+        "command_loss_ms": null,
+        "deadline_ms": 12000,
+        "explicit_withdrawal": false,
+        "kind": "objective"
+      },
+      "input_unchanged": true,
+      "name": "objective exact deadline",
+      "pass": true
+    },
+    {
+      "actual": {
+        "at_deadline": false,
+        "command_loss_requires_other_policy": false,
+        "objective_success_disallowed": true,
+        "ok": true,
+        "simultaneous_failure_priority": false,
+        "withdrawal_only": false,
+        "within_deadline": false
+      },
+      "expected": {
+        "at_deadline": false,
+        "command_loss_requires_other_policy": false,
+        "objective_success_disallowed": true,
+        "ok": true,
+        "simultaneous_failure_priority": false,
+        "withdrawal_only": false,
+        "within_deadline": false
+      },
+      "input": {
+        "achievement_ms": 12001,
+        "command_loss_ms": null,
+        "deadline_ms": 12000,
+        "explicit_withdrawal": false,
+        "kind": "objective"
+      },
+      "input_unchanged": true,
+      "name": "objective after deadline",
+      "pass": true
+    },
+    {
+      "actual": {
+        "at_deadline": true,
+        "command_loss_requires_other_policy": false,
+        "objective_success_disallowed": true,
+        "ok": true,
+        "simultaneous_failure_priority": false,
+        "withdrawal_only": true,
+        "within_deadline": true
+      },
+      "expected": {
+        "at_deadline": true,
+        "command_loss_requires_other_policy": false,
+        "objective_success_disallowed": true,
+        "ok": true,
+        "simultaneous_failure_priority": false,
+        "withdrawal_only": true,
+        "within_deadline": true
+      },
+      "input": {
+        "achievement_ms": 12000,
+        "command_loss_ms": null,
+        "deadline_ms": 12000,
+        "explicit_withdrawal": true,
+        "kind": "escape"
+      },
+      "input_unchanged": true,
+      "name": "escape exact deadline",
+      "pass": true
+    },
+    {
+      "actual": {
+        "at_deadline": false,
+        "command_loss_requires_other_policy": false,
+        "objective_success_disallowed": true,
+        "ok": true,
+        "simultaneous_failure_priority": false,
+        "withdrawal_only": true,
+        "within_deadline": false
+      },
+      "expected": {
+        "at_deadline": false,
+        "command_loss_requires_other_policy": false,
+        "objective_success_disallowed": true,
+        "ok": true,
+        "simultaneous_failure_priority": false,
+        "withdrawal_only": true,
+        "within_deadline": false
+      },
+      "input": {
+        "achievement_ms": 12001,
+        "command_loss_ms": null,
+        "deadline_ms": 12000,
+        "explicit_withdrawal": true,
+        "kind": "escape"
+      },
+      "input_unchanged": true,
+      "name": "escape after deadline",
+      "pass": true
+    },
+    {
+      "actual": {
+        "at_deadline": true,
+        "command_loss_requires_other_policy": false,
+        "objective_success_disallowed": true,
+        "ok": true,
+        "simultaneous_failure_priority": true,
+        "withdrawal_only": false,
+        "within_deadline": true
+      },
+      "expected": {
+        "at_deadline": true,
+        "command_loss_requires_other_policy": false,
+        "objective_success_disallowed": true,
+        "ok": true,
+        "simultaneous_failure_priority": true,
+        "withdrawal_only": false,
+        "within_deadline": true
+      },
+      "input": {
+        "achievement_ms": 12000,
+        "command_loss_ms": 12000,
+        "deadline_ms": 12000,
+        "explicit_withdrawal": false,
+        "kind": "objective"
+      },
+      "input_unchanged": true,
+      "name": "same instant goal and command loss",
+      "pass": true
+    },
+    {
+      "actual": {
+        "at_deadline": false,
+        "command_loss_requires_other_policy": false,
+        "objective_success_disallowed": true,
+        "ok": true,
+        "simultaneous_failure_priority": false,
+        "withdrawal_only": true,
+        "within_deadline": true
+      },
+      "expected": {
+        "at_deadline": false,
+        "command_loss_requires_other_policy": false,
+        "objective_success_disallowed": true,
+        "ok": true,
+        "simultaneous_failure_priority": false,
+        "withdrawal_only": true,
+        "within_deadline": true
+      },
+      "input": {
+        "achievement_ms": 11999,
+        "command_loss_ms": null,
+        "deadline_ms": 12000,
+        "explicit_withdrawal": true,
+        "kind": "objective"
+      },
+      "input_unchanged": true,
+      "name": "withdrawal never becomes objective success",
+      "pass": true
+    },
+    {
+      "actual": {
+        "at_deadline": true,
+        "command_loss_requires_other_policy": false,
+        "objective_success_disallowed": true,
+        "ok": true,
+        "simultaneous_failure_priority": true,
+        "withdrawal_only": true,
+        "within_deadline": true
+      },
+      "expected": {
+        "at_deadline": true,
+        "command_loss_requires_other_policy": false,
+        "objective_success_disallowed": true,
+        "ok": true,
+        "simultaneous_failure_priority": true,
+        "withdrawal_only": true,
+        "within_deadline": true
+      },
+      "input": {
+        "achievement_ms": 12000,
+        "command_loss_ms": 12000,
+        "deadline_ms": 12000,
+        "explicit_withdrawal": true,
+        "kind": "objective"
+      },
+      "input_unchanged": true,
+      "name": "simultaneous failure retained with withdrawal",
+      "pass": true
+    },
+    {
+      "actual": {
+        "at_deadline": true,
+        "command_loss_requires_other_policy": true,
+        "objective_success_disallowed": false,
+        "ok": true,
+        "simultaneous_failure_priority": false,
+        "withdrawal_only": false,
+        "within_deadline": true
+      },
+      "expected": {
+        "at_deadline": true,
+        "command_loss_requires_other_policy": true,
+        "objective_success_disallowed": false,
+        "ok": true,
+        "simultaneous_failure_priority": false,
+        "withdrawal_only": false,
+        "within_deadline": true
+      },
+      "input": {
+        "achievement_ms": 12000,
+        "command_loss_ms": 11999,
+        "deadline_ms": 12000,
+        "explicit_withdrawal": false,
+        "kind": "objective"
+      },
+      "input_unchanged": true,
+      "name": "earlier loss is unresolved policy",
+      "pass": true
+    },
+    {
+      "actual": {
+        "at_deadline": true,
+        "command_loss_requires_other_policy": true,
+        "objective_success_disallowed": false,
+        "ok": true,
+        "simultaneous_failure_priority": false,
+        "withdrawal_only": false,
+        "within_deadline": true
+      },
+      "expected": {
+        "at_deadline": true,
+        "command_loss_requires_other_policy": true,
+        "objective_success_disallowed": false,
+        "ok": true,
+        "simultaneous_failure_priority": false,
+        "withdrawal_only": false,
+        "within_deadline": true
+      },
+      "input": {
+        "achievement_ms": 12000,
+        "command_loss_ms": 12001,
+        "deadline_ms": 12000,
+        "explicit_withdrawal": false,
+        "kind": "objective"
+      },
+      "input_unchanged": true,
+      "name": "later loss is unresolved policy",
+      "pass": true
+    },
+    {
+      "actual": {
+        "at_deadline": true,
+        "command_loss_requires_other_policy": true,
+        "objective_success_disallowed": true,
+        "ok": true,
+        "simultaneous_failure_priority": false,
+        "withdrawal_only": true,
+        "within_deadline": true
+      },
+      "expected": {
+        "at_deadline": true,
+        "command_loss_requires_other_policy": true,
+        "objective_success_disallowed": true,
+        "ok": true,
+        "simultaneous_failure_priority": false,
+        "withdrawal_only": true,
+        "within_deadline": true
+      },
+      "input": {
+        "achievement_ms": 12000,
+        "command_loss_ms": 12000,
+        "deadline_ms": 12000,
+        "explicit_withdrawal": true,
+        "kind": "escape"
+      },
+      "input_unchanged": true,
+      "name": "escape and command loss remains unresolved",
+      "pass": true
+    },
+    {
+      "actual": {
+        "error": "unsupported_achievement",
+        "ok": false
+      },
+      "expected": {
+        "error": "unsupported_achievement",
+        "ok": false
+      },
+      "input": {
+        "achievement_ms": 12000,
+        "command_loss_ms": null,
+        "deadline_ms": 12000,
+        "explicit_withdrawal": false,
+        "kind": "delivery"
+      },
+      "input_unchanged": true,
+      "name": "unknown achievement",
+      "pass": true
+    },
+    {
+      "actual": {
+        "error": "invalid_withdrawal_flag",
+        "ok": false
+      },
+      "expected": {
+        "error": "invalid_withdrawal_flag",
+        "ok": false
+      },
+      "input": {
+        "achievement_ms": 12000,
+        "command_loss_ms": null,
+        "deadline_ms": 12000,
+        "explicit_withdrawal": 1,
+        "kind": "objective"
+      },
+      "input_unchanged": true,
+      "name": "invalid withdrawal flag",
+      "pass": true
+    },
+    {
+      "actual": {
+        "error": "invalid_logical_time",
+        "ok": false
+      },
+      "expected": {
+        "error": "invalid_logical_time",
+        "ok": false
+      },
+      "input": {
+        "achievement_ms": 12000,
+        "command_loss_ms": -1,
+        "deadline_ms": 12000,
+        "explicit_withdrawal": false,
+        "kind": "objective"
+      },
+      "input_unchanged": true,
+      "name": "negative loss timestamp",
+      "pass": true
+    },
+    {
+      "actual": {
+        "error": "invalid_logical_time",
+        "ok": false
+      },
+      "expected": {
+        "error": "invalid_logical_time",
+        "ok": false
+      },
+      "input": {
+        "achievement_ms": 12000.5,
+        "command_loss_ms": null,
+        "deadline_ms": 12000,
+        "explicit_withdrawal": false,
+        "kind": "objective"
+      },
+      "input_unchanged": true,
+      "name": "fractional achievement time",
+      "pass": true
+    },
+    {
+      "actual": {
+        "error": "invalid_fields",
+        "ok": false
+      },
+      "expected": {
+        "error": "invalid_fields",
+        "ok": false
+      },
+      "input": {
+        "achievement_ms": 12000,
+        "command_loss_ms": null,
+        "deadline_ms": 12000,
+        "escape_ratio": 0.5,
+        "explicit_withdrawal": false,
+        "kind": "objective"
+      },
+      "input_unchanged": true,
+      "name": "unknown settlement policy field",
+      "pass": true
+    },
+    {
+      "actual": {
+        "error": "invalid_fields",
+        "ok": false
+      },
+      "expected": {
+        "error": "invalid_fields",
+        "ok": false
+      },
+      "input": null,
+      "input_unchanged": true,
+      "name": "delay non-dictionary",
+      "pass": true
+    },
+    {
+      "actual": {
+        "error": "invalid_fields",
+        "ok": false
+      },
+      "expected": {
+        "error": "invalid_fields",
+        "ok": false
+      },
+      "input": [],
+      "input_unchanged": true,
+      "name": "achievement non-dictionary",
+      "pass": true
+    },
+    {
+      "actual": {
+        "deadline_ms": 12401,
+        "departure_ms": 7701,
+        "effective_delay_ms": 401,
+        "eligible": true,
+        "ok": true
+      },
+      "expected": {
+        "deadline_ms": 12401,
+        "departure_ms": 7701,
+        "effective_delay_ms": 401,
+        "eligible": true,
+        "ok": true
+      },
+      "input": {
+        "activation_complete_ms": 7300,
+        "authorized_delay_ms": 401,
+        "base_deadline_ms": 12000,
+        "departure_ms": 7300
+      },
+      "input_unchanged": true,
+      "name": "proposal mutation cannot alter input or next proposal",
+      "pass": true
+    }
+  ]
+}

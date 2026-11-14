@@ -1,0 +1,70 @@
+extends RefCounted
+
+# Inactive H1-E01/E02 and H1-P02 boundary helper. All values come from an
+# external scenario/authoritative event source; there are no scenario defaults.
+# A result is a detached proposal, not a commit, receipt, settlement or replay.
+# Callers must supply complete same-time facts before committing departures.
+const MAX_TIME_MS := 9223372036854775807
+const DELAY_FIELDS := ["departure_ms", "activation_complete_ms", "authorized_delay_ms", "base_deadline_ms"]
+const ACHIEVEMENT_FIELDS := ["kind", "achievement_ms", "deadline_ms", "command_loss_ms", "explicit_withdrawal"]
+
+
+static func propose_authorized_delay(value: Variant) -> Dictionary:
+	if not _fields(value, DELAY_FIELDS):
+		return _fail("invalid_fields")
+	for key in DELAY_FIELDS:
+		if not _time(value[key]):
+			return _fail("invalid_logical_time")
+	# Compare exact logical timestamps, never the enclosing simulation tick.
+	var eligible: bool = value.activation_complete_ms <= value.departure_ms
+	var effective: int = value.authorized_delay_ms if eligible else 0
+	if effective > MAX_TIME_MS - value.departure_ms or effective > MAX_TIME_MS - value.base_deadline_ms:
+		return _fail("logical_time_overflow")
+	return {"ok": true, "eligible": eligible, "effective_delay_ms": effective,
+		"departure_ms": value.departure_ms + effective,
+		"deadline_ms": value.base_deadline_ms + effective}
+
+
+# Reports only these specific boundaries for an otherwise valid achievement.
+# No `success` or settlement is returned. A false prohibition is not permission:
+# command_loss_requires_other_policy and remaining scenario checks still apply.
+static func assess_achievement_boundary(value: Variant) -> Dictionary:
+	if not _fields(value, ACHIEVEMENT_FIELDS):
+		return _fail("invalid_fields")
+	if typeof(value.kind) != TYPE_STRING or value.kind not in ["objective", "escape"]:
+		return _fail("unsupported_achievement")
+	if typeof(value.explicit_withdrawal) != TYPE_BOOL:
+		return _fail("invalid_withdrawal_flag")
+	if not _time(value.achievement_ms) or not _time(value.deadline_ms):
+		return _fail("invalid_logical_time")
+	if value.command_loss_ms != null and not _time(value.command_loss_ms):
+		return _fail("invalid_logical_time")
+	var within: bool = value.achievement_ms <= value.deadline_ms
+	var objective: bool = value.kind == "objective"
+	var simultaneous_loss: bool = value.command_loss_ms != null and value.command_loss_ms == value.achievement_ms
+	var failure_priority: bool = objective and simultaneous_loss
+	# Earlier/later loss and escape-vs-loss are outside the approved ordering.
+	var unresolved_loss: bool = value.command_loss_ms != null and (not objective or not simultaneous_loss)
+	return {"ok": true, "within_deadline": within,
+		"at_deadline": value.achievement_ms == value.deadline_ms,
+		"objective_success_disallowed": not objective or not within or failure_priority or value.explicit_withdrawal,
+		"simultaneous_failure_priority": failure_priority,
+		"withdrawal_only": value.explicit_withdrawal,
+		"command_loss_requires_other_policy": unresolved_loss}
+
+
+static func _time(value: Variant) -> bool:
+	return typeof(value) == TYPE_INT and value >= 0
+
+
+static func _fields(value: Variant, fields: Array) -> bool:
+	if not value is Dictionary or value.size() != fields.size():
+		return false
+	for key in fields:
+		if not value.has(key):
+			return false
+	return true
+
+
+static func _fail(error: String) -> Dictionary:
+	return {"ok": false, "error": error}

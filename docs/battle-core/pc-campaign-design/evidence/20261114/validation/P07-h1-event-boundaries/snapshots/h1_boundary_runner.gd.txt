@@ -1,0 +1,42 @@
+extends SceneTree
+
+const Boundary := preload("res://core/battle/h1_event_boundaries.gd")
+const Oracle := preload("res://tests/h1_boundary_oracle.gd")
+var observations: Array = []
+var failures := 0
+
+func _initialize() -> void:
+	_run.call_deferred()
+
+func _case(label: String, input: Variant, expected: Dictionary, callback: Callable) -> void:
+	var before := var_to_bytes(input)
+	var actual: Dictionary = callback.call(input)
+	var passed := actual == expected and var_to_bytes(input) == before
+	observations.append({"name": label, "input": input, "expected": expected, "actual": actual, "input_unchanged": var_to_bytes(input) == before, "pass": passed})
+	if not passed:
+		failures += 1
+	print("H1_CHECK %s %s" % [passed, label])
+
+func _run() -> void:
+	for row in Oracle.DELAY:
+		_case(row.name, row.input, row.want, Boundary.propose_authorized_delay)
+	for row in Oracle.ACHIEVEMENTS:
+		_case(row.name, row.input, row.want, Boundary.assess_achievement_boundary)
+	_case("delay non-dictionary", null, {"ok": false, "error": "invalid_fields"}, Boundary.propose_authorized_delay)
+	_case("achievement non-dictionary", [], {"ok": false, "error": "invalid_fields"}, Boundary.assess_achievement_boundary)
+	var original: Dictionary = Oracle.DELAY[1].input.duplicate(true)
+	var proposal := Boundary.propose_authorized_delay(original)
+	proposal.deadline_ms = 1
+	_case("proposal mutation cannot alter input or next proposal", original, Oracle.DELAY[1].want, Boundary.propose_authorized_delay)
+	var args := OS.get_cmdline_user_args()
+	if args.size() != 1:
+		quit(2)
+		return
+	var file := FileAccess.open(args[0], FileAccess.WRITE)
+	if file == null:
+		quit(2)
+		return
+	file.store_string(JSON.stringify({"engine_pid": OS.get_process_id(), "checks": observations.size(), "failures": failures, "observations": observations}, "  ") + "\n")
+	file.close()
+	print("H1_EVENT_BOUNDARIES checks=%d failures=%d" % [observations.size(), failures])
+	quit(0 if failures == 0 else 1)

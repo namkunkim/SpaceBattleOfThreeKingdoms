@@ -1,0 +1,3 @@
+# Preserve recorded SHA-256 bytes across Windows checkouts.
+# Treat original CRLF as line endings; retain original final blank lines.
+* -text whitespace=blank-at-eol,space-before-tab,cr-at-eol
