@@ -1,0 +1,17 @@
+{
+  "created_utc": "2026-11-14T08:26:55.1953763Z",
+  "fixture_sha256": "5FAE437289AC8BBA13F11F5A7A6CC80A442E424935044FB10938283629BDA300",
+  "roaming": "F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/O07-release-foreground-1794644803/roaming",
+  "args": [
+    "--resolution",
+    "1600x900",
+    "--log-file",
+    "\"F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/O07-release-foreground-1794644803/engine.log\"",
+    "--",
+    "--o07-supply",
+    "--restricted-operation-input",
+    "\"F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/O07/i01-replay-fingerprint-520f142f/terminal input.json\""
+  ],
+  "pid": 30728,
+  "local": "F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/O07-release-foreground-1794644803/local"
+}

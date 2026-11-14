@@ -1,0 +1,12 @@
+{
+  "pid": 4500,
+  "args": [
+    "--resolution",
+    "1600x900",
+    "--log-file",
+    "\"F:/WorkSpace/Campaign-Orchestration/SpaceBattleOfThreeKingdoms-validation/O07-release-foreground-1794644803/reopen-engine.log\"",
+    "--",
+    "--o07-supply"
+  ],
+  "created_utc": "2026-11-14T08:28:14.2415746Z"
+}
