@@ -189,4 +189,3 @@ func _finish(details: Dictionary, intended: bool) -> void:
     if not _write_json(lane + "-result.json", result): passed = false
     print("CROSS_COUNTER_REAL_PARENT_RESULT ", result.status)
     quit(0 if passed else 1)
-
