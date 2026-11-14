@@ -55,12 +55,55 @@ func _run() -> void:
 	_check(recorded.ok and Codec.decode(recorded.bytes, Codec.REPLAY_FORMAT).record == replay,
 		"separate replay round trip binds terminal witness")
 	_check(not Codec.encode(replay, Codec.SAVE_FORMAT).ok, "settled operation denied by save codec")
+	_reject_malformed_wire(saved.bytes, save, replay)
 	replay.settlement.operation_id += "-foreign"
 	_check(not Codec.encode(replay, Codec.REPLAY_FORMAT).ok, "foreign settlement denied")
 	_check(Checkpoint.rules_digest() == "b7189ae8f3408fd4e053a792491ac5f6457a520218df2b709c4a8e3986863658"
 		and V1._rules_and_inputs_digest() != Codec.rules_digest(), "native v1 stable and outer v2 digest separate")
 	print("P05_V2_RECORD_CODEC %d/%d" % [tests - failures, tests])
 	quit(0 if failures == 0 else 1)
+
+
+func _reject_malformed_wire(saved: PackedByteArray, save: Dictionary, replay: Dictionary) -> void:
+	for field in ["format", "version", "sha256", "rules_digest", "body"]:
+		var envelope: Dictionary = JSON.parse_string(saved.get_string_from_utf8())
+		envelope.version = Codec.VERSION
+		envelope[field] = true
+		_check(_is_failure(Codec.decode(_canonical_bytes(envelope), Codec.SAVE_FORMAT)),
+			"structured failure for malformed envelope " + field)
+
+	for field in ["capability", "operation_id", "tick", "history", "pending", "state_digest"]:
+		var changed := save.duplicate(true)
+		changed[field] = false
+		_check(_is_failure(Codec.decode(_wire(changed, Codec.SAVE_FORMAT), Codec.SAVE_FORMAT)),
+			"structured failure for valid-checksum malformed save body " + field)
+	var changed := save.duplicate(true)
+	changed.pending = [{"kind": "formation", "squadron_id": false, "formation_id": "FRM-01"}]
+	_check(_is_failure(Codec.decode(_wire(changed, Codec.SAVE_FORMAT), Codec.SAVE_FORMAT)),
+		"structured failure for malformed formation identifier")
+	changed.pending = [{"kind": {"unexpected": true}}]
+	_check(_is_failure(Codec.decode(_wire(changed, Codec.SAVE_FORMAT), Codec.SAVE_FORMAT)),
+		"structured failure for nonstring command name")
+
+	for field in ["id", "operation_id", "kind", "reason", "tick"]:
+		changed = replay.duplicate(true)
+		changed.settlement[field] = true
+		_check(_is_failure(Codec.decode(_wire(changed, Codec.REPLAY_FORMAT), Codec.REPLAY_FORMAT)),
+			"structured failure for valid-checksum malformed settlement " + field)
+
+
+func _wire(body: Dictionary, format: String) -> PackedByteArray:
+	var text := JSON.stringify(body, "", true, true)
+	return _canonical_bytes({"format": format, "version": Codec.VERSION, "body": text,
+		"sha256": text.sha256_text(), "rules_digest": Codec.rules_digest()})
+
+
+func _canonical_bytes(value: Dictionary) -> PackedByteArray:
+	return JSON.stringify(value, "", true, true).to_utf8_buffer()
+
+
+func _is_failure(result: Dictionary) -> bool:
+	return result.get("ok") == false and result.get("error") is String and result.get("path") is String
 
 
 func _check(ok: bool, label: String) -> bool:

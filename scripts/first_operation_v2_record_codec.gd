@@ -42,7 +42,8 @@ static func decode(bytes: PackedByteArray, format: String) -> Dictionary:
 		return parsed
 	var value: Variant = parsed.value
 	if not FileRules._has_fields(value, ["format", "version", "body", "sha256", "rules_digest"]) \
-			or value.format != format or value.version != VERSION or not value.body is String:
+			or not value.format is String or value.format != format or not _integer(value.version, VERSION, VERSION) \
+			or not value.body is String or not _sha256(value.sha256) or not _sha256(value.rules_digest):
 		return _fail("v2_invalid_envelope", "file")
 	if value.sha256 != value.body.sha256_text():
 		return _fail("v2_checksum_mismatch", "file.sha256")
@@ -66,7 +67,7 @@ static func normalize(value: Variant, format: String) -> Dictionary:
 	if format not in [SAVE_FORMAT, REPLAY_FORMAT] or not FileRules._has_fields(value,
 			["capability", "operation_id", "tick", "clock_ms", "history", "pending", "state_digest", "settlement"]):
 		return _fail("v2_invalid_record", "record")
-	if value.capability != Owner.CAPABILITY or not _identity(value.operation_id):
+	if not value.capability is String or value.capability != Owner.CAPABILITY or not _identity(value.operation_id):
 		return _fail("v2_invalid_identity", "record.operation_id")
 	if not _integer(value.tick, 0, MAX_TICKS) or not _integer(value.clock_ms, 0, MAX_TICKS * TICK_MS) \
 			or value.clock_ms != int(value.tick) * TICK_MS:
@@ -109,11 +110,13 @@ static func _batch(entries: Variant) -> Dictionary:
 		return _fail("v2_invalid_batch", "batch")
 	var normalized := []
 	for command in entries:
-		if not command is Dictionary or command.get("kind") not in KINDS:
+		if not command is Dictionary or not command.get("kind") is String or command.kind not in KINDS:
 			return _fail("v2_invalid_command", "batch")
 		match command.kind:
 			"formation":
-				if entries.size() != 1 or command != Owner.FORMATION:
+				if entries.size() != 1 or not FileRules._has_fields(command, ["kind", "squadron_id", "formation_id"]) \
+						or not command.squadron_id is String or not command.formation_id is String \
+						or command.squadron_id != Owner.FORMATION.squadron_id or command.formation_id != Owner.FORMATION.formation_id:
 					return _fail("v2_invalid_formation", "batch")
 				normalized.append(Owner.FORMATION.duplicate())
 			"move":
@@ -130,8 +133,9 @@ static func _batch(entries: Variant) -> Dictionary:
 static func _valid_settlement(record: Dictionary) -> bool:
 	var value: Variant = record.settlement
 	return FileRules._has_fields(value, ["id", "operation_id", "kind", "reason", "tick", "clock_ms"]) \
+		and value.operation_id is String and value.id is String \
 		and value.operation_id == record.operation_id and value.id == record.operation_id + "/settlement" \
-		and value.kind in SETTLEMENT_KINDS and value.reason is String and not value.reason.is_empty() \
+		and value.kind is String and value.kind in SETTLEMENT_KINDS and value.reason is String and not value.reason.is_empty() \
 		and _integer(value.tick, int(record.tick), int(record.tick)) \
 		and _integer(value.clock_ms, int(record.clock_ms), int(record.clock_ms))
 
