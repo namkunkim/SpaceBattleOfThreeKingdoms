@@ -1,0 +1,60 @@
+{
+  "source_main": "a4420ba415b54310d47fd3cddfd61e2ef158ee35",
+  "test_sha256": "adb04e4633e750648ea5af0648befd765f2574a30e4a7798a72359abd142d0e1",
+  "engine_sha256": "c8f0a6bc45a19b33541501e57f6f7cd972ab18453743266339d495cbbe846643",
+  "parent_sha256": "adb0e006848ed1be5cdb0749d634701eb2a2d99802fa0fb58f0d2296b32be3bf",
+  "cases": [
+    {
+      "phase": "close",
+      "pid": 25720,
+      "exit": 0,
+      "checks": [
+        "explicit isolated profile",
+        "eligible result opens explicit route",
+        "published owner held and paused",
+        "durable C0 before publication",
+        "approved native owner advances to tick 16",
+        "public board and stop controls queue two unapplied orders",
+        "force backup replace failure",
+        "failed close preserves active lease, paused UI and committed bytes",
+        "retry persists frontier before window shutdown"
+      ],
+      "diagnostics": []
+    },
+    {
+      "phase": "resume",
+      "pid": 4320,
+      "exit": 0,
+      "checks": [
+        "explicit isolated profile",
+        "eligible result opens explicit route",
+        "published owner held and paused",
+        "original process close witness exists",
+        "new process restores the exact live packet, including pending orders and event cursor",
+        "resume does not consume orders or replay bootstrap",
+        "next tick commits both orders once and drains events",
+        "following tick does not replay the command batch",
+        "public save persists the applied frontier"
+      ],
+      "diagnostics": []
+    },
+    {
+      "phase": "settle",
+      "pid": 26940,
+      "exit": 0,
+      "checks": [
+        "explicit isolated profile",
+        "eligible result opens explicit route",
+        "published owner held and paused",
+        "applied frontier witness exists",
+        "third process restores applied history and an empty queue",
+        "advancing after the second restart does not replay the orders",
+        "explicit abandon records terminal atomically",
+        "authoritative abandon settlement persisted",
+        "return releases lease and restores prior quit behavior",
+        "historical receipt cannot activate gameplay"
+      ],
+      "diagnostics": []
+    }
+  ]
+}
