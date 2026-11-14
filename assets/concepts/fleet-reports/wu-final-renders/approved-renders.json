@@ -1,0 +1,53 @@
+{
+  "date": "2026-11-14",
+  "tool": "built-in image_gen",
+  "status": "All eight selected by user in this chat",
+  "composition": "Front port, bow lower left, stern upper right; dark studio",
+  "source": "../wu-six-view-checkerboard/",
+  "files": [
+    {
+      "name": "assault-carrier-front-port.png",
+      "sha256": "7201209c6a5aad46f73f3c1588b8886bbfd307489fcfd884dc887bd17425f22e"
+    },
+    {
+      "name": "siege-ship-front-port.png",
+      "sha256": "cfea8158313a82ddf2dbd219fc33d5c933323c75e879e42f5734a11fea3e6620"
+    },
+    {
+      "name": "artillery-dreadnought-front-port-v2.png",
+      "sha256": "7336b8c4a9cf099fb5fb411e22c96297b7fb5766df936be5d43fc0f26556d407"
+    },
+    {
+      "name": "changjiang-hydro-front-port-v2.png",
+      "sha256": "dd99c2cbd4a98abfb254164faaa23fa1b957026683c534d0606fd73d3086bf60"
+    },
+    {
+      "name": "supply-repair-front-port-v2.png",
+      "sha256": "84447314973ba8974642d1ecb93e9362fecae9a849164aa05fb5dccf99727fce"
+    },
+    {
+      "name": "electronic-warfare-front-port-v2.png",
+      "sha256": "d7bb0047151fababbba79a6da7f2bf2c26d9bdd14c8e048f79f4f43c487ebc9e"
+    },
+    {
+      "name": "interceptor-front-port-v2.png",
+      "sha256": "27b3cb4f6c3f02edf69deec92dc6cf44c7039eb078022c2703133ac3b4d58e47"
+    },
+    {
+      "name": "fast-attack-front-port-v2.png",
+      "sha256": "261535784de9f9227e46b1fea36c7cd75524e8fdb9f1bde9232604c19af371f7"
+    }
+  ],
+  "source_ambiguities": [
+    "Carrier: fins present in front/tactical views but absent in side; approved render follows front/tactical. Original Wei glyph omitted.",
+    "Carrier, artillery, supply, EW and fast attack sheets include tactical panels instead of independent right-side orthographic views.",
+    "Several source engine captions conflict with visible nozzle counts; image geometry prioritized.",
+    "Fast attack left-side direction is reversed relative to top; engines define stern.",
+    "Supply front shows deployed cranes while side shows folded cranes; folded pose selected."
+  ],
+  "limitations": [
+    "Image-based interpretation, not measured CAD reconstruction. Occluded underside/rear components cannot all be verified in front-port render.",
+    "Approved siege render retains differences in bow length, bridge height and exact front-port depiction recorded during review."
+  ],
+  "validation": "Both reports: 8 hero images and downloads, 8 original sheets and downloads; non-Wu HTML unchanged compared to task base."
+}
