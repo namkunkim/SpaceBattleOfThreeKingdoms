@@ -24,6 +24,8 @@ func install_frame(frame: Dictionary) -> void:
 		_row["ships"] = float(candidate.ships_milli) / 1000.0
 		_row["max_ships"] = float(candidate.max_ships_milli) / 1000.0
 		_row["contact"] = ""
+		if frame.get("phase") == "resume":
+			_row["formation_resume"] = true
 		if not frame.projection.operation.settlement.is_empty():
 			_row["terminal_tick"] = frame.tick
 		break
