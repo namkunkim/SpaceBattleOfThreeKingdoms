@@ -184,7 +184,10 @@ func enable_p05_formation_routes(fleet_ids: Dictionary, operation_id := "", cert
 			return false
 		var fleet: Dictionary = loaded.definition.fleets.filter(func(row): return row.id == roster_id)[0]
 		var squad: Dictionary = roster.squadrons.filter(func(row): return row.id == roster_id)[0]
-		enabled[id] = {"fleet": fleet, "squad": squad}
+		var spawn: Array = loaded.definition.space.nodes[fleet.spawn]
+		var offset: Array = fleet.offset_xy
+		enabled[id] = {"fleet": fleet, "squad": squad,
+			"spawn_origin": Vector2(spawn[0] + offset[0], spawn[1] + offset[1])}
 	_p05_fleet_ids = enabled
 	_p05_operation_id = operation_id
 	_p05_certified_presentation = certified_presentation
@@ -199,7 +202,15 @@ func _p05_build(v: FleetVis, sq: Dictionary) -> void:
 	var approved: Dictionary = _p05_fleet_ids[v.id]
 	var fleet: Dictionary = approved.fleet
 	var squad: Dictionary = approved.squad
-	if sq.get("formation_id", "") != fleet.formation_id or sq.form_to != "" or sq.flagship != squad.flagship 			or sq.ships != fleet.ship_count or v.slots.size() != int(fleet.ship_count):
+	var resumed: bool = _p05_certified_presentation and sq.get("formation_resume", false) == true
+	var resume_ticks := 0
+	if resumed:
+		resume_ticks = _p05_resume_ticks(sq, fleet, approved.spawn_origin)
+		if resume_ticks < 0:
+			return
+	elif sq.get("formation_id", "") != fleet.formation_id or sq.form_to != "":
+		return
+	if sq.flagship != squad.flagship or sq.ships != fleet.ship_count or v.slots.size() != int(fleet.ship_count):
 		return
 	var expected := {}
 	for entry: Dictionary in squad.composition:
@@ -218,6 +229,9 @@ func _p05_build(v: FleetVis, sq: Dictionary) -> void:
 		var presentation := P05Presentation.new()
 		if not presentation.prepare_frozen(rows, fleet.outer_radius):
 			return
+		if resumed:
+			presentation.restore_progress(resume_ticks)
+			v.p05_time = float(presentation.sample_index) / P05Presentation.RATE
 		schedule = presentation
 	else:
 		schedule = P05Schedule.new()
@@ -232,9 +246,24 @@ func _p05_build(v: FleetVis, sq: Dictionary) -> void:
 		v.p05_tick = _p05_authority_tick(sq)
 		if _p05_certified_presentation:
 			v.p05_committed = sq.duplicate(true)
-	v.p05_position = schedule.sample(0.0)
+	v.p05_position = schedule.sample(v.p05_time)
 	_p05_homes(v)
 
+
+func _p05_resume_ticks(sq: Dictionary, fleet: Dictionary, spawn_origin: Vector2) -> int:
+	var remaining: Variant = sq.get("form_left_s")
+	if typeof(remaining) not in [TYPE_FLOAT, TYPE_INT] or not is_finite(remaining):
+		return -1
+	if remaining == 0.0 and sq.form_to == "" and sq.formation_id == fleet.formation_id:
+		return 0
+	if sq.pos != spawn_origin or not is_equal_approx(sq.heading, deg_to_rad(fleet.heading_deg)) 			or sq.dead or sq.ships != sq.max_ships or sq.get("has_move", false):
+		return -1
+	if remaining == 0.0 and sq.form_to == "" and sq.formation_id == fleet.allowed_formations[1] and sq.tick >= 51:
+		return 50
+	var ticks := roundi((P05Schedule.DURATION - float(remaining)) * 10.0)
+	if sq.formation_id != fleet.formation_id or sq.form_to != fleet.allowed_formations[1] 			or ticks < 1 or ticks > 49 or sq.tick <= ticks or not is_equal_approx(remaining, (50 - ticks) / 10.0):
+		return -1
+	return ticks
 
 func _p05_homes(v: FleetVis) -> void:
 	var scale := src.unit_scale()
@@ -746,7 +775,13 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 	var ship_ids := _real_ship_ids(sq.get("counts", {}))
 	var types := ship_ids.map(func(t): return _model_class(t))
 	var n := types.size() if not types.is_empty() else maxi(12, roundi(sq.max_ships * vis_ratio()))
-	var pts := formation_points(sq.formation, n)
+	var layout := int(sq.formation)
+	if _p05_certified_presentation and sq.get("formation_resume", false) == true and _p05_fleet_ids.has(v.id) \
+			and _p05_resume_ticks(sq, _p05_fleet_ids[v.id].fleet, _p05_fleet_ids[v.id].spawn_origin) >= 0:
+		# Slot role and flagship sizing must match the original launch geometry.
+		var canonical: String = _p05_fleet_ids[v.id].fleet.formation_id
+		layout = BattleRules.FORM_SHAPE[int(canonical.get_slice("-", 1)) - 1]
+	var pts := formation_points(layout, n)
 	pts = _role_points(pts, ship_ids)
 	var cls := _assign_real(pts, types, sq.flagship, true) if not types.is_empty() else _assign_class(pts, sq.flagship, sq.id * 7919)
 	var S := src.unit_scale()

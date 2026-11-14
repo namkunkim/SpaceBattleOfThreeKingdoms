@@ -70,6 +70,15 @@ func consume(confirmed_seconds: float, dt: float) -> bool:
 	return true
 
 
+## Rebuild the nominal 30 Hz cursor for an already verified 10 Hz commit.
+## A checkpoint does not preserve presentation stalls from the prior session.
+func restore_progress(elapsed_ticks: int) -> void:
+	for tick in range(1, elapsed_ticks + 1):
+		# The authority update precedes rendering on every third presentation sample.
+		var callbacks := 1 if tick == elapsed_ticks else 3
+		for i in callbacks:
+			consume(float(tick) / 10.0, STEP)
+
 func sample(seconds: float) -> Dictionary:
 	var index := clampi(knots.bsearch(seconds, false) - 1, 0, layouts.size() - 2)
 	var u := clampf((seconds - knots[index]) / (knots[index + 1] - knots[index]), 0.0, 1.0)
