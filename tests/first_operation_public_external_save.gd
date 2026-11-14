@@ -18,10 +18,26 @@ func _exercise(profile: String, focused: bool) -> void:
 	if not _expect(_protected_files() == ["", "", "", ""], "fresh isolated slots"):
 		return
 	change_scene_to_file(ENTRY)
-	for label in ["적벽대전 시작", "서사 건너뛰기", "적벽", "출격 · 실제 전장 준비"]:
+	for label in ["적벽대전 시작", "서사 건너뛰기", "기존 진행 이어하기 / 결산"]:
 		if not await _entry_action(label):
-			print("entry state=", current_scene.screen.flow.state, " error=", current_scene.screen.flow.error)
 			return
+	var atlas_ready := func() -> bool:
+		return current_scene is WorldMapScreen and _button(current_scene, "적벽 모의전") != null
+	if not await _wait_until(atlas_ready):
+		_expect(false, "public atlas offers Red Cliffs briefing")
+		return
+	_button(current_scene, "적벽 모의전").pressed.emit()
+	var briefing_ready := func() -> bool:
+		return current_scene is WorldMapScreen and _button(current_scene, "첫 작전 · 정면") != null
+	if not await _wait_until(briefing_ready):
+		_expect(false, "public briefing offers first operation")
+		return
+	_button(current_scene, "첫 작전 · 정면").pressed.emit()
+	if not _expect(current_scene.state == "sortie", "public first-operation button prepares sortie"):
+		return
+	if not _expect(current_scene._skip.is_visible_in_tree(), "sortie presents the skip control"):
+		return
+	current_scene._skip.pressed.emit()
 	if not _expect(await _wait_host(), "public entry publishes product host"):
 		return
 	var host := _host()
