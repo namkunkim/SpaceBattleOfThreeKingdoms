@@ -1,6 +1,7 @@
 class_name FleetRenderer
 extends Node3D
 const P05Schedule := preload("res://view/fleet_render/p05_formation_schedule.gd")
+const P05Presentation := preload("res://view/fleet_render/p05_formation_presentation.gd")
 const P05Policy := preload("res://core/battle/p05_p07_first_operation.gd")
 const P05Dev := preload("res://core/battle/first_operation_dev.gd")
 const P05Product := preload("res://scripts/first_operation_source_reference.gd")
@@ -125,6 +126,7 @@ class FleetVis:
 	var p05_elapsed := 0.0
 	var p05_tick := -1
 	var p05_terminal := {}
+	var p05_committed := {}
 
 var src: BattleSource
 var meshes := [[], []]
@@ -143,6 +145,7 @@ var _detail := -1.0   # 확대 정도에 따른 함선 세부 표현(0~1)
 var _missile_last := {}
 var _p05_fleet_ids := {}
 var _p05_operation_id := ""
+var _p05_certified_presentation := false
 
 func setup(source: BattleSource) -> void:
 	src = source
@@ -164,7 +167,10 @@ func setup(source: BattleSource) -> void:
 # A fresh renderer is needed for another operation or a rewound timeline.
 # A committed snapshot is immutable within its tick. A terminal row may carry
 # terminal_tick from the operation outcome once its formation is committed.
-func enable_p05_formation_routes(fleet_ids: Dictionary, operation_id := "") -> bool:
+func enable_p05_formation_routes(fleet_ids: Dictionary, operation_id := "", certified_presentation := false) -> bool:
+	if certified_presentation and (operation_id.is_empty() or fleet_ids.size() != 1 \
+			or fleet_ids.values()[0] != P05Presentation.FLEET_ID):
+		return false
 	if not _p05_operation_id.is_empty() or not vis.is_empty() or fleet_ids.is_empty() or FileAccess.get_sha256(P05Dev.INPUT_PATHS.roster) != P05Product.INPUT_SHA256.roster:
 		return false
 	var loaded := P05Policy.load_source()
@@ -181,6 +187,7 @@ func enable_p05_formation_routes(fleet_ids: Dictionary, operation_id := "") -> b
 		enabled[id] = {"fleet": fleet, "squad": squad}
 	_p05_fleet_ids = enabled
 	_p05_operation_id = operation_id
+	_p05_certified_presentation = certified_presentation
 	return true
 
 
@@ -206,9 +213,16 @@ func _p05_build(v: FleetVis, sq: Dictionary) -> void:
 		rows.append({"id": "%s/%d" % [slot.ship_type, counts[slot.ship_type]], "half": half})
 	if counts != expected:
 		return
-	var schedule := P05Schedule.new()
-	if not schedule.prepare(fleet.id, rows, fleet.outer_radius):
-		return
+	var schedule: P05Schedule
+	if _p05_certified_presentation:
+		var presentation := P05Presentation.new()
+		if not presentation.prepare_frozen(rows, fleet.outer_radius):
+			return
+		schedule = presentation
+	else:
+		schedule = P05Schedule.new()
+		if not schedule.prepare(fleet.id, rows, fleet.outer_radius):
+			return
 	v.p05 = schedule
 	v.p05_from = fleet.formation_id
 	v.p05_to = fleet.allowed_formations[1]
@@ -216,6 +230,8 @@ func _p05_build(v: FleetVis, sq: Dictionary) -> void:
 	v.p05_heading = sq.heading
 	if not _p05_operation_id.is_empty():
 		v.p05_tick = _p05_authority_tick(sq)
+		if _p05_certified_presentation:
+			v.p05_committed = sq.duplicate(true)
 	v.p05_position = schedule.sample(0.0)
 	_p05_homes(v)
 
@@ -235,6 +251,53 @@ func _p05_authority_tick(sq: Dictionary) -> int:
 	return tick
 
 
+func _p05_accept_presentation(v: FleetVis, sq: Dictionary, dt: float) -> bool:
+	if not is_finite(dt) or dt <= 0.0:
+		return false
+	var tick := _p05_authority_tick(sq)
+	if tick < v.p05_tick:
+		return false
+	if tick == v.p05_tick:
+		return sq == v.p05_committed
+	if not v.p05_terminal.is_empty():
+		return false
+	var remaining: Variant = sq.get("form_left_s")
+	if typeof(remaining) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(remaining) \
+			or remaining < 0.0 or remaining > P05Schedule.DURATION:
+		return false
+	var current: Variant = sq.get("formation_id")
+	var target: Variant = sq.get("form_to")
+	if current not in [v.p05_from, v.p05_to] or target not in ["", v.p05_to] 			or (target == "" and remaining != 0.0) 			or (target != "" and (current != v.p05_from or remaining <= 0.0)):
+		return false
+	if target != "" and v.p05_committed.form_to == target 			and remaining > v.p05_committed.form_left_s:
+		return false
+	v.p05_tick = tick
+	v.p05_committed = sq.duplicate(true)
+	return true
+
+
+func _p05_present(v: FleetVis, sq: Dictionary, dt: float) -> bool:
+	var path: P05Presentation = v.p05 as P05Presentation
+	var settled: bool = sq.form_to == "" and sq.formation_id == v.p05_to
+	var active: bool = sq.form_to == v.p05_to and sq.formation_id == v.p05_from and sq.form_left_s > 0.0
+	if not active and not settled:
+		if sq.form_to == "" and sq.formation_id == v.p05_from and path.sample_index == 0:
+			return true
+		v.p05 = null
+		_reform(v, sq)
+		return false
+	var confirmed := P05Schedule.DURATION if settled else P05Schedule.DURATION - float(sq.form_left_s)
+	if settled and sq.get("terminal_tick") == v.p05_tick:
+		v.p05_terminal = sq.duplicate(true)
+	if path.consume(confirmed, dt):
+		v.p05_time = float(path.sample_index) / P05Presentation.RATE
+		v.p05_position = path.sample(v.p05_time)
+		_p05_homes(v)
+		v.rest = 0
+	v.formation = sq.formation
+	return true
+
+
 func _p05_update(v: FleetVis, sq: Dictionary, dt: float) -> bool:
 	if v.p05 == null:
 		return false
@@ -245,6 +308,8 @@ func _p05_update(v: FleetVis, sq: Dictionary, dt: float) -> bool:
 		v.p05 = null
 		_reform(v, sq)
 		return false
+	if v.p05 is P05Presentation:
+		return _p05_present(v, sq, dt)
 	var goal := P05Schedule.DURATION if target == v.p05_to else 0.0
 	var requested := goal
 	if _p05_operation_id.is_empty():
@@ -858,7 +923,10 @@ func update(dt: float) -> void:
 					m.set_shader_parameter("detail", detail)
 	for sq in sqs:
 		var v: FleetVis = vis[sq.id]
-		if v.p05 != null and not _p05_operation_id.is_empty():
+		if v.p05 is P05Presentation:
+			if not _p05_accept_presentation(v, sq, dt):
+				continue
+		elif v.p05 != null and not _p05_operation_id.is_empty():
 			if not is_finite(dt) or dt <= 0.0:
 				continue
 			if not v.p05_terminal.is_empty():
