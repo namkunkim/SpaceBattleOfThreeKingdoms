@@ -9,6 +9,7 @@ const SaveStore := preload("res://scripts/first_operation_save_store.gd")
 const Settlements := preload("res://scripts/first_operation_settlement_store.gd")
 const ReplayCodec := preload("res://scripts/first_operation_replay_codec.gd")
 const OperationTrace := preload("res://scripts/first_operation_trace.gd")
+const FormationOwner := preload("res://scripts/first_operation_v2_owner.gd")
 const FormationSource := preload("res://view/fleet_render/first_operation_formation_source.gd")
 
 var operation_owner: RefCounted
@@ -352,9 +353,12 @@ func _export_replay_file(path: String) -> void:
 
 ## Invoke only after publishing the explicitly selected versioned owner.
 ## An operation replacement drops the renderer and must opt in again.
-func enable_certified_formation_presentation(operation_id: String) -> bool:
-	if operation_id.is_empty() or started or _formation_renderer != null or frame.is_empty() \
-			or _field == null:
+func enable_certified_formation_presentation() -> bool:
+	var authority := operation_owner as FormationOwner
+	if authority == null or brief == null or brief.operation_request().get("capability") != FormationOwner.CAPABILITY 			or started or _formation_renderer != null or frame.is_empty() or _field == null:
+		return false
+	var operation_id := authority.presentation_identity()
+	if operation_id.is_empty() or frame.get("meta", {}).get("operation_id") != operation_id:
 		return false
 	var source := FormationSource.new(operation_id, _world)
 	source.install_frame(frame)
