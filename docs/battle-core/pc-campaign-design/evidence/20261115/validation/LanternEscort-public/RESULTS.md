@@ -12,3 +12,5 @@
 초기 통합 실행에서 슬롯 해제와 저장 JSON 키 오류가 드러났다. 명시적 리스 해제와 문자열 키로 고친 뒤 최종 공개 시험을 통과했다. 전투 전술판과 자동화된 재생은 같은 연산을 사용하며, 재생은 공개 파일 선택기가 없는 내부 읽기 전용 경로다. 인수는 동결 편성·항로·정책을 적용한 〈퇴로의 등불〉 단일 작전에 해당한다.
 
 [런타임 로그](F:/WorkSpace/Campaign-Orchestration/LanternRuntime-event-cursor-r3/engine.log) · [공개 프로세스와 실행 로그](F:/WorkSpace/Campaign-Orchestration/LanternEscort-public-20261115-r5) · [Win32 슬롯 검증](F:/WorkSpace/Campaign-Orchestration/Lantern-slot-Win32-20261115-04/RESULTS.md) · [격리 전경 실행](F:/WorkSpace/Campaign-Orchestration/LanternEscort-foreground-20261115)
+
+공식 Windows 릴리스 빌드는 검증 스크립트 18개와 내장 팩 검사를 통과했다. 첫 내보내기에서 격리 빌드 프로필에 Windows 템플릿이 없어 설치된 템플릿을 복사해 재실행했다. 릴리스 PID 31244의 Windows 1600×900에서 공개 메뉴 출격, 작전 시작·저장, 포기 결산과 지도 복귀를 실제 조작했다. 저장 파일로 포기 결산 한 건을 확인했다. EXE SHA-256은 ec17d05591c91cc6a6642ca12e47b8d311a44c7f33d7f75561f869133004a1f0이다. [격리 빌드와 실행 로그](F:/WorkSpace/Campaign-Orchestration/LanternEscort-release-20261115)
