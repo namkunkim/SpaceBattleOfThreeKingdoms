@@ -1,0 +1,287 @@
+{
+  "commit": "da000b66ad756145995d5b854d9da4772c41ee27",
+  "exe_sha256": "6425cd0dff1e1813fc138f8de19bcc6671e7dd23d0573dac75303db3c114fe3d",
+  "dll_sha256": "ebd3b5ce05d43bb89dc2d421047a2ca685a246086bd9298af6ad353760fca9d0",
+  "parent_sha256": "adb0e006848ed1be5cdb0749d634701eb2a2d99802fa0fb58f0d2296b32be3bf",
+  "cases": {
+    "success-c0": {
+      "source_sha256": "3478d4291045fbd88dd3b1a945ccc6f9af19852c0d71c5a92aef46ee5c873f60",
+      "utc": "2026-11-14T13:26:49.1528967Z",
+      "child_head": {
+        "present": true,
+        "envelope_valid": true,
+        "revision": 1,
+        "active_parent_id": "red-cliffs-first-operation-dev-v1/425087998ff11cd06f6a845130c8ada7/settlement",
+        "active_operation_id": "cross-counter-successor-v1/1900d88d9992a8b1a6e9bdcb1aef6897",
+        "active_packet_sha256": "ccda5554f47afbd79dc1141f65a36f655a206c04fc8aa4baee9f33dcb628a749",
+        "completed": {},
+        "packet_decoded": false
+      },
+      "protected_v1_unchanged": true,
+      "source_parent_unchanged": true,
+      "child_file_sha256": "adf75b94970dd59b547b6eefa050b38c2beb553e8682ea1f717ca331e0892490",
+      "live_pids": [
+        16640
+      ]
+    },
+    "success-terminal": {
+      "source_sha256": "95ed9c572340ebd27d8b3b39350bedee11ed7a53a1fd49dad97c34f674704f7b",
+      "utc": "2026-11-14T13:27:27.0780995Z",
+      "child_head": {
+        "present": true,
+        "envelope_valid": true,
+        "revision": 3,
+        "active_parent_id": null,
+        "active_operation_id": null,
+        "active_packet_sha256": null,
+        "completed": {
+          "red-cliffs-first-operation-dev-v1/425087998ff11cd06f6a845130c8ada7/settlement": {
+            "operation_id": "cross-counter-successor-v1/1900d88d9992a8b1a6e9bdcb1aef6897",
+            "packet_sha256": "4b6ce0325076cc4ff97d2ac9227a8e373c6df33e8ff3cae4bd6b00c68cf6f098",
+            "parent_sha256": "b7d85e703f3ace08423439927f993029ef8de88cdd7b2f64bab88b7be8737285",
+            "settlement": {
+              "clock_ms": 12800,
+              "difficulty": "standard",
+              "id": "cross-counter-successor-v1/1900d88d9992a8b1a6e9bdcb1aef6897/settlement",
+              "kind": "objective_success",
+              "mode": "direct",
+              "reason": "counter_salvos_completed",
+              "seed": 20824
+            }
+          }
+        },
+        "packet_decoded": false
+      },
+      "protected_v1_unchanged": true,
+      "source_parent_unchanged": true,
+      "child_file_sha256": "1491a70a0e0102b2f89f8dfcd435c24f2fb8081d61ffd077dc93955d6a401bd7",
+      "live_pids": [
+        16640
+      ]
+    },
+    "success-final": {
+      "source_sha256": "d067c5fc55dc344c5f56b81758ba6585743bec3ba51681188da42801a05d8abe",
+      "utc": "2026-11-14T13:28:27.5415731Z",
+      "child_head": {
+        "present": true,
+        "envelope_valid": true,
+        "revision": 3,
+        "active_parent_id": null,
+        "active_operation_id": null,
+        "active_packet_sha256": null,
+        "completed": {
+          "red-cliffs-first-operation-dev-v1/425087998ff11cd06f6a845130c8ada7/settlement": {
+            "operation_id": "cross-counter-successor-v1/1900d88d9992a8b1a6e9bdcb1aef6897",
+            "packet_sha256": "4b6ce0325076cc4ff97d2ac9227a8e373c6df33e8ff3cae4bd6b00c68cf6f098",
+            "parent_sha256": "b7d85e703f3ace08423439927f993029ef8de88cdd7b2f64bab88b7be8737285",
+            "settlement": {
+              "clock_ms": 12800,
+              "difficulty": "standard",
+              "id": "cross-counter-successor-v1/1900d88d9992a8b1a6e9bdcb1aef6897/settlement",
+              "kind": "objective_success",
+              "mode": "direct",
+              "reason": "counter_salvos_completed",
+              "seed": 20824
+            }
+          }
+        },
+        "packet_decoded": false
+      },
+      "protected_v1_unchanged": true,
+      "source_parent_unchanged": true,
+      "child_file_sha256": "1491a70a0e0102b2f89f8dfcd435c24f2fb8081d61ffd077dc93955d6a401bd7",
+      "live_pids": []
+    },
+    "a-closed": {
+      "source_sha256": "277a9c33e4e6ac08ca949979c94206eab9e7a5413d27bd568aa3e41a05751071",
+      "utc": "2026-11-14T13:29:29.8362857Z",
+      "child_head": {
+        "present": true,
+        "envelope_valid": true,
+        "revision": 3,
+        "active_parent_id": "red-cliffs-first-operation-dev-v1/425087998ff11cd06f6a845130c8ada7/settlement",
+        "active_operation_id": "cross-counter-successor-v1/f2f302b4edf20b92a16220175be55302",
+        "active_packet_sha256": "2ec0cc7809e490878eb7d4bc66744aa747ddb68371795b66c8ddcc211a3dcb22",
+        "completed": {},
+        "packet_decoded": false
+      },
+      "protected_v1_unchanged": true,
+      "source_parent_unchanged": true,
+      "child_file_sha256": "6421edf2ab4c0ad333d5dfbf712cd37b8aead8030a6ea77229f115dd23851a7c",
+      "live_pids": []
+    },
+    "before-b": {
+      "source_sha256": "3fc3a86b8abcb20b1664a4d655d79ec71adc4e97be658da26a9069d4613d02cd",
+      "utc": "2026-11-14T13:29:54.7310663Z",
+      "child_head": {
+        "present": true,
+        "envelope_valid": true,
+        "revision": 3,
+        "active_parent_id": "red-cliffs-first-operation-dev-v1/425087998ff11cd06f6a845130c8ada7/settlement",
+        "active_operation_id": "cross-counter-successor-v1/f2f302b4edf20b92a16220175be55302",
+        "active_packet_sha256": "2ec0cc7809e490878eb7d4bc66744aa747ddb68371795b66c8ddcc211a3dcb22",
+        "completed": {},
+        "packet_decoded": false
+      },
+      "protected_v1_unchanged": true,
+      "source_parent_unchanged": true,
+      "child_file_sha256": "6421edf2ab4c0ad333d5dfbf712cd37b8aead8030a6ea77229f115dd23851a7c",
+      "live_pids": [
+        6104
+      ]
+    },
+    "b-busy": {
+      "source_sha256": "362f5f82320dd34290cca430fdc055fb5247dde153b04d050473714c7f339720",
+      "utc": "2026-11-14T13:30:14.1048467Z",
+      "child_head": {
+        "present": true,
+        "envelope_valid": true,
+        "revision": 3,
+        "active_parent_id": "red-cliffs-first-operation-dev-v1/425087998ff11cd06f6a845130c8ada7/settlement",
+        "active_operation_id": "cross-counter-successor-v1/f2f302b4edf20b92a16220175be55302",
+        "active_packet_sha256": "2ec0cc7809e490878eb7d4bc66744aa747ddb68371795b66c8ddcc211a3dcb22",
+        "completed": {},
+        "packet_decoded": false
+      },
+      "protected_v1_unchanged": true,
+      "source_parent_unchanged": true,
+      "child_file_sha256": "6421edf2ab4c0ad333d5dfbf712cd37b8aead8030a6ea77229f115dd23851a7c",
+      "live_pids": [
+        6104,
+        25756
+      ]
+    },
+    "deadline-terminal": {
+      "source_sha256": "22a744ff978d2c4a23d72fd1d7dd60ab39be299cf89815f07bac0e7b1fe33306",
+      "utc": "2026-11-14T13:31:35.1244484Z",
+      "child_head": {
+        "present": true,
+        "envelope_valid": true,
+        "revision": 4,
+        "active_parent_id": null,
+        "active_operation_id": null,
+        "active_packet_sha256": null,
+        "completed": {
+          "red-cliffs-first-operation-dev-v1/425087998ff11cd06f6a845130c8ada7/settlement": {
+            "operation_id": "cross-counter-successor-v1/f2f302b4edf20b92a16220175be55302",
+            "packet_sha256": "e00a63540b29cd91e9e64cb7fbc8066c13bb87a9f3fcc4a25cd5675e6fb54117",
+            "parent_sha256": "b7d85e703f3ace08423439927f993029ef8de88cdd7b2f64bab88b7be8737285",
+            "settlement": {
+              "clock_ms": 65000,
+              "difficulty": "standard",
+              "id": "cross-counter-successor-v1/f2f302b4edf20b92a16220175be55302/settlement",
+              "kind": "failure",
+              "mode": "direct",
+              "reason": "deadline",
+              "seed": 20824
+            }
+          }
+        },
+        "packet_decoded": false
+      },
+      "protected_v1_unchanged": true,
+      "source_parent_unchanged": true,
+      "child_file_sha256": "1d42685eb1b788c150a26c7fb2777ad4204550de57d482517ba0ac51408a3729",
+      "live_pids": [
+        6104
+      ]
+    },
+    "deadline-final": {
+      "source_sha256": "935e29a6a2043fcf98bfa11f271a4e184d2ea8bf22f49902fe5e756fc90c64c6",
+      "utc": "2026-11-14T13:31:56.1651110Z",
+      "child_head": {
+        "present": true,
+        "envelope_valid": true,
+        "revision": 4,
+        "active_parent_id": null,
+        "active_operation_id": null,
+        "active_packet_sha256": null,
+        "completed": {
+          "red-cliffs-first-operation-dev-v1/425087998ff11cd06f6a845130c8ada7/settlement": {
+            "operation_id": "cross-counter-successor-v1/f2f302b4edf20b92a16220175be55302",
+            "packet_sha256": "e00a63540b29cd91e9e64cb7fbc8066c13bb87a9f3fcc4a25cd5675e6fb54117",
+            "parent_sha256": "b7d85e703f3ace08423439927f993029ef8de88cdd7b2f64bab88b7be8737285",
+            "settlement": {
+              "clock_ms": 65000,
+              "difficulty": "standard",
+              "id": "cross-counter-successor-v1/f2f302b4edf20b92a16220175be55302/settlement",
+              "kind": "failure",
+              "mode": "direct",
+              "reason": "deadline",
+              "seed": 20824
+            }
+          }
+        },
+        "packet_decoded": false
+      },
+      "protected_v1_unchanged": true,
+      "source_parent_unchanged": true,
+      "child_file_sha256": "1d42685eb1b788c150a26c7fb2777ad4204550de57d482517ba0ac51408a3729",
+      "live_pids": []
+    }
+  },
+  "active_checkpoint": {
+    "active_identity": {
+      "operation_id": "cross-counter-successor-v1/f2f302b4edf20b92a16220175be55302",
+      "packet_sha256": "2ec0cc7809e490878eb7d4bc66744aa747ddb68371795b66c8ddcc211a3dcb22",
+      "parent_id": "red-cliffs-first-operation-dev-v1/425087998ff11cd06f6a845130c8ada7/settlement",
+      "parent_sha256": "b7d85e703f3ace08423439927f993029ef8de88cdd7b2f64bab88b7be8737285"
+    },
+    "decoded": {
+      "bootstrap_done": true,
+      "clock_ms": 12100,
+      "commands": [
+        {
+          "batch": [
+            {
+              "ids": [
+                1
+              ],
+              "kind": "move",
+              "operation_id": "cross-counter-successor-v1/f2f302b4edf20b92a16220175be55302",
+              "point": {
+                "variant_type": "Vector2",
+                "x": 51.2968673706055,
+                "y": 1101.9453125
+              },
+              "side": 0
+            }
+          ],
+          "tick": 61
+        }
+      ],
+      "counter_phase": 0,
+      "counter_salvos": [
+        0,
+        0
+      ],
+      "effective_digest": "c4e0935eb4a4c9d9d5fe7e7b876e68dcb9c08eacd693db84d2dd7bd77f1c21de",
+      "emitted_events": 5,
+      "event_cursor": 5,
+      "format": "cross-counter-product-checkpoint/1",
+      "operation_id": "cross-counter-successor-v1/f2f302b4edf20b92a16220175be55302",
+      "pending": [],
+      "request": {
+        "capability": "pc/first-operation/1",
+        "definition_id": "cross-counter-successor-v1",
+        "definition_version": 1,
+        "difficulty": "standard",
+        "mode": "direct",
+        "roster_id": "cross-counter-60v60-v1",
+        "seed": 20824
+      },
+      "rules_digest": "c0a06c8f630ffeeb91da23aa8f62579cf0265fd22427e2ff11a8fd291cc7eaf0",
+      "seed": 20824,
+      "settlement": {},
+      "source_digest": "0c5c1f0f45200264c8f05d7fe3d221e31286a53e12f0b17d49869aa6d3b12d30",
+      "state_digest": "3f410cbe550c62330cc969c13e156291ab8347569b04e6205d138ca043026751",
+      "tick": 121
+    },
+    "file_sha256": "6421edf2ab4c0ad333d5dfbf712cd37b8aead8030a6ea77229f115dd23851a7c",
+    "read_only": true,
+    "revision": 3.0,
+    "slot_format": "cross-counter-successor-slot/1",
+    "source_unchanged": true
+  },
+  "active_decoder_stdout_sha256": "7b686a37d15c33b7f192c3abfb5d87b5345d8beb5d1893fb403f0f075cd0ab4c"
+}
