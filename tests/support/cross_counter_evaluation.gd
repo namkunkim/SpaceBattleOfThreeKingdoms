@@ -2,6 +2,7 @@ extends RefCounted
 ## Test-only candidate factory. No public registry, persistence, settlement or user-save integration.
 const Preparer := preload("res://core/battle/first_operation_preparer.gd")
 const Helpers := preload("res://tests/support/cross_counter_evaluation_witness.gd")
+const Checkpoint := preload("res://tests/support/cross_counter_evaluation_checkpoint.gd")
 const DEFINITION_ID := "cross-counter-drill-successor-eval-v1"
 const ROSTER_ID := "cross-counter-60v60-eval-v1"
 const CAPABILITY := Preparer.SYNTHETIC_CAPABILITY
@@ -38,7 +39,14 @@ static func prepare_fresh(value: Variant, operation_id: String) -> Dictionary:
         "definition_id": DEFINITION_ID, "definition_version": 1,
         "rosters": {ROSTER_ID: {"standard": {"inputs": inputs}}}}
     var resolve := func(_id: String, _version: int) -> Dictionary: return source
-    return Preparer.new(resolve, _build_runtime.bind(operation_id), CAPABILITY).prepare_fresh(value)
+    var retained := {}
+    var prepared := Preparer.new(resolve, _build_runtime.bind(operation_id, retained), CAPABILITY).prepare_fresh(value)
+    if not prepared.ok: return prepared
+    var preview: Dictionary = prepared.owner.preview_initial_frame()
+    var captured: Dictionary = retained.runtime.checkpoint_packet(preview.frame.meta)
+    # A detached, read-only-by-copy C0 envelope for a later authority transaction.
+    prepared.checkpoint = Checkpoint.from_diagnostic(captured.packet).packet
+    return prepared
 
 static func read_pinned(path: String, expected: String) -> Dictionary:
     var bytes := FileAccess.get_file_as_bytes(path)
@@ -50,7 +58,7 @@ static func read_pinned(path: String, expected: String) -> Dictionary:
     if parser.parse(bytes.get_string_from_utf8()) != OK or not parser.data is Dictionary: return {}
     return parser.data
 
-static func _build_runtime(_effective: Dictionary, selection: Dictionary, _request: Dictionary, operation_id: String) -> Dictionary:
+static func _build_runtime(_effective: Dictionary, selection: Dictionary, selected_request: Dictionary, operation_id: String, retained: Dictionary) -> Dictionary:
     # Read from the already pinned, frozen source payload. No second unpinned disk read.
     var inputs: Dictionary = selection.inputs
     var definition: Dictionary = inputs["res://data/profiles/red_cliffs_rt.json"]
@@ -68,7 +76,9 @@ static func _build_runtime(_effective: Dictionary, selection: Dictionary, _reque
     ScenarioProfile.enlarge_field(profile, Vector2(1700, 1150))
     ScenarioProfile.tune_for_play(profile, float(cfg.move_mul), float(cfg.turn_mul))
     patch_drill(profile, cfg)
-    return {"ok": true, "runtime": EvaluationRuntime.new(profile, cfg, operation_id)}
+    var runtime := EvaluationRuntime.new(profile, cfg, operation_id, selected_request)
+    retained.runtime = runtime
+    return {"ok": true, "runtime": runtime}
 
 static func patch_drill(profile: Dictionary, cfg: Dictionary) -> void:
     profile.profile_id = cfg.scenario_id
@@ -115,18 +125,23 @@ static func failure(error: String, path: String) -> Dictionary:
 
 class EvaluationRuntime extends RefCounted:
     const RuntimeHelpers := preload("res://tests/support/cross_counter_evaluation_witness.gd")
+    const RuntimeCheckpoint := preload("res://tests/support/cross_counter_evaluation_checkpoint.gd")
     var _sim: BattleSim
     var _profile: Dictionary
     var _cfg: Dictionary
+    var _request: Dictionary
     var _operation_id: String
     var _begun := false
     var _closed := false
     var _counter_phase := 0
     var _event_cursor := 0
+    var _commands: Array[Dictionary] = []
+    var _pending: Array[Dictionary] = []
 
-    func _init(profile: Dictionary, cfg: Dictionary, operation_id: String) -> void:
+    func _init(profile: Dictionary, cfg: Dictionary, operation_id: String, selected_request: Dictionary) -> void:
         _profile = profile.duplicate(true)
         _cfg = cfg.duplicate(true)
+        _request = selected_request.duplicate(true)
         _operation_id = operation_id
         _sim = _fresh_sim()
 
@@ -140,7 +155,7 @@ class EvaluationRuntime extends RefCounted:
     func summary() -> Dictionary:
         return {"ok": true, "summary": {"tick": _sim.st.tick, "clock_ms": _sim.st.clock_ms,
             "over": _sim.st.over, "settlement": {}, "operation_id": _operation_id,
-            "evaluation_started": _begun}}
+            "evaluation_started": _begun, "evaluation_counter_phase": _counter_phase}}
 
     func read_projection(side: int) -> Dictionary:
         if side != 0: return RuntimeHelpers.failure("invalid_side", "side")
@@ -153,14 +168,13 @@ class EvaluationRuntime extends RefCounted:
         return {"ok": true, "events": events}
 
     func issue(command: Dictionary) -> Dictionary:
-        if command.keys().size() != 2 or command.get("kind") != "begin_evaluation":
-            return RuntimeHelpers.failure("unsupported_evaluation_command", "command")
+        if command.get("kind") != "begin_evaluation": return queue(command)
+        if command.keys().size() != 2: return RuntimeHelpers.failure("unsupported_evaluation_command", "command")
         if command.get("operation_id") != _operation_id:
             return RuntimeHelpers.failure("operation_id_mismatch", "command.operation_id")
         if _begun: return {"ok": true, "already_started": true}
-        # Construct start effects detached. Failure cannot mutate the published brief C0.
         var candidate := _fresh_sim()
-        candidate.drain_events_for(0) # C0 events have already left through the common preparer.
+        candidate.drain_events_for(0)
         for side in 2:
             var destination: Array = _cfg.fleets[side].destination
             candidate.issue(BattleSim.command(side, [candidate.st.fleets[side].id], "move", -1,
@@ -175,25 +189,98 @@ class EvaluationRuntime extends RefCounted:
         RuntimeHelpers.close_sim(previous)
         return {"ok": true, "already_started": false}
 
-    func queue(_command: Dictionary) -> Dictionary:
-        return RuntimeHelpers.failure("evaluation_not_started" if not _begun else "unsupported_evaluation_command", "command")
+    func _normalize_command(command: Variant) -> Dictionary:
+        if not command is Dictionary: return RuntimeHelpers.failure("invalid_evaluation_command", "command")
+        var kind: Variant = command.get("kind")
+        if kind not in ["move", "stop"]: return RuntimeHelpers.failure("unsupported_evaluation_command", "command.kind")
+        var keys := ["operation_id", "kind", "side", "ids"] + (["point"] if kind == "move" else [])
+        if command.size() != keys.size() or not keys.all(func(key): return command.has(key)):
+            return RuntimeHelpers.failure("invalid_evaluation_command", "command")
+        if typeof(command.operation_id) != TYPE_STRING or command.operation_id != _operation_id:
+            return RuntimeHelpers.failure("operation_id_mismatch", "command.operation_id")
+        if typeof(command.side) != TYPE_INT or command.side != 0 or not command.ids is Array \
+                or command.ids.size() != 1 or typeof(command.ids[0]) != TYPE_INT \
+                or command.ids[0] != _sim.st.fleets[0].id:
+            return RuntimeHelpers.failure("invalid_evaluation_selection", "command.ids")
+        var normalized := {"operation_id": _operation_id, "kind": kind, "side": 0, "ids": command.ids.duplicate()}
+        if kind == "move":
+            var point: Variant = command.point
+            if not point is Vector2 or not point.is_finite() or point.x < 0 or point.x > 1700 or point.y < 0 or point.y > 1150:
+                return RuntimeHelpers.failure("invalid_evaluation_point", "command.point")
+            normalized.point = point
+        return {"ok": true, "command": normalized}
+
+    func queue(command: Dictionary) -> Dictionary:
+        if not _begun: return RuntimeHelpers.failure("evaluation_not_started", "command")
+        if _sim.st.over or _sim.st.tick >= RuntimeCheckpoint.MAX_TICKS:
+            return RuntimeHelpers.failure("evaluation_terminal", "command")
+        if _pending.size() >= RuntimeCheckpoint.MAX_BATCH: return RuntimeHelpers.failure("evaluation_queue_full", "command")
+        var normalized := _normalize_command(command)
+        if not normalized.ok: return normalized
+        _pending.append(normalized.command)
+        return {"ok": true}
 
     func advance() -> Dictionary:
         if not _begun: return RuntimeHelpers.failure("evaluation_not_started", "runtime")
+        if _sim.st.over or _sim.st.tick >= RuntimeCheckpoint.MAX_TICKS:
+            return RuntimeHelpers.failure("evaluation_terminal", "runtime")
+        # Scenario reaction precedes the normal queued human batch, then one native step.
         if _counter_phase == 0 and _sim.st.fleets[0].pos.x > _sim.st.fleets[1].pos.x + 180.0:
             _counter_phase = 1
             for side in 2:
                 _sim.issue(BattleSim.command(side, [_sim.st.fleets[side].id], "attack", _sim.st.fleets[1 - side].id))
+        var tick := _sim.st.tick
+        for command in _pending:
+            _sim.queue(BattleSim.command(command.side, command.ids, command.kind, -1, command.get("point", Vector2.ZERO)))
         _sim.step()
+        if not _pending.is_empty(): _commands.append({"tick": tick, "batch": _pending.duplicate(true)})
+        _pending.clear()
+        return {"ok": true}
+
+    func replay_tick(batch: Array, path: String) -> Dictionary:
+        if not _begun:
+            var started := issue({"kind": "begin_evaluation", "operation_id": _operation_id})
+            if not started.ok: return started
+        for command in batch:
+            var normalized := _normalize_command(command)
+            if not normalized.ok: return RuntimeHelpers.failure(normalized.error, path)
+            var queued := queue(normalized.command)
+            if not queued.ok: return RuntimeHelpers.failure(queued.error, path)
+        return advance()
+
+    func finish_restore_replay(packet: Dictionary) -> Dictionary:
+        if packet.bootstrap_done and not _begun:
+            var started := issue({"kind": "begin_evaluation", "operation_id": _operation_id})
+            if not started.ok: return started
+        if _sim.st.tick != packet.tick or _sim.st.clock_ms != packet.clock_ms or _sim.st.seed_id != packet.seed \
+                or _begun != packet.bootstrap_done or _counter_phase != packet.counter_phase or _commands != packet.commands:
+            return RuntimeHelpers.failure("checkpoint_replay_mismatch", "packet")
+        if _event_cursor + _sim._events.size() != packet.emitted_events:
+            return RuntimeHelpers.failure("checkpoint_event_count_mismatch", "event_cursor")
+        var discard: int = packet.event_cursor - _event_cursor
+        if discard < 0 or discard > _sim._events.size():
+            return RuntimeHelpers.failure("checkpoint_event_cursor_mismatch", "event_cursor")
+        _sim._events = _sim._events.slice(discard)
+        _event_cursor = packet.event_cursor
+        var witness: Dictionary = RuntimeHelpers.native_witness(_sim)
+        if RuntimeHelpers.state_digest(witness) != packet.state_digest:
+            return RuntimeHelpers.failure("checkpoint_state_witness_mismatch", "state_digest")
+        var pending: Array[Dictionary] = []
+        for command in packet.pending:
+            var normalized := _normalize_command(command)
+            if not normalized.ok: return RuntimeHelpers.failure(normalized.error, "pending")
+            pending.append(normalized.command)
+        _pending = pending
         return {"ok": true}
 
     func checkpoint_packet(meta: Dictionary) -> Dictionary:
-        # Diagnostic output only. No restore decoder and no production checkpoint claim.
         var witness: Dictionary = RuntimeHelpers.native_witness(_sim)
         return {"ok": true, "packet": {"format": "cross-counter-evaluation-diagnostic/1",
+            "request": _request.duplicate(true), "rules_digest": RuntimeCheckpoint.rules_digest(),
             "operation_id": _operation_id, "tick": _sim.st.tick, "clock_ms": _sim.st.clock_ms,
             "seed": _sim.st.seed_id, "bootstrap_done": _begun, "counter_phase": _counter_phase,
-            "commands": [], "pending": [], "event_cursor": _event_cursor,
+            "commands": _commands.duplicate(true), "pending": _pending.duplicate(true), "event_cursor": _event_cursor,
+            "emitted_events": _event_cursor + _sim._events.size(),
             "proposal_serial": null, "policy_proposal_protocol": "not-implemented",
             "native_instance_id": _sim.get_instance_id(), "state_digest": RuntimeHelpers.state_digest(witness),
             "native_witness": witness, "meta": meta.duplicate(true)}}
