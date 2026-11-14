@@ -13,6 +13,12 @@ func _initialize() -> void:
 		printerr("Final Windows executable fingerprint is invalid")
 		quit(1)
 		return
+	if FileAccess.file_exists("res://data/cross_counter_runtime_fingerprint.json"):
+		var cross_codec := load("res://scripts/cross_counter/checkpoint.gd") as Script
+		if cross_codec == null or cross_codec._packaged_rules_digest().is_empty():
+			printerr("Final Windows Cross Counter fingerprint is invalid")
+			quit(1)
+			return
 	print("FINGERPRINT_RUNTIME_VERIFY_PASS")
 	quit()
 

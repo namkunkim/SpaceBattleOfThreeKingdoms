@@ -14,6 +14,8 @@ PREFIX = "core/battle/"
 MANIFEST = "data/operation_checkpoint_fingerprint.json"
 ANCHOR = "data/operation_checkpoint_anchor.gd"
 REPLAY_MANIFEST = "data/first_operation_replay_fingerprint.json"
+CROSS_COUNTER_MANIFEST = "data/cross_counter_runtime_fingerprint.json"
+CROSS_COUNTER_PREFIX = "scripts/cross_counter/"
 PRESET = "Windows PC (fingerprint staging)"
 RELEASE_GATE = '"res://tools/USE-build_fingerprinted_windows.py-for-Windows-release.exe"'
 
@@ -124,6 +126,23 @@ def replay_source_digests():
             for path in sorted(battle.rglob("*.gd")) if path.is_file()}
 
 
+def cross_counter_source_digests():
+    codec = ROOT / CROSS_COUNTER_PREFIX / "checkpoint.gd"
+    if not codec.exists():
+        return {}
+    match = re.search(r"^const CODE := (\[.*\])$", codec.read_text(encoding="utf-8"), re.MULTILINE)
+    if not match:
+        raise RuntimeError("Cross Counter checkpoint CODE inventory is missing")
+    names = json.loads(match[1])
+    if len(names) != len(set(names)) or any(Path(n).name != n or not n.endswith(".gd") for n in names):
+        raise RuntimeError("Invalid Cross Counter source inventory")
+    return {name: sha((ROOT / CROSS_COUNTER_PREFIX / name).read_bytes()) for name in names}
+
+
+def cross_counter_pack_fingerprints(pack, names, suffix):
+    return {name: sha(pack.read(CROSS_COUNTER_PREFIX + name + suffix)) for name in names}
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--debug", action="store_true", help="use the Windows debug template")
@@ -144,6 +163,7 @@ def main():
 def build(godot, out, debug=False):
     sources = source_digests()
     replay_sources = replay_source_digests()
+    cross_sources = cross_counter_source_digests()
     evidence = out / "_build"
     evidence.mkdir()
     stage_file = evidence / "stage.pck"
@@ -151,7 +171,7 @@ def build(godot, out, debug=False):
     stage = Pack(stage_file)
     if any(name.endswith(".gd") for name in stage.entries):
         raise RuntimeError("Stage unexpectedly contains source")
-    if source_digests() != sources or replay_source_digests() != replay_sources:
+    if source_digests() != sources or replay_source_digests() != replay_sources or cross_counter_source_digests() != cross_sources:
         raise RuntimeError("Checkpoint sources changed during staging")
     version = subprocess.check_output([godot, "--version"], text=True).strip().split(".")
     fingerprint = {
@@ -172,10 +192,21 @@ def build(godot, out, debug=False):
     }
     replay_encoded = json.dumps(replay, ensure_ascii=True, separators=(",", ":")).encode("ascii")
     anchor += f'const REPLAY_SHA256 := "{sha(replay_encoded)}"\n'.encode("ascii")
+    cross_encoded = None
+    if cross_sources:
+        cross = {"format": "cross-counter-runtime-fingerprint/1", "engine": fingerprint["engine"],
+                 "sources": cross_sources,
+                 "tokens": cross_counter_pack_fingerprints(stage, cross_sources, "c"),
+                 "remaps": cross_counter_pack_fingerprints(stage, cross_sources, ".remap")}
+        cross_encoded = json.dumps(cross, ensure_ascii=True, separators=(",", ":")).encode("ascii")
+        anchor += f'const CROSS_COUNTER_SHA256 := "{sha(cross_encoded)}"\n'.encode("ascii")
     output = out / "SpaceBattleOfThreeKingdoms.exe"
     generated = []
     try:
-        for name, content in ((MANIFEST, encoded), (REPLAY_MANIFEST, replay_encoded), (ANCHOR, anchor)):
+        generated_inputs = [(MANIFEST, encoded), (REPLAY_MANIFEST, replay_encoded), (ANCHOR, anchor)]
+        if cross_encoded is not None:
+            generated_inputs.append((CROSS_COUNTER_MANIFEST, cross_encoded))
+        for name, content in generated_inputs:
             path = ROOT / name
             with path.open("xb") as stream:
                 generated.append(path)
@@ -183,11 +214,15 @@ def build(godot, out, debug=False):
         action = "--export-debug" if debug else "--export-release"
         run_export(godot, action, output, evidence / "export-final.log")
         final = Pack(output)
-        if source_digests() != sources or replay_source_digests() != replay_sources:
+        if source_digests() != sources or replay_source_digests() != replay_sources or cross_counter_source_digests() != cross_sources:
             raise RuntimeError("Checkpoint sources changed during Windows export")
         if final.read(MANIFEST) != encoded or final.read(REPLAY_MANIFEST) != replay_encoded or any(p.endswith(".gd") for p in final.entries):
             raise RuntimeError("Unexpected manifest or source in Windows PCK")
+        if cross_encoded is not None and final.read(CROSS_COUNTER_MANIFEST) != cross_encoded:
+            raise RuntimeError("Cross Counter manifest changed during export")
         for suffix in ("c", ".remap"):
+            if cross_counter_pack_fingerprints(stage, cross_sources, suffix) != cross_counter_pack_fingerprints(final, cross_sources, suffix):
+                raise RuntimeError("Cross Counter token or remap changed between export passes")
             if pack_fingerprints(stage, replay_sources, suffix) != pack_fingerprints(final, replay_sources, suffix):
                 raise RuntimeError("Token or remap changed between export passes")
         if ANCHOR + "c" not in final.entries or ANCHOR + ".remap" not in final.entries:
@@ -207,6 +242,8 @@ def build(godot, out, debug=False):
         raise RuntimeError(f"Fingerprint runtime verification failed in {verify_log}")
     (evidence / "fingerprint.json").write_bytes(encoded)
     (evidence / "replay-fingerprint.json").write_bytes(replay_encoded)
+    if cross_encoded is not None:
+        (evidence / "cross-counter-fingerprint.json").write_bytes(cross_encoded)
     return sha(encoded), len(sources)
 
 if __name__ == "__main__":
