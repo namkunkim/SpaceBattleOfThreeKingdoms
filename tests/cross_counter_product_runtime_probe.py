@@ -13,6 +13,7 @@ def main():
     parser.add_argument('--worktree', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--engine', type=Path, required=True)
+    parser.add_argument('--packaged', action='store_true', help='run the acceptance main scene from an isolated exported probe package')
     args = parser.parse_args()
     out = args.output.resolve()
     out.mkdir(parents=True, exist_ok=False)
@@ -28,6 +29,8 @@ def main():
             env[key] = str(folder)
         command = [str(args.engine), '--headless', '--path', str(args.worktree), '--script',
                    'tests/cross_counter_product_runtime_probe.gd']
+        if args.packaged:
+            command = [str(args.engine), '--headless']
         if phase == 'reopen':
             command += ['--', '--reopen']
         started = time.time()

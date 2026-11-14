@@ -22,6 +22,7 @@ static func request() -> Dictionary:
         "difficulty": "standard", "mode": "direct"}
 
 static func prepare_fresh(value: Variant, operation_id: String) -> Dictionary:
+    if Checkpoint.rules_digest().is_empty(): return failure("cross_counter_rules_unavailable", "rules_digest")
     var validator := Preparer.new(Callable(), Callable(), CAPABILITY)
     var invalid: Dictionary = validator._validate_request(value)
     if not invalid.is_empty(): return invalid

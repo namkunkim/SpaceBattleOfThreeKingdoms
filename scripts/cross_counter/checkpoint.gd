@@ -21,22 +21,62 @@ static func sha(bytes: PackedByteArray) -> String:
 static func packet_digest(packet: Dictionary) -> String:
     return sha(var_to_bytes(packet))
 
-static func _rule_paths(directory: String, paths: Array[String]) -> void:
-    for file in DirAccess.get_files_at(directory):
-        if file.ends_with(".gd"): paths.append(directory.path_join(file))
-    for child in DirAccess.get_directories_at(directory):
-        _rule_paths(directory.path_join(child), paths)
+const NativeCheckpoint := preload("res://core/battle/first_operation_checkpoint.gd")
+const CODE := ["runtime.gd", "checkpoint.gd", "witness.gd", "outcome.gd"]
+const CODE_ROOT := "res://scripts/cross_counter/"
 
 static func rules_digest() -> String:
-    var paths: Array[String] = []
-    _rule_paths("res://core", paths)
-    paths.append_array(["res://scripts/cross_counter/runtime.gd",
-        "res://scripts/cross_counter/witness.gd", "res://scripts/cross_counter/outcome.gd",
-        "res://scripts/cross_counter/checkpoint.gd"])
-    paths.sort()
-    var pins := {"engine": Engine.get_version_info().string, "sources": {}}
-    for path in paths: pins.sources[path] = FileAccess.get_sha256(path)
-    return packet_digest(pins)
+    var native := NativeCheckpoint.rules_digest()
+    var sources := _packaged_sources() if OS.has_feature("template") else _source_hashes()
+    return _combined_digest(native, sources)
+
+static func _combined_digest(native: String, sources: Dictionary) -> String:
+    if native.is_empty() or sources.size() != CODE.size(): return ""
+    var inventory: Array = ["cross-counter-product-runtime/1", Engine.get_version_info().string, native]
+    var names := CODE.duplicate()
+    names.sort()
+    for name in names:
+        if not _digest(sources.get(name)): return ""
+        inventory.append([CODE_ROOT + name, sources[name]])
+    return packet_digest(inventory_dict(inventory))
+
+static func inventory_dict(inventory: Array) -> Dictionary:
+    return {"inventory": inventory}
+
+static func _source_hashes() -> Dictionary:
+    var sources := {}
+    for name in CODE:
+        var digest := FileAccess.get_sha256(CODE_ROOT + name)
+        if not _digest(digest): return {}
+        sources[name] = digest
+    return sources
+
+# The existing two-pass Windows builder binds original source hashes to token/remap bytes.
+# It is intentionally fail-closed when the manifest, anchor or any token differs.
+static func _packaged_sources() -> Dictionary:
+    const MANIFEST := "res://data/cross_counter_runtime_fingerprint.json"
+    const ANCHOR := "res://data/operation_checkpoint_anchor.gd"
+    if not FileAccess.file_exists(MANIFEST) or not ResourceLoader.exists(ANCHOR): return {}
+    var text := FileAccess.get_file_as_string(MANIFEST)
+    var anchor := load(ANCHOR) as Script
+    if anchor == null or anchor.get_script_constant_map().get("CROSS_COUNTER_SHA256") != text.sha256_text(): return {}
+    var manifest: Variant = JSON.parse_string(text)
+    if not _fields(manifest, ["format", "engine", "sources", "tokens", "remaps"]) \
+            or manifest.format != "cross-counter-runtime-fingerprint/1": return {}
+    var version := Engine.get_version_info()
+    var engine := "%d.%d.%d.%s.%s" % [version.major, version.minor, version.patch, version.status, str(version.hash).left(9)]
+    if manifest.engine != engine or not _fields(manifest.sources, CODE) \
+            or not _fields(manifest.tokens, CODE) or not _fields(manifest.remaps, CODE): return {}
+    for name in CODE:
+        var source: String = CODE_ROOT + name
+        if OS.has_feature("template") and FileAccess.file_exists(source): return {}
+        if not _digest(manifest.sources[name]) or not _digest(manifest.tokens[name]) or not _digest(manifest.remaps[name]): return {}
+        if FileAccess.get_sha256(source + "c") != manifest.tokens[name] \
+                or FileAccess.get_sha256(source + ".remap") != manifest.remaps[name]: return {}
+    return manifest.sources.duplicate()
+
+static func _packaged_rules_digest() -> String:
+    return _combined_digest(NativeCheckpoint._packaged_rules_digest(), _packaged_sources())
 
 static func from_diagnostic(value: Dictionary) -> Dictionary:
     var packet := {"format": FORMAT, "request": value.request.duplicate(true),
@@ -82,7 +122,8 @@ static func validate(packet: Variant, bind: Variant) -> Dictionary:
         return fail("checkpoint_bind_mismatch", "bind")
     for key in ["rules_digest", "source_digest", "effective_digest", "state_digest"]:
         if not _digest(packet[key]): return fail("invalid_checkpoint_digest", key)
-    if packet.rules_digest != rules_digest(): return fail("checkpoint_rules_mismatch", "rules_digest")
+    var current_rules := rules_digest()
+    if current_rules.is_empty() or packet.rules_digest != current_rules: return fail("checkpoint_rules_mismatch", "rules_digest")
     if not _integer(packet.tick, MAX_TICKS) or not _integer(packet.clock_ms, MAX_TICKS * 100) \
             or not _integer(packet.seed, 4294967295):
         return fail("invalid_checkpoint_clock")
