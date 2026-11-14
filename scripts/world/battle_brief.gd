@@ -11,6 +11,7 @@ const MODES := ["direct", "auto"]
 
 # Mirrors the development composition root without loading its unfinished backend.
 const Product := preload("res://scripts/first_operation_source_reference.gd")
+const FIRST_OPERATION_V2_CAPABILITY := "pc/first-operation/2"
 const FIRST_OPERATION_DEV_ARG := "--pc-first-operation-dev"
 const FIRST_OPERATION_DEV_REQUEST := {
 	"capability": "pc/first-operation-dev/1",
@@ -46,8 +47,14 @@ func select_first_operation_product() -> void:
 	difficulty = "표준"
 	mode = Product.REQUEST.mode
 
+func select_first_operation_v2() -> void:
+	select_first_operation_product()
+	_operation_request = _operation_request.duplicate()
+	_operation_request.capability = FIRST_OPERATION_V2_CAPABILITY
+	_operation_request.make_read_only()
+
 func operation_route() -> String:
-	if _operation_request.get("capability") == Product.CAPABILITY:
+	if _operation_request.get("capability") in [Product.CAPABILITY, FIRST_OPERATION_V2_CAPABILITY]:
 		return Product.ROUTE
 	return _operation_request.get("route_id", "")
 
