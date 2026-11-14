@@ -164,7 +164,8 @@ func _publish_candidate(candidate: RefCounted, target: BattleBrief, restored: bo
 	_stop()
 	operation_owner = candidate
 	brief = target
-	link.brief = target
+	if link != null:
+		link.brief = target
 	started = false
 	failure = {}
 	settlement = null

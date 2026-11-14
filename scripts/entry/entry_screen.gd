@@ -2,6 +2,8 @@ extends Control
 signal continuation_requested(origin: String)
 signal detail_prepared(context: Dictionary)
 signal sortie_requested
+signal v2_requested
+var v2_enabled := false
 var campaign_enabled := false
 var campaign_busy := false
 var campaign_notice: Label
@@ -165,6 +167,11 @@ func request(action: String, token: int, region := Flow.REGION) -> bool:
 		_open_settings()
 		return true
 	if campaign_enabled and token == flow.revision:
+		if action == "v2" and v2_enabled and flow.state in [Flow.State.SELECT, Flow.State.READY]:
+			campaign_busy = true
+			for button in buttons: button.disabled = true
+			v2_requested.emit()
+			return true
 		if action == "sortie" and flow.state == Flow.State.READY:
 			campaign_busy = true
 			gate_remaining = 0.25
@@ -195,6 +202,8 @@ func _render() -> void:
 			_label("조조가 남진하고, 손권과 유비는 형초에서 함대를 모은다.", 22)
 			_space()
 			_button("적벽대전 시작", "start")
+			if v2_enabled:
+				_button("적벽 v2 출격 / 재개", "v2")
 			_button("설정", "settings")
 		Flow.State.STORY:
 			_render_story()
@@ -373,6 +382,8 @@ func _load_detail(token: int) -> void:
 		var actions := HBoxContainer.new()
 		actions.add_theme_constant_override("separation", 12)
 		body.add_child(actions)
+		if v2_enabled:
+			_button("적벽 v2 출격 / 재개", "v2")
 		var resume := _button("기존 진행 이어하기 / 결산", "continue", actions)
 		resume.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var quit_button := _button("게임 종료", "exit", actions)
