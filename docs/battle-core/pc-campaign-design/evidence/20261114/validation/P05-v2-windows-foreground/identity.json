@@ -1,0 +1,18 @@
+{
+  "pid": 2976,
+  "exe": "F:/WorkSpace/Campaign-Orchestration/P05-v2-product-entry-20261114/release-build-selective/candidate/SpaceBattleOfThreeKingdoms.exe",
+  "exe_sha256": "b9090342dd85492fe24c1b994450db72156aebbeff33713eebf46ec040751f3d",
+  "dll_sha256": "ebd3b5ce05d43bb89dc2d421047a2ca685a246086bd9298af6ad353760fca9d0",
+  "arguments": [
+    "--windowed",
+    "--resolution",
+    "1600x900",
+    "--log-file",
+    "F:/WorkSpace/Campaign-Orchestration/P05-v2-product-entry-20261114/foreground-dose-01/engine.log",
+    "--",
+    "--red-cliffs-v2"
+  ],
+  "APPDATA": "F:/WorkSpace/Campaign-Orchestration/P05-v2-product-entry-20261114/foreground-dose-01/roaming",
+  "LOCALAPPDATA": "F:/WorkSpace/Campaign-Orchestration/P05-v2-product-entry-20261114/foreground-dose-01/local",
+  "utc": "2026-11-14T11:30:28.3801512Z"
+}
