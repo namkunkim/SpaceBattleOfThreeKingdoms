@@ -123,7 +123,9 @@ func _process(delta: float) -> void:
 		var credit := _elapsed - period
 		var variable_interval := _frame.has("next_clock_ms")
 		step_replay()
-		_elapsed = minf(_playback_period() if variable_interval else period, credit)
+		if variable_interval or _frame.has("next_clock_ms"):
+			period = _playback_period()
+		_elapsed = minf(period, credit)
 
 
 func _playback_period() -> float:

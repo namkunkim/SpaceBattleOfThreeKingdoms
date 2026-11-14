@@ -44,6 +44,7 @@ func _run() -> void:
 	var before := [link.brief, link.outcome, link.routed()]
 	_verify_delta(source)
 	_verify_contract()
+	_verify_mixed_credit()
 	Engine.max_fps = 120
 	for speed in [1.0, 2.0, 4.0]:
 		await _play(source, speed)
@@ -230,6 +231,29 @@ func _verify_contract() -> void:
 		viewer._process(0.001)
 		_check(replay.calls == 1 and viewer._frame.tick == 1, "no hint installs frame at unchanged 100 ms")
 	viewer.free()
+
+
+func _verify_mixed_credit() -> void:
+	for outgoing_hint in [false, true]:
+		var viewer := Viewer.new()
+		root.add_child(viewer)
+		var replay := StubReplay.new()
+		var initial := _stub_frame(0, 0)
+		replay.next = _stub_frame(1, 100)
+		if outgoing_hint:
+			initial.next_clock_ms = 100
+			replay.next.projection.hz = 20
+		else:
+			replay.next.next_clock_ms = 150
+		if _check(viewer.attach_playback(replay, initial).ok, "attach mixed timing replay"):
+			viewer._play.pressed.emit()
+			viewer._process(0.3)
+			_check(replay.calls == 1 and viewer._frame.tick == 1 and not viewer._finished
+				and is_equal_approx(viewer._elapsed, 0.05), "mixed interval caps credit to successor and steps once")
+			replay.next = _stub_frame(2, 150)
+			viewer._process(0.001)
+			_check(replay.calls == 2 and viewer._frame.tick == 2, "next callback uses capped credit")
+		viewer.free()
 
 
 func _stub_frame(tick: int, clock_ms: int) -> Dictionary:
