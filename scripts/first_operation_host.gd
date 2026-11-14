@@ -9,6 +9,7 @@ const SaveStore := preload("res://scripts/first_operation_save_store.gd")
 const Settlements := preload("res://scripts/first_operation_settlement_store.gd")
 const ReplayCodec := preload("res://scripts/first_operation_replay_codec.gd")
 const OperationTrace := preload("res://scripts/first_operation_trace.gd")
+const FormationSource := preload("res://view/fleet_render/first_operation_formation_source.gd")
 
 var operation_owner: RefCounted
 var frame := {}
@@ -46,6 +47,8 @@ var _replay_recording := {}
 var _can_record_replay := true
 var _export_replay: Button
 var _trace: OperationTrace
+var _formation_source: FormationSource
+var _formation_renderer: FleetRenderer
 
 func _ready() -> void:
 	set_process(false)
@@ -244,6 +247,8 @@ func _process(delta: float) -> void:
 	for i in _clock.advance(delta):
 		if not step_operation():
 			break
+	if _formation_renderer != null:
+		_formation_renderer.update(delta)
 
 func step_operation() -> bool:
 	if not started or _returning or _restore_job != null or _file_dialog != null or settlement != null or not failure.is_empty():
@@ -345,8 +350,43 @@ func _export_replay_file(path: String) -> void:
 	var written := ReplayCodec.write(_replay_recording, path)
 	_save_status.text = "Replay exported" if written.ok else error_text(written)
 
+## Invoke only after publishing the explicitly selected versioned owner.
+## An operation replacement drops the renderer and must opt in again.
+func enable_certified_formation_presentation(operation_id: String) -> bool:
+	if operation_id.is_empty() or started or _formation_renderer != null or frame.is_empty() \
+			or _field == null:
+		return false
+	var source := FormationSource.new(operation_id, _world)
+	source.install_frame(frame)
+	var rows := source.squadrons()
+	if rows.size() != 1 or rows[0].dead:
+		return false
+	var id: int = rows[0].id
+	var renderer := FleetRenderer.new()
+	if not renderer.enable_p05_formation_routes({id: FormationSource.SQUADRON}, operation_id, true):
+		renderer.free()
+		return false
+	var anchor := Node3D.new()
+	anchor.position.y = 15.0
+	anchor.scale = Vector3.ONE / CameraRig.S
+	_field.add_child(anchor)
+	anchor.add_child(renderer)
+	renderer.setup(source)
+	renderer.update(0.0)
+	if not renderer.vis.has(id) or renderer.vis[id].p05 == null:
+		anchor.free()
+		return false
+	_formation_source = source
+	_formation_renderer = renderer
+	if _markers.has(id):
+		_markers[id].hide()
+	return true
+
+
 func _install_frame(next: Dictionary) -> void:
 	frame = next
+	if _formation_source != null:
+		_formation_source.install_frame(frame)
 	_time.text = "Tick %d   %.1f s" % [frame.tick, frame.clock_ms / 1000.0]
 	var states := PackedStringArray()
 	for id in ["A", "B", "C"]:
@@ -361,6 +401,7 @@ func _install_frame(next: Dictionary) -> void:
 		if not _markers.has(row.id):
 			_markers[row.id] = _marker(14.0, Color.CORNFLOWER_BLUE if row.side == 0 else Color.ORANGE_RED)
 		_markers[row.id].position = _position(row.pos, 15.0)
+		_markers[row.id].visible = _formation_source == null or _formation_source.squadron(row.id).is_empty()
 	for id in _markers.keys():
 		if not seen.has(id):
 			_markers[id].queue_free()
@@ -374,6 +415,8 @@ func _reset_field(points: Array) -> void:
 		button.queue_free()
 	_commands.clear()
 	_markers.clear()
+	_formation_source = null
+	_formation_renderer = null
 	if _field != null:
 		remove_child(_field)
 		_field.queue_free()
