@@ -214,7 +214,7 @@ class Run(publication.Run):
         durable.write(self.root / 'publication-records.json', self.publications)
         return {'schema': 'cross-counter-private-host-proof/1', 'status': 'PASS', 'checks': self.checks,
                 'checks_total': len(self.checks), 'checks_passed': len(self.checks), 'engines': engines,
-                'rendered': self.args.render, 'captures': self.captures, 'ui_signal_count': len(self.ui_events),
+                'rendered': self.args.render, 'captures': self.captures, 'ui_control_attempt_count': len(self.ui_events),
                 'database_sha256': durable.file_sha(self.db), 'source_db_sha256': fence.SOURCE_DB_SHA,
                 'counts': counts, 'final_fence': fb, 'public_activation': False, 'new_settlement_policy': False,
                 'existing_user_saves_accessed': False, 'scope': 'Private projection host, owner API controls and explicit logical single-tick stepping.'}
