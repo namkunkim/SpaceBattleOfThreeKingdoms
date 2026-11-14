@@ -1,0 +1,39 @@
+{
+  "sha256": [
+    {
+      "Path": "C:\\Tools\\Godot\\Godot_v4.7.2-stable_win64_console.exe",
+      "Hash": "C8F0A6BC45A19B33541501E57F6F7CD972AB18453743266339D495CBBE846643"
+    },
+    {
+      "Path": "F:\\WorkSpace\\Campaign-Orchestration\\SpaceBattleOfThreeKingdoms-validation\\P07-h1-event-boundaries-20261114-01\\project\\core\\battle\\h1_event_boundaries.gd",
+      "Hash": "AF38F7509561CE665ABF62C49889A8C5CF15601435993F6B44C7CA1AF4C709FF"
+    },
+    {
+      "Path": "F:\\WorkSpace\\Campaign-Orchestration\\SpaceBattleOfThreeKingdoms-validation\\P07-h1-event-boundaries-20261114-01\\project\\tests\\h1_event_boundaries.gd",
+      "Hash": "6EDFA0245B6CD8A9EEEDDE3041D731DFCE0B780B5BE3D220FAB38C7E5AF796A0"
+    },
+    {
+      "Path": "F:\\WorkSpace\\Campaign-Orchestration\\SpaceBattleOfThreeKingdoms-validation\\P07-h1-event-boundaries-20261114-01\\project\\tests\\h1_boundary_oracle.gd",
+      "Hash": "B7F99C9BB6870FC87EDF19FB43BD39CDD418060432950B111B2E066255993A35"
+    }
+  ],
+  "utc": "2026-11-14T08:29:43.8608383Z",
+  "arguments": [
+    "--headless",
+    "--path",
+    "F:\\WorkSpace\\Campaign-Orchestration\\SpaceBattleOfThreeKingdoms-validation\\P07-h1-event-boundaries-20261114-01\\project",
+    "--script",
+    "res://tests/h1_event_boundaries.gd",
+    "--log-file",
+    "F:\\WorkSpace\\Campaign-Orchestration\\SpaceBattleOfThreeKingdoms-validation\\P07-h1-event-boundaries-20261114-01\\engine.log",
+    "--",
+    "F:\\WorkSpace\\Campaign-Orchestration\\SpaceBattleOfThreeKingdoms-validation\\P07-h1-event-boundaries-20261114-01\\result.json"
+  ],
+  "environment": {
+    "TEMP": "F:\\WorkSpace\\Campaign-Orchestration\\SpaceBattleOfThreeKingdoms-validation\\P07-h1-event-boundaries-20261114-01\\profile\\temp",
+    "LOCALAPPDATA": "F:\\WorkSpace\\Campaign-Orchestration\\SpaceBattleOfThreeKingdoms-validation\\P07-h1-event-boundaries-20261114-01\\profile\\local",
+    "APPDATA": "F:\\WorkSpace\\Campaign-Orchestration\\SpaceBattleOfThreeKingdoms-validation\\P07-h1-event-boundaries-20261114-01\\profile\\roaming",
+    "TMP": "F:\\WorkSpace\\Campaign-Orchestration\\SpaceBattleOfThreeKingdoms-validation\\P07-h1-event-boundaries-20261114-01\\profile\\temp"
+  },
+  "exe": "C:/Tools/Godot/Godot_v4.7.2-stable_win64_console.exe"
+}

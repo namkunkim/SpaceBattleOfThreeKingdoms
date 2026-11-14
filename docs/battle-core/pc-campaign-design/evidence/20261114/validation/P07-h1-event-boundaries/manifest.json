@@ -1,0 +1,99 @@
+{
+  "format": "h1-isolated-boundary-documentary-evidence/1",
+  "packaging_base": "a2bcdac5a622da3babdaff27f6a2b6627b210f74",
+  "original_artifact_root": "F:\\WorkSpace\\Campaign-Orchestration\\SpaceBattleOfThreeKingdoms-validation\\P07-h1-event-boundaries-20261114-01",
+  "original_policy_reference_commit": "b40d2958a7331e11b17111704f93eab40a8da4bb",
+  "scope": "Independent review of the isolated parameterized H1 helper and its historical 34-case run; no product integration",
+  "code_review_status": "accepted_for_isolated_helper_only",
+  "package_independent_review_status": "pending",
+  "engine_run_repeated_for_packaging": false,
+  "live_code_added": false,
+  "product_activation": false,
+  "p06_p07_expansion_complete": false,
+  "files": [
+    {
+      "path": "SOURCE-PLAN.md",
+      "source_path": "PLAN.md",
+      "sha256": "4b71d8d093d732bed18f059c39f81eba18384cbcd0c4767ed42dab14977969fb"
+    },
+    {
+      "path": "snapshots/h1_event_boundaries.gd.txt",
+      "source_path": "project/core/battle/h1_event_boundaries.gd",
+      "sha256": "af38f7509561ce665abf62c49889a8c5cf15601435993f6b44c7ca1af4c709ff"
+    },
+    {
+      "path": "snapshots/h1_boundary_oracle.gd.txt",
+      "source_path": "project/tests/h1_boundary_oracle.gd",
+      "sha256": "b7f99c9bb6870fc87edf19fb43bd39cdd418060432950b111b2e066255993a35"
+    },
+    {
+      "path": "snapshots/h1_boundary_runner.gd.txt",
+      "source_path": "project/tests/h1_event_boundaries.gd",
+      "sha256": "6edfa0245b6cd8a9eeedde3041d731dfce0b780b5be3d220fab38c7e5af796a0"
+    },
+    {
+      "path": "snapshots/project.godot.txt",
+      "source_path": "project/project.godot",
+      "sha256": "605da3b4632dad6bfb6f7a46b29a66587620ccd4bd1a75009f0b85ee8904adf0"
+    },
+    {
+      "path": "result.json",
+      "source_path": "result.json",
+      "sha256": "3a81d8ed6825ed32e18df20674b010816f67928c2473f6d46e7d18a05c77dbb0"
+    },
+    {
+      "path": "engine.log",
+      "source_path": "engine.log",
+      "sha256": "149c968501d73534862da95518654d7beb3565875649ee8b4275cb4914668037"
+    },
+    {
+      "path": "stderr.log",
+      "source_path": "stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "process.json",
+      "source_path": "process.json",
+      "sha256": "b236df75216748f87736d0ea27504b730348357c83f1dc06a8bde8fa0fe2c80c"
+    },
+    {
+      "path": "invocation.json",
+      "source_path": "invocation.json",
+      "sha256": "396e4969d6f5cae83320856e0a2101a857c692cb9caf943e886b49b2d03fcb01"
+    },
+    {
+      "path": "oracle-freeze.json",
+      "source_path": "oracle-freeze.json",
+      "sha256": "3ee3ec565865eba7b923032280f6b8f64964ff6dcccc2499342c1211ffe9de7d"
+    },
+    {
+      "path": "reference-pins.json",
+      "source_path": "reference-pins.json",
+      "sha256": "8046a3d1885e43a36f5ff62b428a875c5eefce552aec103e1df7230ea3f3fe7a"
+    },
+    {
+      "path": "reference/H1-EVENT-DECISION.md",
+      "source_path": "reference/H1-EVENT-DECISION.md",
+      "sha256": "7ed15c6ef4c4098064cca7c4e9e9854293e8970632c37e2b31b75ec2aac9f599"
+    },
+    {
+      "path": "reference/H1-POLICY-DECISION.md",
+      "source_path": "reference/H1-POLICY-DECISION.md",
+      "sha256": "12b0440ea92d3db1baa5153009654fcc36d98e449ac53078d4ab09b0e4411730"
+    }
+  ],
+  "policy_sources_at_packaging_base": [
+    {
+      "path": "docs/battle-core/pc-campaign-design/H1-EVENT-DECISION.md",
+      "reference_sha256": "7ed15c6ef4c4098064cca7c4e9e9854293e8970632c37e2b31b75ec2aac9f599",
+      "worktree_sha256": "7ed15c6ef4c4098064cca7c4e9e9854293e8970632c37e2b31b75ec2aac9f599",
+      "same_text_after_crlf_normalization": true
+    },
+    {
+      "path": "docs/battle-core/pc-campaign-design/H1-POLICY-DECISION.md",
+      "reference_sha256": "12b0440ea92d3db1baa5153009654fcc36d98e449ac53078d4ab09b0e4411730",
+      "worktree_sha256": "99a6e8acfe55a79bb6a20e7d6f859a201cd4b5105b3c3adc7705bc874a6465a0",
+      "same_text_after_crlf_normalization": true
+    }
+  ]
+}
