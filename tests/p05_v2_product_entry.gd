@@ -16,6 +16,13 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	var roaming := OS.get_environment("SBTK_P05_V2_TEST_PROFILE")
+	var actual := OS.get_user_data_dir().replace("\\", "/").simplify_path()
+	var expected := roaming.path_join("Godot/app_userdata/SpaceBattleOfThreeKingdoms")
+	if not _check(not roaming.is_empty() and actual.nocasecmp_to(expected.replace("\\", "/").simplify_path()) == 0,
+			"explicit profile matches Godot user data"):
+		quit(1)
+		return
 	if not _check(not Storage.has_save() and not FileAccess.file_exists(V1Host.PRODUCT_SLOT_PATH),
 			"fresh isolated profile"):
 		quit(1)
