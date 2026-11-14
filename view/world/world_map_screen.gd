@@ -85,6 +85,11 @@ const CrossCounterSlot := preload("res://scripts/cross_counter/public_slot.gd")
 var _cross_counter_button: Button
 var _cross_counter_parent_id := ""
 var _cross_counter_host: CrossCounterHost
+const LanternHost := preload("res://scripts/lantern_escort/public_host.gd")
+const LanternSlot := preload("res://scripts/lantern_escort/public_slot.gd")
+var _lantern_host: LanternHost
+var _lantern_menu: MenuButton
+var _lantern_parents: Array[String] = []
 var _atlas_resume_button: Button
 var _atlas_skirmish_button: Button
 var _difficulty := "표준"
@@ -157,6 +162,8 @@ func _ready() -> void:
 	_build_chip()
 	_build_caption()
 	_build_resolve()
+	_build_lantern_menu()
+	_update_lantern()
 	await get_tree().process_frame
 	var restore: Dictionary = link.take_map_restore() if link else {}
 	if not restore.is_empty():
@@ -1226,7 +1233,7 @@ func _update_cross_counter() -> void:
 
 
 func _open_cross_counter() -> void:
-	if _cross_counter_host != null or _cross_counter_button.disabled or not _cross_counter_button.is_visible_in_tree() \
+	if _lantern_host != null or _cross_counter_host != null or _cross_counter_button.disabled or not _cross_counter_button.is_visible_in_tree() \
 			or _replay_dialog != null or _replay_overlay != null:
 		return
 	_cross_counter_host = CrossCounterHost.new()
@@ -1249,6 +1256,81 @@ func _close_cross_counter() -> void:
 		host.queue_free()
 	hud.show()
 	_update_cross_counter()
+	_update_lantern()
+
+
+func _build_lantern_menu() -> void:
+	if not OS.has_feature("windows") or OS.get_cmdline_user_args().has(BattleBrief.FIRST_OPERATION_DEV_ARG):
+		return
+	_lantern_menu = MenuButton.new()
+	_lantern_menu.name = "OpenLanternEscort"
+	_lantern_menu.text = "퇴로의 등불"
+	_lantern_menu.focus_mode = Control.FOCUS_ALL
+	hud.add_child(_lantern_menu)
+	_lantern_menu.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	_lantern_menu.offset_left = -M - 500
+	_lantern_menu.offset_right = -M
+	_lantern_menu.offset_top = -M - 2 * BTN_H - 8
+	_lantern_menu.offset_bottom = -M - BTN_H - 8
+	_lantern_menu.flat = false
+	_lantern_menu.add_theme_font_size_override("font_size", 17)
+	_lantern_menu.get_popup().id_pressed.connect(_open_lantern)
+	_lantern_menu.hide()
+
+
+func _update_lantern() -> void:
+	if _lantern_menu == null:
+		return
+	var popup := _lantern_menu.get_popup()
+	popup.clear()
+	_lantern_parents.clear()
+	var eligible := LanternSlot.read_parents()
+	if not eligible.ok:
+		return
+	var inspected := LanternSlot.inspect()
+	var head: Dictionary = inspected.get("head", {})
+	var active: Dictionary = head.get("active", {})
+	var completed: Dictionary = head.get("completed", {})
+	var parents: Dictionary = eligible.parents
+	var keys := parents.keys()
+	keys.sort()
+	for parent_id: String in keys:
+		var label := "출격"
+		if completed.has(parent_id):
+			label = "결산 보기"
+		elif active.get("parent_id") == parent_id:
+			label = "재개"
+		var index := _lantern_parents.size()
+		_lantern_parents.append(parent_id)
+		popup.add_item("%s · 교차 반격 %s" % [label, parent_id.get_slice("/", 1).left(8)], index)
+		popup.set_item_disabled(index, not inspected.ok or (label == "출격" and not active.is_empty()))
+
+
+func _open_lantern(index: int) -> void:
+	if _lantern_host != null or _cross_counter_host != null or _lantern_menu == null \
+			or not _lantern_menu.is_visible_in_tree() or _lantern_menu.disabled \
+			or index < 0 or index >= _lantern_parents.size() or _lantern_menu.get_popup().is_item_disabled(index):
+		return
+	_lantern_host = LanternHost.new()
+	_lantern_host.name = "LanternEscortPublicHost"
+	add_child(_lantern_host)
+	var opened := _lantern_host.open_operation(_lantern_parents[index])
+	if not opened.ok:
+		_close_lantern()
+		_show_chip("퇴로의 등불을 열지 못했습니다. (%s)" % opened.get("error", ""))
+		return
+	hud.hide()
+	_lantern_host.returned.connect(_close_lantern)
+
+
+func _close_lantern() -> void:
+	if _lantern_host != null:
+		var host := _lantern_host
+		_lantern_host = null
+		remove_child(host)
+		host.queue_free()
+	hud.show()
+	_update_lantern()
 
 
 func _result_to_world() -> void:
@@ -1261,10 +1343,13 @@ func _result_to_world() -> void:
 
 # ------------------------------------------------------------ 진행
 func _process(delta: float) -> void:
-	if _cross_counter_host != null:
+	if _cross_counter_host != null or _lantern_host != null:
 		return
 	var fl := canvas.flying()
 	var show_atlas := state == "browse" and canvas.level() == "z0" and not fl and not _card.visible
+	if _lantern_menu != null:
+		_lantern_menu.visible = (state == "result" or show_atlas) and not _lantern_parents.is_empty()
+		_lantern_menu.disabled = not _sortie_available() or _replay_dialog != null or _replay_overlay != null
 	if state != "result" and not show_atlas:
 		canvas.visible = true
 		_header.visible = true
@@ -1310,6 +1395,9 @@ func _unhandled_input(ev: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 func back() -> void:
+	if _lantern_host != null:
+		_lantern_host.leave()
+		return
 	if _replay_dialog != null:
 		_cancel_replay_dialog()
 		return
