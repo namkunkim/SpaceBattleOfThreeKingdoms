@@ -4,6 +4,8 @@ const Policy := preload("res://core/battle/p05_p07_first_operation.gd")
 const Dev := preload("res://core/battle/first_operation_dev.gd")
 const Schedule := preload("res://view/fleet_render/p05_formation_schedule.gd")
 
+const Presentation := preload("res://view/fleet_render/p05_formation_presentation.gd")
+
 class RouteSource extends BattleSource:
 	var rows: Array[Dictionary] = []
 
@@ -91,8 +93,129 @@ func _run() -> void:
 	renderer.free()
 	source.rows[0].pos -= Vector2.ONE
 	_measure_authority(source, bindings)
+	_measure_certified_presentation(source, false)
+	_measure_certified_presentation(source, true)
+	_measure_certified_guards(source)
 	print("P05_RENDERER_RESULT failures=", failures)
 	quit(0 if failures == 0 else 1)
+
+
+func _measure_certified_presentation(original: RouteSource, delivery_gap: bool) -> void:
+	var source := RouteSource.new(null)
+	var sq: Dictionary = original.rows[0].duplicate(true)
+	sq.operation_id = "p05-certified-clock"
+	sq.tick = 0
+	sq.formation_id = "FRM-03"
+	sq.formation = _shape(sq.formation_id)
+	sq.form_to = ""
+	sq.form_left_s = 0.0
+	source.rows.append(sq)
+	var renderer := FleetRenderer.new()
+	root.add_child(renderer)
+	renderer.setup(source)
+	_check(not renderer.enable_p05_formation_routes({sq.id: "RC-LIU-SQ-02"}, sq.operation_id, true),
+		"frozen presentation refuses uncertified fleet")
+	_check(not renderer.enable_p05_formation_routes({sq.id: "RC-LIU-SQ-01"}, "", true),
+		"frozen presentation requires operation identity")
+	if not _check(renderer.enable_p05_formation_routes({sq.id: "RC-LIU-SQ-01"}, sq.operation_id, true),
+			"explicit frozen presentation admitted"):
+		renderer.free()
+		return
+	renderer.update(0.0)
+	var vis: FleetRenderer.FleetVis = renderer.vis[sq.id]
+	var path := vis.p05 as Presentation
+	if not _check(path != null, "frozen path certified against actual slot dimensions"):
+		renderer.free()
+		return
+
+	var safe := true
+	var scoped := true
+	var arrived := -1
+	var prior := _positions(vis, sq)
+	for frame in range(1, 161):
+		if not (delivery_gap and frame >= 51 and frame <= 61):
+			sq.tick = mini(frame / 3, 50)
+			sq.form_to = "FRM-01" if sq.tick > 0 and sq.tick < 50 else ""
+			sq.form_left_s = float(50 - sq.tick) / 10.0 if not sq.form_to.is_empty() else 0.0
+			if sq.tick >= 50:
+				sq.formation_id = "FRM-01"
+				sq.formation = _shape(sq.formation_id)
+
+		var previous_sample := path.sample_index
+		var original_snapshot := sq.duplicate(true)
+		renderer.update(Presentation.STEP)
+		var shown := _positions(vis, sq)
+		safe = safe and path.clear(prior, shown, 0.0)
+		scoped = scoped and path.sample_index - previous_sample <= 1 \
+			and path.sample_index <= sq.tick * 3 and sq == original_snapshot
+		prior = shown
+		if path.sample_index == Presentation.MOTION_SAMPLES:
+			arrived = frame
+			break
+	_check(safe and scoped and arrived == (158 if delivery_gap else 149),
+		"certified update stays within confirmed progress and lands safely, gap=%s" % delivery_gap)
+	_check(prior.values().size() == 39 and prior.keys().all(
+		func(id): return Vector2(prior[id]).distance_to(path.layouts.back()[id]) < 0.0001),
+		"certified update reaches every slot endpoint")
+	renderer.free()
+
+
+func _measure_certified_guards(original: RouteSource) -> void:
+	var source := RouteSource.new(null)
+	var sq: Dictionary = original.rows[0].duplicate(true)
+	sq.operation_id = "p05-certified-guards"
+	sq.tick = 0
+	sq.formation_id = "FRM-03"
+	sq.formation = _shape(sq.formation_id)
+	sq.form_to = ""
+	sq.form_left_s = 0.0
+	source.rows.append(sq)
+	var renderer := FleetRenderer.new()
+	root.add_child(renderer)
+	renderer.setup(source)
+	if not _check(renderer.enable_p05_formation_routes({sq.id: "RC-LIU-SQ-01"}, sq.operation_id, true),
+			"bind certified guard fixture"):
+		renderer.free()
+		return
+	renderer.update(0.0)
+	var vis: FleetRenderer.FleetVis = renderer.vis[sq.id]
+	var path := vis.p05 as Presentation
+	if not _check(path != null, "certified guard fixture initialized"):
+		renderer.free()
+		return
+	sq.tick = 10
+	sq.form_to = "FRM-01"
+	sq.form_left_s = 4.0
+	renderer.update(4.0)
+	_check(path.sample_index == 1, "long callback advances one certified sample")
+	renderer.update(Presentation.STEP / 3.0)
+	_check(path.sample_index == 1, "short callback holds")
+	renderer.update(2.0 * Presentation.STEP / 3.0)
+	_check(path.sample_index == 2, "fractional callback credit advances one sample")
+	var frozen := sq.duplicate(true)
+	var before := _positions(vis, sq)
+	for delta in [0.0, -1.0, INF, NAN]:
+		renderer.update(delta)
+	sq.form_left_s = 3.9
+	renderer.update(1.0)
+	source.rows[0] = frozen.duplicate(true)
+	source.rows[0].tick = 9
+	renderer.update(1.0)
+	source.rows[0] = frozen.duplicate(true)
+	source.rows[0].tick = 11
+	source.rows[0].form_left_s = 4.1
+	renderer.update(1.0)
+	source.rows[0].operation_id = "wrong-operation"
+	renderer.update(1.0)
+	_check(path.sample_index == 2 and vis.p05_tick == 10 and _positions(vis, frozen) == before,
+		"invalid deltas and mutated, stale, rewound and foreign snapshots hold")
+	source.rows[0] = frozen.duplicate(true)
+	source.rows[0].tick = 11
+	source.rows[0].form_left_s = 3.9
+	source.rows[0].pos += Vector2.ONE
+	renderer.update(Presentation.STEP)
+	_check(vis.p05 == null, "newly committed pose change disables certified presentation")
+	renderer.free()
 
 
 func _measure_authority(source: RouteSource, bindings: Dictionary) -> void:
