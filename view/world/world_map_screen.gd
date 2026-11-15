@@ -90,6 +90,11 @@ const LanternSlot := preload("res://scripts/lantern_escort/public_slot.gd")
 var _lantern_host: LanternHost
 var _lantern_menu: MenuButton
 var _lantern_parents: Array[String] = []
+const OrimHost := preload("res://scripts/orim_signal/public_host.gd")
+const OrimSlot := preload("res://scripts/orim_signal/public_slot.gd")
+var _orim_host: OrimHost
+var _orim_menu: MenuButton
+var _orim_parents: Array[String] = []
 var _atlas_resume_button: Button
 var _atlas_skirmish_button: Button
 var _difficulty := "표준"
@@ -164,6 +169,8 @@ func _ready() -> void:
 	_build_resolve()
 	_build_lantern_menu()
 	_update_lantern()
+	_build_orim_menu()
+	_update_orim()
 	await get_tree().process_frame
 	var restore: Dictionary = link.take_map_restore() if link else {}
 	if not restore.is_empty():
@@ -1233,7 +1240,7 @@ func _update_cross_counter() -> void:
 
 
 func _open_cross_counter() -> void:
-	if _lantern_host != null or _cross_counter_host != null or _cross_counter_button.disabled or not _cross_counter_button.is_visible_in_tree() \
+	if _orim_host != null or _lantern_host != null or _cross_counter_host != null or _cross_counter_button.disabled or not _cross_counter_button.is_visible_in_tree() \
 			or _replay_dialog != null or _replay_overlay != null:
 		return
 	_cross_counter_host = CrossCounterHost.new()
@@ -1281,13 +1288,17 @@ func _build_lantern_menu() -> void:
 func _update_lantern() -> void:
 	if _lantern_menu == null:
 		return
-	var popup := _lantern_menu.get_popup()
+	_fill_followup_menu(_lantern_menu, _lantern_parents, LanternSlot, "교차 반격")
+
+
+func _fill_followup_menu(menu: MenuButton, parent_ids: Array[String], slot: Script, parent_label: String) -> void:
+	var popup := menu.get_popup()
 	popup.clear()
-	_lantern_parents.clear()
-	var eligible := LanternSlot.read_parents()
+	parent_ids.clear()
+	var eligible: Dictionary = slot.read_parents()
 	if not eligible.ok:
 		return
-	var inspected := LanternSlot.inspect()
+	var inspected: Dictionary = slot.inspect()
 	var head: Dictionary = inspected.get("head", {})
 	var active: Dictionary = head.get("active", {})
 	var completed: Dictionary = head.get("completed", {})
@@ -1300,14 +1311,14 @@ func _update_lantern() -> void:
 			label = "결산 보기"
 		elif active.get("parent_id") == parent_id:
 			label = "재개"
-		var index := _lantern_parents.size()
-		_lantern_parents.append(parent_id)
-		popup.add_item("%s · 교차 반격 %s" % [label, parent_id.get_slice("/", 1).left(8)], index)
+		var index := parent_ids.size()
+		parent_ids.append(parent_id)
+		popup.add_item("%s · %s %s" % [label, parent_label, parent_id.get_slice("/", 1).left(8)], index)
 		popup.set_item_disabled(index, not inspected.ok or (label == "출격" and not active.is_empty()))
 
 
 func _open_lantern(index: int) -> void:
-	if _lantern_host != null or _cross_counter_host != null or _lantern_menu == null \
+	if _orim_host != null or _lantern_host != null or _cross_counter_host != null or _lantern_menu == null \
 			or not _lantern_menu.is_visible_in_tree() or _lantern_menu.disabled \
 			or index < 0 or index >= _lantern_parents.size() or _lantern_menu.get_popup().is_item_disabled(index):
 		return
@@ -1331,6 +1342,58 @@ func _close_lantern() -> void:
 		host.queue_free()
 	hud.show()
 	_update_lantern()
+	_update_orim()
+
+func _build_orim_menu() -> void:
+	if _lantern_menu == null:
+		return
+	_orim_menu = MenuButton.new()
+	_orim_menu.name = "OpenOrimSignal"
+	_orim_menu.text = "오림의 마지막 신호"
+	_orim_menu.focus_mode = Control.FOCUS_ALL
+	hud.add_child(_orim_menu)
+	_orim_menu.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	_orim_menu.offset_left = -M - 500
+	_orim_menu.offset_right = -M
+	_orim_menu.offset_top = -M - 3 * BTN_H - 16
+	_orim_menu.offset_bottom = -M - 2 * BTN_H - 16
+	_orim_menu.flat = false
+	_orim_menu.add_theme_font_size_override("font_size", 17)
+	_orim_menu.get_popup().id_pressed.connect(_open_orim)
+	_orim_menu.hide()
+
+
+func _update_orim() -> void:
+	if _orim_menu == null:
+		return
+	_fill_followup_menu(_orim_menu, _orim_parents, OrimSlot, "퇴로의 등불")
+
+
+func _open_orim(index: int) -> void:
+	if _orim_host != null or _lantern_host != null or _cross_counter_host != null or _orim_menu == null \
+			or not _orim_menu.is_visible_in_tree() or _orim_menu.disabled \
+			or index < 0 or index >= _orim_parents.size() or _orim_menu.get_popup().is_item_disabled(index):
+		return
+	_orim_host = OrimHost.new()
+	_orim_host.name = "OrimSignalPublicHost"
+	add_child(_orim_host)
+	var opened := _orim_host.open_operation(_orim_parents[index])
+	if not opened.ok:
+		_close_orim()
+		_show_chip("오림의 마지막 신호를 열지 못했습니다. (%s)" % opened.get("error", ""))
+		return
+	hud.hide()
+	_orim_host.returned.connect(_close_orim)
+
+
+func _close_orim() -> void:
+	if _orim_host != null:
+		var host := _orim_host
+		_orim_host = null
+		remove_child(host)
+		host.queue_free()
+	hud.show()
+	_update_orim()
 
 
 func _result_to_world() -> void:
@@ -1343,13 +1406,16 @@ func _result_to_world() -> void:
 
 # ------------------------------------------------------------ 진행
 func _process(delta: float) -> void:
-	if _cross_counter_host != null or _lantern_host != null:
+	if _cross_counter_host != null or _lantern_host != null or _orim_host != null:
 		return
 	var fl := canvas.flying()
 	var show_atlas := state == "browse" and canvas.level() == "z0" and not fl and not _card.visible
 	if _lantern_menu != null:
 		_lantern_menu.visible = (state == "result" or show_atlas) and not _lantern_parents.is_empty()
 		_lantern_menu.disabled = not _sortie_available() or _replay_dialog != null or _replay_overlay != null
+	if _orim_menu != null:
+		_orim_menu.visible = (state == "result" or show_atlas) and not _orim_parents.is_empty()
+		_orim_menu.disabled = not _sortie_available() or _replay_dialog != null or _replay_overlay != null
 	if state != "result" and not show_atlas:
 		canvas.visible = true
 		_header.visible = true
@@ -1395,6 +1461,9 @@ func _unhandled_input(ev: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 func back() -> void:
+	if _orim_host != null:
+		_orim_host.leave()
+		return
 	if _lantern_host != null:
 		_lantern_host.leave()
 		return
