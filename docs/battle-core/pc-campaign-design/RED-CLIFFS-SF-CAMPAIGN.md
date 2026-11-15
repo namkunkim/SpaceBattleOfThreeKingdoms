@@ -74,3 +74,5 @@
 | 동일 동결 입력의 전투 호스트·헤드리스·리플레이 | 같은 논리 틱과 사건 순서, 같은 결산 내용. |
 
 [캠페인 체크리스트](SESSION-REQUIREMENTS-CHECKLIST-20261031.md) · [기존 Cross Counter 검증](evidence/20261114/validation/Cross-Counter-Windows-public/RESULTS.md) · [일반 승계 제안](P02-P03-SUCCESSOR-CONTRACT-PROPOSAL.md)
+
+[후속 작전·외부 저장·다중 진형·운영 슬롯의 적용 기준](RED-CLIFFS-SF-EXTENSION-CRITERIA.md)
