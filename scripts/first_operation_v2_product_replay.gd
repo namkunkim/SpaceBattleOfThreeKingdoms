@@ -4,18 +4,28 @@ const V2Restore := preload("res://scripts/first_operation_v2_restore.gd")
 const V2Storage := preload("res://scripts/first_operation_v2_storage.gd")
 const V2Codec := preload("res://scripts/first_operation_v2_record_codec.gd")
 const V2Owner := preload("res://scripts/first_operation_v2_owner.gd")
+const V3Restore := preload("res://scripts/first_operation_v3_restore.gd")
+const V3Storage := preload("res://scripts/first_operation_v3_storage.gd")
+const V3Codec := preload("res://scripts/first_operation_v3_record_codec.gd")
+const V3Owner := preload("res://scripts/first_operation_v3_owner.gd")
+
+var _storage: Script = V2Storage
+var _codec: Script = V2Codec
+var _restore: Script = V2Restore
+var _owner_class: Script = V2Owner
+var _title := "적벽 v2"
 
 var _job: RefCounted
 var _record: Dictionary
 
 
 class Playback extends RefCounted:
-	var _owner: V2Owner
+	var _owner: RefCounted
 	var _record: Dictionary
 	var _tick := 0
 	var _cursor := 0
 
-	func _init(owner: V2Owner, record: Dictionary) -> void:
+	func _init(owner: RefCounted, record: Dictionary) -> void:
 		_owner = owner
 		_record = record
 
@@ -29,7 +39,7 @@ class Playback extends RefCounted:
 					close()
 					return _fail("v2_replay_command_rejected")
 			_cursor += 1
-		var advanced := _owner.advance()
+		var advanced: Dictionary = _owner.advance()
 		if not advanced.ok:
 			close()
 			return advanced
@@ -38,7 +48,7 @@ class Playback extends RefCounted:
 			"events": _owner.drain_events().events, "projection": _owner.read_projection().projection}
 		var done: bool = _tick == _record.tick
 		if done:
-			var captured := _owner.capture_record()
+			var captured: Dictionary = _owner.capture_record()
 			var matched: bool = captured.ok and captured.record == _record
 			close()
 			if not matched:
@@ -54,21 +64,30 @@ class Playback extends RefCounted:
 		return {"ok": false, "error": error, "path": "v2_replay"}
 
 
+func configure(multi_formation: bool) -> void:
+	if multi_formation:
+		_storage = V3Storage
+		_codec = V3Codec
+		_restore = V3Restore
+		_owner_class = V3Owner
+		_title = "적벽 v2 · 다중 진형"
+
+
 func open_file(path: String, _product_only := false) -> Dictionary:
 	if not is_node_ready() or _replay != null or _job != null:
 		return _fail("v2_replay_viewer_busy")
-	var loaded := V2Storage.read_replay(path)
+	var loaded: Dictionary = _storage.read_replay(path)
 	if not loaded.ok:
 		return loaded
-	var decoded := V2Codec.decode(loaded.bytes, V2Codec.REPLAY_FORMAT)
+	var decoded: Dictionary = _codec.decode(loaded.bytes, _codec.REPLAY_FORMAT)
 	if not decoded.ok:
 		return decoded
-	var verified := V2Restore.begin_replay_validation(loaded.bytes)
+	var verified: Dictionary = _restore.begin_replay_validation(loaded.bytes)
 	if not verified.ok:
 		return verified
 	_record = decoded.record
 	_job = verified.job
-	_result.text = "적벽 v2 리플레이 검증 중"
+	_result.text = _title + " 리플레이 검증 중"
 	set_process(true)
 	return {"ok": true, "pending": true}
 
@@ -87,12 +106,12 @@ func _process(delta: float) -> void:
 		return
 	_job = null
 	_pause()
-	var prepared := V2Owner._prepare_identity(_record.operation_id)
+	var prepared: Dictionary = _owner_class._prepare_identity(_record.operation_id)
 	if not prepared.ok:
 		_show_failure(str(prepared.error))
 		return
-	var candidate: V2Owner = prepared.owner
-	var initial := candidate.publish()
+	var candidate: RefCounted = prepared.owner
+	var initial: Dictionary = candidate.publish()
 	if not initial.ok:
 		candidate.close()
 		_show_failure(str(initial.error))

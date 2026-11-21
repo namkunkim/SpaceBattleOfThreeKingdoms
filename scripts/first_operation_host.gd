@@ -388,6 +388,41 @@ func enable_certified_formation_presentation() -> bool:
 	return true
 
 
+func enable_multi_formation_presentation() -> bool:
+	if brief.operation_request().get("capability") != "pc/first-operation/3" or _formation_renderer != null:
+		return false
+	var operation_id: String = operation_owner.presentation_identity()
+	if operation_id.is_empty() or frame.get("meta", {}).get("operation_id") != operation_id:
+		return false
+	var source := FormationSource.new(operation_id, _world, ["RC-LIU-SQ-01", "RC-LIU-SQ-02"])
+	source.install_frame(frame)
+	var ids := {}
+	for row in source.squadrons():
+		ids[row.id] = row.squadron_id
+	if ids.is_empty():
+		return false
+	var renderer := FleetRenderer.new()
+	if not renderer.enable_p05_formation_routes(ids, operation_id, false, true):
+		renderer.free()
+		return false
+	var anchor := Node3D.new()
+	anchor.position.y = 15.0
+	anchor.scale = Vector3.ONE / CameraRig.S
+	_field.add_child(anchor)
+	anchor.add_child(renderer)
+	renderer.setup(source)
+	renderer.update(0.0)
+	for id in ids:
+		if not renderer.vis.has(id) or renderer.vis[id].p05_v3 == null:
+			anchor.free()
+			return false
+		if _markers.has(id):
+			_markers[id].hide()
+	_formation_source = source
+	_formation_renderer = renderer
+	return true
+
+
 func _install_frame(next: Dictionary) -> void:
 	frame = next
 	if _formation_source != null:

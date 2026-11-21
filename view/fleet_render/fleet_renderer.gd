@@ -1,5 +1,6 @@
 class_name FleetRenderer
 extends Node3D
+const P05V3 := preload("res://view/fleet_render/first_operation_v3_formation_geometry.gd")
 const P05Schedule := preload("res://view/fleet_render/p05_formation_schedule.gd")
 const P05Presentation := preload("res://view/fleet_render/p05_formation_presentation.gd")
 const P05Policy := preload("res://core/battle/p05_p07_first_operation.gd")
@@ -115,6 +116,8 @@ class FleetVis:
 	var last_rot := 1e9
 	var acc := 0.0
 	var p05: P05Schedule
+	var p05_v3: P05V3
+	var p05_route := {}
 	var p05_from := ""
 	var p05_to := ""
 	var p05_time := 0.0
@@ -146,6 +149,7 @@ var _missile_last := {}
 var _p05_fleet_ids := {}
 var _p05_operation_id := ""
 var _p05_certified_presentation := false
+var _p05_multi_formation := false
 
 func setup(source: BattleSource) -> void:
 	src = source
@@ -167,7 +171,7 @@ func setup(source: BattleSource) -> void:
 # A fresh renderer is needed for another operation or a rewound timeline.
 # A committed snapshot is immutable within its tick. A terminal row may carry
 # terminal_tick from the operation outcome once its formation is committed.
-func enable_p05_formation_routes(fleet_ids: Dictionary, operation_id := "", certified_presentation := false) -> bool:
+func enable_p05_formation_routes(fleet_ids: Dictionary, operation_id := "", certified_presentation := false, multi_formation := false) -> bool:
 	if certified_presentation and (operation_id.is_empty() or fleet_ids.size() != 1 \
 			or fleet_ids.values()[0] != P05Presentation.FLEET_ID):
 		return false
@@ -191,6 +195,7 @@ func enable_p05_formation_routes(fleet_ids: Dictionary, operation_id := "", cert
 	_p05_fleet_ids = enabled
 	_p05_operation_id = operation_id
 	_p05_certified_presentation = certified_presentation
+	_p05_multi_formation = multi_formation
 	return true
 
 
@@ -208,9 +213,9 @@ func _p05_build(v: FleetVis, sq: Dictionary) -> void:
 		resume_ticks = _p05_resume_ticks(sq, fleet, approved.spawn_origin)
 		if resume_ticks < 0:
 			return
-	elif sq.get("formation_id", "") != fleet.formation_id or sq.form_to != "":
+	elif not _p05_multi_formation and (sq.get("formation_id", "") != fleet.formation_id or sq.form_to != ""):
 		return
-	if sq.flagship != squad.flagship or sq.ships != fleet.ship_count or v.slots.size() != int(fleet.ship_count):
+	if sq.flagship != squad.flagship or (not _p05_multi_formation and sq.ships != fleet.ship_count) or v.slots.size() != int(fleet.ship_count):
 		return
 	var expected := {}
 	for entry: Dictionary in squad.composition:
@@ -223,6 +228,14 @@ func _p05_build(v: FleetVis, sq: Dictionary) -> void:
 		var half := Vector2(slot.half_len, SHIP_WIDTH * slot.scl.z * 0.5) / scale
 		rows.append({"id": "%s/%d" % [slot.ship_type, counts[slot.ship_type]], "half": half})
 	if counts != expected:
+		return
+	if _p05_multi_formation:
+		var geometry := P05V3.new()
+		if not geometry.prepare(fleet.id, rows, fleet.outer_radius):
+			return
+		v.p05_v3 = geometry
+		v.p05 = geometry.schedule
+		_p05_update_v3(v, sq, true)
 		return
 	var schedule: P05Schedule
 	if _p05_certified_presentation:
@@ -248,6 +261,46 @@ func _p05_build(v: FleetVis, sq: Dictionary) -> void:
 			v.p05_committed = sq.duplicate(true)
 	v.p05_position = schedule.sample(v.p05_time)
 	_p05_homes(v)
+
+
+func _p05_update_v3(v: FleetVis, sq: Dictionary, initialize := false) -> bool:
+	var tick := _p05_authority_tick(sq)
+	if tick < v.p05_tick:
+		return true
+	var geometry := v.p05_v3
+	var state: Dictionary = sq.get("formation_v3", {})
+	var interrupted: Dictionary = state.get("interrupted", {})
+	var active: Dictionary = state.get("active", {})
+	var points := {}
+	if not interrupted.is_empty():
+		points = geometry.sample(interrupted.source, interrupted.target, interrupted.elapsed_ticks)
+	elif not active.is_empty() and geometry.accepts(active.source, active.target):
+		if v.p05_route.get("start_tick", -1) != active.start_tick:
+			v.p05_route = active.duplicate()
+			v.p05_time = 0.0
+		if initialize:
+			v.p05_time = float(active.elapsed_ticks) / 10.0
+			points = geometry.sample(active.source, active.target, active.elapsed_ticks)
+		else:
+			var advance := geometry.advance(active.source, active.target, active.elapsed_ticks, v.p05_time)
+			if advance.ok:
+				v.p05_time = advance.cursor
+				points = advance.positions
+	elif not v.p05_route.is_empty():
+		var advance := geometry.advance(v.p05_route.source, v.p05_route.target, 50, v.p05_time)
+		if advance.ok:
+			v.p05_time = advance.cursor
+			points = advance.positions
+		if v.p05_time >= 5.0:
+			v.p05_route.clear()
+	else:
+		points = geometry.sample(geometry.source_id, geometry.target_id, 50 if sq.formation_id == geometry.target_id else 0)
+	v.p05_tick = tick
+	if not points.is_empty() and points != v.p05_position:
+		v.p05_position = points
+		_p05_homes(v)
+		v.rest = 0
+	return true
 
 
 func _p05_resume_ticks(sq: Dictionary, fleet: Dictionary, spawn_origin: Vector2) -> int:
@@ -776,7 +829,10 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 	var types := ship_ids.map(func(t): return _model_class(t))
 	var n := types.size() if not types.is_empty() else maxi(12, roundi(sq.max_ships * vis_ratio()))
 	var layout := int(sq.formation)
-	if _p05_certified_presentation and sq.get("formation_resume", false) == true and _p05_fleet_ids.has(v.id) \
+	if _p05_multi_formation and _p05_fleet_ids.has(v.id):
+		var canonical: String = _p05_fleet_ids[v.id].fleet.formation_id
+		layout = BattleRules.FORM_SHAPE[int(canonical.get_slice("-", 1)) - 1]
+	elif _p05_certified_presentation and sq.get("formation_resume", false) == true and _p05_fleet_ids.has(v.id) \
 			and _p05_resume_ticks(sq, _p05_fleet_ids[v.id].fleet, _p05_fleet_ids[v.id].spawn_origin) >= 0:
 		# Slot role and flagship sizing must match the original launch geometry.
 		var canonical: String = _p05_fleet_ids[v.id].fleet.formation_id
@@ -958,7 +1014,10 @@ func update(dt: float) -> void:
 					m.set_shader_parameter("detail", detail)
 	for sq in sqs:
 		var v: FleetVis = vis[sq.id]
-		if v.p05 is P05Presentation:
+		if v.p05_v3 != null:
+			if _p05_authority_tick(sq) < v.p05_tick:
+				continue
+		elif v.p05 is P05Presentation:
 			if not _p05_accept_presentation(v, sq, dt):
 				continue
 		elif v.p05 != null and not _p05_operation_id.is_empty():
@@ -978,7 +1037,10 @@ func update(dt: float) -> void:
 		if v.aim:
 			v.aim_pos = src.to3(foe.pos)
 		v.node.visible = sq.contact != "lost"   # 상실 접촉은 마지막 위치에 모델 없이 표식만 남는다
-		if not _p05_update(v, sq, dt):
+		if v.p05_v3 != null:
+			_p05_update_v3(v, sq)
+			v.aim = false
+		elif not _p05_update(v, sq, dt):
 			if sq.formation != v.formation:
 				_reform(v, sq)
 			_form_progress(v, sq)
