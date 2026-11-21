@@ -5,6 +5,8 @@ const RestoreWorker := preload("res://scripts/campaign/open_jump_restore_worker.
 const RestoreOverlay := preload("res://scripts/campaign/open_jump_restore_overlay.gd")
 signal restore_finished(result: Dictionary)
 
+const RESTORED_PAUSE := "restored_pause"
+
 const OBJECTIVES = {
  "rendezvous": "유비 또는 관우로 황개와 합류하세요 (400, 650).",
  "escort": "황개를 대기시키고 차단군을 제압한 뒤 기지 (850, 430)로 호위하세요.",
@@ -110,12 +112,19 @@ func back_to_world() -> Error:
 func _start() -> void:
  if _restore_job != null:
   return
+ var resumed_restore: bool = G.state == RESTORED_PAUSE
+ _show_operation("play")
+ if resumed_restore:
+  operation_notice.text = "저장한 전장을 불러왔습니다."
+  _refresh_operation_ui()
+
+func _show_operation(state: String) -> void:
  if operation_panel != null:
   operation_panel.show()
  hud.brief_ov.hide()
  hud.end_ov.hide()
  hud.menu_ov.hide()
- G.state = "play"
+ G.state = state
  placing = false
  place_mode = false
  selected.assign(my_sel())
@@ -143,6 +152,9 @@ func my_sel() -> Array:
 func issue(cmd: Dictionary) -> void:
  if _restore_job != null:
   last_command_result = {"ok": false, "error": "checkpoint_busy"}
+  return
+ if G.state == RESTORED_PAUSE:
+  last_command_result = {"ok": false, "error": "checkpoint_paused"}
   return
  last_command_result = {"ok": false, "error": "not_player_fleet"}
  var kind: String = cmd.get("kind", "")
@@ -234,7 +246,7 @@ func _filter_commands() -> void:
    button.visible = button.cmd.id in ["stop", "all", "missile", "fighter"]
 
 func update_sim(dt: float) -> void:
- if G.state == "guidance" or _restore_job != null:
+ if G.state in ["guidance", RESTORED_PAUSE] or _restore_job != null:
   return
  for i in _sim_acc_clock.advance(dt):
   if sim.st.over:
@@ -277,6 +289,8 @@ func _pump() -> void:
 func campaign_order(kind: String) -> Dictionary:
  if _restore_job != null:
   return {"ok": false, "error": "checkpoint_busy"}
+ if G.state == RESTORED_PAUSE:
+  return {"ok": false, "error": "checkpoint_paused"}
  var result: Dictionary = session.runtime.queue({"kind": kind})
  if not result.ok:
   operation_notice.text = "명령 거부: " + str(result.error)
@@ -330,11 +344,13 @@ func _finish_load(result: Dictionary) -> Dictionary:
    operation_notice.text = "불러오기를 취소했습니다." if result.error == "checkpoint_cancelled" else "불러오기 실패: " + str(result.error)
   return result
  _install_session(result.session)
- _start()
+ var terminal := sim.st.over
+ _show_operation("play" if terminal else RESTORED_PAUSE)
  presentation.hud.show_screen("")
  _pump()
- operation_notice.text = "저장한 전장을 불러왔습니다."
- if sim.st.over:
+ operation_notice.text = ("저장한 전장을 불러왔습니다." if terminal
+  else "저장한 전장을 불러왔습니다. ‘출격 / 계속’을 누르면 재개합니다.")
+ if terminal:
   var won: bool = session.runtime.policy.snapshot().outcome == "success"
   end_game(won, _result_text())
  return {"ok": true}
@@ -411,7 +427,7 @@ func _refresh_operation_ui() -> void:
   session.runtime.definition.operation.capture_ticks, state.outcome]
  _refresh_guidance(state)
  for kind in ["huang_wait", "huang_advance", "confirm_jump"]:
-  operation_buttons[kind].disabled = state.outcome != "active" or (state.phase == "rendezvous") or (kind == "confirm_jump" and state.phase != "extraction")
+  operation_buttons[kind].disabled = G.state == RESTORED_PAUSE or state.outcome != "active" or state.phase == "rendezvous" or (kind == "confirm_jump" and state.phase != "extraction")
 
 # Legacy debug helpers are deliberately inert in this product host.
 func apply_dmg(_src, _tgt, _amt: float) -> void:
