@@ -289,6 +289,8 @@ func restart() -> void:
 
 # 천하 지도에서 들어온 전투는 "타이틀로" 대신 "천하로"
 func title_label() -> String:
+	if battle.has_method("campaign_menu_label"):
+		return battle.campaign_menu_label()
 	return "천하로" if battle.has_method("routed") and battle.routed() else "타이틀로"
 
 func to_title(return_notice: Label = null) -> void:

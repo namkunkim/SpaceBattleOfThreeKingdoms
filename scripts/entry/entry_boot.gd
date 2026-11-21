@@ -6,6 +6,8 @@ const Settlements := preload("res://scripts/first_operation_settlement_store.gd"
 const V2 := preload("res://scripts/entry/red_cliffs_v2_home.gd")
 const LanternSlot := preload("res://scripts/lantern_escort/public_slot.gd")
 const LANTERN_RESTORE := "--lantern-restore-slot"
+const OPEN_JUMP_SCENE := "res://scenes/campaign/OpenJumpBattle3D.tscn"
+@export var force_menu := false
 static var _v2_cli_routed := false
 var screen: Control
 var _route_error: VBoxContainer
@@ -34,7 +36,7 @@ func _boot() -> void:
 	if args.has(BattleBrief.FIRST_OPERATION_DEV_ARG) or args.has("--o07-supply"):
 		_route("res://scenes/FleetBattle3D.tscn")
 		return
-	if not returning and (link.outcome != null or _has_progress()):
+	if not force_menu and not returning and (link.outcome != null or _has_progress()):
 		_route(link.WORLD_SCENE)
 		return
 	screen = Entry.instantiate()
@@ -42,6 +44,7 @@ func _boot() -> void:
 	screen.v2_enabled = OS.has_feature("windows")
 	screen.v2_requested.connect(_open_v2)
 	screen.sortie_requested.connect(_sortie)
+	screen.open_jump_requested.connect(_open_jump)
 	screen.continuation_requested.connect(_continue)
 	add_child(screen)
 	if returning: screen.restore_prepared_entry()
@@ -88,3 +91,10 @@ func _open_v2() -> void:
 	var error := get_tree().change_scene_to_file(V2.SCENE)
 	if error != OK:
 		screen.campaign_rejected("적벽 v2 메뉴를 열지 못했습니다.")
+
+
+func _open_jump() -> void:
+	if screen == null or screen.flow.state != screen.Flow.State.SELECT:
+		return
+	if get_tree().change_scene_to_file(OPEN_JUMP_SCENE) != OK:
+		screen.campaign_rejected("열린 도약로 전장에 들어가지 못했습니다. 다시 시도해 주세요.")

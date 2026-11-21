@@ -19,6 +19,13 @@ func _initialize() -> void:
 			printerr("Final Windows Cross Counter fingerprint is invalid")
 			quit(1)
 			return
+	if FileAccess.file_exists("res://data/open_jump_runtime_fingerprint.json"):
+		var open_jump := load("res://scripts/campaign/open_jump_rule_identity.gd") as Script
+		if open_jump == null or open_jump.packaged_digest().is_empty():
+			printerr("Final Windows Open Jump fingerprint is invalid")
+			quit(1)
+			return
+		print("OPEN_JUMP_FINGERPRINT_RUNTIME_VERIFY_PASS")
 	print("FINGERPRINT_RUNTIME_VERIFY_PASS")
 	quit()
 

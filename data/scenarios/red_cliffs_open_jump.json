@@ -1,0 +1,662 @@
+{
+  "schema_version": 1,
+  "scenario_id": "RED-CLIFFS-OPEN-JUMP-1",
+  "title": "적벽 · 열린 도약로",
+  "source_path": "res://data/scenarios/red_cliffs_208_realtime.json",
+  "source_sha256": "0d702495a1ac94e255b44948ba8ebb625d4cdae2f1605658d05ec47911edb208",
+  "battlefield_bounds": [
+    0,
+    0,
+    1600,
+    900
+  ],
+  "fleets": [
+    {
+      "alias": "liu",
+      "id": "RC-LIU-SQ-01",
+      "source_squadron_id": "RC-LIU-SQ-01",
+      "name": "유비 본대",
+      "faction_id": "liu_bei",
+      "commander_id": "CHR-0128",
+      "vice_id": "CHR-0130",
+      "staff": [
+        {
+          "post": "assault",
+          "id": "CHR-0136"
+        },
+        {
+          "post": "siege",
+          "id": "CHR-0134"
+        },
+        {
+          "post": "supply",
+          "id": "CHR-0117"
+        }
+      ],
+      "flagship": true,
+      "formation_id": "FRM-03",
+      "composition": [
+        {
+          "ship_type_id": "SHP-01",
+          "count": 5
+        },
+        {
+          "ship_type_id": "SHP-03",
+          "count": 10
+        },
+        {
+          "ship_type_id": "SHP-04",
+          "count": 21
+        },
+        {
+          "ship_type_id": "SHP-05",
+          "count": 5
+        },
+        {
+          "ship_type_id": "SHP-06",
+          "count": 5
+        },
+        {
+          "ship_type_id": "SHP-07",
+          "count": 10
+        },
+        {
+          "ship_type_id": "SHP-08",
+          "count": 18,
+          "mission_equipment_id": "FAST-EQ-RECON"
+        }
+      ],
+      "initial_position": [
+        120,
+        740
+      ],
+      "deployment_event": "initial",
+      "role": "full",
+      "skill_slots": [
+        "SK-T-MORALE",
+        "SK-U-ZHUGE",
+        "SK-U-ZHAOYUN"
+      ]
+    },
+    {
+      "alias": "guan",
+      "id": "RC-LIU-SQ-02",
+      "source_squadron_id": "RC-LIU-SQ-02",
+      "name": "관우 수군",
+      "faction_id": "liu_bei",
+      "commander_id": "CHR-0107",
+      "vice_id": "CHR-0141",
+      "staff": [
+        {
+          "post": "assault",
+          "id": "CHR-0176"
+        },
+        {
+          "post": "siege",
+          "id": "CHR-0122"
+        },
+        {
+          "post": "supply",
+          "id": "CHR-0112"
+        }
+      ],
+      "flagship": false,
+      "formation_id": "FRM-01",
+      "composition": [
+        {
+          "ship_type_id": "SHP-03",
+          "count": 6
+        },
+        {
+          "ship_type_id": "SHP-04",
+          "count": 9
+        },
+        {
+          "ship_type_id": "SHP-07",
+          "count": 6
+        }
+      ],
+      "initial_position": [
+        200,
+        740
+      ],
+      "deployment_event": "initial",
+      "role": "detachment"
+    },
+    {
+      "alias": "zhou",
+      "id": "RC-SUN-SQ-01",
+      "source_squadron_id": "RC-SUN-SQ-01",
+      "name": "주유 중군",
+      "faction_id": "sun_quan",
+      "commander_id": "CHR-0211",
+      "vice_id": "CHR-0185",
+      "staff": [
+        {
+          "post": "assault",
+          "id": "CHR-0191"
+        },
+        {
+          "post": "siege",
+          "id": "CHR-0199"
+        },
+        {
+          "post": "supply",
+          "id": "CHR-0186"
+        }
+      ],
+      "flagship": true,
+      "formation_id": "FRM-02",
+      "composition": [
+        {
+          "ship_type_id": "SHP-01",
+          "count": 6
+        },
+        {
+          "ship_type_id": "SHP-03",
+          "count": 12
+        },
+        {
+          "ship_type_id": "SHP-04",
+          "count": 25
+        },
+        {
+          "ship_type_id": "SHP-05",
+          "count": 6
+        },
+        {
+          "ship_type_id": "SHP-06",
+          "count": 6
+        },
+        {
+          "ship_type_id": "SHP-07",
+          "count": 13
+        }
+      ],
+      "initial_position": [
+        1000,
+        820
+      ],
+      "deployment_event": "base_captured",
+      "role": "full"
+    },
+    {
+      "alias": "cheng",
+      "id": "RC-SUN-SQ-02",
+      "source_squadron_id": "RC-SUN-SQ-02",
+      "name": "정보 우군",
+      "faction_id": "sun_quan",
+      "commander_id": "CHR-0207",
+      "vice_id": "CHR-0212",
+      "staff": [
+        {
+          "post": "assault",
+          "id": "CHR-0221"
+        },
+        {
+          "post": "siege",
+          "id": "CHR-0246"
+        },
+        {
+          "post": "supply",
+          "id": "CHR-0204"
+        }
+      ],
+      "flagship": false,
+      "formation_id": "FRM-01",
+      "composition": [
+        {
+          "ship_type_id": "SHP-01",
+          "count": 5
+        },
+        {
+          "ship_type_id": "SHP-03",
+          "count": 11
+        },
+        {
+          "ship_type_id": "SHP-04",
+          "count": 23
+        },
+        {
+          "ship_type_id": "SHP-05",
+          "count": 5
+        },
+        {
+          "ship_type_id": "SHP-06",
+          "count": 5
+        },
+        {
+          "ship_type_id": "SHP-07",
+          "count": 12
+        },
+        {
+          "ship_type_id": "SHP-08",
+          "count": 1,
+          "mission_equipment_id": "FAST-EQ-RECON"
+        }
+      ],
+      "initial_position": [
+        1180,
+        820
+      ],
+      "deployment_event": "base_captured",
+      "role": "full"
+    },
+    {
+      "alias": "huang",
+      "id": "RC-SUN-SQ-03",
+      "source_squadron_id": "RC-SUN-SQ-03",
+      "name": "황개 화공대",
+      "faction_id": "sun_quan",
+      "commander_id": "CHR-0217",
+      "vice_id": "CHR-0216",
+      "staff": [
+        {
+          "post": "assault",
+          "id": "CHR-0187"
+        },
+        {
+          "post": "siege",
+          "id": "CHR-0218"
+        },
+        {
+          "post": "supply",
+          "id": "CHR-0200"
+        }
+      ],
+      "flagship": false,
+      "formation_id": "FRM-05",
+      "composition": [
+        {
+          "ship_type_id": "SHP-04",
+          "count": 6
+        },
+        {
+          "ship_type_id": "SHP-07",
+          "count": 3
+        },
+        {
+          "ship_type_id": "SHP-08",
+          "count": 24,
+          "mission_equipment_id": "FAST-EQ-TORPEDO"
+        }
+      ],
+      "initial_position": [
+        400,
+        650
+      ],
+      "deployment_event": "initial",
+      "role": "detachment"
+    },
+    {
+      "alias": "cao",
+      "id": "RC-CAO-SQ-01",
+      "source_squadron_id": "RC-CAO-SQ-01",
+      "name": "조조 중군",
+      "faction_id": "cao_cao",
+      "commander_id": "CHR-0034",
+      "vice_id": "CHR-0047",
+      "staff": [
+        {
+          "post": "assault",
+          "id": "CHR-0036"
+        },
+        {
+          "post": "siege",
+          "id": "CHR-0001"
+        },
+        {
+          "post": "supply",
+          "id": "CHR-0031"
+        }
+      ],
+      "flagship": true,
+      "formation_id": "FRM-04",
+      "composition": [
+        {
+          "ship_type_id": "SHP-01",
+          "count": 6
+        },
+        {
+          "ship_type_id": "SHP-03",
+          "count": 12
+        },
+        {
+          "ship_type_id": "SHP-04",
+          "count": 25
+        },
+        {
+          "ship_type_id": "SHP-05",
+          "count": 6
+        },
+        {
+          "ship_type_id": "SHP-06",
+          "count": 6
+        },
+        {
+          "ship_type_id": "SHP-07",
+          "count": 13
+        }
+      ],
+      "initial_position": [
+        1450,
+        200
+      ],
+      "deployment_event": "base_captured",
+      "role": "full"
+    },
+    {
+      "alias": "ren",
+      "id": "RC-CAO-SQ-02",
+      "source_squadron_id": "RC-CAO-SQ-02",
+      "name": "조인 선봉",
+      "faction_id": "cao_cao",
+      "commander_id": "CHR-0033",
+      "vice_id": "CHR-0025",
+      "staff": [
+        {
+          "post": "assault",
+          "id": "CHR-0028"
+        },
+        {
+          "post": "siege",
+          "id": "CHR-0019"
+        },
+        {
+          "post": "supply",
+          "id": "CHR-0040"
+        }
+      ],
+      "flagship": false,
+      "formation_id": "FRM-01",
+      "composition": [
+        {
+          "ship_type_id": "SHP-01",
+          "count": 3
+        },
+        {
+          "ship_type_id": "SHP-03",
+          "count": 12
+        },
+        {
+          "ship_type_id": "SHP-04",
+          "count": 30
+        },
+        {
+          "ship_type_id": "SHP-07",
+          "count": 9
+        }
+      ],
+      "initial_position": [
+        640,
+        350
+      ],
+      "deployment_event": "escort",
+      "role": "detachment"
+    },
+    {
+      "alias": "wen",
+      "id": "RC-CAO-SQ-04",
+      "source_squadron_id": "RC-CAO-SQ-04",
+      "name": "형주 수군 갑",
+      "faction_id": "cao_cao",
+      "commander_id": "CHR-0010",
+      "vice_id": "CHR-0329",
+      "staff": [
+        {
+          "post": "assault",
+          "id": "CHR-0046"
+        },
+        {
+          "post": "siege",
+          "id": "CHR-0024"
+        },
+        {
+          "post": "supply",
+          "id": "CHR-0055"
+        }
+      ],
+      "flagship": false,
+      "formation_id": "FRM-04",
+      "composition": [
+        {
+          "ship_type_id": "SHP-03",
+          "count": 12
+        },
+        {
+          "ship_type_id": "SHP-04",
+          "count": 24
+        },
+        {
+          "ship_type_id": "SHP-05",
+          "count": 3
+        },
+        {
+          "ship_type_id": "SHP-07",
+          "count": 6
+        }
+      ],
+      "initial_position": [
+        850,
+        430
+      ],
+      "deployment_event": "initial",
+      "role": "detachment"
+    },
+    {
+      "alias": "xu",
+      "id": "RC-CAO-SQ-03",
+      "source_squadron_id": "RC-CAO-SQ-03",
+      "name": "서황 별군",
+      "faction_id": "cao_cao",
+      "commander_id": "CHR-0017",
+      "vice_id": "CHR-0009",
+      "staff": [
+        {
+          "post": "assault",
+          "id": "CHR-0012"
+        },
+        {
+          "post": "siege",
+          "id": "CHR-0016"
+        },
+        {
+          "post": "supply",
+          "id": "CHR-0038"
+        }
+      ],
+      "flagship": false,
+      "formation_id": "FRM-03",
+      "composition": [
+        {
+          "ship_type_id": "SHP-01",
+          "count": 5
+        },
+        {
+          "ship_type_id": "SHP-03",
+          "count": 21
+        },
+        {
+          "ship_type_id": "SHP-04",
+          "count": 16
+        },
+        {
+          "ship_type_id": "SHP-05",
+          "count": 5
+        },
+        {
+          "ship_type_id": "SHP-06",
+          "count": 5
+        },
+        {
+          "ship_type_id": "SHP-07",
+          "count": 10
+        },
+        {
+          "ship_type_id": "SHP-08",
+          "count": 1,
+          "mission_equipment_id": "FAST-EQ-RECON"
+        }
+      ],
+      "initial_position": [
+        1390,
+        330
+      ],
+      "deployment_event": "base_captured",
+      "role": "full"
+    },
+    {
+      "alias": "patrol",
+      "id": "OJ-CAO-PATROL-01",
+      "source_squadron_id": "RC-CAO-SQ-06",
+      "name": "위군 초계대",
+      "faction_id": "cao_cao",
+      "commander_id": "CHR-0044",
+      "vice_id": "",
+      "staff": [],
+      "flagship": false,
+      "formation_id": "FRM-06",
+      "composition": [
+        {
+          "ship_type_id": "SHP-07",
+          "count": 6
+        },
+        {
+          "ship_type_id": "SHP-08",
+          "count": 12,
+          "mission_equipment_id": "FAST-EQ-INTERCEPT"
+        }
+      ],
+      "initial_position": [
+        520,
+        500
+      ],
+      "deployment_event": "initial",
+      "role": "detachment"
+    },
+    {
+      "alias": "chun",
+      "id": "RC-CAO-SQ-06",
+      "source_squadron_id": "RC-CAO-SQ-06",
+      "name": "조순 호표 고속대",
+      "faction_id": "cao_cao",
+      "commander_id": "CHR-0084",
+      "vice_id": "",
+      "staff": [
+        {
+          "post": "assault",
+          "id": "CHR-0043"
+        },
+        {
+          "post": "siege",
+          "id": "CHR-0029"
+        },
+        {
+          "post": "supply",
+          "id": "CHR-0088"
+        }
+      ],
+      "flagship": false,
+      "formation_id": "FRM-05",
+      "composition": [
+        {
+          "ship_type_id": "SHP-07",
+          "count": 12
+        },
+        {
+          "ship_type_id": "SHP-08",
+          "count": 18,
+          "mission_equipment_id": "FAST-EQ-INTERCEPT"
+        }
+      ],
+      "initial_position": [
+        1420,
+        550
+      ],
+      "deployment_event": "extraction",
+      "role": "detachment"
+    }
+  ],
+  "operation": {
+    "version": 1,
+    "regions": {
+      "rendezvous": {
+        "center": [
+          400,
+          650
+        ],
+        "radius": 90
+      },
+      "base": {
+        "center": [
+          850,
+          430
+        ],
+        "radius": 100
+      },
+      "jump": {
+        "center": [
+          1100,
+          650
+        ],
+        "radius": 100
+      },
+      "exit": {
+        "center": [
+          1400,
+          750
+        ],
+        "radius": 110
+      }
+    },
+    "deployments": {
+      "initial": [
+        "liu",
+        "guan",
+        "huang",
+        "patrol",
+        "wen"
+      ],
+      "escort": [
+        "ren"
+      ],
+      "capture": [],
+      "base_captured": [
+        "zhou",
+        "cheng",
+        "cao",
+        "xu"
+      ],
+      "extraction": [
+        "chun"
+      ]
+    },
+    "capture_ticks": 30,
+    "recon_on": "escort",
+    "recon": {
+      "cao_approach": [
+        1450,
+        200
+      ],
+      "exit_region": "exit"
+    },
+    "tuning_status": "prototype_unbalanced",
+    "briefing": "황개는 필수 철수 대상이다. 황개와 살아 있는 유비 또는 관우가 함께 철수 구역에 도착한 뒤 도약을 확정하라.",
+    "fleet_ids": {
+      "liu": "RC-LIU-SQ-01",
+      "guan": "RC-LIU-SQ-02",
+      "zhou": "RC-SUN-SQ-01",
+      "cheng": "RC-SUN-SQ-02",
+      "huang": "RC-SUN-SQ-03",
+      "cao": "RC-CAO-SQ-01",
+      "ren": "RC-CAO-SQ-02",
+      "wen": "RC-CAO-SQ-04",
+      "xu": "RC-CAO-SQ-03",
+      "patrol": "OJ-CAO-PATROL-01",
+      "chun": "RC-CAO-SQ-06"
+    },
+    "balance_notes": [
+      "Wen guard exists at the base from start; engage after scouting before Huang approaches. No capture-phase ambush spawn."
+    ]
+  }
+}

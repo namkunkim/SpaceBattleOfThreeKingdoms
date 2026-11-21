@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "profile_id": "red-cliffs-open-jump-1",
+  "scenario_path": "res://data/scenarios/red_cliffs_open_jump.json",
+  "base_profile": "res://data/profiles/poc_corridor.json",
+  "combat_rules_path": "res://data/profiles/combat_m3.json",
+  "ai_rules_path": "res://data/profiles/ai_m7.json",
+  "default_difficulty": "standard",
+  "rule_overrides": {
+    "ai_advance_speed": 0.0
+  },
+  "side_by_control": {
+    "player": 0,
+    "ai_delegate": 0,
+    "ai": 1
+  },
+  "loader": "res://core/campaign/open_jump_definition.gd",
+  "note": "Use OpenJumpDefinition, not Organization.load_auto/repair; event-gated reserves and fixed named officers."
+}

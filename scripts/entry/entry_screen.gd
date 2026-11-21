@@ -3,6 +3,7 @@ signal continuation_requested(origin: String)
 signal detail_prepared(context: Dictionary)
 signal sortie_requested
 signal v2_requested
+signal open_jump_requested
 var v2_enabled := false
 var campaign_enabled := false
 var campaign_busy := false
@@ -167,6 +168,11 @@ func request(action: String, token: int, region := Flow.REGION) -> bool:
 		_open_settings()
 		return true
 	if campaign_enabled and token == flow.revision:
+		if action == "open_jump" and flow.state == Flow.State.SELECT:
+			campaign_busy = true
+			for button in buttons: button.disabled = true
+			open_jump_requested.emit()
+			return true
 		if action == "v2" and v2_enabled and flow.state in [Flow.State.SELECT, Flow.State.READY]:
 			campaign_busy = true
 			for button in buttons: button.disabled = true
@@ -202,6 +208,8 @@ func _render() -> void:
 			_label("조조가 남진하고, 손권과 유비는 형초에서 함대를 모은다.", 22)
 			_space()
 			_button("적벽대전 시작", "start")
+			if campaign_enabled and OS.has_feature("windows"):
+				_button("적벽 · 열린 도약로 — 5개 연속 임무", "open_jump")
 			if v2_enabled:
 				_button("적벽 v2 출격 / 재개", "v2")
 			_button("설정", "settings")
