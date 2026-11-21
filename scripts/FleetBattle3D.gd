@@ -27,7 +27,7 @@ var profile_patch := Callable()   # 측정 전용(bench_density 1,500척 프리�
 var move_mul := 150.0   # 이동 배율: 화면 한 폭(1600)을 약 10초에 건넌다. 헤드리스 테스트는 1로 둔다
 var turn_mul := 15.0    # 선회율 배율: 선회 반경(속도÷선회율)이 도착 판정(settle 0.7×속도) 안에 들어야 목적지를 돌지 않는다. 조건은 선회율 > 82°/초(속도와 무관)
 var pc_preset := ""
-const PC_EXPERIMENT = preload("res://core/battle/pc_battle_experiment.gd")
+const PC_EXPERIMENT = preload("res://scripts/pc_battle_experiment.gd")
 const FIELD_SIZE := CameraRig.WORLD * 0.5   # 전투 전장 크기: 배경판(3400×2300)의 가로·세로 1/2 = 1700×1150 (이전 6800×4600의 1/4)
 var ALLY_DEF: Array = []   # 브리핑·결산 편성표: 시나리오 프로필의 아군(유비군+손권군) 전대
 var FOE_DEF: Array = []    # 브리핑 적 정보: 처음부터 배치되는 적 전대만(증원 전대는 안개 속, 규모를 미리 알리지 않는다)

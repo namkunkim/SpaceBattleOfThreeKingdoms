@@ -1,6 +1,6 @@
 extends SceneTree
 
-const Experiment = preload("res://core/battle/pc_battle_experiment.gd")
+const Experiment = preload("res://scripts/pc_battle_experiment.gd")
 
 func _initialize() -> void:
 	call_deferred("_run")
