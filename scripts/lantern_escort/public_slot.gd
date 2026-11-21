@@ -1,6 +1,7 @@
 extends RefCounted
 
 const CrossCounter := preload("res://scripts/cross_counter/public_slot.gd")
+const ParentReceipts := preload("res://scripts/campaign_successor_parent_receipts.gd")
 const Lease := preload("res://scripts/cross_counter/public_lease.gd")
 const Store := preload("res://scripts/first_operation_save_store.gd")
 const Publisher := preload("res://scripts/o07_windows_slot.gd")
@@ -18,20 +19,8 @@ var _head: Dictionary
 
 
 static func read_parents() -> Dictionary:
-	var source := CrossCounter.inspect()
-	if not source.ok:
-		return source
-	var parents := {}
-	for parent_id: String in source.head.completed:
-		var receipt: Dictionary = source.head.completed[parent_id]
-		var settlement: Dictionary = receipt.settlement
-		if settlement.kind != "objective_success":
-			continue
-		# Include the original parent and the entire Cross Counter receipt,
-		# including the hash of the committed terminal checkpoint.
-		var digest := JSON.stringify([parent_id, receipt], "", true, true).sha256_text()
-		parents[settlement.id] = {"parent_id": parent_id, "digest": digest, "receipt": receipt}
-	return {"ok": true, "parents": parents}
+	return ParentReceipts.collect(CrossCounter.inspect(), func(settlement: Dictionary) -> bool:
+		return settlement.kind == "objective_success")
 
 
 static func validate_parent(parent_id: String, digest: String) -> Dictionary:

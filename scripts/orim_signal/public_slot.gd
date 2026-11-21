@@ -2,6 +2,7 @@ extends RefCounted
 
 const LanternSlot := preload("res://scripts/lantern_escort/public_slot.gd")
 const LanternRuntime := preload("res://scripts/lantern_escort/runtime.gd")
+const ParentReceipts := preload("res://scripts/campaign_successor_parent_receipts.gd")
 const Lease := preload("res://scripts/cross_counter/public_lease.gd")
 const Store := preload("res://scripts/first_operation_save_store.gd")
 const Publisher := preload("res://scripts/o07_windows_slot.gd")
@@ -18,20 +19,8 @@ var _head: Dictionary
 
 
 static func read_parents() -> Dictionary:
-	var source := LanternSlot.inspect()
-	if not source.ok:
-		return source
-	var parents := {}
-	for parent_id: String in source.head.completed:
-		var receipt: Dictionary = source.head.completed[parent_id]
-		var settlement: Dictionary = receipt.settlement
-		if settlement.kind != "success" or settlement.escaped < 1:
-			continue
-		# Include the original parent and the entire Lantern receipt,
-		# including the hash of the committed terminal checkpoint.
-		var digest := JSON.stringify([parent_id, receipt], "", true, true).sha256_text()
-		parents[settlement.id] = {"parent_id": parent_id, "digest": digest, "receipt": receipt}
-	return {"ok": true, "parents": parents}
+	return ParentReceipts.collect(LanternSlot.inspect(), func(settlement: Dictionary) -> bool:
+		return settlement.kind == "success" and settlement.escaped >= 1)
 
 
 static func validate_parent(parent_id: String, digest: String) -> Dictionary:
