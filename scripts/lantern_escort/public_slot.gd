@@ -65,7 +65,7 @@ static func open(for_import := false) -> Dictionary:
 		slot._head = {"format": FORMAT, "revision": 0, "active": {}, "completed": {}}
 	elif saved.ok:
 		slot._head = saved.payload
-		if not slot._valid_head():
+		if not _valid_head(slot._head):
 			slot.close()
 			return _fail("lantern_invalid_head")
 	else:
@@ -82,6 +82,30 @@ static func import_checkpoint(candidate: Dictionary) -> Dictionary:
 	var result: Dictionary = slot._apply_import(candidate)
 	slot.close()
 	return result
+
+
+static func restore_operational_slot(candidate_path: String, primary_sha256: String,
+		previous_sha256: String, candidate_sha256: String) -> Dictionary:
+	if not _hex(primary_sha256, 64) or (previous_sha256 != "missing" and not _hex(previous_sha256, 64)) \
+			or not _hex(candidate_sha256, 64):
+		return _fail("lantern_operational_invalid_fingerprint")
+	var opened := open(true)
+	if not opened.ok:
+		return opened
+	var slot: RefCounted = opened.lease
+	var expected: Array[String] = [primary_sha256, previous_sha256]
+	var result: Dictionary = slot._restore_operational_slot(candidate_path, expected, candidate_sha256)
+	slot.close()
+	return result
+
+
+static func rescue_merit_count(completed: Dictionary) -> int:
+	var successful_ids := {}
+	for receipt: Dictionary in completed.values():
+		var settlement: Dictionary = receipt.settlement
+		if settlement.kind == "success":
+			successful_ids[settlement.id] = true
+	return successful_ids.size()
 
 
 static func inspect() -> Dictionary:
@@ -182,6 +206,43 @@ func _apply_import(candidate: Dictionary) -> Dictionary:
 	return _store_active(active, checked.packet, _publish_import)
 
 
+func _restore_operational_slot(candidate_path: String, expected: Array[String], candidate_sha256: String) -> Dictionary:
+	if _import_base != expected:
+		return _fail("lantern_operational_base_mismatch")
+	var decoded := Store._read_file(candidate_path, candidate_sha256)
+	if not decoded.ok:
+		return decoded
+	var candidate: Dictionary = decoded.payload
+	if not _valid_head(candidate):
+		return _fail("lantern_operational_invalid_candidate")
+	if candidate.completed != _head.completed:
+		return _fail("lantern_operational_receipts_changed")
+	var active: Dictionary = _head.active
+	var next: Dictionary = candidate.active
+	if active.is_empty() and next.is_empty():
+		return {"ok": true, "written": false}
+	if active.is_empty() or next.is_empty() or next.parent_id != active.parent_id \
+			or next.parent_sha256 != active.parent_sha256 or next.operation_id != active.operation_id:
+		return _fail("lantern_operational_active_mismatch")
+	var parent := validate_parent(active.parent_id, active.parent_sha256)
+	if not parent.ok:
+		return parent
+	var current := _canonical_packet(_decode_packet(active))
+	if not current.ok:
+		return current
+	var previous: Dictionary = current.packet
+	var checked := _canonical_packet(_decode_packet(next))
+	if not checked.ok:
+		return checked
+	if not _extends_checkpoint(previous, checked.packet):
+		return _fail("lantern_operational_stale_checkpoint")
+	if _slot_fingerprints() != _import_base:
+		return _fail("lantern_slot_changed")
+	if checked.packet == previous:
+		return {"ok": true, "written": false}
+	return _store_active(active, checked.packet, _publish_import)
+
+
 func settle(packet: Dictionary) -> Dictionary:
 	if not _held():
 		return _fail("lantern_lease_closed")
@@ -262,14 +323,14 @@ static func _slot_fingerprints() -> Array[String]:
 		fingerprints.append(digest)
 	return fingerprints
 
-func _valid_head() -> bool:
-	if not _fields(_head, ["format", "revision", "active", "completed"]) or _head.format != FORMAT\
-			or not _json_integer(_head.revision, 1, Store.MAX_JSON_INT)\
-			or not _head.active is Dictionary or not _head.completed is Dictionary:
+static func _valid_head(head: Dictionary) -> bool:
+	if not _fields(head, ["format", "revision", "active", "completed"]) or head.format != FORMAT\
+			or not _json_integer(head.revision, 1, Store.MAX_JSON_INT)\
+			or not head.active is Dictionary or not head.completed is Dictionary:
 		return false
 	var identities := {}
-	for parent_id: Variant in _head.completed:
-		var receipt: Variant = _head.completed[parent_id]
+	for parent_id: Variant in head.completed:
+		var receipt: Variant = head.completed[parent_id]
 		if not _parent_id(parent_id) or not _fields(receipt, ["parent_sha256", "operation_id", "packet_sha256", "settlement"])\
 				or not _hex(receipt.parent_sha256, 64) or not _hex(receipt.packet_sha256, 64)\
 				or not _operation_id(receipt.operation_id) or identities.has(receipt.operation_id)\
@@ -282,11 +343,11 @@ func _valid_head() -> bool:
 		escaped_ids.assign(receipt.settlement.escaped_ids)
 		receipt.settlement.escaped_ids = escaped_ids
 		identities[receipt.operation_id] = true
-	var active: Dictionary = _head.active
+	var active: Dictionary = head.active
 	if active.is_empty():
 		return not identities.is_empty()
 	if not _fields(active, ["parent_id", "parent_sha256", "operation_id", "packet_bytes", "packet_sha256"])\
-			or not _parent_id(active.parent_id) or _head.completed.has(active.parent_id)\
+			or not _parent_id(active.parent_id) or head.completed.has(active.parent_id)\
 			or not _hex(active.parent_sha256, 64) or not _hex(active.packet_sha256, 64)\
 			or not _operation_id(active.operation_id) or identities.has(active.operation_id):
 		return false

@@ -84,7 +84,7 @@ static func _read_previous(path: String) -> Dictionary:
 	return result
 
 
-static func _read_file(path: String) -> Dictionary:
+static func _read_file(path: String, expected_sha256 := "") -> Dictionary:
 	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		if not FileAccess.file_exists(path) and not DirAccess.dir_exists_absolute(path):
@@ -96,6 +96,12 @@ static func _read_file(path: String) -> Dictionary:
 	var bytes := file.get_buffer(size)
 	if bytes.size() != size or file.get_length() != size:
 		return _fail("read_failed", path)
+	if not expected_sha256.is_empty():
+		var digest := HashingContext.new()
+		digest.start(HashingContext.HASH_SHA256)
+		digest.update(bytes)
+		if digest.finish().hex_encode() != expected_sha256:
+			return _fail("candidate_sha256_mismatch", path)
 	var source := bytes.get_string_from_utf8()
 	if source.to_utf8_buffer() != bytes:
 		return _fail("invalid_utf8", path)

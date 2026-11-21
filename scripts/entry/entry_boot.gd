@@ -4,6 +4,8 @@ const Entry := preload("res://scenes/entry/NewEntry.tscn")
 const Host := preload("res://scripts/first_operation_host.gd")
 const Settlements := preload("res://scripts/first_operation_settlement_store.gd")
 const V2 := preload("res://scripts/entry/red_cliffs_v2_home.gd")
+const LanternSlot := preload("res://scripts/lantern_escort/public_slot.gd")
+const LANTERN_RESTORE := "--lantern-restore-slot"
 static var _v2_cli_routed := false
 var screen: Control
 var _route_error: VBoxContainer
@@ -17,6 +19,13 @@ func _boot() -> void:
 	var link := get_node("/root/WorldLink")
 	var returning: bool = link.take_entry_restore()
 	var args := OS.get_cmdline_user_args()
+	if args.has(LANTERN_RESTORE):
+		var result := {"ok": false, "error": "lantern_operational_invalid_arguments"}
+		if args.size() == 5 and args[0] == LANTERN_RESTORE and OS.has_feature("windows"):
+			result = LanternSlot.restore_operational_slot(args[1], args[2], args[3], args[4])
+		print("LANTERN_OPERATIONAL_RESTORE ", JSON.stringify(result))
+		get_tree().quit(0 if result.ok else 1)
+		return
 	if not _v2_cli_routed and OS.has_feature("windows") and args == PackedStringArray(["--red-cliffs-v2"]):
 		_v2_cli_routed = true
 		_route(V2.SCENE)

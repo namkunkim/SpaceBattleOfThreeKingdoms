@@ -268,7 +268,8 @@ func _show_settlement(settlement: Dictionary) -> void:
 	]
 	_line.text = "%s   ·   탈출 %d / 2척   ·   %.1f초" % [
 		titles[escaped] if settlement.kind == "success" else titles[0], escaped, settlement.clock_ms / 1000.0]
-	_notice.text = "구조 작전을 포기했습니다." if settlement.reason == "abandoned" else endings[escaped]
+	var ending: String = "구조 작전을 포기했습니다." if settlement.reason == "abandoned" else endings[escaped]
+	_notice.text = "%s  ·  구조 공적 %d건" % [ending, Slot.rescue_merit_count(_slot.head().completed)]
 	_controls()
 
 
