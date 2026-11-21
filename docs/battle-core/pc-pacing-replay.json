@@ -1,0 +1,333 @@
+{
+	"meta": {
+		"difficulty": "표준",
+		"game_speed": 1,
+		"human_playtest": false,
+		"physical_obstacles": false,
+		"policy": "Liu Bei direct control; advance to public map centre then attack known contacts every 5s; Sun delegated"
+	},
+	"runs": [
+		{
+			"army_end": [
+				2984,
+				5851
+			],
+			"burst_shots": {
+				"1": 3,
+				"10": 8,
+				"5": 5
+			},
+			"combat_s": 129.05,
+			"config": {
+				"move_mul": 150.0,
+				"physical_obstacles": false,
+				"preset": "baseline",
+				"turn_mul": 15.0,
+				"world": [
+					1700.0,
+					1150.0
+				],
+				"zones": 3
+			},
+			"curve": [
+				[
+					30.0,
+					7237,
+					7043
+				],
+				[
+					60.0,
+					6775,
+					6142
+				],
+				[
+					90.0,
+					5199,
+					6101
+				],
+				[
+					120.0,
+					5199,
+					5930
+				]
+			],
+			"fingerprint": "f76c81ef7bab6401618797cc13cefe5468d013483e4b5795ae69152f31ff3cb5",
+			"first_crisis_s": 127.7,
+			"first_fire_s": 2.9,
+			"first_hit_s": 2.9,
+			"morale_after_hit": {
+				"1": [
+					9183,
+					7609
+				],
+				"10": [
+					8805,
+					7533
+				],
+				"5": [
+					9183,
+					7609
+				]
+			},
+			"morale_at_first_hit": [
+				9622,
+				7692
+			],
+			"preset": "baseline",
+			"reason": "alliance_morale_collapse",
+			"replay_fingerprint": "f76c81ef7bab6401618797cc13cefe5468d013483e4b5795ae69152f31ff3cb5",
+			"replay_match": true,
+			"seed": 20824,
+			"t": 131.95,
+			"win": false
+		},
+		{
+			"army_end": [
+				2714,
+				5660
+			],
+			"burst_shots": {
+				"1": 4,
+				"10": 10,
+				"5": 8
+			},
+			"combat_s": 528.95,
+			"config": {
+				"move_mul": 30.0,
+				"physical_obstacles": false,
+				"preset": "large_slow",
+				"turn_mul": 15.0,
+				"world": [
+					6800.0,
+					4600.0
+				],
+				"zones": 3
+			},
+			"curve": [
+				[
+					30.0,
+					10000,
+					7692
+				],
+				[
+					60.0,
+					9423,
+					7211
+				],
+				[
+					90.0,
+					8177,
+					7009
+				],
+				[
+					120.0,
+					8177,
+					6952
+				],
+				[
+					150.0,
+					8477,
+					6229
+				],
+				[
+					180.0,
+					7476,
+					5516
+				],
+				[
+					210.0,
+					7476,
+					5516
+				],
+				[
+					240.0,
+					6146,
+					5389
+				],
+				[
+					270.0,
+					6146,
+					5389
+				],
+				[
+					300.0,
+					5946,
+					5293
+				],
+				[
+					330.0,
+					5946,
+					5293
+				],
+				[
+					360.0,
+					5523,
+					5150
+				],
+				[
+					390.0,
+					5523,
+					5138
+				],
+				[
+					420.0,
+					5196,
+					5126
+				],
+				[
+					450.0,
+					4354,
+					5413
+				],
+				[
+					480.0,
+					4141,
+					5401
+				],
+				[
+					510.0,
+					4141,
+					5389
+				],
+				[
+					540.0,
+					4141,
+					5377
+				],
+				[
+					570.0,
+					3799,
+					5364
+				]
+			],
+			"fingerprint": "662f3b004d7b74fe113ad23ad2f5266fe1cd474943d276d60a67cd85d6aebe92",
+			"first_crisis_s": 441.1,
+			"first_fire_s": 58.0,
+			"first_hit_s": 58.0,
+			"morale_after_hit": {
+				"1": [
+					9903,
+					7479
+				],
+				"10": [
+					9277,
+					7211
+				],
+				"5": [
+					9423,
+					7211
+				]
+			},
+			"morale_at_first_hit": [
+				10000,
+				7479
+			],
+			"preset": "large_slow",
+			"reason": "alliance_morale_collapse",
+			"replay_fingerprint": "662f3b004d7b74fe113ad23ad2f5266fe1cd474943d276d60a67cd85d6aebe92",
+			"replay_match": true,
+			"seed": 20824,
+			"t": 586.95,
+			"win": false
+		},
+		{
+			"army_end": [
+				5222,
+				6231
+			],
+			"burst_shots": {
+				"1": 2,
+				"10": 4,
+				"5": 4
+			},
+			"combat_s": 237.35,
+			"config": {
+				"move_mul": 30.0,
+				"physical_obstacles": false,
+				"preset": "terrain",
+				"turn_mul": 15.0,
+				"world": [
+					6800.0,
+					4600.0
+				],
+				"zones": 10
+			},
+			"curve": [
+				[
+					30.0,
+					10000,
+					7692
+				],
+				[
+					60.0,
+					9794,
+					7637
+				],
+				[
+					90.0,
+					9528,
+					7637
+				],
+				[
+					120.0,
+					9528,
+					7436
+				],
+				[
+					150.0,
+					9528,
+					7047
+				],
+				[
+					180.0,
+					9528,
+					7005
+				],
+				[
+					210.0,
+					9528,
+					6211
+				],
+				[
+					240.0,
+					8380,
+					6027
+				],
+				[
+					270.0,
+					8214,
+					5805
+				]
+			],
+			"fingerprint": "123dc4c7552ae07582f19cfd20f0adaafea072ea021890d8ae50a325d59a6387",
+			"first_crisis_s": -1.0,
+			"first_fire_s": 58.4,
+			"first_hit_s": 59.6,
+			"morale_after_hit": {
+				"1": [
+					9794,
+					7637
+				],
+				"10": [
+					9794,
+					7637
+				],
+				"5": [
+					9794,
+					7637
+				]
+			},
+			"morale_at_first_hit": [
+				9794,
+				7637
+			],
+			"preset": "terrain",
+			"reason": "liu_flagship_lost",
+			"replay_fingerprint": "123dc4c7552ae07582f19cfd20f0adaafea072ea021890d8ae50a325d59a6387",
+			"replay_match": true,
+			"seed": 20824,
+			"t": 296.95,
+			"win": false
+		}
+	]
+}

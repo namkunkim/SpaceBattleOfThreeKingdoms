@@ -26,6 +26,8 @@ var org_errors := []   # org가 apply에서 거부된 사유(REVIEW-O4 #1). 비�
 var profile_patch := Callable()   # 측정 전용(bench_density 1,500척 프리셋): 프로필을 받아 고친다. 게임 흐름에서는 비어 있다
 var move_mul := 150.0   # 이동 배율: 화면 한 폭(1600)을 약 10초에 건넌다. 헤드리스 테스트는 1로 둔다
 var turn_mul := 15.0    # 선회율 배율: 선회 반경(속도÷선회율)이 도착 판정(settle 0.7×속도) 안에 들어야 목적지를 돌지 않는다. 조건은 선회율 > 82°/초(속도와 무관)
+var pc_preset := ""
+const PC_EXPERIMENT = preload("res://core/battle/pc_battle_experiment.gd")
 const FIELD_SIZE := CameraRig.WORLD * 0.5   # 전투 전장 크기: 배경판(3400×2300)의 가로·세로 1/2 = 1700×1150 (이전 6800×4600의 1/4)
 var ALLY_DEF: Array = []   # 브리핑·결산 편성표: 시나리오 프로필의 아군(유비군+손권군) 전대
 var FOE_DEF: Array = []    # 브리핑 적 정보: 처음부터 배치되는 적 전대만(증원 전대는 안개 속, 규모를 미리 알리지 않는다)
@@ -145,6 +147,14 @@ func _exit_tree() -> void:
 	sim = null
 
 func _ready() -> void:
+	var args := OS.get_cmdline_user_args()
+	var preset_index := args.find("--pc-preset")
+	if preset_index >= 0 and preset_index + 1 < args.size():
+		var requested := args[preset_index + 1]
+		if requested in PC_EXPERIMENT.PRESETS:
+			pc_preset = requested
+		else:
+			push_warning("Unknown PC experiment preset: " + requested)
 	var link := get_node_or_null("/root/WorldLink")
 	if get_tree().current_scene == self and (link == null or not link.routed()) and not _o07_product_requested() and not OS.get_cmdline_user_args().has(BattleBrief.FIRST_OPERATION_DEV_ARG):
 		get_tree().call_deferred("change_scene_to_file", "res://scenes/entry/EntryBoot.tscn")
@@ -351,9 +361,16 @@ func _prepare_game(candidate_org: Dictionary) -> Dictionary:
 		if profile.is_empty():
 			profile = PocSetup.profile()
 	var scen := profile_def != "" and profile.has("combat")   # 시나리오 전장(POC로 대체됐으면 아니다)
-	if scen:
+	if scen and pc_preset == "":
 		ScenarioProfile.enlarge_field(profile, FIELD_SIZE)   # 전장을 FIELD_SIZE로 맞추고 배치를 비율대로 늘린다. 미니맵은 이 전장을 비례 축소해 보여 준다
-		ScenarioProfile.tune_for_play(profile, move_mul, turn_mul)
+	if scen:
+		if pc_preset == "":
+			ScenarioProfile.tune_for_play(profile, move_mul, turn_mul)
+		else:
+			var config: Dictionary = PC_EXPERIMENT.configure(profile, pc_preset)
+			move_mul = config.move_mul
+			turn_mul = config.turn_mul
+			print("PC_EXPERIMENT ", JSON.stringify(config))
 	if profile_patch.is_valid() and not profile.is_empty():
 		profile_patch.call(profile)
 		var invalid_path := "profile" if profile.is_empty() else ""
