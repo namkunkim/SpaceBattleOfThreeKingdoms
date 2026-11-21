@@ -1,5 +1,7 @@
 # P02 필수 작업 체크리스트
 
+> **보관본.** P02 구현·검증 이력을 보존한다. 캠페인 적용의 현재 상태와 남은 작업은 [캠페인 적용 통합 체크리스트](CAMPAIGN-APPLICATION-CHECKLIST.md)에서만 조회·갱신한다.
+
 ## K6 완료 및 재검증 현황 — 2026-11-12
 
 - [x] **K6 정식 실행 완료 — `264f47b9`.** 2026-11-12 14:21 KST, 5차 실행에서 21행·58작업·27비교와 실제 Windows GUI 4작업의 독립 증거 검증을 통과했다. [정식 집계](F:/WorkSpace/SpaceBattleOfThreeKingdoms-validation/K6/historical-264f47b9-row21-05/run-once/aggregate.json)
