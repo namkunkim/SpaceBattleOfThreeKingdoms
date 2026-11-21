@@ -90,6 +90,7 @@ const LanternSlot := preload("res://scripts/lantern_escort/public_slot.gd")
 var _lantern_host: LanternHost
 var _lantern_menu: MenuButton
 var _lantern_parents: Array[String] = []
+var _lantern_import_available := false
 const OrimHost := preload("res://scripts/orim_signal/public_host.gd")
 const OrimSlot := preload("res://scripts/orim_signal/public_slot.gd")
 var _orim_host: OrimHost
@@ -885,6 +886,7 @@ func _select_import_file() -> void:
 
 func _close_import_dialog() -> void:
 	if _import_dialog != null:
+		_import_dialog.hide()
 		_import_dialog.queue_free()
 		_import_dialog = null
 
@@ -1288,16 +1290,19 @@ func _build_lantern_menu() -> void:
 func _update_lantern() -> void:
 	if _lantern_menu == null:
 		return
-	_fill_followup_menu(_lantern_menu, _lantern_parents, LanternSlot, "교차 반격")
+	var active := _fill_followup_menu(_lantern_menu, _lantern_parents, LanternSlot, "교차 반격")
+	_lantern_import_available = active.get("parent_id", "") in _lantern_parents
+	if _lantern_import_available:
+		_lantern_menu.get_popup().add_item("외부 저장 가져오기…", _lantern_parents.size())
 
 
-func _fill_followup_menu(menu: MenuButton, parent_ids: Array[String], slot: Script, parent_label: String) -> void:
+func _fill_followup_menu(menu: MenuButton, parent_ids: Array[String], slot: Script, parent_label: String) -> Dictionary:
 	var popup := menu.get_popup()
 	popup.clear()
 	parent_ids.clear()
 	var eligible: Dictionary = slot.read_parents()
 	if not eligible.ok:
-		return
+		return {}
 	var inspected: Dictionary = slot.inspect()
 	var head: Dictionary = inspected.get("head", {})
 	var active: Dictionary = head.get("active", {})
@@ -1315,12 +1320,17 @@ func _fill_followup_menu(menu: MenuButton, parent_ids: Array[String], slot: Scri
 		parent_ids.append(parent_id)
 		popup.add_item("%s · %s %s" % [label, parent_label, parent_id.get_slice("/", 1).left(8)], index)
 		popup.set_item_disabled(index, not inspected.ok or (label == "출격" and not active.is_empty()))
+	return active
 
 
 func _open_lantern(index: int) -> void:
 	if _orim_host != null or _lantern_host != null or _cross_counter_host != null or _lantern_menu == null \
-			or not _lantern_menu.is_visible_in_tree() or _lantern_menu.disabled \
-			or index < 0 or index >= _lantern_parents.size() or _lantern_menu.get_popup().is_item_disabled(index):
+			or not _lantern_menu.is_visible_in_tree() or _lantern_menu.disabled or not _sortie_available():
+		return
+	if index == _lantern_parents.size() and _lantern_import_available:
+		_select_lantern_import_file()
+		return
+	if index < 0 or index >= _lantern_parents.size() or _lantern_menu.get_popup().is_item_disabled(index):
 		return
 	_lantern_host = LanternHost.new()
 	_lantern_host.name = "LanternEscortPublicHost"
@@ -1333,6 +1343,34 @@ func _open_lantern(index: int) -> void:
 	hud.hide()
 	_lantern_host.returned.connect(_close_lantern)
 
+
+func _select_lantern_import_file() -> void:
+	if _import_dialog != null or _replay_dialog != null or _replay_overlay != null or state not in ["browse", "result"]:
+		return
+	_import_dialog = LanternHost.external_save_dialog(false)
+	add_child(_import_dialog)
+	_import_dialog.canceled.connect(_close_lantern_import_dialog)
+	_import_dialog.file_selected.connect(_lantern_import_file_selected)
+	_import_dialog.popup_centered_ratio(0.7)
+	_import_dialog.get_line_edit().grab_focus()
+
+func _close_lantern_import_dialog() -> void:
+	_close_import_dialog()
+	_lantern_menu.grab_focus()
+
+func _lantern_import_file_selected(path: String) -> void:
+	if _import_dialog == null:
+		return
+	_close_lantern_import_dialog()
+	var decoded := LanternHost.ExternalSave.read(path)
+	var result := LanternSlot.import_checkpoint(decoded.active) if decoded.ok else decoded
+	_update_lantern()
+	if not result.ok:
+		_show_chip("호송 외부 저장을 가져오지 못했습니다. (%s)" % result.error)
+	elif result.written:
+		_show_chip("호송 외부 저장을 가져왔습니다. 퇴로의 등불 메뉴에서 재개하세요.")
+	else:
+		_show_chip("이미 같은 호송 저장을 사용 중입니다.")
 
 func _close_lantern() -> void:
 	if _lantern_host != null:

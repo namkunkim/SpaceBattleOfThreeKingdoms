@@ -4,6 +4,7 @@ signal returned
 
 const Runtime := preload("res://scripts/lantern_escort/runtime.gd")
 const Slot := preload("res://scripts/lantern_escort/public_slot.gd")
+const ExternalSave := preload("res://scripts/lantern_escort/external_save.gd")
 
 var _slot: Slot
 var _operation: RefCounted
@@ -21,6 +22,8 @@ var _notice: Label
 var _board: Control
 var _play: Button
 var _save: Button
+var _export: Button
+var _export_dialog: FileDialog
 var _stop: Button
 var _abandon: Button
 
@@ -54,6 +57,7 @@ func _ready() -> void:
 	layout.add_child(actions)
 	_play = _button(actions, "작전 시작", "LanternStart", _toggle_run)
 	_save = _button(actions, "저장", "LanternSave", _save_or_retry)
+	_export = _button(actions, "외부 저장 내보내기…", "LanternExport", _select_export_file)
 	_stop = _button(actions, "호위 정지", "LanternStop", _queue.bind("stop"))
 	_abandon = _button(actions, "작전 포기", "LanternAbandon", _abandon_operation)
 	_button(actions, "천하로 돌아가기", "LanternReturn", leave)
@@ -168,6 +172,47 @@ func _persist() -> bool:
 	return true
 
 
+static func external_save_dialog(exporting: bool) -> FileDialog:
+	var dialog := FileDialog.new()
+	dialog.access = FileDialog.ACCESS_FILESYSTEM
+	dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE if exporting else FileDialog.FILE_MODE_OPEN_FILE
+	dialog.title = "퇴로의 등불 외부 저장 내보내기" if exporting else "퇴로의 등불 외부 저장 가져오기"
+	dialog.add_filter("*" + ExternalSave.EXTENSION, "퇴로의 등불 외부 저장")
+	return dialog
+
+func _select_export_file() -> void:
+	if _export.disabled or _export_dialog != null:
+		return
+	set_process(false)
+	_export_dialog = external_save_dialog(true)
+	add_child(_export_dialog)
+	_export_dialog.canceled.connect(_close_export_dialog)
+	_export_dialog.file_selected.connect(_export_file_selected)
+	_export_dialog.popup_centered_ratio(0.7)
+	_export_dialog.get_line_edit().grab_focus()
+
+func _export_file_selected(path: String) -> void:
+	if _export_dialog == null:
+		return
+	var active: Dictionary = _slot.head().active
+	var checkpoint := {
+		"parent_id": active.parent_id, "parent_sha256": active.parent_sha256,
+		"operation_id": active.operation_id, "packet": _operation.capture(),
+	}
+	var result := ExternalSave.write(checkpoint, path)
+	_notice.text = "호송 외부 저장을 내보냈습니다." if result.ok else "내보내지 못했습니다. (%s)" % result.error
+	_close_export_dialog()
+
+func _close_export_dialog() -> void:
+	if _export_dialog == null:
+		return
+	_export_dialog.hide()
+	_export_dialog.queue_free()
+	_export_dialog = null
+	if _running and not _blocked and not _terminal:
+		set_process(true)
+	_export.grab_focus()
+
 func _save_or_retry() -> void:
 	if _persist():
 		_after_save()
@@ -233,6 +278,7 @@ func _controls() -> void:
 	_play.text = "일시정지" if _running else ("계속" if active and _operation.started else "작전 시작")
 	_stop.disabled = not active or not _running or _blocked
 	_save.disabled = not active
+	_export.disabled = not active or _blocked or not _operation.started
 	_save.text = "저장 재시도" if _blocked else "저장"
 	_abandon.disabled = not active or _blocked or not _operation.started
 

@@ -16,6 +16,7 @@ const SETTLEMENT_FIELDS := ["id", "operation_id", "kind", "reason", "escaped", "
 
 var _lease: Lease
 var _head: Dictionary
+var _import_base: Array[String] = []
 
 
 static func read_parents() -> Dictionary:
@@ -41,7 +42,7 @@ static func _find_parent(parent_id: String) -> Dictionary:
 	return result
 
 
-static func open() -> Dictionary:
+static func open(for_import := false) -> Dictionary:
 	var acquired := Lease.acquire(SLOT_PATH)
 	if not acquired.ok:
 		match acquired.error:
@@ -54,6 +55,11 @@ static func open() -> Dictionary:
 		return acquired
 	var slot := new()
 	slot._lease = acquired.lease
+	if for_import:
+		slot._import_base = _slot_fingerprints()
+		if slot._import_base.is_empty():
+			slot.close()
+			return _fail("lantern_slot_unreadable")
 	var saved := Store.read(SLOT_PATH)
 	if not saved.ok and saved.error == "file_not_found":
 		slot._head = {"format": FORMAT, "revision": 0, "active": {}, "completed": {}}
@@ -66,6 +72,16 @@ static func open() -> Dictionary:
 		slot.close()
 		return saved
 	return {"ok": true, "lease": slot, "head": slot.head()}
+
+
+static func import_checkpoint(candidate: Dictionary) -> Dictionary:
+	var opened := open(true)
+	if not opened.ok:
+		return opened
+	var slot: RefCounted = opened.lease
+	var result: Dictionary = slot._apply_import(candidate)
+	slot.close()
+	return result
 
 
 static func inspect() -> Dictionary:
@@ -141,6 +157,31 @@ func save(packet: Dictionary) -> Dictionary:
 	return _store_active(active, checked.packet)
 
 
+func _apply_import(candidate: Dictionary) -> Dictionary:
+	var active: Dictionary = _head.active
+	if active.is_empty() or candidate.get("parent_id") != active.parent_id\
+			or candidate.get("parent_sha256") != active.parent_sha256\
+			or candidate.get("operation_id") != active.operation_id:
+		return _fail("lantern_import_active_mismatch")
+	var parent := validate_parent(active.parent_id, active.parent_sha256)
+	if not parent.ok:
+		return parent
+	var packet: Variant = candidate.get("packet")
+	if not packet is Dictionary or not _valid_packet(packet, active.operation_id) or not packet.settlement.is_empty():
+		return _fail("lantern_invalid_active_checkpoint")
+	var previous := _decode_packet(active)
+	if not _extends_checkpoint(previous, packet, true):
+		return _fail("lantern_stale_checkpoint")
+	var checked := _canonical_packet(packet)
+	if not checked.ok:
+		return checked
+	if _slot_fingerprints() != _import_base:
+		return _fail("lantern_slot_changed")
+	if checked.packet == previous:
+		return {"ok": true, "written": false}
+	return _store_active(active, checked.packet, _publish_import)
+
+
 func settle(packet: Dictionary) -> Dictionary:
 	if not _held():
 		return _fail("lantern_lease_closed")
@@ -180,7 +221,7 @@ func _held() -> bool:
 	return _lease != null and _lease.held()
 
 
-func _store_active(active: Dictionary, packet: Dictionary) -> Dictionary:
+func _store_active(active: Dictionary, packet: Dictionary, publisher := Callable()) -> Dictionary:
 	var bytes := var_to_bytes(packet)
 	if bytes.size() > MAX_PACKET_BYTES:
 		return _fail("lantern_checkpoint_too_large")
@@ -188,19 +229,38 @@ func _store_active(active: Dictionary, packet: Dictionary) -> Dictionary:
 	next.active = active.duplicate(true)
 	next.active["packet_bytes"] = Marshalls.raw_to_base64(bytes)
 	next.active["packet_sha256"] = _sha(bytes)
-	return _publish(next)
+	return _publish(next, publisher)
 
 
-func _publish(next: Dictionary) -> Dictionary:
+func _publish(next: Dictionary, publisher := Callable()) -> Dictionary:
 	if int(_head.revision) >= Store.MAX_JSON_INT:
 		return _fail("lantern_revision_exhausted")
 	next.revision = int(_head.revision) + 1
-	var stored := Store.write(next, SLOT_PATH, Publisher.publish)
+	var stored := Store.write(next, SLOT_PATH, publisher if publisher.is_valid() else Publisher.publish)
 	if not stored.ok:
 		return stored
 	_head = next
 	return {"ok": true, "written": true}
 
+
+func _publish_import(staged: String, path: String, existing: bool) -> Dictionary:
+	if _slot_fingerprints() != _import_base:
+		return _fail("lantern_slot_changed")
+	return Publisher.publish(staged, path, existing)
+
+static func _slot_fingerprints() -> Array[String]:
+	var fingerprints: Array[String] = []
+	for path: String in [SLOT_PATH, SLOT_PATH + Store.PREVIOUS]:
+		if DirAccess.dir_exists_absolute(path):
+			return []
+		if not FileAccess.file_exists(path):
+			fingerprints.append("missing")
+			continue
+		var digest := FileAccess.get_sha256(path)
+		if digest.is_empty():
+			return []
+		fingerprints.append(digest)
+	return fingerprints
 
 func _valid_head() -> bool:
 	if not _fields(_head, ["format", "revision", "active", "completed"]) or _head.format != FORMAT\
@@ -263,19 +323,21 @@ static func _canonical_packet(packet: Dictionary) -> Dictionary:
 	return {"ok": true, "packet": restored.runtime.capture()} if restored.ok else restored
 
 
-static func _extends_checkpoint(previous: Dictionary, packet: Dictionary) -> bool:
+static func _extends_checkpoint(previous: Dictionary, packet: Dictionary, exact_pending := false) -> bool:
 	if packet.tick < previous.tick or packet.event_cursor < previous.event_cursor or (previous.started and not packet.started)\
 			or packet.applied.slice(0, previous.applied.size()) != previous.applied:
 		return false
-	if previous.pending.is_empty():
-		return true
 	if packet.tick == previous.tick:
-		return packet.pending.slice(0, previous.pending.size()) == previous.pending
-	if packet.applied.size() <= previous.applied.size():
-		return false
+		if packet.applied != previous.applied:
+			return false
+		return packet.pending == previous.pending if exact_pending else packet.pending.slice(0, previous.pending.size()) == previous.pending
+	if packet.applied.size() == previous.applied.size():
+		return previous.pending.is_empty()
 	var applied: Variant = packet.applied[previous.applied.size()]
-	return applied is Dictionary and applied.get("tick") == previous.tick\
-		and applied.get("batch") is Array and applied.batch.slice(0, previous.pending.size()) == previous.pending
+	if not applied is Dictionary or typeof(applied.get("tick")) != TYPE_INT or applied.tick < previous.tick:
+		return false
+	return previous.pending.is_empty() or (applied.tick == previous.tick\
+		and applied.get("batch") is Array and applied.batch.slice(0, previous.pending.size()) == previous.pending)
 
 
 static func _valid_settlement(value: Variant, operation_id: String) -> bool:

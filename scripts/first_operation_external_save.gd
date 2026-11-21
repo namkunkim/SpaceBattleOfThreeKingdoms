@@ -210,11 +210,11 @@ static func _publish_new(path: String, bytes: PackedByteArray, product := false)
 	DirAccess.remove_absolute(temporary)
 	return result
 
-static func _windows_path(path: String) -> String:
+static func _windows_path(path: String, extension := EXTENSION) -> String:
 	var normalized := path.replace("\\", "/")
 	if normalized.length() < 4 or not normalized.substr(0, 1).to_upper() in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
 		return ""
-	if normalized.substr(1, 2) != ":/" or not normalized.to_lower().ends_with(EXTENSION):
+	if normalized.substr(1, 2) != ":/" or not normalized.to_lower().ends_with(extension):
 		return ""
 	var reserved := ["CON", "PRN", "AUX", "NUL", "CONIN$", "CONOUT$"]
 	for segment in normalized.substr(3).split("/"):
