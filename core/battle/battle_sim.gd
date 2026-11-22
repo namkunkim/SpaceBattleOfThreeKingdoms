@@ -8,6 +8,10 @@ extends RefCounted
 #   플레이어 명령은 queue()로 넣고 다음 step()의 첫머리에 적용·기록한다. AI 명령은 기록하지 않는다(상태에서 다시 나온다).
 # 사건: {tick, kind, sq, other, pos, value} — drain_events()로 가져간다. 표현과 로그는 사건만 보고 그린다.
 
+const HexRules := preload("res://core/battle/hex_battle_rules.gd")
+var hex_combat := false
+var _hex_ordered_moves := {}
+
 var profile_id := ""
 var rs: RuleSet
 var R: Dictionary          # rs.v (규칙 수치, 프로필 JSON)
@@ -41,6 +45,7 @@ func _init(seed_id: int = 0, hz: int = BattleRules.TICK_HZ, profile: Dictionary 
 	if profile.is_empty():
 		profile = PocSetup.profile()
 	profile_id = profile.profile_id
+	hex_combat = profile.get("hex_combat", false)
 	rs = RuleSet.from_profile(profile)
 	R = rs.v
 	st = BattleState.new()
@@ -135,6 +140,10 @@ func fingerprint() -> String:
 		extra += cmd.fingerprint()
 	if skills:
 		extra += skills.fingerprint()   # P8a. 발동이 없으면 빈 문자열
+	if hex_combat:
+		var ordered := _hex_ordered_moves.keys()
+		ordered.sort()
+		extra += "|hex:%s" % [ordered]
 	return BattleFingerprint.of(st, detect, extra)
 
 # 즉시 적용 명령. 틱 사이에 상태는 변하지 않으므로 "다음 step() 첫머리에 적용"과 결과가 같고,
@@ -149,7 +158,15 @@ func issue(cmd: Dictionary) -> void:
 func _apply_human(c: Dictionary) -> void:
 	if str(c.kind) != "skill":
 		_mark_direct(c)
+		var first_event := _events.size()
 		apply(c)
+		if hex_combat and str(c.kind) in ["move", "retreat", "rally"]:
+			for i in range(first_event, _events.size()):
+				if _events[i].kind == "rejected":
+					return
+			for f in _cmd_fleets(c):
+				if f.has_move:
+					_hex_ordered_moves[f.id] = true
 		return
 	var n := _events.size()
 	apply(c)
@@ -470,13 +487,15 @@ func apply(c: Dictionary) -> void:
 	if s.is_empty():
 		_reject(null, "no_selection", side)
 		return
-	if morale:
+	if morale and not hex_combat:
 		# 강제 퇴각 중인 전대는 명령을 받지 않는다(§4.6)
 		s = s.filter(func(f): return not morale.forced(f))
 		if s.is_empty():
 			if not (kind.begins_with("ai_") or kind == "def_on" or kind == "delegate" or kind == "posture"):
 				_reject(null, "retreating", side)
 			return
+	if hex_combat and kind == "ai_move":
+		return
 	var L := _lead(s)
 	if morale and kind in ["stop", "move", "face", "attack", "charge"]:
 		for f in s:
@@ -522,7 +541,7 @@ func apply(c: Dictionary) -> void:
 			if done.is_empty():
 				_reject(L, why, side)
 				return
-			if done.size() > 1:
+			if done.size() > 1 and not hex_combat:
 				_bundle_layout(done, str(c.get("args", {}).get("id", "")))   # 전환을 받아들인 함대만 재배치한다
 			emit("say", L.id, -1, L.pos, "formation")
 		"def":
@@ -1003,8 +1022,13 @@ func _fleet_phase(timers: bool) -> void:
 			if f.flip_wait > 0:
 				f.flip_wait -= 1
 		var fl: FleetState = flags[f.side]
+		# In hex mode only an explicit relocation order authorizes translation.
+		if hex_combat and not _hex_ordered_moves.has(f.id) and f.has_move:
+			f.has_move = false
+			f.retreat_order = false
+			_clear_path(f)
 		f.in_cmd = fl == null or fl == f or f.pos.distance_to(fl.pos) < R.cmd_r
-		if morale and morale.forced(f):
+		if morale and morale.forced(f) and not hex_combat:
 			f.target_id = -1
 			f.has_move = true
 			f.move_to = morale.exit_point(f.side)
@@ -1031,7 +1055,7 @@ func _fleet_phase(timers: bool) -> void:
 			if f.has_move:
 				has_dest = true
 				dest = f.move_to
-		elif tgt:
+		elif tgt and not hex_combat:
 			var tp := known_pos(f, tgt)
 			if f.pos.distance_to(tp) > chase_r:
 				has_dest = true
@@ -1056,7 +1080,7 @@ func _fleet_phase(timers: bool) -> void:
 				dest = waypoint
 		if frozen:
 			has_dest = false
-		elif has_dest and cfoe != null and not f.strafe and f.move_grp == 0 and not _retreating(f):
+		elif has_dest and not hex_combat and cfoe != null and not f.strafe and f.move_grp == 0 and not _retreating(f):
 			# 접적 이동(PoC): 진형 방향은 그대로 두고 평행 이동한다. 적 쪽 ±contact_fast_deg 안으로 가면 전진 속도, 옆·뒤는 평행 속도
 			var dd := f.pos.distance_to(dest)
 			var cp := known_pos(f, cfoe)
@@ -1093,7 +1117,9 @@ func _fleet_phase(timers: bool) -> void:
 				f.pos += Vector2(cos(f.heading), sin(f.heading)) * stp
 		if f.pos != old_pos and terrain != null and not terrain.can_traverse(old_pos, f.pos):
 			f.pos = old_pos
-		var blk := _hold_blocker(f, old_pos) if (has_dest and salvo) else Vector2.INF
+		if hex_combat and not f.has_move:
+			_hex_ordered_moves.erase(f.id)
+		var blk := _hold_blocker(f, old_pos) if (has_dest and salvo and not hex_combat) else Vector2.INF
 		if blk != Vector2.INF:
 			f.pos = old_pos   # 걸음만 막는다. 목적지가 적 쪽일 때만 이동 명령을 접는다(돌아서는 중의 앞쪽 쏠림은 명령을 지키지 않는다)
 			if (dest - old_pos).dot(blk - old_pos) > 0.0:
@@ -1106,7 +1132,10 @@ func _fleet_phase(timers: bool) -> void:
 			_orient(f, f.face_to, float(salvo.C.movement.get("face_turn_deg_per_s", -1.0)) if salvo else -1.0)
 			if absf(BattleRules.ang_diff(f.heading, f.face_to)) < deg_to_rad(float(salvo.C.movement.face_tolerance_deg)):
 				f.face_set = false
-		var ft: FleetState = tgt if (tgt and f.pos.distance_to(known_pos(f, tgt)) <= f.range_r) else sight_foe(f, f.range_r)
+		var aim_reach := f.range_r
+		if hex_combat:
+			aim_reach = HexRules.WIDTH * 2.0 + HexRules.RADIUS * 2.0
+		var ft: FleetState = tgt if (tgt and f.pos.distance_to(known_pos(f, tgt)) <= aim_reach) else sight_foe(f, aim_reach)
 		f.fire_id = ft.id if ft else -1
 		if ft == null and cfoe != null and not has_dest and not f.face_set and f.flip_wait == 0:
 			var cp := known_pos(f, cfoe)

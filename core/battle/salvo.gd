@@ -324,7 +324,7 @@ func sector(att_pos: Vector2, tgt: FleetState) -> String:
 # 레이저 회피(Q72): 이동 중인 표적이 전열·요격 사격에 대해 얻는 방어 bp. 속도(진형 기동 포함)에 비례, 상한 있음. 정지 0
 func evasion_bp(tgt: FleetState, cat: String) -> int:
 	var ev: Dictionary = C.evasion
-	if not tgt.moving or not (ev.categories as Array).has(cat):
+	if sim.hex_combat or not tgt.moving or not (ev.categories as Array).has(cat):
 		return 0
 	return mini(int(ev.max_bp), int(tgt.speed * float(ev.bp_per_speed)))
 
@@ -409,7 +409,11 @@ func qualifying(f: FleetState, cat: String, tgt: FleetState, cap := -1.0) -> Arr
 	var out: Array = []
 	var aim := _aim(f, tgt)
 	var dist := f.pos.distance_to(aim)
-	if dist > (cap if cap >= 0.0 else _range_cap(f, cat)):
+	if sim.hex_combat:
+		if sim.HexRules.distance(f.pos, tgt.pos) > sim.HexRules.weapon_reach(cat):
+			return out
+		dist = 0.0 # Cell distance replaces the continuous range checks below.
+	elif dist > (cap if cap >= 0.0 else _range_cap(f, cat)):
 		return out   # 성능(C1): 어느 플랫폼 사거리에도 못 미친다. 아래 판정과 결과가 같다
 	var bearing := atan2(aim.y - f.pos.y, aim.x - f.pos.x)
 	var off := rad_to_deg(absf(BattleRules.ang_diff(f.heading, bearing)))
@@ -498,7 +502,7 @@ func _pick_target(f: FleetState, cat: String) -> Dictionary:
 			continue
 		if cap < 0.0:
 			cap = _range_cap(f, cat)
-		if d > cap:
+		if not sim.hex_combat and d > cap:
 			continue   # qualifying이 빈 배열이다
 		var q := qualifying(f, cat, o, cap)
 		if not q.is_empty():

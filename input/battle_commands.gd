@@ -5,7 +5,13 @@ extends RefCounted
 # 명령 사전: {kind, ids: [전대 ID], target_id, point}. 진영·틱은 호스트가 붙인다.
 # 검증과 자원 차감은 코어가 한다. 거부되면 사유 코드 사건이 돌아와 토스트가 된다.
 
+const HexRules := preload("res://core/battle/hex_battle_rules.gd")
+const HEX_RADIUS := HexRules.RADIUS
+const HEX_WIDTH := HexRules.WIDTH
+const HEX_ROW_HEIGHT := HexRules.ROW_HEIGHT
+
 var host: Node
+var hex_destinations := false
 
 func _init(h: Node) -> void:
 	host = h
@@ -78,7 +84,7 @@ func order_move(w: Vector2, strafe := false, facing_deg = null) -> void:
 	var s: Array = host.my_sel()
 	if s.is_empty():
 		return
-	w = _fit_to_field(w, s)
+	w = move_destination(w, s)
 	var args := {}
 	if strafe:
 		args.strafe = true
@@ -94,7 +100,7 @@ func order_move(w: Vector2, strafe := false, facing_deg = null) -> void:
 
 # 목적지를 전장 안으로 당긴다. 코어는 함대마다 따로 경계에 자르므로 그대로 두면 경계 밖 지점에서 대형이 한 줄로 뭉친다.
 # 대형 전체(중심 기준 간격)가 들어가게 중심만 옮겨 간격을 지킨다.
-func _fit_to_field(w: Vector2, s: Array) -> Vector2:
+func move_destination(w: Vector2, s: Array) -> Vector2:
 	var e: float = host.sim.R.edge
 	var cen := Vector2.ZERO
 	for f in s:
@@ -106,7 +112,31 @@ func _fit_to_field(w: Vector2, s: Array) -> Vector2:
 		lo = lo.min(f.pos - cen)
 		hi = hi.max(f.pos - cen)
 	var fld: Vector2 = host.field()
-	return Vector2(clampf(w.x, e - lo.x, fld.x - e - hi.x), clampf(w.y, e - lo.y, fld.y - e - hi.y))
+	var minimum := Vector2.ONE * e - lo
+	var maximum := fld - Vector2.ONE * e - hi
+	var fitted := w.clamp(minimum, maximum)
+	if hex_destinations:
+		return nearest_hex_center(w, minimum, maximum, fitted)
+	return fitted
+
+# Pointy-top hexes. On each legal row, only its nearest legal column can win.
+# A formation too wide for any center still uses the standard boundary fit.
+static func nearest_hex_center(w: Vector2, minimum: Vector2, maximum: Vector2, fallback: Vector2) -> Vector2:
+	var nearest := fallback
+	var best_distance := INF
+	for row in range(ceili(minimum.y / HEX_ROW_HEIGHT), floori(maximum.y / HEX_ROW_HEIGHT) + 1):
+		var offset := float(posmod(row, 2)) * 0.5
+		var first := ceili(minimum.x / HEX_WIDTH - offset)
+		var last := floori(maximum.x / HEX_WIDTH - offset)
+		if first > last:
+			continue
+		var column := clampi(roundi(w.x / HEX_WIDTH - offset), first, last)
+		var center := Vector2((column + offset) * HEX_WIDTH, row * HEX_ROW_HEIGHT)
+		var distance := w.distance_squared_to(center)
+		if distance < best_distance:
+			nearest = center
+			best_distance = distance
+	return nearest
 
 # 선택 전체가 제자리에서 월드 각도(rad) 방향으로 돌아선다
 func order_face(rad: float) -> void:

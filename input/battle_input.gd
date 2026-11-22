@@ -137,6 +137,15 @@ func _key(e: InputEventKey) -> void:
 		return
 	if host.G.state != "play":
 		return
+	if e.keycode == KEY_F8:
+		if host.sim.hex_combat:
+			host.toast("6각형 교전 규칙 적용 중")
+			get_viewport().set_input_as_handled()
+			return
+		cmds.hex_destinations = not cmds.hex_destinations
+		host.toast("6각형 목적지 켜짐" if cmds.hex_destinations else "6각형 목적지 꺼짐")
+		get_viewport().set_input_as_handled()
+		return
 	# 확대·축소 단축키(PoC §7.3): + 확대, - 축소, Home 처음 배율. 화면 가운데 기준
 	var mid: Vector2 = host.get_viewport().get_visible_rect().size * 0.5
 	if e.keycode == KEY_EQUAL or e.keycode == KEY_KP_ADD:

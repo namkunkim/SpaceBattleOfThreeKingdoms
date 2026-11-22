@@ -66,13 +66,26 @@ func _draw() -> void:
 			ticks.append(battle.w2s(pf.pos + Vector2(cos(a), sin(a)) * r0))
 			ticks.append(battle.w2s(pf.pos + Vector2(cos(a), sin(a)) * r1))
 		draw_multiline(ticks, Color(UiTheme.ALLY, 0.34), 1.0)
-	_detect_rings()
 	var sel: Array = battle.my_sel()
-	if sel.size() == 1:
-		_weapon_arcs(sel[0])
+	if battle.sim.hex_combat:
+		if sel.size() == 1:
+			_hex_ranges(sel[0])
+	else:
+		_detect_rings()
+		if sel.size() == 1:
+			_weapon_arcs(sel[0])
 	if battle.placing:   # 초기 배치 허용 구역: 선택 함대의 시작 위치 반경(Q70)
 		for f in sel:
 			draw_polyline(_ground_ring(f.spawn, f.place_r, 64), Color(UiTheme.GOLD_HI, 0.6), 1.6, true)
+	var hex_mode: bool = battle.cmds.hex_destinations and battle.G.state == "play"
+	if hex_mode:
+		if not sel.is_empty():
+			var cursor: Vector2 = battle.s2w(get_global_mouse_position())
+			var center: Vector2 = battle.cmds.move_destination(cursor, sel)
+			draw_polyline(_destination_hex(center), Color(UiTheme.ALLY, 0.8), 2.0, true)
+		for f in battle.alive(0):
+			if f.has_move and not f.target and not sel.has(f):
+				_orders(f)
 	for f in sel:
 		_orders(f)
 		_brackets(f, UiTheme.GOLD_HI)
@@ -81,7 +94,10 @@ func _draw() -> void:
 	if not battle.marker.is_empty():
 		var k: float = battle.marker.t / 1.2
 		var col := Color(UiTheme.FOE, k) if battle.marker.foe else Color(UiTheme.GOLD_HI, k)
-		draw_polyline(_ground_ring(battle.marker.pos, 22.0 + (1.0 - k) * 26.0, 40), col, 2.0, true)
+		if hex_mode and not battle.marker.foe:
+			draw_polyline(_destination_hex(battle.marker.pos), col, 2.5, true)
+		else:
+			draw_polyline(_ground_ring(battle.marker.pos, 22.0 + (1.0 - k) * 26.0, 40), col, 2.0, true)
 		UiDraw.diamond(self, battle.w2s(battle.marker.pos), 5.0, col)
 	var compact: bool = battle.cam_z < 0.55
 	# 일반 명패는 도형 → 글자 → 아이콘 순으로 모아 그린다. 도형은 삼각형 묶음 하나로 보낸다.
@@ -269,6 +285,35 @@ func _weapon_arcs(f) -> void:
 		_ring_label(lp, "%s %d" % [st[0], int(r)], st[1])
 		i += 1
 
+const HEX_NEIGHBORS := [Vector2i(0, 1), Vector2i(-1, 1), Vector2i(-1, 0),
+	Vector2i(0, -1), Vector2i(1, -1), Vector2i(1, 0)]
+
+func _hex_ranges(f) -> void:
+	var scan := 4 if battle.sim.detect and battle.sim.detect.scout(f) else 3
+	_hex_range(f.pos, scan, Color(UiTheme.ALLY, 0.55), "탐색 %d칸" % scan)
+	_hex_range(f.pos, 2, Color(UiTheme.GOLD_HI, 0.7), "미사일 2칸")
+	_hex_range(f.pos, 1, Color(UiTheme.GOLD_HI, 0.85), "레이저·전투기 1칸")
+
+func _hex_range(pos: Vector2, reach: int, color: Color, caption: String) -> void:
+	var origin := BattleCommands.HexRules.cell(pos)
+	var lines := PackedVector2Array()
+	for q in range(-reach, reach + 1):
+		for r in range(-reach, reach + 1):
+			var offset := Vector2i(q, r)
+			if BattleCommands.HexRules.cell_distance(Vector2i.ZERO, offset) != reach:
+				continue
+			var outline := _destination_hex(BattleCommands.HexRules.center(origin + offset))
+			for i in 6:
+				if BattleCommands.HexRules.cell_distance(Vector2i.ZERO, offset + HEX_NEIGHBORS[i]) > reach:
+					lines.append(outline[i])
+					lines.append(outline[i + 1])
+	draw_multiline(lines, color, 1.5, true)
+	var label_pos := BattleCommands.HexRules.center(origin + Vector2i(reach, 0))
+	_ring_label(battle.w2s(label_pos + Vector2(BattleCommands.HEX_WIDTH * 0.5, 0)), caption, color)
+
+func _destination_hex(center: Vector2) -> PackedVector2Array:
+	return _ground_ring(center, BattleCommands.HEX_RADIUS, 6, PI / 6.0, TAU + PI / 6.0)
+
 func _orders(f) -> void:
 	var a: Vector2 = battle.w2s(f.pos)
 	if f.target and not f.target.dead:
@@ -284,6 +329,11 @@ func _orders(f) -> void:
 		var r: Vector2 = battle.w2s(f.move_to + dir * 22.0 - dir.orthogonal() * 14.0)
 		draw_colored_polygon(PackedVector2Array([tip, l, r]), Color(UiTheme.GOLD_HI, 0.85))
 		UiDraw.diamond(self, b, 5.0, Color(UiTheme.GOLD_HI, 0.9), false)
+		if battle.cmds.hex_destinations:
+			var destination: Vector2 = f.move_to
+			var center := BattleCommands.nearest_hex_center(destination, Vector2.ZERO, battle.field(), destination)
+			if destination.distance_squared_to(center) < 0.01:
+				draw_polyline(_destination_hex(center), Color(UiTheme.GOLD_HI, 0.9), 2.0, true)
 		_dest_rings(f, Vector2.from_angle(f.face_to) if f.face_set else dir)
 		var spd: float = 62.0 * f.spd * (0.5 if f.defense else 1.0)
 		var eta := int(f.pos.distance_to(f.move_to) / maxf(1.0, spd))

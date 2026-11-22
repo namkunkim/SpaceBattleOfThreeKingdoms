@@ -21,6 +21,14 @@ func _circle(c: Vector2, r: float, n := 48) -> PackedVector2Array:
 		pts.append(b.w2s(c + Vector2(cos(a), sin(a)) * r))
 	return pts
 
+func _hex_outline(center: Vector2) -> PackedVector2Array:
+	var points := PackedVector2Array()
+	for corner in 6:
+		var angle := PI / 6.0 + TAU * corner / 6.0
+		points.append(b.w2s(center + Vector2.from_angle(angle) * BattleCommands.HEX_RADIUS))
+	points.append(points[0])
+	return points
+
 func label_rect(f) -> Rect2:
 	var s: Vector2 = b.w2s(f.pos)
 	if b.cam_z < 0.55:
@@ -42,9 +50,19 @@ func _draw() -> void:
 		var pts := _circle(pf.pos, CMD_R, 64)
 		draw_colored_polygon(pts, Color(0.37, 0.88, 0.81, 0.06))
 		draw_polyline(pts, Color(0.37, 0.88, 0.81, 0.35), 2.0)
-	# 명령선
-	for f in b.selected:
-		if f.target:
+	# 실험 중에는 선택을 바꿔도 각 함대의 이동선을 비교할 수 있다.
+	var hex_mode: bool = b.cmds.hex_destinations and b.G.state == "play"
+	if hex_mode:
+		var selection: Array = b.my_sel()
+		if not selection.is_empty():
+			var cursor: Vector2 = b.s2w(get_global_mouse_position())
+			var center: Vector2 = b.cmds.move_destination(cursor, selection)
+			draw_polyline(_hex_outline(center), Color(0.37, 0.88, 0.81, 0.65), 1.5, true)
+	var tracked: Array = b.alive(0) if hex_mode else b.selected
+	for f in tracked:
+		if not b.selected.has(f) and not f.has_move:
+			continue
+		if f.target and b.selected.has(f):
 			draw_dashed_line(b.w2s(f.pos), b.w2s(f.target.pos), Color(1.0, 0.46, 0.31, 0.5), 1.5, 8.0)
 		elif f.has_move:
 			draw_dashed_line(b.w2s(f.pos), b.w2s(f.move_to), Color(0.37, 0.88, 0.81, 0.4), 1.5, 8.0)
@@ -59,7 +77,10 @@ func _draw() -> void:
 	if not b.marker.is_empty():
 		var k: float = b.marker.t / 1.2
 		var col := Color(1.0, 0.46, 0.31, k) if b.marker.foe else Color(0.37, 0.88, 0.81, k)
-		draw_polyline(_circle(b.marker.pos, 26.0 + (1.0 - k) * 14.0, 32), col, 3.0)
+		if hex_mode and not b.marker.foe:
+			draw_polyline(_hex_outline(b.marker.pos), col, 3.0, true)
+		else:
+			draw_polyline(_circle(b.marker.pos, 26.0 + (1.0 - k) * 14.0, 32), col, 3.0)
 	# 함대 라벨
 	for f in b.fleets:
 		if not f.dead and b.G.state != "brief":

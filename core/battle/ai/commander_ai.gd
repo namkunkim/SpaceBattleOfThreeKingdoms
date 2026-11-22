@@ -124,6 +124,9 @@ func _think_fleet(sim: BattleSim, f: FleetState, side: int, foes: Array[Dictiona
 			_hold(sim, f)
 			return
 	var best := _pick(sim, f, tg, lvl)
+	if sim.hex_combat:
+		_do(sim, f, "ai_target", best.id)
+		return
 	var weak: bool = best.band <= int(A.reaction.foe_weak_band)
 	var a := _bias(sim, f, P, view, weak)
 	_retreat(sim, f, P)

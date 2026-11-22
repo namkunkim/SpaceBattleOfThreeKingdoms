@@ -121,6 +121,8 @@ func view_range(f: FleetState) -> float:
 	return float(D.radar_r) if scout(f) else float(D.view_r)
 
 func in_view(o: FleetState, t: FleetState) -> bool:
+	if sim.hex_combat:
+		return sim.HexRules.distance(o.pos, t.pos) <= (4 if scout(o) else 3)
 	var r := view_range(o)
 	var ext := 0.0
 	for p in o.form:
@@ -165,10 +167,11 @@ func _eval(side: int) -> void:
 			continue
 		var best := 0
 		for i in obs.size():
-			best = maxi(best, level_of(score(sens[i], obs[i], t)))
+			if not sim.hex_combat:
+				best = maxi(best, level_of(score(sens[i], obs[i], t)))
 			if best < 2 and in_view(obs[i], t):
 				best = 2
-		if sim.skills and sim.skills.reveals(side, t):
+		if not sim.hex_combat and sim.skills and sim.skills.reveals(side, t):
 			best = level_of(int(D.confirmed))   # 특기 귀모·간파: 반경 안 적은 확인 상태(P8a)
 		var r: Dictionary = book.get(t.id, {})
 		if best > 0:
