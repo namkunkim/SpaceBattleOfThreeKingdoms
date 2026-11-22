@@ -82,7 +82,8 @@ func _draw() -> void:
 		if not sel.is_empty():
 			var cursor: Vector2 = battle.s2w(get_global_mouse_position())
 			var center: Vector2 = battle.cmds.move_destination(cursor, sel)
-			draw_polyline(_destination_hex(center), Color(UiTheme.ALLY, 0.8), 2.0, true)
+			if center != Vector2.INF:
+				draw_polyline(_destination_hex(center), Color(UiTheme.ALLY, 0.8), 2.0, true)
 		for f in battle.alive(0):
 			if f.has_move and not f.target and not sel.has(f):
 				_orders(f)
@@ -289,7 +290,8 @@ const HEX_NEIGHBORS := [Vector2i(0, 1), Vector2i(-1, 1), Vector2i(-1, 0),
 	Vector2i(0, -1), Vector2i(1, -1), Vector2i(1, 0)]
 
 func _hex_ranges(f) -> void:
-	var scan := 4 if battle.sim.detect and battle.sim.detect.scout(f) else 3
+	var fleet: FleetState = battle.sim.st.by_id(f.id)
+	var scan := 4 if fleet and battle.sim.detect and battle.sim.detect.scout(fleet) else 3
 	_hex_range(f.pos, scan, Color(UiTheme.ALLY, 0.55), "탐색 %d칸" % scan)
 	_hex_range(f.pos, 2, Color(UiTheme.GOLD_HI, 0.7), "미사일 2칸")
 	_hex_range(f.pos, 1, Color(UiTheme.GOLD_HI, 0.85), "레이저·전투기 1칸")

@@ -24,6 +24,7 @@ func _run() -> void:
 	seed(77)
 	battle._restart()
 	if not TestCheck.ok(self, battle.G.state == "play", "start -> play"): return
+	if not TestCheck.ok(self, battle.sim.hex_combat and battle.cmds.hex_destinations, "fleet battle uses hex mode by default"): return
 	# --- 선택 ---
 	if not TestCheck.ok(self, battle.my_sel().size() == 1 and battle.my_sel()[0].is_flag, "initial selection = flagship"): return
 	battle.do_cmd("all")
@@ -101,6 +102,7 @@ func _run() -> void:
 	if battle.profile_def != "":
 		ScenarioProfile.enlarge_field(rprof, battle.FIELD_SIZE)   # 호스트와 같은 전장
 		ScenarioProfile.tune_for_play(rprof, battle.move_mul, battle.turn_mul)   # 호스트와 같은 이동 배율
+	rprof["hex_combat"] = battle.sim.hex_combat
 	var rp := BattleSim.replay(battle.battle_seed, 10, log, battle.sim.st.tick, rprof)
 	var replay_matches: bool = rp.fingerprint() == battle.sim.fingerprint()
 	preload("res://scripts/legacy_battle_lifetime.gd").release(rp)

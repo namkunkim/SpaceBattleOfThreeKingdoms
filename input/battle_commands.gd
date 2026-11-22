@@ -84,7 +84,14 @@ func order_move(w: Vector2, strafe := false, facing_deg = null) -> void:
 	var s: Array = host.my_sel()
 	if s.is_empty():
 		return
+	var requested := w
 	w = move_destination(w, s)
+	if host.sim.hex_combat:
+		var resolved: Variant = null if w == Vector2.INF else w
+		host.trace.write(host, "hex_destination", {"ids": _ids(s), "requested": requested, "resolved": resolved})
+	if w == Vector2.INF:
+		host.toast("도달 가능한 이동 칸이 없습니다")
+		return
 	var args := {}
 	if strafe:
 		args.strafe = true
@@ -102,22 +109,57 @@ func order_move(w: Vector2, strafe := false, facing_deg = null) -> void:
 # 대형 전체(중심 기준 간격)가 들어가게 중심만 옮겨 간격을 지킨다.
 func move_destination(w: Vector2, s: Array) -> Vector2:
 	var e: float = host.sim.R.edge
+	var terrain: BattleTerrain = host.sim.terrain if host.sim.hex_combat and not host.placing else null
+	var positions: Array[Vector2] = []
 	var cen := Vector2.ZERO
 	for f in s:
-		cen += f.pos
-	cen /= s.size()
+		var p: Vector2 = host.sim.st.by_id(f.id).pos if terrain else f.pos
+		positions.append(p)
+		cen += p
+	cen /= positions.size()
 	var lo := Vector2(INF, INF)
 	var hi := Vector2(-INF, -INF)
-	for f in s:
-		lo = lo.min(f.pos - cen)
-		hi = hi.max(f.pos - cen)
+	for p in positions:
+		lo = lo.min(p - cen)
+		hi = hi.max(p - cen)
 	var fld: Vector2 = host.field()
 	var minimum := Vector2.ONE * e - lo
 	var maximum := fld - Vector2.ONE * e - hi
 	var fitted := w.clamp(minimum, maximum)
 	if hex_destinations:
+		if terrain:
+			return _reachable_hex_center(w, minimum, maximum, terrain, positions, cen)
 		return nearest_hex_center(w, minimum, maximum, fitted)
 	return fitted
+
+static func _reachable_hex_center(w: Vector2, minimum: Vector2, maximum: Vector2, terrain: BattleTerrain, positions: Array[Vector2], formation_center: Vector2) -> Vector2:
+	var nearest := nearest_hex_center(w, minimum, maximum, Vector2.INF)
+	if nearest == Vector2.INF or _can_reach_formation(nearest, terrain, positions, formation_center):
+		return nearest
+	var candidates: Array[Vector2] = []
+	for row in range(ceili(minimum.y / HEX_ROW_HEIGHT), floori(maximum.y / HEX_ROW_HEIGHT) + 1):
+		var offset := float(posmod(row, 2)) * 0.5
+		var first := ceili(minimum.x / HEX_WIDTH - offset)
+		var last := floori(maximum.x / HEX_WIDTH - offset)
+		for column in range(first, last + 1):
+			candidates.append(Vector2((column + offset) * HEX_WIDTH, row * HEX_ROW_HEIGHT))
+	candidates.sort_custom(func(a: Vector2, b: Vector2) -> bool:
+		var da := w.distance_squared_to(a)
+		var db := w.distance_squared_to(b)
+		if da != db:
+			return da < db
+		return a.y < b.y if a.y != b.y else a.x < b.x)
+	for point in candidates:
+		if point != nearest and _can_reach_formation(point, terrain, positions, formation_center):
+			return point
+	return Vector2.INF
+
+static func _can_reach_formation(point: Vector2, terrain: BattleTerrain, positions: Array[Vector2], formation_center: Vector2) -> bool:
+	for start in positions:
+		var dest := BattleRules.quant_v(point + (start - formation_center))
+		if not terrain.can_traverse(dest, dest) or terrain.next_waypoint(start, dest) == Vector2.INF:
+			return false
+	return true
 
 # Pointy-top hexes. On each legal row, only its nearest legal column can win.
 # A formation too wide for any center still uses the standard boundary fit.

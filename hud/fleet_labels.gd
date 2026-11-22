@@ -57,7 +57,8 @@ func _draw() -> void:
 		if not selection.is_empty():
 			var cursor: Vector2 = b.s2w(get_global_mouse_position())
 			var center: Vector2 = b.cmds.move_destination(cursor, selection)
-			draw_polyline(_hex_outline(center), Color(0.37, 0.88, 0.81, 0.65), 1.5, true)
+			if center != Vector2.INF:
+				draw_polyline(_hex_outline(center), Color(0.37, 0.88, 0.81, 0.65), 1.5, true)
 	var tracked: Array = b.alive(0) if hex_mode else b.selected
 	for f in tracked:
 		if not b.selected.has(f) and not f.has_move:

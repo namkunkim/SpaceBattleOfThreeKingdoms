@@ -366,7 +366,7 @@ func _prepare_game(candidate_org: Dictionary) -> Dictionary:
 					break
 		if not invalid_path.is_empty():
 			return {"ok": false, "error": "invalid_candidate_profile", "path": invalid_path}
-	if OS.get_cmdline_user_args().has(HEX_COMBAT_ARG) and not profile.get("combat", {}).is_empty():
+	if not profile.get("combat", {}).is_empty():
 		profile["hex_combat"] = true
 	var candidate_sim := BattleSim.new(candidate_seed, BattleRules.TICK_HZ, profile)
 	# 플레이어 유비군은 처음부터 직접 지휘한다. 손권군·적군은 기존 위임 AI를 쓴다.

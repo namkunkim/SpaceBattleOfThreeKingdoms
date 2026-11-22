@@ -87,6 +87,8 @@ func sample(host: Node) -> void:
 			"army_morale_bp": [host.sim.morale.army_bp(0), host.sim.morale.army_bp(1)] if host.sim.morale else []})
 
 func event(host: Node, e: Dictionary) -> void:
+	if e.kind == "hex_move":
+		write(host, "hex_move", {"fleet_id": e.sq, "pos": e.pos, "movement": e.value})
 	if e.kind in ["rejected", "battle_end", "morale_crisis", "retreat", "surrender", "fleet_sunk", "charge", "ai_charge_decision"]:
 		write(host, "core_event", {"event": e, "fleets": fleets(host.sim)})
 	if e.kind == "battle_end":

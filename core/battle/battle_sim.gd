@@ -11,6 +11,7 @@ extends RefCounted
 const HexRules := preload("res://core/battle/hex_battle_rules.gd")
 var hex_combat := false
 var _hex_ordered_moves := {}
+var _hex_move_status := {}
 
 var profile_id := ""
 var rs: RuleSet
@@ -167,6 +168,8 @@ func _apply_human(c: Dictionary) -> void:
 			for f in _cmd_fleets(c):
 				if f.has_move:
 					_hex_ordered_moves[f.id] = true
+					_hex_move_status.erase(f.id)
+					_trace_hex_move(f, "ordered", f.move_to, f.pos, c.get("point", null))
 		return
 	var n := _events.size()
 	apply(c)
@@ -1007,6 +1010,13 @@ func _substep(first: bool) -> void:
 		else:
 			_end(true, "annihilation")
 
+func _trace_hex_move(f: FleetState, status: String, waypoint: Vector2, attempted: Vector2, requested: Variant = null) -> void:
+	if _hex_move_status.get(f.id) == status:
+		return
+	_hex_move_status[f.id] = status
+	emit("hex_move", f.id, -1, f.pos, {"status": status, "destination": f.move_to,
+		"waypoint": waypoint, "attempted": attempted, "requested": requested})
+
 func _fleet_phase(timers: bool) -> void:
 	var flags := [st.flag(0), st.flag(1)]
 	for f in st.fleets:
@@ -1045,8 +1055,11 @@ func _fleet_phase(timers: bool) -> void:
 			chase_r = float(salvo.C.bands.assault_r)   # 돌격은 강습 거리까지 붙는다
 		# AI의 거리 유지/후퇴 이동은 사격 표적과 함께 존재한다. 이동 목적지를 추격으로 덮지 않는다.
 		if f.has_move:
-			if f.pos.distance_to(f.move_to) < R.arrive_r:
+			var arrival_radius: float = 0.01 if hex_combat else R.arrive_r
+			if f.pos.distance_to(f.move_to) < arrival_radius:
 				if f.route.is_empty():
+					if hex_combat and _hex_ordered_moves.has(f.id):
+						_trace_hex_move(f, "arrived", f.move_to, f.pos)
 					f.has_move = false
 					f.strafe = false
 					f.speed_cap = 0.0
@@ -1074,12 +1087,20 @@ func _fleet_phase(timers: bool) -> void:
 				spd *= 1.0 + cmd.penalty(f, "move_pct")   # 승계 혼선·지휘 한도 초과(§4.14)
 			if skills:
 				spd *= skills.mulf(f, "speed_mul_bp")   # 특기 질주·신속(P8a)
+		var route_missing := false
 		if has_dest and terrain != null:
 			var waypoint := terrain.next_waypoint(f.pos, dest)
 			if waypoint != Vector2.INF:
 				dest = waypoint
-		if frozen:
+			else:
+				route_missing = true
+		if frozen or (hex_combat and route_missing):
 			has_dest = false
+		elif has_dest and hex_combat and not f.strafe:
+			# Follow the traversable segment while the formation turns visually.
+			_orient(f, (dest - f.pos).angle())
+			if f.flip_wait == 0:
+				f.pos = f.pos.move_toward(dest, spd * dt)
 		elif has_dest and not hex_combat and cfoe != null and not f.strafe and f.move_grp == 0 and not _retreating(f):
 			# 접적 이동(PoC): 진형 방향은 그대로 두고 평행 이동한다. 적 쪽 ±contact_fast_deg 안으로 가면 전진 속도, 옆·뒤는 평행 속도
 			var dd := f.pos.distance_to(dest)
@@ -1115,10 +1136,20 @@ func _fleet_phase(timers: bool) -> void:
 				var k: float = maxf(R.min_turn_cos, cos(BattleRules.ang_diff(f.heading, a)))
 				var stp := minf(spd * dt * k, dd)
 				f.pos += Vector2(cos(f.heading), sin(f.heading)) * stp
-		if f.pos != old_pos and terrain != null and not terrain.can_traverse(old_pos, f.pos):
+		var attempted := f.pos
+		var blocked := f.pos != old_pos and terrain != null and not terrain.can_traverse(old_pos, f.pos)
+		if blocked:
 			f.pos = old_pos
-		if hex_combat and not f.has_move:
-			_hex_ordered_moves.erase(f.id)
+		if hex_combat and _hex_ordered_moves.has(f.id):
+			if not f.has_move:
+				_hex_ordered_moves.erase(f.id)
+				_hex_move_status.erase(f.id)
+			elif route_missing:
+				_trace_hex_move(f, "route_unavailable", dest, attempted)
+			elif blocked:
+				_trace_hex_move(f, "terrain_blocked", dest, attempted)
+			elif f.pos != old_pos:
+				_trace_hex_move(f, "advancing", dest, attempted)
 		var blk := _hold_blocker(f, old_pos) if (has_dest and salvo and not hex_combat) else Vector2.INF
 		if blk != Vector2.INF:
 			f.pos = old_pos   # 걸음만 막는다. 목적지가 적 쪽일 때만 이동 명령을 접는다(돌아서는 중의 앞쪽 쏠림은 명령을 지키지 않는다)
