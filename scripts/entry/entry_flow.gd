@@ -28,6 +28,23 @@ func begin(source: String) -> bool:
 func act(action: String, token: int, region := REGION) -> bool:
 	if token != revision:
 		return false
+	if action == "back":
+		match state:
+			State.STORY:
+				if page > 0:
+					page -= 1
+				else:
+					state = State.SELECT
+			State.CONFIRM:
+				state = State.MAP
+				notified = false
+			State.MAP, State.READY, State.ERROR:
+				state = State.SELECT
+				page = 0
+				notified = false
+			_: return false
+		revision += 1
+		return true
 	match state:
 		State.SELECT:
 			if action != "start" or region != REGION: return false

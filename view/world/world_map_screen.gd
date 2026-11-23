@@ -54,7 +54,6 @@ var _diff_btns := {}
 var _mode_btns := {}
 var _diff_note: Label
 var _mode_note: Label
-var _product_sortie: Button
 var _sortie_t := 0.0
 var _sortie_i := 0
 var _sortie_origin := {}
@@ -96,12 +95,11 @@ const OrimSlot := preload("res://scripts/orim_signal/public_slot.gd")
 var _orim_host: OrimHost
 var _orim_menu: MenuButton
 var _orim_parents: Array[String] = []
-var _atlas_resume_button: Button
-var _atlas_skirmish_button: Button
 var _difficulty := "표준"
 var _mode := "direct"
 var _res_labels := {}
 var _was_flying := false
+var _development := OS.get_cmdline_user_args().has(BattleBrief.FIRST_OPERATION_DEV_ARG)
 
 func _ready() -> void:
 	theme = UiTheme.build()
@@ -149,9 +147,18 @@ func _ready() -> void:
 	_atlas.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_atlas.offset_bottom = -M - 108
 	_atlas.hide()
-	_build_header()
-	_build_legend()
-	_build_card()
+	if _development:
+		_build_header()
+		_build_legend()
+		_build_card()
+	else:
+		canvas.hide()
+		_header = Control.new()
+		_legend = Control.new()
+		_card = PanelContainer.new()
+		for control in [_header, _legend, _card]:
+			hud.add_child(control)
+			control.hide()
 	_build_result()
 	_build_cta()
 	_title_button = _btn("타이틀로", false, 144)
@@ -163,8 +170,6 @@ func _ready() -> void:
 	_title_button.offset_bottom = -M
 	_title_button.hide()
 	_title_button.pressed.connect(_return_to_title)
-	_build_atlas_resume()
-	_build_atlas_skirmish()
 	_build_chip()
 	_build_caption()
 	_build_resolve()
@@ -303,9 +308,8 @@ func _draw_legend(c: Control) -> void:
 func _build_card() -> void:
 	_card = _panel()
 	_anchor_right(_card)
-	var development := OS.get_cmdline_user_args().has(BattleBrief.FIRST_OPERATION_DEV_ARG)
 	var v := VBoxContainer.new()
-	v.add_theme_constant_override("separation", 10 if development else 8)
+	v.add_theme_constant_override("separation", 10)
 	_card.add_child(v)
 	v.add_child(UiTheme.label("시나리오 · 건안 13년 겨울", "Eyebrow", 13))
 	v.add_child(UiTheme.label("적벽", "Display", 52))
@@ -313,7 +317,7 @@ func _build_card() -> void:
 	var go := _btn("출  격", true)
 	go.custom_minimum_size.y = 66
 	go.pressed.connect(func(): sortie())
-	if development:
+	if _development:
 		var routes := HBoxContainer.new()
 		v.add_child(routes)
 		go.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -390,18 +394,6 @@ func _build_card() -> void:
 	var sp := Control.new()
 	sp.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	v.add_child(sp)
-	if not development:
-		var actions := HBoxContainer.new()
-		actions.add_theme_constant_override("separation", 10)
-		v.add_child(actions)
-		go.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		actions.add_child(go)
-		_product_sortie = _btn("첫 작전 · 정면", true)
-		_product_sortie.name = "FirstOperationProduct"
-		_product_sortie.custom_minimum_size.y = go.custom_minimum_size.y
-		_product_sortie.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		_product_sortie.pressed.connect(_sortie_first_operation)
-		actions.add_child(_product_sortie)
 	_set_difficulty(_difficulty)
 	_set_mode(_mode)
 	_card.visible = false
@@ -457,12 +449,24 @@ func _build_result() -> void:
 	var again := _btn("다시 하기", true)
 	again.name = "ResultRetry"
 	again.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	again.pressed.connect(func(): sortie())
+	again.pressed.connect(_retry_from_result)
 	row.add_child(again)
 	var replay := _watch_replay_action(false)
 	replay.text = "리플레이 보기"
 	replay.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(replay)
+	var title := _btn("타이틀로")
+	title.name = "ResultTitle"
+	title.focus_mode = Control.FOCUS_ALL
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	title.pressed.connect(_return_to_title)
+	row.add_child(title)
+	var back_button := _btn("뒤로 가기")
+	back_button.name = "ResultBack"
+	back_button.focus_mode = Control.FOCUS_ALL
+	back_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	back_button.pressed.connect(back)
+	row.add_child(back_button)
 	var quit_button := _btn("종료")
 	quit_button.name = "ResultQuit"
 	quit_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -497,45 +501,6 @@ func _build_cta() -> void:
 	h.add_child(b)
 	_cta.visible = false
 
-func _build_atlas_skirmish() -> void:
-	_atlas_skirmish_button = _btn("적벽 모의전", false, 180)
-	_atlas_skirmish_button.name = "OpenRedCliffsSkirmish"
-	_atlas_skirmish_button.focus_mode = Control.FOCUS_ALL
-	hud.add_child(_atlas_skirmish_button)
-	_atlas_skirmish_button.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	_atlas_skirmish_button.offset_left = M
-	_atlas_skirmish_button.offset_right = M + _atlas_skirmish_button.custom_minimum_size.x
-	_atlas_skirmish_button.offset_top = -M - BTN_H
-	_atlas_skirmish_button.offset_bottom = -M
-	_atlas_skirmish_button.hide()
-	_atlas_skirmish_button.pressed.connect(_open_atlas_skirmish)
-
-
-func _open_atlas_skirmish() -> void:
-	if (not _atlas_skirmish_button.is_visible_in_tree() or not _cta.visible
-			or not _sortie_available() or _replay_dialog != null or _replay_overlay != null):
-		return
-	open_card()
-
-
-func _build_atlas_resume() -> void:
-	if not OperationHost.product_save_supported() \
-			or OS.get_cmdline_user_args().has(BattleBrief.FIRST_OPERATION_DEV_ARG):
-		return
-	var path := OperationHost.PRODUCT_SLOT_PATH
-	if not FileAccess.file_exists(path) and not FileAccess.file_exists(path + ".previous"):
-		return
-	_atlas_resume_button = _resume_action(false)
-	_atlas_resume_button.focus_mode = Control.FOCUS_ALL
-	hud.add_child(_atlas_resume_button)
-	_atlas_resume_button.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	_atlas_resume_button.offset_right = _title_button.offset_left - 12.0
-	_atlas_resume_button.offset_left = _atlas_resume_button.offset_right - 176.0
-	_atlas_resume_button.offset_top = _title_button.offset_top
-	_atlas_resume_button.offset_bottom = _title_button.offset_bottom
-	_atlas_resume_button.hide()
-
-
 func _open_atlas_red_cliffs() -> void:
 	if state != "browse" or not _sortie_available():
 		return
@@ -544,8 +509,16 @@ func _open_atlas_red_cliffs() -> void:
 		_show_chip("적벽 상세를 열지 못했습니다. 다시 눌러 주세요.")
 
 
+func _retry_from_result() -> void:
+	if state != "result" or not _sortie_available() or _replay_dialog != null or _replay_overlay != null or _cross_counter_host != null:
+		return
+	var link := _link()
+	if link == null or link.open_entry_detail() != OK:
+		_show_chip("적벽 상세를 열지 못했습니다. 다시 눌러 주세요.")
+
+
 func _return_to_title() -> void:
-	if not _title_button.visible or not _sortie_available():
+	if not _sortie_available() or _replay_dialog != null or _replay_overlay != null or _cross_counter_host != null:
 		return
 	if get_tree().change_scene_to_file("res://scenes/campaign/OpenJumpMenu.tscn") != OK:
 		_show_chip("타이틀로 돌아가지 못했습니다. 다시 눌러 주세요.")
@@ -651,7 +624,7 @@ func _enter_browse() -> void:
 	_caption.visible = false
 	_skip.visible = false
 	_resolve.visible = false
-	_legend.visible = true
+	_legend.visible = _development
 	_update_card()
 
 func _update_card() -> void:
@@ -659,8 +632,8 @@ func _update_card() -> void:
 		return   # 비행이 끝나면 _process가 다시 부른다
 	var l := canvas.level()
 	var show := state == "browse" and l != "z0" and l != ""
-	_card.visible = show and not _result.visible
-	_cta.visible = state == "browse" and l == "z0" and not _result.visible
+	_card.visible = _development and show and not _result.visible
+	_cta.visible = state == "browse" and (not _development or l == "z0") and not _result.visible
 	_update_inset()
 
 func _update_inset() -> void:
@@ -684,13 +657,18 @@ func _go_level(l: String) -> void:
 func open_card() -> void:
 	if state != "browse":
 		return
-	_card.visible = true
-	_cta.visible = false
-	canvas.arrows = ""
-	_update_inset()
-	canvas.fly_to("z2", 1.3)
+	if _development:
+		_card.show()
+		_cta.hide()
+		canvas.arrows = ""
+		_update_inset()
+		canvas.fly_to("z2", 1.3)
+		return
+	_open_atlas_red_cliffs()
 
 func _on_level(l: String) -> void:
+	if not _development:
+		return
 	_title.text = LEVEL_TITLE.get(l, "")
 	_sub.text = LEVEL_SUB.get(l, "")
 	if state == "browse":
@@ -733,30 +711,16 @@ func _set_difficulty(d: String) -> void:
 	_difficulty = d
 	for k in _diff_btns:
 		(_diff_btns[k] as Button).set_pressed_no_signal(k == d)
-	_diff_note.text = BattleBrief.difficulty_note(d)
-	_update_product_sortie()
+	if _diff_note != null:
+		_diff_note.text = BattleBrief.difficulty_note(d)
 
 func _set_mode(m: String) -> void:
 	_mode = m
 	for k in _mode_btns:
 		(_mode_btns[k] as Button).set_pressed_no_signal(k == m)
-	_mode_note.text = "전장에서 직접 지휘한다. 지금 전장은 시연 편성으로 진행된다." if m == "direct" \
-		else "지휘관 AI가 적벽 편성으로 끝까지 싸우고 결과만 보여 준다. 수십 초 걸릴 수 있다."
-	_update_product_sortie()
-
-func _update_product_sortie() -> void:
-	if _product_sortie != null:
-		_product_sortie.disabled = not _product_sortie_allowed()
-
-func _product_sortie_allowed() -> bool:
-	return _mode == BattleBrief.Product.REQUEST.mode and _difficulty == "표준"
-
-func _sortie_first_operation() -> void:
-	if state != "browse" or not _card.visible or not _product_sortie_allowed() or not _sortie_available():
-		return
-	var candidate := make_brief(BattleBrief.Product.REQUEST.seed)
-	candidate.select_first_operation_product()
-	_begin_sortie(candidate)
+	if _mode_note != null:
+		_mode_note.text = "전장에서 직접 지휘한다. 지금 전장은 시연 편성으로 진행된다." if m == "direct" \
+			else "지휘관 AI가 적벽 편성으로 끝까지 싸우고 결과만 보여 준다. 수십 초 걸릴 수 있다."
 
 func make_brief(seed := -1) -> BattleBrief:
 	var b := BattleBrief.new()
@@ -769,30 +733,20 @@ func make_brief(seed := -1) -> BattleBrief:
 
 # 출격: 연출(건너뛰기 가능) 뒤 전장 또는 자동 해결
 func _add_restore_actions(container: Container) -> void:
-	var development := OS.get_cmdline_user_args().has(BattleBrief.FIRST_OPERATION_DEV_ARG)
-	if not development and not OS.has_feature("windows"):
-		return
 	var row := HBoxContainer.new()
 	container.add_child(row)
-	if development or OperationHost.product_save_supported():
-		row.add_child(_resume_action(development))
-	if development:
-		var imported := _btn("Import battle\u2026")
-		imported.name = "ImportBattle"
-		imported.pressed.connect(_select_import_file)
-		row.add_child(imported)
-	row.add_child(_watch_replay_action(development))
+	var resume := _btn("Resume saved battle")
+	resume.name = "ResumeSavedBattle"
+	resume.pressed.connect(_resume_saved_battle)
+	row.add_child(resume)
+	var imported := _btn("Import battle\u2026")
+	imported.name = "ImportBattle"
+	imported.pressed.connect(_select_import_file)
+	row.add_child(imported)
+	row.add_child(_watch_replay_action(true))
 	for button: Button in row.get_children():
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		if development:
-			button.add_theme_font_size_override("font_size", 14)
-
-
-func _resume_action(development: bool) -> Button:
-	var resume := _btn("Resume saved battle" if development else "첫 작전 이어하기")
-	resume.name = "ResumeSavedBattle" if development else "ResumeProductBattle"
-	resume.pressed.connect(_resume_saved_battle.bind(not development))
-	return resume
+		button.add_theme_font_size_override("font_size", 14)
 
 
 func _watch_replay_action(development: bool) -> Button:
@@ -1447,28 +1401,23 @@ func _process(delta: float) -> void:
 	if _cross_counter_host != null or _lantern_host != null or _orim_host != null:
 		return
 	var fl := canvas.flying()
-	var show_atlas := state == "browse" and canvas.level() == "z0" and not fl and not _card.visible
+	var show_atlas := state == "browse" and (not _development or (canvas.level() == "z0" and not fl and not _card.visible))
 	if _lantern_menu != null:
 		_lantern_menu.visible = (state == "result" or show_atlas) and not _lantern_parents.is_empty()
 		_lantern_menu.disabled = not _sortie_available() or _replay_dialog != null or _replay_overlay != null
 	if _orim_menu != null:
 		_orim_menu.visible = (state == "result" or show_atlas) and not _orim_parents.is_empty()
 		_orim_menu.disabled = not _sortie_available() or _replay_dialog != null or _replay_overlay != null
-	if state != "result" and not show_atlas:
+	if _development and state != "result" and not show_atlas:
 		canvas.visible = true
 		_header.visible = true
 	_title_button.visible = show_atlas and _sortie_available()
-	_atlas_skirmish_button.visible = show_atlas and _cta.visible
-	_atlas_skirmish_button.disabled = not _sortie_available() or _replay_dialog != null or _replay_overlay != null
-	if _atlas_resume_button != null:
-		_atlas_resume_button.visible = show_atlas
-		_atlas_resume_button.disabled = not _sortie_available() or _replay_dialog != null or _replay_overlay != null
 	if _atlas.visible != show_atlas:
 		_atlas.visible = show_atlas
 		_atlas_backdrop.visible = show_atlas
-		_header.visible = not show_atlas and state != "result"
-		canvas.visible = not show_atlas and state != "result"
-		_legend.visible = not show_atlas and state not in ["sortie", "result"]
+		_header.visible = _development and not show_atlas and state != "result"
+		canvas.visible = _header.visible
+		_legend.visible = _development and not show_atlas and state not in ["sortie", "result"]
 		if show_atlas:
 			_atlas.show_overview()
 	if _was_flying and not fl and state == "browse":

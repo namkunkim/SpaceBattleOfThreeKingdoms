@@ -201,6 +201,8 @@ func _render() -> void:
 		child.queue_free()
 	buttons.clear()
 	_label("SPACE BATTLE OF THREE KINGDOMS     /     RED CLIFFS", 16, true)
+	if flow.state in [Flow.State.STORY, Flow.State.MAP, Flow.State.CONFIRM, Flow.State.READY, Flow.State.ERROR]:
+		_button("뒤로 가기", "back")
 	match flow.state:
 		Flow.State.SELECT:
 			_space()
@@ -410,6 +412,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if is_instance_valid(_settings_overlay):
 		return
 	if event is InputEventKey and event.echo:
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("ui_cancel") and request("back", flow.revision):
 		get_viewport().set_input_as_handled()
 
 func _process(delta: float) -> void:

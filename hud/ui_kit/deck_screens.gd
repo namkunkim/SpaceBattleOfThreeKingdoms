@@ -71,6 +71,19 @@ class PrologueScreen extends Control:
 		skip.offset_right = -56
 		skip.offset_bottom = -56
 		skip.pressed.connect(finish)
+		var back := Button.new()
+		back.text = "뒤로 가기"
+		add_child(back)
+		back.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+		back.offset_left = 56
+		back.offset_right = 236
+		back.offset_top = -108
+		back.offset_bottom = -56
+		back.pressed.connect(func():
+			if page > 0:
+				open_at(page - 1)
+			else:
+				deck.to_title())
 	func open_at(i: int) -> void:
 		page = clampi(i, 0, PrologueText.PAGES.size() - 1)
 		t = 0.0
@@ -155,7 +168,7 @@ class BriefScreen extends Control:
 		roster.pressed.connect(func(): deck.screens["roster"].open_roster(false))
 		hb.add_child(roster)
 		var back := Button.new()
-		back.text = "뒤로"
+		back.text = "뒤로 가기"
 		back.custom_minimum_size = Vector2(120, 54)
 		back.focus_mode = Control.FOCUS_NONE
 		back.pressed.connect(func(): deck.show_screen("title"))
