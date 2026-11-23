@@ -1,8 +1,6 @@
 extends Control
 # Routes only. Save validation, restoration and settlement remain WorldMap/host responsibilities.
 const Entry := preload("res://scenes/entry/NewEntry.tscn")
-const Host := preload("res://scripts/first_operation_host.gd")
-const Settlements := preload("res://scripts/first_operation_settlement_store.gd")
 const V2 := preload("res://scripts/entry/red_cliffs_v2_home.gd")
 const LanternSlot := preload("res://scripts/lantern_escort/public_slot.gd")
 const LANTERN_RESTORE := "--lantern-restore-slot"
@@ -36,9 +34,7 @@ func _boot() -> void:
 	if args.has(BattleBrief.FIRST_OPERATION_DEV_ARG) or args.has("--o07-supply"):
 		_route("res://scenes/FleetBattle3D.tscn")
 		return
-	if not force_menu and not returning and (link.outcome != null or _has_progress()):
-		_route(link.WORLD_SCENE)
-		return
+
 	screen = Entry.instantiate()
 	screen.campaign_enabled = true
 	screen.v2_enabled = OS.has_feature("windows")
@@ -48,12 +44,6 @@ func _boot() -> void:
 	screen.continuation_requested.connect(_continue)
 	add_child(screen)
 	if returning: screen.restore_prepared_entry()
-
-func _has_progress() -> bool:
-	for path in [Host.PRODUCT_SLOT_PATH, Settlements.PRODUCT_SLOT_PATH]:
-		if FileAccess.file_exists(path) or FileAccess.file_exists(path + ".previous"):
-			return true
-	return false
 
 func _route(path: String) -> void:
 	var error := get_tree().change_scene_to_file(path)
