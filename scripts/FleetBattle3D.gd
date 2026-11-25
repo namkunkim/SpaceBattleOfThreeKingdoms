@@ -616,7 +616,14 @@ func update_sim(dt: float) -> void:
 # ============================================================ 코어 ↔ 화면
 # 투영을 화면 모델에 반영하고 새 전대의 3D 노드를 만든다.
 func _sync() -> void:
-	_apply_projection(sim.projection(0))
+	var projection := sim.projection(0)
+	# 확인된 적의 최초 규모는 렌더링에만 사용하며 AI 투영에는 넣지 않는다.
+	for squadron in projection.squadrons:
+		if squadron.get("contact", "") == "confirmed":
+			var fleet: FleetState = sim.st.by_id(squadron.id)
+			var initial_ships: int = sim.salvo.total0(fleet) if sim.salvo else ceili(float(fleet.max_ships) / BattleRules.MILLI)
+			squadron.visual_max_ships = maxi(25, roundi(float(initial_ships) / 25.0) * 25)
+	_apply_projection(projection)
 
 func _apply_projection(projection: Dictionary) -> void:
 	for squadron in projection.squadrons:

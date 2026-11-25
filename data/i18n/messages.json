@@ -1,4 +1,6 @@
 {
+  "적 함선 수 미확인": ["Enemy ship count unknown", "敌方舰船数量未知", "敵艦数は不明"],
+  "함대를 선택하세요.  아군 %d개 함대 · %d척\n적 %d개 함대 확인 · 척수 미확인": ["Select a fleet.  Allies: %d fleets · %d ships\nEnemies: %d fleets confirmed · ship count unknown", "请选择舰队。友军：%d支舰队 · %d艘\n已确认敌军%d支舰队 · 舰船数量未知", "艦隊を選択してください。味方 %d艦隊 · %d隻\n敵 %d艦隊を確認 · 艦数不明"],
   "항복": [
     "Surrendered",
     "投降",
