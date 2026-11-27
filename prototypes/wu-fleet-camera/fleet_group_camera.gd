@@ -47,6 +47,9 @@ var move_gesture_index := -1
 var move_gesture_start := Vector2.ZERO
 var move_gesture_target := Vector3.ZERO
 const FACING_DRAG_THRESHOLD := 8.0
+var selection_dragging := false
+var selection_additive := false
+var selection_start := Vector2.ZERO
 var formations: Array[Node3D] = []
 var destinations: Dictionary[int, Vector3] = {}
 const FleetMotion = preload("res://fleet_poc_motion.gd")
@@ -78,6 +81,8 @@ class GroupMap extends StrategyOverlay:
 	var command_hits: Array[Rect2] = []
 	var tactical := false
 	var selected_index := -1
+	var selected_indices: Array[int] = []
+	var selection_box := Rect2()
 	var fleet_hits: Dictionary[int, Rect2] = {}
 	var fleet_areas: Dictionary[int, Rect2] = {}
 	var hull_bounds: Array[AABB]
@@ -102,14 +107,17 @@ class GroupMap extends StrategyOverlay:
 		selected_bounds = Rect2()
 		if map_opacity > 0.0:
 			draw_map()
+		if not motion.is_empty():
+			for index in selection():
+				if destinations.has(index):
+					draw_active_route(index)
+		if selection_box.has_area():
+			draw_rect(selection_box, Color(INK, 0.12))
+			draw_rect(selection_box, INK, false, 1.0)
 		if show_move_preview:
 			draw_brackets(move_preview_start, Vector2(9, 9))
-			var direction := (move_preview_end - move_preview_start).normalized()
-			var wing := direction.orthogonal() * 5.0
 			if move_preview_start.distance_to(move_preview_end) >= FACING_DRAG_THRESHOLD:
-				draw_line(move_preview_start, move_preview_end, INK, 1.5, true)
-				draw_polyline(PackedVector2Array([move_preview_end - direction * 10.0 + wing,
-					move_preview_end, move_preview_end - direction * 10.0 - wing]), INK, 1.5, true)
+				draw_heading_arrow(move_preview_start, move_preview_end)
 		var world_center := fleet.position + FLEET_FOCUS
 		var center := camera.unproject_position(world_center)
 		var extent := center.distance_to(camera.unproject_position(world_center + Vector3.BACK * 90.0))
@@ -150,6 +158,8 @@ class GroupMap extends StrategyOverlay:
 			if i == selected_index:
 				draw_inspected(point, heading, i)
 			else:
+				if selected_indices.has(i) and area.has_area():
+					draw_brackets(area.get_center(), area.size * 0.5)
 				draw_fleet_icon(point, heading, i)
 		draw_selection_panel()
 
@@ -169,16 +179,48 @@ class GroupMap extends StrategyOverlay:
 				projected = true
 		return bounds.grow(12.0) if projected else Rect2()
 
-	func select_at(point: Vector2) -> bool:
+	func selection() -> Array[int]:
+		if not selected_indices.is_empty():
+			return selected_indices
+		var single: Array[int] = []
+		if selected_index >= 0:
+			single.append(selected_index)
+		return single
+
+	func set_selection(indices: Array[int]) -> void:
+		selected_indices = indices
+		selected_index = indices[0] if not indices.is_empty() else -1
+		order_mode = Order.NONE
+		queue_redraw()
+
+	func select_at(point: Vector2, additive := false) -> bool:
 		var index := nearest_hit(point, fleet_hits)
 		if index == -1:
 			index = nearest_hit(point, fleet_areas)
 		if index == -1:
+			if not additive and not motion.is_empty():
+				set_selection([])
 			return false
-		selected_index = index
-		order_mode = Order.NONE
-		queue_redraw()
+		var next: Array[int] = []
+		if additive:
+			next.assign(selection())
+		if next.has(index):
+			next.erase(index)
+		else:
+			next.append(index)
+		set_selection(next)
 		return true
+
+	func select_in(area: Rect2, additive: bool) -> void:
+		var next: Array[int] = []
+		if additive:
+			next.assign(selection())
+		for index in formations.size():
+			var symbol: Rect2 = fleet_hits.get(index, Rect2())
+			var footprint: Rect2 = fleet_areas.get(index, Rect2())
+			if (symbol.intersects(area) or footprint.intersects(area)) and not next.has(index):
+				next.append(index)
+		set_selection(next)
 
 	func nearest_hit(point: Vector2, areas: Dictionary[int, Rect2]) -> int:
 		var index := -1
@@ -228,9 +270,15 @@ class GroupMap extends StrategyOverlay:
 		draw_line(origin, origin + Vector2(size.x, 0), INK, 1.5, true)
 		draw_crest(origin + Vector2(30, 30))
 		var commander := "주유 (예시)" if selected_index == INSPECTED_FORMATION else "미지정"
-		draw_string(commander_font, origin + Vector2(58, 25), "오국  ·  %02d함대" % (selected_index + 1),
+		var title := "오국  ·  %02d함대" % (selected_index + 1)
+		if selected_indices.size() > 1:
+			title = "오국  ·  %d개 함대 선택" % selected_indices.size()
+		draw_string(commander_font, origin + Vector2(58, 25), title,
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 20, INK)
-		draw_string(commander_font, origin + Vector2(58, 47), "사령관  %s" % commander,
+		var commander_line := "사령관  %s" % commander
+		if selected_indices.size() > 1:
+			commander_line = "%02d함대  ·  %s" % [selected_index + 1, commander_line]
+		draw_string(commander_font, origin + Vector2(58, 47), commander_line,
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color("#a7c8d5"))
 		for i in offsets.size():
 			var offset := offsets[i]
@@ -253,6 +301,8 @@ class GroupMap extends StrategyOverlay:
 				HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color("#a7c8d5"))
 		draw_line(origin + Vector2(15, 181), origin + Vector2(315, 181), EDGE)
 		var status := "이동 중" if destinations.has(selected_index) else "대기 중"
+		if destinations.has(selected_index) and not motion.is_empty() and motion[selected_index].turning:
+			status = "도착 후 선회 중"
 		if order_mode != Order.NONE:
 			status = "지도에서 %s 목표 지점을 클릭하세요" % ORDER_LABELS[order_mode]
 		draw_string(commander_font, origin + Vector2(16, 207), status,
@@ -285,7 +335,7 @@ class GroupMap extends StrategyOverlay:
 	func draw_fleet_icon(point: Vector2, heading: Vector2, index: int) -> void:
 		# A 22 px screen-space carrier keeps the footprint constant as its hull rotates.
 		fleet_hits[index] = Rect2(point - Vector2(14, 13), Vector2(28, 39))
-		var selected := index == selected_index
+		var selected := index == selected_index or selected_indices.has(index)
 		var rim := INK if selected else Color("#56899d")
 		var light := Color("#e0faff") if selected else Color("#a0ddec")
 		var wing := heading.orthogonal()
@@ -352,6 +402,66 @@ class GroupMap extends StrategyOverlay:
 				draw_polyline(PackedVector2Array([corner - Vector2(x * 8, 0),
 					corner, corner - Vector2(0, y * 8)]), INK, 1.15, true)
 
+	func draw_active_route(index: int) -> void:
+		var target := fleet.to_global(destinations[index])
+		var bow := fleet.to_global(formations[index].position)
+		var depth_normal := camera.global_basis.z
+		var near_plane := Plane(depth_normal, camera.global_position - depth_normal * camera.near)
+		var bow_visible := near_plane.distance_to(bow) <= 0.0
+		var target_visible := near_plane.distance_to(target) <= 0.0
+		if bow_visible or target_visible:
+			var route_start := bow
+			var route_end := target
+			if not bow_visible:
+				route_start = near_plane.intersects_segment(bow, target)
+			elif not target_visible:
+				route_end = near_plane.intersects_segment(bow, target)
+			var path := visible_route(camera.unproject_position(route_start), camera.unproject_position(route_end))
+			if path.size() == 2:
+				draw_dashed_line(path[0], path[1], INK, 1.3, 8.0, true, true)
+		if not target_visible:
+			return
+		var destination := camera.unproject_position(target)
+		if not get_viewport_rect().grow(44.0).has_point(destination):
+			return
+		draw_brackets(destination, Vector2(9, 9))
+		var state := motion[index]
+		var yaw := state.arrival_yaw if state.has_arrival_yaw else state.course
+		var forward := fleet.global_basis * Vector3.RIGHT.rotated(Vector3.UP, yaw)
+		var forward_probe := target + forward
+		if near_plane.distance_to(forward_probe) > 0.0:
+			forward_probe = target - forward
+			var reversed := (destination - camera.unproject_position(forward_probe)).normalized()
+			draw_heading_arrow(destination, destination + reversed * 34.0)
+		else:
+			var heading := (camera.unproject_position(forward_probe) - destination).normalized()
+			draw_heading_arrow(destination, destination + heading * 34.0)
+
+	func visible_route(start: Vector2, end: Vector2) -> PackedVector2Array:
+		var viewport := get_viewport_rect()
+		var offset := end - start
+		var first := 0.0
+		var last := 1.0
+		for axis in 2:
+			if is_zero_approx(offset[axis]):
+				if start[axis] < viewport.position[axis] or start[axis] > viewport.end[axis]:
+					return PackedVector2Array()
+				continue
+			var entry := (viewport.position[axis] - start[axis]) / offset[axis]
+			var exit := (viewport.end[axis] - start[axis]) / offset[axis]
+			first = maxf(first, minf(entry, exit))
+			last = minf(last, maxf(entry, exit))
+		if first >= last or offset.length_squared() < 1.0:
+			return PackedVector2Array()
+		return PackedVector2Array([start + offset * first, start + offset * last])
+
+	func draw_heading_arrow(start: Vector2, end: Vector2) -> void:
+		var direction := (end - start).normalized()
+		var wing := direction.orthogonal() * 5.0
+		draw_line(start, end, INK, 1.5, true)
+		draw_polyline(PackedVector2Array([end - direction * 10.0 + wing,
+			end, end - direction * 10.0 - wing]), INK, 1.5, true)
+
 	func draw_inspected(point: Vector2, heading: Vector2, index: int) -> void:
 		if not get_viewport_rect().grow(40).has_point(point):
 			return
@@ -383,7 +493,7 @@ class GroupMap extends StrategyOverlay:
 			draw_fleet_icon(label + Vector2(52, 12), heading, index)
 			if tactical:
 				draw_ticks(label + Vector2(0, 33))
-		if tactical and destinations.has(index):
+		if motion.is_empty() and tactical and destinations.has(index):
 			var target := fleet.to_global(destinations[index])
 			if camera.is_position_behind(target):
 				return
@@ -620,7 +730,7 @@ func build_hud() -> void:
 		controls.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		(controls.get_parent() as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var help := controls.get_child(1) as Label
-		help.text = "Wheel  Zoom   ·   Middle drag  Pan   ·   Left click  Select   ·   Right click / drag  Move / Face   ·   Space  Pause / Resume   ·   Esc  Deselect"
+		help.text = "Wheel  Zoom   ·   Middle drag  Pan   ·   Left drag / Shift-click  Multi-select   ·   Right click / drag  Move / Face   ·   Space  Pause / Resume   ·   Esc  Deselect"
 
 
 func show_frame(at: float) -> void:
@@ -655,7 +765,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			var requested := map.command_at(event.position)
 			if requested != Order.NONE:
 				if requested == Order.STOP:
-					stop_formation(map.selected_index)
+					for index in map.selection():
+						stop_formation(index)
 					map.order_mode = Order.NONE
 				elif map.tactical:
 					map.order_mode = Order.MOVE if requested == Order.MOVE else Order.FACE
@@ -682,6 +793,12 @@ func _unhandled_input(event: InputEvent) -> void:
 func handle_map_mouse(event: InputEvent) -> bool:
 	var map := overlay as GroupMap
 	if event is InputEventMouseMotion:
+		if selection_dragging:
+			if event.button_mask & MOUSE_BUTTON_MASK_LEFT:
+				update_selection_box(map, event.position)
+			else:
+				clear_selection_box(map)
+			return true
 		if move_gesture_index >= 0:
 			if event.button_mask & MOUSE_BUTTON_MASK_RIGHT:
 				map.move_preview_end = event.position
@@ -701,17 +818,49 @@ func handle_map_mouse(event: InputEvent) -> bool:
 			show_frame(camera_zoom)
 		return true
 	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.pressed:
+				if panning or move_gesture_index >= 0:
+					return true
+				if map.order_mode != Order.NONE or map.details_panel.has_point(event.position):
+					return false
+				selection_dragging = true
+				selection_start = event.position
+				selection_additive = event.shift_pressed
+				return true
+			if selection_dragging:
+				update_selection_box(map, event.position)
+				if map.selection_box.has_area():
+					map.select_in(map.selection_box, selection_additive)
+				else:
+					map.select_at(event.position, selection_additive)
+				clear_selection_box(map)
+				return true
 		if event.button_index == MOUSE_BUTTON_MIDDLE:
 			panning = event.pressed
 			return true
 		if event.button_index == MOUSE_BUTTON_RIGHT:
 			if event.pressed:
-				if map.selected_index >= 0 and not panning:
+				if map.selected_index >= 0 and not panning and not selection_dragging:
 					begin_move_gesture(map, event.position)
 			elif move_gesture_index >= 0:
 				finish_move_gesture(map, event.position)
 			return true
 	return false
+
+
+func update_selection_box(map: GroupMap, point: Vector2) -> void:
+	if selection_start.distance_to(point) >= FACING_DRAG_THRESHOLD:
+		map.selection_box = Rect2(selection_start, point - selection_start).abs().grow(1.0)
+	else:
+		map.selection_box = Rect2()
+	map.queue_redraw()
+
+
+func clear_selection_box(map: GroupMap) -> void:
+	selection_dragging = false
+	map.selection_box = Rect2()
+	map.queue_redraw()
 
 
 func begin_move_gesture(map: GroupMap, point: Vector2) -> void:
@@ -740,8 +889,7 @@ func finish_move_gesture(map: GroupMap, point: Vector2) -> void:
 			var direction := fleet.to_local(hit) - move_gesture_target
 			if Vector2(direction.x, direction.z).length_squared() > 0.000001:
 				facing = atan2(-direction.z, direction.x)
-	motion[index].move_to(node, move_gesture_target, facing)
-	destinations[index] = move_gesture_target
+	move_selection(map, move_gesture_target, facing)
 	map.order_mode = Order.NONE
 	clear_move_gesture()
 
@@ -756,6 +904,7 @@ func clear_move_gesture() -> void:
 func cancel_map_gestures() -> void:
 	panning = false
 	clear_move_gesture()
+	clear_selection_box(overlay as GroupMap)
 
 
 func map_position(point: Vector2, height: float) -> Variant:
@@ -773,18 +922,28 @@ func issue_map_order(map: GroupMap, point: Vector2, order: int) -> void:
 	var target := fleet.to_local(hit)
 	if order == Order.MOVE:
 		if mouse_validation:
-			motion[index].move_to(node, target)
+			move_selection(map, target)
 		else:
 			face_target(node, target)
-		destinations[index] = target
+			destinations[index] = target
 	else:
-		stop_formation(index)
-		if mouse_validation:
-			motion[index].face(node, target)
-		else:
-			face_target(node, target)
+		for selected in map.selection():
+			stop_formation(selected)
+			if mouse_validation:
+				motion[selected].face(formations[selected], target)
+			else:
+				face_target(node, target)
 	map.order_mode = Order.NONE
 	map.queue_redraw()
+
+
+func move_selection(map: GroupMap, target: Vector3, facing: Variant = null) -> void:
+	var translation := target - formations[map.selected_index].position
+	for index in map.selection():
+		var node := formations[index]
+		var destination := node.position + translation
+		motion[index].move_to(node, destination, facing)
+		destinations[index] = destination
 
 
 func update_simulation_status() -> void:
@@ -808,7 +967,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				cancel_map_gestures()
 			var map := overlay as GroupMap
 			if mouse_validation or map.order_mode == Order.NONE:
-				map.selected_index = -1
+				map.set_selection([])
 			map.order_mode = Order.NONE
 			map.queue_redraw()
 			get_viewport().set_input_as_handled()
