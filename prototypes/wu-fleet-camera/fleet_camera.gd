@@ -475,6 +475,10 @@ func show_frame(at: float) -> void:
 	sun.light_specular = lerpf(0.68, 0.40, approach)
 	time = at
 	fleet.position.x = SPEED * at
+	show_camera_frame(at)
+
+
+func show_camera_frame(at: float) -> void:
 	var index := 0
 	while index + 2 < camera_shots.size() and at > camera_shots[index + 1][0]:
 		index += 1
