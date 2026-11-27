@@ -1,6 +1,10 @@
 extends Node3D
 
 const DURATION := 34.0
+const RETURN_MAP := 41.5
+const RETURN_WIDE_START := 45.0
+const RETURN_WIDE_END := 49.0
+const ROUND_TRIP_DURATION := 52.0
 const APPROACH_END := 7.4
 const TILT_START := 9.0
 const TILT_END := 16.5
@@ -9,6 +13,8 @@ const MISSILE_START := 11.6 + FIRE_DELAY
 const SHU_LASER := 15.0 + FIRE_DELAY
 const WEI_LASER := 16.35 + FIRE_DELAY
 const SHU_IMPACT := WEI_LASER + 0.15
+const IMPACT_HOLD_IN := SHU_IMPACT - 0.10
+const IMPACT_HOLD_OUT := SHU_IMPACT + 0.63
 const SHU_MISSILE_REPEAT := 6.50
 const WEI_MISSILE_REPEAT := 4.95
 const JADE := Color("#64f1bd")
@@ -33,6 +39,7 @@ var elapsed := 0.0
 var frame := 0
 var movie := false
 var review := false
+var round_trip := false
 var effects: Array[Dictionary] = []
 var fleet_volleys: Array[Dictionary] = []
 var fleet_missiles: Array[Dictionary] = []
@@ -43,6 +50,7 @@ var last_spread_time := 0.0
 var engine_materials: Array[StandardMaterial3D] = []
 var engine_flares: Array[MeshInstance3D] = []
 var damage_sparks: Array[MeshInstance3D] = []
+var lead_beam_clearance := Vector4.ZERO
 var damage_glow: MeshInstance3D
 var damage_light: OmniLight3D
 var battle_audio := AudioStreamPlayer.new()
@@ -55,13 +63,11 @@ var font: Font
 
 func _ready() -> void:
 	review = "--review-cut" in OS.get_cmdline_user_args()
-	movie = review or "--movie-cut" in OS.get_cmdline_user_args()
+	round_trip = "--round-trip-cut" in OS.get_cmdline_user_args()
+	movie = review or round_trip or "--movie-cut" in OS.get_cmdline_user_args()
 	hold_point = WEI_ANCHOR - Vector3.RIGHT * engagement_distance
 	start_point = hold_point - Vector3.RIGHT * 23.0
-	var backdrop := preload("res://wu_map.gd").new()
-	add_child(backdrop)
-	backdrop.build_space()
-	backdrop.build_lighting()
+	_build_backdrop()
 	var rim := DirectionalLight3D.new()
 	rim.rotation_degrees = Vector3(-12, 146, 0)
 	rim.light_color = Color("#c8dfff")
@@ -83,6 +89,25 @@ func _ready() -> void:
 	camera.current = true
 	_sample(0.0)
 
+func _build_backdrop() -> void:
+	var backdrop := preload("res://wu_map.gd").new()
+	add_child(backdrop)
+	backdrop.build_space()
+	backdrop.build_lighting()
+
+
+func _overview_center() -> Vector3:
+	return STRATEGIC_CENTER
+
+
+func _overview_span() -> float:
+	return PARENT_MAP_SPAN
+
+
+func _update_backdrop(_focus: Vector3, _span: float) -> void:
+	pass
+
+
 func _exit_tree() -> void:
 	battle_audio.stop()
 	audio_playback = null
@@ -96,7 +121,8 @@ func _process(delta: float) -> void:
 		_sample(samples[frame])
 		frame += 1
 	elif movie:
-		if frame >= int(DURATION * 30.0):
+		var duration := ROUND_TRIP_DURATION if round_trip else DURATION
+		if frame >= int(duration * 30.0):
 			get_tree().quit()
 			return
 		_sample(frame / 30.0)
@@ -115,8 +141,11 @@ func _sample(at: float) -> void:
 	wei.position = WEI_ANCHOR
 	tilt = smoothstep(TILT_START, TILT_END, at)
 	var closing_view := smoothstep(0.45, 4.8, at)
+	if round_trip:
+		tilt *= 1.0 - smoothstep(DURATION, RETURN_MAP, at)
+		closing_view *= 1.0 - smoothstep(RETURN_WIDE_START, RETURN_WIDE_END, at)
 	var midpoint := (shu.position + wei.position) * 0.5
-	var focus := STRATEGIC_CENTER.lerp(midpoint, closing_view)
+	var focus := _overview_center().lerp(midpoint, closing_view)
 	var close_shot := smoothstep(16.55, 17.64, at) * (1.0 - smoothstep(19.04, 19.93, at))
 	focus = focus.lerp(midpoint + Vector3(0.1, 0.05, 0), close_shot)
 	var reply_shot := smoothstep(21.95, 22.48, at) * (1.0 - smoothstep(22.95, 23.47, at))
@@ -126,14 +155,24 @@ func _sample(at: float) -> void:
 	var angle := lerpf(lerpf(lerpf(0.93, 1.02, reply_shot), 1.14, close_shot), 1.03, damage_shot) * tilt
 	var orbit := -0.13 + 0.22 * smoothstep(19.0, DURATION, at)
 	var yaw := lerpf(lerpf(lerpf(orbit, 0.105, reply_shot), -0.47, close_shot), -0.46, damage_shot) * tilt
-	var radial := Vector3(sin(yaw) * sin(angle), cos(angle), cos(yaw) * sin(angle))
-	var right := Vector3(cos(yaw), 0, -sin(yaw))
+
 	var local_span := (engagement_distance + lerpf(67.0, 46.0, tilt)) / 1.7777778
-	var span := exp(lerpf(log(PARENT_MAP_SPAN), log(local_span), closing_view))
+	var span := exp(lerpf(log(_overview_span()), log(local_span), closing_view))
 	span = lerpf(span, (engagement_distance + 13.0) / 1.7777778, close_shot)
 	span = lerpf(span, (engagement_distance + 34.0) / 1.7777778, reply_shot)
 	span = lerpf(span, 10.0, damage_shot)
 	var strength := lerpf(lerpf(lerpf(0.15, 0.19, reply_shot), 0.30, close_shot), 0.28, damage_shot) * tilt
+	var impact_hold := 0.0
+	if at >= IMPACT_HOLD_IN:
+		impact_hold = 1.0 - smoothstep(IMPACT_HOLD_OUT, IMPACT_HOLD_OUT + 0.58, at)
+	if impact_hold > 0.0:
+		focus = focus.lerp(hold_point + Vector3(-0.26, -0.07, 0.22), impact_hold)
+		angle = lerpf(angle, 1.21, impact_hold)
+		yaw = lerpf(yaw, -0.96, impact_hold)
+		span = lerpf(span, 2.95, impact_hold)
+		strength = lerpf(strength, 0.29, impact_hold)
+	var radial := Vector3(sin(yaw) * sin(angle), cos(angle), cos(yaw) * sin(angle))
+	var right := Vector3(cos(yaw), 0, -sin(yaw))
 	var distance := span / (2.0 * strength + span / 100000.0)
 	camera.transform = Transform3D(Basis(right, radial.cross(right), radial), focus + radial * distance)
 	var near_clip := maxf(0.08, distance - 750.0)
@@ -141,12 +180,20 @@ func _sample(at: float) -> void:
 		camera.set_orthogonal(span, near_clip, distance + 52000.0)
 	else:
 		camera.set_frustum(span * near_clip / distance, Vector2.ZERO, near_clip, distance + 52000.0)
+	_update_backdrop(focus, span)
 	shu.visible = tilt > 0.20
 	wei.visible = shu.visible
 	for group in [shu, wei]:
 		for batch in group.get_children():
 			batch.transparency = 1.0 - smoothstep(0.20, 0.62, tilt)
 	_sample_damage(at)
+	lead_beam_clearance = Vector4.ZERO
+	if impact_hold > 0.0:
+		var pose := _shu_ship_pose(0, at)
+		var center := camera.unproject_position(shu.to_global(pose * Vector3(-0.09, 0.025, 0)))
+		var viewport_size := get_viewport().get_visible_rect().size
+		var uv := center / viewport_size
+		lead_beam_clearance = Vector4(uv.x, uv.y, 0.145 * impact_hold, 0.205 * impact_hold)
 	for effect in effects:
 		_sample_effect(effect, at)
 	for shot in fleet_volleys:
@@ -418,7 +465,7 @@ func _sample_fleet_volley(shot: Dictionary, at: float) -> void:
 		return
 	var travel := clampf((age - 0.065) / 0.085, 0.0, 1.0)
 	var width := 0.030 * (1.0 - smoothstep(0.15, 0.31, age))
-	_segment(beam, a, a.lerp(b, travel), width)
+	_beam_segment(beam, a, a.lerp(b, travel), width, lead_beam_clearance)
 
 func _build_audio() -> void:
 	var stream := AudioStreamPolyphonic.new()
@@ -538,7 +585,7 @@ func _set_flare(flare: MeshInstance3D, point: Vector3, size: float, energy: floa
 	flare.visible = energy > 0.01
 	if flare.visible:
 		flare.position = point
-		flare.look_at(camera.position)
+		flare.look_at(camera.position, camera.basis.y)
 		flare.scale = Vector3(size, size, size)
 		flare.material_override.set_shader_parameter("energy", energy)
 
@@ -554,6 +601,10 @@ func _segment(mesh: MeshInstance3D, a: Vector3, b: Vector3, width: float) -> voi
 		mesh.position = (a + b) * 0.5
 		mesh.quaternion = Quaternion(Vector3.UP, direction.normalized())
 		mesh.scale = Vector3(width, direction.length(), width)
+
+func _beam_segment(beam: MeshInstance3D, from: Vector3, to: Vector3, width: float, clearance: Vector4) -> void:
+	beam.material_override.set_shader_parameter("lead_clearance", clearance)
+	_segment(beam, from, to, width)
 
 func _missile_point(a: Vector3, b: Vector3, fraction: float) -> Vector3:
 	var t := clampf(fraction, 0.0, 1.0)
@@ -589,7 +640,8 @@ func _sample_effect(effect: Dictionary, at: float) -> void:
 			beam.visible = false
 		else:
 			var pulse := 1.0 - smoothstep(0.15, life, age)
-			_segment(beam, a, a.lerp(b, minf(travel, 1.0)), 0.040 * pulse)
+			var clearance := lead_beam_clearance if at >= SHU_IMPACT + 0.034 else Vector4.ZERO
+			_beam_segment(beam, a, a.lerp(b, minf(travel, 1.0)), 0.040 * pulse, clearance)
 
 func _sample_missile(effect: Dictionary, age: float, life: float, a: Vector3, b: Vector3) -> void:
 	var u := clampf(age / life, 0.0, 1.0)
@@ -631,6 +683,13 @@ func _map_line(a: Vector3, b: Vector3, color: Color) -> void:
 	if not camera.is_position_behind(a) and not camera.is_position_behind(b):
 		hud.draw_line(_project(a), _project(b), color, 1.0, true)
 
+func _draw_map_grid(graticule: Color) -> void:
+	for x in range(-22000, 22001, 2000):
+		_map_line(Vector3(x, -1, -15000), Vector3(x, -1, 15000), graticule)
+	for z in range(-15000, 15001, 2000):
+		_map_line(Vector3(-22000, -1, z), Vector3(22000, -1, z), graticule)
+
+
 func _draw_hud() -> void:
 	var screen := get_viewport().get_visible_rect().size
 	var scale_factor := screen.x / 1920.0
@@ -638,10 +697,7 @@ func _draw_hud() -> void:
 	var map_alpha := 1.0 - smoothstep(0.12, 0.80, tilt)
 	if map_alpha > 0.0:
 		var graticule := Color(0.38, 0.62, 0.80, 0.24 * map_alpha)
-		for x in range(-22000, 22001, 2000):
-			_map_line(Vector3(x, -1, -15000), Vector3(x, -1, 15000), graticule)
-		for z in range(-15000, 15001, 2000):
-			_map_line(Vector3(-22000, -1, z), Vector3(22000, -1, z), graticule)
+		_draw_map_grid(graticule)
 		var route_start := _project(start_point)
 		var route_end := _project(hold_point)
 		hud.draw_dashed_line(route_start, route_end, Color(JADE, 0.65 * map_alpha), 2.0 * scale_factor, 13.0 * scale_factor, true)
@@ -650,7 +706,9 @@ func _draw_hud() -> void:
 		var anchor := _project(wei.position)
 		var contact := _project(shu.position)
 		var separation := contact.distance_to(anchor)
-		if separation > 72.0 * scale_factor:
+		if round_trip and separation > 72.0 * scale_factor:
+			_draw_tactical_fleets(scale_factor, map_alpha)
+		elif separation > 72.0 * scale_factor:
 			hud.draw_arc(anchor, 34.0 * scale_factor, 0.0, TAU, 64, Color(AZURE, 0.55 * map_alpha), 2.0 * scale_factor, true)
 			for group in [shu, wei]:
 				var color := JADE if group == shu else AZURE
@@ -664,6 +722,8 @@ func _draw_hud() -> void:
 			hud.draw_circle(sector, 17.0 * scale_factor, Color(0.02, 0.055, 0.09, 0.9 * map_alpha))
 			hud.draw_arc(sector, 17.0 * scale_factor, 0.0, TAU, 28, Color(0.68, 0.93, 1.0, map_alpha), 2.0 * scale_factor, true)
 			_ink("SHU / WEI CONTACT SECTOR", sector + Vector2(24, -12) * scale_factor, roundi(23.0 * scale_factor), Color(0.68, 0.93, 1.0, map_alpha))
+	if round_trip and elapsed >= RETURN_WIDE_START:
+		_draw_formation_inset(screen, scale_factor)
 	hud.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE * scale_factor)
 	hud.draw_rect(Rect2(0, 0, 1920, 113), Color(0.018, 0.032, 0.06, 0.90))
 	hud.draw_rect(Rect2(0, 980, 1920, 100), Color(0.018, 0.032, 0.06, 0.90))
@@ -676,6 +736,10 @@ func _draw_hud() -> void:
 		mode = "TACTICAL VIEW"
 	elif elapsed >= TILT_START:
 		mode = "TACTICAL TRANSITION"
+	if round_trip and elapsed >= DURATION:
+		mode = "RETURN TO STRATEGIC MAP" if elapsed < RETURN_MAP else "2D TACTICAL MAP"
+		if elapsed >= RETURN_WIDE_END:
+			mode = "STRATEGIC OVERVIEW"
 	_ink(mode, Vector2(1515, 62), 23, Color("#d0dff4"))
 	_ink("%05.2f s" % elapsed, Vector2(1747, 91), 18, frame_color)
 	var phase := "SHU ADVANCING   /   WEI AT ANCHOR"
@@ -696,13 +760,67 @@ func _draw_hud() -> void:
 		phase_color = JADE
 	elif elapsed >= APPROACH_END:
 		phase = "SHU HOLDING AT ENGAGEMENT RANGE"
+	if round_trip and elapsed >= DURATION:
+		phase = "SHU LEAD SHIP DISABLED   /   GAP IN FRONT LINE"
+		phase_color = Color("#ffbd83")
 	_ink(phase, Vector2(55, 1028), 28, phase_color)
 	_ink("FLEET SEPARATION  %04.1f u" % shu.position.distance_to(wei.position), Vector2(1490, 1027), 22, frame_color)
 	hud.draw_line(Vector2(55, 1054), Vector2(1864, 1054), Color(frame_color, 0.35), 2.0)
-	hud.draw_line(Vector2(55, 1054), Vector2(lerpf(55.0, 1864.0, elapsed / DURATION), 1054), phase_color, 3.0)
+	hud.draw_line(Vector2(55, 1054), Vector2(lerpf(55.0, 1864.0, elapsed / (ROUND_TRIP_DURATION if round_trip else DURATION)), 1054), phase_color, 3.0)
 	_fleet_label(Vector2(57, 166), "SHU HAN", JADE)
 	_fleet_label(Vector2(1617, 166), "CAO WEI", AZURE)
 	hud.draw_set_transform(Vector2.ZERO)
+
+func _draw_tactical_fleets(scale_factor: float, alpha: float) -> void:
+	for group: Node3D in [shu, wei]:
+		var color := JADE if group == shu else AZURE
+		var heading := Vector2.RIGHT if group == shu else Vector2.LEFT
+		for index in range(slots.size() - 1, -1, -1):
+			var position := slots[index]
+			if group == shu:
+				position = _shu_ship_pose(index, elapsed).origin
+			var point := _project(group.to_global(position))
+			if index == 0 and group == shu and elapsed >= SHU_IMPACT:
+				_mark_disabled(point, scale_factor, alpha)
+			else:
+				_arrow(point, heading, Color(color, alpha),
+					(11.0 if index == 0 else 4.0) * scale_factor)
+	if elapsed >= SHU_IMPACT + 2.9:
+		var gap := _project(shu.to_global(Vector3(-7.3, 0.0, 0.0)))
+		var label := gap + Vector2(-185.0, -180.0) * scale_factor
+		var orange := Color(Color("#ffbd83"), alpha)
+		hud.draw_line(label + Vector2(155.0, 8.0) * scale_factor, gap, orange, 1.0, true)
+		_ink("FRONT LINE GAP", label, roundi(20.0 * scale_factor), orange)
+
+func _mark_disabled(point: Vector2, scale_factor: float, alpha: float) -> void:
+	var r := 6.0 * scale_factor
+	var orange := Color(Color("#ffbd83"), alpha)
+	hud.draw_circle(point, r + 3.0 * scale_factor, Color(0.02, 0.055, 0.09, alpha))
+	hud.draw_line(point - Vector2(r, r), point + Vector2(r, r), orange, 2.0, true)
+	hud.draw_line(point - Vector2(r, -r), point + Vector2(r, -r), orange, 2.0, true)
+
+func _draw_formation_inset(screen: Vector2, scale_factor: float) -> void:
+	var alpha := smoothstep(46.0, 48.0, elapsed)
+	var corner := screen - Vector2(437.0, 366.0) * scale_factor
+	var center := corner + Vector2(232.0, 143.0) * scale_factor
+	var orange := Color(Color("#ffbd83"), alpha)
+	hud.draw_rect(Rect2(corner, Vector2(381.0, 244.0) * scale_factor),
+		Color(0.016, 0.027, 0.044, 0.94 * alpha))
+	hud.draw_rect(Rect2(corner, Vector2(381.0, 244.0) * scale_factor),
+		Color(0.47, 0.56, 0.67, alpha), false)
+	_ink("SHU FRONT LINE", corner + Vector2(18.0, 32.0) * scale_factor,
+		roundi(20.0 * scale_factor), Color(JADE, alpha))
+	for index in range(slots.size() - 1, -1, -1):
+		var pose := _shu_ship_pose(index, elapsed).origin
+		var point := center + Vector2(pose.x, pose.z) * 8.0 * scale_factor
+		if index == 0:
+			_mark_disabled(point, scale_factor, alpha)
+		else:
+			_arrow(point, Vector2.RIGHT, Color(JADE, alpha), 4.0 * scale_factor)
+	var gap := center - Vector2(58.4, 0.0) * scale_factor
+	var label := corner + Vector2(18.0, 222.0) * scale_factor
+	hud.draw_line(label + Vector2(80.0, -8.0) * scale_factor, gap, orange, 1.0, true)
+	_ink("GAP IN FORMATION", label, roundi(17.0 * scale_factor), orange)
 
 func _fleet_label(point: Vector2, title: String, color: Color) -> void:
 	hud.draw_rect(Rect2(point - Vector2(0, 24), Vector2(245, 40)), Color(0.016, 0.027, 0.044, 0.87))
