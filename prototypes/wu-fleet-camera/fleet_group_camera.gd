@@ -44,6 +44,7 @@ var camera_pan := Vector3.ZERO
 var panning := false
 var simulation_paused := false
 var move_gesture_index := -1
+var move_gesture_fleet := -1
 var move_gesture_start := Vector2.ZERO
 var move_gesture_target := Vector3.ZERO
 const FACING_DRAG_THRESHOLD := 8.0
@@ -91,6 +92,7 @@ class GroupMap extends StrategyOverlay:
 	var move_preview_end := Vector2.ZERO
 	var group_panel := Rect2()
 	var details_panel := Rect2()
+	var tactics_open := false
 	var selected_bounds := Rect2()
 	var motion: Array[FleetMotion]
 	var flagship_view := false
@@ -188,15 +190,18 @@ class GroupMap extends StrategyOverlay:
 		return single
 
 	func set_selection(indices: Array[int]) -> void:
+		tactics_open = false
 		selected_indices = indices
 		selected_index = indices[0] if not indices.is_empty() else -1
 		order_mode = Order.NONE
 		queue_redraw()
 
-	func select_at(point: Vector2, additive := false) -> bool:
+	func fleet_at(point: Vector2) -> int:
 		var index := nearest_hit(point, fleet_hits)
-		if index == -1:
-			index = nearest_hit(point, fleet_areas)
+		return index if index >= 0 else nearest_hit(point, fleet_areas)
+
+	func select_at(point: Vector2, additive := false) -> bool:
+		var index := fleet_at(point)
 		if index == -1:
 			if not additive and not motion.is_empty():
 				set_selection([])
@@ -236,7 +241,8 @@ class GroupMap extends StrategyOverlay:
 	func draw_selection_panel() -> void:
 		if selected_index < 0:
 			return
-		var size := Vector2(330, 283)
+		var full_panel := motion.is_empty() or tactics_open
+		var size := Vector2(330, 283) if full_panel else Vector2(250, 62)
 		var selected_hit: Rect2 = fleet_hits.get(selected_index, Rect2())
 		if not selected_hit.has_area():
 			return
@@ -275,6 +281,10 @@ class GroupMap extends StrategyOverlay:
 			title = "오국  ·  %d개 함대 선택" % selected_indices.size()
 		draw_string(commander_font, origin + Vector2(58, 25), title,
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 20, INK)
+		if not full_panel:
+			draw_string(commander_font, origin + Vector2(58, 47), "함선 %d척" % (offsets.size() * selection().size()),
+				HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color("#a7c8d5"))
+			return
 		var commander_line := "사령관  %s" % commander
 		if selected_indices.size() > 1:
 			commander_line = "%02d함대  ·  %s" % [selected_index + 1, commander_line]
@@ -730,7 +740,7 @@ func build_hud() -> void:
 		controls.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		(controls.get_parent() as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var help := controls.get_child(1) as Label
-		help.text = "Wheel  Zoom   ·   Middle drag  Pan   ·   Left drag / Shift-click  Multi-select   ·   Right click / drag  Move / Face   ·   Space  Pause / Resume   ·   Esc  Deselect"
+		help.text = "Wheel  Zoom   ·   Middle drag  Pan   ·   Shift+click / Left drag  Select   ·   Right-click fleet  Tactics   ·   Right-click map  Move   ·   Space  Pause   ·   Esc  Deselect"
 
 
 func show_frame(at: float) -> void:
@@ -769,7 +779,7 @@ func _unhandled_input(event: InputEvent) -> void:
 						stop_formation(index)
 					map.order_mode = Order.NONE
 				elif map.tactical:
-					map.order_mode = Order.MOVE if requested == Order.MOVE else Order.FACE
+					map.order_mode = Order.NONE if mouse_validation and map.order_mode == requested else requested
 				map.queue_redraw()
 				get_viewport().set_input_as_handled()
 				return
@@ -802,6 +812,7 @@ func handle_map_mouse(event: InputEvent) -> bool:
 		if move_gesture_index >= 0:
 			if event.button_mask & MOUSE_BUTTON_MASK_RIGHT:
 				map.move_preview_end = event.position
+				map.show_move_preview = move_gesture_fleet < 0 or move_gesture_start.distance_to(event.position) >= FACING_DRAG_THRESHOLD
 				map.queue_redraw()
 			else:
 				clear_move_gesture()
@@ -864,7 +875,13 @@ func clear_selection_box(map: GroupMap) -> void:
 
 
 func begin_move_gesture(map: GroupMap, point: Vector2) -> void:
-	if map.details_panel.has_point(point) or map.group_panel.has_point(point):
+	if map.details_panel.has_point(point):
+		open_tactics(map, map.selected_index)
+		return
+	var hit_fleet := map.fleet_at(point)
+	if map.group_panel.has_point(point):
+		if hit_fleet >= 0:
+			open_tactics(map, hit_fleet)
 		return
 	var node := formations[map.selected_index]
 	var hit: Variant = map_position(point, node.global_position.y)
@@ -873,7 +890,8 @@ func begin_move_gesture(map: GroupMap, point: Vector2) -> void:
 	move_gesture_index = map.selected_index
 	move_gesture_start = point
 	move_gesture_target = fleet.to_local(hit)
-	map.show_move_preview = true
+	move_gesture_fleet = hit_fleet
+	map.show_move_preview = hit_fleet < 0
 	map.move_preview_start = point
 	map.move_preview_end = point
 	map.queue_redraw()
@@ -882,8 +900,14 @@ func begin_move_gesture(map: GroupMap, point: Vector2) -> void:
 func finish_move_gesture(map: GroupMap, point: Vector2) -> void:
 	var index := move_gesture_index
 	var node := formations[index]
+	var dragged := move_gesture_start.distance_to(point) >= FACING_DRAG_THRESHOLD
+	if move_gesture_fleet >= 0 and not dragged:
+		var hit_fleet := move_gesture_fleet
+		clear_move_gesture()
+		open_tactics(map, hit_fleet)
+		return
 	var facing: Variant = null
-	if move_gesture_start.distance_to(point) >= FACING_DRAG_THRESHOLD:
+	if dragged:
 		var hit: Variant = map_position(point, node.global_position.y)
 		if hit is Vector3:
 			var direction := fleet.to_local(hit) - move_gesture_target
@@ -894,8 +918,16 @@ func finish_move_gesture(map: GroupMap, point: Vector2) -> void:
 	clear_move_gesture()
 
 
+func open_tactics(map: GroupMap, index: int) -> void:
+	if not map.selection().has(index):
+		map.set_selection([index])
+	map.tactics_open = true
+	map.queue_redraw()
+
+
 func clear_move_gesture() -> void:
 	move_gesture_index = -1
+	move_gesture_fleet = -1
 	var map := overlay as GroupMap
 	map.show_move_preview = false
 	map.queue_redraw()
