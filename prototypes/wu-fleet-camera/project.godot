@@ -1,0 +1,15 @@
+config_version=5
+
+[application]
+config/name="Wu Fleet Camera"
+run/main_scene="res://fleet_camera.tscn"
+
+[display]
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/stretch/mode="canvas_items"
+
+[rendering]
+renderer/rendering_method="forward_plus"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/default_filters/use_nearest_mipmap_filter=false
