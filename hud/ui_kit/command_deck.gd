@@ -384,7 +384,6 @@ func _side_totals(side: int) -> Vector3:
 
 func _draw_top(c: Control) -> void:
 	var a := _side_totals(0)
-	var e := _side_totals(1)
 	var w := c.size.x
 	# 촉한
 	UiDraw.seal(c, Rect2(18, 17, 44, 44), 0)
@@ -396,10 +395,13 @@ func _draw_top(c: Control) -> void:
 	# 위
 	UiDraw.seal(c, Rect2(w - 62, 17, 44, 44), 1)
 	UiDraw.text(c, Vector2(w - 74, 34), "조조군", "serif_bold", 15, UiTheme.INK, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
-	var fe := e.x / maxf(1.0, e.y)
-	UiDraw.text(c, Vector2(w - 318, 34), "%d%% · %d척" % [roundi(fe * 100.0), roundi(e.x)], "semibold", 12, UiTheme.INK_2)
-	_side_bar(c, Rect2(w - 318, 44, 244, 9), 1, fe, UiTheme.FOE, true)
-	UiDraw.text(c, Vector2(w - 74, 68), ("별동대 출현 · " if battle.G.reinf else "") + "%d개 함대 확인" % int(e.z), "regular", 11, UiTheme.WARN if battle.G.reinf else UiTheme.INK_3, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
+	# 적 접촉의 ships는 실제 척수가 아닌 표시용 가상값이다.
+	UiDraw.text(c, Vector2(w - 318, 34), "적 함선 수 미확인", "semibold", 12, UiTheme.INK_2)
+	var confirmed := 0
+	for f in battle.fleets:
+		if f.side == 1 and not f.dead and (f.contact == "confirmed" or f.contact == ""):
+			confirmed += 1
+	UiDraw.text(c, Vector2(w - 74, 68), ("별동대 출현 · " if battle.G.reinf else "") + "%d개 함대 확인" % confirmed, "regular", 11, UiTheme.WARN if battle.G.reinf else UiTheme.INK_3, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
 	# 가운데: 상태와 시계
 	var mx := w * 0.5
 	c.draw_line(Vector2(mx - 112, 14), Vector2(mx - 112, 64), Color(UiTheme.GOLD, 0.18))
@@ -901,11 +903,10 @@ func _info_multi(c: Control, sel: Array) -> void:
 
 func _info_none(c: Control) -> void:
 	var a := _side_totals(0)
-	var e := _side_totals(1)
 	UiDraw.text(c, Vector2(c.size.x * 0.5, 40), "함대를 선택하십시오", "serif_bold", 20, UiTheme.INK, HORIZONTAL_ALIGNMENT_CENTER, 0.0)
 	UiDraw.text(c, Vector2(c.size.x * 0.5, 62), "함대 클릭 · 드래그로 범위 선택 · 편성 1–9 · A 전 함대", "regular", 12, UiTheme.INK_3, HORIZONTAL_ALIGNMENT_CENTER, 0.0)
 	UiDraw.text(c, Vector2(c.size.x * 0.5 - 20, 80), "아군 %d개 함대 · %d척" % [int(a.z), roundi(a.x)], "semibold", 13, UiTheme.ALLY_HI, HORIZONTAL_ALIGNMENT_RIGHT, 0.0)
-	UiDraw.text(c, Vector2(c.size.x * 0.5 + 20, 80), "적 %d개 함대 · %d척 확인" % [int(e.z), roundi(e.x)], "semibold", 13, UiTheme.FOE_HI)
+	UiDraw.text(c, Vector2(c.size.x * 0.5 + 20, 80), "적 함선 수 미확인", "semibold", 13, UiTheme.FOE_HI)
 	UiDraw.diamond(c, Vector2(c.size.x * 0.5, 75), 3.0, UiTheme.GOLD)
 
 # ------------------------------------------------------------ 명령 패널

@@ -1,0 +1,11 @@
+config_version=5
+[application]
+config/name="Deep Space Sector Map"
+run/main_scene="res://sector_map.tscn"
+[display]
+window/size/viewport_width=1440
+window/size/viewport_height=900
+window/stretch/mode="canvas_items"
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
