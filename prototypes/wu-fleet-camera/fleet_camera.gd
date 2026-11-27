@@ -110,6 +110,10 @@ class StrategyOverlay extends Node2D:
 
 @onready var camera: Camera3D = $Camera3D
 var sun: DirectionalLight3D
+var camera_shots: Array = SHOTS
+var camera_stages: Array = STAGES
+var asteroid_clearance := 7.5
+var hud_title := "WU FLEET   /   60 SHIPS"
 var fleet := Node3D.new()
 var offsets: Array[Vector3] = []
 var roles: Array[int] = []
@@ -140,20 +144,7 @@ func build_fleet() -> bool:
 			return false
 		models.append(model)
 	add_child(fleet)
-	# The lead ship travels ahead of the formation. The gap clears the complete
-	# inspection orbit, including the stern view, while the fleet stays in motion.
-	offsets.append(Vector3.ZERO)
-	roles.append(0)
-	for deck in 3:
-		for row in 4:
-			for column in 5:
-				if deck == 1 and row == 0 and column == 2:
-					continue
-				var tier := float(deck - 1)
-				var wing := float(column - 2)
-				offsets.append(Vector3(-4.0 - row * 1.7 - absf(wing) * 0.38 - absf(tier) * 1.5,
-					tier * 1.25 + wing * 0.10, wing * 1.25 + tier * 2.8))
-				roles.append((row + column + deck) % models.size())
+	build_formation()
 	for i in offsets.size():
 		var role := roles[i]
 		var ship := models[role].instantiate() as Node3D
@@ -167,6 +158,23 @@ func build_fleet() -> bool:
 		ship.scale = Vector3.ONE * LENGTHS[role] / length
 		fleet.add_child(ship)
 	return true
+
+
+func build_formation() -> void:
+	# The lead ship travels ahead of the formation. The gap clears the complete
+	# inspection orbit, including the stern view, while the fleet stays in motion.
+	offsets.append(Vector3.ZERO)
+	roles.append(0)
+	for deck in 3:
+		for row in 4:
+			for column in 5:
+				if deck == 1 and row == 0 and column == 2:
+					continue
+				var tier := float(deck - 1)
+				var wing := float(column - 2)
+				offsets.append(Vector3(-4.0 - row * 1.7 - absf(wing) * 0.38 - absf(tier) * 1.5,
+					tier * 1.25 + wing * 0.10, wing * 1.25 + tier * 2.8))
+				roles.append((row + column + deck) % PATHS.size())
 
 
 func mesh_bounds(node: Node3D, parent: Transform3D) -> AABB:
@@ -243,7 +251,7 @@ func build_space() -> void:
 			group_z = 15.0 if far_band else 9.0
 		var z := side * (group_z + 4.0 * sin(group * 0.9))
 		z += clampf(rng.randfn(0.0, 3.5), -5.0, 5.0)
-		z = side * maxf(absf(z), 7.5)
+		z = side * (maxf(absf(z), 7.5) + asteroid_clearance - 7.5)
 		var y := 5.0 * sin(group * 0.67) + rng.randfn(0.0, 2.5)
 		var size := pow(rng.randf(), 2.2) * (1.52 if far_band else 0.72) + 0.04
 		var spin := Basis.from_euler(Vector3(rng.randf() * TAU, rng.randf() * TAU, rng.randf() * TAU))
@@ -358,7 +366,7 @@ func build_hud() -> void:
 	hud.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	hud.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var title := Label.new()
-	title.text = "WU FLEET   /   60 SHIPS"
+	title.text = hud_title
 	title.position = Vector2(32, 22)
 	title.modulate = Color("#8cbdcf")
 	hud.add_child(title)
@@ -454,24 +462,32 @@ func seek(value: float) -> void:
 	show_frame(value)
 
 
+func map_focus_weight(strength: float, _span: float) -> float:
+	return smoothstep(0.0, 0.14, strength)
+
+
+func tracking_point(weight: float) -> Vector3:
+	return FLEET_FOCUS.lerp(Vector3.ZERO, weight)
+
+
 func show_frame(at: float) -> void:
 	var approach := smoothstep(45.0, 48.0, at) * (1.0 - smoothstep(52.0, 55.0, at))
 	sun.light_specular = lerpf(0.68, 0.40, approach)
 	time = at
 	fleet.position.x = SPEED * at
 	var index := 0
-	while index + 2 < SHOTS.size() and at > SHOTS[index + 1][0]:
+	while index + 2 < camera_shots.size() and at > camera_shots[index + 1][0]:
 		index += 1
-	var a: Array = SHOTS[index]
-	var b: Array = SHOTS[index + 1]
+	var a: Array = camera_shots[index]
+	var b: Array = camera_shots[index + 1]
 	var u := smoothstep(a[0], b[0], at)
 	var az := deg_to_rad(lerpf(a[1], b[1], u))
 	var elevation := lerpf(a[2], b[2], u)
 	var el := deg_to_rad(elevation)
 	var span := exp(lerpf(log(a[3]), log(b[3]), u))
 	var strength := lerpf(a[4], b[4], u)
-	var focus := fleet.position + FLEET_FOCUS.lerp(Vector3.ZERO, lerpf(a[5], b[5], u))
-	focus = STRATEGIC_CENTER.lerp(focus, smoothstep(0.0, 0.14, strength))
+	var focus := fleet.position + tracking_point(lerpf(a[5], b[5], u))
+	focus = STRATEGIC_CENTER.lerp(focus, map_focus_weight(strength, span))
 	var horizontal := Vector3(cos(az), 0.0, -sin(az))
 	var radial := horizontal * cos(el) + Vector3.UP * sin(el)
 	var right := Vector3(-sin(az), 0.0, -cos(az))
@@ -486,8 +502,8 @@ func show_frame(at: float) -> void:
 	else:
 		camera.set_frustum(span * near_clip / distance, Vector2.ZERO, near_clip, distance + 52000.0)
 
-	var stage: String = STAGES[0][1]
-	for cue in STAGES:
+	var stage: String = camera_stages[0][1]
+	for cue in camera_stages:
 		if at >= cue[0]:
 			stage = cue[1]
 	stage_label.text = stage
