@@ -4,6 +4,7 @@ const FleetMotion := preload("res://fleet_poc_motion.gd")
 const SingleFleetMotion := preload("res://single_fleet_motion.gd")
 const FleetMarker := preload("res://shu_fleet_map_marker.gd")
 const CAMERA_TILT_START := 120.0
+const MIN_VIEW_SPAN := 21.0
 const ROSTER_START_SPAN := 540.0
 const ROSTER_REVEAL_INTERVAL := 0.045
 const CAMERA_BLEND_DURATION := 0.30
@@ -18,6 +19,7 @@ enum Order { NONE, MOVE, FACE }
 @export var map_formation: FleetMarker.Formation = FleetMarker.Formation.CIRCLE
 
 @export var single_fleet_3d := false
+@export var fleet_orders_enabled := true
 
 class FleetUnit:
 	var anchor: Node3D
@@ -26,6 +28,9 @@ class FleetUnit:
 	var formation: FleetMarker.Formation
 	var ships: Array[Dictionary]
 	var roles: Array[int]
+	var affiliation := "촉 함대"
+	var ink := Color.WHITE
+	var faction := "SHU"
 
 
 var units: Array[FleetUnit] = []
@@ -67,6 +72,19 @@ func _ready() -> void:
 	if recording or "--verify-fleet" in OS.get_cmdline_user_args():
 		panel.free()
 		return
+	_initialize_fleets()
+	span = _overview_span()
+	_build_tactics()
+	_build_navigation()
+	if single_fleet_3d:
+		_set_selection([0])
+		focus = Vector2(fleet.position.x, fleet.position.z)
+		span = 38.0
+		tilt_elapsed = CAMERA_BLEND_DURATION
+	_update_camera()
+
+
+func _initialize_fleets() -> void:
 	var markers: Dictionary[FleetMarker.FleetSize, FleetMarker] = {}
 	for i in FleetMarker.FleetSize.size():
 		var size: FleetMarker.FleetSize = i
@@ -85,15 +103,6 @@ func _ready() -> void:
 		for slot in slots:
 			formation_center += slot
 		formation_center /= slots.size()
-	span = _overview_span()
-	_build_tactics()
-	_build_navigation()
-	if single_fleet_3d:
-		_set_selection([0])
-		focus = Vector2(fleet.position.x, fleet.position.z)
-		span = 38.0
-		tilt_elapsed = CAMERA_BLEND_DURATION
-	_update_camera()
 
 
 func _process(delta: float) -> void:
@@ -260,7 +269,7 @@ func _zoom_at(pixel: Vector2, ratio: float) -> void:
 	var anchor: Variant = _game_point(pixel)
 	var prior_span := wheel_span if zoom_tween != null and zoom_tween.is_running() else span
 	_cancel_zoom()
-	wheel_span = clampf(prior_span * ratio, 21.0, _overview_span() * 1.35)
+	wheel_span = clampf(prior_span * ratio, MIN_VIEW_SPAN, _overview_span() * 1.35)
 	zoom_tween = create_tween()
 	zoom_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	zoom_tween.tween_method(_apply_anchored_zoom.bind(pixel, anchor), span, wheel_span, 0.28)
@@ -292,13 +301,14 @@ func _unhandled_input(event: InputEvent) -> void:
 				_clear_gestures()
 				_set_selection([])
 			KEY_SPACE:
-				paused = not paused
+				if fleet_orders_enabled:
+					paused = not paused
 			KEY_2, KEY_3, KEY_4:
 				spread_positions.clear()
 				_cancel_zoom()
 				var point := _active_unit().anchor.position
 				focus = Vector2(point.x, point.z)
-				span = {KEY_2: 410.0, KEY_3: 110.0, KEY_4: 21.0}[event.keycode]
+				span = {KEY_2: 410.0, KEY_3: 110.0, KEY_4: MIN_VIEW_SPAN}[event.keycode]
 				_update_camera()
 			KEY_HOME, KEY_1:
 				_show_overview()
@@ -349,6 +359,8 @@ func _handle_button(event: InputEventMouseButton) -> void:
 				left_down = false
 				_select_on_release(point, event.shift_pressed)
 		MOUSE_BUTTON_RIGHT:
+			if not fleet_orders_enabled:
+				return
 			if event.pressed:
 				if panning or left_down or (selected_units.is_empty() and _units_at(point).is_empty()):
 					return
@@ -522,8 +534,9 @@ func _set_selection(indices: Array[int]) -> void:
 		panel.hide()
 		_set_order(Order.NONE)
 	else:
-		title_label.text = ("촉 함대 %02d  ·  %d척" % [selected_units[0] + 1, _selected_ship_count()]
-			if selected_units.size() == 1 else "촉 함대 %d개 선택  ·  %d척" %
+		title_label.text = ("%s %02d  ·  %d척" %
+			[_active_unit().affiliation, selected_units[0] + 1, _selected_ship_count()]
+			if selected_units.size() == 1 else "함대 %d개 선택  ·  %d척" %
 				[selected_units.size(), _selected_ship_count()])
 		for role in manifest_labels.size():
 			manifest_labels[role].text = "%s  %d" % [ROLE_NAMES[role],
@@ -631,6 +644,8 @@ func _build_tactics() -> void:
 	status_label.add_theme_font_override("font", font)
 	column.add_child(status_label)
 	var buttons := HBoxContainer.new()
+	buttons.visible = fleet_orders_enabled
+	status_label.visible = fleet_orders_enabled
 	column.add_child(buttons)
 	move_button = _make_button(buttons, "이동", font)
 	face_button = _make_button(buttons, "방향 전환", font)
@@ -676,14 +691,14 @@ func _draw_fleet_overlay() -> void:
 	if units.is_empty():
 		super._draw_fleet_overlay()
 		return
+	_draw_fleet_labels()
 	var font := ThemeDB.fallback_font
 	var screen := get_viewport().get_visible_rect().size
 	selection.draw_rect(Rect2(Vector2.ZERO, Vector2(screen.x, 52)), Color("#101a29"))
 	selection.draw_string(font, Vector2(22, 33),
 		"2D STRATEGIC MAP" if map_opacity > 0.5 else "3D FLEET VIEW",
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 19, Color("#d8e7fb"))
-	selection.draw_string(font, Vector2(280, 32),
-		"Wheel: zoom   Middle drag: pan   Left: select   Right: orders   Space: pause",
+	selection.draw_string(font, Vector2(280, 32), _navigation_hint(),
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color("#b7cadf"))
 	var view := get_viewport().get_visible_rect()
 	if single_fleet_3d or map_opacity > 0.001:
@@ -699,13 +714,15 @@ func _draw_fleet_overlay() -> void:
 			continue
 		if marker_opacity > 0.001:
 			unit.marker.draw(selection, center, -unit.anchor.rotation.y, unit.formation,
-				_unit_marker_scale(i), marker_opacity, _unit_roster(i))
+				_unit_marker_scale(i), marker_opacity, _unit_roster(i), _marker_color(unit))
 		if selected_units.has(i):
-			selection.draw_rect(area, Color(JADE, 0.8), false, 1.0)
+			var ink := JADE if unit.ink == Color.WHITE else unit.ink
+			selection.draw_rect(area, Color(ink, 0.8), false, 1.0)
 	if not selected_units.is_empty():
 		var summary := _summary_area()
 		if summary.has_area():
-			var label := ("SHU %02d  /  %d SHIPS" % [selected_units[0] + 1, _selected_ship_count()]
+			var label := ("%s %02d  /  %d SHIPS" %
+				[_active_unit().faction, selected_units[0] + 1, _selected_ship_count()]
 				if selected_units.size() == 1 else "%d FLEETS  /  %d SHIPS" %
 					[selected_units.size(), _selected_ship_count()])
 			selection.draw_rect(summary, Color("#101a29"))
@@ -719,21 +736,35 @@ func _draw_fleet_overlay() -> void:
 		_draw_direction(gesture_start, gesture_end, JADE, 8.0)
 
 
+func _navigation_hint() -> String:
+	return ("Wheel: zoom   Middle drag: pan   Left: select   Right: orders   Space: pause"
+		if fleet_orders_enabled else "Wheel: zoom   Middle drag: pan   Left: select   2: map   3: 3D")
+
+
+func _marker_color(unit: FleetUnit) -> Color:
+	return unit.ink
+
+
+func _draw_fleet_labels() -> void:
+	pass
+
+
 func _draw_active_route(unit: FleetUnit) -> void:
 	var motion: Variant = unit.motion
 	if camera.is_position_behind(unit.anchor.position) or camera.is_position_behind(motion.destination):
 		return
 	var lead := camera.unproject_position(unit.anchor.position)
+	var ink := JADE if unit.ink == Color.WHITE else unit.ink
 	var show_route: bool = motion.has_fleet_order() if single_fleet_3d else motion.moving and not motion.turning
 	if show_route:
 		var end := camera.unproject_position(motion.destination)
 		var opacity := maxf(0.74, map_opacity) if single_fleet_3d else map_opacity
-		selection.draw_dashed_line(lead, end, Color(JADE, 0.65 * opacity), 2.0, 12.0, true)
-		selection.draw_circle(end, 4.0, Color(JADE, opacity), false, 1.0, true)
+		selection.draw_dashed_line(lead, end, Color(ink, 0.65 * opacity), 2.0, 12.0, true)
+		selection.draw_circle(end, 4.0, Color(ink, opacity), false, 1.0, true)
 		if motion.has_arrival_yaw:
 			var direction := Basis(Vector3.UP, motion.arrival_yaw).x
 			var ahead := camera.unproject_position(motion.destination + direction)
-			_draw_direction(end, end + (ahead - end).normalized() * 28.0, Color(JADE, opacity), 7.0)
+			_draw_direction(end, end + (ahead - end).normalized() * 28.0, Color(ink, opacity), 7.0)
 
 
 func _draw_direction(start: Vector2, end: Vector2, color: Color, size: float) -> void:
