@@ -40,13 +40,6 @@ func _run() -> void:
 		if f.side == 1 and f.contact == "confirmed":
 			foe = f
 	if not TestCheck.ok(self, foe != null, "확인 접촉"): return
-	var core_confirmed: FleetState = battle.sim.st.by_id(foe.id)
-	var initial_size: int = battle.sim.salvo.total0(core_confirmed)
-	var expected_size := maxi(25, roundi(float(initial_size) / 25.0) * 25)
-	if not TestCheck.ok(self, foe.visual_max_ships == expected_size and expected_size > 10, "확인 접촉의 초기 규모 구간을 화면에 전달"): return
-	battle.presentation.renderer.update(0.1)
-	var fleet_vis = battle.presentation.renderer.vis[foe.id]
-	if not TestCheck.ok(self, fleet_vis.slots.size() == maxi(12, roundi(expected_size * battle.presentation.renderer.vis_ratio())), "확인 접촉의 규모 구간에 비례한 모델 수"): return
 	if not TestCheck.ok(self, src.detail(foe.id).is_empty() and foe.ranges.is_empty() and foe.formation_id == "" and src.form_name(foe) == "" and foe.counts.is_empty(), "적 접촉에 편성·진형·사거리 없음"): return
 	if not TestCheck.ok(self, BattleSource.contact_strength_text(foe).begins_with("전력 ") and foe.band > 0, "확인: 전력 구간"): return
 	battle.selected.clear()

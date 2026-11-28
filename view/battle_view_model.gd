@@ -19,7 +19,6 @@ class FleetView:
 	var form: Array[Vector2] = []
 	var ships := 0.0
 	var max_ships := 0.0
-	var visual_max_ships := 0 # 확인 접촉의 화면 전용 규모 구간
 	var shown := 0.0
 	var lv := 1
 	var spd := 1.0
@@ -293,7 +292,6 @@ func _apply_contact(s: Dictionary, advanced: bool, fresh: Array[FleetView]) -> v
 		f.tpos = f.tpos.move_toward(f.cgoal, f.cstep)
 	f.faction = s.faction
 	f.contact = s.contact
-	f.visual_max_ships = int(s.get("visual_max_ships", 0)) if s.contact == "confirmed" else 0
 	f.err_r = s.err_r
 	f.conf = s.conf_bp / 10000.0
 	if s.contact != "confirmed":

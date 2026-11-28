@@ -28,7 +28,6 @@ func _sq(f) -> Dictionary:
 	return {
 		"id": f.id, "side": f.side, "faction": faction(f.id), "name": f.fname, "role": f.role, "portrait": f.portrait,
 		"pos": f.pos, "heading": f.heading, "flip": f.flip, "ships": f.ships, "max_ships": f.max_ships, "counts": f.counts,
-		"visual_max_ships": f.visual_max_ships,
 		"flagship": f.is_flag, "dead": f.dead,
 		"target_id": f.target.id if f.target else -1,
 		"firing_at": f.fire_t.id if (f.fire_t and not f.fire_t.dead) else -1,

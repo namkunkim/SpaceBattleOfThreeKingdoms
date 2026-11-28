@@ -101,7 +101,6 @@ class FleetVis:
 	var mmis: Array = []
 	var glow: MultiMeshInstance3D
 	var slots: Array = []
-	var visual_max_ships := 0
 	var alive_n := 0
 	var volley_t := 0.0
 	var dying := false
@@ -828,9 +827,7 @@ func _build_slots(v: FleetVis, sq: Dictionary) -> void:
 	v.formation = sq.formation
 	var ship_ids := _real_ship_ids(sq.get("counts", {}))
 	var types := ship_ids.map(func(t): return _model_class(t))
-	v.visual_max_ships = int(sq.get("visual_max_ships", 0))
-	var visual_size: float = float(v.visual_max_ships) if v.visual_max_ships > 0 else sq.max_ships
-	var n := types.size() if not types.is_empty() else maxi(12, roundi(visual_size * vis_ratio()))
+	var n := types.size() if not types.is_empty() else maxi(12, roundi(sq.max_ships * vis_ratio()))
 	var layout := int(sq.formation)
 	if _p05_multi_formation and _p05_fleet_ids.has(v.id):
 		var canonical: String = _p05_fleet_ids[v.id].fleet.formation_id
@@ -1001,9 +998,6 @@ func update(dt: float) -> void:
 	for sq in sqs:
 		seen[sq.id] = true
 		by_id[sq.id] = sq
-		if vis.has(sq.id) and vis[sq.id].visual_max_ships != int(sq.get("visual_max_ships", 0)):
-			_free_vis(vis[sq.id])
-			vis.erase(sq.id)
 		if not vis.has(sq.id):
 			vis[sq.id] = _make_vis(sq)
 	for id in vis.keys():

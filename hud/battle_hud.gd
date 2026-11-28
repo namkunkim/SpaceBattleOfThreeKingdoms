@@ -312,8 +312,8 @@ func refresh_panel() -> void:
 		p_portrait.texture = b._portrait_tex(single.portrait)
 		p_name.text = "%s 함대" % single.fname
 		p_role.text = single.role + (" · 적" if foe else "")
-		p_ships.text = BattleSource.contact_strength_text(single) if foe and single.contact != "" else "Lv.%02d      %d / %d척" % [single.lv, ceili(single.ships), int(single.max_ships)]
-		p_bar.value = BattleSource.strength_frac(single) * 100.0
+		p_ships.text = "Lv.%02d      %d / %d척" % [single.lv, ceili(single.ships), int(single.max_ships)]
+		p_bar.value = single.ships / single.max_ships * 100.0
 		p_bar.add_theme_stylebox_override("fill", style(C_FOE if foe else C_LIFE, C_FOE if foe else C_LIFE, 2, 0))
 		if foe:
 			p_chips.text = ("[방어진형] " if single.defense else "") + ("[기함]" if single.is_flag else "")
@@ -338,13 +338,12 @@ func refresh_panel() -> void:
 		var a: Array = b.alive(0)
 		var e: Array = b.alive(1)
 		var at := 0.0
-		var confirmed := 0
+		var et := 0.0
 		for f in a:
 			at += f.ships
 		for f in e:
-			if f.contact == "confirmed" or f.contact == "":
-				confirmed += 1
-		p_hint.text = GameLocale.text("함대를 선택하세요.  아군 %d개 함대 · %d척\n적 %d개 함대 확인 · 척수 미확인") % [a.size(), ceili(at), confirmed]
+			et += f.ships
+		p_hint.text = "함대를 선택하세요.  아군 %d개 함대 · %d척\n적 %d개 함대 · %d척 확인" % [a.size(), ceili(at), e.size(), ceili(et)]
 	paint_groups()
 
 func _shift_panel(x: float) -> void:
