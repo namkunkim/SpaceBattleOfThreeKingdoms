@@ -311,15 +311,30 @@ func _tactical_point(ship_id: int, centers: PackedVector2Array) -> Vector2:
 	return centers[side] + (offset * 0.48).limit_length(28.0 * _unit_marker_scale(side))
 
 
+func _draw_tactical_shots(impacts: bool) -> void:
+	if marker_opacity <= 0.01:
+		return
+	var centers := PackedVector2Array([_marker_center(0), _marker_center(1)])
+	for shot in fire_playback.active_shots:
+		if shot.impact != impacts:
+			continue
+		var target := _tactical_point(shot.target, centers)
+		if impacts and target.y < 64.0:
+			continue
+		var origin := _tactical_point(shot.source, centers)
+		var target_side := int(shot.target >= fire_playback.shu_count)
+		tactical_combat.draw_shot(selection, shot, origin, target, marker_opacity,
+			_unit_marker_scale(target_side))
+
+
+func _draw_fleet_impacts() -> void:
+	_draw_tactical_shots(true)
+
+
 func _draw_fleet_labels() -> void:
 	var show_life := marker_opacity > 0.01 and tactical_combat.life.size() == units.size()
 	if show_life:
-		var centers := PackedVector2Array([_marker_center(0), _marker_center(1)])
-		if centers[0].distance_to(centers[1]) > 56.0:
-			for shot in fire_playback.active_shots:
-				var origin := _tactical_point(shot.source, centers)
-				var target := _tactical_point(shot.target, centers)
-				tactical_combat.draw_shot(selection, shot, origin, target, marker_opacity)
+		_draw_tactical_shots(false)
 	var view := get_viewport().get_visible_rect()
 	for i in units.size():
 		var area := _fleet_area(i)

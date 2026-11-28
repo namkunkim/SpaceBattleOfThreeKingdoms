@@ -722,6 +722,7 @@ func _draw_fleet_overlay() -> void:
 		if selected_units.has(i):
 			var ink := JADE if unit.ink == Color.WHITE else unit.ink
 			selection.draw_rect(area, Color(ink, 0.8), false, 1.0)
+	_draw_fleet_impacts()
 	if not selected_units.is_empty():
 		var summary := _summary_area()
 		if summary.has_area():
@@ -750,6 +751,10 @@ func _marker_color(unit: FleetUnit) -> Color:
 
 
 func _draw_fleet_labels() -> void:
+	pass
+
+
+func _draw_fleet_impacts() -> void:
 	pass
 
 

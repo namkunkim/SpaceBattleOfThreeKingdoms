@@ -35,68 +35,68 @@ func resolve_hits(shots: Array[Dictionary], shu_count: int) -> void:
 	active_impacts = impacts
 
 
-func draw_shot(canvas: Node2D, shot: Dictionary, start: Vector2, target: Vector2, opacity: float) -> void:
+func draw_shot(canvas: Node2D, shot: Dictionary, start: Vector2, target: Vector2,
+		opacity: float, scale_factor: float) -> void:
 	var weapon := _weapon(shot)
 	var phase: float = shot.progress
-	var color: Color = WEAPON_COLORS[weapon]
-	var axis := (target - start).normalized()
+	var offset := target - start
+	var distance := offset.length()
+	var axis := offset.normalized()
+	if axis.is_zero_approx():
+		axis = Vector2.RIGHT if int(shot.source) < int(shot.target) else Vector2.LEFT
 	if shot.impact:
-		_draw_impact(canvas, target, axis, weapon, color, phase, opacity)
+		_draw_impact(canvas, target, axis, phase, opacity, scale_factor)
 		return
+	var color: Color = WEAPON_COLORS[weapon]
+	var head := start.lerp(target, phase)
 	match weapon:
 		Weapon.LASER:
-			var alpha := opacity * sin(PI * phase)
-			canvas.draw_line(start, target, Color(color, alpha * 0.24), 3.2, true)
-			canvas.draw_line(start, target, Color(color.lerp(Color.WHITE, 0.40), alpha), 1.1, true)
+			var pulse := clampf((phase - 0.84) / 0.16, 0.0, 1.0)
+			if pulse <= 0.0:
+				return
+			head = target - axis * minf((1.0 - pulse) * 16.0 * scale_factor, distance)
+			var length := minf(11.0 * scale_factor, start.distance_to(head))
+			canvas.draw_line(head - axis * length, head,
+				Color(color.lerp(Color.WHITE, 0.7), opacity * sin(PI * pulse) * 0.78), maxf(0.85, scale_factor), true)
 		Weapon.MISSILE:
 			var emitter: int = shot.emitter
-			var height := (11.0 + 4.0 * (emitter % 4)) * (-1.0 if emitter % 2 == 0 else 1.0)
-			var arc := axis.orthogonal() * height
-			for i in 8:
-				var age := float(i) / 8.0
-				var a := maxf(0.0, phase - 0.01 - i * 0.024)
-				var b := maxf(0.0, phase - 0.01 - (i + 1) * 0.024)
-				var near_point := start.lerp(target, a) + arc * sin(PI * a)
-				var far_point := start.lerp(target, b) + arc * sin(PI * b)
-				canvas.draw_line(near_point, far_point, Color(0.63, 0.67, 0.72, opacity * 0.24 * pow(1.0 - age, 1.7)),
-					lerpf(1.15, 2.2, age), true)
-			var nose := start.lerp(target, phase) + arc * sin(PI * phase)
-			var previous := maxf(0.0, phase - 0.01)
-			var pointing := (nose - (start.lerp(target, previous) + arc * sin(PI * previous))).normalized()
-			canvas.draw_line(nose, nose - pointing * 3.0, Color(color, opacity * 0.92), 1.2, true)
-			canvas.draw_circle(nose, 1.05, Color("#fff4d0", opacity), true, -1.0, true)
+			var height := (9.0 + 3.0 * (emitter % 4)) * (-1.0 if emitter % 2 == 0 else 1.0)
+			var arc := axis.orthogonal() * height * scale_factor
+			head += arc * sin(PI * phase)
+			var back := maxf(0.0, phase - 0.016)
+			var previous := start.lerp(target, back) + arc * sin(PI * back)
+			var tail := head - (head - previous).normalized() * minf(13.0 * scale_factor, distance * phase)
+			canvas.draw_line(tail, head, Color("#b4c2d0", opacity * 0.34), maxf(0.85, scale_factor), true)
+			canvas.draw_circle(head, maxf(0.65, 0.9 * scale_factor), Color(color.lerp(Color.WHITE, 0.52), opacity * 0.82),
+				true, -1.0, true)
 		Weapon.RAILGUN:
-			var head := start.lerp(target, phase)
-			var tail := start.lerp(target, maxf(0.0, phase - 0.067))
-			canvas.draw_line(tail, head, Color(color, opacity * 0.9), 1.25, true)
-			canvas.draw_circle(head, 0.9, Color(Color.WHITE, opacity), true, -1.0, true)
+			var length := minf(9.0 * scale_factor, distance * phase)
+			canvas.draw_line(head - axis * length, head,
+				Color(color.lerp(Color.WHITE, 0.58), opacity * 0.66), maxf(0.85, 0.9 * scale_factor), true)
 
 
 func _weapon(shot: Dictionary) -> Weapon:
 	return shot.weapon
 
 
-func _draw_impact(canvas: Node2D, point: Vector2, axis: Vector2, weapon: Weapon,
-		color: Color, phase: float, opacity: float) -> void:
-	var fade := opacity * (1.0 - phase)
+func _draw_impact(canvas: Node2D, point: Vector2, axis: Vector2, phase: float,
+		opacity: float, scale_factor: float) -> void:
+	var flash_window := lerpf(0.56, 0.34, smoothstep(0.30, 1.0, scale_factor))
+	var age := phase / flash_window
+	if age >= 1.0:
+		return
+	var fade := opacity * pow(1.0 - age, 1.8)
+	var halo_radius := maxf(1.7, (4.0 - age) * scale_factor)
+	var core_radius := maxf(1.0, (1.9 - age * 0.65) * scale_factor)
+	var flash_brightness := lerpf(1.32, 1.0, smoothstep(0.30, 0.85, scale_factor))
+	var flash_opacity := minf(opacity, fade * flash_brightness)
+	canvas.draw_circle(point, halo_radius, Color("#d5e7ff", fade * flash_brightness * 0.26), true, -1.0, true)
+	canvas.draw_circle(point, core_radius, Color(Color.WHITE, flash_opacity), true, -1.0, true)
 	var normal := axis.orthogonal()
-	match weapon:
-		Weapon.LASER:
-			var radius := 4.0 + phase * 16.0
-			var angle := normal.angle()
-			canvas.draw_arc(point, radius, angle - 1.0, angle + 1.0, 12,
-				Color(color, fade), 2.0, true)
-			canvas.draw_arc(point, radius, angle + PI - 1.0, angle + PI + 1.0, 12,
-				Color(color, fade), 2.0, true)
-			canvas.draw_circle(point, 4.0 * (1.0 - phase), Color(color, fade), true, -1.0, true)
-		Weapon.MISSILE:
-			var radius := 5.0 + phase * 24.0
-			canvas.draw_circle(point, radius, Color(color, fade * 0.18), true, -1.0, true)
-			canvas.draw_arc(point, radius, 0.0, TAU, 24, Color(color, fade), 2.5, true)
-			canvas.draw_circle(point, 7.0 * (1.0 - phase), Color("#fff1c4", fade), true, -1.0, true)
-		Weapon.RAILGUN:
-			for i in range(-2, 3):
-				var spark := (axis + normal * i * 0.45).normalized()
-				canvas.draw_line(point + spark * phase * 14.0, point + spark * (7.0 + phase * 22.0),
-					Color(color, fade), 2.0 if i == 0 else 1.0, true)
-			canvas.draw_circle(point, 3.0 * (1.0 - phase), Color(Color.WHITE, fade), true, -1.0, true)
+	var spark_length := maxf(2.1, (6.0 - age * 2.5) * scale_factor)
+	for i in [-1, 1]:
+		var spark := (axis + normal * float(i) * 0.24).normalized()
+		var inner := point + spark * (1.0 + age * 3.0) * scale_factor
+		var outer := inner + spark * spark_length
+		canvas.draw_line(inner, outer, Color(Color.WHITE, fade * 0.63),
+			maxf(0.85, 0.8 * scale_factor), true)
