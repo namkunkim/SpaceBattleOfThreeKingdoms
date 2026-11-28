@@ -16,12 +16,14 @@ const LAYOUTS := [
 const DIAMETERS := [76.0, 91.0, 110.0]
 const VIEWS := [4.2, 5.2, 6.0]
 const GLYPH_OFFSET := 13.0
+const SYMBOL_HALF_HEIGHT := 9.0
 const EXTRA_HULLS := [4, 6, 8]
 const THUMB_SIZE := 22.0
 const THUMB_VIEW_SPAN := 2.25
 
 var viewport: SubViewport
 var diameter: float
+var space_under_symbol := 0.0
 var footprint := Rect2()
 var roster_roles: Array[int]
 var roster_textures: Array[ViewportTexture] = []
@@ -120,20 +122,22 @@ func hull_area(center: Vector2, yaw: float, scale_factor: float) -> Rect2:
 
 func hit_area(center: Vector2, yaw: float, scale_factor: float, count: int) -> Rect2:
 	var area := roster_area(hull_area(center, yaw, scale_factor), scale_factor, count)
-	var glyph := Rect2(_symbol_position(center, area) - Vector2(9.0, 9.0), Vector2(18.0, 18.0))
+	var half_size := Vector2.ONE * SYMBOL_HALF_HEIGHT * scale_factor
+	var glyph := Rect2(symbol_position(center, area, scale_factor) - half_size, half_size * 2.0)
 	return area.merge(glyph).grow(7.0)
 
 
-func _symbol_position(center: Vector2, hull: Rect2) -> Vector2:
-	return Vector2(center.x, hull.position.y - GLYPH_OFFSET)
+func symbol_position(center: Vector2, content: Rect2, scale_factor: float) -> Vector2:
+	return Vector2(center.x, content.position.y - (GLYPH_OFFSET + space_under_symbol) * scale_factor)
 
 
 func draw(canvas: Node2D, center: Vector2, yaw: float, formation: Formation,
-		scale_factor: float, alpha: float, count: int) -> void:
+		scale_factor: float, alpha: float, count: int, accent := Color.WHITE) -> void:
+	var tint := Color(Color.WHITE.lerp(accent, 0.44), alpha)
 	canvas.draw_set_transform(center, yaw, Vector2.ONE * scale_factor)
 	var size := Vector2.ONE * diameter
 	canvas.draw_texture_rect(viewport.get_texture(), Rect2(-size * 0.5, size), false,
-		Color(1.0, 1.0, 1.0, alpha))
+		tint)
 	canvas.draw_set_transform(Vector2.ZERO)
 	var hull := hull_area(center, yaw, scale_factor)
 	var thumb := Vector2.ONE * THUMB_SIZE * scale_factor
@@ -141,13 +145,14 @@ func draw(canvas: Node2D, center: Vector2, yaw: float, formation: Formation,
 		var point := _roster_point(i, hull, scale_factor)
 		canvas.draw_set_transform(point, yaw)
 		canvas.draw_texture_rect(roster_textures[roster_roles[i]], Rect2(-thumb * 0.5, thumb),
-			false, Color(1.0, 1.0, 1.0, alpha))
+			false, tint)
+	var point := symbol_position(center, roster_area(hull, scale_factor, count), scale_factor)
+	canvas.draw_set_transform(point, 0.0, Vector2.ONE * scale_factor)
+	_draw_symbol(canvas, Vector2.ZERO, formation, Color(accent, alpha))
 	canvas.draw_set_transform(Vector2.ZERO)
-	_draw_symbol(canvas, _symbol_position(center, roster_area(hull, scale_factor, count)), formation, alpha)
 
 
-func _draw_symbol(canvas: Node2D, point: Vector2, formation: Formation, alpha: float) -> void:
-	var ink := Color(1.0, 1.0, 1.0, alpha)
+func _draw_symbol(canvas: Node2D, point: Vector2, formation: Formation, ink: Color) -> void:
 	var triangle := PackedVector2Array([point + Vector2(0, -7),
 		point + Vector2(8, 7), point + Vector2(-8, 7)])
 	match formation:

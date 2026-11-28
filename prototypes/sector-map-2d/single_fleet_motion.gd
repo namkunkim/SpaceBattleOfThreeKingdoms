@@ -59,7 +59,7 @@ func _init(anchor: Node3D, slots: Array[Vector3], roles: Array[int]) -> void:
 	_roles = roles
 	_slots = slots
 	for i in slots.size():
-		positions.append(anchor.position + slots[i])
+		positions.append(anchor.transform * slots[i])
 		_slot_velocities.append(Vector3.ZERO)
 		headings.append(anchor.rotation.y)
 		pitches.append(0.0)
