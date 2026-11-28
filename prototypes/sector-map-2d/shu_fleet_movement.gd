@@ -11,6 +11,7 @@ const FORMATION_SCALE := 1.6
 var fleet := Node3D.new()
 var slots: Array[Vector3] = []
 var roles: Array[int] = []
+var ship_instances: Array[Dictionary] = []
 var map_opacity := 1.0
 var recording := false
 
@@ -171,6 +172,7 @@ func _build_formation() -> void:
 				roles.append((row + column + deck) % HULLS.size())
 
 func _build_ships() -> bool:
+	ship_instances.resize(slots.size())
 	for role in HULLS.size():
 		var reference := load("res://models/shu-%s.glb" % HULLS[role]) as PackedScene
 		if reference == null:
@@ -218,6 +220,7 @@ func _build_ships() -> bool:
 		for i in slots.size():
 			if roles[i] == role:
 				multi.set_instance_transform(ship, Transform3D(Basis.IDENTITY, slots[i]) * model_transform)
+				ship_instances[i] = {"mesh": multi, "index": ship, "model": model_transform}
 				ship += 1
 		var batch := MultiMeshInstance3D.new()
 		batch.multimesh = multi
