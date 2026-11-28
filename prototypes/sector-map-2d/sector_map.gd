@@ -16,6 +16,7 @@ var systems: Array[Dictionary] = []
 var center := Vector2.ZERO
 var zoom := 1.0
 var dragging := false
+var show_controls := true
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
@@ -208,6 +209,8 @@ func _draw() -> void:
 	var font := ThemeDB.fallback_font
 	draw_string(font, Vector2(22.0, 33.0), "DEEP SPACE  /  SECTOR MAP",
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 19, Color("#e8eef9"))
+	if not show_controls:
+		return
 	draw_string(font, Vector2(22.0, screen.y - 18.0), "Scroll  Zoom     Drag  Pan     Home  Overview",
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color("#aebcd4"))
 
