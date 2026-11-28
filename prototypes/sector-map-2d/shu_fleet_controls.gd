@@ -1,6 +1,7 @@
 extends "res://shu_fleet_movement.gd"
 
 const FleetMotion := preload("res://fleet_poc_motion.gd")
+const SingleFleetMotion := preload("res://single_fleet_motion.gd")
 const FleetMarker := preload("res://shu_fleet_map_marker.gd")
 const CAMERA_TILT_START := 120.0
 const ROSTER_START_SPAN := 540.0
@@ -16,9 +17,11 @@ enum Order { NONE, MOVE, FACE }
 @export var map_fleet_size: FleetMarker.FleetSize = FleetMarker.FleetSize.LARGE
 @export var map_formation: FleetMarker.Formation = FleetMarker.Formation.CIRCLE
 
+@export var single_fleet_3d := false
+
 class FleetUnit:
 	var anchor: Node3D
-	var motion: FleetMotion
+	var motion: Variant
 	var marker: FleetMarker
 	var formation: FleetMarker.Formation
 	var ships: Array[Dictionary]
@@ -69,7 +72,7 @@ func _ready() -> void:
 		var size: FleetMarker.FleetSize = i
 		markers[size] = FleetMarker.new(self, size, roles, ship_instances)
 	_add_unit(fleet, ship_instances, markers[map_fleet_size], map_formation)
-	for i in EXTRA_STARTS.size():
+	for i in range(0 if single_fleet_3d else EXTRA_STARTS.size()):
 		var point := EXTRA_STARTS[i]
 		var anchor := Node3D.new()
 		anchor.position = Vector3(point.x, 0.0, point.y)
@@ -77,13 +80,19 @@ func _ready() -> void:
 		var size: FleetMarker.FleetSize = i % FleetMarker.FleetSize.size()
 		var formation: FleetMarker.Formation = i % FleetMarker.Formation.size()
 		_add_unit(anchor, _copy_hulls(anchor, 20 * (size + 1)), markers[size], formation)
-	units[0].motion.move_to(fleet, Vector3(ROUTE_END.x, 0.0, ROUTE_END.y))
-	for slot in slots:
-		formation_center += slot
-	formation_center /= slots.size()
+	if not single_fleet_3d:
+		units[0].motion.move_to(fleet, Vector3(ROUTE_END.x, 0.0, ROUTE_END.y))
+		for slot in slots:
+			formation_center += slot
+		formation_center /= slots.size()
 	span = _overview_span()
 	_build_tactics()
 	_build_navigation()
+	if single_fleet_3d:
+		_set_selection([0])
+		focus = Vector2(fleet.position.x, fleet.position.z)
+		span = 38.0
+		tilt_elapsed = CAMERA_BLEND_DURATION
 	_update_camera()
 
 
@@ -94,7 +103,7 @@ func _process(delta: float) -> void:
 	if not paused:
 		for unit in units:
 			if unit.motion.moving:
-				unit.motion.advance(unit.anchor, delta * FLIGHT_TIME_SCALE)
+				unit.motion.advance(unit.anchor, delta if single_fleet_3d else delta * FLIGHT_TIME_SCALE)
 				_sync_ships(unit)
 	if visible_roster < desired_roster:
 		reveal_elapsed += delta
@@ -120,7 +129,10 @@ func _add_unit(anchor: Node3D, ships: Array[Dictionary], marker: FleetMarker,
 	unit.formation = formation
 	unit.roles = roles.slice(0, ships.size())
 	var layout := slots if anchor == fleet else _formation_slots(ships.size(), formation)
-	unit.motion = FleetMotion.new(anchor, layout, unit.roles)
+	if single_fleet_3d:
+		unit.motion = SingleFleetMotion.new(anchor, layout, unit.roles)
+	else:
+		unit.motion = FleetMotion.new(anchor, layout, unit.roles)
 	_sync_ships(unit)
 	units.append(unit)
 
@@ -190,7 +202,11 @@ func _sync_ships(unit: FleetUnit) -> void:
 	var local := unit.anchor.transform.affine_inverse()
 	for i in unit.ships.size():
 		var ship := unit.ships[i]
-		var world := Transform3D(Basis(Vector3.UP, unit.motion.headings[i]), unit.motion.positions[i])
+		var attitude := Basis(Vector3.UP, unit.motion.headings[i])
+		if single_fleet_3d:
+			var motion: SingleFleetMotion = unit.motion
+			attitude = attitude * Basis(Vector3.BACK, motion.pitches[i]) * Basis(Vector3.RIGHT, motion.banks[i])
+		var world := Transform3D(attitude, unit.motion.positions[i])
 		ship.mesh.set_instance_transform(ship.index, local * world * ship.model)
 
 
@@ -636,6 +652,8 @@ func _update_status() -> void:
 		status_label.text = "지도에서 바라볼 방향을 클릭하세요"
 	elif paused:
 		status_label.text = "일시 정지"
+	elif single_fleet_3d:
+		status_label.text = _active_unit().motion.status_text()
 	elif _active_unit().motion.turning:
 		status_label.text = "선회 중"
 	elif _active_unit().motion.moving:
@@ -668,9 +686,9 @@ func _draw_fleet_overlay() -> void:
 		"Wheel: zoom   Middle drag: pan   Left: select   Right: orders   Space: pause",
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color("#b7cadf"))
 	var view := get_viewport().get_visible_rect()
-	if map_opacity > 0.001:
-		for i in units.size():
-			_draw_active_route(units[i])
+	if single_fleet_3d or map_opacity > 0.001:
+		for unit in units:
+			_draw_active_route(unit)
 	for i in units.size():
 		var unit := units[i]
 		if camera.is_position_behind(unit.anchor.position):
@@ -702,18 +720,20 @@ func _draw_fleet_overlay() -> void:
 
 
 func _draw_active_route(unit: FleetUnit) -> void:
-	var motion := unit.motion
+	var motion: Variant = unit.motion
 	if camera.is_position_behind(unit.anchor.position) or camera.is_position_behind(motion.destination):
 		return
 	var lead := camera.unproject_position(unit.anchor.position)
-	if motion.moving and not motion.turning:
+	var show_route: bool = motion.has_fleet_order() if single_fleet_3d else motion.moving and not motion.turning
+	if show_route:
 		var end := camera.unproject_position(motion.destination)
-		selection.draw_dashed_line(lead, end, Color(JADE, 0.65 * map_opacity), 2.0, 12.0, true)
-		selection.draw_circle(end, 4.0, Color(JADE, map_opacity), false, 1.0, true)
+		var opacity := maxf(0.74, map_opacity) if single_fleet_3d else map_opacity
+		selection.draw_dashed_line(lead, end, Color(JADE, 0.65 * opacity), 2.0, 12.0, true)
+		selection.draw_circle(end, 4.0, Color(JADE, opacity), false, 1.0, true)
 		if motion.has_arrival_yaw:
 			var direction := Basis(Vector3.UP, motion.arrival_yaw).x
 			var ahead := camera.unproject_position(motion.destination + direction)
-			_draw_direction(end, end + (ahead - end).normalized() * 28.0, Color(JADE, map_opacity), 7.0)
+			_draw_direction(end, end + (ahead - end).normalized() * 28.0, Color(JADE, opacity), 7.0)
 
 
 func _draw_direction(start: Vector2, end: Vector2, color: Color, size: float) -> void:
