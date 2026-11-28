@@ -85,12 +85,13 @@ func _process(delta: float) -> void:
 	if not paused:
 		# Sample short impact windows even when a frame is delayed.
 		var steps := maxi(1, ceili(delta * 60.0))
+		var step := delta / steps
 		for i in steps:
 			var previous := fire_playback.elapsed
-			fire_playback.advance(delta / steps, is_3d)
+			fire_playback.advance(step, is_3d)
 			if fire_playback.elapsed < previous:
 				tactical_combat.reset(fire_playback.shu_count, fire_playback.wei_count)
-			tactical_combat.resolve_hits(fire_playback.active_shots, fire_playback.shu_count)
+			tactical_combat.resolve_hits(fire_playback.active_shots, fire_playback.shu_count, step)
 	if is_3d:
 		_sync_combat_poses()
 		_draw_live_weapons()
@@ -329,6 +330,16 @@ func _draw_tactical_shots(impacts: bool) -> void:
 
 func _draw_fleet_impacts() -> void:
 	_draw_tactical_shots(true)
+	if marker_opacity <= 0.01:
+		return
+	var centers := PackedVector2Array([_marker_center(0), _marker_center(1)])
+	for side in units.size():
+		var shot := tactical_combat.overview_hits[side]
+		if shot.is_empty() or tactical_combat.overview_hit_age[side] >= TacticalCombat.OVERVIEW_FLASH_DURATION:
+			continue
+		var point := _tactical_point(shot.target, centers)
+		if point.y >= 64.0:
+			tactical_combat.draw_overview_flash(selection, point, side, marker_opacity, _unit_marker_scale(side))
 
 
 func _draw_fleet_labels() -> void:
