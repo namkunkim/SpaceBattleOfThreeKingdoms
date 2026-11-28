@@ -264,12 +264,16 @@ func _game_point(pixel: Vector2) -> Variant:
 	return Plane(Vector3.UP, 0.0).intersects_ray(origin, direction)
 
 
+func _minimum_view_span() -> float:
+	return MIN_VIEW_SPAN
+
+
 func _zoom_at(pixel: Vector2, ratio: float) -> void:
 	spread_positions.clear()
 	var anchor: Variant = _game_point(pixel)
 	var prior_span := wheel_span if zoom_tween != null and zoom_tween.is_running() else span
 	_cancel_zoom()
-	wheel_span = clampf(prior_span * ratio, MIN_VIEW_SPAN, _overview_span() * 1.35)
+	wheel_span = clampf(prior_span * ratio, _minimum_view_span(), _overview_span() * 1.35)
 	zoom_tween = create_tween()
 	zoom_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	zoom_tween.tween_method(_apply_anchored_zoom.bind(pixel, anchor), span, wheel_span, 0.28)
@@ -308,7 +312,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				_cancel_zoom()
 				var point := _active_unit().anchor.position
 				focus = Vector2(point.x, point.z)
-				span = {KEY_2: 410.0, KEY_3: 110.0, KEY_4: MIN_VIEW_SPAN}[event.keycode]
+				span = {KEY_2: 410.0, KEY_3: 110.0, KEY_4: _minimum_view_span()}[event.keycode]
 				_update_camera()
 			KEY_HOME, KEY_1:
 				_show_overview()

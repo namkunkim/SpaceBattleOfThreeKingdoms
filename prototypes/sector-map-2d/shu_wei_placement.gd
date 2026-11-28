@@ -10,13 +10,12 @@ const LIFE_GAUGE_WIDTH := 64.0
 const LIFE_GAUGE_HEIGHT := 7.0
 const LIFE_GAUGE_GAP := 1.0
 const CLOSE_SPAN := 58.0
-const ANGLE_BLEND_START_SPAN := 26.0
 const CLOSE_CAMERA_DIRECTION := Vector3(-29.0, 13.5, 22.0)
 const CLOSE_CAMERA_DISTANCE_FACTOR := 1.65
 const ORBIT_YAW_SPEED := 0.006
 const ORBIT_PITCH_SPEED := 0.0045
-const ORBIT_MIN_PITCH := deg_to_rad(6.0)
-const ORBIT_MAX_PITCH := deg_to_rad(78.0)
+const COMBAT_MIN_VIEW_SPAN := 10.0
+const ORBIT_BLEND_START_SPAN := 12.5
 
 var label_font := SystemFont.new()
 var fire_playback := FirePlayback.new()
@@ -134,7 +133,7 @@ func _update_camera() -> void:
 	super._update_camera()
 	if not fire_playback.is_inside_tree():
 		return
-	if span >= ANGLE_BLEND_START_SPAN:
+	if span >= ORBIT_BLEND_START_SPAN:
 		orbit_yaw = 0.0
 		orbit_pitch = 0.0
 	var is_3d := units[0].anchor.visible
@@ -144,29 +143,50 @@ func _update_camera() -> void:
 		muzzle_history.clear()
 		return
 
-	var close_weight := 1.0 - smoothstep(MIN_VIEW_SPAN, ANGLE_BLEND_START_SPAN, span)
-	close_weight *= smoothstep(0.0, CAMERA_BLEND_DURATION, tilt_elapsed)
-	if close_weight <= 0.0:
+	var tilt_weight := smoothstep(0.0, CAMERA_BLEND_DURATION, tilt_elapsed)
+	var dolly_weight := (1.0 - smoothstep(MIN_VIEW_SPAN, CLOSE_SPAN, span)) * tilt_weight
+	var orbit_weight := (1.0 - smoothstep(COMBAT_MIN_VIEW_SPAN, ORBIT_BLEND_START_SPAN, span)) * tilt_weight
+	if dolly_weight <= 0.0 and orbit_weight <= 0.0:
 		return
 	var target := Vector3(focus.x, 0.0, focus.y)
-	var offset := camera.position - target
-	var direction := offset.normalized().slerp(_close_camera_direction(), close_weight)
-	var right := Vector3.UP.cross(direction).normalized()
-	var distance := offset.length() * lerpf(1.0, CLOSE_CAMERA_DISTANCE_FACTOR, close_weight)
-	camera.transform = Transform3D(Basis(right, direction.cross(right), direction),
-		target + direction * distance)
+	var distance := camera.position.distance_to(target) * lerpf(1.0, CLOSE_CAMERA_DISTANCE_FACTOR, dolly_weight)
+	var view_basis := camera.basis.slerp(_close_camera_basis(), orbit_weight).orthonormalized()
+	camera.transform = Transform3D(view_basis, target + view_basis.z * distance)
+
+
+func _minimum_view_span() -> float:
+	return COMBAT_MIN_VIEW_SPAN
+
+
+func _game_point(pixel: Vector2) -> Variant:
+	var point: Variant = super._game_point(pixel)
+	if span >= ORBIT_BLEND_START_SPAN:
+		return point
+	var target := Vector3(focus.x, 0.0, focus.y)
+	if point is Vector3 and absf(camera.basis.z.y) >= 0.16 and target.distance_to(point) <= span * 6.0:
+		return point
+
+	# At the horizon the pick ray can run parallel to the tactical plane.
+	var viewport := get_viewport().get_visible_rect()
+	var world_per_pixel := span * CLOSE_CAMERA_DISTANCE_FACTOR / maxf(viewport.size.y, 1.0)
+	var offset := (pixel - viewport.get_center()) * world_per_pixel
+	var right := camera.basis.x.normalized()
+	var ground_depth := Vector3(-right.z, 0.0, right.x).normalized()
+	return target + right * offset.x + ground_depth * offset.y
 
 
 func _at_orbit_zoom() -> bool:
-	return is_equal_approx(span, MIN_VIEW_SPAN) and tilt_elapsed >= CAMERA_BLEND_DURATION
+	return is_equal_approx(span, COMBAT_MIN_VIEW_SPAN) and tilt_elapsed >= CAMERA_BLEND_DURATION
 
 
-func _close_camera_direction() -> Vector3:
+func _close_camera_basis() -> Basis:
 	var base := CLOSE_CAMERA_DIRECTION.normalized()
-	var pitch := asin(base.y)
-	pitch = clampf(pitch + orbit_pitch, ORBIT_MIN_PITCH, ORBIT_MAX_PITCH)
+	var pitch := asin(base.y) + orbit_pitch
 	var yaw := atan2(base.x, base.z) + orbit_yaw
-	return Vector3(sin(yaw) * cos(pitch), sin(pitch), cos(yaw) * cos(pitch))
+	var direction := Vector3(sin(yaw) * cos(pitch), sin(pitch), cos(yaw) * cos(pitch))
+	# Derive the right axis from longitude so it remains defined above and below the fleets.
+	var right := Vector3(cos(yaw), 0.0, -sin(yaw))
+	return Basis(right, direction.cross(right), direction)
 
 
 func _handle_camera_orbit(event: InputEvent) -> bool:
@@ -176,22 +196,20 @@ func _handle_camera_orbit(event: InputEvent) -> bool:
 				orbit_dragging = false
 				return true
 			return false
-		orbit_dragging = event.alt_pressed and _at_orbit_zoom() and not (left_down or right_down or panning)
+		orbit_dragging = event.ctrl_pressed and _at_orbit_zoom() and not (left_down or right_down or panning)
 		if orbit_dragging:
 			_cancel_zoom()
-			var midpoint := _fleet_midpoint()
-			orbit_pivot = Vector2(midpoint.x, midpoint.z)
+			var pivot := _fleet_midpoint() if selected_units.is_empty() else _active_unit().anchor.position
+			orbit_pivot = Vector2(pivot.x, pivot.z)
 		return orbit_dragging
 	if event is InputEventMouseMotion and orbit_dragging:
 		if not (event.button_mask & MOUSE_BUTTON_MASK_LEFT):
 			orbit_dragging = false
 			return false
-		if event.alt_pressed and _at_orbit_zoom():
+		if event.ctrl_pressed and _at_orbit_zoom():
 			focus = orbit_pivot
 			orbit_yaw = wrapf(orbit_yaw - event.relative.x * ORBIT_YAW_SPEED, -PI, PI)
-			var default_pitch := asin(CLOSE_CAMERA_DIRECTION.normalized().y)
-			orbit_pitch = clampf(orbit_pitch - event.relative.y * ORBIT_PITCH_SPEED,
-				ORBIT_MIN_PITCH - default_pitch, ORBIT_MAX_PITCH - default_pitch)
+			orbit_pitch = wrapf(orbit_pitch - event.relative.y * ORBIT_PITCH_SPEED, -PI, PI)
 			_update_camera()
 		return true
 	return false
@@ -199,14 +217,14 @@ func _handle_camera_orbit(event: InputEvent) -> bool:
 
 func _navigation_hint() -> String:
 	if _at_orbit_zoom():
-		return "Alt + left drag: orbit   C: reset view   Left: select   Right: orders   Middle: pan   F: fire"
+		return "Ctrl + left drag: orbit   C: reset view   Left: select   Right: orders   Middle: pan   F: fire"
 	if units[0].anchor.visible:
 		return "Wheel: zoom   Middle drag: pan   Left: select   Right: orders   F: fire   4: close angle"
 	return "Wheel: zoom   Middle drag: pan   Left: select   Right: move   F: fire   Space: pause   R: replay"
 
 
 func _go_back() -> void:
-	if is_equal_approx(span, MIN_VIEW_SPAN):
+	if is_equal_approx(span, COMBAT_MIN_VIEW_SPAN):
 		_frame_fleets(CLOSE_SPAN)
 	else:
 		super._go_back()
@@ -221,8 +239,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			KEY_2, KEY_3:
 				_frame_fleets(START_SPAN if event.keycode == KEY_2 else CLOSE_SPAN)
 			KEY_4:
-				var center := get_viewport().get_visible_rect().get_center()
-				_zoom_at(center, MIN_VIEW_SPAN / span)
+				_zoom_from_toolbar(COMBAT_MIN_VIEW_SPAN / span)
 			KEY_C:
 				if _at_orbit_zoom():
 					orbit_yaw = 0.0
